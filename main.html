@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>제주도 부동산 매물 지도 - Leaflet + DB 연결</title>
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""
+  />
+  <style>
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: "Pretendard", "Noto Sans KR", Arial, sans-serif;
+      background: #f4f7fb;
+      color: #122033;
+    }
+    body { height: 100vh; overflow: hidden; }
+    .app {
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      background: linear-gradient(180deg, #0f2942 0%, #143f63 100%);
+      color: #fff;
+      padding: 22px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      overflow-y: auto;
+      height: 100vh;
+    
+    }
+
+    .brand small {
+      display: block;
+      opacity: 0.8;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+    }
+    .brand h1 {
+      margin: 0;
+      font-size: 28px;
+      line-height: 1.2;
+      font-weight: 800;
+    }
+    .brand p {
+      margin: 8px 0 0;
+      font-size: 14px;
+      opacity: 0.88;
+      line-height: 1.55;
+    }
+
+    .panel {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 18px;
+      padding: 14px;
+      backdrop-filter: blur(8px);
+    }
+    .panel h2 {
+      margin: 0 0 10px;
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .search {
+      display: grid;
+      gap: 10px;
+    }
+    .search input,
+    .search select {
+      width: 100%;
+      border: 0;
+      outline: none;
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 14px;
+      background: rgba(255,255,255,0.95);
+      color: #122033;
+    }
+    .helper-text {
+      font-size: 12px;
+      line-height: 1.55;
+      color: rgba(255,255,255,0.82);
+    }
+    .helper-text code {
+      background: rgba(255,255,255,0.12);
+      padding: 2px 6px;
+      border-radius: 6px;
+      color: #fff;
+    }
+    .filter-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .chips {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .chip {
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      background: rgba(255,255,255,0.14);
+      border: 1px solid rgba(255,255,255,0.15);
+      cursor: pointer;
+      user-select: none;
+    }
+    .chip.active {
+      background: #29c3a7;
+      color: #08313a;
+      border-color: transparent;
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .stat {
+      background: rgba(255,255,255,0.12);
+      border-radius: 16px;
+      padding: 14px;
+    }
+    .stat b {
+      display: block;
+      font-size: 22px;
+      margin-bottom: 4px;
+    }
+    .stat span {
+      font-size: 12px;
+      opacity: 0.85;
+    }
+
+    .list {
+      display: grid;
+      gap: 12px;
+    }
+    .card {
+      background: #fff;
+      color: #122033;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.10);
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: 0.2s ease;
+    }
+    .card:hover,
+    .card.active {
+      transform: translateY(-1px);
+      border-color: #29c3a7;
+    }
+    .thumb {
+      height: 150px;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+    .badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: rgba(15,41,66,0.88);
+      color: #fff;
+      border-radius: 999px;
+      padding: 7px 10px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .heart {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(255,255,255,0.92);
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 16px;
+    }
+    .content { padding: 14px; }
+    .title {
+      margin: 0 0 8px;
+      font-size: 17px;
+      font-weight: 800;
+      line-height: 1.35;
+    }
+    .price {
+      font-size: 20px;
+      font-weight: 900;
+      color: #0e7c67;
+      margin-bottom: 8px;
+    }
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+    .meta span {
+      background: #eef4f8;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 12px;
+      color: #486174;
+      font-weight: 700;
+    }
+    .desc {
+      font-size: 13px;
+      color: #55697d;
+      line-height: 1.55;
+    }
+
+    .map-wrap {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      background: #dbe8ef;
+      overflow: hidden;
+    }
+    #map {
+      width: 100%;
+      height: 100vh;
+      min-height: 520px;
+    }
+
+    .topbar {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      right: 18px;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      pointer-events: none;
+    }
+    .floating {
+      pointer-events: auto;
+      background: rgba(255,255,255,0.95);
+      border-radius: 16px;
+      padding: 12px 14px;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.10);
+    }
+    .floating strong {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+    .floating span,
+    .floating code {
+      font-size: 12px;
+      color: #597083;
+    }
+
+    .legend {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #3f5568;
+      font-weight: 700;
+    }
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .map-status {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 900;
+      padding: 24px;
+      background: linear-gradient(180deg, rgba(244,247,251,0.85), rgba(219,232,239,0.95));
+    }
+    .map-status.hidden { display: none; }
+    .status-card {
+      max-width: 580px;
+      background: rgba(255,255,255,0.98);
+      border-radius: 22px;
+      box-shadow: 0 18px 42px rgba(0,0,0,0.10);
+      padding: 22px;
+      color: #122033;
+    }
+    .status-card h2 {
+      margin: 0 0 10px;
+      font-size: 22px;
+    }
+    .status-card p {
+      margin: 0 0 10px;
+      line-height: 1.6;
+      color: #4d6274;
+      font-size: 14px;
+    }
+    .status-card ul {
+      margin: 10px 0 0;
+      padding-left: 18px;
+      color: #4d6274;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .leaflet-popup-content-wrapper {
+      border-radius: 18px;
+      box-shadow: 0 16px 36px rgba(0,0,0,0.15);
+    }
+    .popup-card {
+      min-width: 240px;
+    }
+    .popup-card h3 {
+      margin: 0 0 8px;
+      font-size: 16px;
+      line-height: 1.35;
+    }
+    .popup-price {
+      color: #0e7c67;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+    .popup-card p {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.55;
+      color: #55697d;
+    }
+
+    .custom-pin {
+      width: 18px;
+      height: 18px;
+      border-radius: 50% 50% 50% 0;
+      transform: rotate(-45deg);
+      border: 2px solid #fff;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.18);
+    }
+    .custom-pin.sale { background: #0ea5e9; }
+    .custom-pin.rent { background: #f97316; }
+    .custom-pin.land { background: #22c55e; }
+
+    @media (max-width: 980px) {
+      body { height: auto; overflow: auto; }
+      .app { grid-template-columns: 1fr; }
+      .sidebar {
+        height: auto;
+        overflow: visible;
+      }
+      .map-wrap {
+        position: relative;
+        height: 70vh;
+        min-height: 520px;
+      }
+      #map { height: 70vh; min-height: 520px; }
+      .topbar { left: 12px; right: 12px; }
+    }
+      .map-wrap, #map { height: 70vh; min-height: 520px; }
+      .topbar { left: 12px; right: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <small>LEAFLET + DATABASE</small>
+        <h1>제주도 부동산<br>매물 지도 시안</h1>
+        <p>카카오맵 없이 Leaflet + OpenStreetMap 기반으로 동작하는 완성형 구조입니다. API 키 없이 바로 실행되고, 백엔드 API만 연결하면 실제 매물이 자동 표시됩니다.</p>
+      </div>
+
+      <section class="panel search">
+        <h2>매물 검색</h2>
+        <input id="keyword" type="text" placeholder="지역명, 주소, 키워드 검색" />
+        <div class="filter-grid">
+          <select id="typeFilter">
+            <option value="all">거래유형 전체</option>
+            <option value="매매">매매</option>
+            <option value="월세">월세</option>
+            <option value="토지">토지</option>
+          </select>
+          <select id="regionFilter">
+            <option value="all">지역 전체</option>
+            <option value="제주시">제주시</option>
+            <option value="서귀포시">서귀포시</option>
+            <option value="영어교육도시">영어교육도시</option>
+            <option value="애월">애월</option>
+          </select>
+        </div>
+        <div class="helper-text">
+          DB 연결 시 <code>window.PROPERTY_API_URL</code> 만 바꾸면 됩니다.<br />
+          예: <code>/api/properties</code>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>빠른 필터</h2>
+        <div class="chips" id="featureChips">
+          <div class="chip active" data-feature="all">전체</div>
+          <div class="chip" data-feature="오션뷰">오션뷰</div>
+          <div class="chip" data-feature="영어교육도시">영어교육도시</div>
+          <div class="chip" data-feature="투자용">투자용</div>
+          <div class="chip" data-feature="신축">신축</div>
+        </div>
+      </section>
+
+      <section class="summary">
+        <div class="stat">
+          <b id="countStat">0</b>
+          <span>표시 매물 수</span>
+        </div>
+        <div class="stat">
+          <b id="mapModeLabel">초기화 중</b>
+          <span>지도 / DB 상태</span>
+        </div>
+      </section>
+
+      <section class="list" id="propertyList"></section>
+    </aside>
+
+    <main class="map-wrap">
+      <div class="topbar">
+        <div class="floating">
+          <strong>연결 방식</strong>
+          <span>프론트는 <code>fetch()</code> 로 API 호출, 지도는 Leaflet + OSM으로 렌더링합니다.</span>
+        </div>
+        <div class="floating">
+          <div class="legend">
+            <div class="legend-item"><span class="dot" style="background:#0ea5e9"></span>매매</div>
+            <div class="legend-item"><span class="dot" style="background:#f97316"></span>월세</div>
+            <div class="legend-item"><span class="dot" style="background:#22c55e"></span>토지</div>
+          </div>
+        </div>
+      </div>
+      <div id="map"></div>
+      <div id="mapStatus" class="map-status">
+        <div class="status-card" id="statusCard">
+          <h2>초기화 중</h2>
+          <p>지도를 만들고 매물 데이터를 불러오는 중입니다.</p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    window.PROPERTY_API_URL = window.PROPERTY_API_URL || '/api/properties';
+  </script>
+
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""
+  ></script>
+  <script>
+    const FALLBACK_PROPERTIES = [
+      {
+        id: 1,
+        title: '애월 바다뷰 타운하우스',
+        type: '매매',
+        region: '애월',
+        price: '12억 5,000',
+        area: '전용 148㎡',
+        address: '제주시 애월읍',
+        lat: 33.4631,
+        lng: 126.3092,
+        features: ['오션뷰', '신축', '실거주'],
+        desc: '탁 트인 바다 조망과 프라이빗한 테라스를 갖춘 고급 타운하우스.',
+        image: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80'
+      },
+      {
+        id: 2,
+        title: '영어교육도시 인근 수익형 상가',
+        type: '매매',
+        region: '영어교육도시',
+        price: '8억 9,000',
+        area: '94㎡',
+        address: '서귀포시 대정읍',
+        lat: 33.3025,
+        lng: 126.2863,
+        features: ['영어교육도시', '투자용'],
+        desc: '유동인구가 안정적인 핵심 입지의 수익형 상가 매물입니다.',
+        image: 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1200&q=80'
+      },
+      {
+        id: 3,
+        title: '구좌 감귤밭 인접 토지',
+        type: '토지',
+        region: '제주시',
+        price: '3억 2,000',
+        area: '1,240㎡',
+        address: '제주시 구좌읍',
+        lat: 33.5169,
+        lng: 126.8302,
+        features: ['투자용', '전원형'],
+        desc: '도로 접한 정방형 토지로 전원주택이나 장기 투자 검토에 적합합니다.',
+        image: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1200&q=80'
+      },
+      {
+        id: 4,
+        title: '중문 관광단지 근처 오피스텔',
+        type: '월세',
+        region: '서귀포시',
+        price: '보증금 1,000 / 월 85',
+        area: '38㎡',
+        address: '서귀포시 중문동',
+        lat: 33.2497,
+        lng: 126.4128,
+        features: ['오션뷰', '단기수요'],
+        desc: '중문권 생활 편의성과 관광 수요 접근성이 좋은 실속형 오피스텔.',
+        image: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1200&q=80'
+      },
+      {
+        id: 5,
+        title: '제주시 노형 신축 아파트',
+        type: '매매',
+        region: '제주시',
+        price: '6억 7,000',
+        area: '84㎡',
+        address: '제주시 노형동',
+        lat: 33.4851,
+        lng: 126.4788,
+        features: ['신축', '생활권'],
+        desc: '학교, 병원, 마트 접근이 좋은 도심 신축 아파트 매물입니다.',
+        image: 'https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1200&q=80'
+      }
+    ];
+
+    const state = {
+      allProperties: [],
+      selectedFeature: 'all',
+      map: null,
+      markersLayer: null,
+      activeMarker: null,
+    };
+
+    const propertyList = document.getElementById('propertyList');
+    const countStat = document.getElementById('countStat');
+    const mapModeLabel = document.getElementById('mapModeLabel');
+    const keywordInput = document.getElementById('keyword');
+    const typeFilter = document.getElementById('typeFilter');
+    const regionFilter = document.getElementById('regionFilter');
+    const mapStatus = document.getElementById('mapStatus');
+    const statusCard = document.getElementById('statusCard');
+
+    function setStatus(title, message, details = []) {
+      statusCard.innerHTML = `
+        <h2>${title}</h2>
+        <p>${message}</p>
+        ${details.length ? `<ul>${details.map(item => `<li>${item}</li>`).join('')}</ul>` : ''}
+      `;
+      mapStatus.classList.remove('hidden');
+    }
+
+    function hideStatus() {
+      mapStatus.classList.add('hidden');
+    }
+
+    function getMarkerClass(type) {
+      if (type === '월세') return 'rent';
+      if (type === '토지') return 'land';
+      return 'sale';
+    }
+
+    function createLeafletIcon(type) {
+      return L.divIcon({
+        className: '',
+        html: `<div class="custom-pin ${getMarkerClass(type)}"></div>`,
+        iconSize: [18, 18],
+        iconAnchor: [9, 18],
+        popupAnchor: [0, -18]
+      });
+    }
+
+    function createPopupContent(item) {
+      return `
+        <div class="popup-card">
+          <h3>${item.title || ''}</h3>
+          <div class="popup-price">${item.type || ''} · ${item.price || ''}</div>
+          <p>${item.address || ''}<br>${item.area || ''}<br>${item.desc || ''}</p>
+        </div>
+      `;
+    }
+
+    function validateProperty(item) {
+      return !!(item && Number.isFinite(item.lat) && Number.isFinite(item.lng) && item.title);
+    }
+
+    function normalizeProperty(item, index) {
+      return {
+        id: item.id ?? index + 1,
+        title: item.title ?? '제목 없음',
+        type: item.type ?? '매매',
+        region: item.region ?? '제주시',
+        price: item.price ?? '-',
+        area: item.area ?? '-',
+        address: item.address ?? '-',
+        lat: Number(item.lat),
+        lng: Number(item.lng),
+        features: Array.isArray(item.features) ? item.features : [],
+        desc: item.desc ?? '',
+        image: item.image ?? 'https://images.unsplash.com/photo-1460317442991-0ec209397118?auto=format&fit=crop&w=1200&q=80'
+      };
+    }
+
+    async function loadProperties() {
+      const apiUrl = String(window.PROPERTY_API_URL || '').trim();
+      if (!apiUrl) {
+        state.allProperties = FALLBACK_PROPERTIES.map(normalizeProperty).filter(validateProperty);
+        return { source: 'fallback', count: state.allProperties.length };
+      }
+
+      try {
+        const response = await fetch(apiUrl, {
+          headers: { Accept: 'application/json' }
+        });
+
+        if (!response.ok) {
+          throw new Error(`API 응답 오류: ${response.status}`);
+        }
+
+        const result = await response.json();
+        const rawList = Array.isArray(result) ? result : Array.isArray(result.items) ? result.items : [];
+        const normalized = rawList.map(normalizeProperty).filter(validateProperty);
+
+        if (!normalized.length) {
+          throw new Error('API 데이터가 비어 있거나 형식이 맞지 않습니다.');
+        }
+
+        state.allProperties = normalized;
+        return { source: 'api', count: normalized.length };
+      } catch (error) {
+        console.warn('API 로드 실패, fallback 데이터 사용:', error);
+        state.allProperties = FALLBACK_PROPERTIES.map(normalizeProperty).filter(validateProperty);
+        return { source: 'fallback', count: state.allProperties.length, error };
+      }
+    }
+
+    function initMap() {
+      state.map = L.map('map', { zoomControl: true }).setView([33.38, 126.55], 10);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap contributors'
+      }).addTo(state.map);
+      state.markersLayer = L.layerGroup().addTo(state.map);
+    }
+
+    function clearMarkers() {
+      state.markersLayer.clearLayers();
+      state.activeMarker = null;
+    }
+
+    function renderMarkers(data) {
+      clearMarkers();
+      if (!data.length) return;
+
+      const bounds = [];
+
+      data.forEach(item => {
+        const marker = L.marker([item.lat, item.lng], {
+          icon: createLeafletIcon(item.type)
+        }).addTo(state.markersLayer);
+
+        marker.bindPopup(createPopupContent(item));
+        marker.on('click', () => {
+          focusCard(item.id);
+          state.activeMarker = marker;
+        });
+
+        marker.__propertyId = item.id;
+        bounds.push([item.lat, item.lng]);
+      });
+
+      if (bounds.length === 1) {
+        state.map.setView(bounds[0], 13);
+      } else {
+        state.map.fitBounds(bounds, { padding: [50, 50] });
+      }
+    }
+
+    function focusCard(id) {
+      document.querySelectorAll('.card').forEach(card => {
+        card.classList.toggle('active', Number(card.dataset.id) === id);
+      });
+    }
+
+    function renderList(data) {
+      if (!data.length) {
+        propertyList.innerHTML = `
+          <div class="card" style="padding:18px; cursor:default;">
+            <div class="content" style="padding:0;">
+              <h3 class="title" style="margin-bottom:6px;">표시할 매물이 없습니다</h3>
+              <div class="desc">검색 조건을 변경하거나 API 데이터 형식을 확인해 주세요.</div>
+            </div>
+          </div>
+        `;
+        countStat.textContent = '0';
+        return;
+      }
+
+      propertyList.innerHTML = data.map(item => `
+        <article class="card" data-id="${item.id}">
+          <div class="thumb" style="background-image:url('${item.image}')">
+            <div class="badge">${item.type}</div>
+            <div class="heart">☆</div>
+          </div>
+          <div class="content">
+            <h3 class="title">${item.title}</h3>
+            <div class="price">${item.price}</div>
+            <div class="meta">
+              <span>${item.region}</span>
+              <span>${item.area}</span>
+              <span>${item.address}</span>
+            </div>
+            <div class="desc">${item.desc}</div>
+          </div>
+        </article>
+      `).join('');
+
+      countStat.textContent = String(data.length);
+
+      document.querySelectorAll('.card').forEach(card => {
+        card.addEventListener('click', () => {
+          const id = Number(card.dataset.id);
+          focusProperty(id, data);
+        });
+      });
+    }
+
+    function focusProperty(id, currentData = state.allProperties) {
+      const item = currentData.find(p => p.id === id) || state.allProperties.find(p => p.id === id);
+      if (!item || !state.map) return;
+
+      state.markersLayer.eachLayer((marker) => {
+        if (marker.__propertyId === id) {
+          marker.openPopup();
+          state.map.setView([item.lat, item.lng], 13);
+          state.activeMarker = marker;
+        }
+      });
+
+      focusCard(id);
+    }
+
+    function getFilteredData() {
+      const keyword = keywordInput.value.trim().toLowerCase();
+      const type = typeFilter.value;
+      const region = regionFilter.value;
+
+      return state.allProperties.filter(item => {
+        const haystack = [item.title, item.region, item.address, item.desc, item.features.join(' ')].join(' ').toLowerCase();
+        const matchesKeyword = !keyword || haystack.includes(keyword);
+        const matchesType = type === 'all' || item.type === type;
+        const matchesRegion = region === 'all' || item.region === region;
+        const matchesFeature = state.selectedFeature === 'all' || item.features.includes(state.selectedFeature);
+        return matchesKeyword && matchesType && matchesRegion && matchesFeature;
+      });
+    }
+
+    function refreshView() {
+      const filtered = getFilteredData();
+      renderList(filtered);
+      renderMarkers(filtered);
+    }
+
+    function bindUiEvents() {
+      keywordInput.addEventListener('input', refreshView);
+      typeFilter.addEventListener('change', refreshView);
+      regionFilter.addEventListener('change', refreshView);
+
+      document.querySelectorAll('.chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+          chip.classList.add('active');
+          state.selectedFeature = chip.dataset.feature;
+          refreshView();
+        });
+      });
+    }
+
+    function runBasicTests() {
+      console.assert(getMarkerClass('매매') === 'sale', '매매 마커 클래스 테스트 실패');
+      console.assert(getMarkerClass('월세') === 'rent', '월세 마커 클래스 테스트 실패');
+      console.assert(getMarkerClass('토지') === 'land', '토지 마커 클래스 테스트 실패');
+
+      const normalized = normalizeProperty({ id: 99, title: '테스트', lat: '33.5', lng: '126.5' }, 0);
+      console.assert(normalized.lat === 33.5 && normalized.lng === 126.5, '좌표 숫자 변환 테스트 실패');
+      console.assert(validateProperty(normalized) === true, '매물 검증 테스트 실패');
+
+      const badItem = normalizeProperty({ title: '불량데이터', lat: 'x', lng: null }, 0);
+      console.assert(validateProperty(badItem) === false, '불량 데이터 검증 테스트 실패');
+
+      state.allProperties = FALLBACK_PROPERTIES.map(normalizeProperty).filter(validateProperty);
+      keywordInput.value = '애월';
+      typeFilter.value = 'all';
+      regionFilter.value = 'all';
+      state.selectedFeature = 'all';
+      console.assert(getFilteredData().length >= 1, '키워드 필터 테스트 실패');
+      keywordInput.value = '';
+    }
+
+    async function bootstrap() {
+      runBasicTests();
+      bindUiEvents();
+      setStatus('초기화 중', 'Leaflet 지도와 매물 데이터를 준비하는 중입니다.');
+
+      try {
+        initMap();
+        const loadResult = await loadProperties();
+        refreshView();
+
+        if (loadResult.source === 'api') {
+          mapModeLabel.textContent = 'DB 연결 완료';
+          hideStatus();
+        } else {
+          mapModeLabel.textContent = '샘플 데이터';
+          setStatus(
+            '샘플 데이터로 실행 중',
+            'API 연결에 실패했거나 아직 백엔드가 준비되지 않아 샘플 매물을 표시합니다.',
+            [
+              `API 주소: ${window.PROPERTY_API_URL}`,
+              '백엔드가 준비되면 같은 형식의 JSON을 반환하도록 연결하면 됩니다.',
+              'Leaflet 버전은 API 키 없이 바로 실행됩니다.'
+            ]
+          );
+        }
+      } catch (error) {
+        console.error(error);
+        mapModeLabel.textContent = '오류 발생';
+        setStatus(
+          '지도 로드 실패',
+          error.message || '초기화 중 오류가 발생했습니다.',
+          [
+            '네트워크 차단 여부를 확인하세요.',
+            'Leaflet CDN 로드가 가능한 환경인지 확인하세요.',
+            'API 주소와 JSON 형식을 확인하세요.'
+          ]
+        );
+        if (!state.allProperties.length) {
+          state.allProperties = FALLBACK_PROPERTIES.map(normalizeProperty).filter(validateProperty);
+        }
+        renderList(state.allProperties);
+      }
+    }
+
+    bootstrap();
+  </script>
+
+  <!--
+    백엔드 API 응답 예시
+    GET /api/properties
+    {
+      "items": [
+        {
+          "id": 1,
+          "title": "애월 바다뷰 타운하우스",
+          "type": "매매",
+          "region": "애월",
+          "price": "12억 5,000",
+          "area": "전용 148㎡",
+          "address": "제주시 애월읍",
+          "lat": 33.4631,
+          "lng": 126.3092,
+          "features": ["오션뷰", "신축"],
+          "desc": "설명",
+          "image": "https://..."
+        }
+      ]
+    }
+
+    Node.js Express 예시
+    app.get('/api/properties', async (req, res) => {
+      const rows = await db.query('SELECT * FROM properties ORDER BY id DESC');
+      res.json({ items: rows });
+    });
+  -->
+</body>
+</html>
