@@ -542,10 +542,8 @@
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
     crossorigin=""
   ></script>
-
-    
+  
   <script>
-   
     const ENABLE_CARD_DIRECT_LINK = false;
 
     /* 2026.03.20 새로 추가 */
@@ -640,39 +638,6 @@
         link: item.link ?? '#',
         phone: item.phone ?? '064-000-0000'
       };
-    }
-
-    async function loadProperties() {
-      const apiUrl = String(window.PROPERTY_API_URL || '').trim();
-      if (!apiUrl) {
-        state.allProperties = FALLBACK_PROPERTIES.map(normalizeProperty).filter(validateProperty);
-        return { source: 'fallback', count: state.allProperties.length };
-      }
-
-      try {
-        const response = await fetch(apiUrl, {
-          headers: { Accept: 'application/json' }
-        });
-
-        if (!response.ok) {
-          throw new Error(`API 응답 오류: ${response.status}`);
-        }
-
-        const result = await response.json();
-        const rawList = Array.isArray(result) ? result : Array.isArray(result.items) ? result.items : [];
-        const normalized = rawList.map(normalizeProperty).filter(validateProperty);
-
-        if (!normalized.length) {
-          throw new Error('API 데이터가 비어 있거나 형식이 맞지 않습니다.');
-        }
-
-        state.allProperties = normalized;
-        return { source: 'api', count: normalized.length };
-      } catch (error) {
-        console.warn('API 로드 실패, fallback 데이터 사용:', error);
-        state.allProperties = FALLBACK_PROPERTIES.map(normalizeProperty).filter(validateProperty);
-        return { source: 'fallback', count: state.allProperties.length, error };
-      }
     }
 
     function initMap() {
