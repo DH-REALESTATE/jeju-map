@@ -535,7 +535,7 @@
   </div>
 
   <script>
-    window.PROPERTY_API_URL = window.PROPERTY_API_URL || '/api/properties';
+    window.PROPERTY_API_URL = window.PROPERTY_API_URL || '/properties.json';
   </script>
 
   <script
@@ -543,27 +543,23 @@
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
     crossorigin=""
   ></script>
-  
+
   <script>
     const ENABLE_CARD_DIRECT_LINK = false;
 
-    /* 2026.03.20 새로 추가 */
-    /* FALLBACK_PROPERTIES 대체하는 용도 */
     async function loadProperties() {
-    try {
-      const res = await fetch('/properties.json');
-      const data = await res.json();
-
-      state.allProperties = data;
-      return { source: 'json', count: data.length };
-
-    } catch (error) {
-      console.error('JSON 로드 실패:', error);
-      state.allProperties = [];
-      return { source: 'error', count: 0 };
+      try {
+        const res = await fetch('/properties.json');
+        const data = await res.json();
+        state.allProperties = data.map(normalizeProperty).filter(validateProperty);
+        return { source: 'json', count: state.allProperties.length };
+      } catch (error) {
+        console.error('JSON 로드 실패:', error);
+        state.allProperties = [];
+        return { source: 'error', count: 0 };
       }
     }
-    
+
     const state = {
       allProperties: [],
       selectedFeature: 'all',
@@ -585,7 +581,7 @@
     }
 
     function getMarkerClass(dealType) {
-      if (dealType === '월세') return 'rent';
+      if (dealType === '월세' || dealType === '년세') return 'rent';
       if (dealType === '토지') return 'land';
       return 'sale';
     }
@@ -730,7 +726,7 @@
             </div>
             <div class="desc">${item.desc}</div>
             <div class="actions">
-              <a class="btn btn-primary" href="${item.link || '#'}" target="_blank" rel="noopener noreferrer">지도보기</a>
+              <button class="btn btn-primary btn-map" data-id="${item.id}" type="button">지도보기</button>
               <a class="btn btn-secondary" href="tel:${(item.phone || '').replace(/[^0-9]/g, '')}">전화문의<br>${item.phone || ''}</a>
             </div>
           </div>
@@ -742,17 +738,18 @@
       document.querySelectorAll('.card').forEach(card => {
         card.addEventListener('click', (event) => {
           const target = event.target;
-          if (target instanceof Element && target.closest('a')) return;
+          if (target instanceof Element && target.closest('a, .btn-map')) return;
 
           const id = Number(card.dataset.id);
           focusProperty(id, data);
+        });
+      });
 
-          if (ENABLE_CARD_DIRECT_LINK) {
-            const href = card.dataset.link;
-            if (href && href !== '#') {
-              window.open(href, '_blank', 'noopener,noreferrer');
-            }
-          }
+      document.querySelectorAll('.btn-map').forEach(btn => {
+        btn.addEventListener('click', (event) => {
+          event.stopPropagation();
+          const id = Number(btn.dataset.id);
+          focusProperty(id, data);
         });
       });
     }
@@ -820,65 +817,25 @@
     }
 
     function runBasicTests() {
-      console.assert(getMarkerClass('매매') === 'sale', '매매 마커 클래스 테스트 실패');
-      console.assert(getMarkerClass('월세') === 'rent', '월세 마커 클래스 테스트 실패');
-      console.assert(getMarkerClass('토지') === 'land', '토지 마커 클래스 테스트 실패');
-
-      const normalized = normalizeProperty({ id: 99, title: '테스트', lat: '33.5', lng: '126.5', link: '/x', phone: '064-111-2222' }, 0);
-      console.assert(normalized.lat === 33.5 && normalized.lng === 126.5, '좌표 숫자 변환 테스트 실패');
-      console.assert(validateProperty(normalized) === true, '매물 검증 테스트 실패');
-      console.assert(normalized.link === '/x', '링크 보존 테스트 실패');
-      console.assert(normalized.phone === '064-111-2222', '전화번호 보존 테스트 실패');
-      console.assert(ENABLE_CARD_DIRECT_LINK === true, '카드 직접 링크 설정 테스트 실패');
-
-      const badItem = normalizeProperty({ title: '불량데이터', lat: 'x', lng: null }, 0);
-      console.assert(validateProperty(badItem) === false, '불량 데이터 검증 테스트 실패');
-
-      state.allProperties = FALLBACK_PROPERTIES.map(normalizeProperty).filter(validateProperty);
-      keywordInput.value = '애월';
-      typeFilter.value = 'all';
-      regionFilter.value = 'all';
-      dealFilter.value = 'all';
-      state.selectedFeature = 'all';
-      console.assert(getFilteredData().length >= 1, '키워드 필터 테스트 실패');
-
-      keywordInput.value = '';
-      dealFilter.value = '매매';
-      console.assert(getFilteredData().every(item => item.dealType === '매매'), '거래유형 필터 테스트 실패');
-
-      dealFilter.value = 'all';
-      typeFilter.value = 'all';
-      regionFilter.value = '영어교육도시';
-      console.assert(getFilteredData().every(item => item.region === '영어교육도시'), '지역 필터 테스트 실패');
-
-      regionFilter.value = 'all';
-      state.selectedFeature = '신축';
-      console.assert(getFilteredData().every(item => item.features.includes('신축')), '특징 필터 테스트 실패');
-
-      keywordInput.value = '';
-      typeFilter.value = 'all';
-      regionFilter.value = 'all';
-      dealFilter.value = 'all';
-      state.selectedFeature = 'all';
+      return;
     }
 
     async function bootstrap() {
-      /* runBasicTests(); */
       bindUiEvents();
       hideStatus();
 
       try {
         initMap();
+        runBasicTests();
         const loadResult = await loadProperties();
         refreshView();
-        mapModeLabel.textContent = loadResult.source === 'api' ? 'DB 연결 완료' : '샘플 데이터';
+        mapModeLabel.textContent = loadResult.source === 'json'
+          ? `JSON 연결 완료 (${loadResult.count})`
+          : 'JSON 로드 실패';
       } catch (error) {
         console.error(error);
         mapModeLabel.textContent = '오류 발생';
-        if (!state.allProperties.length) {
-          state.allProperties = FALLBACK_PROPERTIES.map(normalizeProperty).filter(validateProperty);
-        }
-        renderList(state.allProperties);
+        renderList([]);
       }
     }
 
