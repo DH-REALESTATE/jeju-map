@@ -541,98 +541,30 @@
     src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
     crossorigin=""
-  ></script>
+  ></script
+
+    
   <script>
+   
     const ENABLE_CARD_DIRECT_LINK = false;
 
-    const FALLBACK_PROPERTIES = [
-      {
-        id: 1,
-        title: '애월 바다뷰 타운하우스',
-        type: '단독',
-        dealType: '매매',
-        region: '애월',
-        price: '12억 5,000',
-        area: '전용 148㎡',
-        address: '제주시 애월읍',
-        lat: 33.4631,
-        lng: 126.3092,
-        features: ['오션뷰', '신축', '실거주'],
-        desc: '탁 트인 바다 조망과 프라이빗한 테라스를 갖춘 고급 타운하우스.',
-        image: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80',
-        link: 'https://land.jejukcr.com/offer/80576184',
-        phone: '064-000-0000'
-      },
-      {
-        id: 2,
-        title: '영어교육도시 인근 수익형 상가',
-        type: '상가',
-        dealType: '매매',
-        region: '영어교육도시',
-        price: '8억 9,000',
-        area: '94㎡',
-        address: '서귀포시 대정읍',
-        lat: 33.3025,
-        lng: 126.2863,
-        features: ['영어교육도시', '투자용'],
-        desc: '유동인구가 안정적인 핵심 입지의 수익형 상가 매물입니다.',
-        image: 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1200&q=80',
-        link: 'https://land.jejukcr.com/offer/80360494',
-        phone: '064-000-0000'
-      },
-      {
-        id: 3,
-        title: '구좌 감귤밭 인접 토지',
-        type: '토지',
-        dealType: '매매',
-        region: '제주시',
-        price: '3억 2,000',
-        area: '1,240㎡',
-        address: '제주시 구좌읍',
-        lat: 33.5169,
-        lng: 126.8302,
-        features: ['투자용', '전원형'],
-        desc: '도로 접한 정방형 토지로 전원주택이나 장기 투자 검토에 적합합니다.',
-        image: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1200&q=80',
-        link: 'https://land.jejukcr.com/offer/64166600',
-        phone: '064-000-0000'
-      },
-      {
-        id: 4,
-        title: '중문 관광단지 근처 오피스텔',
-        type: '원룸',
-        dealType: '월세',
-        region: '서귀포시',
-        price: '보증금 1,000 / 월 85',
-        area: '38㎡',
-        address: '서귀포시 중문동',
-        lat: 33.2497,
-        lng: 126.4128,
-        features: ['오션뷰', '단기수요'],
-        desc: '중문권 생활 편의성과 관광 수요 접근성이 좋은 실속형 오피스텔.',
-        image: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1200&q=80',
-        link: 'https://land.jejukcr.com/offer/80100718',
-        phone: '064-000-0000'
-      },
-      {
-        id: 5,
-        title: '제주시 노형 신축 아파트',
-        type: '아파트',
-        dealType: '매매',
-        region: '제주시',
-        price: '6억 7,000',
-        area: '84㎡',
-        address: '제주시 노형동',
-        lat: 33.4851,
-        lng: 126.4788,
-        features: ['신축', '생활권'],
-        desc: '학교, 병원, 마트 접근이 좋은 도심 신축 아파트 매물입니다.',
-        image: 'https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1200&q=80',
-        link: 'https://land.jejukcr.com/offer/79918569',
-        phone: '064-000-0000'
-      }
-    ];
+    /* 2026.03.20 새로 추가 */
+    /* FALLBACK_PROPERTIES 대체하는 용도 */
+    async function loadProperties() {
+    try {
+      const res = await fetch('./properties.json');
+      const data = await res.json();
 
+      state.allProperties = data;
+      return { source: 'json', count: data.length };
+
+    } catch (error) {
+      console.error('JSON 로드 실패:', error);
+      state.allProperties = [];
+      return { source: 'error', count: 0 };
+      }
+    }
+    
     const state = {
       allProperties: [],
       selectedFeature: 'all',
