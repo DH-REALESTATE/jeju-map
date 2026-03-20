@@ -551,7 +551,7 @@
     /* FALLBACK_PROPERTIES 대체하는 용도 */
     async function loadProperties() {
     try {
-      const res = await fetch('./properties.json');
+      const res = await fetch('/properties.json');
       const data = await res.json();
 
       state.allProperties = data;
