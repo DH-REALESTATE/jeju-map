@@ -607,7 +607,7 @@
           <p>${item.address || ''}<br>${item.area || ''}<br>${item.desc || ''}</p>
           <div class="popup-actions">
             <a class="popup-btn popup-btn-primary" href="${detailLink}" target="_blank" rel="noopener noreferrer">상세보기</a>
-            <a class="popup-btn popup-btn-secondary" href="${phoneLink}">전화문의<br>${item.phone || ''}</a>
+            <a class="popup-btn popup-btn-secondary" href="${phoneLink}">${item.phone || ''}</a>
           </div>
         </div>
       `;
@@ -727,7 +727,7 @@
             <div class="desc">${item.desc}</div>
             <div class="actions">
               <button class="btn btn-primary btn-map" data-id="${item.id}" type="button">지도보기</button>
-              <a class="btn btn-secondary" href="tel:${(item.phone || '').replace(/[^0-9]/g, '')}">전화문의<br>${item.phone || ''}</a>
+              <a class="btn btn-secondary" href="tel:${(item.phone || '').replace(/[^0-9]/g, '')}">${item.phone || ''}</a>
             </div>
           </div>
         </article>
