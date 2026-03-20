@@ -467,6 +467,7 @@
             <option value="all">거래 유형 전체</option>
             <option value="매매">매매</option>
             <option value="전세">전세</option>
+            <option value="년세">년세</option>
             <option value="월세">월세</option>
           </select>
           <select id="typeFilter">
@@ -484,8 +485,8 @@
             <option value="제주시">제주시</option>
             <option value="서귀포시">서귀포시</option>
             <option value="영어교육도시">영어교육도시</option>
-            <option value="애월">애월</option>
-            <option value="함덕">함덕</option>
+            <option value="애월">애월읍</option>
+            <option value="조천">조천읍</option>
           </select>
         </div>
         <div class="helper-text">
@@ -862,7 +863,7 @@
     }
 
     async function bootstrap() {
-      runBasicTests();
+      /* runBasicTests(); */
       bindUiEvents();
       hideStatus();
 
