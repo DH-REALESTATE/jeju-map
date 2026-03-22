@@ -292,11 +292,21 @@
           <option value="all">거래유형 전체</option>
           <option value="매매">매매</option>
           <option value="전세">전세</option>
-          <option value="월세">월세</option>
           <option value="년세">년세</option>
+          <option value="월세">월세</option>
+        </select>
+
+        <select id="typeFilter">
+          <option value="all">매물유형 전체</option>
+          <option value="단독">단독주택</option>
+          <option value="아파트">아파트ㆍ빌라</option>
+          <option value="다가구">다가구ㆍ다세대</option>
+          <option value="원룸">원룸ㆍ투룸</option>
+          <option value="상가">상가ㆍ사무실ㆍ공장</option>
+          <option value="토지">토지ㆍ임야</option>
         </select>
       </div>
-
+      
       <div class="property-list" id="propertyList"></div>
     </aside>
 
@@ -309,66 +319,34 @@
   <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=b7db2d3c35122f3ec33c88ea6d3195fb"></script>
 
   <script>
-    const properties = [
-      {
-        id: 1,
-        title: "영어교육도시 푸르지오 더퍼스트",
-        dealType: "매매",
-        price: "8억 5,000",
-        area: "84㎡",
-        address: "제주 서귀포시 대정읍",
-        region: "영어교육도시",
-        desc: "학군과 생활 인프라가 좋은 실거주 추천 아파트",
-        lat: 33.2895,
-        lng: 126.2862,
-        phone: "064-794-1111",
-        image: "https://images.unsplash.com/photo-1460317442991-0ec209397118?auto=format&fit=crop&w=1200&q=80",
-        link: "#"
-      },
-      {
-        id: 2,
-        title: "애월 오션뷰 단독주택",
-        dealType: "매매",
-        price: "12억",
-        area: "132㎡",
-        address: "제주 제주시 애월읍",
-        region: "애월",
-        desc: "넓은 마당과 바다 조망이 좋은 프리미엄 단독주택",
-        lat: 33.4631,
-        lng: 126.3093,
-        phone: "064-794-1111",
-        image: "https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=1200&q=80",
-        link: "#"
-      },
-      {
-        id: 3,
-        title: "제주시 노형동 수익형 원룸",
-        dealType: "월세",
-        price: "보증금 500 / 월 55",
-        area: "26㎡",
-        address: "제주 제주시 노형동",
-        region: "제주시",
-        desc: "공실 부담이 적은 도심권 수익형 원룸",
-        lat: 33.4858,
-        lng: 126.4799,
-        phone: "064-794-1111",
-        image: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80",
-        link: "#"
-      }
-    ];
-
     const state = {
       map: null,
       markers: [],
       overlays: [],
       activeOverlay: null,
-      filtered: [...properties]
+      all: [],       // 전체 데이터
+      filtered: []   // 필터 결과
     };
-
+    
     const propertyList = document.getElementById("propertyList");
     const keywordInput = document.getElementById("keyword");
     const dealFilter = document.getElementById("dealFilter");
 
+    // JSON 파일 로딩
+    async function loadProperties() {
+    try {
+      const res = await fetch("./properties.json");
+      const data = await res.json();
+  
+      state.all = data;
+      state.filtered = data;
+  
+      applyFilter(); // 로딩 후 바로 렌더링
+    } catch (err) {
+      console.error("매물 데이터 불러오기 실패", err);
+      }
+    }
+    
     function escapeHtml(str) {
       return String(str ?? "")
         .replace(/&/g, "&amp;")
@@ -574,7 +552,7 @@
       const keyword = keywordInput.value.trim().toLowerCase();
       const dealType = dealFilter.value;
 
-      state.filtered = properties.filter(item => {
+      state.filtered = state.all.filter(item => {
         const text = [
           item.title,
           item.region,
@@ -605,7 +583,7 @@
 
       initMap();
       initEvents();
-      applyFilter();
+      loadProperties();
     }
 
     bootstrap();
