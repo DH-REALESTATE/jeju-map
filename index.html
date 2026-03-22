@@ -137,6 +137,11 @@
       padding: 6px 10px;
     }
 
+    .feature-badge {
+      background: #e7fbf5 !important;
+      color: #0d7b68 !important;
+    }
+
     .desc {
       font-size: 13px;
       line-height: 1.6;
@@ -228,6 +233,22 @@
       color: #5c6c7c;
     }
 
+    .overlay-features {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .overlay-features span {
+      background: #e7fbf5;
+      color: #0d7b68;
+      font-size: 11px;
+      font-weight: 700;
+      border-radius: 999px;
+      padding: 5px 8px;
+    }
+
     .custom-overlay .overlay-actions {
       display: flex;
       gap: 8px;
@@ -284,21 +305,21 @@
   <div class="app">
     <aside class="sidebar">
       <h1>제주도 부동산<br>카카오맵 매물 지도</h1>
-      <p>왼쪽 카드에서 지도보기를 누르면 오른쪽 카카오맵으로 이동합니다.</p>
+      <p>왼쪽 카드에서 지도보기를 누르거나 카드를 클릭하면 오른쪽 카카오맵으로 바로 이동합니다.</p>
 
       <div class="search-box">
         <input type="text" id="keyword" placeholder="지역명, 주소, 키워드 검색">
 
         <select id="typeFilter">
           <option value="all">매물유형 전체</option>
-          <option value="아파트">아파트ㆍ빌라</option>
           <option value="단독">단독주택</option>
           <option value="다가구">다가구ㆍ다세대</option>
           <option value="원룸">원룸ㆍ투룸</option>
+          <option value="아파트">아파트ㆍ빌라</option>
           <option value="상가">상가ㆍ사무실</option>
           <option value="토지">토지ㆍ임야</option>
         </select>
-
+        
         <select id="dealFilter">
           <option value="all">거래유형 전체</option>
           <option value="매매">매매</option>
@@ -306,7 +327,15 @@
           <option value="월세">월세</option>
           <option value="년세">년세</option>
         </select>
-        
+
+        <select id="featureFilter">
+          <option value="all">특징 전체</option>
+          <option value="신축">신축</option>
+          <option value="오션뷰">오션뷰</option>
+          <option value="생활권">생활권</option>
+          <option value="투자용">투자용</option>
+          <option value="급매">급매</option>
+        </select>
       </div>
 
       <div class="property-list" id="propertyList"></div>
@@ -317,6 +346,7 @@
     </main>
   </div>
 
+  <!-- 네 카카오 JavaScript 키로 바꿔 넣기 -->
   <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=b7db2d3c35122f3ec33c88ea6d3195fb"></script>
 
   <script>
@@ -333,6 +363,7 @@
     const keywordInput = document.getElementById("keyword");
     const dealFilter = document.getElementById("dealFilter");
     const typeFilter = document.getElementById("typeFilter");
+    const featureFilter = document.getElementById("featureFilter");
 
     function escapeHtml(str) {
       return String(str ?? "")
@@ -347,8 +378,9 @@
       return {
         id: item.id ?? index + 1,
         title: item.title ?? "제목 없음",
-        dealType: item.dealType ?? "매매",
-        type: item.type ?? "",
+        dealType: item.dealFilter ?? item.dealType ?? "매매",
+        type: item.typeFilter ?? item.type ?? "",
+        features: Array.isArray(item.features) ? item.features : [],
         price: item.price ?? "-",
         area: item.area ?? "-",
         address: item.address ?? "-",
@@ -431,7 +463,7 @@
 
     function clearMapObjects() {
       state.markers.forEach(marker => marker.setMap(null));
-      state.overlays.forEach(overlay => overlay.setMap(null));
+      state.overlays.forEach(item => item.overlay.setMap(null));
       state.markers = [];
       state.overlays = [];
       state.activeOverlay = null;
@@ -440,6 +472,9 @@
     function createOverlayContent(item) {
       const wrap = document.createElement("div");
       const phoneLink = String(item.phone || "").replace(/[^0-9]/g, "");
+      const featuresHtml = (item.features || [])
+        .map(feature => `<span>${escapeHtml(feature)}</span>`)
+        .join("");
 
       wrap.innerHTML = `
         <div class="custom-overlay">
@@ -451,6 +486,7 @@
             ${escapeHtml(item.area)}<br>
             ${escapeHtml(item.desc)}
           </p>
+          ${featuresHtml ? `<div class="overlay-features">${featuresHtml}</div>` : ""}
           <div class="overlay-actions">
             <a class="overlay-btn overlay-primary" href="${escapeHtml(item.link)}" target="_blank" rel="noopener noreferrer">상세보기</a>
             <a class="overlay-btn overlay-secondary" href="tel:${phoneLink}">문의</a>
@@ -458,6 +494,30 @@
         </div>
       `;
       return wrap.firstElementChild;
+    }
+
+    function highlightCard(id) {
+      document.querySelectorAll(".card").forEach(card => {
+        card.classList.toggle("active", Number(card.dataset.id) === id);
+      });
+    }
+
+    function openOverlayById(id) {
+      const found = state.overlays.find(v => v.id === id);
+      if (!found) return;
+
+      closeOverlay();
+      found.overlay.setMap(state.map);
+      state.activeOverlay = found.overlay;
+    }
+
+    function moveMapToProperty(item, zoomLevel = 4) {
+      if (!item || !state.map) return;
+
+      const position = new kakao.maps.LatLng(item.lat, item.lng);
+      state.map.setLevel(zoomLevel);
+      state.map.setCenter(position);
+      state.map.relayout();
     }
 
     function renderMarkers(data) {
@@ -495,15 +555,14 @@
         });
 
         kakao.maps.event.addListener(marker, "click", function () {
-          closeOverlay();
           highlightCard(item.id);
-        
-          state.map.setLevel(4);
-          state.map.setCenter(position);
-          state.map.relayout();
-        
-          overlay.setMap(state.map);
-          state.activeOverlay = overlay;
+          moveMapToProperty(item, 4);
+
+          setTimeout(() => {
+            closeOverlay();
+            overlay.setMap(state.map);
+            state.activeOverlay = overlay;
+          }, 80);
         });
 
         state.markers.push(marker);
@@ -512,60 +571,22 @@
       });
 
       if (data.length === 1) {
-        state.map.setCenter(new kakao.maps.LatLng(data[0].lat, data[0].lng));
-        state.map.setLevel(4);
+        moveMapToProperty(data[0], 4);
       } else {
         state.map.setBounds(bounds);
       }
     }
 
-    function highlightCard(id) {
-      document.querySelectorAll(".card").forEach(card => {
-        card.classList.toggle("active", Number(card.dataset.id) === id);
-      });
-    }
-
-    /*
-    function focusProperty(id) {
-      const item = state.filtered.find(v => v.id === id);
-      if (!item) return;
-
-      const position = new kakao.maps.LatLng(item.lat, item.lng);
-      state.map.panTo(position);
-      state.map.setLevel(4);
-
-      const found = state.overlays.find(v => v.id === id);
-      if (found) {
-        closeOverlay();
-        found.overlay.setMap(state.map);
-        state.activeOverlay = found.overlay;
-      }
-
-      highlightCard(id);
-    }
-    */
-
     function focusProperty(id) {
       const item = state.filtered.find(v => v.id === id);
       if (!item || !state.map) return;
-    
-      const position = new kakao.maps.LatLng(item.lat, item.lng);
-    
-      closeOverlay();
+
       highlightCard(id);
-    
-      state.map.setLevel(4);
-      state.map.setCenter(position);
-      state.map.relayout();
-    
-      const found = state.overlays.find(v => v.id === id);
-    
-      if (found) {
-        setTimeout(() => {
-          found.overlay.setMap(state.map);
-          state.activeOverlay = found.overlay;
-        }, 120);
-      }
+      moveMapToProperty(item, 4);
+
+      setTimeout(() => {
+        openOverlayById(id);
+      }, 80);
     }
 
     function renderList(data) {
@@ -581,27 +602,34 @@
         return;
       }
 
-      propertyList.innerHTML = data.map(item => `
-        <article class="card" data-id="${item.id}">
-          <div class="thumb" style="background-image:url('${escapeHtml(item.image)}')">
-            <div class="badge">${escapeHtml(item.dealType)}</div>
-          </div>
-          <div class="card-body">
-            <h3 class="title">${escapeHtml(item.title)}</h3>
-            <div class="price">${escapeHtml(item.price)}</div>
-            <div class="meta">
-              <span>${escapeHtml(item.type || "-")}</span>
-              <span>${escapeHtml(item.region || "-")}</span>
-              <span>${escapeHtml(item.area)}</span>
+      propertyList.innerHTML = data.map(item => {
+        const featureHtml = (item.features || [])
+          .map(feature => `<span class="feature-badge">${escapeHtml(feature)}</span>`)
+          .join("");
+
+        return `
+          <article class="card" data-id="${item.id}">
+            <div class="thumb" style="background-image:url('${escapeHtml(item.image)}')">
+              <div class="badge">${escapeHtml(item.dealType)}</div>
             </div>
-            <div class="desc">${escapeHtml(item.address)}<br>${escapeHtml(item.desc)}</div>
-            <div class="actions">
-              <button class="btn btn-map" data-id="${item.id}" type="button">지도보기</button>
-              <a class="btn btn-call" href="tel:${String(item.phone || "").replace(/[^0-9]/g, "")}">${escapeHtml(item.phone || "문의")}</a>
+            <div class="card-body">
+              <h3 class="title">${escapeHtml(item.title)}</h3>
+              <div class="price">${escapeHtml(item.price)}</div>
+              <div class="meta">
+                <span>${escapeHtml(item.type || "-")}</span>
+                <span>${escapeHtml(item.region || "-")}</span>
+                <span>${escapeHtml(item.area)}</span>
+              </div>
+              ${featureHtml ? `<div class="meta">${featureHtml}</div>` : ""}
+              <div class="desc">${escapeHtml(item.address)}<br>${escapeHtml(item.desc)}</div>
+              <div class="actions">
+                <button class="btn btn-map" data-id="${item.id}" type="button">지도보기</button>
+                <a class="btn btn-call" href="tel:${String(item.phone || "").replace(/[^0-9]/g, "")}">${escapeHtml(item.phone || "문의")}</a>
+              </div>
             </div>
-          </div>
-        </article>
-      `).join("");
+          </article>
+        `;
+      }).join("");
 
       document.querySelectorAll(".card").forEach(card => {
         card.addEventListener("click", function (e) {
@@ -622,6 +650,7 @@
       const keyword = keywordInput.value.trim().toLowerCase();
       const dealValue = dealFilter.value;
       const typeValue = typeFilter.value;
+      const featureValue = featureFilter.value;
 
       state.filtered = state.all.filter(item => {
         const text = [
@@ -629,7 +658,8 @@
           item.region ?? "",
           item.address ?? "",
           item.desc ?? "",
-          item.type ?? ""
+          item.type ?? "",
+          ...(item.features ?? [])
         ].join(" ").toLowerCase();
 
         const okKeyword = !keyword || text.includes(keyword);
@@ -646,7 +676,11 @@
           (typeValue === "상가" && ["상가", "사무실", "공장", "상가ㆍ사무실"].includes(itemType)) ||
           (typeValue === "토지" && ["토지", "임야", "토지ㆍ임야"].includes(itemType));
 
-        return okKeyword && okDeal && okType;
+        const okFeature =
+          featureValue === "all" ||
+          (Array.isArray(item.features) && item.features.includes(featureValue));
+
+        return okKeyword && okDeal && okType && okFeature;
       });
 
       renderList(state.filtered);
@@ -657,6 +691,7 @@
       keywordInput.addEventListener("input", applyFilter);
       dealFilter.addEventListener("change", applyFilter);
       typeFilter.addEventListener("change", applyFilter);
+      featureFilter.addEventListener("change", applyFilter);
     }
 
     function bootstrap() {
