@@ -3,8 +3,8 @@
   {
     "id": 1,
     "title": "애월 바다뷰 타운하우스",
-    "type": "단독",
-    "dealType": "매매",
+    "typeFilter": "단독",
+    "dealFilter": "매매",
     "region": "애월",
     "price": "12억 5,000",
     "area": "전용 148㎡",
@@ -21,8 +21,8 @@
   {
     "id": 2,
     "title": "영어교육도시 인근 수익형 상가",
-    "type": "상가",
-    "dealType": "매매",
+    "typeFilter": "상가",
+    "dealFilter": "매매",
     "region": "영어교육도시",
     "price": "8억 9,000",
     "area": "94㎡",
@@ -38,8 +38,8 @@
   {
     "id": 3,
     "title": "구좌 감귤밭 인접 토지",
-    "type": "토지",
-    "dealType": "매매",
+    "typeFilter": "토지",
+    "dealFilter": "매매",
     "region": "제주시",
     "price": "3억 2,000",
     "area": "1,240㎡",
@@ -56,8 +56,8 @@
   {
     "id": 4,
     "title": "중문 관광단지 근처 오피스텔",
-    "type": "원룸",
-    "dealType": "월세",
+    "typeFilter": "원룸",
+    "dealFilter": "월세",
     "region": "서귀포시",
     "price": "보증금 1,000 / 월 85",
     "area": "38㎡",
@@ -74,8 +74,8 @@
   {
     "id": 5,
     "title": "제주시 노형 신축 아파트",
-    "type": "아파트",
-    "dealType": "매매",
+    "typeFilter": "아파트",
+    "dealFilter": "매매",
     "region": "제주시",
     "price": "6억 7,000",
     "area": "84㎡",
@@ -92,8 +92,8 @@
   {
     "id": 6,
     "title": "제주시 뜨란채",
-    "type": "아파트",
-    "dealType": "전세",
+    "typeFilter": "아파트",
+    "dealFilter": "전세",
     "region": "제주시",
     "price": "4억",
     "area": "84㎡",
@@ -105,6 +105,6 @@
     "image": "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1200&q=80",
     "link": "https://land.jejukcr.com/offer/79918569",
     "phone": "010-2134-7806"
-  }  
+  }
   
 ]
