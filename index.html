@@ -291,10 +291,10 @@
 
         <select id="typeFilter">
           <option value="all">매물유형 전체</option>
+          <option value="아파트">아파트ㆍ빌라</option>
           <option value="단독">단독주택</option>
           <option value="다가구">다가구ㆍ다세대</option>
           <option value="원룸">원룸ㆍ투룸</option>
-          <option value="아파트">아파트ㆍ빌라</option>
           <option value="상가">상가ㆍ사무실</option>
           <option value="토지">토지ㆍ임야</option>
         </select>
@@ -496,10 +496,14 @@
 
         kakao.maps.event.addListener(marker, "click", function () {
           closeOverlay();
+          highlightCard(item.id);
+        
+          state.map.setLevel(4);
+          state.map.setCenter(position);
+          state.map.relayout();
+        
           overlay.setMap(state.map);
           state.activeOverlay = overlay;
-          state.map.panTo(position);
-          highlightCard(item.id);
         });
 
         state.markers.push(marker);
@@ -521,6 +525,7 @@
       });
     }
 
+    /*
     function focusProperty(id) {
       const item = state.filtered.find(v => v.id === id);
       if (!item) return;
@@ -537,6 +542,30 @@
       }
 
       highlightCard(id);
+    }
+    */
+
+    function focusProperty(id) {
+      const item = state.filtered.find(v => v.id === id);
+      if (!item || !state.map) return;
+    
+      const position = new kakao.maps.LatLng(item.lat, item.lng);
+    
+      closeOverlay();
+      highlightCard(id);
+    
+      state.map.setLevel(4);
+      state.map.setCenter(position);
+      state.map.relayout();
+    
+      const found = state.overlays.find(v => v.id === id);
+    
+      if (found) {
+        setTimeout(() => {
+          found.overlay.setMap(state.map);
+          state.activeOverlay = found.overlay;
+        }, 120);
+      }
     }
 
     function renderList(data) {
