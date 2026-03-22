@@ -194,11 +194,13 @@
       border-radius: 16px;
       box-shadow: 0 16px 40px rgba(0,0,0,0.18);
       width: 270px;
+      max-width: 270px;
       padding: 16px;
       border: 1px solid rgba(0,0,0,0.08);
       position: relative;
+      overflow: hidden;
     }
-
+    
     .custom-overlay .close {
       position: absolute;
       top: 10px;
@@ -211,35 +213,44 @@
       cursor: pointer;
       font-size: 14px;
     }
-
+    
     .custom-overlay h3 {
       margin: 0 28px 8px 0;
       font-size: 16px;
       line-height: 1.4;
       color: #122033;
+      word-break: keep-all;
+      overflow-wrap: break-word;
     }
-
+    
     .custom-overlay .overlay-price {
       font-size: 14px;
       font-weight: 900;
       color: #0d7b68;
       margin-bottom: 8px;
+      word-break: keep-all;
+      overflow-wrap: break-word;
     }
-
+    
     .custom-overlay p {
       margin: 0;
       font-size: 13px;
       line-height: 1.6;
       color: #5c6c7c;
+      word-break: keep-all;
+      overflow-wrap: break-word;
+      white-space: normal;
+      max-width: 100%;
     }
-
+    
     .overlay-features {
       display: flex;
       flex-wrap: wrap;
       gap: 6px;
       margin-top: 10px;
+      max-width: 100%;
     }
-
+    
     .overlay-features span {
       background: #e7fbf5;
       color: #0d7b68;
@@ -247,14 +258,17 @@
       font-weight: 700;
       border-radius: 999px;
       padding: 5px 8px;
+      max-width: 100%;
+      word-break: keep-all;
+      overflow-wrap: break-word;
     }
-
+    
     .custom-overlay .overlay-actions {
       display: flex;
       gap: 8px;
       margin-top: 12px;
     }
-
+    
     .custom-overlay .overlay-btn {
       flex: 1;
       text-decoration: none;
