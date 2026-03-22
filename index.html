@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>제주도 부동산 매물 지도 - Kakao Map</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      background: #f5f7fa;
+      color: #222;
+    }
+
+    body {
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .app {
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      height: 100vh;
+    }
+
+    .sidebar {
+      background: #0f2942;
+      color: #fff;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .sidebar h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+      line-height: 1.3;
+    }
+
+    .sidebar p {
+      margin: 0 0 20px;
+      font-size: 14px;
+      line-height: 1.6;
+      color: rgba(255,255,255,0.85);
+    }
+
+    .search-box {
+      margin-bottom: 16px;
+    }
+
+    .search-box input,
+    .search-box select {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 12px 14px;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .property-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .card {
+      background: #fff;
+      color: #222;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.2s ease;
+    }
+
+    .card:hover,
+    .card.active {
+      border-color: #18c1a3;
+      transform: translateY(-1px);
+    }
+
+    .thumb {
+      height: 150px;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+
+    .badge {
+      position: absolute;
+      left: 12px;
+      top: 12px;
+      background: rgba(0,0,0,0.75);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 10px;
+      border-radius: 999px;
+    }
+
+    .card-body {
+      padding: 14px;
+    }
+
+    .title {
+      font-size: 17px;
+      font-weight: 800;
+      margin: 0 0 8px;
+      line-height: 1.4;
+    }
+
+    .price {
+      font-size: 20px;
+      font-weight: 900;
+      color: #0d7b68;
+      margin-bottom: 8px;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .meta span {
+      background: #eef3f7;
+      color: #4c6275;
+      font-size: 12px;
+      font-weight: 700;
+      border-radius: 999px;
+      padding: 6px 10px;
+    }
+
+    .desc {
+      font-size: 13px;
+      line-height: 1.6;
+      color: #5c6c7c;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .btn {
+      flex: 1;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      text-decoration: none;
+      border: 0;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .btn-map {
+      background: #0f2942;
+      color: #fff;
+    }
+
+    .btn-call {
+      background: #eef3f7;
+      color: #203040;
+    }
+
+    .map-wrap {
+      position: relative;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    #map {
+      width: 100%;
+      height: 100vh;
+    }
+
+    .custom-overlay {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.18);
+      width: 270px;
+      padding: 16px;
+      border: 1px solid rgba(0,0,0,0.08);
+      position: relative;
+    }
+
+    .custom-overlay .close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 28px;
+      height: 28px;
+      border: 0;
+      border-radius: 50%;
+      background: #eef3f7;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .custom-overlay h3 {
+      margin: 0 28px 8px 0;
+      font-size: 16px;
+      line-height: 1.4;
+      color: #122033;
+    }
+
+    .custom-overlay .overlay-price {
+      font-size: 14px;
+      font-weight: 900;
+      color: #0d7b68;
+      margin-bottom: 8px;
+    }
+
+    .custom-overlay p {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.6;
+      color: #5c6c7c;
+    }
+
+    .custom-overlay .overlay-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .custom-overlay .overlay-btn {
+      flex: 1;
+      text-decoration: none;
+      text-align: center;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 12px;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .overlay-primary {
+      background: #0f2942;
+      color: #fff;
+    }
+
+    .overlay-secondary {
+      background: #eef3f7;
+      color: #203040;
+    }
+
+    @media (max-width: 980px) {
+      body {
+        height: auto;
+        overflow: auto;
+      }
+
+      .app {
+        grid-template-columns: 1fr;
+        height: auto;
+      }
+
+      .sidebar {
+        overflow: visible;
+      }
+
+      .map-wrap,
+      #map {
+        height: 70vh;
+        min-height: 500px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <h1>제주도 부동산<br>카카오맵 매물 지도</h1>
+      <p>왼쪽 카드에서 지도보기를 누르면 오른쪽 카카오맵으로 이동합니다.</p>
+
+      <div class="search-box">
+        <input type="text" id="keyword" placeholder="지역명, 주소, 키워드 검색">
+        <select id="dealFilter">
+          <option value="all">거래유형 전체</option>
+          <option value="매매">매매</option>
+          <option value="전세">전세</option>
+          <option value="월세">월세</option>
+          <option value="년세">년세</option>
+        </select>
+      </div>
+
+      <div class="property-list" id="propertyList"></div>
+    </aside>
+
+    <main class="map-wrap">
+      <div id="map"></div>
+    </main>
+  </div>
+
+  <!-- 카카오맵 JavaScript 키 넣기 -->
+  <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=b7db2d3c35122f3ec33c88ea6d3195fb"></script>
+
+  <script>
+    const properties = [
+      {
+        id: 1,
+        title: "영어교육도시 푸르지오 더퍼스트",
+        dealType: "매매",
+        price: "8억 5,000",
+        area: "84㎡",
+        address: "제주 서귀포시 대정읍",
+        region: "영어교육도시",
+        desc: "학군과 생활 인프라가 좋은 실거주 추천 아파트",
+        lat: 33.2895,
+        lng: 126.2862,
+        phone: "064-794-1111",
+        image: "https://images.unsplash.com/photo-1460317442991-0ec209397118?auto=format&fit=crop&w=1200&q=80",
+        link: "#"
+      },
+      {
+        id: 2,
+        title: "애월 오션뷰 단독주택",
+        dealType: "매매",
+        price: "12억",
+        area: "132㎡",
+        address: "제주 제주시 애월읍",
+        region: "애월",
+        desc: "넓은 마당과 바다 조망이 좋은 프리미엄 단독주택",
+        lat: 33.4631,
+        lng: 126.3093,
+        phone: "064-794-1111",
+        image: "https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=1200&q=80",
+        link: "#"
+      },
+      {
+        id: 3,
+        title: "제주시 노형동 수익형 원룸",
+        dealType: "월세",
+        price: "보증금 500 / 월 55",
+        area: "26㎡",
+        address: "제주 제주시 노형동",
+        region: "제주시",
+        desc: "공실 부담이 적은 도심권 수익형 원룸",
+        lat: 33.4858,
+        lng: 126.4799,
+        phone: "064-794-1111",
+        image: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80",
+        link: "#"
+      }
+    ];
+
+    const state = {
+      map: null,
+      markers: [],
+      overlays: [],
+      activeOverlay: null,
+      filtered: [...properties]
+    };
+
+    const propertyList = document.getElementById("propertyList");
+    const keywordInput = document.getElementById("keyword");
+    const dealFilter = document.getElementById("dealFilter");
+
+    function escapeHtml(str) {
+      return String(str ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function getMarkerColor(dealType) {
+      if (dealType === "월세" || dealType === "년세") return "#f97316";
+      return "#0ea5e9";
+    }
+
+    function createMarkerImage(item) {
+      const color = getMarkerColor(item.dealType);
+      const svg = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="48" viewBox="0 0 36 48">
+          <path d="M18 0C8.06 0 0 8.06 0 18c0 12.95 18 30 18 30s18-17.05 18-30C36 8.06 27.94 0 18 0z" fill="${color}"/>
+          <circle cx="18" cy="18" r="8" fill="white"/>
+        </svg>
+      `;
+      return new kakao.maps.MarkerImage(
+        "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg),
+        new kakao.maps.Size(36, 48),
+        { offset: new kakao.maps.Point(18, 48) }
+      );
+    }
+
+    function initMap() {
+      const mapContainer = document.getElementById("map");
+      const mapOption = {
+        center: new kakao.maps.LatLng(33.38, 126.55),
+        level: 9
+      };
+      state.map = new kakao.maps.Map(mapContainer, mapOption);
+
+      kakao.maps.event.addListener(state.map, "click", function () {
+        closeOverlay();
+      });
+    }
+
+    function closeOverlay() {
+      if (state.activeOverlay) {
+        state.activeOverlay.setMap(null);
+        state.activeOverlay = null;
+      }
+    }
+
+    function clearMapObjects() {
+      state.markers.forEach(marker => marker.setMap(null));
+      state.overlays.forEach(overlay => overlay.setMap(null));
+      state.markers = [];
+      state.overlays = [];
+      state.activeOverlay = null;
+    }
+
+    function createOverlayContent(item) {
+      const wrap = document.createElement("div");
+      wrap.innerHTML = `
+        <div class="custom-overlay">
+          <button class="close" type="button">✕</button>
+          <h3>${escapeHtml(item.title)}</h3>
+          <div class="overlay-price">${escapeHtml(item.dealType)} · ${escapeHtml(item.price)}</div>
+          <p>${escapeHtml(item.address)}<br>${escapeHtml(item.area)}<br>${escapeHtml(item.desc)}</p>
+          <div class="overlay-actions">
+            <a class="overlay-btn overlay-primary" href="${escapeHtml(item.link)}" target="_blank">상세보기</a>
+            <a class="overlay-btn overlay-secondary" href="tel:${item.phone.replace(/[^0-9]/g, "")}">문의</a>
+          </div>
+        </div>
+      `;
+      return wrap.firstElementChild;
+    }
+
+    function renderMarkers(data) {
+      clearMapObjects();
+      if (!data.length) return;
+
+      const bounds = new kakao.maps.LatLngBounds();
+
+      data.forEach(item => {
+        const position = new kakao.maps.LatLng(item.lat, item.lng);
+
+        const marker = new kakao.maps.Marker({
+          map: state.map,
+          position,
+          image: createMarkerImage(item),
+          clickable: true
+        });
+
+        const contentNode = createOverlayContent(item);
+
+        const overlay = new kakao.maps.CustomOverlay({
+          position,
+          content: contentNode,
+          yAnchor: 1.15
+        });
+
+        contentNode.querySelector(".close").addEventListener("click", function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          overlay.setMap(null);
+          if (state.activeOverlay === overlay) {
+            state.activeOverlay = null;
+          }
+        });
+
+        kakao.maps.event.addListener(marker, "click", function () {
+          closeOverlay();
+          overlay.setMap(state.map);
+          state.activeOverlay = overlay;
+          state.map.panTo(position);
+          highlightCard(item.id);
+        });
+
+        state.markers.push(marker);
+        state.overlays.push(overlay);
+        bounds.extend(position);
+      });
+
+      if (data.length === 1) {
+        state.map.setCenter(new kakao.maps.LatLng(data[0].lat, data[0].lng));
+        state.map.setLevel(4);
+      } else {
+        state.map.setBounds(bounds);
+      }
+    }
+
+    function highlightCard(id) {
+      document.querySelectorAll(".card").forEach(card => {
+        card.classList.toggle("active", Number(card.dataset.id) === id);
+      });
+    }
+
+    function focusProperty(id) {
+      const item = state.filtered.find(v => v.id === id);
+      if (!item) return;
+
+      const position = new kakao.maps.LatLng(item.lat, item.lng);
+      state.map.panTo(position);
+      state.map.setLevel(4);
+
+      const overlay = state.overlays[state.filtered.findIndex(v => v.id === id)];
+      if (overlay) {
+        closeOverlay();
+        overlay.setMap(state.map);
+        state.activeOverlay = overlay;
+      }
+
+      highlightCard(id);
+    }
+
+    function renderList(data) {
+      if (!data.length) {
+        propertyList.innerHTML = `
+          <div class="card" style="padding:18px; cursor:default;">
+            <div class="card-body" style="padding:0;">
+              <h3 class="title" style="margin-bottom:6px;">표시할 매물이 없습니다</h3>
+              <div class="desc">검색 조건을 바꿔보세요.</div>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      propertyList.innerHTML = data.map(item => `
+        <article class="card" data-id="${item.id}">
+          <div class="thumb" style="background-image:url('${item.image}')">
+            <div class="badge">${escapeHtml(item.dealType)}</div>
+          </div>
+          <div class="card-body">
+            <h3 class="title">${escapeHtml(item.title)}</h3>
+            <div class="price">${escapeHtml(item.price)}</div>
+            <div class="meta">
+              <span>${escapeHtml(item.region)}</span>
+              <span>${escapeHtml(item.area)}</span>
+            </div>
+            <div class="desc">${escapeHtml(item.address)}<br>${escapeHtml(item.desc)}</div>
+            <div class="actions">
+              <button class="btn btn-map" data-id="${item.id}" type="button">지도보기</button>
+              <a class="btn btn-call" href="tel:${item.phone.replace(/[^0-9]/g, "")}">${escapeHtml(item.phone)}</a>
+            </div>
+          </div>
+        </article>
+      `).join("");
+
+      document.querySelectorAll(".card").forEach(card => {
+        card.addEventListener("click", function (e) {
+          if (e.target.closest("a, button")) return;
+          focusProperty(Number(card.dataset.id));
+        });
+      });
+
+      document.querySelectorAll(".btn-map").forEach(btn => {
+        btn.addEventListener("click", function (e) {
+          e.stopPropagation();
+          focusProperty(Number(btn.dataset.id));
+        });
+      });
+    }
+
+    function applyFilter() {
+      const keyword = keywordInput.value.trim().toLowerCase();
+      const dealType = dealFilter.value;
+
+      state.filtered = properties.filter(item => {
+        const text = [
+          item.title,
+          item.region,
+          item.address,
+          item.desc
+        ].join(" ").toLowerCase();
+
+        const okKeyword = !keyword || text.includes(keyword);
+        const okDeal = dealType === "all" || item.dealType === dealType;
+
+        return okKeyword && okDeal;
+      });
+
+      renderList(state.filtered);
+      renderMarkers(state.filtered);
+    }
+
+    function initEvents() {
+      keywordInput.addEventListener("input", applyFilter);
+      dealFilter.addEventListener("change", applyFilter);
+    }
+
+    function bootstrap() {
+      if (!window.kakao || !window.kakao.maps) {
+        alert("카카오맵 SDK가 로드되지 않았습니다. appkey를 확인하세요.");
+        return;
+      }
+
+      initMap();
+      initEvents();
+      applyFilter();
+    }
+
+    bootstrap();
+  </script>
+</body>
+</html>
