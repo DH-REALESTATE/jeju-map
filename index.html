@@ -288,14 +288,6 @@
 
       <div class="search-box">
         <input type="text" id="keyword" placeholder="지역명, 주소, 키워드 검색">
-        <select id="dealFilter">
-          <option value="all">거래유형 전체</option>
-          <option value="매매">매매</option>
-          <option value="전세">전세</option>
-          <option value="년세">년세</option>
-          <option value="월세">월세</option>
-        </select>
-
         <select id="typeFilter">
           <option value="all">매물유형 전체</option>
           <option value="단독">단독주택</option>
@@ -304,6 +296,13 @@
           <option value="원룸">원룸ㆍ투룸</option>
           <option value="상가">상가ㆍ사무실ㆍ공장</option>
           <option value="토지">토지ㆍ임야</option>
+        </select>
+        <select id="dealFilter">
+          <option value="all">거래유형 전체</option>
+          <option value="매매">매매</option>
+          <option value="전세">전세</option>
+          <option value="년세">년세</option>
+          <option value="월세">월세</option>
         </select>
       </div>
       
@@ -330,6 +329,7 @@
     
     const propertyList = document.getElementById("propertyList");
     const keywordInput = document.getElementById("keyword");
+    const typeFilter = document.getElementById("typeFilter");
     const dealFilter = document.getElementById("dealFilter");
 
     // JSON 파일 로딩
@@ -550,20 +550,33 @@
 
     function applyFilter() {
       const keyword = keywordInput.value.trim().toLowerCase();
+      const typeValue = typeFilter.value;
       const dealType = dealFilter.value;
 
       state.filtered = state.all.filter(item => {
         const text = [
-          item.title,
-          item.region,
-          item.address,
-          item.desc
+          item.title ?? "",
+          item.region ?? "",
+          item.address ?? "",
+          item.desc ?? "",
+          item.type ?? ""
         ].join(" ").toLowerCase();
 
         const okKeyword = !keyword || text.includes(keyword);
         const okDeal = dealType === "all" || item.dealType === dealType;
-
-        return okKeyword && okDeal;
+    
+        const itemType = (item.type ?? "").trim();
+    
+        const okType =
+          typeValue === "all" ||
+          (typeValue === "단독" && ["단독", "단독주택"].includes(itemType)) ||
+          (typeValue === "아파트" && ["아파트", "빌라"].includes(itemType)) ||
+          (typeValue === "다가구" && ["다가구", "다세대", "다가구ㆍ다세대", "다세대주택"].includes(itemType)) ||
+          (typeValue === "원룸" && ["원룸", "투룸", "원룸ㆍ투룸"].includes(itemType)) ||
+          (typeValue === "상가" && ["상가", "사무실", "공장", "상가ㆍ사무실ㆍ공장"].includes(itemType)) ||
+          (typeValue === "토지" && ["토지", "임야", "토지ㆍ임야"].includes(itemType));
+    
+        return okKeyword && okDeal && okType;
       });
 
       renderList(state.filtered);
@@ -572,6 +585,7 @@
 
     function initEvents() {
       keywordInput.addEventListener("input", applyFilter);
+      typeFilter.addEventListener("change", applyFilter);
       dealFilter.addEventListener("change", applyFilter);
     }
 
