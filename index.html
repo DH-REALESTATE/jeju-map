@@ -25,16 +25,12 @@
       display: grid;
       grid-template-columns: 380px 1fr;
       height: 100vh;
-      gap: 0;
+      gap: 0 !important;
     }
-
+    
     .sidebar {
-      background: #0f2942;
-      color: #fff;
-      overflow-y: auto;
-      min-height: 0;
-      border-right: none;
-      box-shadow: none;
+      border-right: none !important;
+      box-shadow: none !important;
     }
 
     .filter-sticky {
@@ -228,9 +224,8 @@
     }
 
     .map-wrap {
-      position: relative;
-      height: 100vh;
-      overflow: hidden;
+      border-left: none !important;
+      box-shadow: none !important;
     }
 
     #map {
@@ -468,8 +463,6 @@
           <button type="button" data-value="토지">토지ㆍ임야</button>
         </div>
       </div>
-
-      <button id="roadviewToggle" class="roadview-toggle" type="button">로드뷰</button>
     </main>
   </div>
 
