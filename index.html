@@ -25,10 +25,17 @@
       display: grid;
       grid-template-columns: 380px 1fr;
       height: 100vh;
-      gap: 0 !important;
+      gap: 0;
     }
-    
+
     .sidebar {
+      background: #0f2942;
+      color: #fff;
+      min-height: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
       border-right: none !important;
       box-shadow: none !important;
     }
@@ -38,6 +45,7 @@
       background: #0f2942;
       padding: 20px 20px 12px;
       box-shadow: none;
+      flex: 0 0 auto;
     }
 
     .sidebar h1 {
@@ -104,6 +112,14 @@
       padding: 0 20px 12px;
       font-size: 13px;
       color: rgba(255,255,255,0.82);
+      flex: 0 0 auto;
+    }
+
+    .property-scroll-area {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      overflow-x: hidden;
     }
 
     .property-list {
@@ -224,6 +240,9 @@
     }
 
     .map-wrap {
+      position: relative;
+      height: 100vh;
+      overflow: hidden;
       border-left: none !important;
       box-shadow: none !important;
     }
@@ -246,7 +265,7 @@
       border-radius: 12px;
       box-shadow: 0 6px 20px rgba(0,0,0,0.15);
       backdrop-filter: blur(6px);
-      max-width: calc(100% - 180px);
+      max-width: calc(100% - 20px);
     }
 
     .deal-buttons,
@@ -259,29 +278,6 @@
     .map-filter-bar button {
       font-size: 12px;
       padding: 6px 10px;
-    }
-
-    .roadview-toggle {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      z-index: 30;
-      border: 1px solid #cfcfcf;
-      background: #fff;
-      color: #222;
-      height: 32px;
-      padding: 0 14px;
-      border-radius: 3px;
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.12);
-    }
-
-    .roadview-toggle.active {
-      background: #0f2942;
-      color: #fff;
-      border-color: #0f2942;
     }
 
     .custom-overlay {
@@ -401,12 +397,18 @@
       }
 
       .sidebar {
-        overflow: visible;
+        overflow: hidden;
+        height: auto;
       }
 
       .filter-sticky {
         position: static;
         top: auto;
+      }
+
+      .property-scroll-area {
+        flex: none;
+        overflow: visible;
       }
 
       .map-wrap,
@@ -417,7 +419,6 @@
 
       .map-filter-bar {
         max-width: calc(100% - 20px);
-        right: 10px;
       }
     }
   </style>
@@ -438,7 +439,10 @@
       </div>
 
       <div class="property-summary" id="propertySummary">매물 불러오는 중...</div>
-      <div class="property-list" id="propertyList"></div>
+
+      <div class="property-scroll-area">
+        <div class="property-list" id="propertyList"></div>
+      </div>
     </aside>
 
     <main class="map-wrap">
@@ -699,7 +703,6 @@
 
       closeBtn.addEventListener("click", () => {
         roadviewContainer.style.display = "none";
-        roadviewToggle.classList.remove("active");
       });
 
       roadviewContainer.appendChild(closeBtn);
@@ -723,7 +726,6 @@
 
         roadview.setPanoId(panoId, position);
         roadviewOverlay.style.display = "block";
-        roadviewToggle.classList.add("active");
       });
     }
 
