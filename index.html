@@ -189,6 +189,49 @@
       height: 100vh;
     }
 
+    .map-filter-bar {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 30;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      background: rgba(255,255,255,0.95);
+      padding: 10px;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+      backdrop-filter: blur(6px);
+      max-width: calc(100% - 20px);
+    }
+
+    .deal-buttons,
+    .type-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .deal-buttons button,
+    .type-buttons button {
+      border: none;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      background: #eef3f7;
+      color: #203040;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .deal-buttons button.active,
+    .type-buttons button.active {
+      background: #18c1a3;
+      color: #fff;
+    }
+
     .custom-overlay {
       background: #fff;
       border-radius: 16px;
@@ -200,7 +243,7 @@
       position: relative;
       overflow: hidden;
     }
-    
+
     .custom-overlay .close {
       position: absolute;
       top: 10px;
@@ -213,7 +256,7 @@
       cursor: pointer;
       font-size: 14px;
     }
-    
+
     .custom-overlay h3 {
       margin: 0 28px 8px 0;
       font-size: 16px;
@@ -222,7 +265,7 @@
       word-break: keep-all;
       overflow-wrap: break-word;
     }
-    
+
     .custom-overlay .overlay-price {
       font-size: 14px;
       font-weight: 900;
@@ -231,7 +274,7 @@
       word-break: keep-all;
       overflow-wrap: break-word;
     }
-    
+
     .custom-overlay p {
       margin: 0;
       font-size: 13px;
@@ -242,7 +285,7 @@
       white-space: normal;
       max-width: 100%;
     }
-    
+
     .overlay-features {
       display: flex;
       flex-wrap: wrap;
@@ -250,7 +293,7 @@
       margin-top: 10px;
       max-width: 100%;
     }
-    
+
     .overlay-features span {
       background: #e7fbf5;
       color: #0d7b68;
@@ -262,13 +305,13 @@
       word-break: keep-all;
       overflow-wrap: break-word;
     }
-    
+
     .custom-overlay .overlay-actions {
       display: flex;
       gap: 8px;
       margin-top: 12px;
     }
-    
+
     .custom-overlay .overlay-btn {
       flex: 1;
       text-decoration: none;
@@ -312,6 +355,10 @@
         height: 70vh;
         min-height: 500px;
       }
+
+      .map-filter-bar {
+        max-width: calc(100% - 20px);
+      }
     }
   </style>
 </head>
@@ -323,24 +370,6 @@
 
       <div class="search-box">
         <input type="text" id="keyword" placeholder="지역명, 주소, 키워드 검색">
-
-        <select id="typeFilter">
-          <option value="all">매물유형 전체</option>
-          <option value="단독">단독주택</option>
-          <option value="다가구">다가구ㆍ다세대</option>
-          <option value="원룸">원룸ㆍ투룸</option>
-          <option value="아파트">아파트ㆍ빌라</option>
-          <option value="상가">상가ㆍ사무실</option>
-          <option value="토지">토지ㆍ임야</option>
-        </select>
-        
-        <select id="dealFilter">
-          <option value="all">거래유형 전체</option>
-          <option value="매매">매매</option>
-          <option value="전세">전세</option>
-          <option value="월세">월세</option>
-          <option value="년세">년세</option>
-        </select>
 
         <select id="featureFilter">
           <option value="all">특징 전체</option>
@@ -357,6 +386,26 @@
 
     <main class="map-wrap">
       <div id="map"></div>
+
+      <div class="map-filter-bar">
+        <div class="deal-buttons" id="dealButtons">
+          <button type="button" data-value="all" class="active">전체</button>
+          <button type="button" data-value="매매">매매</button>
+          <button type="button" data-value="전세">전세</button>
+          <button type="button" data-value="월세">월세</button>
+          <button type="button" data-value="년세">년세</button>
+        </div>
+
+        <div class="type-buttons" id="typeButtons">
+          <button type="button" data-value="all" class="active">전체</button>
+          <button type="button" data-value="단독">단독주택</button>
+          <button type="button" data-value="다가구">다가구ㆍ다세대</button>
+          <button type="button" data-value="원룸">원룸ㆍ투룸</button>
+          <button type="button" data-value="아파트">아파트ㆍ빌라</button>
+          <button type="button" data-value="상가">상가ㆍ사무실</button>
+          <button type="button" data-value="토지">토지ㆍ임야</button>
+        </div>
+      </div>
     </main>
   </div>
 
@@ -372,11 +421,14 @@
       filtered: []
     };
 
+    let selectedDeal = "all";
+    let selectedType = "all";
+
     const propertyList = document.getElementById("propertyList");
     const keywordInput = document.getElementById("keyword");
-    const dealFilter = document.getElementById("dealFilter");
-    const typeFilter = document.getElementById("typeFilter");
     const featureFilter = document.getElementById("featureFilter");
+    const dealButtons = document.querySelectorAll("#dealButtons button");
+    const typeButtons = document.querySelectorAll("#typeButtons button");
 
     function escapeHtml(str) {
       return String(str ?? "")
@@ -459,20 +511,18 @@
         center: new kakao.maps.LatLng(33.38, 126.55),
         level: 9
       };
-    
+
       state.map = new kakao.maps.Map(mapContainer, mapOption);
-    
-      // 처음부터 스카이뷰로 시작
-      state.map.setMapTypeId(kakao.maps.MapTypeId.SKYVIEW);
-    
-      // 오른쪽 위에 일반지도 / 스카이뷰 전환 버튼 추가
+
+      // ✅ 기본 지도
+      state.map.setMapTypeId(kakao.maps.MapTypeId.ROADMAP);
+
       const mapTypeControl = new kakao.maps.MapTypeControl();
       state.map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
-    
-      // 줌 버튼도 같이 추가
+
       const zoomControl = new kakao.maps.ZoomControl();
       state.map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
-    
+
       kakao.maps.event.addListener(state.map, "click", function () {
         closeOverlay();
       });
@@ -672,8 +722,8 @@
 
     function applyFilter() {
       const keyword = keywordInput.value.trim().toLowerCase();
-      const dealValue = dealFilter.value;
-      const typeValue = typeFilter.value;
+      const dealValue = selectedDeal;
+      const typeValue = selectedType;
       const featureValue = featureFilter.value;
 
       state.filtered = state.all.filter(item => {
@@ -713,9 +763,25 @@
 
     function initEvents() {
       keywordInput.addEventListener("input", applyFilter);
-      dealFilter.addEventListener("change", applyFilter);
-      typeFilter.addEventListener("change", applyFilter);
       featureFilter.addEventListener("change", applyFilter);
+
+      dealButtons.forEach(btn => {
+        btn.addEventListener("click", () => {
+          dealButtons.forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+          selectedDeal = btn.dataset.value;
+          applyFilter();
+        });
+      });
+
+      typeButtons.forEach(btn => {
+        btn.addEventListener("click", () => {
+          typeButtons.forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+          selectedType = btn.dataset.value;
+          applyFilter();
+        });
+      });
     }
 
     function bootstrap() {
