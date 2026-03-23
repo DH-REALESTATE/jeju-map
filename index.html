@@ -56,8 +56,7 @@
       color: rgba(255,255,255,0.85);
     }
 
-    .search-box input,
-    .search-box select {
+    .search-box input {
       width: 100%;
       margin-bottom: 10px;
       padding: 12px 14px;
@@ -71,16 +70,20 @@
       font-size: 12px;
       font-weight: 700;
       color: rgba(255,255,255,0.78);
-      margin: 4px 0 8px;
+      margin: 8px 0 8px;
     }
 
+    .deal-buttons,
+    .type-buttons,
     .feature-buttons {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
-      margin-top: 4px;
+      margin-bottom: 10px;
     }
 
+    .deal-buttons button,
+    .type-buttons button,
     .feature-buttons button {
       border: none;
       border-radius: 999px;
@@ -94,10 +97,14 @@
       white-space: nowrap;
     }
 
+    .deal-buttons button:hover,
+    .type-buttons button:hover,
     .feature-buttons button:hover {
-      transform: translateY(-1px);
+      transform: none;
     }
 
+    .deal-buttons button.active,
+    .type-buttons button.active,
     .feature-buttons button.active,
     .feature-buttons button.all-active {
       background: #18c1a3;
@@ -410,23 +417,25 @@
         <div class="search-box">
           <input type="text" id="keyword" placeholder="지역명, 주소, 키워드 검색">
 
-          <select id="dealFilter">
-            <option value="all">거래유형 전체</option>
-            <option value="매매">매매</option>
-            <option value="전세">전세</option>
-            <option value="월세">월세</option>
-            <option value="년세">년세</option>
-          </select>
+          <div class="filter-title">거래 유형</div>
+          <div class="deal-buttons" id="dealButtons">
+            <button type="button" data-value="all" class="active">전체</button>
+            <button type="button" data-value="매매">매매</button>
+            <button type="button" data-value="전세">전세</button>
+            <button type="button" data-value="월세">월세</button>
+            <button type="button" data-value="년세">년세</button>
+          </div>
 
-          <select id="typeFilter">
-            <option value="all">매물유형 전체</option>
-            <option value="단독">단독주택</option>
-            <option value="다가구">다가구ㆍ다세대</option>
-            <option value="원룸">원룸ㆍ투룸</option>
-            <option value="아파트">아파트ㆍ빌라</option>
-            <option value="상가">상가ㆍ사무실</option>
-            <option value="토지">토지ㆍ임야</option>
-          </select>
+          <div class="filter-title">매물 유형</div>
+          <div class="type-buttons" id="typeButtons">
+            <button type="button" data-value="all" class="active">전체</button>
+            <button type="button" data-value="단독">단독주택</button>
+            <button type="button" data-value="다가구">다가구ㆍ다세대</button>
+            <button type="button" data-value="원룸">원룸ㆍ투룸</button>
+            <button type="button" data-value="아파트">아파트ㆍ빌라</button>
+            <button type="button" data-value="상가">상가ㆍ사무실</button>
+            <button type="button" data-value="토지">토지ㆍ임야</button>
+          </div>
 
           <div class="filter-title">특징 태그</div>
           <div class="feature-buttons" id="featureButtons"></div>
@@ -461,14 +470,16 @@
     let roadview = null;
     let roadviewClient = null;
     let roadviewOverlay = null;
+    let selectedDeal = "all";
+    let selectedType = "all";
 
     const propertyList = document.getElementById("propertyList");
     const propertySummary = document.getElementById("propertySummary");
     const keywordInput = document.getElementById("keyword");
-    const dealFilter = document.getElementById("dealFilter");
-    const typeFilter = document.getElementById("typeFilter");
     const featureButtonsWrap = document.getElementById("featureButtons");
     const roadviewToggle = document.getElementById("roadviewToggle");
+    const dealButtons = document.querySelectorAll("#dealButtons button");
+    const typeButtons = document.querySelectorAll("#typeButtons button");
 
     function escapeHtml(str) {
       return String(str ?? "")
@@ -902,8 +913,8 @@
 
     function applyFilter() {
       const keyword = keywordInput.value.trim().toLowerCase();
-      const dealValue = dealFilter.value;
-      const typeValue = typeFilter.value;
+      const dealValue = selectedDeal;
+      const typeValue = selectedType;
 
       state.filtered = state.all.filter(item => {
         const text = [
@@ -944,8 +955,24 @@
 
     function initEvents() {
       keywordInput.addEventListener("input", applyFilter);
-      dealFilter.addEventListener("change", applyFilter);
-      typeFilter.addEventListener("change", applyFilter);
+
+      dealButtons.forEach(btn => {
+        btn.addEventListener("click", () => {
+          dealButtons.forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+          selectedDeal = btn.dataset.value;
+          applyFilter();
+        });
+      });
+
+      typeButtons.forEach(btn => {
+        btn.addEventListener("click", () => {
+          typeButtons.forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+          selectedType = btn.dataset.value;
+          applyFilter();
+        });
+      });
 
       roadviewToggle.addEventListener("click", () => {
         if (!state.selectedProperty) {
