@@ -786,6 +786,20 @@
       const detailBtn = contentNode.querySelector(".btn-detail");
       const roadBtn = contentNode.querySelector(".btn-roadview");
 
+      [
+        "click",
+        "mousedown",
+        "mouseup",
+        "touchstart",
+        "touchend",
+        "pointerdown",
+        "pointerup"
+      ].forEach(eventName => {
+        contentNode.addEventListener(eventName, function (e) {
+          e.stopPropagation();
+        });
+      });
+
       if (detailBtn) {
         detailBtn.addEventListener("click", function (e) {
           e.preventDefault();
