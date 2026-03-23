@@ -498,7 +498,6 @@
     const propertySummary = document.getElementById("propertySummary");
     const keywordInput = document.getElementById("keyword");
     const featureButtonsWrap = document.getElementById("featureButtons");
-    const roadviewToggle = document.getElementById("roadviewToggle");
     const dealButtons = document.querySelectorAll("#dealButtons button");
     const typeButtons = document.querySelectorAll("#typeButtons button");
 
@@ -808,7 +807,7 @@
           const link = item.link;
 
           if (link && link !== "#") {
-            window.location.href = link;
+            window.open(link, "_blank", "noopener,noreferrer");
           } else {
             alert("상세페이지 링크가 없습니다.");
           }
@@ -1046,15 +1045,6 @@
           selectedType = btn.dataset.value;
           applyFilter();
         });
-      });
-
-      roadviewToggle.addEventListener("click", () => {
-        if (!state.selectedProperty) {
-          alert("먼저 매물을 선택해 주세요.");
-          return;
-        }
-
-        showRoadview(state.selectedProperty.lat, state.selectedProperty.lng);
       });
     }
 
