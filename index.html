@@ -758,7 +758,7 @@
       const featuresHtml = (item.features || [])
         .map(feature => `<span>${escapeHtml(feature)}</span>`)
         .join("");
-
+    
       wrap.innerHTML = `
         <div class="custom-overlay">
           <button class="close" type="button">✕</button>
@@ -770,25 +770,42 @@
             ${escapeHtml(item.desc)}
           </p>
           ${featuresHtml ? `<div class="overlay-features">${featuresHtml}</div>` : ""}
-
           <div class="overlay-actions">
-          <a class="overlay-btn overlay-primary"
-             href="${escapeHtml(item.link)}"
-             target="_blank"
-             rel="noopener noreferrer">
-             상세보기
-          </a>
-        
-          <button class="overlay-btn overlay-secondary btn-roadview"
-                  data-lat="${item.lat}"
-                  data-lng="${item.lng}">
-             로드뷰
-          </button>
+            <a class="overlay-btn overlay-primary"
+               href="${escapeHtml(item.link)}"
+               target="_blank"
+               rel="noopener noreferrer">
+               상세보기
+            </a>
+    
+            <button class="overlay-btn overlay-secondary btn-roadview"
+                    type="button"
+                    data-lat="${item.lat}"
+                    data-lng="${item.lng}">
+               로드뷰
+            </button>
+          </div>
         </div>
       `;
-      return wrap.firstElementChild;
+    
+      const contentNode = wrap.firstElementChild;
+      const roadBtn = contentNode.querySelector(".btn-roadview");
+    
+      if (roadBtn) {
+        roadBtn.addEventListener("click", function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+    
+          const lat = parseFloat(this.dataset.lat);
+          const lng = parseFloat(this.dataset.lng);
+    
+          showRoadview(lat, lng);
+        });
+      }
+    
+      return contentNode;
     }
-
+    
     function highlightCard(id) {
       document.querySelectorAll(".card").forEach(card => {
         card.classList.toggle("active", Number(card.dataset.id) === id);
@@ -836,7 +853,7 @@
           content: contentNode,
           yAnchor: 1.15
         });
-
+        
         const closeBtn = contentNode.querySelector(".close");
         closeBtn.addEventListener("click", function (e) {
           e.preventDefault();
