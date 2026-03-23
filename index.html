@@ -23,10 +23,9 @@
 
     .app {
       display: grid;
-      /* 왼쪽 영역 폭 설정 */
-      grid-template-columns: 320px 1fr;
+      grid-template-columns: 380px 1fr;
       height: 100vh;
-      gap: 0;   /* 이거 중요 - 슬라이드 바 없는 것 처럼 보이게 */
+      gap: 0;
     }
 
     .sidebar {
@@ -34,9 +33,8 @@
       color: #fff;
       overflow-y: auto;
       min-height: 0;
-    
-      border-right: none !important;
-      box-shadow: none !important;
+      border-right: none;
+      box-shadow: none;
     }
 
     .filter-sticky {
@@ -382,6 +380,8 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      border: 0;
+      cursor: pointer;
     }
 
     .overlay-primary {
@@ -398,35 +398,33 @@
       body {
         height: auto;
         overflow: auto;
-    }
+      }
 
-    .app {
-      display: grid;
-      grid-template-columns: 380px 1fr;
-      height: 100vh;
-      gap: 0;
-    }
+      .app {
+        grid-template-columns: 1fr;
+        height: auto;
+      }
 
-    .sidebar {
-      overflow: visible;
-    }
+      .sidebar {
+        overflow: visible;
+      }
 
-    .filter-sticky {
-      position: sticky;
-      top: 0;
-    }
+      .filter-sticky {
+        position: static;
+        top: auto;
+      }
 
-    .map-wrap,
-    #map {
-      height: 70vh;
-      min-height: 500px;
-    }
+      .map-wrap,
+      #map {
+        height: 70vh;
+        min-height: 500px;
+      }
 
-    .map-filter-bar {
-      max-width: calc(100% - 20px);
-      right: 10px;
+      .map-filter-bar {
+        max-width: calc(100% - 20px);
+        right: 10px;
+      }
     }
-  }
   </style>
 </head>
 <body>
@@ -459,7 +457,7 @@
           <button type="button" data-value="월세">월세</button>
           <button type="button" data-value="년세">년세</button>
         </div>
-        
+
         <div class="type-buttons" id="typeButtons">
           <button type="button" data-value="all" class="active">전체</button>
           <button type="button" data-value="단독">단독주택</button>
@@ -752,12 +750,12 @@
       state.activeOverlay = null;
     }
 
-   function createOverlayContent(item) {
+    function createOverlayContent(item) {
       const wrap = document.createElement("div");
       const featuresHtml = (item.features || [])
         .map(feature => `<span>${escapeHtml(feature)}</span>`)
         .join("");
-    
+
       wrap.innerHTML = `
         <div class="custom-overlay">
           <button class="close" type="button">✕</button>
@@ -773,7 +771,7 @@
             <button class="overlay-btn overlay-primary btn-detail" type="button">
               상세보기
             </button>
-    
+
             <button class="overlay-btn overlay-secondary btn-roadview"
                     type="button"
                     data-lat="${item.lat}"
@@ -783,18 +781,18 @@
           </div>
         </div>
       `;
-    
+
       const contentNode = wrap.firstElementChild;
       const detailBtn = contentNode.querySelector(".btn-detail");
       const roadBtn = contentNode.querySelector(".btn-roadview");
-    
+
       if (detailBtn) {
         detailBtn.addEventListener("click", function (e) {
           e.preventDefault();
           e.stopPropagation();
-    
+
           const link = item.link;
-    
+
           if (link && link !== "#") {
             window.location.href = link;
           } else {
@@ -802,22 +800,22 @@
           }
         });
       }
-    
+
       if (roadBtn) {
         roadBtn.addEventListener("click", function (e) {
           e.preventDefault();
           e.stopPropagation();
-    
+
           const lat = parseFloat(this.dataset.lat);
           const lng = parseFloat(this.dataset.lng);
-    
+
           showRoadview(lat, lng);
         });
       }
-    
+
       return contentNode;
     }
-    
+
     function highlightCard(id) {
       document.querySelectorAll(".card").forEach(card => {
         card.classList.toggle("active", Number(card.dataset.id) === id);
@@ -865,7 +863,7 @@
           content: contentNode,
           yAnchor: 1.15
         });
-        
+
         const closeBtn = contentNode.querySelector(".close");
         closeBtn.addEventListener("click", function (e) {
           e.preventDefault();
