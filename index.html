@@ -771,9 +771,10 @@
           </p>
           ${featuresHtml ? `<div class="overlay-features">${featuresHtml}</div>` : ""}
           <div class="overlay-actions">
-            <a class="overlay-btn overlay-primary" href="${escapeHtml(item.link)}" target="_blank" rel="noopener noreferrer">상세보기</a>
+            <a class="overlay-btn overlay-primary" href="${item.link}" target="_blank">상세보기</a>
             <a class="overlay-btn overlay-secondary" href="tel:${phoneLink}">문의</a>
           </div>
+
         </div>
       `;
       return wrap.firstElementChild;
