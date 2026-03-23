@@ -770,9 +770,7 @@
           </p>
           ${featuresHtml ? `<div class="overlay-features">${featuresHtml}</div>` : ""}
           <div class="overlay-actions">
-            <button class="overlay-btn overlay-primary btn-detail"
-                    type="button"
-                    data-link="${escapeHtml(item.link)}">
+            <button class="overlay-btn overlay-primary btn-detail" type="button">
               상세보기
             </button>
     
@@ -787,7 +785,6 @@
       `;
     
       const contentNode = wrap.firstElementChild;
-    
       const detailBtn = contentNode.querySelector(".btn-detail");
       const roadBtn = contentNode.querySelector(".btn-roadview");
     
@@ -796,9 +793,10 @@
           e.preventDefault();
           e.stopPropagation();
     
-          const link = this.dataset.link;
+          const link = item.link;
+    
           if (link && link !== "#") {
-            window.open(link, "_blank", "noopener,noreferrer");
+            window.location.href = link;
           } else {
             alert("상세페이지 링크가 없습니다.");
           }
