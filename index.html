@@ -752,9 +752,8 @@
       state.activeOverlay = null;
     }
 
-    function createOverlayContent(item) {
+   function createOverlayContent(item) {
       const wrap = document.createElement("div");
-      const phoneLink = String(item.phone || "").replace(/[^0-9]/g, "");
       const featuresHtml = (item.features || [])
         .map(feature => `<span>${escapeHtml(feature)}</span>`)
         .join("");
@@ -771,25 +770,40 @@
           </p>
           ${featuresHtml ? `<div class="overlay-features">${featuresHtml}</div>` : ""}
           <div class="overlay-actions">
-            <a class="overlay-btn overlay-primary"
-               href="${escapeHtml(item.link)}"
-               target="_blank"
-               rel="noopener noreferrer">
-               상세보기
-            </a>
+            <button class="overlay-btn overlay-primary btn-detail"
+                    type="button"
+                    data-link="${escapeHtml(item.link)}">
+              상세보기
+            </button>
     
             <button class="overlay-btn overlay-secondary btn-roadview"
                     type="button"
                     data-lat="${item.lat}"
                     data-lng="${item.lng}">
-               로드뷰
+              로드뷰
             </button>
           </div>
         </div>
       `;
     
       const contentNode = wrap.firstElementChild;
+    
+      const detailBtn = contentNode.querySelector(".btn-detail");
       const roadBtn = contentNode.querySelector(".btn-roadview");
+    
+      if (detailBtn) {
+        detailBtn.addEventListener("click", function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+    
+          const link = this.dataset.link;
+          if (link && link !== "#") {
+            window.open(link, "_blank", "noopener,noreferrer");
+          } else {
+            alert("상세페이지 링크가 없습니다.");
+          }
+        });
+      }
     
       if (roadBtn) {
         roadBtn.addEventListener("click", function (e) {
