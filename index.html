@@ -8,7 +8,7 @@
   <style>
     :root {
       --sidebar-width: 320px;
-      --resizer-hit-width: 14px;
+      --resizer-hit-width: 16px;
     }
 
     * { box-sizing: border-box; }
@@ -16,13 +16,13 @@
     html, body {
       margin: 0;
       padding: 0;
+      height: 100%;
       font-family: "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
       background: #f5f7fa;
       color: #222;
     }
 
     body {
-      height: 100vh;
       overflow: hidden;
     }
 
@@ -38,12 +38,15 @@
       background: #0f2942;
       color: #fff;
       padding: 20px;
+      height: 100vh;
       overflow-y: auto;
+      overflow-x: hidden;
       min-width: 260px;
       border-right: none !important;
       box-shadow: none !important;
     }
 
+    /* 안 보이지만 드래그는 되는 영역 */
     .resizer {
       position: absolute;
       top: 0;
@@ -51,26 +54,36 @@
       width: var(--resizer-hit-width);
       height: 100vh;
       background: transparent !important;
-      border: none !important;
+      border: 0 !important;
       box-shadow: none !important;
+      outline: none !important;
+      opacity: 0 !important;
       cursor: col-resize;
       user-select: none;
-      z-index: 100;
+      z-index: 999;
     }
 
     .resizer:hover,
-    .resizer:active {
+    .resizer:active,
+    .resizer:focus {
       background: transparent !important;
       box-shadow: none !important;
+      outline: none !important;
+      opacity: 0 !important;
     }
 
     .map-wrap {
       position: relative;
+      min-width: 0;
       height: 100vh;
       overflow: hidden;
       border-left: none !important;
       box-shadow: none !important;
-      min-width: 0;
+    }
+
+    #map {
+      width: 100%;
+      height: 100vh;
     }
 
     .sidebar h1 {
@@ -137,6 +150,7 @@
     .property-list {
       display: grid;
       gap: 12px;
+      padding-bottom: 20px;
     }
 
     .card {
@@ -248,11 +262,6 @@
     .btn-call {
       background: #eef3f7;
       color: #203040;
-    }
-
-    #map {
-      width: 100%;
-      height: 100vh;
     }
 
     .map-filter-bar {
@@ -429,7 +438,6 @@
       }
 
       body {
-        height: auto;
         overflow: auto;
       }
 
@@ -443,6 +451,7 @@
       }
 
       .sidebar {
+        height: auto;
         overflow: visible;
         min-width: 0;
       }
@@ -625,9 +634,7 @@
     }
 
     function hideRoadview() {
-      if (roadviewOverlay) {
-        roadviewOverlay.style.display = "none";
-      }
+      if (roadviewOverlay) roadviewOverlay.style.display = "none";
     }
 
     function initMap() {
@@ -1087,7 +1094,6 @@
         const min = 260;
         const max = 700;
         const nextWidth = Math.min(Math.max(e.clientX, min), max);
-
         document.documentElement.style.setProperty("--sidebar-width", `${nextWidth}px`);
       });
 
