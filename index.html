@@ -781,11 +781,11 @@
 
           if (mode === "sqm") {
             areaTextEl.textContent = areaInfo.pyeongText;
-            this.textContent = "㎡로";
+            this.textContent = "㎡";
             this.dataset.mode = "pyeong";
           } else {
             areaTextEl.textContent = areaInfo.original;
-            this.textContent = "평으로";
+            this.textContent = "평";
             this.dataset.mode = "sqm";
           }
         });
