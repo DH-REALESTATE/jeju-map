@@ -32,15 +32,15 @@
       color: #fff;
       overflow-y: auto;
       min-height: 0;
+      border-right: none;
+      box-shadow: none;
     }
 
     .filter-sticky {
-      position: sticky;
-      top: 0;
-      z-index: 30;
+      position: static;
       background: #0f2942;
       padding: 20px 20px 12px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+      box-shadow: none;
     }
 
     .sidebar h1 {
@@ -395,33 +395,35 @@
       body {
         height: auto;
         overflow: auto;
-      }
-
-      .app {
-        grid-template-columns: 1fr;
-        height: auto;
-      }
-
-      .sidebar {
-        overflow: visible;
-      }
-
-      .filter-sticky {
-        position: sticky;
-        top: 0;
-      }
-
-      .map-wrap,
-      #map {
-        height: 70vh;
-        min-height: 500px;
-      }
-
-      .map-filter-bar {
-        max-width: calc(100% - 20px);
-        right: 10px;
-      }
     }
+
+    .app {
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      height: 100vh;
+      gap: 0;
+    }
+
+    .sidebar {
+      overflow: visible;
+    }
+
+    .filter-sticky {
+      position: sticky;
+      top: 0;
+    }
+
+    .map-wrap,
+    #map {
+      height: 70vh;
+      min-height: 500px;
+    }
+
+    .map-filter-bar {
+      max-width: calc(100% - 20px);
+      right: 10px;
+    }
+  }
   </style>
 </head>
 <body>
