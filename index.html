@@ -8,7 +8,7 @@
   <style>
     :root {
       --sidebar-width: 320px;
-      --resizer-width: 10px;
+      --resizer-hit-width: 14px;
     }
 
     * { box-sizing: border-box; }
@@ -27,8 +27,9 @@
     }
 
     .app {
+      position: relative;
       display: grid;
-      grid-template-columns: var(--sidebar-width) var(--resizer-width) 1fr;
+      grid-template-columns: var(--sidebar-width) 1fr;
       height: 100vh;
       gap: 0;
     }
@@ -43,16 +44,18 @@
       box-shadow: none !important;
     }
 
-    /* 슬라이스 바는 안 보이지만 드래그는 가능 */
     .resizer {
-      width: var(--resizer-width);
+      position: absolute;
+      top: 0;
+      left: calc(var(--sidebar-width) - (var(--resizer-hit-width) / 2));
+      width: var(--resizer-hit-width);
+      height: 100vh;
       background: transparent !important;
       border: none !important;
       box-shadow: none !important;
       cursor: col-resize;
       user-select: none;
-      position: relative;
-      z-index: 40;
+      z-index: 100;
     }
 
     .resizer:hover,
@@ -422,7 +425,7 @@
     @media (max-width: 980px) {
       :root {
         --sidebar-width: 100%;
-        --resizer-width: 0px;
+        --resizer-hit-width: 0px;
       }
 
       body {
@@ -571,9 +574,6 @@
 
       return {
         original: areaText,
-        sqm,
-        sqmText: `${sqm}㎡`,
-        pyeong: (sqm / 3.3058).toFixed(1),
         pyeongText: `${(sqm / 3.3058).toFixed(1)}평`
       };
     }
@@ -624,6 +624,12 @@
       );
     }
 
+    function hideRoadview() {
+      if (roadviewOverlay) {
+        roadviewOverlay.style.display = "none";
+      }
+    }
+
     function initMap() {
       const mapContainer = document.getElementById("map");
       const mapOption = {
@@ -642,6 +648,7 @@
 
       kakao.maps.event.addListener(state.map, "click", function () {
         closeOverlay();
+        hideRoadview();
       });
     }
 
@@ -748,24 +755,14 @@
             ${escapeHtml(item.address)}<br>
             <span class="area-row">
               <span class="area-text">${escapeHtml(item.area)}</span>
-              <button class="area-toggle-btn" type="button" data-mode="sqm">
-                평으로
-              </button>
+              <button class="area-toggle-btn" type="button" data-mode="sqm">평으로</button>
             </span><br>
             ${escapeHtml(item.desc)}
           </p>
           ${featuresHtml ? `<div class="overlay-features">${featuresHtml}</div>` : ""}
           <div class="overlay-actions">
-            <button class="overlay-btn overlay-primary btn-detail" type="button">
-              상세보기
-            </button>
-
-            <button class="overlay-btn overlay-secondary btn-roadview"
-                    type="button"
-                    data-lat="${item.lat}"
-                    data-lng="${item.lng}">
-              로드뷰
-            </button>
+            <button class="overlay-btn overlay-primary btn-detail" type="button">상세보기</button>
+            <button class="overlay-btn overlay-secondary btn-roadview" type="button" data-lat="${item.lat}" data-lng="${item.lng}">로드뷰</button>
           </div>
         </div>
       `;
@@ -776,19 +773,12 @@
       const areaBtn = contentNode.querySelector(".area-toggle-btn");
       const areaTextEl = contentNode.querySelector(".area-text");
 
-      [
-        "click",
-        "mousedown",
-        "mouseup",
-        "touchstart",
-        "touchend",
-        "pointerdown",
-        "pointerup"
-      ].forEach(eventName => {
-        contentNode.addEventListener(eventName, function (e) {
-          e.stopPropagation();
+      ["click","mousedown","mouseup","touchstart","touchend","pointerdown","pointerup"]
+        .forEach(eventName => {
+          contentNode.addEventListener(eventName, function (e) {
+            e.stopPropagation();
+          });
         });
-      });
 
       if (detailBtn) {
         detailBtn.addEventListener("click", function (e) {
@@ -808,11 +798,7 @@
         roadBtn.addEventListener("click", function (e) {
           e.preventDefault();
           e.stopPropagation();
-
-          const lat = parseFloat(this.dataset.lat);
-          const lng = parseFloat(this.dataset.lng);
-
-          showRoadview(lat, lng);
+          showRoadview(parseFloat(this.dataset.lat), parseFloat(this.dataset.lng));
         });
       }
 
@@ -821,9 +807,7 @@
           e.preventDefault();
           e.stopPropagation();
 
-          const mode = this.dataset.mode;
-
-          if (mode === "sqm") {
+          if (this.dataset.mode === "sqm") {
             areaTextEl.textContent = areaInfo.pyeongText;
             this.textContent = "㎡로";
             this.dataset.mode = "pyeong";
@@ -855,7 +839,6 @@
 
     function moveMapToProperty(item, zoomLevel = 4) {
       if (!item || !state.map) return;
-
       const position = new kakao.maps.LatLng(item.lat, item.lng);
       state.map.setLevel(zoomLevel);
       state.map.setCenter(position);
@@ -891,12 +874,11 @@
           e.preventDefault();
           e.stopPropagation();
           overlay.setMap(null);
-          if (state.activeOverlay === overlay) {
-            state.activeOverlay = null;
-          }
+          if (state.activeOverlay === overlay) state.activeOverlay = null;
         });
 
         kakao.maps.event.addListener(marker, "click", function () {
+          hideRoadview();
           highlightCard(item.id);
           moveMapToProperty(item, 4);
 
@@ -923,6 +905,7 @@
       const item = state.filtered.find(v => v.id === id);
       if (!item || !state.map) return;
 
+      hideRoadview();
       highlightCard(id);
       moveMapToProperty(item, 4);
 
