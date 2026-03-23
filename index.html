@@ -953,8 +953,15 @@
                 <span>${escapeHtml(item.region || "-")}</span>
                 <span>${escapeHtml(item.area)}</span>
               </div>
-              ${featureHtml ? `<div class="meta">${featureHtml}</div>` : ""}
-              <div class="desc">${escapeHtml(item.address)}<br>${escapeHtml(item.desc)}</div>
+              
+              /* ${featureHtml ? `<div class="meta">${featureHtml}</div>` : ""} */
+
+              /* 왼쪽 카드 영역 설명 부분 */
+              <div class="desc">
+                ${escapeHtml(item.address)}<br>
+                /* ${escapeHtml(item.desc)} */
+              </div>
+              
               <div class="actions">
                 <button class="btn btn-map" data-id="${item.id}" type="button">지도보기</button>
                 <a class="btn btn-call" href="tel:${String(item.phone || "").replace(/[^0-9]/g, "")}">${escapeHtml(item.phone || "문의")}</a>
