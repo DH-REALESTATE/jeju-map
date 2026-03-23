@@ -6,11 +6,6 @@
   <title>제주도 부동산 매물 지도 - Kakao Map</title>
 
   <style>
-    :root {
-      --sidebar-width: 380px;
-      --resizer-width: 10px;
-    }
-
     * { box-sizing: border-box; }
 
     html, body {
@@ -28,55 +23,15 @@
 
     .app {
       display: grid;
-      grid-template-columns: var(--sidebar-width) var(--resizer-width) 1fr;
+      grid-template-columns: 320px 1fr;
       height: 100vh;
-      gap: 0;
     }
 
     .sidebar {
       background: #0f2942;
       color: #fff;
-      min-height: 0;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      border-right: none !important;
-      box-shadow: none !important;
-      min-width: 300px;
-    }
-
-    /* ✅ 슬라이드 바는 1개만 유지, 보이지 않게 */
-    .resizer {
-      width: var(--resizer-width);
-      height: 100vh;
-      background: transparent;
-      cursor: col-resize;
-      user-select: none;
-      position: relative;
-      z-index: 50;
-    }
-
-    .resizer::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: transparent;
-    }
-
-    /* ✅ 혹시 남아있는 예전 바 전부 숨김 */
-    .divider,
-    .splitter,
-    .handle {
-      display: none !important;
-    }
-
-    .filter-sticky {
-      position: static;
-      background: #0f2942;
-      padding: 20px 20px 12px;
-      box-shadow: none;
-      flex: 0 0 auto;
+      padding: 20px;
+      overflow-y: auto;
     }
 
     .sidebar h1 {
@@ -92,7 +47,12 @@
       color: rgba(255,255,255,0.85);
     }
 
-    .search-box input {
+    .search-box {
+      margin-bottom: 16px;
+    }
+
+    .search-box input,
+    .search-box select {
       width: 100%;
       margin-bottom: 10px;
       padding: 12px 14px;
@@ -102,61 +62,9 @@
       outline: none;
     }
 
-    .filter-title {
-      font-size: 12px;
-      font-weight: 700;
-      color: rgba(255,255,255,0.78);
-      margin: 8px 0 8px;
-    }
-
-    .feature-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 10px;
-    }
-
-    .feature-buttons button,
-    .deal-buttons button,
-    .type-buttons button {
-      border: none;
-      border-radius: 999px;
-      padding: 8px 12px;
-      font-size: 13px;
-      font-weight: 700;
-      background: #eef3f7;
-      color: #203040;
-      cursor: pointer;
-      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
-      white-space: nowrap;
-    }
-
-    .feature-buttons button.active,
-    .feature-buttons button.all-active,
-    .deal-buttons button.active,
-    .type-buttons button.active {
-      background: #18c1a3;
-      color: #fff;
-    }
-
-    .property-summary {
-      padding: 0 20px 12px;
-      font-size: 13px;
-      color: rgba(255,255,255,0.82);
-      flex: 0 0 auto;
-    }
-
-    .property-scroll-area {
-      flex: 1;
-      min-height: 0;
-      overflow-y: auto;
-      overflow-x: hidden;
-    }
-
     .property-list {
       display: grid;
       gap: 12px;
-      padding: 0 20px 20px;
     }
 
     .card {
@@ -167,7 +75,7 @@
       box-shadow: 0 8px 20px rgba(0,0,0,0.08);
       cursor: pointer;
       border: 2px solid transparent;
-      transition: border-color 0.2s ease, transform 0.2s ease;
+      transition: all 0.2s ease;
     }
 
     .card:hover,
@@ -274,42 +182,11 @@
       position: relative;
       height: 100vh;
       overflow: hidden;
-      border-left: none !important;
-      box-shadow: none !important;
-      min-width: 0;
     }
 
     #map {
       width: 100%;
       height: 100vh;
-    }
-
-    .map-filter-bar {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      z-index: 30;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      background: rgba(255,255,255,0.95);
-      padding: 10px;
-      border-radius: 12px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-      backdrop-filter: blur(6px);
-      max-width: calc(100% - 20px);
-    }
-
-    .deal-buttons,
-    .type-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .map-filter-bar button {
-      font-size: 12px;
-      padding: 6px 10px;
     }
 
     .custom-overlay {
@@ -323,7 +200,7 @@
       position: relative;
       overflow: hidden;
     }
-
+    
     .custom-overlay .close {
       position: absolute;
       top: 10px;
@@ -336,7 +213,7 @@
       cursor: pointer;
       font-size: 14px;
     }
-
+    
     .custom-overlay h3 {
       margin: 0 28px 8px 0;
       font-size: 16px;
@@ -345,7 +222,7 @@
       word-break: keep-all;
       overflow-wrap: break-word;
     }
-
+    
     .custom-overlay .overlay-price {
       font-size: 14px;
       font-weight: 900;
@@ -354,7 +231,7 @@
       word-break: keep-all;
       overflow-wrap: break-word;
     }
-
+    
     .custom-overlay p {
       margin: 0;
       font-size: 13px;
@@ -365,7 +242,7 @@
       white-space: normal;
       max-width: 100%;
     }
-
+    
     .overlay-features {
       display: flex;
       flex-wrap: wrap;
@@ -373,7 +250,7 @@
       margin-top: 10px;
       max-width: 100%;
     }
-
+    
     .overlay-features span {
       background: #e7fbf5;
       color: #0d7b68;
@@ -385,13 +262,13 @@
       word-break: keep-all;
       overflow-wrap: break-word;
     }
-
+    
     .custom-overlay .overlay-actions {
       display: flex;
       gap: 8px;
       margin-top: 12px;
     }
-
+    
     .custom-overlay .overlay-btn {
       flex: 1;
       text-decoration: none;
@@ -403,8 +280,6 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      border: 0;
-      cursor: pointer;
     }
 
     .overlay-primary {
@@ -418,11 +293,6 @@
     }
 
     @media (max-width: 980px) {
-      :root {
-        --sidebar-width: 100%;
-        --resizer-width: 0px;
-      }
-
       body {
         height: auto;
         overflow: auto;
@@ -433,23 +303,7 @@
         height: auto;
       }
 
-      .resizer {
-        display: none;
-      }
-
       .sidebar {
-        overflow: hidden;
-        height: auto;
-        min-width: 0;
-      }
-
-      .filter-sticky {
-        position: static;
-        top: auto;
-      }
-
-      .property-scroll-area {
-        flex: none;
         overflow: visible;
       }
 
@@ -458,60 +312,51 @@
         height: 70vh;
         min-height: 500px;
       }
-
-      .map-filter-bar {
-        max-width: calc(100% - 20px);
-      }
     }
   </style>
 </head>
 <body>
-  <div class="app" id="app">
-    <aside class="sidebar" id="sidebar">
-      <div class="filter-sticky">
-        <h1>제주도 부동산<br>카카오맵 매물 지도</h1>
-        <p>왼쪽 카드에서 지도보기를 누르거나 카드를 클릭하면 오른쪽 카카오맵으로 바로 이동합니다.</p>
+  <div class="app">
+    <aside class="sidebar">
+      <h1>제주도 부동산<br>카카오맵 매물 지도</h1>
+      <p>왼쪽 카드에서 지도보기를 누르거나 카드를 클릭하면 오른쪽 카카오맵으로 바로 이동합니다.</p>
 
-        <div class="search-box">
-          <input type="text" id="keyword" placeholder="지역명, 주소, 키워드 검색">
+      <div class="search-box">
+        <input type="text" id="keyword" placeholder="지역명, 주소, 키워드 검색">
 
-          <div class="filter-title">특징 태그</div>
-          <div class="feature-buttons" id="featureButtons"></div>
-        </div>
+        <select id="typeFilter">
+          <option value="all">매물유형 전체</option>
+          <option value="단독">단독주택</option>
+          <option value="다가구">다가구ㆍ다세대</option>
+          <option value="원룸">원룸ㆍ투룸</option>
+          <option value="아파트">아파트ㆍ빌라</option>
+          <option value="상가">상가ㆍ사무실</option>
+          <option value="토지">토지ㆍ임야</option>
+        </select>
+        
+        <select id="dealFilter">
+          <option value="all">거래유형 전체</option>
+          <option value="매매">매매</option>
+          <option value="전세">전세</option>
+          <option value="월세">월세</option>
+          <option value="년세">년세</option>
+        </select>
+
+        <select id="featureFilter">
+          <option value="all">특징 전체</option>
+          <option value="신축">신축</option>
+          <option value="오션뷰">오션뷰</option>
+          <option value="생활권">생활권</option>
+          <option value="투자용">투자용</option>
+          <option value="급매">급매</option>
+        </select>
       </div>
 
-      <div class="property-summary" id="propertySummary">매물 불러오는 중...</div>
-
-      <div class="property-scroll-area">
-        <div class="property-list" id="propertyList"></div>
-      </div>
+      <div class="property-list" id="propertyList"></div>
     </aside>
-
-    <!-- ✅ 슬라이드 바 1개만 -->
-    <div class="resizer" id="resizer" aria-label="패널 크기 조절"></div>
 
     <main class="map-wrap">
       <div id="map"></div>
-
-      <div class="map-filter-bar">
-        <div class="deal-buttons" id="dealButtons">
-          <button type="button" data-value="all" class="active">전체</button>
-          <button type="button" data-value="매매">매매</button>
-          <button type="button" data-value="전세">전세</button>
-          <button type="button" data-value="월세">월세</button>
-          <button type="button" data-value="년세">년세</button>
-        </div>
-
-        <div class="type-buttons" id="typeButtons">
-          <button type="button" data-value="all" class="active">전체</button>
-          <button type="button" data-value="단독">단독주택</button>
-          <button type="button" data-value="다가구">다가구ㆍ다세대</button>
-          <button type="button" data-value="원룸">원룸ㆍ투룸</button>
-          <button type="button" data-value="아파트">아파트ㆍ빌라</button>
-          <button type="button" data-value="상가">상가ㆍ사무실</button>
-          <button type="button" data-value="토지">토지ㆍ임야</button>
-        </div>
-      </div>
     </main>
   </div>
 
@@ -524,25 +369,14 @@
       overlays: [],
       activeOverlay: null,
       all: [],
-      filtered: [],
-      selectedFeatures: new Set(),
-      availableFeatures: [],
-      selectedProperty: null
+      filtered: []
     };
 
-    let roadview = null;
-    let roadviewClient = null;
-    let roadviewOverlay = null;
-    let selectedDeal = "all";
-    let selectedType = "all";
-
-    const resizer = document.getElementById("resizer");
     const propertyList = document.getElementById("propertyList");
-    const propertySummary = document.getElementById("propertySummary");
     const keywordInput = document.getElementById("keyword");
-    const featureButtonsWrap = document.getElementById("featureButtons");
-    const dealButtons = document.querySelectorAll("#dealButtons button");
-    const typeButtons = document.querySelectorAll("#typeButtons button");
+    const dealFilter = document.getElementById("dealFilter");
+    const typeFilter = document.getElementById("typeFilter");
+    const featureFilter = document.getElementById("featureFilter");
 
     function escapeHtml(str) {
       return String(str ?? "")
@@ -559,7 +393,7 @@
         title: item.title ?? "제목 없음",
         dealType: item.dealFilter ?? item.dealType ?? "매매",
         type: item.typeFilter ?? item.type ?? "",
-        features: Array.isArray(item.features) ? item.features.filter(Boolean) : [],
+        features: Array.isArray(item.features) ? item.features : [],
         price: item.price ?? "-",
         area: item.area ?? "-",
         address: item.address ?? "-",
@@ -573,71 +407,6 @@
       };
     }
 
-    function buildFeatureButtons() {
-      const counts = new Map();
-
-      state.all.forEach(item => {
-        (item.features || []).forEach(feature => {
-          counts.set(feature, (counts.get(feature) || 0) + 1);
-        });
-      });
-
-      state.availableFeatures = [...counts.entries()]
-        .sort((a, b) => {
-          if (b[1] !== a[1]) return b[1] - a[1];
-          return a[0].localeCompare(b[0], "ko");
-        })
-        .map(entry => entry[0]);
-
-      const buttonsHtml = [
-        `<button type="button" data-value="all" class="all-active">전체</button>`,
-        ...state.availableFeatures.map(feature => {
-          const count = counts.get(feature) || 0;
-          return `<button type="button" data-value="${escapeHtml(feature)}">${escapeHtml(feature)} <span>(${count})</span></button>`;
-        })
-      ].join("");
-
-      featureButtonsWrap.innerHTML = buttonsHtml;
-
-      featureButtonsWrap.querySelectorAll("button").forEach(btn => {
-        btn.addEventListener("click", () => {
-          const value = btn.dataset.value;
-
-          if (value === "all") {
-            state.selectedFeatures.clear();
-          } else {
-            if (state.selectedFeatures.has(value)) {
-              state.selectedFeatures.delete(value);
-            } else {
-              state.selectedFeatures.add(value);
-            }
-          }
-
-          syncFeatureButtons();
-          applyFilter();
-        });
-      });
-
-      syncFeatureButtons();
-    }
-
-    function syncFeatureButtons() {
-      const buttons = featureButtonsWrap.querySelectorAll("button");
-      const isAll = state.selectedFeatures.size === 0;
-
-      buttons.forEach(btn => {
-        const value = btn.dataset.value;
-
-        if (value === "all") {
-          btn.classList.toggle("all-active", isAll);
-          btn.classList.remove("active");
-        } else {
-          btn.classList.toggle("active", state.selectedFeatures.has(value));
-          btn.classList.remove("all-active");
-        }
-      });
-    }
-
     async function loadProperties() {
       try {
         const res = await fetch("./properties.json");
@@ -648,11 +417,9 @@
           .map(normalizeProperty)
           .filter(item => Number.isFinite(item.lat) && Number.isFinite(item.lng));
 
-        buildFeatureButtons();
         applyFilter();
       } catch (err) {
         console.error("매물 데이터 불러오기 실패:", err);
-        propertySummary.textContent = "매물 데이터를 불러오지 못했습니다.";
         propertyList.innerHTML = `
           <div class="card" style="padding:18px; cursor:default;">
             <div class="card-body" style="padding:0;">
@@ -692,86 +459,22 @@
         center: new kakao.maps.LatLng(33.38, 126.55),
         level: 9
       };
-
+    
       state.map = new kakao.maps.Map(mapContainer, mapOption);
-
+    
+      // 처음부터 스카이뷰로 시작
+      state.map.setMapTypeId(kakao.maps.MapTypeId.SKYVIEW);
+    
+      // 오른쪽 위에 일반지도 / 스카이뷰 전환 버튼 추가
       const mapTypeControl = new kakao.maps.MapTypeControl();
       state.map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
-
+    
+      // 줌 버튼도 같이 추가
       const zoomControl = new kakao.maps.ZoomControl();
       state.map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
-
+    
       kakao.maps.event.addListener(state.map, "click", function () {
         closeOverlay();
-      });
-    }
-
-    function initRoadview() {
-      roadviewClient = new kakao.maps.RoadviewClient();
-
-      const roadviewContainer = document.createElement("div");
-      roadviewContainer.id = "roadviewPanel";
-      roadviewContainer.style.cssText = `
-        position:absolute;
-        top:52px;
-        right:10px;
-        width:420px;
-        height:320px;
-        z-index:25;
-        background:#fff;
-        border-radius:12px;
-        overflow:hidden;
-        box-shadow:0 10px 30px rgba(0,0,0,0.18);
-        display:none;
-      `;
-
-      const closeBtn = document.createElement("button");
-      closeBtn.type = "button";
-      closeBtn.textContent = "✕";
-      closeBtn.style.cssText = `
-        position:absolute;
-        top:8px;
-        right:8px;
-        z-index:2;
-        width:30px;
-        height:30px;
-        border:none;
-        border-radius:50%;
-        background:rgba(255,255,255,0.92);
-        cursor:pointer;
-        font-size:14px;
-        font-weight:700;
-      `;
-
-      const inner = document.createElement("div");
-      inner.id = "roadviewInner";
-      inner.style.cssText = "width:100%; height:100%;";
-
-      closeBtn.addEventListener("click", () => {
-        roadviewContainer.style.display = "none";
-      });
-
-      roadviewContainer.appendChild(closeBtn);
-      roadviewContainer.appendChild(inner);
-      document.querySelector(".map-wrap").appendChild(roadviewContainer);
-
-      roadview = new kakao.maps.Roadview(inner);
-      roadviewOverlay = roadviewContainer;
-    }
-
-    function showRoadview(lat, lng) {
-      if (!roadviewClient || !roadviewOverlay) return;
-
-      const position = new kakao.maps.LatLng(lat, lng);
-
-      roadviewClient.getNearestPanoId(position, 50, function (panoId) {
-        if (!panoId) {
-          alert("이 위치 주변에는 로드뷰가 없습니다.");
-          return;
-        }
-
-        roadview.setPanoId(panoId, position);
-        roadviewOverlay.style.display = "block";
       });
     }
 
@@ -792,6 +495,7 @@
 
     function createOverlayContent(item) {
       const wrap = document.createElement("div");
+      const phoneLink = String(item.phone || "").replace(/[^0-9]/g, "");
       const featuresHtml = (item.features || [])
         .map(feature => `<span>${escapeHtml(feature)}</span>`)
         .join("");
@@ -808,66 +512,12 @@
           </p>
           ${featuresHtml ? `<div class="overlay-features">${featuresHtml}</div>` : ""}
           <div class="overlay-actions">
-            <button class="overlay-btn overlay-primary btn-detail" type="button">
-              상세보기
-            </button>
-
-            <button class="overlay-btn overlay-secondary btn-roadview"
-                    type="button"
-                    data-lat="${item.lat}"
-                    data-lng="${item.lng}">
-              로드뷰
-            </button>
+            <a class="overlay-btn overlay-primary" href="${escapeHtml(item.link)}" target="_blank" rel="noopener noreferrer">상세보기</a>
+            <a class="overlay-btn overlay-secondary" href="tel:${phoneLink}">문의</a>
           </div>
         </div>
       `;
-
-      const contentNode = wrap.firstElementChild;
-      const detailBtn = contentNode.querySelector(".btn-detail");
-      const roadBtn = contentNode.querySelector(".btn-roadview");
-
-      [
-        "click",
-        "mousedown",
-        "mouseup",
-        "touchstart",
-        "touchend",
-        "pointerdown",
-        "pointerup"
-      ].forEach(eventName => {
-        contentNode.addEventListener(eventName, function (e) {
-          e.stopPropagation();
-        });
-      });
-
-      if (detailBtn) {
-        detailBtn.addEventListener("click", function (e) {
-          e.preventDefault();
-          e.stopPropagation();
-
-          const link = item.link;
-
-          if (link && link !== "#") {
-            window.open(link, "_blank", "noopener,noreferrer");
-          } else {
-            alert("상세페이지 링크가 없습니다.");
-          }
-        });
-      }
-
-      if (roadBtn) {
-        roadBtn.addEventListener("click", function (e) {
-          e.preventDefault();
-          e.stopPropagation();
-
-          const lat = parseFloat(this.dataset.lat);
-          const lng = parseFloat(this.dataset.lng);
-
-          showRoadview(lat, lng);
-        });
-      }
-
-      return contentNode;
+      return wrap.firstElementChild;
     }
 
     function highlightCard(id) {
@@ -929,7 +579,6 @@
         });
 
         kakao.maps.event.addListener(marker, "click", function () {
-          state.selectedProperty = item;
           highlightCard(item.id);
           moveMapToProperty(item, 4);
 
@@ -956,7 +605,6 @@
       const item = state.filtered.find(v => v.id === id);
       if (!item || !state.map) return;
 
-      state.selectedProperty = item;
       highlightCard(id);
       moveMapToProperty(item, 4);
 
@@ -967,7 +615,6 @@
 
     function renderList(data) {
       if (!data.length) {
-        propertySummary.textContent = "조건에 맞는 매물 0개";
         propertyList.innerHTML = `
           <div class="card" style="padding:18px; cursor:default;">
             <div class="card-body" style="padding:0;">
@@ -978,8 +625,6 @@
         `;
         return;
       }
-
-      propertySummary.textContent = `조건에 맞는 매물 ${data.length}개`;
 
       propertyList.innerHTML = data.map(item => {
         const featureHtml = (item.features || [])
@@ -1027,8 +672,9 @@
 
     function applyFilter() {
       const keyword = keywordInput.value.trim().toLowerCase();
-      const dealValue = selectedDeal;
-      const typeValue = selectedType;
+      const dealValue = dealFilter.value;
+      const typeValue = typeFilter.value;
+      const featureValue = featureFilter.value;
 
       state.filtered = state.all.filter(item => {
         const text = [
@@ -1055,10 +701,8 @@
           (typeValue === "토지" && ["토지", "임야", "토지ㆍ임야"].includes(itemType));
 
         const okFeature =
-          state.selectedFeatures.size === 0 ||
-          [...state.selectedFeatures].every(feature =>
-            Array.isArray(item.features) && item.features.includes(feature)
-          );
+          featureValue === "all" ||
+          (Array.isArray(item.features) && item.features.includes(featureValue));
 
         return okKeyword && okDeal && okType && okFeature;
       });
@@ -1069,53 +713,9 @@
 
     function initEvents() {
       keywordInput.addEventListener("input", applyFilter);
-
-      dealButtons.forEach(btn => {
-        btn.addEventListener("click", () => {
-          dealButtons.forEach(b => b.classList.remove("active"));
-          btn.classList.add("active");
-          selectedDeal = btn.dataset.value;
-          applyFilter();
-        });
-      });
-
-      typeButtons.forEach(btn => {
-        btn.addEventListener("click", () => {
-          typeButtons.forEach(b => b.classList.remove("active"));
-          btn.classList.add("active");
-          selectedType = btn.dataset.value;
-          applyFilter();
-        });
-      });
-    }
-
-    function initResizer() {
-      let isResizing = false;
-
-      resizer.addEventListener("mousedown", (e) => {
-        if (window.innerWidth <= 980) return;
-        e.preventDefault();
-        isResizing = true;
-        document.body.style.cursor = "col-resize";
-        document.body.style.userSelect = "none";
-      });
-
-      window.addEventListener("mousemove", (e) => {
-        if (!isResizing) return;
-
-        const min = 300;
-        const max = 700;
-        const nextWidth = Math.min(Math.max(e.clientX, min), max);
-
-        document.documentElement.style.setProperty("--sidebar-width", `${nextWidth}px`);
-      });
-
-      window.addEventListener("mouseup", () => {
-        if (!isResizing) return;
-        isResizing = false;
-        document.body.style.cursor = "";
-        document.body.style.userSelect = "";
-      });
+      dealFilter.addEventListener("change", applyFilter);
+      typeFilter.addEventListener("change", applyFilter);
+      featureFilter.addEventListener("change", applyFilter);
     }
 
     function bootstrap() {
@@ -1125,9 +725,7 @@
       }
 
       initMap();
-      initRoadview();
       initEvents();
-      initResizer();
       loadProperties();
     }
 
