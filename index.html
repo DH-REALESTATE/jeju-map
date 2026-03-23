@@ -7,7 +7,7 @@
 
   <style>
     :root {
-      --sidebar-width: 340px;
+      --sidebar-width: 320px;
       --resizer-hit-width: 16px;
     }
 
@@ -164,23 +164,44 @@
       transition: all 0.2s ease;
     }
 
+    .premium-card {
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 10px 24px rgba(15, 41, 66, 0.10);
+      border: 1px solid rgba(0,0,0,0.04);
+      background: #fff;
+    }
+
     .card:hover,
-    .card.active {
+    .card.active,
+    .premium-card:hover,
+    .premium-card.active {
       border-color: #18c1a3;
-      transform: translateY(-1px);
+      box-shadow: 0 14px 28px rgba(15, 41, 66, 0.14);
+      transform: translateY(-2px);
     }
 
     .thumb {
-      height: 150px;
+      height: 160px;
       background-size: cover;
       background-position: center;
       position: relative;
     }
 
-    .badge {
+    .card-top-badges {
       position: absolute;
-      left: 12px;
       top: 12px;
+      left: 12px;
+      right: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
       background: rgba(0,0,0,0.75);
       color: #fff;
       font-size: 12px;
@@ -189,22 +210,45 @@
       border-radius: 999px;
     }
 
+    .deal-badge {
+      background: rgba(15, 41, 66, 0.88);
+      color: #fff;
+    }
+
+    .hot-badge {
+      background: #ff5a5f;
+      color: #fff;
+    }
+
     .card-body {
       padding: 14px;
+    }
+
+    .card-header-row {
+      margin-bottom: 8px;
     }
 
     .title {
       font-size: 17px;
       font-weight: 800;
-      margin: 0 0 8px;
-      line-height: 1.4;
+      line-height: 1.45;
+      color: #182533;
+      margin: 0;
+    }
+
+    .price-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
     }
 
     .price {
-      font-size: 20px;
+      font-size: 22px;
       font-weight: 900;
       color: #0d7b68;
-      margin-bottom: 8px;
+      letter-spacing: -0.3px;
+      margin: 0;
     }
 
     .meta {
@@ -223,9 +267,53 @@
       padding: 6px 10px;
     }
 
+    .meta-main {
+      margin-bottom: 10px;
+    }
+
+    .meta-main span {
+      background: #f2f5f8;
+      color: #425466;
+      border: 1px solid #e7edf3;
+    }
+
+    .feature-chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .feature-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: #ecfbf6;
+      color: #0d7b68;
+      font-size: 11px;
+      font-weight: 800;
+      border: 1px solid #d7f3ea;
+    }
+
     .feature-badge {
       background: #e7fbf5 !important;
       color: #0d7b68 !important;
+    }
+
+    .address-row {
+      margin-bottom: 12px;
+      padding-top: 2px;
+    }
+
+    .address-text {
+      display: block;
+      font-size: 13px;
+      line-height: 1.5;
+      color: #667788;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .desc {
@@ -240,6 +328,10 @@
       margin-top: 12px;
     }
 
+    .premium-actions {
+      margin-top: 0;
+    }
+
     .btn {
       flex: 1;
       display: inline-flex;
@@ -247,8 +339,9 @@
       align-items: center;
       text-decoration: none;
       border: 0;
-      border-radius: 10px;
+      border-radius: 12px;
       padding: 10px 12px;
+      min-height: 42px;
       font-size: 13px;
       font-weight: 800;
       cursor: pointer;
@@ -260,7 +353,7 @@
     }
 
     .btn-call {
-      background: #eef3f7;
+      background: #f3f6f9;
       color: #203040;
     }
 
@@ -433,7 +526,7 @@
 
     @media (max-width: 980px) {
       :root {
-        --sidebar-width: 340px;
+        --sidebar-width: 100%;
         --resizer-hit-width: 0px;
       }
 
@@ -480,6 +573,7 @@
         <div class="filter-title">특징 태그</div>
         <div class="feature-buttons" id="featureButtons">
           <button type="button" data-value="all" class="all-active">전체</button>
+          <button type="button" data-value="신축">신축</button>
           <button type="button" data-value="오션뷰">오션뷰</button>
           <button type="button" data-value="생활권">생활권</button>
           <button type="button" data-value="투자용">투자용</button>
@@ -496,6 +590,13 @@
       <div id="map"></div>
 
       <div class="map-filter-bar">
+        <div class="deal-buttons" id="dealButtons">
+          <button type="button" data-value="all" class="active">전체</button>
+          <button type="button" data-value="매매">매매</button>
+          <button type="button" data-value="전세">전세</button>
+          <button type="button" data-value="월세">월세</button>
+          <button type="button" data-value="년세">년세</button>
+        </div>
 
         <div class="type-buttons" id="typeButtons">
           <button type="button" data-value="all" class="active">전체</button>
@@ -506,15 +607,6 @@
           <button type="button" data-value="상가">상가ㆍ사무실</button>
           <button type="button" data-value="토지">토지ㆍ임야</button>
         </div>
-        
-        <div class="deal-buttons" id="dealButtons">
-          <button type="button" data-value="all" class="active">전체</button>
-          <button type="button" data-value="매매">매매</button>
-          <button type="button" data-value="전세">전세</button>
-          <button type="button" data-value="월세">월세</button>
-          <button type="button" data-value="년세">년세</button>
-        </div>
-
       </div>
     </main>
   </div>
@@ -763,7 +855,7 @@
             ${escapeHtml(item.address)}<br>
             <span class="area-row">
               <span class="area-text">${escapeHtml(item.area)}</span>
-              <button class="area-toggle-btn" type="button" data-mode="sqm">평</button>
+              <button class="area-toggle-btn" type="button" data-mode="sqm">평으로</button>
             </span><br>
             ${escapeHtml(item.desc)}
           </p>
@@ -817,11 +909,11 @@
 
           if (this.dataset.mode === "sqm") {
             areaTextEl.textContent = areaInfo.pyeongText;
-            this.textContent = "㎡";
+            this.textContent = "㎡로";
             this.dataset.mode = "pyeong";
           } else {
             areaTextEl.textContent = areaInfo.original;
-            this.textContent = "평";
+            this.textContent = "평으로";
             this.dataset.mode = "sqm";
           }
         });
@@ -936,34 +1028,50 @@
       }
 
       propertyList.innerHTML = data.map(item => {
+        const hotBadge = item.features && item.features.includes("급매")
+          ? `<span class="badge hot-badge">HOT</span>`
+          : "";
+
         const featureHtml = (item.features || [])
-          .map(feature => `<span class="feature-badge">${escapeHtml(feature)}</span>`)
+          .slice(0, 4)
+          .map(feature => `<span class="feature-chip">${escapeHtml(feature)}</span>`)
           .join("");
 
         return `
-          <article class="card" data-id="${item.id}">
+          <article class="card premium-card" data-id="${item.id}">
             <div class="thumb" style="background-image:url('${escapeHtml(item.image)}')">
-              <div class="badge">${escapeHtml(item.dealType)}</div>
+              <div class="card-top-badges">
+                <span class="badge deal-badge">${escapeHtml(item.dealType)}</span>
+                ${hotBadge}
+              </div>
             </div>
+
             <div class="card-body">
-              <h3 class="title">${escapeHtml(item.title)}</h3>
-              <div class="price">${escapeHtml(item.price)}</div>
-              <div class="meta">
+              <div class="card-header-row">
+                <h3 class="title">${escapeHtml(item.title)}</h3>
+              </div>
+
+              <div class="price-row">
+                <div class="price">${escapeHtml(item.price)}</div>
+              </div>
+
+              <div class="meta meta-main">
                 <span>${escapeHtml(item.type || "-")}</span>
                 <span>${escapeHtml(item.region || "-")}</span>
                 <span>${escapeHtml(item.area)}</span>
               </div>
-              
-              ${ featureHtml ? `<div class="meta">${featureHtml}</div>` : "" }
 
-              <div class="desc">
-                ${escapeHtml(item.address)}<br>
-                ${escapeHtml(item.desc)}
+              ${featureHtml ? `<div class="feature-chip-row">${featureHtml}</div>` : ""}
+
+              <div class="address-row">
+                <span class="address-text">${escapeHtml(item.address)}</span>
               </div>
-              
-              <div class="actions">
+
+              <div class="actions premium-actions">
                 <button class="btn btn-map" data-id="${item.id}" type="button">지도보기</button>
-                <a class="btn btn-call" href="tel:${String(item.phone || "").replace(/[^0-9]/g, "")}">${escapeHtml(item.phone || "문의")}</a>
+                <a class="btn btn-call" href="tel:${String(item.phone || "").replace(/[^0-9]/g, "")}">
+                  ${escapeHtml(item.phone || "문의")}
+                </a>
               </div>
             </div>
           </article>
