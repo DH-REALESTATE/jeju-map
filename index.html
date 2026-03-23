@@ -6,6 +6,11 @@
   <title>제주도 부동산 매물 지도 - Kakao Map</title>
 
   <style>
+    :root {
+      --sidebar-width: 380px;
+      --resizer-width: 10px;
+    }
+
     * { box-sizing: border-box; }
 
     html, body {
@@ -23,7 +28,7 @@
 
     .app {
       display: grid;
-      grid-template-columns: 380px 1fr;
+      grid-template-columns: var(--sidebar-width) var(--resizer-width) 1fr;
       height: 100vh;
       gap: 0;
     }
@@ -38,6 +43,24 @@
       overflow: hidden;
       border-right: none !important;
       box-shadow: none !important;
+      min-width: 300px;
+    }
+
+    .resizer {
+      width: var(--resizer-width);
+      height: 100vh;
+      background: transparent;
+      cursor: col-resize;
+      user-select: none;
+      position: relative;
+      z-index: 50;
+    }
+
+    .resizer::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: transparent;
     }
 
     .filter-sticky {
@@ -245,6 +268,7 @@
       overflow: hidden;
       border-left: none !important;
       box-shadow: none !important;
+      min-width: 0;
     }
 
     #map {
@@ -386,6 +410,11 @@
     }
 
     @media (max-width: 980px) {
+      :root {
+        --sidebar-width: 100%;
+        --resizer-width: 0px;
+      }
+
       body {
         height: auto;
         overflow: auto;
@@ -396,9 +425,14 @@
         height: auto;
       }
 
+      .resizer {
+        display: none;
+      }
+
       .sidebar {
         overflow: hidden;
         height: auto;
+        min-width: 0;
       }
 
       .filter-sticky {
@@ -424,8 +458,8 @@
   </style>
 </head>
 <body>
-  <div class="app">
-    <aside class="sidebar">
+  <div class="app" id="app">
+    <aside class="sidebar" id="sidebar">
       <div class="filter-sticky">
         <h1>제주도 부동산<br>카카오맵 매물 지도</h1>
         <p>왼쪽 카드에서 지도보기를 누르거나 카드를 클릭하면 오른쪽 카카오맵으로 바로 이동합니다.</p>
@@ -444,6 +478,8 @@
         <div class="property-list" id="propertyList"></div>
       </div>
     </aside>
+
+    <div class="resizer" id="resizer" aria-label="패널 크기 조절"></div>
 
     <main class="map-wrap">
       <div id="map"></div>
@@ -490,6 +526,10 @@
     let roadviewOverlay = null;
     let selectedDeal = "all";
     let selectedType = "all";
+
+    const app = document.getElementById("app");
+    const sidebar = document.getElementById("sidebar");
+    const resizer = document.getElementById("resizer");
 
     const propertyList = document.getElementById("propertyList");
     const propertySummary = document.getElementById("propertySummary");
@@ -1043,6 +1083,35 @@
       });
     }
 
+    function initResizer() {
+      let isResizing = false;
+
+      resizer.addEventListener("mousedown", (e) => {
+        if (window.innerWidth <= 980) return;
+        e.preventDefault();
+        isResizing = true;
+        document.body.style.cursor = "col-resize";
+        document.body.style.userSelect = "none";
+      });
+
+      window.addEventListener("mousemove", (e) => {
+        if (!isResizing) return;
+
+        const min = 300;
+        const max = 700;
+        const nextWidth = Math.min(Math.max(e.clientX, min), max);
+
+        document.documentElement.style.setProperty("--sidebar-width", `${nextWidth}px`);
+      });
+
+      window.addEventListener("mouseup", () => {
+        if (!isResizing) return;
+        isResizing = false;
+        document.body.style.cursor = "";
+        document.body.style.userSelect = "";
+      });
+    }
+
     function bootstrap() {
       if (!window.kakao || !window.kakao.maps) {
         alert("카카오맵 SDK가 로드되지 않았습니다. appkey를 확인하세요.");
@@ -1052,6 +1121,7 @@
       initMap();
       initRoadview();
       initEvents();
+      initResizer();
       loadProperties();
     }
 
