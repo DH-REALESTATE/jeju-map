@@ -23,8 +23,10 @@
 
     .app {
       display: grid;
-      grid-template-columns: 380px 1fr;
+      /* 왼쪽 영역 폭 설정 */
+      grid-template-columns: 320px 1fr;
       height: 100vh;
+      gap: 0;   /* 이거 중요 - 슬라이드 바 없는 것 처럼 보이게 */
     }
 
     .sidebar {
@@ -32,8 +34,9 @@
       color: #fff;
       overflow-y: auto;
       min-height: 0;
-      border-right: none;
-      box-shadow: none;
+    
+      border-right: none !important;
+      box-shadow: none !important;
     }
 
     .filter-sticky {
