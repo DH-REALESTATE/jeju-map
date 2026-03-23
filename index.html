@@ -323,6 +323,8 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      border: 0;
+      cursor: pointer;
     }
 
     .overlay-primary {
@@ -421,6 +423,9 @@
       filtered: []
     };
 
+    let roadview = null;
+    let roadviewClient = null;
+    let roadviewOverlay = null;
     let selectedDeal = "all";
     let selectedType = "all";
 
@@ -514,7 +519,7 @@
 
       state.map = new kakao.maps.Map(mapContainer, mapOption);
 
-      // ✅ 기본 지도
+      // 기본 지도
       state.map.setMapTypeId(kakao.maps.MapTypeId.ROADMAP);
 
       const mapTypeControl = new kakao.maps.MapTypeControl();
@@ -525,6 +530,78 @@
 
       kakao.maps.event.addListener(state.map, "click", function () {
         closeOverlay();
+      });
+    }
+
+    function initRoadview() {
+      roadviewClient = new kakao.maps.RoadviewClient();
+
+      const roadviewContainer = document.createElement("div");
+      roadviewContainer.id = "roadviewPanel";
+      roadviewContainer.style.cssText = `
+        position:absolute;
+        top:52px;
+        right:10px;
+        width:420px;
+        height:320px;
+        z-index:50;
+        background:#fff;
+        border-radius:12px;
+        overflow:hidden;
+        box-shadow:0 10px 30px rgba(0,0,0,0.18);
+        display:none;
+      `;
+
+      const closeBtn = document.createElement("button");
+      closeBtn.type = "button";
+      closeBtn.textContent = "✕";
+      closeBtn.style.cssText = `
+        position:absolute;
+        top:8px;
+        right:8px;
+        z-index:2;
+        width:30px;
+        height:30px;
+        border:none;
+        border-radius:50%;
+        background:rgba(255,255,255,0.92);
+        cursor:pointer;
+        font-size:14px;
+        font-weight:700;
+      `;
+
+      const inner = document.createElement("div");
+      inner.id = "roadviewInner";
+      inner.style.cssText = "width:100%; height:100%;";
+
+      closeBtn.addEventListener("click", () => {
+        roadviewContainer.style.display = "none";
+      });
+
+      roadviewContainer.appendChild(closeBtn);
+      roadviewContainer.appendChild(inner);
+      document.querySelector(".map-wrap").appendChild(roadviewContainer);
+
+      roadview = new kakao.maps.Roadview(inner);
+      roadviewOverlay = roadviewContainer;
+    }
+
+    function showRoadview(lat, lng) {
+      if (!roadviewClient || !roadviewOverlay || !roadview) {
+        alert("로드뷰가 초기화되지 않았습니다.");
+        return;
+      }
+
+      const position = new kakao.maps.LatLng(lat, lng);
+
+      roadviewClient.getNearestPanoId(position, 100, function (panoId) {
+        if (!panoId) {
+          alert("이 위치 주변에는 로드뷰가 없습니다.");
+          return;
+        }
+
+        roadviewOverlay.style.display = "block";
+        roadview.setPanoId(panoId, position);
       });
     }
 
@@ -548,7 +625,7 @@
       const featuresHtml = (item.features || [])
         .map(feature => `<span>${escapeHtml(feature)}</span>`)
         .join("");
-    
+
       wrap.innerHTML = `
         <div class="custom-overlay">
           <button class="close" type="button">✕</button>
@@ -561,13 +638,10 @@
           </p>
           ${featuresHtml ? `<div class="overlay-features">${featuresHtml}</div>` : ""}
           <div class="overlay-actions">
-            <a class="overlay-btn overlay-primary"
-               href="${escapeHtml(item.link || '#')}"
-               target="_blank"
-               rel="noopener noreferrer">
+            <button class="overlay-btn overlay-primary btn-detail" type="button">
               상세보기
-            </a>
-    
+            </button>
+
             <button class="overlay-btn overlay-secondary btn-roadview"
                     type="button"
                     data-lat="${item.lat}"
@@ -577,10 +651,11 @@
           </div>
         </div>
       `;
-    
+
       const contentNode = wrap.firstElementChild;
+      const detailBtn = contentNode.querySelector(".btn-detail");
       const roadBtn = contentNode.querySelector(".btn-roadview");
-    
+
       [
         "click",
         "mousedown",
@@ -594,19 +669,34 @@
           e.stopPropagation();
         });
       });
-    
+
+      if (detailBtn) {
+        detailBtn.addEventListener("click", function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+
+          const link = item.link;
+
+          if (link && link !== "#") {
+            window.open(link, "_blank", "noopener,noreferrer");
+          } else {
+            alert("상세페이지 링크가 없습니다.");
+          }
+        });
+      }
+
       if (roadBtn) {
         roadBtn.addEventListener("click", function (e) {
           e.preventDefault();
           e.stopPropagation();
-    
+
           const lat = parseFloat(this.dataset.lat);
           const lng = parseFloat(this.dataset.lng);
-    
+
           showRoadview(lat, lng);
         });
       }
-    
+
       return contentNode;
     }
 
@@ -831,6 +921,7 @@
       }
 
       initMap();
+      initRoadview();
       initEvents();
       loadProperties();
     }
