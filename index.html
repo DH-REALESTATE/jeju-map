@@ -46,6 +46,7 @@
       min-width: 300px;
     }
 
+    /* ✅ 슬라이드 바는 1개만 유지, 보이지 않게 */
     .resizer {
       width: var(--resizer-width);
       height: 100vh;
@@ -61,6 +62,13 @@
       position: absolute;
       inset: 0;
       background: transparent;
+    }
+
+    /* ✅ 혹시 남아있는 예전 바 전부 숨김 */
+    .divider,
+    .splitter,
+    .handle {
+      display: none !important;
     }
 
     .filter-sticky {
@@ -479,6 +487,7 @@
       </div>
     </aside>
 
+    <!-- ✅ 슬라이드 바 1개만 -->
     <div class="resizer" id="resizer" aria-label="패널 크기 조절"></div>
 
     <main class="map-wrap">
@@ -527,10 +536,7 @@
     let selectedDeal = "all";
     let selectedType = "all";
 
-    const app = document.getElementById("app");
-    const sidebar = document.getElementById("sidebar");
     const resizer = document.getElementById("resizer");
-
     const propertyList = document.getElementById("propertyList");
     const propertySummary = document.getElementById("propertySummary");
     const keywordInput = document.getElementById("keyword");
