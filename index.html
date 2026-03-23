@@ -51,7 +51,8 @@
       margin-bottom: 16px;
     }
 
-    .search-box input {
+    .search-box input,
+    .search-box select {
       width: 100%;
       margin-bottom: 10px;
       padding: 12px 14px;
@@ -59,40 +60,6 @@
       border-radius: 10px;
       font-size: 14px;
       outline: none;
-    }
-
-    .filter-title {
-      font-size: 12px;
-      font-weight: 700;
-      color: rgba(255,255,255,0.82);
-      margin: 8px 0 8px;
-    }
-
-    .feature-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 6px;
-      margin-bottom: 10px;
-    }
-
-    .feature-buttons button {
-      border: none;
-      border-radius: 999px;
-      padding: 6px 10px;
-      font-size: 12px;
-      font-weight: 700;
-      background: #eef3f7;
-      color: #203040;
-      cursor: pointer;
-      transition: background 0.2s ease, color 0.2s ease;
-      white-space: nowrap;
-    }
-
-    .feature-buttons button.active,
-    .feature-buttons button.all-active {
-      background: #18c1a3;
-      color: #fff;
     }
 
     .property-list {
@@ -338,6 +305,12 @@
       line-height: 1.2;
     }
 
+    .pyeong-text {
+      font-size: 12px;
+      font-weight: 700;
+      color: #0d7b68;
+    }
+
     .overlay-features {
       display: flex;
       flex-wrap: wrap;
@@ -425,15 +398,14 @@
       <div class="search-box">
         <input type="text" id="keyword" placeholder="지역명, 주소, 키워드 검색">
 
-        <div class="filter-title">특징 태그</div>
-        <div class="feature-buttons" id="featureButtons">
-          <button type="button" data-value="all" class="all-active">전체</button>
-          <button type="button" data-value="신축">신축</button>
-          <button type="button" data-value="오션뷰">오션뷰</button>
-          <button type="button" data-value="생활권">생활권</button>
-          <button type="button" data-value="투자용">투자용</button>
-          <button type="button" data-value="급매">급매</button>
-        </div>
+        <select id="featureFilter">
+          <option value="all">특징 전체</option>
+          <option value="신축">신축</option>
+          <option value="오션뷰">오션뷰</option>
+          <option value="생활권">생활권</option>
+          <option value="투자용">투자용</option>
+          <option value="급매">급매</option>
+        </select>
       </div>
 
       <div class="property-list" id="propertyList"></div>
@@ -473,8 +445,7 @@
       overlays: [],
       activeOverlay: null,
       all: [],
-      filtered: [],
-      selectedFeatures: new Set()
+      filtered: []
     };
 
     let roadview = null;
@@ -485,9 +456,9 @@
 
     const propertyList = document.getElementById("propertyList");
     const keywordInput = document.getElementById("keyword");
+    const featureFilter = document.getElementById("featureFilter");
     const dealButtons = document.querySelectorAll("#dealButtons button");
     const typeButtons = document.querySelectorAll("#typeButtons button");
-    const featureButtons = document.querySelectorAll("#featureButtons button");
 
     function escapeHtml(str) {
       return String(str ?? "")
@@ -699,7 +670,8 @@
           <p>
             ${escapeHtml(item.address)}<br>
             <span class="area-row">
-              <span>${escapeHtml(item.area)}</span>
+              <span class="area-text">${escapeHtml(item.area)}</span>
+              <span class="pyeong-text"></span>
               <button class="area-convert-btn" type="button" data-area="${escapeHtml(item.area)}">평 계산</button>
             </span><br>
             ${escapeHtml(item.desc)}
@@ -724,6 +696,7 @@
       const detailBtn = contentNode.querySelector(".btn-detail");
       const roadBtn = contentNode.querySelector(".btn-roadview");
       const areaBtn = contentNode.querySelector(".area-convert-btn");
+      const pyeongText = contentNode.querySelector(".pyeong-text");
 
       [
         "click",
@@ -771,12 +744,10 @@
           e.stopPropagation();
 
           const areaInfo = convertSqmToPyeong(this.dataset.area);
-          if (!areaInfo) {
-            alert("면적 정보를 계산할 수 없습니다.");
-            return;
-          }
+          if (!areaInfo) return;
 
-          alert(`${areaInfo.sqm}㎡ = 약 ${areaInfo.pyeong}평`);
+          pyeongText.textContent = `(약 ${areaInfo.pyeong}평)`;
+          this.style.display = "none";
         });
       }
 
@@ -933,26 +904,11 @@
       });
     }
 
-    function syncFeatureButtons() {
-      const isAll = state.selectedFeatures.size === 0;
-
-      featureButtons.forEach(btn => {
-        const value = btn.dataset.value;
-
-        if (value === "all") {
-          btn.classList.toggle("all-active", isAll);
-          btn.classList.remove("active");
-        } else {
-          btn.classList.toggle("active", state.selectedFeatures.has(value));
-          btn.classList.remove("all-active");
-        }
-      });
-    }
-
     function applyFilter() {
       const keyword = keywordInput.value.trim().toLowerCase();
       const dealValue = selectedDeal;
       const typeValue = selectedType;
+      const featureValue = featureFilter.value;
 
       state.filtered = state.all.filter(item => {
         const text = [
@@ -979,10 +935,8 @@
           (typeValue === "토지" && ["토지", "임야", "토지ㆍ임야"].includes(itemType));
 
         const okFeature =
-          state.selectedFeatures.size === 0 ||
-          [...state.selectedFeatures].every(feature =>
-            Array.isArray(item.features) && item.features.includes(feature)
-          );
+          featureValue === "all" ||
+          (Array.isArray(item.features) && item.features.includes(featureValue));
 
         return okKeyword && okDeal && okType && okFeature;
       });
@@ -993,6 +947,7 @@
 
     function initEvents() {
       keywordInput.addEventListener("input", applyFilter);
+      featureFilter.addEventListener("change", applyFilter);
 
       dealButtons.forEach(btn => {
         btn.addEventListener("click", () => {
@@ -1011,25 +966,6 @@
           applyFilter();
         });
       });
-
-      featureButtons.forEach(btn => {
-        btn.addEventListener("click", () => {
-          const value = btn.dataset.value;
-
-          if (value === "all") {
-            state.selectedFeatures.clear();
-          } else {
-            if (state.selectedFeatures.has(value)) {
-              state.selectedFeatures.delete(value);
-            } else {
-              state.selectedFeatures.add(value);
-            }
-          }
-
-          syncFeatureButtons();
-          applyFilter();
-        });
-      });
     }
 
     function bootstrap() {
@@ -1042,7 +978,6 @@
       initRoadview();
       initEvents();
       loadProperties();
-      syncFeatureButtons();
     }
 
     bootstrap();
