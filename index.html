@@ -335,6 +335,24 @@
       max-width: calc(100% - 20px);
     }
 
+    .map-result-count {
+      position: absolute;
+      top: 110px;
+      left: 10px;
+      z-index: 30;
+      display: inline-flex;
+      align-items: center;
+      padding: 10px 14px;
+      border-radius: 12px;
+      background: rgba(15, 41, 66, 0.92);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 800;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+      backdrop-filter: blur(6px);
+      letter-spacing: -0.2px;
+    }
+
     .deal-buttons,
     .type-buttons {
       display: flex;
@@ -520,6 +538,10 @@
       .map-filter-bar {
         max-width: calc(100% - 20px);
       }
+
+      .map-result-count {
+        top: 112px;
+      }
     }
   </style>
 </head>
@@ -570,6 +592,8 @@
           <button type="button" data-value="토지">토지ㆍ임야</button>
         </div>
       </div>
+
+      <div class="map-result-count" id="mapResultCount">총 0건</div>
     </main>
   </div>
 
@@ -596,6 +620,7 @@
 
     const propertyList = document.getElementById("propertyList");
     const keywordInput = document.getElementById("keyword");
+    const mapResultCount = document.getElementById("mapResultCount");
     const dealButtons = document.querySelectorAll("#dealButtons button");
     const typeButtons = document.querySelectorAll("#typeButtons button");
     const featureButtons = document.querySelectorAll("#featureButtons button");
@@ -664,6 +689,7 @@
             </div>
           </div>
         `;
+        if (mapResultCount) mapResultCount.textContent = "총 0건";
       }
     }
 
@@ -1149,6 +1175,10 @@
 
       renderList(state.filtered);
       renderMarkers(state.filtered);
+
+      if (mapResultCount) {
+        mapResultCount.textContent = `총 ${state.filtered.length}건`;
+      }
     }
 
     function initEvents() {
