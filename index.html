@@ -740,9 +740,10 @@
       state.clusterer = new kakao.maps.MarkerClusterer({
         map: state.map,
         averageCenter: true,
-        minLevel: 3,
+        minLevel: 3,   // 핵심
         disableClickZoom: true,
-        calculator: [10, 30, 50, 100],
+        calculator: [5, 10, 20, 50]
+        
         styles: [
           {
             width: "44px",
