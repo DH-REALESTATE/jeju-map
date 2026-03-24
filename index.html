@@ -42,8 +42,6 @@
       overflow-y: auto;
       overflow-x: hidden;
       min-width: 260px;
-      border-right: none !important;
-      box-shadow: none !important;
     }
 
     .resizer {
@@ -62,22 +60,11 @@
       z-index: 999;
     }
 
-    .resizer:hover,
-    .resizer:active,
-    .resizer:focus {
-      background: transparent !important;
-      box-shadow: none !important;
-      outline: none !important;
-      opacity: 0 !important;
-    }
-
     .map-wrap {
       position: relative;
       min-width: 0;
       height: 100vh;
       overflow: hidden;
-      border-left: none !important;
-      box-shadow: none !important;
     }
 
     #map {
@@ -127,7 +114,8 @@
       margin-bottom: 10px;
     }
 
-    .feature-buttons button {
+    .feature-buttons button,
+    .reset-list-btn {
       border: none;
       border-radius: 999px;
       padding: 6px 10px;
@@ -144,6 +132,16 @@
     .feature-buttons button.all-active {
       background: #18c1a3;
       color: #fff;
+    }
+
+    .reset-list-btn {
+      width: 100%;
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-top: 4px;
+      margin-bottom: 8px;
+      font-size: 13px;
+      font-weight: 800;
     }
 
     .property-list {
@@ -549,10 +547,12 @@
   <div class="app">
     <aside class="sidebar">
       <h1>제주도 부동산<br>카카오맵 매물 지도</h1>
-      <p>왼쪽 카드에서 지도보기를 누르거나 카드를 클릭하면 오른쪽 카카오맵으로 바로 이동합니다.</p>
+      <p>지도 숫자를 누르면 해당 묶음의 매물만 왼쪽 카드에 표시됩니다.</p>
 
       <div class="search-box">
         <input type="text" id="keyword" placeholder="지역명, 주소, 키워드 검색">
+
+        <button class="reset-list-btn" id="resetListBtn" type="button">전체 매물 보기</button>
 
         <div class="filter-title">특징 태그</div>
         <div class="feature-buttons" id="featureButtons">
@@ -597,11 +597,12 @@
     </main>
   </div>
 
-  <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=b7db2d3c35122f3ec33c88ea6d3195fb"></script>
+  <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=b7db2d3c35122f3ec33c88ea6d3195fb&libraries=clusterer"></script>
 
   <script>
     const state = {
       map: null,
+      clusterer: null,
       markers: [],
       overlays: [],
       activeOverlay: null,
@@ -621,6 +622,7 @@
     const propertyList = document.getElementById("propertyList");
     const keywordInput = document.getElementById("keyword");
     const mapResultCount = document.getElementById("mapResultCount");
+    const resetListBtn = document.getElementById("resetListBtn");
     const dealButtons = document.querySelectorAll("#dealButtons button");
     const typeButtons = document.querySelectorAll("#typeButtons button");
     const featureButtons = document.querySelectorAll("#featureButtons button");
@@ -735,9 +737,101 @@
       const zoomControl = new kakao.maps.ZoomControl();
       state.map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
 
+      state.clusterer = new kakao.maps.MarkerClusterer({
+        map: state.map,
+        averageCenter: true,
+        minLevel: 7,
+        disableClickZoom: true,
+        calculator: [10, 30, 50, 100],
+        styles: [
+          {
+            width: "44px",
+            height: "44px",
+            background: "rgba(255,255,255,0.92)",
+            borderRadius: "22px",
+            color: "#2563eb",
+            textAlign: "center",
+            fontWeight: "800",
+            lineHeight: "44px",
+            fontSize: "24px",
+            border: "1px solid rgba(0,0,0,0.06)",
+            boxShadow: "0 8px 20px rgba(0,0,0,0.12)"
+          },
+          {
+            width: "50px",
+            height: "50px",
+            background: "rgba(255,255,255,0.94)",
+            borderRadius: "25px",
+            color: "#2563eb",
+            textAlign: "center",
+            fontWeight: "800",
+            lineHeight: "50px",
+            fontSize: "24px",
+            border: "1px solid rgba(0,0,0,0.06)",
+            boxShadow: "0 8px 20px rgba(0,0,0,0.12)"
+          },
+          {
+            width: "56px",
+            height: "56px",
+            background: "rgba(255,255,255,0.96)",
+            borderRadius: "28px",
+            color: "#2563eb",
+            textAlign: "center",
+            fontWeight: "800",
+            lineHeight: "56px",
+            fontSize: "26px",
+            border: "1px solid rgba(0,0,0,0.06)",
+            boxShadow: "0 8px 20px rgba(0,0,0,0.12)"
+          },
+          {
+            width: "62px",
+            height: "62px",
+            background: "rgba(255,255,255,0.98)",
+            borderRadius: "31px",
+            color: "#2563eb",
+            textAlign: "center",
+            fontWeight: "900",
+            lineHeight: "62px",
+            fontSize: "28px",
+            border: "1px solid rgba(0,0,0,0.06)",
+            boxShadow: "0 8px 20px rgba(0,0,0,0.12)"
+          }
+        ]
+      });
+
+      kakao.maps.event.addListener(state.clusterer, "clusterclick", function (cluster) {
+        hideRoadview();
+        closeOverlay();
+
+        const clusterMarkers = cluster.getMarkers();
+        const clusterItems = clusterMarkers
+          .map(marker => marker.__property)
+          .filter(Boolean);
+
+        renderList(clusterItems);
+
+        if (propertyList) {
+          propertyList.scrollTop = 0;
+        }
+
+        if (mapResultCount) {
+          mapResultCount.textContent = `선택 지역 ${clusterItems.length}건`;
+        }
+
+        const bounds = new kakao.maps.LatLngBounds();
+        clusterItems.forEach(item => {
+          bounds.extend(new kakao.maps.LatLng(item.lat, item.lng));
+        });
+        state.map.setBounds(bounds);
+      });
+
       kakao.maps.event.addListener(state.map, "click", function () {
         closeOverlay();
         hideRoadview();
+        renderList(state.filtered);
+        if (mapResultCount) {
+          mapResultCount.textContent = `총 ${state.filtered.length}건`;
+        }
       });
     }
 
@@ -858,6 +952,10 @@
     }
 
     function clearMapObjects() {
+      if (state.clusterer) {
+        state.clusterer.clear();
+      }
+
       state.markers.forEach(marker => marker.setMap(null));
       state.overlays.forEach(item => item.overlay.setMap(null));
       state.markers = [];
@@ -976,16 +1074,18 @@
       if (!data.length) return;
 
       const bounds = new kakao.maps.LatLngBounds();
+      const markerList = [];
 
       data.forEach(item => {
         const position = new kakao.maps.LatLng(item.lat, item.lng);
 
         const marker = new kakao.maps.Marker({
-          map: state.map,
           position,
           image: createMarkerImage(item),
           clickable: true
         });
+
+        marker.__property = item;
 
         const contentNode = createOverlayContent(item);
 
@@ -1000,7 +1100,9 @@
           e.preventDefault();
           e.stopPropagation();
           overlay.setMap(null);
-          if (state.activeOverlay === overlay) state.activeOverlay = null;
+          if (state.activeOverlay === overlay) {
+            state.activeOverlay = null;
+          }
         });
 
         kakao.maps.event.addListener(marker, "click", function () {
@@ -1015,10 +1117,13 @@
           }, 80);
         });
 
+        markerList.push(marker);
         state.markers.push(marker);
         state.overlays.push({ id: item.id, overlay });
         bounds.extend(position);
       });
+
+      state.clusterer.addMarkers(markerList);
 
       if (data.length === 1) {
         moveMapToProperty(data[0], 4);
@@ -1183,6 +1288,15 @@
 
     function initEvents() {
       keywordInput.addEventListener("input", applyFilter);
+
+      if (resetListBtn) {
+        resetListBtn.addEventListener("click", () => {
+          renderList(state.filtered);
+          if (mapResultCount) {
+            mapResultCount.textContent = `총 ${state.filtered.length}건`;
+          }
+        });
+      }
 
       dealButtons.forEach(btn => {
         btn.addEventListener("click", () => {
