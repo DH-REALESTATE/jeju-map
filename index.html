@@ -3,12 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주도 부동산 매물 지도 - Kakao Map</title>
+  <title>제주 프리미엄 부동산 지도</title>
 
   <style>
     :root {
-      --sidebar-width: 320px;
+      --sidebar-width: 360px;
       --resizer-hit-width: 16px;
+      --brand: #14b8a6;
+      --brand-dark: #0f2942;
+      --bg: #f4f7fb;
+      --line: #e7edf3;
+      --text: #17212b;
+      --muted: #667788;
+      --white: #ffffff;
+      --shadow: 0 12px 30px rgba(15, 41, 66, 0.12);
+      --radius: 18px;
     }
 
     * { box-sizing: border-box; }
@@ -18,8 +27,8 @@
       padding: 0;
       height: 100%;
       font-family: "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
-      background: #f5f7fa;
-      color: #222;
+      background: var(--bg);
+      color: var(--text);
     }
 
     body {
@@ -35,13 +44,26 @@
     }
 
     .sidebar {
-      background: #0f2942;
-      color: #fff;
-      padding: 20px;
+      position: relative;
       height: 100vh;
       overflow-y: auto;
       overflow-x: hidden;
-      min-width: 260px;
+      background:
+        radial-gradient(circle at top left, rgba(20,184,166,0.12), transparent 26%),
+        linear-gradient(180deg, #0f2942 0%, #122d49 42%, #143451 100%);
+      color: #fff;
+      padding: 20px 18px 22px;
+    }
+
+    .sidebar::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    .sidebar::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.16);
+      border-radius: 999px;
+      border: 2px solid transparent;
+      background-clip: padding-box;
     }
 
     .resizer {
@@ -65,6 +87,7 @@
       min-width: 0;
       height: 100vh;
       overflow: hidden;
+      background: #dde7ef;
     }
 
     #map {
@@ -72,107 +95,178 @@
       height: 100vh;
     }
 
+    .brand-card {
+      position: relative;
+      margin-bottom: 16px;
+      padding: 18px 16px 16px;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.09);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+      backdrop-filter: blur(10px);
+    }
+
+    .brand-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(20,184,166,0.18);
+      color: #c7fff8;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.2px;
+      margin-bottom: 10px;
+    }
+
     .sidebar h1 {
       margin: 0 0 8px;
-      font-size: 28px;
-      line-height: 1.3;
+      font-size: 30px;
+      line-height: 1.22;
+      letter-spacing: -0.8px;
     }
 
     .sidebar p {
-      margin: 0 0 20px;
-      font-size: 14px;
-      line-height: 1.6;
-      color: rgba(255,255,255,0.85);
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.65;
+      color: rgba(255,255,255,0.78);
     }
 
-    .search-box {
-      margin-bottom: 16px;
+    .panel {
+      margin-bottom: 14px;
+      padding: 14px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(10px);
     }
 
     .search-box input {
       width: 100%;
-      margin-bottom: 10px;
-      padding: 12px 14px;
-      border: none;
-      border-radius: 10px;
-      font-size: 14px;
+      height: 46px;
+      padding: 0 14px;
+      border: 0;
+      border-radius: 14px;
       outline: none;
+      font-size: 14px;
+      background: #fff;
+      color: #17212b;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.03);
     }
 
     .filter-title {
+      margin: 12px 0 8px;
       font-size: 12px;
-      font-weight: 700;
-      color: rgba(255,255,255,0.82);
-      margin: 8px 0 8px;
+      font-weight: 800;
+      color: rgba(255,255,255,0.84);
+      letter-spacing: 0.2px;
     }
 
     .feature-buttons {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
-      margin-top: 6px;
-      margin-bottom: 10px;
     }
 
     .feature-buttons button,
     .reset-list-btn {
-      border: none;
+      border: 0;
       border-radius: 999px;
-      padding: 6px 10px;
+      padding: 8px 11px;
       font-size: 12px;
-      font-weight: 700;
-      background: #eef3f7;
-      color: #203040;
+      font-weight: 800;
       cursor: pointer;
-      transition: background 0.2s ease, color 0.2s ease;
-      white-space: nowrap;
+      transition: 0.2s ease;
+    }
+
+    .feature-buttons button {
+      background: rgba(255,255,255,0.92);
+      color: #203040;
+    }
+
+    .feature-buttons button:hover {
+      transform: translateY(-1px);
     }
 
     .feature-buttons button.active,
     .feature-buttons button.all-active {
-      background: #18c1a3;
+      background: var(--brand);
       color: #fff;
+      box-shadow: 0 8px 18px rgba(20,184,166,0.28);
     }
 
     .reset-list-btn {
       width: 100%;
-      border-radius: 10px;
-      padding: 10px 12px;
-      margin-top: 4px;
-      margin-bottom: 8px;
-      font-size: 13px;
-      font-weight: 800;
+      margin-top: 10px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.92);
+      color: #0f2942;
+    }
+
+    .reset-list-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .list-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin: 14px 0 10px;
+      padding: 0 4px;
+    }
+
+    .list-head strong {
+      font-size: 14px;
+      color: #fff;
+      letter-spacing: -0.2px;
+    }
+
+    .list-head span {
+      font-size: 12px;
+      color: rgba(255,255,255,0.72);
     }
 
     .property-list {
       display: grid;
-      gap: 12px;
-      padding-bottom: 20px;
+      gap: 14px;
+      padding-bottom: 24px;
     }
 
     .card {
-      background: #fff;
-      color: #222;
-      border-radius: 18px;
       overflow: hidden;
-      box-shadow: 0 10px 24px rgba(15, 41, 66, 0.10);
-      border: 1px solid rgba(0,0,0,0.04);
+      border-radius: 20px;
+      background: #fff;
+      border: 1px solid rgba(0,0,0,0.05);
+      box-shadow: 0 12px 26px rgba(8, 24, 44, 0.16);
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
     }
 
     .card:hover,
     .card.active {
-      border-color: #18c1a3;
-      box-shadow: 0 14px 28px rgba(15, 41, 66, 0.14);
       transform: translateY(-2px);
+      border-color: rgba(20,184,166,0.5);
+      box-shadow: 0 18px 30px rgba(8, 24, 44, 0.22);
     }
 
     .thumb {
-      height: 160px;
+      position: relative;
+      height: 172px;
       background-size: cover;
       background-position: center;
-      position: relative;
+    }
+
+    .thumb::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0;
+      height: 55%;
+      background: linear-gradient(to top, rgba(0,0,0,0.32), transparent);
+      pointer-events: none;
     }
 
     .card-top-badges {
@@ -181,31 +275,28 @@
       left: 12px;
       right: 12px;
       display: flex;
-      justify-content: space-between;
       align-items: flex-start;
+      justify-content: space-between;
       gap: 8px;
+      z-index: 1;
     }
 
     .badge {
       display: inline-flex;
       align-items: center;
-      font-size: 12px;
-      font-weight: 700;
-      padding: 6px 10px;
       border-radius: 999px;
+      padding: 7px 11px;
+      font-size: 12px;
+      font-weight: 900;
       color: #fff;
+      letter-spacing: -0.1px;
     }
 
-    .deal-badge {
-      background: rgba(15, 41, 66, 0.88);
-    }
-
-    .hot-badge {
-      background: #ff5a5f;
-    }
+    .deal-badge { background: rgba(15,41,66,0.86); }
+    .hot-badge { background: #ff5a5f; }
 
     .card-body {
-      padding: 14px;
+      padding: 15px 15px 14px;
     }
 
     .card-header-row {
@@ -213,11 +304,12 @@
     }
 
     .title {
-      font-size: 17px;
-      font-weight: 800;
-      line-height: 1.45;
-      color: #182533;
       margin: 0;
+      font-size: 17px;
+      font-weight: 900;
+      line-height: 1.42;
+      color: #162331;
+      letter-spacing: -0.35px;
     }
 
     .price-row {
@@ -228,28 +320,31 @@
     }
 
     .price {
-      font-size: 22px;
+      margin: 0;
+      font-size: 23px;
       font-weight: 900;
       color: #0d7b68;
-      letter-spacing: -0.3px;
-      margin: 0;
+      letter-spacing: -0.5px;
     }
 
     .meta {
       display: flex;
       flex-wrap: wrap;
       gap: 6px;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
     }
 
     .meta span {
-      background: #f2f5f8;
-      color: #425466;
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #f4f7fa;
+      color: #415466;
       border: 1px solid #e7edf3;
       font-size: 12px;
-      font-weight: 700;
-      border-radius: 999px;
-      padding: 6px 10px;
+      font-weight: 800;
     }
 
     .feature-chip-row {
@@ -262,25 +357,26 @@
     .feature-chip {
       display: inline-flex;
       align-items: center;
+      min-height: 28px;
       padding: 5px 9px;
       border-radius: 999px;
       background: #ecfbf6;
       color: #0d7b68;
+      border: 1px solid #d9f4ec;
       font-size: 11px;
-      font-weight: 800;
-      border: 1px solid #d7f3ea;
+      font-weight: 900;
+      letter-spacing: -0.1px;
     }
 
     .address-row {
       margin-bottom: 12px;
-      padding-top: 2px;
     }
 
     .address-text {
       display: block;
       font-size: 13px;
       line-height: 1.5;
-      color: #667788;
+      color: #657789;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -289,7 +385,6 @@
     .actions {
       display: flex;
       gap: 8px;
-      margin-top: 0;
     }
 
     .btn {
@@ -297,19 +392,25 @@
       display: inline-flex;
       justify-content: center;
       align-items: center;
-      text-decoration: none;
-      border: 0;
-      border-radius: 12px;
+      min-height: 44px;
       padding: 10px 12px;
-      min-height: 42px;
+      border: 0;
+      border-radius: 14px;
       font-size: 13px;
-      font-weight: 800;
+      font-weight: 900;
+      text-decoration: none;
       cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
     }
 
     .btn-map {
       background: #0f2942;
       color: #fff;
+      box-shadow: 0 10px 18px rgba(15,41,66,0.18);
     }
 
     .btn-call {
@@ -319,36 +420,19 @@
 
     .map-filter-bar {
       position: absolute;
-      top: 10px;
-      left: 10px;
+      top: 12px;
+      left: 12px;
       z-index: 30;
       display: flex;
       flex-direction: column;
       gap: 8px;
-      background: rgba(255,255,255,0.95);
-      padding: 10px;
-      border-radius: 12px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-      backdrop-filter: blur(6px);
-      max-width: calc(100% - 20px);
-    }
-
-    .map-result-count {
-      position: absolute;
-      top: 110px;
-      left: 10px;
-      z-index: 30;
-      display: inline-flex;
-      align-items: center;
-      padding: 10px 14px;
-      border-radius: 12px;
-      background: rgba(15, 41, 66, 0.92);
-      color: #fff;
-      font-size: 14px;
-      font-weight: 800;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-      backdrop-filter: blur(6px);
-      letter-spacing: -0.2px;
+      max-width: calc(100% - 24px);
+      padding: 12px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.94);
+      border: 1px solid rgba(0,0,0,0.05);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
     }
 
     .deal-buttons,
@@ -360,33 +444,60 @@
 
     .deal-buttons button,
     .type-buttons button {
-      border: none;
+      border: 0;
       border-radius: 999px;
-      padding: 6px 10px;
+      padding: 8px 12px;
       font-size: 12px;
-      font-weight: 700;
+      font-weight: 900;
       background: #eef3f7;
       color: #203040;
       cursor: pointer;
       white-space: nowrap;
-      transition: background 0.2s ease, color 0.2s ease;
+      transition: 0.2s ease;
     }
 
     .deal-buttons button.active,
     .type-buttons button.active {
-      background: #18c1a3;
+      background: var(--brand);
       color: #fff;
+      box-shadow: 0 8px 18px rgba(20,184,166,0.22);
+    }
+
+    .map-result-count {
+      position: absolute;
+      top: 120px;
+      left: 12px;
+      z-index: 30;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 46px;
+      padding: 10px 15px;
+      border-radius: 16px;
+      background: rgba(15,41,66,0.92);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 900;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      letter-spacing: -0.2px;
+    }
+
+    .map-result-count::before {
+      content: "●";
+      color: #34d399;
+      font-size: 12px;
     }
 
     .custom-overlay {
-      background: #fff;
-      border-radius: 16px;
-      box-shadow: 0 16px 40px rgba(0,0,0,0.18);
-      width: 300px;
-      max-width: 300px;
-      padding: 16px;
-      border: 1px solid rgba(0,0,0,0.08);
       position: relative;
+      width: 315px;
+      max-width: 315px;
+      padding: 16px;
+      border-radius: 18px;
+      background: #fff;
+      border: 1px solid rgba(0,0,0,0.06);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.18);
       overflow: hidden;
     }
 
@@ -394,17 +505,19 @@
       position: absolute;
       top: 10px;
       right: 10px;
-      width: 28px;
-      height: 28px;
+      width: 30px;
+      height: 30px;
       border: 0;
       border-radius: 50%;
       background: #eef3f7;
+      color: #203040;
       cursor: pointer;
       font-size: 14px;
+      font-weight: 900;
     }
 
     .custom-overlay h3 {
-      margin: 0 28px 8px 0;
+      margin: 0 34px 8px 0;
       font-size: 16px;
       line-height: 1.4;
       color: #122033;
@@ -413,23 +526,19 @@
     }
 
     .custom-overlay .overlay-price {
+      margin-bottom: 8px;
       font-size: 14px;
       font-weight: 900;
       color: #0d7b68;
-      margin-bottom: 8px;
-      word-break: keep-all;
-      overflow-wrap: break-word;
     }
 
     .custom-overlay p {
       margin: 0;
       font-size: 13px;
-      line-height: 1.6;
+      line-height: 1.65;
       color: #5c6c7c;
       word-break: keep-all;
       overflow-wrap: break-word;
-      white-space: normal;
-      max-width: 100%;
     }
 
     .area-row {
@@ -444,11 +553,10 @@
       border-radius: 999px;
       padding: 4px 8px;
       font-size: 11px;
-      font-weight: 700;
+      font-weight: 900;
       background: #eef3f7;
       color: #203040;
       cursor: pointer;
-      line-height: 1.2;
     }
 
     .overlay-features {
@@ -456,19 +564,18 @@
       flex-wrap: wrap;
       gap: 6px;
       margin-top: 10px;
-      max-width: 100%;
     }
 
     .overlay-features span {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 5px 8px;
+      border-radius: 999px;
       background: #e7fbf5;
       color: #0d7b68;
       font-size: 11px;
-      font-weight: 700;
-      border-radius: 999px;
-      padding: 5px 8px;
-      max-width: 100%;
-      word-break: keep-all;
-      overflow-wrap: break-word;
+      font-weight: 900;
     }
 
     .custom-overlay .overlay-actions {
@@ -479,16 +586,16 @@
 
     .custom-overlay .overlay-btn {
       flex: 1;
-      text-decoration: none;
-      text-align: center;
-      border-radius: 10px;
-      padding: 10px 12px;
-      font-size: 12px;
-      font-weight: 800;
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      min-height: 42px;
+      padding: 10px 12px;
       border: 0;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 900;
+      text-decoration: none;
       cursor: pointer;
     }
 
@@ -529,16 +636,12 @@
 
       .map-wrap,
       #map {
-        height: 70vh;
-        min-height: 500px;
-      }
-
-      .map-filter-bar {
-        max-width: calc(100% - 20px);
+        height: 72vh;
+        min-height: 520px;
       }
 
       .map-result-count {
-        top: 112px;
+        top: 124px;
       }
     }
   </style>
@@ -546,12 +649,14 @@
 <body>
   <div class="app">
     <aside class="sidebar">
-      <h1>제주도 부동산<br>카카오맵 매물 지도</h1>
-      <p>지도 숫자를 누르면 해당 묶음의 매물만 왼쪽 카드에 표시됩니다.</p>
+      <div class="brand-card">
+        <div class="brand-badge">PREMIUM REAL ESTATE MAP</div>
+        <h1>제주 프리미엄<br>부동산 지도</h1>
+        <p>지도의 숫자를 누르면 해당 위치에 포함된 매물만 왼쪽 카드에 표시됩니다. 지도 빈 곳을 누르거나 전체 매물 보기를 누르면 다시 전체 목록으로 돌아갑니다.</p>
+      </div>
 
-      <div class="search-box">
-        <input type="text" id="keyword" placeholder="지역명, 주소, 키워드 검색">
-
+      <div class="panel search-box">
+        <input type="text" id="keyword" placeholder="지역명, 주소, 키워드 검색" />
         <button class="reset-list-btn" id="resetListBtn" type="button">전체 매물 보기</button>
 
         <div class="filter-title">특징 태그</div>
@@ -563,6 +668,11 @@
           <button type="button" data-value="투자용">투자용</button>
           <button type="button" data-value="급매">급매</button>
         </div>
+      </div>
+
+      <div class="list-head">
+        <strong>매물 리스트</strong>
+        <span id="listInfoText">전체 결과</span>
       </div>
 
       <div class="property-list" id="propertyList"></div>
@@ -627,6 +737,7 @@
     const typeButtons = document.querySelectorAll("#typeButtons button");
     const featureButtons = document.querySelectorAll("#featureButtons button");
     const resizer = document.getElementById("resizer");
+    const listInfoText = document.getElementById("listInfoText");
 
     function escapeHtml(str) {
       return String(str ?? "")
@@ -670,6 +781,14 @@
       };
     }
 
+    function setResultInfo(text) {
+      if (mapResultCount) mapResultCount.textContent = text;
+    }
+
+    function setListInfo(text) {
+      if (listInfoText) listInfoText.textContent = text;
+    }
+
     async function loadProperties() {
       try {
         const res = await fetch("./properties.json");
@@ -691,7 +810,8 @@
             </div>
           </div>
         `;
-        if (mapResultCount) mapResultCount.textContent = "총 0건";
+        setResultInfo("총 0건");
+        setListInfo("불러오기 실패");
       }
     }
 
@@ -705,30 +825,49 @@
     function createMarkerImage(item) {
       const color = getMarkerColor(item.dealType, item.type);
       const svg = `
-        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="48" viewBox="0 0 36 48">
-          <path d="M18 0C8.06 0 0 8.06 0 18c0 12.95 18 30 18 30s18-17.05 18-30C36 8.06 27.94 0 18 0z" fill="${color}"/>
-          <circle cx="18" cy="18" r="8" fill="white"/>
+        <svg xmlns="http://www.w3.org/2000/svg" width="44" height="56" viewBox="0 0 44 56">
+          <defs>
+            <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+              <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="rgba(0,0,0,0.18)"/>
+            </filter>
+          </defs>
+          <g filter="url(#shadow)">
+            <path d="M22 0C10.1 0 0.5 9.6 0.5 21.5C0.5 36.4 22 55 22 55S43.5 36.4 43.5 21.5C43.5 9.6 33.9 0 22 0Z" fill="${color}"/>
+            <circle cx="22" cy="21.5" r="9.2" fill="#ffffff"/>
+          </g>
         </svg>
       `;
       return new kakao.maps.MarkerImage(
         "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg),
-        new kakao.maps.Size(36, 48),
-        { offset: new kakao.maps.Point(18, 48) }
+        new kakao.maps.Size(44, 56),
+        { offset: new kakao.maps.Point(22, 56) }
       );
     }
 
-    function hideRoadview() {
-      if (roadviewOverlay) roadviewOverlay.style.display = "none";
+    async function closeRoadviewPanel() {
+      try {
+        if (document.fullscreenElement === roadviewOverlay) {
+          await document.exitFullscreen();
+        }
+      } catch (err) {
+        console.error("전체화면 해제 실패:", err);
+      }
+
+      if (roadviewOverlay) {
+        roadviewOverlay.style.display = "none";
+      }
+    }
+
+    async function hideRoadview() {
+      await closeRoadviewPanel();
     }
 
     function initMap() {
-      const mapContainer = document.getElementById("map");
-      const mapOption = {
+      state.map = new kakao.maps.Map(document.getElementById("map"), {
         center: new kakao.maps.LatLng(33.38, 126.55),
         level: 9
-      };
+      });
 
-      state.map = new kakao.maps.Map(mapContainer, mapOption);
       state.map.setMapTypeId(kakao.maps.MapTypeId.ROADMAP);
 
       const mapTypeControl = new kakao.maps.MapTypeControl();
@@ -740,10 +879,9 @@
       state.clusterer = new kakao.maps.MarkerClusterer({
         map: state.map,
         averageCenter: true,
-        minLevel: 3,   // 핵심
+        minLevel: 3,
         disableClickZoom: true,
         calculator: [5, 10, 20, 50],
-        
         styles: [
           {
             width: "44px",
@@ -752,72 +890,67 @@
             borderRadius: "22px",
             color: "#2563eb",
             textAlign: "center",
-            fontWeight: "800",
+            fontWeight: "900",
             lineHeight: "44px",
-            fontSize: "24px",
+            fontSize: "22px",
             border: "1px solid rgba(0,0,0,0.06)",
             boxShadow: "0 8px 20px rgba(0,0,0,0.12)"
           },
           {
             width: "50px",
             height: "50px",
-            background: "rgba(255,255,255,0.94)",
+            background: "rgba(255,255,255,0.95)",
             borderRadius: "25px",
             color: "#2563eb",
             textAlign: "center",
-            fontWeight: "800",
+            fontWeight: "900",
             lineHeight: "50px",
             fontSize: "24px",
             border: "1px solid rgba(0,0,0,0.06)",
             boxShadow: "0 8px 20px rgba(0,0,0,0.12)"
           },
           {
-            width: "56px",
-            height: "56px",
-            background: "rgba(255,255,255,0.96)",
-            borderRadius: "28px",
+            width: "58px",
+            height: "58px",
+            background: "rgba(255,255,255,0.97)",
+            borderRadius: "29px",
             color: "#2563eb",
             textAlign: "center",
-            fontWeight: "800",
-            lineHeight: "56px",
+            fontWeight: "900",
+            lineHeight: "58px",
             fontSize: "26px",
             border: "1px solid rgba(0,0,0,0.06)",
             boxShadow: "0 8px 20px rgba(0,0,0,0.12)"
           },
           {
-            width: "62px",
-            height: "62px",
+            width: "66px",
+            height: "66px",
             background: "rgba(255,255,255,0.98)",
-            borderRadius: "31px",
+            borderRadius: "33px",
             color: "#2563eb",
             textAlign: "center",
             fontWeight: "900",
-            lineHeight: "62px",
+            lineHeight: "66px",
             fontSize: "28px",
             border: "1px solid rgba(0,0,0,0.06)",
-            boxShadow: "0 8px 20px rgba(0,0,0,0.12)"
+            boxShadow: "0 10px 24px rgba(0,0,0,0.14)"
           }
         ]
       });
 
-      kakao.maps.event.addListener(state.clusterer, "clusterclick", function (cluster) {
-        hideRoadview();
+      kakao.maps.event.addListener(state.clusterer, "clusterclick", async function (cluster) {
+        await hideRoadview();
         closeOverlay();
 
-        const clusterMarkers = cluster.getMarkers();
-        const clusterItems = clusterMarkers
+        const clusterItems = cluster.getMarkers()
           .map(marker => marker.__property)
           .filter(Boolean);
 
         renderList(clusterItems);
+        propertyList.scrollTop = 0;
 
-        if (propertyList) {
-          propertyList.scrollTop = 0;
-        }
-
-        if (mapResultCount) {
-          mapResultCount.textContent = `선택 지역 ${clusterItems.length}건`;
-        }
+        setResultInfo(`선택 지역 ${clusterItems.length}건`);
+        setListInfo(`클러스터 선택 · ${clusterItems.length}건`);
 
         const bounds = new kakao.maps.LatLngBounds();
         clusterItems.forEach(item => {
@@ -826,13 +959,12 @@
         state.map.setBounds(bounds);
       });
 
-      kakao.maps.event.addListener(state.map, "click", function () {
+      kakao.maps.event.addListener(state.map, "click", async function () {
         closeOverlay();
-        hideRoadview();
+        await hideRoadview();
         renderList(state.filtered);
-        if (mapResultCount) {
-          mapResultCount.textContent = `총 ${state.filtered.length}건`;
-        }
+        setResultInfo(`총 ${state.filtered.length}건`);
+        setListInfo(`전체 결과 · ${state.filtered.length}건`);
       });
     }
 
@@ -845,13 +977,13 @@
         position:absolute;
         top:52px;
         right:10px;
-        width:min(640px, calc(100% - 20px));
-        height:min(480px, calc(100vh - 80px));
+        width:min(720px, calc(100% - 20px));
+        height:min(520px, calc(100vh - 80px));
         z-index:50;
         background:#fff;
-        border-radius:12px;
+        border-radius:14px;
         overflow:hidden;
-        box-shadow:0 10px 30px rgba(0,0,0,0.18);
+        box-shadow:0 18px 40px rgba(0,0,0,0.22);
         display:none;
       `;
 
@@ -863,14 +995,14 @@
         top:8px;
         right:8px;
         z-index:2;
-        width:30px;
-        height:30px;
+        width:32px;
+        height:32px;
         border:none;
         border-radius:50%;
-        background:rgba(255,255,255,0.92);
+        background:rgba(255,255,255,0.94);
         cursor:pointer;
         font-size:14px;
-        font-weight:700;
+        font-weight:900;
       `;
 
       const fullscreenBtn = document.createElement("button");
@@ -879,24 +1011,24 @@
       fullscreenBtn.style.cssText = `
         position:absolute;
         top:8px;
-        right:46px;
+        right:48px;
         z-index:2;
-        height:30px;
-        padding:0 10px;
+        height:32px;
+        padding:0 11px;
         border:none;
         border-radius:999px;
-        background:rgba(255,255,255,0.92);
+        background:rgba(255,255,255,0.94);
         cursor:pointer;
         font-size:12px;
-        font-weight:700;
+        font-weight:900;
       `;
 
       const inner = document.createElement("div");
       inner.id = "roadviewInner";
       inner.style.cssText = "width:100%; height:100%;";
 
-      closeBtn.addEventListener("click", () => {
-        roadviewContainer.style.display = "none";
+      closeBtn.addEventListener("click", async () => {
+        await closeRoadviewPanel();
       });
 
       fullscreenBtn.addEventListener("click", async () => {
@@ -913,7 +1045,8 @@
 
       document.addEventListener("fullscreenchange", () => {
         if (!roadviewFullscreenBtn) return;
-        roadviewFullscreenBtn.textContent = document.fullscreenElement ? "전체화면 해제" : "전체화면";
+        roadviewFullscreenBtn.textContent =
+          document.fullscreenElement === roadviewOverlay ? "전체화면 해제" : "전체화면";
       });
 
       roadviewContainer.appendChild(closeBtn);
@@ -959,6 +1092,7 @@
 
       state.markers.forEach(marker => marker.setMap(null));
       state.overlays.forEach(item => item.overlay.setMap(null));
+
       state.markers = [];
       state.overlays = [];
       state.activeOverlay = null;
@@ -1106,8 +1240,8 @@
           }
         });
 
-        kakao.maps.event.addListener(marker, "click", function () {
-          hideRoadview();
+        kakao.maps.event.addListener(marker, "click", async function () {
+          await hideRoadview();
           highlightCard(item.id);
           moveMapToProperty(item, 4);
 
@@ -1133,11 +1267,11 @@
       }
     }
 
-    function focusProperty(id) {
+    async function focusProperty(id) {
       const item = state.filtered.find(v => v.id === id);
       if (!item || !state.map) return;
 
-      hideRoadview();
+      await hideRoadview();
       highlightCard(id);
       moveMapToProperty(item, 4);
 
@@ -1211,16 +1345,16 @@
       }).join("");
 
       document.querySelectorAll(".card").forEach(card => {
-        card.addEventListener("click", function (e) {
+        card.addEventListener("click", async function (e) {
           if (e.target.closest("a, button")) return;
-          focusProperty(Number(card.dataset.id));
+          await focusProperty(Number(card.dataset.id));
         });
       });
 
       document.querySelectorAll(".btn-map").forEach(btn => {
-        btn.addEventListener("click", function (e) {
+        btn.addEventListener("click", async function (e) {
           e.stopPropagation();
-          focusProperty(Number(btn.dataset.id));
+          await focusProperty(Number(btn.dataset.id));
         });
       });
     }
@@ -1281,10 +1415,8 @@
 
       renderList(state.filtered);
       renderMarkers(state.filtered);
-
-      if (mapResultCount) {
-        mapResultCount.textContent = `총 ${state.filtered.length}건`;
-      }
+      setResultInfo(`총 ${state.filtered.length}건`);
+      setListInfo(`전체 결과 · ${state.filtered.length}건`);
     }
 
     function initEvents() {
@@ -1293,9 +1425,8 @@
       if (resetListBtn) {
         resetListBtn.addEventListener("click", () => {
           renderList(state.filtered);
-          if (mapResultCount) {
-            mapResultCount.textContent = `총 ${state.filtered.length}건`;
-          }
+          setResultInfo(`총 ${state.filtered.length}건`);
+          setListInfo(`전체 결과 · ${state.filtered.length}건`);
         });
       }
 
@@ -1323,12 +1454,10 @@
 
           if (value === "all") {
             state.selectedFeatures.clear();
+          } else if (state.selectedFeatures.has(value)) {
+            state.selectedFeatures.delete(value);
           } else {
-            if (state.selectedFeatures.has(value)) {
-              state.selectedFeatures.delete(value);
-            } else {
-              state.selectedFeatures.add(value);
-            }
+            state.selectedFeatures.add(value);
           }
 
           syncFeatureButtons();
@@ -1350,9 +1479,8 @@
 
       window.addEventListener("mousemove", (e) => {
         if (!isResizing) return;
-
-        const min = 260;
-        const max = 700;
+        const min = 280;
+        const max = 760;
         const nextWidth = Math.min(Math.max(e.clientX, min), max);
         document.documentElement.style.setProperty("--sidebar-width", `${nextWidth}px`);
       });
