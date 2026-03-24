@@ -46,7 +46,6 @@
       box-shadow: none !important;
     }
 
-    /* 안 보이지만 드래그는 되는 영역 */
     .resizer {
       position: absolute;
       top: 0;
@@ -156,26 +155,16 @@
     .card {
       background: #fff;
       color: #222;
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-      cursor: pointer;
-      border: 2px solid transparent;
-      transition: all 0.2s ease;
-    }
-
-    .premium-card {
       border-radius: 18px;
       overflow: hidden;
       box-shadow: 0 10px 24px rgba(15, 41, 66, 0.10);
       border: 1px solid rgba(0,0,0,0.04);
-      background: #fff;
+      cursor: pointer;
+      transition: all 0.2s ease;
     }
 
     .card:hover,
-    .card.active,
-    .premium-card:hover,
-    .premium-card.active {
+    .card.active {
       border-color: #18c1a3;
       box-shadow: 0 14px 28px rgba(15, 41, 66, 0.14);
       transform: translateY(-2px);
@@ -202,22 +191,19 @@
     .badge {
       display: inline-flex;
       align-items: center;
-      background: rgba(0,0,0,0.75);
-      color: #fff;
       font-size: 12px;
       font-weight: 700;
       padding: 6px 10px;
       border-radius: 999px;
+      color: #fff;
     }
 
     .deal-badge {
       background: rgba(15, 41, 66, 0.88);
-      color: #fff;
     }
 
     .hot-badge {
       background: #ff5a5f;
-      color: #fff;
     }
 
     .card-body {
@@ -259,22 +245,13 @@
     }
 
     .meta span {
-      background: #eef3f7;
-      color: #4c6275;
+      background: #f2f5f8;
+      color: #425466;
+      border: 1px solid #e7edf3;
       font-size: 12px;
       font-weight: 700;
       border-radius: 999px;
       padding: 6px 10px;
-    }
-
-    .meta-main {
-      margin-bottom: 10px;
-    }
-
-    .meta-main span {
-      background: #f2f5f8;
-      color: #425466;
-      border: 1px solid #e7edf3;
     }
 
     .feature-chip-row {
@@ -296,11 +273,6 @@
       border: 1px solid #d7f3ea;
     }
 
-    .feature-badge {
-      background: #e7fbf5 !important;
-      color: #0d7b68 !important;
-    }
-
     .address-row {
       margin-bottom: 12px;
       padding-top: 2px;
@@ -316,19 +288,9 @@
       text-overflow: ellipsis;
     }
 
-    .desc {
-      font-size: 13px;
-      line-height: 1.6;
-      color: #5c6c7c;
-    }
-
     .actions {
       display: flex;
       gap: 8px;
-      margin-top: 12px;
-    }
-
-    .premium-actions {
       margin-top: 0;
     }
 
@@ -404,8 +366,8 @@
       background: #fff;
       border-radius: 16px;
       box-shadow: 0 16px 40px rgba(0,0,0,0.18);
-      width: 290px;
-      max-width: 290px;
+      width: 300px;
+      max-width: 300px;
       padding: 16px;
       border: 1px solid rgba(0,0,0,0.08);
       position: relative;
@@ -627,6 +589,7 @@
     let roadview = null;
     let roadviewClient = null;
     let roadviewOverlay = null;
+    let roadviewFullscreenBtn = null;
     let selectedDeal = "all";
     let selectedType = "all";
     let isResizing = false;
@@ -697,7 +660,7 @@
           <div class="card" style="padding:18px; cursor:default;">
             <div class="card-body" style="padding:0;">
               <h3 class="title" style="margin-bottom:6px;">매물 데이터를 불러오지 못했습니다</h3>
-              <div class="desc">properties.json 파일 경로와 형식을 확인해 주세요.</div>
+              <div class="address-text">properties.json 파일 경로와 형식을 확인해 주세요.</div>
             </div>
           </div>
         `;
@@ -759,10 +722,10 @@
       roadviewContainer.id = "roadviewPanel";
       roadviewContainer.style.cssText = `
         position:absolute;
-        top:70px;
-        right:15px;
-        width:min(480px, calc(100% - 20px));
-        height:min(360px, calc(100vh - 80px));
+        top:52px;
+        right:10px;
+        width:min(640px, calc(100% - 20px));
+        height:min(480px, calc(100vh - 80px));
         z-index:50;
         background:#fff;
         border-radius:12px;
@@ -789,6 +752,24 @@
         font-weight:700;
       `;
 
+      const fullscreenBtn = document.createElement("button");
+      fullscreenBtn.type = "button";
+      fullscreenBtn.textContent = "전체화면";
+      fullscreenBtn.style.cssText = `
+        position:absolute;
+        top:8px;
+        right:46px;
+        z-index:2;
+        height:30px;
+        padding:0 10px;
+        border:none;
+        border-radius:999px;
+        background:rgba(255,255,255,0.92);
+        cursor:pointer;
+        font-size:12px;
+        font-weight:700;
+      `;
+
       const inner = document.createElement("div");
       inner.id = "roadviewInner";
       inner.style.cssText = "width:100%; height:100%;";
@@ -797,12 +778,31 @@
         roadviewContainer.style.display = "none";
       });
 
+      fullscreenBtn.addEventListener("click", async () => {
+        try {
+          if (!document.fullscreenElement) {
+            await roadviewContainer.requestFullscreen();
+          } else {
+            await document.exitFullscreen();
+          }
+        } catch (err) {
+          console.error("전체화면 전환 실패:", err);
+        }
+      });
+
+      document.addEventListener("fullscreenchange", () => {
+        if (!roadviewFullscreenBtn) return;
+        roadviewFullscreenBtn.textContent = document.fullscreenElement ? "전체화면 해제" : "전체화면";
+      });
+
       roadviewContainer.appendChild(closeBtn);
+      roadviewContainer.appendChild(fullscreenBtn);
       roadviewContainer.appendChild(inner);
       document.querySelector(".map-wrap").appendChild(roadviewContainer);
 
       roadview = new kakao.maps.Roadview(inner);
       roadviewOverlay = roadviewContainer;
+      roadviewFullscreenBtn = fullscreenBtn;
     }
 
     function showRoadview(lat, lng) {
@@ -1020,7 +1020,7 @@
           <div class="card" style="padding:18px; cursor:default;">
             <div class="card-body" style="padding:0;">
               <h3 class="title" style="margin-bottom:6px;">표시할 매물이 없습니다</h3>
-              <div class="desc">검색 조건을 바꿔보세요.</div>
+              <div class="address-text">검색 조건을 바꿔보세요.</div>
             </div>
           </div>
         `;
@@ -1038,7 +1038,7 @@
           .join("");
 
         return `
-          <article class="card premium-card" data-id="${item.id}">
+          <article class="card" data-id="${item.id}">
             <div class="thumb" style="background-image:url('${escapeHtml(item.image)}')">
               <div class="card-top-badges">
                 <span class="badge deal-badge">${escapeHtml(item.dealType)}</span>
@@ -1055,7 +1055,7 @@
                 <div class="price">${escapeHtml(item.price)}</div>
               </div>
 
-              <div class="meta meta-main">
+              <div class="meta">
                 <span>${escapeHtml(item.type || "-")}</span>
                 <span>${escapeHtml(item.region || "-")}</span>
                 <span>${escapeHtml(item.area)}</span>
@@ -1067,7 +1067,7 @@
                 <span class="address-text">${escapeHtml(item.address)}</span>
               </div>
 
-              <div class="actions premium-actions">
+              <div class="actions">
                 <button class="btn btn-map" data-id="${item.id}" type="button">지도보기</button>
                 <a class="btn btn-call" href="tel:${String(item.phone || "").replace(/[^0-9]/g, "")}">
                   ${escapeHtml(item.phone || "문의")}
