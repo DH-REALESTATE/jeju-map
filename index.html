@@ -7,75 +7,75 @@
 <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=b7db2d3c35122f3ec33c88ea6d3195fb&libraries=clusterer"></script>
 
 <style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:sans-serif;}
+*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Noto Sans KR",sans-serif;}
+body{display:flex;height:100vh;overflow:hidden;background:#f5f7fa}
 
-body{display:flex;height:100vh;overflow:hidden;}
+/* 좌측 */
+.sidebar{width:380px;background:#fff;border-right:1px solid #eee;overflow:hidden;transition:.3s}
+.sidebar.expanded{width:760px}
 
-.sidebar{
-  width:420px;
-  background:#fff;
-  border-right:1px solid #eee;
-  transition:width .3s;
-  overflow:hidden;
-}
+.sidebar-inner{display:flex;height:100%}
 
-.sidebar.expanded{
-  width:780px;
-}
-
-.sidebar-inner{
-  display:flex;
-  height:100%;
-}
-
-.list{
-  width:420px;
-  overflow-y:auto;
-  padding:10px;
-}
-
-.detail{
-  width:360px;
-  border-left:1px solid #eee;
-  background:#fafafa;
-  display:none;
-  flex-direction:column;
-}
-
-.sidebar.expanded .detail{
-  display:flex;
-}
+.list{width:380px;overflow-y:auto;padding:16px}
 
 .card{
-  padding:12px;
-  border:1px solid #eee;
-  border-radius:10px;
-  margin-bottom:10px;
+  padding:14px;border:1px solid #eee;border-radius:12px;
+  margin-bottom:12px;cursor:pointer;
+  transition:.15s;
+}
+.card:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.08)}
+
+.detail{
+  width:380px;background:#fff;border-left:1px solid #eee;
+  display:none;flex-direction:column
+}
+.sidebar.expanded .detail{display:flex}
+
+.detail-header{
+  padding:12px;border-bottom:1px solid #eee;
+  display:flex;justify-content:space-between
+}
+
+.detail-body{padding:16px;overflow-y:auto}
+
+.detail-img{height:220px;background:#ddd;background-size:cover;background-position:center;border-radius:12px;margin-bottom:12px}
+
+.price{font-size:24px;font-weight:900;color:#0d7b68;margin:8px 0}
+
+.btns{display:flex;gap:8px;margin-top:12px}
+.btns button,.btns a{
+  flex:1;padding:10px;border-radius:10px;border:0;
+  background:#eef3f7;cursor:pointer;text-align:center;text-decoration:none
+}
+
+/* 지도 */
+#map{flex:1}
+
+/* 가격 마커 */
+.price-marker{
+  background:#fff;padding:6px 10px;border-radius:999px;
+  font-weight:900;font-size:12px;
+  box-shadow:0 4px 12px rgba(0,0,0,.15);
+  transform:translateY(-100%);
   cursor:pointer;
-}
-
-#map{
-  flex:1;
-}
-
-/* 클러스터 스타일 */
-.cluster{
-  background:#fff;
-  border-radius:50%;
-  padding:10px;
-  font-weight:900;
 }
 
 /* 로드뷰 */
 #roadview{
-  position:absolute;
-  top:50px;
-  right:10px;
-  width:500px;
-  height:400px;
-  display:none;
-  z-index:999;
-  background:#000;
+  position:absolute;top:60px;right:20px;
+  width:520px;height:400px;
+  display:none;z-index:999;background:#000;
+  border-radius:12px;overflow:hidden
+}
+
+.rv-top{
+  position:absolute;top:10px;right:10px;z-index:2;
+  display:flex;gap:6px
+}
+
+.rv-btn{
+  background:rgba(0,0,0,.6);color:#fff;border:0;
+  padding:6px 10px;border-radius:8px;cursor:pointer;font-size:12px
 }
 
 </style>
@@ -83,153 +83,152 @@ body{display:flex;height:100vh;overflow:hidden;}
 
 <body>
 
+<!-- 좌측 -->
 <div class="sidebar" id="sidebar">
   <div class="sidebar-inner">
-    
+
     <div class="list" id="list"></div>
 
     <div class="detail" id="detail">
-      <button onclick="closeDetail()">닫기</button>
-      <div id="detailContent"></div>
+      <div class="detail-header">
+        <button onclick="closeDetail()">←</button>
+      </div>
+
+      <div class="detail-body">
+        <div class="detail-img" id="dImg"></div>
+        <h2 id="dTitle"></h2>
+        <div class="price" id="dPrice"></div>
+        <div id="dDesc"></div>
+
+        <div class="btns">
+          <button onclick="goMap()">지도</button>
+          <button onclick="goRoad()">로드뷰</button>
+          <a id="dLink" target="_blank">상세보기</a>
+        </div>
+      </div>
     </div>
 
   </div>
 </div>
 
 <div id="map"></div>
-<div id="roadview"></div>
+
+<!-- 로드뷰 -->
+<div id="roadview">
+  <div class="rv-top">
+    <button class="rv-btn" id="rvFull">전체화면</button>
+    <button class="rv-btn" onclick="closeRoad()">X</button>
+  </div>
+</div>
 
 <script>
 
-// 샘플 데이터
+// 데이터
 const data = [
-  {
-    id:1,
-    title:"제주시 토지",
-    price:"3억",
-    lat:33.38,
-    lng:126.55,
-    desc:"좋은 입지",
-    image:"https://picsum.photos/400/200"
-  },
-  {
-    id:2,
-    title:"애월 매물",
-    price:"5억",
-    lat:33.45,
-    lng:126.35,
-    desc:"바다뷰",
-    image:"https://picsum.photos/400/201"
-  }
+ {id:1,title:"제주시 신축",price:"6억",lat:33.38,lng:126.55,desc:"도심 신축",image:"https://picsum.photos/400/200"},
+ {id:2,title:"애월 바다뷰",price:"8억",lat:33.45,lng:126.35,desc:"오션뷰",image:"https://picsum.photos/400/201"}
 ];
 
 const sidebar = document.getElementById("sidebar");
-const listEl = document.getElementById("list");
-const detailEl = document.getElementById("detail");
-const detailContent = document.getElementById("detailContent");
+const list = document.getElementById("list");
 
-// 지도 생성
+let current;
+
+// 지도
 const map = new kakao.maps.Map(document.getElementById('map'), {
-  center:new kakao.maps.LatLng(33.38,126.55),
-  level:8
+ center:new kakao.maps.LatLng(33.38,126.55),level:8
 });
 
 // 클러스터
 const clusterer = new kakao.maps.MarkerClusterer({
-  map:map,
-  averageCenter:true,
-  minLevel:3
+ map,averageCenter:true,minLevel:3
 });
 
-let markers = [];
-
-// 리스트 렌더링
+// 리스트
 function renderList(items){
-  listEl.innerHTML = "";
-
-  items.forEach(item=>{
-    const div = document.createElement("div");
-    div.className="card";
-    div.innerHTML = `
-      <strong>${item.title}</strong><br>
-      ${item.price}
-    `;
-
-    div.onclick = ()=>{
-      openDetail(item);
-    };
-
-    listEl.appendChild(div);
-  });
+ list.innerHTML="";
+ items.forEach(item=>{
+  const el=document.createElement("div");
+  el.className="card";
+  el.innerHTML=`<b>${item.title}</b><br>${item.price}`;
+  el.onclick=()=>openDetail(item);
+  list.appendChild(el);
+ });
 }
 
-// 상세 열기
+// 상세
 function openDetail(item){
-  sidebar.classList.add("expanded");
-  detailEl.style.display="flex";
+ current=item;
+ sidebar.classList.add("expanded");
 
-  detailContent.innerHTML = `
-    <h2>${item.title}</h2>
-    <img src="${item.image}" style="width:100%">
-    <p>${item.desc}</p>
-  `;
+ dImg.style.backgroundImage=`url(${item.image})`;
+ dTitle.textContent=item.title;
+ dPrice.textContent=item.price;
+ dDesc.textContent=item.desc;
+ dLink.href=item.link||"#";
 
-  map.setCenter(new kakao.maps.LatLng(item.lat,item.lng));
+ map.setCenter(new kakao.maps.LatLng(item.lat,item.lng));
 }
 
-// 상세 닫기
 function closeDetail(){
-  sidebar.classList.remove("expanded");
-  detailEl.style.display="none";
+ sidebar.classList.remove("expanded");
 }
 
-// 마커 생성
+// 마커
 function renderMarkers(items){
-  clusterer.clear();
+ clusterer.clear();
 
-  markers = items.map(item=>{
-    const marker = new kakao.maps.Marker({
-      position:new kakao.maps.LatLng(item.lat,item.lng)
-    });
+ const markers = items.map(item=>{
+  const el=document.createElement("div");
+  el.className="price-marker";
+  el.textContent=item.price;
 
-    marker.__data = item;
-
-    kakao.maps.event.addListener(marker,"click",()=>{
-      openDetail(item);
-    });
-
-    return marker;
+  const overlay=new kakao.maps.CustomOverlay({
+   position:new kakao.maps.LatLng(item.lat,item.lng),
+   content:el,yAnchor:1
   });
 
-  clusterer.addMarkers(markers);
+  overlay.setMap(map);
 
-  kakao.maps.event.addListener(clusterer,"clusterclick",function(cluster){
-    const ms = cluster.getMarkers();
-    const items = ms.map(m=>m.__data);
-    renderList(items);
-  });
+  el.onclick=()=>openDetail(item);
+
+  return overlay;
+ });
+
+ clusterer.addMarkers([]);
 }
 
 // 로드뷰
-const roadviewEl = document.getElementById("roadview");
+const rvEl=document.getElementById("roadview");
 let roadview;
 
-function showRoadview(lat,lng){
-  roadviewEl.style.display="block";
+function goRoad(){
+ rvEl.style.display="block";
 
-  const container = roadviewEl;
+ roadview=new kakao.maps.Roadview(rvEl);
+ const rvClient=new kakao.maps.RoadviewClient();
 
-  roadview = new kakao.maps.Roadview(container);
-  const rvClient = new kakao.maps.RoadviewClient();
+ const pos=new kakao.maps.LatLng(current.lat,current.lng);
 
-  const position = new kakao.maps.LatLng(lat,lng);
-
-  rvClient.getNearestPanoId(position,50,function(panoId){
-    roadview.setPanoId(panoId,position);
-  });
+ rvClient.getNearestPanoId(pos,50,function(id){
+  roadview.setPanoId(id,pos);
+ });
 }
 
-// 초기 실행
+function closeRoad(){
+ if(document.fullscreenElement) document.exitFullscreen();
+ rvEl.style.display="none";
+}
+
+rvFull.onclick=()=>{
+ if(!document.fullscreenElement){
+  rvEl.requestFullscreen();
+ }else{
+  document.exitFullscreen();
+ }
+};
+
+// 실행
 renderList(data);
 renderMarkers(data);
 
