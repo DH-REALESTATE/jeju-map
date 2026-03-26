@@ -16,6 +16,9 @@
     "image": "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80",
     "link": "https://land.jejukcr.com/offer/80576184",
     "phone": "064-745-0531"
+    "agentName": "김대홍",
+    "agentTitle": "대표이사ㆍ공인중개사",
+    "agentOffice": "디에이치부동산"
   },
   
   {
@@ -34,7 +37,11 @@
     "image": "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1200&q=80",
     "link": "https://land.jejukcr.com/offer/80360494",
     "phone": "064-000-0000"
+    "agentName": "박수용",
+    "agentTitle": "대표",
+    "agentOffice": "수용공인중개사사무소"
   },
+  
   {
     "id": 3,
     "title": "구좌 감귤밭 인접 토지",
@@ -51,6 +58,9 @@
     "image": "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1200&q=80",
     "link": "https://land.jejukcr.com/offer/64166600",
     "phone": "064-745-0531"
+    "agentName": "최진사",
+    "agentTitle": "대표",
+    "agentOffice": "진사부동산중개"
   },
   
   {
@@ -69,6 +79,9 @@
     "image": "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1200&q=80",
     "link": "https://land.jejukcr.com/offer/80100718",
     "phone": "064-745-0531"
+    "agentName": "고도리",
+    "agentTitle": "대표",
+    "agentOffice": "고도리부동산중개"
   },
   
   {
@@ -87,6 +100,9 @@
     "image": "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1200&q=80",
     "link": "https://land.jejukcr.com/offer/79918569",
     "phone": "010-2134-7806"
+    "agentName": "박날아",
+    "agentTitle": "대표",
+    "agentOffice": "날아올라부동산중개"
   },
 
   {
@@ -105,6 +121,30 @@
     "image": "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1200&q=80",
     "link": "https://land.jejukcr.com/offer/79918569",
     "phone": "010-2134-7806"
-  }
+    "agentName": "박날아",
+    "agentTitle": "대표",
+    "agentOffice": "날아올라부동산중개"
+  },
+
+  {
+    "id": 236,
+    "title": "영어교육도시 인근 수익형 상가",
+    "type": "상가",
+    "dealFilter": "매매",
+    "region": "영어교육도시",
+    "price": "8억 9,000",
+    "area": "94㎡",
+    "address": "서귀포시 대정읍",
+    "lat": 33.3025,
+    "lng": 126.2863,
+    "features": ["영어교육도시", "투자용"],
+    "desc": "유동인구가 안정적인 핵심 입지의 수익형 상가 매물입니다.",
+    "image": "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1200&q=80",
+    "link": "https://land.jejukcr.com/offer/80360494",
+    "phone": "064-000-0000"
+    "agentName": "박수용",
+    "agentTitle": "대표",
+    "agentOffice": "수용공인중개사사무소"
+  },
   
 ]
