@@ -12,14 +12,10 @@
       --sidebar-current-width: var(--sidebar-list-width);
       --resizer-hit-width: 16px;
       --brand: #14b8a6;
-      --brand-dark: #0f2942;
       --bg: #f4f7fb;
       --line: #e7edf3;
       --text: #17212b;
-      --muted: #667788;
-      --white: #ffffff;
       --shadow: 0 12px 30px rgba(15, 41, 66, 0.12);
-      --radius: 18px;
     }
 
     * { box-sizing: border-box; }
@@ -33,9 +29,7 @@
       color: var(--text);
     }
 
-    body {
-      overflow: hidden;
-    }
+    body { overflow: hidden; }
 
     .app {
       position: relative;
@@ -552,9 +546,7 @@
       overflow: hidden;
     }
 
-    .thumb::after {
-      display: none;
-    }
+    .thumb::after { display: none; }
 
     .card-body {
       flex: 1;
@@ -685,9 +677,7 @@
       text-overflow: ellipsis;
     }
 
-    .actions {
-      display: none;
-    }
+    .actions { display: none; }
 
     .resizer {
       position: absolute;
@@ -915,18 +905,14 @@
         --resizer-hit-width: 0px;
       }
 
-      body {
-        overflow: auto;
-      }
+      body { overflow: auto; }
 
       .app {
         grid-template-columns: 1fr;
         height: auto;
       }
 
-      .resizer {
-        display: none;
-      }
+      .resizer { display: none; }
 
       .sidebar {
         height: auto;
@@ -938,9 +924,7 @@
         grid-template-columns: 1fr;
       }
 
-      .sidebar-detail-panel {
-        display: none;
-      }
+      .sidebar-detail-panel { display: none; }
 
       .map-wrap,
       #map {
@@ -948,9 +932,7 @@
         min-height: 520px;
       }
 
-      .map-result-count {
-        top: 124px;
-      }
+      .map-result-count { top: 124px; }
     }
   </style>
 </head>
@@ -1164,6 +1146,23 @@
         .replace(/'/g, "&#39;");
     }
 
+    function getRelativeDate(dateString) {
+      if (!dateString) return "";
+      const now = new Date();
+      const target = new Date(dateString);
+      if (isNaN(target.getTime())) return "";
+
+      const diffMs = now - target;
+      const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+      if (diffDays <= 0) return "오늘";
+      if (diffDays === 1) return "1일 전";
+      if (diffDays < 7) return `${diffDays}일 전`;
+      if (diffDays < 30) return `${Math.floor(diffDays / 7)}주 전`;
+      if (diffDays < 365) return `${Math.floor(diffDays / 30)}개월 전`;
+      return `${Math.floor(diffDays / 365)}년 전`;
+    }
+
     function normalizeProperty(item, index) {
       return {
         id: item.id ?? index + 1,
@@ -1184,7 +1183,9 @@
         agentName: item.agentName ?? "담당자",
         agentTitle: item.agentTitle ?? "대표",
         agentOffice: item.agentOffice ?? "중개사무소",
-        agentImage: item.agentImage ?? ""
+        agentImage: item.agentImage ?? "",
+        date: item.date ?? "",
+        dateLabel: item.dateLabel ?? ""
       };
     }
 
@@ -1293,9 +1294,7 @@
       updateSidebarWidth();
 
       detailHero.style.backgroundImage = `url('${escapeHtml(item.image)}')`;
-      detailBadges.innerHTML = `
-        <span>${escapeHtml(item.type || "-")}</span>
-      `;
+      detailBadges.innerHTML = `<span>${escapeHtml(item.type || "-")}</span>`;
 
       detailTitle.textContent = item.title || "";
       detailPrice.textContent = `${item.dealType || ""} ${item.price || ""}`.trim();
@@ -1307,7 +1306,6 @@
       `;
 
       detailDesc.textContent = item.desc || "";
-
       detailAreaValue.textContent = item.area || "-";
       detailTypeValue.textContent = item.type || "-";
       detailRegionValue.textContent = item.region || "-";
@@ -1782,9 +1780,8 @@
         const addressText = escapeHtml(item.address || "-");
         const areaText = escapeHtml(item.area || "-");
         const typeText = escapeHtml(item.type || "-");
-        const regionText = escapeHtml(item.region || "-");
         const titleText = escapeHtml(item.title || "매물명");
-        const dateText = "1년 전";
+        const dateText = item.dateLabel || (item.date ? getRelativeDate(item.date) : "");
 
         const agentName = escapeHtml(item.agentName || "담당자");
         const agentTitle = escapeHtml(item.agentTitle || "대표");
@@ -1799,7 +1796,7 @@
               <div class="card-body">
                 <div class="card-top-line">
                   <span class="card-badge">${typeText}</span>
-                  <span class="card-date">${dateText}</span>
+                  <span class="card-date">${escapeHtml(dateText)}</span>
                 </div>
 
                 <div class="card-address">${addressText}</div>
@@ -1872,6 +1869,8 @@
           item.type ?? "",
           item.agentName ?? "",
           item.agentOffice ?? "",
+          item.date ?? "",
+          item.dateLabel ?? "",
           ...(item.features ?? [])
         ].join(" ").toLowerCase();
 
