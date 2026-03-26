@@ -37,12 +37,13 @@
     "lng": 126.2863,
     "features": ["영어교육도시", "투자용"],
     "desc": "유동인구가 안정적인 핵심 입지의 수익형 상가 매물입니다.",
-    "image": "https://raw.githubusercontent.com/DH-REALESTATE/jeju-map/main/dh_realestate/235/image1.jpeg",
+    "image": "https://raw.githubusercontent.com/DH-REALESTATE/jeju-map/main/dh_real/235/image1.jpeg",
     "link": "https://land.jejukcr.com/offer/80360494",
     "phone": "064-000-0000",
     "agentName": "박수용",
     "agentTitle": "대표",
-    "agentOffice": "수용공인중개사사무소"
+    "agentOffice": "수용공인중개사사무소",
+    "agentImage": "https://raw.githubusercontent.com/DH-REALESTATE/jeju-map/main/dh_real/000/face.jpg"
   },
   
   {
@@ -64,7 +65,8 @@
     "phone": "064-745-0531",
     "agentName": "최진사",
     "agentTitle": "대표",
-    "agentOffice": "진사부동산중개"
+    "agentOffice": "진사부동산중개",
+    "agentImage": "https://raw.githubusercontent.com/DH-REALESTATE/jeju-map/main/dh_real/000/face.jpg"
   },
   
   {
