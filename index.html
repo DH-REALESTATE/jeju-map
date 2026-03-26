@@ -7,7 +7,9 @@
 
   <style>
     :root {
-      --sidebar-width: 360px;
+      --sidebar-list-width: 360px;
+      --detail-panel-width: 420px;
+      --sidebar-current-width: var(--sidebar-list-width);
       --resizer-hit-width: 16px;
       --brand: #14b8a6;
       --brand-dark: #0f2942;
@@ -38,61 +40,239 @@
     .app {
       position: relative;
       display: grid;
-      grid-template-columns: var(--sidebar-width) 1fr;
+      grid-template-columns: var(--sidebar-current-width) 1fr;
       height: 100vh;
       gap: 0;
     }
 
     .sidebar {
-      position: relative;
       height: 100vh;
-      overflow-y: auto;
-      overflow-x: hidden;
+      overflow: hidden;
       background:
         radial-gradient(circle at top left, rgba(20,184,166,0.12), transparent 26%),
         linear-gradient(180deg, #0f2942 0%, #122d49 42%, #143451 100%);
       color: #fff;
+      min-width: 280px;
+    }
+
+    .sidebar-inner {
+      display: grid;
+      grid-template-columns: var(--sidebar-list-width) 0px;
+      height: 100%;
+      transition: grid-template-columns 0.28s ease;
+    }
+
+    .sidebar.expanded .sidebar-inner {
+      grid-template-columns: var(--sidebar-list-width) var(--detail-panel-width);
+    }
+
+    .sidebar-list-panel {
+      height: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
       padding: 20px 18px 22px;
     }
 
-    .sidebar::-webkit-scrollbar {
+    .sidebar-list-panel::-webkit-scrollbar,
+    .sidebar-detail-panel::-webkit-scrollbar {
       width: 10px;
     }
 
-    .sidebar::-webkit-scrollbar-thumb {
+    .sidebar-list-panel::-webkit-scrollbar-thumb,
+    .sidebar-detail-panel::-webkit-scrollbar-thumb {
       background: rgba(255,255,255,0.16);
       border-radius: 999px;
       border: 2px solid transparent;
       background-clip: padding-box;
     }
 
-    .resizer {
-      position: absolute;
-      top: 0;
-      left: calc(var(--sidebar-width) - (var(--resizer-hit-width) / 2));
-      width: var(--resizer-hit-width);
-      height: 100vh;
-      background: transparent !important;
-      border: 0 !important;
-      box-shadow: none !important;
-      outline: none !important;
-      opacity: 0 !important;
-      cursor: col-resize;
-      user-select: none;
-      z-index: 999;
-    }
-
-    .map-wrap {
-      position: relative;
-      min-width: 0;
-      height: 100vh;
+    .sidebar-detail-panel {
+      height: 100%;
       overflow: hidden;
-      background: #dde7ef;
+      opacity: 0;
+      background: #fff;
+      border-left: 1px solid rgba(0,0,0,0.06);
+      transition: opacity 0.22s ease;
     }
 
-    #map {
-      width: 100%;
-      height: 100vh;
+    .sidebar.expanded .sidebar-detail-panel {
+      opacity: 1;
+    }
+
+    .detail-panel-inner {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      background: #fff;
+    }
+
+    .detail-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px;
+      border-bottom: 1px solid #eef2f6;
+      background: rgba(255,255,255,0.96);
+      backdrop-filter: blur(8px);
+    }
+
+    .detail-close-btn,
+    .detail-icon-btn {
+      border: 0;
+      background: #f3f6f9;
+      color: #223244;
+      cursor: pointer;
+      border-radius: 12px;
+      height: 36px;
+      min-width: 36px;
+      padding: 0 12px;
+      font-weight: 900;
+    }
+
+    .detail-top-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .detail-scroll {
+      flex: 1;
+      overflow-y: auto;
+      background: #fff;
+    }
+
+    .detail-hero {
+      height: 250px;
+      background: #dbe6ef center / cover no-repeat;
+      position: relative;
+    }
+
+    .detail-content {
+      padding: 18px;
+    }
+
+    .detail-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .detail-badges span {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: #ecfbf6;
+      color: #0d7b68;
+      font-size: 11px;
+      font-weight: 900;
+    }
+
+    .detail-title {
+      margin: 0 0 8px;
+      font-size: 26px;
+      line-height: 1.28;
+      color: #142232;
+      letter-spacing: -0.5px;
+    }
+
+    .detail-price {
+      margin-bottom: 12px;
+      font-size: 30px;
+      font-weight: 900;
+      color: #0d7b68;
+      letter-spacing: -0.8px;
+    }
+
+    .detail-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .detail-meta span {
+      background: #f4f7fa;
+      color: #44576a;
+      border: 1px solid #e7edf3;
+      border-radius: 999px;
+      padding: 7px 11px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .detail-address {
+      margin-bottom: 10px;
+      font-size: 14px;
+      color: #536578;
+      line-height: 1.6;
+    }
+
+    .detail-desc {
+      margin-bottom: 14px;
+      font-size: 14px;
+      color: #334355;
+      line-height: 1.8;
+      white-space: pre-line;
+    }
+
+    .detail-features {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .detail-features span {
+      background: #eef8ff;
+      color: #2563eb;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .detail-action-box {
+      padding: 16px;
+      border-radius: 18px;
+      background: #f8fafc;
+      border: 1px solid #e7edf3;
+    }
+
+    .detail-phone {
+      margin-bottom: 12px;
+      font-size: 14px;
+      color: #233345;
+      font-weight: 800;
+    }
+
+    .detail-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .detail-action-btn {
+      flex: 1;
+      min-width: 100px;
+      min-height: 42px;
+      border: 0;
+      border-radius: 12px;
+      background: #eef3f7;
+      color: #203040;
+      font-size: 13px;
+      font-weight: 900;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .detail-action-btn.primary {
+      background: #0f2942;
+      color: #fff;
     }
 
     .brand-card {
@@ -418,6 +598,35 @@
       color: #203040;
     }
 
+    .resizer {
+      position: absolute;
+      top: 0;
+      left: calc(var(--sidebar-current-width) - (var(--resizer-hit-width) / 2));
+      width: var(--resizer-hit-width);
+      height: 100vh;
+      background: transparent !important;
+      border: 0 !important;
+      box-shadow: none !important;
+      outline: none !important;
+      opacity: 0 !important;
+      cursor: col-resize;
+      user-select: none;
+      z-index: 999;
+    }
+
+    .map-wrap {
+      position: relative;
+      min-width: 0;
+      height: 100vh;
+      overflow: hidden;
+      background: #dde7ef;
+    }
+
+    #map {
+      width: 100%;
+      height: 100vh;
+    }
+
     .map-filter-bar {
       position: absolute;
       top: 12px;
@@ -611,7 +820,7 @@
 
     @media (max-width: 980px) {
       :root {
-        --sidebar-width: 100%;
+        --sidebar-current-width: 100%;
         --resizer-hit-width: 0px;
       }
 
@@ -630,8 +839,16 @@
 
       .sidebar {
         height: auto;
-        overflow: visible;
         min-width: 0;
+      }
+
+      .sidebar-inner,
+      .sidebar.expanded .sidebar-inner {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar-detail-panel {
+        display: none;
       }
 
       .map-wrap,
@@ -648,34 +865,73 @@
 </head>
 <body>
   <div class="app">
-    <aside class="sidebar">
-      <div class="brand-card">
-        <div class="brand-badge">PREMIUM REAL ESTATE MAP</div>
-        <h1>제주 프리미엄<br>부동산 지도</h1>
-        <p>지도의 숫자를 누르면 해당 위치에 포함된 매물만 왼쪽 카드에 표시됩니다. 지도 빈 곳을 누르거나 전체 매물 보기를 누르면 다시 전체 목록으로 돌아갑니다.</p>
-      </div>
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-inner">
+        <div class="sidebar-list-panel">
+          <div class="brand-card">
+            <div class="brand-badge">PREMIUM REAL ESTATE MAP</div>
+            <h1>제주 프리미엄<br>부동산 지도</h1>
+            <p>지도의 숫자를 누르면 해당 위치에 포함된 매물만 왼쪽 카드에 표시됩니다. 카드나 마커를 누르면 옆 상세 패널이 열립니다.</p>
+          </div>
 
-      <div class="panel search-box">
-        <input type="text" id="keyword" placeholder="지역명, 주소, 키워드 검색" />
-        <button class="reset-list-btn" id="resetListBtn" type="button">전체 매물 보기</button>
+          <div class="panel search-box">
+            <input type="text" id="keyword" placeholder="지역명, 주소, 키워드 검색" />
+            <button class="reset-list-btn" id="resetListBtn" type="button">전체 매물 보기</button>
 
-        <div class="filter-title">특징 태그</div>
-        <div class="feature-buttons" id="featureButtons">
-          <button type="button" data-value="all" class="all-active">전체</button>
-          <button type="button" data-value="신축">신축</button>
-          <button type="button" data-value="오션뷰">오션뷰</button>
-          <button type="button" data-value="생활권">생활권</button>
-          <button type="button" data-value="투자용">투자용</button>
-          <button type="button" data-value="급매">급매</button>
+            <div class="filter-title">특징 태그</div>
+            <div class="feature-buttons" id="featureButtons">
+              <button type="button" data-value="all" class="all-active">전체</button>
+              <button type="button" data-value="신축">신축</button>
+              <button type="button" data-value="오션뷰">오션뷰</button>
+              <button type="button" data-value="생활권">생활권</button>
+              <button type="button" data-value="투자용">투자용</button>
+              <button type="button" data-value="급매">급매</button>
+            </div>
+          </div>
+
+          <div class="list-head">
+            <strong>매물 리스트</strong>
+            <span id="listInfoText">전체 결과</span>
+          </div>
+
+          <div class="property-list" id="propertyList"></div>
+        </div>
+
+        <div class="sidebar-detail-panel" id="sidebarDetailPanel">
+          <div class="detail-panel-inner">
+            <div class="detail-topbar">
+              <button type="button" class="detail-close-btn" id="detailCloseBtn">←</button>
+              <div class="detail-top-actions">
+                <button type="button" class="detail-icon-btn" id="detailShareBtn">⤴</button>
+              </div>
+            </div>
+
+            <div class="detail-scroll">
+              <div class="detail-hero" id="detailHero"></div>
+
+              <div class="detail-content">
+                <div class="detail-badges" id="detailBadges"></div>
+                <h2 class="detail-title" id="detailTitle">매물을 선택하세요</h2>
+                <div class="detail-price" id="detailPrice"></div>
+                <div class="detail-meta" id="detailMeta"></div>
+                <div class="detail-address" id="detailAddress"></div>
+                <div class="detail-desc" id="detailDesc"></div>
+                <div class="detail-features" id="detailFeatures"></div>
+
+                <div class="detail-action-box">
+                  <div class="detail-phone" id="detailPhone"></div>
+
+                  <div class="detail-actions">
+                    <button type="button" class="detail-action-btn primary" id="detailMapBtn">지도보기</button>
+                    <button type="button" class="detail-action-btn" id="detailRoadviewBtn">로드뷰</button>
+                    <a class="detail-action-btn" id="detailLinkBtn" href="#" target="_blank" rel="noopener noreferrer">상세보기</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-
-      <div class="list-head">
-        <strong>매물 리스트</strong>
-        <span id="listInfoText">전체 결과</span>
-      </div>
-
-      <div class="property-list" id="propertyList"></div>
     </aside>
 
     <div class="resizer" id="resizer" aria-label="패널 크기 조절"></div>
@@ -728,7 +984,9 @@
     let selectedDeal = "all";
     let selectedType = "all";
     let isResizing = false;
+    let currentDetailItem = null;
 
+    const sidebar = document.getElementById("sidebar");
     const propertyList = document.getElementById("propertyList");
     const keywordInput = document.getElementById("keyword");
     const mapResultCount = document.getElementById("mapResultCount");
@@ -738,6 +996,30 @@
     const featureButtons = document.querySelectorAll("#featureButtons button");
     const resizer = document.getElementById("resizer");
     const listInfoText = document.getElementById("listInfoText");
+
+    const detailCloseBtn = document.getElementById("detailCloseBtn");
+    const detailHero = document.getElementById("detailHero");
+    const detailBadges = document.getElementById("detailBadges");
+    const detailTitle = document.getElementById("detailTitle");
+    const detailPrice = document.getElementById("detailPrice");
+    const detailMeta = document.getElementById("detailMeta");
+    const detailAddress = document.getElementById("detailAddress");
+    const detailDesc = document.getElementById("detailDesc");
+    const detailFeatures = document.getElementById("detailFeatures");
+    const detailPhone = document.getElementById("detailPhone");
+    const detailMapBtn = document.getElementById("detailMapBtn");
+    const detailRoadviewBtn = document.getElementById("detailRoadviewBtn");
+    const detailLinkBtn = document.getElementById("detailLinkBtn");
+    const detailShareBtn = document.getElementById("detailShareBtn");
+
+    function updateSidebarWidth() {
+      const listWidth = getComputedStyle(document.documentElement).getPropertyValue("--sidebar-list-width").trim() || "360px";
+      const detailWidth = getComputedStyle(document.documentElement).getPropertyValue("--detail-panel-width").trim() || "420px";
+      const totalWidth = sidebar.classList.contains("expanded")
+        ? `calc(${listWidth} + ${detailWidth})`
+        : listWidth;
+      document.documentElement.style.setProperty("--sidebar-current-width", totalWidth);
+    }
 
     function escapeHtml(str) {
       return String(str ?? "")
@@ -862,6 +1144,53 @@
       await closeRoadviewPanel();
     }
 
+    function openDetailPanel(item) {
+      currentDetailItem = item;
+      sidebar.classList.add("expanded");
+      updateSidebarWidth();
+
+      detailHero.style.backgroundImage = `url('${escapeHtml(item.image)}')`;
+
+      detailBadges.innerHTML = `
+        <span>${escapeHtml(item.dealType || "-")}</span>
+        <span>${escapeHtml(item.type || "-")}</span>
+        <span>${escapeHtml(item.region || "-")}</span>
+      `;
+
+      detailTitle.textContent = item.title || "";
+      detailPrice.textContent = item.price || "";
+
+      detailMeta.innerHTML = `
+        <span>${escapeHtml(item.area || "-")}</span>
+        <span>${escapeHtml(item.address || "-")}</span>
+      `;
+
+      detailAddress.textContent = item.address || "";
+      detailDesc.textContent = item.desc || "";
+      detailPhone.textContent = item.phone ? `문의: ${item.phone}` : "문의 가능";
+
+      detailFeatures.innerHTML = (item.features || [])
+        .map(feature => `<span>${escapeHtml(feature)}</span>`)
+        .join("");
+
+      detailLinkBtn.href = item.link && item.link !== "#" ? item.link : "#";
+
+      detailMapBtn.onclick = async () => {
+        await focusProperty(item.id);
+      };
+
+      detailRoadviewBtn.onclick = async () => {
+        await hideRoadview();
+        showRoadview(item.lat, item.lng);
+      };
+    }
+
+    function closeDetailPanel() {
+      sidebar.classList.remove("expanded");
+      currentDetailItem = null;
+      updateSidebarWidth();
+    }
+
     function initMap() {
       state.map = new kakao.maps.Map(document.getElementById("map"), {
         center: new kakao.maps.LatLng(33.38, 126.55),
@@ -948,7 +1277,6 @@
 
         renderList(clusterItems);
         propertyList.scrollTop = 0;
-
         setResultInfo(`선택 지역 ${clusterItems.length}건`);
         setListInfo(`클러스터 선택 · ${clusterItems.length}건`);
 
@@ -1143,20 +1471,20 @@
         detailBtn.addEventListener("click", function (e) {
           e.preventDefault();
           e.stopPropagation();
+          openDetailPanel(item);
 
           const link = item.link;
           if (link && link !== "#") {
             window.open(link, "_blank", "noopener,noreferrer");
-          } else {
-            alert("상세페이지 링크가 없습니다.");
           }
         });
       }
 
       if (roadBtn) {
-        roadBtn.addEventListener("click", function (e) {
+        roadBtn.addEventListener("click", async function (e) {
           e.preventDefault();
           e.stopPropagation();
+          await hideRoadview();
           showRoadview(parseFloat(this.dataset.lat), parseFloat(this.dataset.lng));
         });
       }
@@ -1243,6 +1571,7 @@
         kakao.maps.event.addListener(marker, "click", async function () {
           await hideRoadview();
           highlightCard(item.id);
+          openDetailPanel(item);
           moveMapToProperty(item, 4);
 
           setTimeout(() => {
@@ -1268,7 +1597,7 @@
     }
 
     async function focusProperty(id) {
-      const item = state.filtered.find(v => v.id === id);
+      const item = state.filtered.find(v => v.id === id) || state.all.find(v => v.id === id);
       if (!item || !state.map) return;
 
       await hideRoadview();
@@ -1347,14 +1676,24 @@
       document.querySelectorAll(".card").forEach(card => {
         card.addEventListener("click", async function (e) {
           if (e.target.closest("a, button")) return;
-          await focusProperty(Number(card.dataset.id));
+
+          const item = data.find(v => v.id === Number(card.dataset.id));
+          if (!item) return;
+
+          openDetailPanel(item);
+          await focusProperty(item.id);
         });
       });
 
       document.querySelectorAll(".btn-map").forEach(btn => {
         btn.addEventListener("click", async function (e) {
           e.stopPropagation();
-          await focusProperty(Number(btn.dataset.id));
+
+          const item = data.find(v => v.id === Number(btn.dataset.id));
+          if (!item) return;
+
+          openDetailPanel(item);
+          await focusProperty(item.id);
         });
       });
     }
@@ -1430,6 +1769,23 @@
         });
       }
 
+      detailCloseBtn.addEventListener("click", closeDetailPanel);
+
+      detailShareBtn.addEventListener("click", async () => {
+        if (!currentDetailItem) return;
+        const url = currentDetailItem.link && currentDetailItem.link !== "#" ? currentDetailItem.link : location.href;
+
+        try {
+          await navigator.clipboard.writeText(url);
+          detailShareBtn.textContent = "복사됨";
+          setTimeout(() => {
+            detailShareBtn.textContent = "⤴";
+          }, 1000);
+        } catch (err) {
+          console.error(err);
+        }
+      });
+
       dealButtons.forEach(btn => {
         btn.addEventListener("click", () => {
           dealButtons.forEach(b => b.classList.remove("active"));
@@ -1479,10 +1835,12 @@
 
       window.addEventListener("mousemove", (e) => {
         if (!isResizing) return;
+
         const min = 280;
-        const max = 760;
+        const max = 520;
         const nextWidth = Math.min(Math.max(e.clientX, min), max);
-        document.documentElement.style.setProperty("--sidebar-width", `${nextWidth}px`);
+        document.documentElement.style.setProperty("--sidebar-list-width", `${nextWidth}px`);
+        updateSidebarWidth();
       });
 
       window.addEventListener("mouseup", () => {
@@ -1499,6 +1857,7 @@
         return;
       }
 
+      updateSidebarWidth();
       initMap();
       initRoadview();
       initEvents();
