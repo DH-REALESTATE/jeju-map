@@ -48,11 +48,10 @@
     .sidebar {
       height: 100vh;
       overflow: hidden;
-      background:
-        radial-gradient(circle at top left, rgba(20,184,166,0.12), transparent 26%),
-        linear-gradient(180deg, #0f2942 0%, #122d49 42%, #143451 100%);
-      color: #fff;
+      background: #f7f8fa;
+      color: #1f2a36;
       min-width: 280px;
+      border-right: 1px solid #e6ebf0;
     }
 
     .sidebar-inner {
@@ -70,7 +69,7 @@
       height: 100%;
       overflow-y: auto;
       overflow-x: hidden;
-      padding: 20px 18px 22px;
+      background: #f7f8fa;
     }
 
     .sidebar-list-panel::-webkit-scrollbar,
@@ -80,7 +79,7 @@
 
     .sidebar-list-panel::-webkit-scrollbar-thumb,
     .sidebar-detail-panel::-webkit-scrollbar-thumb {
-      background: rgba(255,255,255,0.16);
+      background: rgba(120, 135, 150, 0.28);
       border-radius: 999px;
       border: 2px solid transparent;
       background-clip: padding-box;
@@ -91,7 +90,7 @@
       overflow: hidden;
       opacity: 0;
       background: #fff;
-      border-left: 1px solid rgba(0,0,0,0.06);
+      border-left: 1px solid #e7edf3;
       transition: opacity 0.22s ease;
     }
 
@@ -110,28 +109,29 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 12px;
+      padding: 10px 12px;
       border-bottom: 1px solid #eef2f6;
-      background: rgba(255,255,255,0.96);
+      background: rgba(255,255,255,0.98);
       backdrop-filter: blur(8px);
     }
 
     .detail-close-btn,
     .detail-icon-btn {
       border: 0;
-      background: #f3f6f9;
+      background: transparent;
       color: #223244;
       cursor: pointer;
-      border-radius: 12px;
+      border-radius: 10px;
       height: 36px;
       min-width: 36px;
-      padding: 0 12px;
+      padding: 0 10px;
       font-weight: 900;
+      font-size: 18px;
     }
 
     .detail-top-actions {
       display: flex;
-      gap: 8px;
+      gap: 6px;
     }
 
     .detail-scroll {
@@ -141,9 +141,23 @@
     }
 
     .detail-hero {
-      height: 250px;
+      height: 235px;
       background: #dbe6ef center / cover no-repeat;
       position: relative;
+    }
+
+    .detail-hero-expand {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 30px;
+      height: 30px;
+      border: 0;
+      border-radius: 8px;
+      background: rgba(0,0,0,0.35);
+      color: #fff;
+      cursor: pointer;
+      font-weight: 900;
     }
 
     .detail-content {
@@ -163,58 +177,161 @@
       min-height: 28px;
       padding: 5px 10px;
       border-radius: 999px;
-      background: #ecfbf6;
-      color: #0d7b68;
+      background: #f3f6fb;
+      color: #7f4dff;
       font-size: 11px;
       font-weight: 900;
     }
 
     .detail-title {
-      margin: 0 0 8px;
-      font-size: 26px;
-      line-height: 1.28;
-      color: #142232;
-      letter-spacing: -0.5px;
-    }
-
-    .detail-price {
-      margin-bottom: 12px;
-      font-size: 30px;
+      margin: 0 0 10px;
+      font-size: 18px;
+      line-height: 1.5;
+      color: #1d2733;
+      letter-spacing: -0.4px;
       font-weight: 900;
-      color: #0d7b68;
-      letter-spacing: -0.8px;
     }
 
-    .detail-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
+    .detail-link-row {
       margin-bottom: 12px;
-    }
-
-    .detail-meta span {
-      background: #f4f7fa;
-      color: #44576a;
-      border: 1px solid #e7edf3;
-      border-radius: 999px;
-      padding: 7px 11px;
-      font-size: 12px;
-      font-weight: 800;
-    }
-
-    .detail-address {
-      margin-bottom: 10px;
-      font-size: 14px;
-      color: #536578;
+      font-size: 13px;
       line-height: 1.6;
     }
 
+    .detail-link-row a {
+      color: #1f6fff;
+      text-decoration: none;
+      word-break: break-all;
+    }
+
+    .detail-link-row a:hover {
+      text-decoration: underline;
+    }
+
     .detail-desc {
-      margin-bottom: 14px;
+      margin-bottom: 16px;
       font-size: 14px;
       color: #334355;
-      line-height: 1.8;
+      line-height: 1.9;
       white-space: pre-line;
+    }
+
+    .detail-price-box {
+      padding: 14px 14px 12px;
+      border-radius: 14px;
+      background: #f7f8fa;
+      border: 1px solid #eceff3;
+      margin-bottom: 16px;
+    }
+
+    .detail-price-badge {
+      display: inline-flex;
+      align-items: center;
+      height: 24px;
+      padding: 0 10px;
+      border-radius: 999px;
+      background: #f3eefe;
+      color: #8d59ff;
+      font-size: 11px;
+      font-weight: 900;
+      margin-bottom: 10px;
+    }
+
+    .detail-price {
+      margin-bottom: 8px;
+      font-size: 20px;
+      font-weight: 900;
+      color: #1d2733;
+      letter-spacing: -0.5px;
+    }
+
+    .detail-address {
+      font-size: 13px;
+      color: #667788;
+      line-height: 1.6;
+    }
+
+    .detail-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      overflow: hidden;
+      border-radius: 14px;
+      border: 1px solid #eceff3;
+      margin-bottom: 16px;
+      background: #fff;
+    }
+
+    .detail-meta-item {
+      padding: 14px 12px;
+      border-right: 1px solid #eceff3;
+    }
+
+    .detail-meta-item:last-child {
+      border-right: 0;
+    }
+
+    .detail-meta-label {
+      display: block;
+      font-size: 12px;
+      color: #7a8794;
+      margin-bottom: 6px;
+      font-weight: 700;
+    }
+
+    .detail-meta-value {
+      display: block;
+      font-size: 16px;
+      color: #1f6fff;
+      font-weight: 900;
+      letter-spacing: -0.3px;
+    }
+
+    .detail-agent-card {
+      border-radius: 14px;
+      border: 1px solid #eceff3;
+      background: #fff;
+      padding: 14px;
+      margin-bottom: 16px;
+    }
+
+    .detail-agent-top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .detail-agent-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: #eef3f7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #4d5d6d;
+      font-weight: 900;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .detail-agent-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .detail-agent-name {
+      font-size: 15px;
+      font-weight: 900;
+      color: #1f2a36;
+    }
+
+    .detail-agent-office {
+      font-size: 12px;
+      color: #8a97a5;
+      margin-top: 3px;
     }
 
     .detail-features {
@@ -276,72 +393,74 @@
     }
 
     .brand-card {
-      position: relative;
-      margin-bottom: 16px;
-      padding: 18px 16px 16px;
-      border-radius: 22px;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.09);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
-      backdrop-filter: blur(10px);
-    }
-
-    .brand-badge {
-      display: inline-flex;
+      display: flex;
       align-items: center;
-      gap: 6px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: rgba(20,184,166,0.18);
-      color: #c7fff8;
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: 0.2px;
-      margin-bottom: 10px;
+      justify-content: space-between;
+      gap: 10px;
+      height: 58px;
+      padding: 0 16px;
+      background: #fff;
+      border-bottom: 1px solid #e6ebf0;
     }
 
-    .sidebar h1 {
-      margin: 0 0 8px;
-      font-size: 30px;
-      line-height: 1.22;
-      letter-spacing: -0.8px;
+    .brand-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
     }
 
-    .sidebar p {
-      margin: 0;
-      font-size: 13px;
-      line-height: 1.65;
-      color: rgba(255,255,255,0.78);
+    .back-btn {
+      border: 0;
+      background: transparent;
+      color: #1f2a36;
+      font-size: 26px;
+      line-height: 1;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .brand-title {
+      font-size: 17px;
+      font-weight: 900;
+      color: #1f2a36;
+      white-space: nowrap;
+    }
+
+    .brand-card p,
+    .brand-badge {
+      display: none;
     }
 
     .panel {
-      margin-bottom: 14px;
-      padding: 14px;
-      border-radius: 20px;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.08);
-      backdrop-filter: blur(10px);
+      margin: 0;
+      padding: 10px 16px;
+      border-radius: 0;
+      background: #fff;
+      border-bottom: 1px solid #e6ebf0;
+      backdrop-filter: none;
     }
 
     .search-box input {
       width: 100%;
-      height: 46px;
+      height: 42px;
       padding: 0 14px;
-      border: 0;
-      border-radius: 14px;
+      border: 1px solid #dfe5eb;
+      border-radius: 12px;
       outline: none;
       font-size: 14px;
       background: #fff;
       color: #17212b;
-      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.03);
+      box-shadow: none;
+      margin-bottom: 10px;
     }
 
     .filter-title {
-      margin: 12px 0 8px;
+      margin: 2px 0 8px;
       font-size: 12px;
       font-weight: 800;
-      color: rgba(255,255,255,0.84);
-      letter-spacing: 0.2px;
+      color: #7a8794;
+      letter-spacing: 0.1px;
     }
 
     .feature-buttons {
@@ -352,42 +471,30 @@
 
     .feature-buttons button,
     .reset-list-btn {
-      border: 0;
-      border-radius: 999px;
+      border: 1px solid #dfe5eb;
+      border-radius: 10px;
       padding: 8px 11px;
       font-size: 12px;
       font-weight: 800;
       cursor: pointer;
       transition: 0.2s ease;
-    }
-
-    .feature-buttons button {
-      background: rgba(255,255,255,0.92);
-      color: #203040;
-    }
-
-    .feature-buttons button:hover {
-      transform: translateY(-1px);
+      background: #fff;
+      color: #304050;
     }
 
     .feature-buttons button.active,
     .feature-buttons button.all-active {
-      background: var(--brand);
-      color: #fff;
-      box-shadow: 0 8px 18px rgba(20,184,166,0.28);
+      background: #f1f7ff;
+      color: #1f6fff;
+      border-color: #bfd6ff;
+      box-shadow: none;
     }
 
     .reset-list-btn {
       width: 100%;
-      margin-top: 10px;
-      padding: 12px 14px;
-      border-radius: 14px;
-      background: rgba(255,255,255,0.92);
-      color: #0f2942;
-    }
-
-    .reset-list-btn:hover {
-      transform: translateY(-1px);
+      margin-top: 0;
+      margin-bottom: 10px;
+      border-radius: 12px;
     }
 
     .list-head {
@@ -395,207 +502,206 @@
       align-items: center;
       justify-content: space-between;
       gap: 10px;
-      margin: 14px 0 10px;
-      padding: 0 4px;
+      margin: 0;
+      padding: 14px 16px 10px;
+      background: #f7f8fa;
+      border-bottom: 1px solid #eceff3;
     }
 
     .list-head strong {
       font-size: 14px;
-      color: #fff;
+      color: #1f6fff;
       letter-spacing: -0.2px;
+      font-weight: 900;
     }
 
     .list-head span {
-      font-size: 12px;
-      color: rgba(255,255,255,0.72);
+      font-size: 13px;
+      color: #1f2a36;
+      font-weight: 800;
     }
 
     .property-list {
-      display: grid;
-      gap: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
       padding-bottom: 24px;
+      background: #f7f8fa;
     }
 
     .card {
-      overflow: hidden;
-      border-radius: 20px;
       background: #fff;
-      border: 1px solid rgba(0,0,0,0.05);
-      box-shadow: 0 12px 26px rgba(8, 24, 44, 0.16);
+      border: 0;
+      border-bottom: 1px solid #eceff3;
+      border-radius: 0;
+      box-shadow: none;
       cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      transition: background 0.15s ease;
+      padding: 0;
+      overflow: hidden;
     }
 
     .card:hover,
     .card.active {
-      transform: translateY(-2px);
-      border-color: rgba(20,184,166,0.5);
-      box-shadow: 0 18px 30px rgba(8, 24, 44, 0.22);
+      background: #f8fbff;
+      transform: none;
+      box-shadow: none;
+      border-color: transparent;
+      border-bottom: 1px solid #eceff3;
+    }
+
+    .card-inner-row {
+      display: flex;
+      gap: 12px;
+      padding: 14px 14px 12px;
     }
 
     .thumb {
-      position: relative;
-      height: 172px;
+      width: 92px;
+      min-width: 92px;
+      height: 92px;
+      border-radius: 10px;
       background-size: cover;
       background-position: center;
+      position: relative;
+      overflow: hidden;
     }
 
     .thumb::after {
-      content: "";
-      position: absolute;
-      inset: auto 0 0;
-      height: 55%;
-      background: linear-gradient(to top, rgba(0,0,0,0.32), transparent);
-      pointer-events: none;
+      display: none;
     }
-
-    .card-top-badges {
-      position: absolute;
-      top: 12px;
-      left: 12px;
-      right: 12px;
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 8px;
-      z-index: 1;
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      border-radius: 999px;
-      padding: 7px 11px;
-      font-size: 12px;
-      font-weight: 900;
-      color: #fff;
-      letter-spacing: -0.1px;
-    }
-
-    .deal-badge { background: rgba(15,41,66,0.86); }
-    .hot-badge { background: #ff5a5f; }
 
     .card-body {
-      padding: 15px 15px 14px;
+      flex: 1;
+      min-width: 0;
+      padding: 0;
     }
 
-    .card-header-row {
-      margin-bottom: 8px;
+    .card-top-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 6px;
     }
 
-    .title {
-      margin: 0;
-      font-size: 17px;
+    .card-badge {
+      display: inline-flex;
+      align-items: center;
+      height: 22px;
+      padding: 0 8px;
+      border-radius: 6px;
+      background: #f3eefe;
+      color: #8d59ff;
+      font-size: 11px;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .card-date {
+      font-size: 12px;
+      color: #9aa7b4;
+      white-space: nowrap;
+    }
+
+    .card-address {
+      font-size: 14px;
+      color: #5d6b78;
+      line-height: 1.45;
+      margin-bottom: 6px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-price-line {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      margin-bottom: 4px;
+      flex-wrap: wrap;
+    }
+
+    .card-deal {
+      font-size: 16px;
       font-weight: 900;
-      line-height: 1.42;
-      color: #162331;
-      letter-spacing: -0.35px;
+      color: #1f6fff;
     }
 
-    .price-row {
+    .card-price {
+      font-size: 20px;
+      font-weight: 900;
+      color: #1d2733;
+      letter-spacing: -0.4px;
+    }
+
+    .card-spec {
+      font-size: 13px;
+      color: #6a7785;
+      line-height: 1.4;
+      margin-bottom: 10px;
+    }
+
+    .card-agent-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 10px;
+      gap: 8px;
+      padding-top: 10px;
+      border-top: 1px solid #f1f3f6;
     }
 
-    .price {
-      margin: 0;
-      font-size: 23px;
-      font-weight: 900;
-      color: #0d7b68;
-      letter-spacing: -0.5px;
-    }
-
-    .meta {
+    .card-agent-left {
       display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-bottom: 10px;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
     }
 
-    .meta span {
-      display: inline-flex;
+    .card-agent-avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: #eef3f7;
+      display: flex;
       align-items: center;
-      min-height: 30px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: #f4f7fa;
-      color: #415466;
-      border: 1px solid #e7edf3;
+      justify-content: center;
       font-size: 12px;
       font-weight: 800;
+      color: #506070;
+      overflow: hidden;
+      flex-shrink: 0;
     }
 
-    .feature-chip-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-bottom: 10px;
-    }
-
-    .feature-chip {
-      display: inline-flex;
-      align-items: center;
-      min-height: 28px;
-      padding: 5px 9px;
-      border-radius: 999px;
-      background: #ecfbf6;
-      color: #0d7b68;
-      border: 1px solid #d9f4ec;
-      font-size: 11px;
-      font-weight: 900;
-      letter-spacing: -0.1px;
-    }
-
-    .address-row {
-      margin-bottom: 12px;
-    }
-
-    .address-text {
+    .card-agent-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
       display: block;
+    }
+
+    .card-agent-name {
       font-size: 13px;
-      line-height: 1.5;
-      color: #657789;
+      font-weight: 800;
+      color: #1f2a36;
+    }
+
+    .card-agent-title {
+      font-size: 12px;
+      color: #8a97a5;
+      margin-left: 4px;
+    }
+
+    .card-agent-office {
+      font-size: 12px;
+      color: #8a97a5;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
     .actions {
-      display: flex;
-      gap: 8px;
-    }
-
-    .btn {
-      flex: 1;
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 44px;
-      padding: 10px 12px;
-      border: 0;
-      border-radius: 14px;
-      font-size: 13px;
-      font-weight: 900;
-      text-decoration: none;
-      cursor: pointer;
-      transition: 0.2s ease;
-    }
-
-    .btn:hover {
-      transform: translateY(-1px);
-    }
-
-    .btn-map {
-      background: #0f2942;
-      color: #fff;
-      box-shadow: 0 10px 18px rgba(15,41,66,0.18);
-    }
-
-    .btn-call {
-      background: #f3f6f9;
-      color: #203040;
+      display: none;
     }
 
     .resizer {
@@ -869,14 +975,15 @@
       <div class="sidebar-inner">
         <div class="sidebar-list-panel">
           <div class="brand-card">
-            <div class="brand-badge">PREMIUM REAL ESTATE MAP</div>
-            <h1>제주 프리미엄<br>부동산 지도</h1>
-            <p>지도의 숫자를 누르면 해당 위치에 포함된 매물만 왼쪽 카드에 표시됩니다. 카드나 마커를 누르면 옆 상세 패널이 열립니다.</p>
+            <div class="brand-left">
+              <button type="button" class="back-btn">‹</button>
+              <div class="brand-title">disco 매물</div>
+            </div>
           </div>
 
           <div class="panel search-box">
-            <input type="text" id="keyword" placeholder="지역명, 주소, 키워드 검색" />
             <button class="reset-list-btn" id="resetListBtn" type="button">전체 매물 보기</button>
+            <input type="text" id="keyword" placeholder="지역명, 주소, 키워드 검색" />
 
             <div class="filter-title">특징 태그</div>
             <div class="feature-buttons" id="featureButtons">
@@ -890,8 +997,8 @@
           </div>
 
           <div class="list-head">
-            <strong>매물 리스트</strong>
-            <span id="listInfoText">전체 결과</span>
+            <strong id="listInfoText">총 0개 매물</strong>
+            <span>최신순</span>
           </div>
 
           <div class="property-list" id="propertyList"></div>
@@ -903,19 +1010,55 @@
               <button type="button" class="detail-close-btn" id="detailCloseBtn">←</button>
               <div class="detail-top-actions">
                 <button type="button" class="detail-icon-btn" id="detailShareBtn">⤴</button>
+                <button type="button" class="detail-icon-btn">🔖</button>
+                <button type="button" class="detail-icon-btn">⋮</button>
               </div>
             </div>
 
             <div class="detail-scroll">
-              <div class="detail-hero" id="detailHero"></div>
+              <div class="detail-hero" id="detailHero">
+                <button type="button" class="detail-hero-expand">⤢</button>
+              </div>
 
               <div class="detail-content">
                 <div class="detail-badges" id="detailBadges"></div>
                 <h2 class="detail-title" id="detailTitle">매물을 선택하세요</h2>
-                <div class="detail-price" id="detailPrice"></div>
-                <div class="detail-meta" id="detailMeta"></div>
-                <div class="detail-address" id="detailAddress"></div>
+
+                <div class="detail-link-row" id="detailLinkRow"></div>
+
                 <div class="detail-desc" id="detailDesc"></div>
+
+                <div class="detail-price-box">
+                  <div class="detail-price-badge" id="detailPriceBadge">매물</div>
+                  <div class="detail-price" id="detailPrice"></div>
+                  <div class="detail-address" id="detailAddress"></div>
+                </div>
+
+                <div class="detail-meta-grid" id="detailMetaGrid">
+                  <div class="detail-meta-item">
+                    <span class="detail-meta-label">면적</span>
+                    <span class="detail-meta-value" id="detailAreaValue">-</span>
+                  </div>
+                  <div class="detail-meta-item">
+                    <span class="detail-meta-label">유형</span>
+                    <span class="detail-meta-value" id="detailTypeValue">-</span>
+                  </div>
+                  <div class="detail-meta-item">
+                    <span class="detail-meta-label">지역</span>
+                    <span class="detail-meta-value" id="detailRegionValue">-</span>
+                  </div>
+                </div>
+
+                <div class="detail-agent-card">
+                  <div class="detail-agent-top">
+                    <div class="detail-agent-avatar" id="detailAgentAvatar">담당</div>
+                    <div>
+                      <div class="detail-agent-name">담당자 대표</div>
+                      <div class="detail-agent-office" id="detailAgentOffice">중개사무소</div>
+                    </div>
+                  </div>
+                </div>
+
                 <div class="detail-features" id="detailFeatures"></div>
 
                 <div class="detail-action-box">
@@ -1001,8 +1144,9 @@
     const detailHero = document.getElementById("detailHero");
     const detailBadges = document.getElementById("detailBadges");
     const detailTitle = document.getElementById("detailTitle");
+    const detailLinkRow = document.getElementById("detailLinkRow");
     const detailPrice = document.getElementById("detailPrice");
-    const detailMeta = document.getElementById("detailMeta");
+    const detailPriceBadge = document.getElementById("detailPriceBadge");
     const detailAddress = document.getElementById("detailAddress");
     const detailDesc = document.getElementById("detailDesc");
     const detailFeatures = document.getElementById("detailFeatures");
@@ -1011,6 +1155,11 @@
     const detailRoadviewBtn = document.getElementById("detailRoadviewBtn");
     const detailLinkBtn = document.getElementById("detailLinkBtn");
     const detailShareBtn = document.getElementById("detailShareBtn");
+    const detailAreaValue = document.getElementById("detailAreaValue");
+    const detailTypeValue = document.getElementById("detailTypeValue");
+    const detailRegionValue = document.getElementById("detailRegionValue");
+    const detailAgentOffice = document.getElementById("detailAgentOffice");
+    const detailAgentAvatar = document.getElementById("detailAgentAvatar");
 
     function updateSidebarWidth() {
       const listWidth = getComputedStyle(document.documentElement).getPropertyValue("--sidebar-list-width").trim() || "360px";
@@ -1085,7 +1234,7 @@
       } catch (err) {
         console.error("매물 데이터 불러오기 실패:", err);
         propertyList.innerHTML = `
-          <div class="card" style="padding:18px; cursor:default;">
+          <div class="card" style="padding:18px; cursor:default; border-bottom:0;">
             <div class="card-body" style="padding:0;">
               <h3 class="title" style="margin-bottom:6px;">매물 데이터를 불러오지 못했습니다</h3>
               <div class="address-text">properties.json 파일 경로와 형식을 확인해 주세요.</div>
@@ -1093,7 +1242,7 @@
           </div>
         `;
         setResultInfo("총 0건");
-        setListInfo("불러오기 실패");
+        setListInfo("총 0개 매물");
       }
     }
 
@@ -1144,35 +1293,44 @@
       await closeRoadviewPanel();
     }
 
+    function makeAgentInitial(text) {
+      const raw = String(text || "담당").trim();
+      return raw.length >= 2 ? raw.slice(-2) : raw;
+    }
+
     function openDetailPanel(item) {
       currentDetailItem = item;
       sidebar.classList.add("expanded");
       updateSidebarWidth();
 
       detailHero.style.backgroundImage = `url('${escapeHtml(item.image)}')`;
-
       detailBadges.innerHTML = `
-        <span>${escapeHtml(item.dealType || "-")}</span>
         <span>${escapeHtml(item.type || "-")}</span>
-        <span>${escapeHtml(item.region || "-")}</span>
       `;
 
       detailTitle.textContent = item.title || "";
-      detailPrice.textContent = item.price || "";
+      detailPrice.textContent = `${item.dealType || ""} ${item.price || ""}`.trim();
+      detailPriceBadge.textContent = item.type || "매물";
+      detailAddress.textContent = `${item.region || ""} ${item.address || ""}`.trim();
 
-      detailMeta.innerHTML = `
-        <span>${escapeHtml(item.area || "-")}</span>
-        <span>${escapeHtml(item.address || "-")}</span>
+      detailLinkRow.innerHTML = `
+        지도도 매물확인 <a href="${escapeHtml(item.link && item.link !== "#" ? item.link : "#")}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.link && item.link !== "#" ? item.link : "링크 없음")}</a>
       `;
 
-      detailAddress.textContent = item.address || "";
       detailDesc.textContent = item.desc || "";
-      detailPhone.textContent = item.phone ? `문의: ${item.phone}` : "문의 가능";
+
+      detailAreaValue.textContent = item.area || "-";
+      detailTypeValue.textContent = item.type || "-";
+      detailRegionValue.textContent = item.region || "-";
+
+      detailAgentOffice.textContent = `${item.region || "제주"} 중개사무소`;
+      detailAgentAvatar.textContent = makeAgentInitial(item.phone || item.title);
 
       detailFeatures.innerHTML = (item.features || [])
         .map(feature => `<span>${escapeHtml(feature)}</span>`)
         .join("");
 
+      detailPhone.textContent = item.phone ? `문의 ${item.phone}` : "문의 가능";
       detailLinkBtn.href = item.link && item.link !== "#" ? item.link : "#";
 
       detailMapBtn.onclick = async () => {
@@ -1278,7 +1436,7 @@
         renderList(clusterItems);
         propertyList.scrollTop = 0;
         setResultInfo(`선택 지역 ${clusterItems.length}건`);
-        setListInfo(`클러스터 선택 · ${clusterItems.length}건`);
+        setListInfo(`총 ${clusterItems.length}개 매물`);
 
         const bounds = new kakao.maps.LatLngBounds();
         clusterItems.forEach(item => {
@@ -1292,7 +1450,7 @@
         await hideRoadview();
         renderList(state.filtered);
         setResultInfo(`총 ${state.filtered.length}건`);
-        setListInfo(`전체 결과 · ${state.filtered.length}건`);
+        setListInfo(`총 ${state.filtered.length}개 매물`);
       });
     }
 
@@ -1612,7 +1770,7 @@
     function renderList(data) {
       if (!data.length) {
         propertyList.innerHTML = `
-          <div class="card" style="padding:18px; cursor:default;">
+          <div class="card" style="padding:18px; cursor:default; border-bottom:0;">
             <div class="card-body" style="padding:0;">
               <h3 class="title" style="margin-bottom:6px;">표시할 매물이 없습니다</h3>
               <div class="address-text">검색 조건을 바꿔보세요.</div>
@@ -1623,50 +1781,49 @@
       }
 
       propertyList.innerHTML = data.map(item => {
-        const hotBadge = item.features && item.features.includes("급매")
-          ? `<span class="badge hot-badge">HOT</span>`
-          : "";
-
-        const featureHtml = (item.features || [])
-          .slice(0, 4)
-          .map(feature => `<span class="feature-chip">${escapeHtml(feature)}</span>`)
-          .join("");
+        const thumb = escapeHtml(item.image || "");
+        const dealLabel = escapeHtml(item.dealType || "매매");
+        const priceText = escapeHtml(item.price || "-");
+        const addressText = escapeHtml(item.address || "-");
+        const areaText = escapeHtml(item.area || "-");
+        const typeText = escapeHtml(item.type || "-");
+        const regionText = escapeHtml(item.region || "-");
+        const titleText = escapeHtml(item.title || "매물명");
+        const dateText = "1년 전";
+        const agentInitial = makeAgentInitial(item.phone || item.title);
+        const agentName = "담당자";
+        const officeName = `${regionText} 중개`;
 
         return `
           <article class="card" data-id="${item.id}">
-            <div class="thumb" style="background-image:url('${escapeHtml(item.image)}')">
-              <div class="card-top-badges">
-                <span class="badge deal-badge">${escapeHtml(item.dealType)}</span>
-                ${hotBadge}
-              </div>
-            </div>
+            <div class="card-inner-row">
+              <div class="thumb" style="background-image:url('${thumb}')"></div>
 
-            <div class="card-body">
-              <div class="card-header-row">
-                <h3 class="title">${escapeHtml(item.title)}</h3>
-              </div>
+              <div class="card-body">
+                <div class="card-top-line">
+                  <span class="card-badge">${typeText}</span>
+                  <span class="card-date">${dateText}</span>
+                </div>
 
-              <div class="price-row">
-                <div class="price">${escapeHtml(item.price)}</div>
-              </div>
+                <div class="card-address">${addressText}</div>
 
-              <div class="meta">
-                <span>${escapeHtml(item.type || "-")}</span>
-                <span>${escapeHtml(item.region || "-")}</span>
-                <span>${escapeHtml(item.area)}</span>
-              </div>
+                <div class="card-price-line">
+                  <span class="card-deal">${dealLabel}</span>
+                  <span class="card-price">${priceText}</span>
+                </div>
 
-              ${featureHtml ? `<div class="feature-chip-row">${featureHtml}</div>` : ""}
+                <div class="card-spec">${areaText} · ${titleText}</div>
 
-              <div class="address-row">
-                <span class="address-text">${escapeHtml(item.address)}</span>
-              </div>
-
-              <div class="actions">
-                <button class="btn btn-map" data-id="${item.id}" type="button">지도보기</button>
-                <a class="btn btn-call" href="tel:${String(item.phone || "").replace(/[^0-9]/g, "")}">
-                  ${escapeHtml(item.phone || "문의")}
-                </a>
+                <div class="card-agent-row">
+                  <div class="card-agent-left">
+                    <div class="card-agent-avatar">${agentInitial}</div>
+                    <div>
+                      <span class="card-agent-name">${agentName}</span>
+                      <span class="card-agent-title">대표</span>
+                      <div class="card-agent-office">${officeName}</div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </article>
@@ -1678,18 +1835,6 @@
           if (e.target.closest("a, button")) return;
 
           const item = data.find(v => v.id === Number(card.dataset.id));
-          if (!item) return;
-
-          openDetailPanel(item);
-          await focusProperty(item.id);
-        });
-      });
-
-      document.querySelectorAll(".btn-map").forEach(btn => {
-        btn.addEventListener("click", async function (e) {
-          e.stopPropagation();
-
-          const item = data.find(v => v.id === Number(btn.dataset.id));
           if (!item) return;
 
           openDetailPanel(item);
@@ -1755,7 +1900,7 @@
       renderList(state.filtered);
       renderMarkers(state.filtered);
       setResultInfo(`총 ${state.filtered.length}건`);
-      setListInfo(`전체 결과 · ${state.filtered.length}건`);
+      setListInfo(`총 ${state.filtered.length}개 매물`);
     }
 
     function initEvents() {
@@ -1765,7 +1910,7 @@
         resetListBtn.addEventListener("click", () => {
           renderList(state.filtered);
           setResultInfo(`총 ${state.filtered.length}건`);
-          setListInfo(`전체 결과 · ${state.filtered.length}건`);
+          setListInfo(`총 ${state.filtered.length}개 매물`);
         });
       }
 
@@ -1777,7 +1922,7 @@
 
         try {
           await navigator.clipboard.writeText(url);
-          detailShareBtn.textContent = "복사됨";
+          detailShareBtn.textContent = "복사";
           setTimeout(() => {
             detailShareBtn.textContent = "⤴";
           }, 1000);
