@@ -410,26 +410,11 @@
       min-width: 0;
     }
 
-    .back-btn {
-      border: 0;
-      background: transparent;
-      color: #1f2a36;
-      font-size: 26px;
-      line-height: 1;
-      cursor: pointer;
-      padding: 0;
-    }
-
     .brand-title {
       font-size: 17px;
       font-weight: 900;
       color: #1f2a36;
       white-space: nowrap;
-    }
-
-    .brand-card p,
-    .brand-badge {
-      display: none;
     }
 
     .panel {
@@ -1052,7 +1037,7 @@
                   <div class="detail-agent-top">
                     <div class="detail-agent-avatar" id="detailAgentAvatar">담당</div>
                     <div>
-                      <div class="detail-agent-name">담당자 대표</div>
+                      <div class="detail-agent-name" id="detailAgentName">담당자 대표</div>
                       <div class="detail-agent-office" id="detailAgentOffice">중개사무소</div>
                     </div>
                   </div>
@@ -1159,6 +1144,7 @@
     const detailRegionValue = document.getElementById("detailRegionValue");
     const detailAgentOffice = document.getElementById("detailAgentOffice");
     const detailAgentAvatar = document.getElementById("detailAgentAvatar");
+    const detailAgentName = document.getElementById("detailAgentName");
 
     function updateSidebarWidth() {
       const listWidth = getComputedStyle(document.documentElement).getPropertyValue("--sidebar-list-width").trim() || "360px";
@@ -1194,7 +1180,11 @@
         lng: Number(item.lng),
         phone: item.phone ?? "",
         image: item.image ?? "",
-        link: item.link ?? "#"
+        link: item.link ?? "#",
+        agentName: item.agentName ?? "담당자",
+        agentTitle: item.agentTitle ?? "대표",
+        agentOffice: item.agentOffice ?? "중개사무소",
+        agentImage: item.agentImage ?? ""
       };
     }
 
@@ -1322,8 +1312,14 @@
       detailTypeValue.textContent = item.type || "-";
       detailRegionValue.textContent = item.region || "-";
 
-      detailAgentOffice.textContent = `${item.region || "제주"} 중개사무소`;
-      detailAgentAvatar.textContent = makeAgentInitial(item.phone || item.title);
+      detailAgentName.textContent = `${item.agentName || "담당자"} ${item.agentTitle || "대표"}`;
+      detailAgentOffice.textContent = item.agentOffice || "중개사무소";
+
+      if (item.agentImage) {
+        detailAgentAvatar.innerHTML = `<img src="${escapeHtml(item.agentImage)}" alt="agent">`;
+      } else {
+        detailAgentAvatar.textContent = makeAgentInitial(item.agentName || "담당자");
+      }
 
       detailFeatures.innerHTML = (item.features || [])
         .map(feature => `<span>${escapeHtml(feature)}</span>`)
@@ -1789,9 +1785,11 @@
         const regionText = escapeHtml(item.region || "-");
         const titleText = escapeHtml(item.title || "매물명");
         const dateText = "1년 전";
-        const agentInitial = makeAgentInitial(item.phone || item.title);
-        const agentName = "담당자";
-        const officeName = `${regionText} 중개`;
+
+        const agentName = escapeHtml(item.agentName || "담당자");
+        const agentTitle = escapeHtml(item.agentTitle || "대표");
+        const officeName = escapeHtml(item.agentOffice || "중개사무소");
+        const agentInitial = makeAgentInitial(item.agentName || "담당자");
 
         return `
           <article class="card" data-id="${item.id}">
@@ -1815,10 +1813,12 @@
 
                 <div class="card-agent-row">
                   <div class="card-agent-left">
-                    <div class="card-agent-avatar">${agentInitial}</div>
+                    <div class="card-agent-avatar">
+                      ${item.agentImage ? `<img src="${escapeHtml(item.agentImage)}" alt="agent">` : agentInitial}
+                    </div>
                     <div>
                       <span class="card-agent-name">${agentName}</span>
-                      <span class="card-agent-title">대표</span>
+                      <span class="card-agent-title">${agentTitle}</span>
                       <div class="card-agent-office">${officeName}</div>
                     </div>
                   </div>
@@ -1870,6 +1870,8 @@
           item.address ?? "",
           item.desc ?? "",
           item.type ?? "",
+          item.agentName ?? "",
+          item.agentOffice ?? "",
           ...(item.features ?? [])
         ].join(" ").toLowerCase();
 
