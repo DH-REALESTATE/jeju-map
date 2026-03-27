@@ -1358,9 +1358,8 @@
       detailPriceBadge.textContent = item.type || "매물";
       detailAddress.textContent = `${item.region || ""} ${item.address || ""}`.trim();
 
-      detailLinkRow.innerHTML = `
-        지도도 매물확인 <a href="${escapeHtml(item.link && item.link !== "#" ? item.link : "#")}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.link && item.link !== "#" ? item.link : "링크 없음")}</a>
-      `;
+      /* 지도로 매물확인 */
+      detailLinkRow.innerHTML = "";
 
       detailDesc.textContent = item.desc || "";
 
