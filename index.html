@@ -1175,6 +1175,59 @@
       return "46px";
     }
 
+    function getClusterMarkerElement(cluster) {
+      if (!cluster || typeof cluster.getClusterMarker !== "function") return null;
+      const clusterMarker = cluster.getClusterMarker();
+      if (!clusterMarker) return null;
+
+      if (typeof clusterMarker.getContent === "function") {
+        const content = clusterMarker.getContent();
+        if (content instanceof HTMLElement) return content;
+      }
+
+      return null;
+    }
+
+    function setClusterBadgeSelected(cluster, isSelected) {
+      const clusterMarker = cluster.getClusterMarker ? cluster.getClusterMarker() : null;
+      if (!clusterMarker) return;
+
+      const clusterItems = cluster.getMarkers()
+        .map(marker => marker.__property)
+        .filter(Boolean);
+
+      if (!clusterItems.length) return;
+
+      const count = clusterItems.length;
+      const width = getClusterBadgeWidth(count);
+
+      const bg = isSelected ? "#2563eb" : "rgba(255,255,255,0.82)";
+      const color = isSelected ? "#ffffff" : "#2563eb";
+      const border = isSelected ? "#2563eb" : "rgba(255,255,255,0.55)";
+
+      const el = document.createElement("div");
+      el.style.display = "flex";
+      el.style.alignItems = "center";
+      el.style.justifyContent = "center";
+      el.style.minWidth = width;
+      el.style.height = "46px";
+      el.style.padding = "0 12px";
+      el.style.borderRadius = "14px";
+      el.style.background = bg;
+      el.style.color = color;
+      el.style.fontSize = "16px";
+      el.style.fontWeight = "900";
+      el.style.lineHeight = "46px";
+      el.style.letterSpacing = "-0.5px";
+      el.style.border = `1px solid ${border}`;
+      el.style.boxShadow = "0 6px 16px rgba(15,41,66,0.12)";
+      el.style.boxSizing = "border-box";
+      el.style.whiteSpace = "nowrap";
+      el.textContent = String(count);
+
+      clusterMarker.setContent(el);
+    }
+
     function refreshClusterBadges() {
       if (!state.clusterer) return;
 
@@ -1184,45 +1237,16 @@
       clusters.forEach(cluster => {
         if (!cluster || typeof cluster.getClusterMarker !== "function") return;
 
-        const clusterMarker = cluster.getClusterMarker();
-        if (!clusterMarker) return;
-
         const clusterItems = cluster.getMarkers()
           .map(marker => marker.__property)
           .filter(Boolean);
 
         if (!clusterItems.length) return;
 
-        const count = clusterItems.length;
         const key = getClusterKeyFromItems(clusterItems);
         const isSelected = state.selectedClusterKey === key;
-        const width = getClusterBadgeWidth(count);
 
-        const bg = isSelected ? "#2563eb" : "rgba(255,255,255,0.82)";
-        const color = isSelected ? "#ffffff" : "#2563eb";
-        const border = isSelected ? "#2563eb" : "rgba(255,255,255,0.55)";
-
-        clusterMarker.setContent(`
-          <div style="
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            min-width:${width};
-            height:46px;
-            padding:0 12px;
-            border-radius:14px;
-            background:${bg};
-            color:${color};
-            font-size:16px;
-            font-weight:900;
-            line-height:46px;
-            letter-spacing:-0.5px;
-            border:1px solid ${border};
-            box-shadow:0 6px 16px rgba(15,41,66,0.12);
-            box-sizing:border-box;
-            white-space:nowrap;
-          ">${count}</div>
-        `);
+        setClusterBadgeSelected(cluster, isSelected);
       });
     }
 
@@ -1409,10 +1433,9 @@
         setResultInfo(`선택 지역 ${clusterItems.length}건`);
         setListInfo(`총 ${clusterItems.length}개 매물`);
 
-        refreshClusterBadges();
-
         setTimeout(() => {
           refreshClusterBadges();
+          setClusterBadgeSelected(cluster, true);
         }, 0);
       });
 
@@ -1428,7 +1451,9 @@
         setResultInfo(`총 ${state.filtered.length}건`);
         setListInfo(`총 ${state.filtered.length}개 매물`);
 
-        refreshClusterBadges();
+        setTimeout(() => {
+          refreshClusterBadges();
+        }, 0);
       });
     }
 
@@ -1597,7 +1622,9 @@
           setResultInfo("선택 매물 1건");
           setListInfo("총 1개 매물");
 
-          refreshClusterBadges();
+          setTimeout(() => {
+            refreshClusterBadges();
+          }, 0);
         });
 
         markerList.push(marker);
@@ -1630,7 +1657,9 @@
       updateMarkerSelection(id);
       moveMapToProperty(item);
 
-      refreshClusterBadges();
+      setTimeout(() => {
+        refreshClusterBadges();
+      }, 0);
     }
 
     function renderList(data) {
@@ -1790,7 +1819,10 @@
           renderList(state.filtered);
           setResultInfo(`총 ${state.filtered.length}건`);
           setListInfo(`총 ${state.filtered.length}개 매물`);
-          refreshClusterBadges();
+
+          setTimeout(() => {
+            refreshClusterBadges();
+          }, 0);
         });
       }
 
