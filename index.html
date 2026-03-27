@@ -1113,38 +1113,33 @@
     }
 
     function createMarkerImage(item) {
-      const color = "#0ea5e9";
-    
       const svg = `
-        <svg xmlns="http://www.w3.org/2000/svg" width="46" height="46" viewBox="0 0 46 46">
+        <svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" viewBox="0 0 52 52">
           <defs>
             <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
-              <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="rgba(15,41,66,0.15)"/>
+              <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="rgba(15,41,66,0.12)"/>
             </filter>
           </defs>
     
           <g filter="url(#shadow)">
-            <!-- 원 크기 ↓ / 테두리 ↓ -->
-            <circle cx="23" cy="23" r="20"
-                    fill="#ffffff"
-                    stroke="${color}"
-                    stroke-width="2"/>
-    
-            <!-- 숫자 -->
-            <text x="23" y="29"
+            <rect x="6" y="6" width="40" height="40" rx="12" ry="12"
+                  fill="rgba(255,255,255,0.82)"
+                  stroke="rgba(255,255,255,0.55)"
+                  stroke-width="1"/>
+            <text x="26" y="32"
                   text-anchor="middle"
                   font-size="16"
                   font-weight="900"
                   font-family="Apple SD Gothic Neo, Malgun Gothic, sans-serif"
-                  fill="${color}">1</text>
+                  fill="#2563eb">1</text>
           </g>
         </svg>
       `;
     
       return new kakao.maps.MarkerImage(
         "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg),
-        new kakao.maps.Size(46, 46),
-        { offset: new kakao.maps.Point(23, 23) }
+        new kakao.maps.Size(52, 52),
+        { offset: new kakao.maps.Point(26, 26) }
       );
     }
 
@@ -1249,43 +1244,56 @@
         calculator: [5, 10, 20, 50],
         styles: [
           {
-            width: "46px",
-            height: "46px",
-            background: "#ffffff",
-            borderRadius: "23px",
-            color: "#0ea5e9",
-            textAlign: "center",
-            fontWeight: "900",
-            lineHeight: "46px",
-            fontSize: "16px",
-            border: "2px solid #0ea5e9",
-            boxShadow: "0 6px 16px rgba(15,41,66,0.15)"
-          },
-          {
             width: "52px",
             height: "52px",
-            background: "#ffffff",
-            borderRadius: "26px",
-            color: "#0ea5e9",
+            background: "rgba(255,255,255,0.82)",
+            borderRadius: "14px",
+            color: "#2563eb",
             textAlign: "center",
             fontWeight: "900",
             lineHeight: "52px",
-            fontSize: "18px",
-            border: "2px solid #0ea5e9",
-            boxShadow: "0 6px 16px rgba(15,41,66,0.16)"
+            fontSize: "16px",
+            border: "1px solid rgba(255,255,255,0.55)",
+            boxShadow: "0 6px 16px rgba(15,41,66,0.12)"
           },
           {
-            width: "58px",
-            height: "58px",
-            background: "#ffffff",
-            borderRadius: "29px",
-            color: "#0ea5e9",
+            width: "56px",
+            height: "56px",
+            background: "rgba(255,255,255,0.84)",
+            borderRadius: "15px",
+            color: "#2563eb",
             textAlign: "center",
             fontWeight: "900",
-            lineHeight: "58px",
+            lineHeight: "56px",
+            fontSize: "18px",
+            border: "1px solid rgba(255,255,255,0.58)",
+            boxShadow: "0 6px 16px rgba(15,41,66,0.14)"
+          },
+          {
+            width: "60px",
+            height: "60px",
+            background: "rgba(255,255,255,0.86)",
+            borderRadius: "16px",
+            color: "#2563eb",
+            textAlign: "center",
+            fontWeight: "900",
+            lineHeight: "60px",
             fontSize: "20px",
-            border: "2px solid #0ea5e9",
-            boxShadow: "0 8px 20px rgba(15,41,66,0.18)"
+            border: "1px solid rgba(255,255,255,0.6)",
+            boxShadow: "0 8px 20px rgba(15,41,66,0.15)"
+          },
+          {
+            width: "64px",
+            height: "64px",
+            background: "rgba(255,255,255,0.88)",
+            borderRadius: "17px",
+            color: "#2563eb",
+            textAlign: "center",
+            fontWeight: "900",
+            lineHeight: "64px",
+            fontSize: "22px",
+            border: "1px solid rgba(255,255,255,0.62)",
+            boxShadow: "0 8px 20px rgba(15,41,66,0.16)"
           }
         ]
       });
