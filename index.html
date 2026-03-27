@@ -1014,7 +1014,6 @@
 
     function refreshMapLayout() {
       if (!state.map) return;
-
       setTimeout(() => {
         state.map.relayout();
       }, 320);
@@ -1130,7 +1129,6 @@
               <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="rgba(15,41,66,0.12)"/>
             </filter>
           </defs>
-
           <g filter="url(#shadow)">
             <rect x="6" y="0.5" width="${boxWidth}" height="45" rx="14" ry="14"
                   fill="${bgColor}"
@@ -1185,7 +1183,7 @@
 
       return `
         <div style="
-          display:inline-flex;
+          display:flex;
           align-items:center;
           justify-content:center;
           min-width:${width};
@@ -1207,9 +1205,12 @@
     }
 
     function refreshClusterBadges() {
-      if (!state.clusterer || !state.clusterer._clusters) return;
+      if (!state.clusterer) return;
 
-      state.clusterer._clusters.forEach(cluster => {
+      const clusters = state.clusterer.getClusters ? state.clusterer.getClusters() : state.clusterer._clusters;
+      if (!clusters || !clusters.length) return;
+
+      clusters.forEach(cluster => {
         if (!cluster || typeof cluster.getClusterMarker !== "function") return;
 
         const clusterMarker = cluster.getClusterMarker();
@@ -1219,12 +1220,27 @@
           .map(marker => marker.__property)
           .filter(Boolean);
 
+        if (!clusterItems.length) return;
+
         const key = getClusterKeyFromItems(clusterItems);
         const isSelected = state.selectedClusterKey === key;
 
-        clusterMarker.setContent(
-          getClusterBadgeContent(clusterItems.length, isSelected)
-        );
+        clusterMarker.setStyles([{
+          width: getClusterBadgeWidth(clusterItems.length),
+          height: "46px",
+          background: isSelected ? "#2563eb" : "rgba(255,255,255,0.82)",
+          borderRadius: "14px",
+          color: isSelected ? "#ffffff" : "#2563eb",
+          textAlign: "center",
+          fontWeight: "900",
+          lineHeight: "46px",
+          fontSize: "16px",
+          letterSpacing: "-0.5px",
+          border: `1px solid ${isSelected ? "#2563eb" : "rgba(255,255,255,0.55)"}`,
+          boxShadow: "0 6px 16px rgba(15,41,66,0.12)"
+        }]);
+
+        clusterMarker.setText(String(clusterItems.length));
       });
     }
 
@@ -1401,6 +1417,7 @@
         state.selectedMarkerId = null;
         state.selectedClusterKey = getClusterKeyFromItems(clusterItems);
 
+        updateMarkerSelection(null);
         renderList(clusterItems);
         propertyList.scrollTop = 0;
 
@@ -1584,15 +1601,15 @@
 
           state.selectedClusterKey = null;
 
-          renderList(state.filtered);
+          renderList([item]);
           propertyList.scrollTop = 0;
 
           highlightCard(item.id);
           updateMarkerSelection(item.id);
           openDetailPanel(item);
 
-          setResultInfo(`총 ${state.filtered.length}건`);
-          setListInfo(`총 ${state.filtered.length}개 매물`);
+          setResultInfo("선택 매물 1건");
+          setListInfo("총 1개 매물");
 
           refreshClusterBadges();
         });
@@ -1781,7 +1798,9 @@
 
       if (resetListBtn) {
         resetListBtn.addEventListener("click", () => {
+          state.selectedMarkerId = null;
           state.selectedClusterKey = null;
+          updateMarkerSelection(null);
           renderList(state.filtered);
           setResultInfo(`총 ${state.filtered.length}건`);
           setListInfo(`총 ${state.filtered.length}개 매물`);
