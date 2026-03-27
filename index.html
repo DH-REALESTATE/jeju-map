@@ -79,8 +79,7 @@
       overflow: hidden;
       opacity: 0;
       background: #fff;
-      /* border-left: 1px solid #e6ebf0; */
-      border-left: 1px solid #eef2f6;
+      border-left: 1px solid #e6ebf0;
       transition: opacity 0.22s ease;
       scrollbar-width: none;
       -ms-overflow-style: none;
@@ -939,7 +938,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title">제주도 부동산 지도 Ver 1.003</div>
+              <div class="brand-title">제주도 부동산 지도 Ver 1.004</div>
             </div>
           </div>
 
@@ -1135,6 +1134,17 @@
       document.documentElement.style.setProperty("--sidebar-current-width", totalWidth);
     }
 
+    function refreshMapLayout() {
+      if (!state.map) return;
+
+      const center = state.map.getCenter();
+
+      setTimeout(() => {
+        state.map.relayout();
+        state.map.setCenter(center);
+      }, 320);
+    }
+
     function escapeHtml(str) {
       return String(str ?? "")
         .replace(/&/g, "&amp;")
@@ -1290,6 +1300,7 @@
       currentDetailItem = item;
       sidebar.classList.add("expanded");
       updateSidebarWidth();
+      refreshMapLayout();
 
       detailHero.style.backgroundImage = `url('${escapeHtml(item.image)}')`;
       detailBadges.innerHTML = `<span>${escapeHtml(item.type || "-")}</span>`;
@@ -1338,6 +1349,7 @@
       sidebar.classList.remove("expanded");
       currentDetailItem = null;
       updateSidebarWidth();
+      refreshMapLayout();
     }
 
     function initMap() {
@@ -1962,6 +1974,11 @@
           syncFeatureButtons();
           applyFilter();
         });
+      });
+
+      window.addEventListener("resize", () => {
+        if (!state.map) return;
+        state.map.relayout();
       });
     }
 
