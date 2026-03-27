@@ -818,7 +818,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title">제주도 부동산 지도 Ver 1.007</div>
+              <div class="brand-title">제주도 부동산 지도 Ver 1.008</div>
             </div>
           </div>
 
@@ -1175,35 +1175,6 @@
       return "46px";
     }
 
-    function getClusterBadgeContent(count, isSelected = false) {
-      const width = getClusterBadgeWidth(count);
-      const bg = isSelected ? "#2563eb" : "rgba(255,255,255,0.82)";
-      const color = isSelected ? "#ffffff" : "#2563eb";
-      const border = isSelected ? "#2563eb" : "rgba(255,255,255,0.55)";
-
-      return `
-        <div style="
-          display:flex;
-          align-items:center;
-          justify-content:center;
-          min-width:${width};
-          height:46px;
-          padding:0 12px;
-          border-radius:14px;
-          background:${bg};
-          color:${color};
-          font-size:16px;
-          font-weight:900;
-          line-height:46px;
-          letter-spacing:-0.5px;
-          border:1px solid ${border};
-          box-shadow:0 6px 16px rgba(15,41,66,0.12);
-          box-sizing:border-box;
-          white-space:nowrap;
-        ">${count}</div>
-      `;
-    }
-
     function refreshClusterBadges() {
       if (!state.clusterer) return;
 
@@ -1222,25 +1193,36 @@
 
         if (!clusterItems.length) return;
 
+        const count = clusterItems.length;
         const key = getClusterKeyFromItems(clusterItems);
         const isSelected = state.selectedClusterKey === key;
+        const width = getClusterBadgeWidth(count);
 
-        clusterMarker.setStyles([{
-          width: getClusterBadgeWidth(clusterItems.length),
-          height: "46px",
-          background: isSelected ? "#2563eb" : "rgba(255,255,255,0.82)",
-          borderRadius: "14px",
-          color: isSelected ? "#ffffff" : "#2563eb",
-          textAlign: "center",
-          fontWeight: "900",
-          lineHeight: "46px",
-          fontSize: "16px",
-          letterSpacing: "-0.5px",
-          border: `1px solid ${isSelected ? "#2563eb" : "rgba(255,255,255,0.55)"}`,
-          boxShadow: "0 6px 16px rgba(15,41,66,0.12)"
-        }]);
+        const bg = isSelected ? "#2563eb" : "rgba(255,255,255,0.82)";
+        const color = isSelected ? "#ffffff" : "#2563eb";
+        const border = isSelected ? "#2563eb" : "rgba(255,255,255,0.55)";
 
-        clusterMarker.setText(String(clusterItems.length));
+        clusterMarker.setContent(`
+          <div style="
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            min-width:${width};
+            height:46px;
+            padding:0 12px;
+            border-radius:14px;
+            background:${bg};
+            color:${color};
+            font-size:16px;
+            font-weight:900;
+            line-height:46px;
+            letter-spacing:-0.5px;
+            border:1px solid ${border};
+            box-shadow:0 6px 16px rgba(15,41,66,0.12);
+            box-sizing:border-box;
+            white-space:nowrap;
+          ">${count}</div>
+        `);
       });
     }
 
@@ -1428,6 +1410,10 @@
         setListInfo(`총 ${clusterItems.length}개 매물`);
 
         refreshClusterBadges();
+
+        setTimeout(() => {
+          refreshClusterBadges();
+        }, 0);
       });
 
       kakao.maps.event.addListener(state.map, "click", async function () {
