@@ -1110,7 +1110,7 @@
       const bgColor = isSelected ? "#2563eb" : "rgba(255,255,255,0.82)";
       const textColor = isSelected ? "#ffffff" : "#2563eb";
       const borderColor = isSelected ? "#2563eb" : "rgba(255,255,255,0.55)";
-
+    
       const svg = `
         <svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" viewBox="0 0 52 52">
           <defs>
@@ -1118,12 +1118,13 @@
               <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="rgba(15,41,66,0.12)"/>
             </filter>
           </defs>
-
+    
           <g filter="url(#shadow)">
-            <rect x="6" y="6" width="40" height="40" rx="12" ry="12"
+            <rect x="0.5" y="0.5" width="51" height="51" rx="14" ry="14"
                   fill="${bgColor}"
                   stroke="${borderColor}"
                   stroke-width="1"/>
+    
             <text x="26" y="32"
                   text-anchor="middle"
                   font-size="16"
@@ -1133,7 +1134,7 @@
           </g>
         </svg>
       `;
-
+    
       return new kakao.maps.MarkerImage(
         "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg),
         new kakao.maps.Size(52, 52),
