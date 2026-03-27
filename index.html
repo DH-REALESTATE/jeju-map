@@ -66,19 +66,12 @@
       overflow-y: auto;
       overflow-x: hidden;
       background: #f7f8fa;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
     }
 
-    .sidebar-list-panel::-webkit-scrollbar,
-    .sidebar-detail-panel::-webkit-scrollbar {
-      width: 10px;
-    }
-
-    .sidebar-list-panel::-webkit-scrollbar-thumb,
-    .sidebar-detail-panel::-webkit-scrollbar-thumb {
-      background: rgba(120, 135, 150, 0.28);
-      border-radius: 999px;
-      border: 2px solid transparent;
-      background-clip: padding-box;
+    .sidebar-list-panel::-webkit-scrollbar {
+      display: none;
     }
 
     .sidebar-detail-panel {
@@ -88,6 +81,12 @@
       background: #fff;
       border-left: 0;
       transition: opacity 0.22s ease;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .sidebar-detail-panel::-webkit-scrollbar {
+      display: none;
     }
 
     .sidebar.expanded .sidebar-detail-panel {
@@ -134,6 +133,12 @@
       flex: 1;
       overflow-y: auto;
       background: #fff;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .detail-scroll::-webkit-scrollbar {
+      display: none;
     }
 
     .detail-hero {
@@ -933,7 +938,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title">제주도 부동산 지도 Ver 1.002</div>
+              <div class="brand-title">제주도 부동산 지도 Ver 1.003</div>
             </div>
           </div>
 
