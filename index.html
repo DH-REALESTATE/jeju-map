@@ -11,12 +11,21 @@ body { margin:0; font-family:sans-serif; }
 
 #wrap { display:flex; height:100vh; }
 
+/* ===== 좌측 카드 영역 (기존 유지) ===== */
 #sidebar {
-  width:320px;
+  width:340px;
   overflow-y:auto;
   border-right:1px solid #eee;
 }
 
+.card {
+  padding:14px;
+  border-bottom:1px solid #eee;
+  cursor:pointer;
+}
+.card:hover { background:#f8fafc; }
+
+/* ===== 지도 영역 ===== */
 #mapWrap {
   flex:1;
   position:relative;
@@ -27,14 +36,7 @@ body { margin:0; font-family:sans-serif; }
   height:100%;
 }
 
-.card {
-  padding:14px;
-  border-bottom:1px solid #eee;
-  cursor:pointer;
-}
-
-.card:hover { background:#f9fafb; }
-
+/* ===== 재검색 버튼 (추가된 기능) ===== */
 .search-btn {
   position:absolute;
   top:16px;
@@ -47,11 +49,13 @@ body { margin:0; font-family:sans-serif; }
   border:none;
   border-radius:20px;
   padding:10px 18px;
+  font-size:14px;
   font-weight:700;
-  display:none;
-  cursor:pointer;
-}
 
+  box-shadow:0 6px 16px rgba(0,0,0,0.15);
+  cursor:pointer;
+  display:none;
+}
 </style>
 </head>
 
@@ -59,10 +63,12 @@ body { margin:0; font-family:sans-serif; }
 
 <div id="wrap">
 
+  <!-- 좌측 카드 -->
   <div id="sidebar">
     <div id="propertyList"></div>
   </div>
 
+  <!-- 지도 -->
   <div id="mapWrap">
     <div id="map"></div>
     <button id="searchBtn" class="search-btn">이 지역에서 재검색</button>
@@ -72,6 +78,9 @@ body { margin:0; font-family:sans-serif; }
 
 <script>
 
+/* =======================
+   상태
+======================= */
 const state = {
   map:null,
   clusterer:null,
@@ -83,25 +92,18 @@ const state = {
 };
 
 /* =======================
-   마커 디자인
+   마커
 ======================= */
-function createMarkerImage(item, isSelected=false){
+function createMarkerImage(item, selected=false){
 
-  const bg = isSelected ? "#2563eb" : "rgba(255,255,255,0.92)";
-  const color = isSelected ? "#fff" : "#2563eb";
-  const scale = isSelected ? 1.15 : 1;
+  const bg = selected ? "#2563eb" : "rgba(255,255,255,0.9)";
+  const color = selected ? "#fff" : "#2563eb";
 
   const svg = `
   <svg xmlns="http://www.w3.org/2000/svg" width="52" height="52">
-    <g transform="scale(${scale}) translate(${(1-scale)*26}, ${(1-scale)*26})">
-      <rect x="0.5" y="0.5" width="51" height="51" rx="14"
-        fill="${bg}"/>
-      <text x="26" y="32"
-        text-anchor="middle"
-        font-size="16"
-        font-weight="900"
-        fill="${color}">1</text>
-    </g>
+    <rect x="0.5" y="0.5" width="51" height="51" rx="14" fill="${bg}"/>
+    <text x="26" y="32" text-anchor="middle"
+      font-size="16" font-weight="900" fill="${color}">1</text>
   </svg>`;
 
   return new kakao.maps.MarkerImage(
@@ -141,7 +143,7 @@ function initMap(){
     styles:[{
       width:"52px",
       height:"52px",
-      background:"rgba(255,255,255,0.92)",
+      background:"rgba(255,255,255,0.9)",
       borderRadius:"14px",
       color:"#2563eb",
       lineHeight:"52px",
@@ -150,7 +152,7 @@ function initMap(){
     }]
   });
 
-  /* 지도 이동 감지 */
+  /* ===== 지도 이동 감지 (추가 기능) ===== */
   kakao.maps.event.addListener(state.map,"dragend",()=>{
     searchBtn.style.display="block";
   });
@@ -159,7 +161,7 @@ function initMap(){
     searchBtn.style.display="block";
   });
 
-  /* 지도 클릭 초기화 */
+  /* ===== 지도 클릭 초기화 ===== */
   kakao.maps.event.addListener(state.map,"click",()=>{
     renderList(state.filtered);
     updateMarkerSelection(null);
@@ -167,21 +169,24 @@ function initMap(){
     if(state.selectedCluster){
       const el = state.selectedCluster._clusterMarker.getElement();
       if(el){
-        el.style.background="rgba(255,255,255,0.92)";
+        el.style.background="rgba(255,255,255,0.9)";
         el.style.color="#2563eb";
       }
       state.selectedCluster=null;
     }
   });
 
-  /* 클러스터 클릭 */
+  /* ===== 클러스터 클릭 ===== */
   kakao.maps.event.addListener(state.clusterer,"clusterclick",(cluster)=>{
 
     const items = cluster.getMarkers().map(m=>m.__property);
 
     renderList(items);
 
-    openDetail(items[0]);
+    // 첫 매물 상세
+    if(items[0]){
+      highlightCard(items[0].id);
+    }
 
     updateMarkerSelection(null);
 
@@ -189,7 +194,7 @@ function initMap(){
       if(state.selectedCluster){
         const prev = state.selectedCluster._clusterMarker.getElement();
         if(prev){
-          prev.style.background="rgba(255,255,255,0.92)";
+          prev.style.background="rgba(255,255,255,0.9)";
           prev.style.color="#2563eb";
         }
       }
@@ -202,13 +207,11 @@ function initMap(){
 
       state.selectedCluster = cluster;
     },0);
-
   });
-
 }
 
 /* =======================
-   영역 필터
+   영역 필터 (추가 기능)
 ======================= */
 function filterByBounds(){
   const bounds = state.map.getBounds();
@@ -254,14 +257,13 @@ function renderMarkers(data){
       if(state.selectedCluster){
         const el = state.selectedCluster._clusterMarker.getElement();
         if(el){
-          el.style.background="rgba(255,255,255,0.92)";
+          el.style.background="rgba(255,255,255,0.9)";
           el.style.color="#2563eb";
         }
         state.selectedCluster=null;
       }
 
       updateMarkerSelection(item.id);
-      openDetail(item);
     });
 
     markers.push(marker);
@@ -285,13 +287,6 @@ function renderList(data){
 }
 
 /* =======================
-   상세 (간단)
-======================= */
-function openDetail(item){
-  console.log("상세:",item.title);
-}
-
-/* =======================
    리스트 클릭
 ======================= */
 function focusItem(id){
@@ -299,19 +294,20 @@ function focusItem(id){
   if(!item) return;
 
   updateMarkerSelection(id);
-  openDetail(item);
 }
 
 /* =======================
-   데이터 로드
+   데이터
 ======================= */
 async function load(){
   const res = await fetch("./properties.json");
-  state.all = await res.json();
-  state.filtered = state.all;
+  const data = await res.json();
 
-  renderList(state.filtered);
-  renderMarkers(state.filtered);
+  state.all = data;
+  state.filtered = data;
+
+  renderList(data);
+  renderMarkers(data);
 }
 
 /* =======================
