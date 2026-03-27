@@ -195,55 +195,6 @@
       line-height: 1;
     }
 
-    .detail-desc {
-      margin-bottom: 16px;
-      font-size: 14px;
-      color: #334355;
-      line-height: 1.9;
-      white-space: pre-line;
-    }
-
-    .detail-info-list {
-      margin-bottom: 16px;
-      border-top: 1px solid #eceff3;
-      border-bottom: 1px solid #eceff3;
-      background: #fff;
-    }
-
-    /* 상세정보 밑줄 */
-    .detail-info-row {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 16px;
-      padding: 12px 2px;
-      border-bottom: 0px solid #f1f3f6;
-    }
-
-    .detail-info-row:last-child {
-      border-bottom: 0;
-    }
-
-    .detail-info-label {
-      min-width: 120px;
-      font-size: 13px;
-      font-weight: 800;
-      color: #5f6b78;
-      text-align: left;
-      line-height: 1.6;
-    }
-
-    .detail-info-value {
-      flex: 1;
-      font-size: 13px;
-      font-weight: 700;
-      color: #1f2a36;
-      text-align: right;
-      line-height: 1.6;
-      white-space: pre-line;
-      word-break: keep-all;
-    }
-
     .detail-price-box {
       padding: 14px 14px 12px;
       border-radius: 14px;
@@ -304,6 +255,59 @@
       color: #1f6fff;
       font-weight: 900;
       letter-spacing: -0.3px;
+    }
+
+    .detail-desc {
+      margin-bottom: 16px;
+      font-size: 14px;
+      color: #334355;
+      line-height: 1.9;
+      white-space: pre-line;
+    }
+
+    .detail-section-title {
+      font-size: 14px;
+      font-weight: 900;
+      color: #1f2a36;
+      margin: 18px 0 10px;
+      padding-top: 14px;
+      border-top: 1px solid #eceff3;
+    }
+
+    .detail-info-list {
+      margin-bottom: 16px;
+      background: #fff;
+      border-top: none;
+      border-bottom: none;
+    }
+
+    .detail-info-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 12px 0;
+      border-bottom: none;
+    }
+
+    .detail-info-label {
+      min-width: 120px;
+      font-size: 13px;
+      font-weight: 800;
+      color: #5f6b78;
+      text-align: left;
+      line-height: 1.6;
+    }
+
+    .detail-info-value {
+      flex: 1;
+      font-size: 13px;
+      font-weight: 700;
+      color: #1f2a36;
+      text-align: right;
+      line-height: 1.6;
+      white-space: pre-line;
+      word-break: keep-all;
     }
 
     .detail-agent-card {
@@ -411,15 +415,6 @@
       color: #fff;
     }
 
-    .detail-section-title {
-      font-size: 18px;
-      font-weight: 900;
-      color: #1f2a36;
-      margin: 18px 0 10px;
-      padding-top: 14px;
-      border-top: 1px solid #eceff3;
-    }
-        
     .brand-card {
       display: flex;
       align-items: center;
@@ -895,7 +890,7 @@
                   <h2 class="detail-title" id="detailTitle">매물을 선택하세요</h2>
                   <div class="detail-type-badge" id="detailTypeBadge"></div>
                 </div>
-                
+
                 <div class="detail-meta-grid" id="detailMetaGrid">
                   <div class="detail-meta-item">
                     <span class="detail-meta-label">면적</span>
@@ -910,17 +905,17 @@
                     <span class="detail-meta-value" id="detailRegionValue">-</span>
                   </div>
                 </div>
-                
+
                 <div class="detail-price-box">
                   <div class="detail-price-badge" id="detailPriceBadge"></div>
                   <div class="detail-price" id="detailPrice"></div>
                   <div class="detail-address" id="detailAddress"></div>
                 </div>
-                
+
                 <div class="detail-desc" id="detailDesc"></div>
 
                 <div class="detail-section-title">매물정보</div>
-                
+
                 <div class="detail-info-list" id="detailInfoList"></div>
 
                 <div class="detail-agent-card">
@@ -1323,15 +1318,11 @@
     }
 
     async function loadPropertyInfo(item) {
-      if (!item.desc_folder) {
-        return {};
-      }
+      if (!item.desc_folder) return {};
 
       try {
         const res = await fetch(item.desc_folder, { cache: "no-store" });
-        if (!res.ok) {
-          throw new Error(`info.json 불러오기 실패: ${res.status}`);
-        }
+        if (!res.ok) throw new Error(`info.json 불러오기 실패: ${res.status}`);
         return await res.json();
       } catch (err) {
         console.error("상세 정보 불러오기 실패:", err);
@@ -1396,12 +1387,12 @@
       detailPriceBadge.textContent = "";
       detailPriceBadge.style.display = "none";
 
-      detailPrice.textContent = `${item.dealType || ""} ${item.price || ""}`.trim();
-      detailAddress.textContent = `${item.address || ""}`.trim();
-
       detailAreaValue.textContent = item.area || "-";
       detailTypeValue.textContent = item.type || "-";
       detailRegionValue.textContent = item.region || "-";
+
+      detailPrice.textContent = `${item.dealType || ""} ${item.price || ""}`.trim();
+      detailAddress.textContent = `${item.address || ""}`.trim();
 
       detailDesc.textContent = item.desc || "";
       detailInfoList.innerHTML = "";
