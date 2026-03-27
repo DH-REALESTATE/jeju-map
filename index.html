@@ -959,7 +959,8 @@
       all: [],
       filtered: [],
       selectedFeatures: new Set(),
-      selectedMarkerId: null
+      selectedMarkerId: null,
+      selectedClusterKey: null
     };
 
     let roadview = null;
@@ -1106,13 +1107,24 @@
       }
     }
 
-    function createMarkerImage(item, isSelected = false) {
+    function getBadgeWidthByText(text) {
+      const len = String(text ?? "").length;
+      if (len >= 3) return 70;
+      if (len === 2) return 58;
+      return 46;
+    }
+
+    function createMarkerImage(item, isSelected = false, label = "1") {
+      const text = String(label ?? "1");
+      const boxWidth = getBadgeWidthByText(text);
+      const svgWidth = boxWidth + 12;
+
       const bgColor = isSelected ? "#2563eb" : "rgba(255,255,255,0.82)";
       const textColor = isSelected ? "#ffffff" : "#2563eb";
       const borderColor = isSelected ? "#2563eb" : "rgba(255,255,255,0.55)";
 
       const svg = `
-        <svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" viewBox="0 0 52 52">
+        <svg xmlns="http://www.w3.org/2000/svg" width="${svgWidth}" height="46" viewBox="0 0 ${svgWidth} 46">
           <defs>
             <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
               <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="rgba(15,41,66,0.12)"/>
@@ -1120,24 +1132,24 @@
           </defs>
 
           <g filter="url(#shadow)">
-            <rect x="6" y="6" width="40" height="40" rx="12" ry="12"
+            <rect x="6" y="0.5" width="${boxWidth}" height="45" rx="14" ry="14"
                   fill="${bgColor}"
                   stroke="${borderColor}"
                   stroke-width="1"/>
-            <text x="26" y="32"
+            <text x="${6 + (boxWidth / 2)}" y="29"
                   text-anchor="middle"
                   font-size="16"
                   font-weight="900"
                   font-family="Apple SD Gothic Neo, Malgun Gothic, sans-serif"
-                  fill="${textColor}">1</text>
+                  fill="${textColor}">${text}</text>
           </g>
         </svg>
       `;
 
       return new kakao.maps.MarkerImage(
         "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg),
-        new kakao.maps.Size(52, 52),
-        { offset: new kakao.maps.Point(26, 26) }
+        new kakao.maps.Size(svgWidth, 46),
+        { offset: new kakao.maps.Point(svgWidth / 2, 23) }
       );
     }
 
@@ -1147,7 +1159,72 @@
       state.markers.forEach(marker => {
         const item = marker.__property;
         const isSelected = item && item.id === selectedId;
-        marker.setImage(createMarkerImage(item, isSelected));
+        marker.setImage(createMarkerImage(item, isSelected, "1"));
+      });
+    }
+
+    function getClusterKeyFromItems(items) {
+      return items
+        .map(item => item.id)
+        .sort((a, b) => a - b)
+        .join(",");
+    }
+
+    function getClusterBadgeWidth(count) {
+      const len = String(count).length;
+      if (len >= 3) return "70px";
+      if (len === 2) return "58px";
+      return "46px";
+    }
+
+    function getClusterBadgeContent(count, isSelected = false) {
+      const width = getClusterBadgeWidth(count);
+      const bg = isSelected ? "#2563eb" : "rgba(255,255,255,0.82)";
+      const color = isSelected ? "#ffffff" : "#2563eb";
+      const border = isSelected ? "#2563eb" : "rgba(255,255,255,0.55)";
+
+      return `
+        <div style="
+          display:inline-flex;
+          align-items:center;
+          justify-content:center;
+          min-width:${width};
+          height:46px;
+          padding:0 12px;
+          border-radius:14px;
+          background:${bg};
+          color:${color};
+          font-size:16px;
+          font-weight:900;
+          line-height:46px;
+          letter-spacing:-0.5px;
+          border:1px solid ${border};
+          box-shadow:0 6px 16px rgba(15,41,66,0.12);
+          box-sizing:border-box;
+          white-space:nowrap;
+        ">${count}</div>
+      `;
+    }
+
+    function refreshClusterBadges() {
+      if (!state.clusterer || !state.clusterer._clusters) return;
+
+      state.clusterer._clusters.forEach(cluster => {
+        if (!cluster || typeof cluster.getClusterMarker !== "function") return;
+
+        const clusterMarker = cluster.getClusterMarker();
+        if (!clusterMarker) return;
+
+        const clusterItems = cluster.getMarkers()
+          .map(marker => marker.__property)
+          .filter(Boolean);
+
+        const key = getClusterKeyFromItems(clusterItems);
+        const isSelected = state.selectedClusterKey === key;
+
+        clusterMarker.setContent(
+          getClusterBadgeContent(clusterItems.length, isSelected)
+        );
       });
     }
 
@@ -1252,56 +1329,56 @@
         calculator: [5, 10, 20, 50],
         styles: [
           {
-            width: "52px",
-            height: "52px",
+            width: "46px",
+            height: "46px",
             background: "rgba(255,255,255,0.82)",
             borderRadius: "14px",
             color: "#2563eb",
             textAlign: "center",
             fontWeight: "900",
-            lineHeight: "52px",
+            lineHeight: "46px",
             fontSize: "16px",
             letterSpacing: "-0.5px",
             border: "1px solid rgba(255,255,255,0.55)",
             boxShadow: "0 6px 16px rgba(15,41,66,0.12)"
           },
           {
-            width: "52px",
-            height: "52px",
+            width: "58px",
+            height: "46px",
             background: "rgba(255,255,255,0.82)",
             borderRadius: "14px",
             color: "#2563eb",
             textAlign: "center",
             fontWeight: "900",
-            lineHeight: "52px",
+            lineHeight: "46px",
             fontSize: "16px",
             letterSpacing: "-0.5px",
             border: "1px solid rgba(255,255,255,0.55)",
             boxShadow: "0 6px 16px rgba(15,41,66,0.12)"
           },
           {
-            width: "52px",
-            height: "52px",
+            width: "70px",
+            height: "46px",
             background: "rgba(255,255,255,0.82)",
             borderRadius: "14px",
             color: "#2563eb",
             textAlign: "center",
             fontWeight: "900",
-            lineHeight: "52px",
+            lineHeight: "46px",
             fontSize: "16px",
             letterSpacing: "-0.5px",
             border: "1px solid rgba(255,255,255,0.55)",
             boxShadow: "0 6px 16px rgba(15,41,66,0.12)"
           },
           {
-            width: "52px",
-            height: "52px",
+            width: "82px",
+            height: "46px",
             background: "rgba(255,255,255,0.82)",
             borderRadius: "14px",
             color: "#2563eb",
             textAlign: "center",
             fontWeight: "900",
-            lineHeight: "52px",
+            lineHeight: "46px",
             fontSize: "16px",
             letterSpacing: "-0.5px",
             border: "1px solid rgba(255,255,255,0.55)",
@@ -1317,19 +1394,38 @@
           .map(marker => marker.__property)
           .filter(Boolean);
 
+        if (!clusterItems.length) return;
+
+        const topItem = clusterItems[0];
+
+        state.selectedMarkerId = null;
+        state.selectedClusterKey = getClusterKeyFromItems(clusterItems);
+
         renderList(clusterItems);
         propertyList.scrollTop = 0;
+
+        openDetailPanel(topItem);
+        highlightCard(topItem.id);
+
         setResultInfo(`선택 지역 ${clusterItems.length}건`);
         setListInfo(`총 ${clusterItems.length}개 매물`);
+
+        refreshClusterBadges();
       });
 
       kakao.maps.event.addListener(state.map, "click", async function () {
         await hideRoadview();
+
+        state.selectedClusterKey = null;
+
         highlightCard(-1);
         updateMarkerSelection(null);
         renderList(state.filtered);
+
         setResultInfo(`총 ${state.filtered.length}건`);
         setListInfo(`총 ${state.filtered.length}개 매물`);
+
+        refreshClusterBadges();
       });
     }
 
@@ -1477,7 +1573,7 @@
 
         const marker = new kakao.maps.Marker({
           position,
-          image: createMarkerImage(item, state.selectedMarkerId === item.id),
+          image: createMarkerImage(item, state.selectedMarkerId === item.id, "1"),
           clickable: true
         });
 
@@ -1485,9 +1581,20 @@
 
         kakao.maps.event.addListener(marker, "click", async function () {
           await hideRoadview();
+
+          state.selectedClusterKey = null;
+
+          renderList(state.filtered);
+          propertyList.scrollTop = 0;
+
           highlightCard(item.id);
           updateMarkerSelection(item.id);
           openDetailPanel(item);
+
+          setResultInfo(`총 ${state.filtered.length}건`);
+          setListInfo(`총 ${state.filtered.length}개 매물`);
+
+          refreshClusterBadges();
         });
 
         markerList.push(marker);
@@ -1496,6 +1603,10 @@
       });
 
       state.clusterer.addMarkers(markerList);
+
+      setTimeout(() => {
+        refreshClusterBadges();
+      }, 0);
 
       if (data.length === 1) {
         state.map.setCenter(new kakao.maps.LatLng(data[0].lat, data[0].lng));
@@ -1509,9 +1620,14 @@
       if (!item || !state.map) return;
 
       await hideRoadview();
+
+      state.selectedClusterKey = null;
+
       highlightCard(id);
       updateMarkerSelection(id);
       moveMapToProperty(item);
+
+      refreshClusterBadges();
     }
 
     function renderList(data) {
@@ -1653,6 +1769,7 @@
       });
 
       state.selectedMarkerId = null;
+      state.selectedClusterKey = null;
       renderList(state.filtered);
       renderMarkers(state.filtered);
       setResultInfo(`총 ${state.filtered.length}건`);
@@ -1664,9 +1781,11 @@
 
       if (resetListBtn) {
         resetListBtn.addEventListener("click", () => {
+          state.selectedClusterKey = null;
           renderList(state.filtered);
           setResultInfo(`총 ${state.filtered.length}건`);
           setListInfo(`총 ${state.filtered.length}개 매물`);
+          refreshClusterBadges();
         });
       }
 
