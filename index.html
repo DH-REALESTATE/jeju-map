@@ -165,25 +165,6 @@
       padding: 18px;
     }
 
-    .detail-badges {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-bottom: 10px;
-    }
-
-    .detail-badges span {
-      display: inline-flex;
-      align-items: center;
-      min-height: 28px;
-      padding: 5px 10px;
-      border-radius: 999px;
-      background: #f3f6fb;
-      color: #7f4dff;
-      font-size: 11px;
-      font-weight: 900;
-    }
-
     .detail-title {
       margin: 0 0 10px;
       font-size: 18px;
@@ -888,16 +869,15 @@
               </div>
 
               <div class="detail-content">
-                <div class="detail-badges" id="detailBadges"></div>
                 <h2 class="detail-title" id="detailTitle">매물을 선택하세요</h2>
-
-                <div class="detail-desc" id="detailDesc"></div>
 
                 <div class="detail-price-box">
                   <div class="detail-price-badge" id="detailPriceBadge">매물</div>
                   <div class="detail-price" id="detailPrice"></div>
                   <div class="detail-address" id="detailAddress"></div>
                 </div>
+
+                <div class="detail-desc" id="detailDesc"></div>
 
                 <div class="detail-info-list" id="detailInfoList"></div>
 
@@ -1007,7 +987,6 @@
 
     const detailCloseBtn = document.getElementById("detailCloseBtn");
     const detailHero = document.getElementById("detailHero");
-    const detailBadges = document.getElementById("detailBadges");
     const detailTitle = document.getElementById("detailTitle");
     const detailPrice = document.getElementById("detailPrice");
     const detailPriceBadge = document.getElementById("detailPriceBadge");
@@ -1095,6 +1074,28 @@
         dateLabel: item.dateLabel ?? "",
         desc_folder: item.desc_folder ?? ""
       };
+    }
+
+    function sqmToPyeong(value) {
+      const num = Number(value);
+      if (!Number.isFinite(num)) return "";
+      return (num / 3.305785).toFixed(2);
+    }
+
+    function formatAreaWithPyeong(areaText) {
+      if (!areaText) return "-";
+
+      const match = String(areaText).match(/공급\s*([\d.]+)㎡\s*\/\s*전용\s*([\d.]+)㎡/);
+
+      if (!match) return areaText;
+
+      const supply = Number(match[1]);
+      const privateArea = Number(match[2]);
+
+      const supplyPy = sqmToPyeong(supply);
+      const privatePy = sqmToPyeong(privateArea);
+
+      return `공급 ${supply}㎡ (${supplyPy}평) / 전용 ${privateArea}㎡ (${privatePy}평)`;
     }
 
     function setResultInfo(text) {
@@ -1294,11 +1295,15 @@
     }
 
     async function loadPropertyInfo(item) {
-      if (!item.desc_folder) return {};
+      if (!item.desc_folder) {
+        return {};
+      }
 
       try {
         const res = await fetch(item.desc_folder, { cache: "no-store" });
-        if (!res.ok) throw new Error("info.json 불러오기 실패");
+        if (!res.ok) {
+          throw new Error(`info.json 불러오기 실패: ${res.status}`);
+        }
         return await res.json();
       } catch (err) {
         console.error("상세 정보 불러오기 실패:", err);
@@ -1307,22 +1312,45 @@
     }
 
     function renderDetailInfoRows(info) {
-      const rows = Array.isArray(info.infoRows) ? info.infoRows : [];
+      let rows = [];
+
+      if (Array.isArray(info.infoRows)) {
+        rows = info.infoRows;
+      } else {
+        rows = [
+          { label: "월관리비", value: info.monthlyFee },
+          { label: "관리비 포함 내역", value: info.feeIncluded },
+          { label: "관리비 미포함 내역", value: info.feeExcluded },
+          { label: "부과사유", value: info.feeReason },
+          { label: "부과기준", value: info.feeBasis },
+          { label: "해당동", value: info.buildingDong },
+          { label: "입주가능일", value: info.moveInDate },
+          { label: "방향", value: info.direction },
+          { label: "현관구조", value: info.entranceType },
+          { label: "해당층/총층", value: info.floorInfo },
+          { label: "방/욕실수", value: info.roomBath },
+          { label: "주차가능여부", value: info.parkingAvailable },
+          { label: "건축물용도", value: info.buildingUse },
+          { label: "총세대수", value: info.totalHouseholds },
+          { label: "사용승인일", value: info.approvalDate },
+          { label: "옵션", value: info.parkingInfo },
+          { label: "매물번호", value: info.propertyNo }
+        ];
+      }
+
+      rows = rows.filter(row => String(row?.value || "").trim() !== "");
 
       if (!rows.length) {
         detailInfoList.innerHTML = "";
         return;
       }
 
-      detailInfoList.innerHTML = rows
-        .filter(row => String(row?.value || "").trim() !== "")
-        .map(row => `
-          <div class="detail-info-row">
-            <div class="detail-info-label">${escapeHtml(row.label || "")}</div>
-            <div class="detail-info-value">${escapeHtml(row.value || "")}</div>
-          </div>
-        `)
-        .join("");
+      detailInfoList.innerHTML = rows.map(row => `
+        <div class="detail-info-row">
+          <div class="detail-info-label">${escapeHtml(row.label || "")}</div>
+          <div class="detail-info-value">${escapeHtml(row.value || "")}</div>
+        </div>
+      `).join("");
     }
 
     async function openDetailPanel(item) {
@@ -1332,16 +1360,16 @@
       refreshMapLayout();
 
       detailHero.style.backgroundImage = `url('${escapeHtml(item.image)}')`;
-      detailBadges.innerHTML = `<span>${escapeHtml(item.type || "-")}</span>`;
 
       detailTitle.textContent = item.title || "";
-      detailDesc.textContent = item.desc || "";
 
       detailPrice.textContent = `${item.dealType || ""} ${item.price || ""}`.trim();
       detailPriceBadge.textContent = item.type || "매물";
       detailAddress.textContent = `${item.region || ""} ${item.address || ""}`.trim();
 
+      detailDesc.textContent = item.desc || "";
       detailInfoList.innerHTML = "";
+
       const info = await loadPropertyInfo(item);
       renderDetailInfoRows(info);
 
@@ -1737,7 +1765,7 @@
         const dealLabel = escapeHtml(item.dealType || "매매");
         const priceText = escapeHtml(item.price || "-");
         const addressText = escapeHtml(item.address || "-");
-        const areaText = escapeHtml(item.area || "-");
+        const areaText = escapeHtml(formatAreaWithPyeong(item.area || "-"));
         const typeText = escapeHtml(item.type || "-");
         const titleText = escapeHtml(item.title || "매물명");
         const dateText = item.dateLabel || (item.date ? getRelativeDate(item.date) : "");
