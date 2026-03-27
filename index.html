@@ -66,19 +66,12 @@
       overflow-y: auto;
       overflow-x: hidden;
       background: #f7f8fa;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
     }
 
-    .sidebar-list-panel::-webkit-scrollbar,
-    .sidebar-detail-panel::-webkit-scrollbar {
-      width: 10px;
-    }
-
-    .sidebar-list-panel::-webkit-scrollbar-thumb,
-    .sidebar-detail-panel::-webkit-scrollbar-thumb {
-      background: rgba(120, 135, 150, 0.28);
-      border-radius: 999px;
-      border: 2px solid transparent;
-      background-clip: padding-box;
+    .sidebar-list-panel::-webkit-scrollbar {
+      display: none;
     }
 
     .sidebar-detail-panel {
@@ -86,9 +79,14 @@
       overflow: hidden;
       opacity: 0;
       background: #fff;
-      /* border-left: 1px solid #e7edf3; */
-      border-left: 0;
+      border-left: 1px solid #e6ebf0;
       transition: opacity 0.22s ease;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .sidebar-detail-panel::-webkit-scrollbar {
+      display: none;
     }
 
     .sidebar.expanded .sidebar-detail-panel {
@@ -135,6 +133,12 @@
       flex: 1;
       overflow-y: auto;
       background: #fff;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .detail-scroll::-webkit-scrollbar {
+      display: none;
     }
 
     .detail-hero {
@@ -684,21 +688,6 @@
 
     .resizer {
       display: none;
-      /*
-      position: absolute;
-      top: 0;
-      left: calc(var(--sidebar-current-width) - (var(--resizer-hit-width) / 2));
-      width: var(--resizer-hit-width);
-      height: 100vh;
-      background: transparent !important;
-      border: 0 !important;
-      box-shadow: none !important;
-      outline: none !important;
-      opacity: 0 !important;
-      cursor: col-resize;
-      user-select: none;
-      z-index: 999;
-      */
     }
 
     .map-wrap {
@@ -785,126 +774,6 @@
       font-size: 12px;
     }
 
-    .custom-overlay {
-      position: relative;
-      width: 315px;
-      max-width: 315px;
-      padding: 16px;
-      border-radius: 18px;
-      background: #fff;
-      border: 1px solid rgba(0,0,0,0.06);
-      box-shadow: 0 20px 40px rgba(0,0,0,0.18);
-      overflow: hidden;
-    }
-
-    .custom-overlay .close {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      width: 30px;
-      height: 30px;
-      border: 0;
-      border-radius: 50%;
-      background: #eef3f7;
-      color: #203040;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: 900;
-    }
-
-    .custom-overlay h3 {
-      margin: 0 34px 8px 0;
-      font-size: 16px;
-      line-height: 1.4;
-      color: #122033;
-      word-break: keep-all;
-      overflow-wrap: break-word;
-    }
-
-    .custom-overlay .overlay-price {
-      margin-bottom: 8px;
-      font-size: 14px;
-      font-weight: 900;
-      color: #0d7b68;
-    }
-
-    .custom-overlay p {
-      margin: 0;
-      font-size: 13px;
-      line-height: 1.65;
-      color: #5c6c7c;
-      word-break: keep-all;
-      overflow-wrap: break-word;
-    }
-
-    .area-row {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
-
-    .area-toggle-btn {
-      border: 0;
-      border-radius: 999px;
-      padding: 4px 8px;
-      font-size: 11px;
-      font-weight: 900;
-      background: #eef3f7;
-      color: #203040;
-      cursor: pointer;
-    }
-
-    .overlay-features {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 10px;
-    }
-
-    .overlay-features span {
-      display: inline-flex;
-      align-items: center;
-      min-height: 28px;
-      padding: 5px 8px;
-      border-radius: 999px;
-      background: #e7fbf5;
-      color: #0d7b68;
-      font-size: 11px;
-      font-weight: 900;
-    }
-
-    .custom-overlay .overlay-actions {
-      display: flex;
-      gap: 8px;
-      margin-top: 12px;
-    }
-
-    .custom-overlay .overlay-btn {
-      flex: 1;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 42px;
-      padding: 10px 12px;
-      border: 0;
-      border-radius: 12px;
-      font-size: 12px;
-      font-weight: 900;
-      text-decoration: none;
-      cursor: pointer;
-    }
-
-    .overlay-primary {
-      background: #0f2942;
-      color: #fff;
-    }
-
-    .overlay-secondary {
-      background: #eef3f7;
-      color: #203040;
-    }
-
     @media (max-width: 980px) {
       :root {
         --sidebar-current-width: 100%;
@@ -949,7 +818,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title">제주도 부동산 지도 Ver 1.0</div>
+              <div class="brand-title">제주도 부동산 지도 Ver 1.007</div>
             </div>
           </div>
 
@@ -1087,11 +956,10 @@
       map: null,
       clusterer: null,
       markers: [],
-      overlays: [],
-      activeOverlay: null,
       all: [],
       filtered: [],
-      selectedFeatures: new Set()
+      selectedFeatures: new Set(),
+      selectedMarkerId: null
     };
 
     let roadview = null;
@@ -1100,7 +968,6 @@
     let roadviewFullscreenBtn = null;
     let selectedDeal = "all";
     let selectedType = "all";
-    let isResizing = false;
     let currentDetailItem = null;
 
     const sidebar = document.getElementById("sidebar");
@@ -1111,7 +978,6 @@
     const dealButtons = document.querySelectorAll("#dealButtons button");
     const typeButtons = document.querySelectorAll("#typeButtons button");
     const featureButtons = document.querySelectorAll("#featureButtons button");
-    const resizer = document.getElementById("resizer");
     const listInfoText = document.getElementById("listInfoText");
 
     const detailCloseBtn = document.getElementById("detailCloseBtn");
@@ -1143,6 +1009,14 @@
         ? `calc(${listWidth} + ${detailWidth})`
         : listWidth;
       document.documentElement.style.setProperty("--sidebar-current-width", totalWidth);
+    }
+
+    function refreshMapLayout() {
+      if (!state.map) return;
+
+      setTimeout(() => {
+        state.map.relayout();
+      }, 320);
     }
 
     function escapeHtml(str) {
@@ -1179,6 +1053,7 @@
         type: item.typeFilter ?? item.type ?? "",
         features: Array.isArray(item.features) ? item.features : [],
         price: item.price ?? "-",
+        markerPrice: item.markerPrice ?? "",
         area: item.area ?? "-",
         address: item.address ?? "-",
         region: item.region ?? "",
@@ -1194,19 +1069,6 @@
         agentImage: item.agentImage ?? "",
         date: item.date ?? "",
         dateLabel: item.dateLabel ?? ""
-      };
-    }
-
-    function parseAreaInfo(areaText) {
-      const match = String(areaText || "").match(/[\d,.]+/);
-      if (!match) return null;
-
-      const sqm = parseFloat(match[0].replace(/,/g, ""));
-      if (isNaN(sqm)) return null;
-
-      return {
-        original: areaText,
-        pyeongText: `${(sqm / 3.3058).toFixed(1)}평`
       };
     }
 
@@ -1244,33 +1106,49 @@
       }
     }
 
-    function getMarkerColor(dealType, type) {
-      if (["토지", "임야", "토지ㆍ임야"].includes(type)) return "#22c55e";
-      if (dealType === "월세" || dealType === "년세") return "#f97316";
-      if (dealType === "전세") return "#8b5cf6";
-      return "#0ea5e9";
-    }
+    function createMarkerImage(item, isSelected = false) {
+      const bgColor = isSelected ? "#2563eb" : "rgba(255,255,255,0.82)";
+      const textColor = isSelected ? "#ffffff" : "#2563eb";
+      const borderColor = isSelected ? "#2563eb" : "rgba(255,255,255,0.55)";
 
-    function createMarkerImage(item) {
-      const color = getMarkerColor(item.dealType, item.type);
       const svg = `
-        <svg xmlns="http://www.w3.org/2000/svg" width="44" height="56" viewBox="0 0 44 56">
+        <svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" viewBox="0 0 52 52">
           <defs>
             <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
-              <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="rgba(0,0,0,0.18)"/>
+              <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="rgba(15,41,66,0.12)"/>
             </filter>
           </defs>
+
           <g filter="url(#shadow)">
-            <path d="M22 0C10.1 0 0.5 9.6 0.5 21.5C0.5 36.4 22 55 22 55S43.5 36.4 43.5 21.5C43.5 9.6 33.9 0 22 0Z" fill="${color}"/>
-            <circle cx="22" cy="21.5" r="9.2" fill="#ffffff"/>
+            <rect x="6" y="6" width="40" height="40" rx="12" ry="12"
+                  fill="${bgColor}"
+                  stroke="${borderColor}"
+                  stroke-width="1"/>
+            <text x="26" y="32"
+                  text-anchor="middle"
+                  font-size="16"
+                  font-weight="900"
+                  font-family="Apple SD Gothic Neo, Malgun Gothic, sans-serif"
+                  fill="${textColor}">1</text>
           </g>
         </svg>
       `;
+
       return new kakao.maps.MarkerImage(
         "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg),
-        new kakao.maps.Size(44, 56),
-        { offset: new kakao.maps.Point(22, 56) }
+        new kakao.maps.Size(52, 52),
+        { offset: new kakao.maps.Point(26, 26) }
       );
+    }
+
+    function updateMarkerSelection(selectedId) {
+      state.selectedMarkerId = selectedId;
+
+      state.markers.forEach(marker => {
+        const item = marker.__property;
+        const isSelected = item && item.id === selectedId;
+        marker.setImage(createMarkerImage(item, isSelected));
+      });
     }
 
     async function closeRoadviewPanel() {
@@ -1300,6 +1178,7 @@
       currentDetailItem = item;
       sidebar.classList.add("expanded");
       updateSidebarWidth();
+      refreshMapLayout();
 
       detailHero.style.backgroundImage = `url('${escapeHtml(item.image)}')`;
       detailBadges.innerHTML = `<span>${escapeHtml(item.type || "-")}</span>`;
@@ -1348,6 +1227,7 @@
       sidebar.classList.remove("expanded");
       currentDetailItem = null;
       updateSidebarWidth();
+      refreshMapLayout();
     }
 
     function initMap() {
@@ -1372,63 +1252,66 @@
         calculator: [5, 10, 20, 50],
         styles: [
           {
-            width: "44px",
-            height: "44px",
-            background: "rgba(255,255,255,0.92)",
-            borderRadius: "22px",
+            width: "52px",
+            height: "52px",
+            background: "rgba(255,255,255,0.82)",
+            borderRadius: "14px",
             color: "#2563eb",
             textAlign: "center",
             fontWeight: "900",
-            lineHeight: "44px",
-            fontSize: "22px",
-            border: "1px solid rgba(0,0,0,0.06)",
-            boxShadow: "0 8px 20px rgba(0,0,0,0.12)"
+            lineHeight: "52px",
+            fontSize: "16px",
+            letterSpacing: "-0.5px",
+            border: "1px solid rgba(255,255,255,0.55)",
+            boxShadow: "0 6px 16px rgba(15,41,66,0.12)"
           },
           {
-            width: "50px",
-            height: "50px",
-            background: "rgba(255,255,255,0.95)",
-            borderRadius: "25px",
+            width: "52px",
+            height: "52px",
+            background: "rgba(255,255,255,0.82)",
+            borderRadius: "14px",
             color: "#2563eb",
             textAlign: "center",
             fontWeight: "900",
-            lineHeight: "50px",
-            fontSize: "24px",
-            border: "1px solid rgba(0,0,0,0.06)",
-            boxShadow: "0 8px 20px rgba(0,0,0,0.12)"
+            lineHeight: "52px",
+            fontSize: "16px",
+            letterSpacing: "-0.5px",
+            border: "1px solid rgba(255,255,255,0.55)",
+            boxShadow: "0 6px 16px rgba(15,41,66,0.12)"
           },
           {
-            width: "58px",
-            height: "58px",
-            background: "rgba(255,255,255,0.97)",
-            borderRadius: "29px",
+            width: "52px",
+            height: "52px",
+            background: "rgba(255,255,255,0.82)",
+            borderRadius: "14px",
             color: "#2563eb",
             textAlign: "center",
             fontWeight: "900",
-            lineHeight: "58px",
-            fontSize: "26px",
-            border: "1px solid rgba(0,0,0,0.06)",
-            boxShadow: "0 8px 20px rgba(0,0,0,0.12)"
+            lineHeight: "52px",
+            fontSize: "16px",
+            letterSpacing: "-0.5px",
+            border: "1px solid rgba(255,255,255,0.55)",
+            boxShadow: "0 6px 16px rgba(15,41,66,0.12)"
           },
           {
-            width: "66px",
-            height: "66px",
-            background: "rgba(255,255,255,0.98)",
-            borderRadius: "33px",
+            width: "52px",
+            height: "52px",
+            background: "rgba(255,255,255,0.82)",
+            borderRadius: "14px",
             color: "#2563eb",
             textAlign: "center",
             fontWeight: "900",
-            lineHeight: "66px",
-            fontSize: "28px",
-            border: "1px solid rgba(0,0,0,0.06)",
-            boxShadow: "0 10px 24px rgba(0,0,0,0.14)"
+            lineHeight: "52px",
+            fontSize: "16px",
+            letterSpacing: "-0.5px",
+            border: "1px solid rgba(255,255,255,0.55)",
+            boxShadow: "0 6px 16px rgba(15,41,66,0.12)"
           }
         ]
       });
 
       kakao.maps.event.addListener(state.clusterer, "clusterclick", async function (cluster) {
         await hideRoadview();
-        closeOverlay();
 
         const clusterItems = cluster.getMarkers()
           .map(marker => marker.__property)
@@ -1438,17 +1321,12 @@
         propertyList.scrollTop = 0;
         setResultInfo(`선택 지역 ${clusterItems.length}건`);
         setListInfo(`총 ${clusterItems.length}개 매물`);
-
-        const bounds = new kakao.maps.LatLngBounds();
-        clusterItems.forEach(item => {
-          bounds.extend(new kakao.maps.LatLng(item.lat, item.lng));
-        });
-        state.map.setBounds(bounds);
       });
 
       kakao.maps.event.addListener(state.map, "click", async function () {
-        closeOverlay();
         await hideRoadview();
+        highlightCard(-1);
+        updateMarkerSelection(null);
         renderList(state.filtered);
         setResultInfo(`총 ${state.filtered.length}건`);
         setListInfo(`총 ${state.filtered.length}개 매물`);
@@ -1565,107 +1443,13 @@
       });
     }
 
-    function closeOverlay() {
-      if (state.activeOverlay) {
-        state.activeOverlay.setMap(null);
-        state.activeOverlay = null;
-      }
-    }
-
     function clearMapObjects() {
       if (state.clusterer) {
         state.clusterer.clear();
       }
 
       state.markers.forEach(marker => marker.setMap(null));
-      state.overlays.forEach(item => item.overlay.setMap(null));
-
       state.markers = [];
-      state.overlays = [];
-      state.activeOverlay = null;
-    }
-
-    function createOverlayContent(item) {
-      const wrap = document.createElement("div");
-      const featuresHtml = (item.features || [])
-        .map(feature => `<span>${escapeHtml(feature)}</span>`)
-        .join("");
-      const areaInfo = parseAreaInfo(item.area);
-
-      wrap.innerHTML = `
-        <div class="custom-overlay">
-          <button class="close" type="button">✕</button>
-          <h3>${escapeHtml(item.title)}</h3>
-          <div class="overlay-price">${escapeHtml(item.dealType)} · ${escapeHtml(item.price)}</div>
-          <p>
-            ${escapeHtml(item.address)}<br>
-            <span class="area-row">
-              <span class="area-text">${escapeHtml(item.area)}</span>
-              <button class="area-toggle-btn" type="button" data-mode="sqm">평으로</button>
-            </span><br>
-            ${escapeHtml(item.desc)}
-          </p>
-          ${featuresHtml ? `<div class="overlay-features">${featuresHtml}</div>` : ""}
-          <div class="overlay-actions">
-            <button class="overlay-btn overlay-primary btn-detail" type="button">상세보기</button>
-            <button class="overlay-btn overlay-secondary btn-roadview" type="button" data-lat="${item.lat}" data-lng="${item.lng}">로드뷰</button>
-          </div>
-        </div>
-      `;
-
-      const contentNode = wrap.firstElementChild;
-      const detailBtn = contentNode.querySelector(".btn-detail");
-      const roadBtn = contentNode.querySelector(".btn-roadview");
-      const areaBtn = contentNode.querySelector(".area-toggle-btn");
-      const areaTextEl = contentNode.querySelector(".area-text");
-
-      ["click","mousedown","mouseup","touchstart","touchend","pointerdown","pointerup"]
-        .forEach(eventName => {
-          contentNode.addEventListener(eventName, function (e) {
-            e.stopPropagation();
-          });
-        });
-
-      if (detailBtn) {
-        detailBtn.addEventListener("click", function (e) {
-          e.preventDefault();
-          e.stopPropagation();
-          openDetailPanel(item);
-
-          const link = item.link;
-          if (link && link !== "#") {
-            window.open(link, "_blank", "noopener,noreferrer");
-          }
-        });
-      }
-
-      if (roadBtn) {
-        roadBtn.addEventListener("click", async function (e) {
-          e.preventDefault();
-          e.stopPropagation();
-          await hideRoadview();
-          showRoadview(parseFloat(this.dataset.lat), parseFloat(this.dataset.lng));
-        });
-      }
-
-      if (areaBtn && areaTextEl && areaInfo) {
-        areaBtn.addEventListener("click", function (e) {
-          e.preventDefault();
-          e.stopPropagation();
-
-          if (this.dataset.mode === "sqm") {
-            areaTextEl.textContent = areaInfo.pyeongText;
-            this.textContent = "㎡로";
-            this.dataset.mode = "pyeong";
-          } else {
-            areaTextEl.textContent = areaInfo.original;
-            this.textContent = "평으로";
-            this.dataset.mode = "sqm";
-          }
-        });
-      }
-
-      return contentNode;
     }
 
     function highlightCard(id) {
@@ -1674,19 +1458,9 @@
       });
     }
 
-    function openOverlayById(id) {
-      const found = state.overlays.find(v => v.id === id);
-      if (!found) return;
-
-      closeOverlay();
-      found.overlay.setMap(state.map);
-      state.activeOverlay = found.overlay;
-    }
-
-    function moveMapToProperty(item, zoomLevel = 4) {
+    function moveMapToProperty(item) {
       if (!item || !state.map) return;
       const position = new kakao.maps.LatLng(item.lat, item.lng);
-      state.map.setLevel(zoomLevel);
       state.map.setCenter(position);
       state.map.relayout();
     }
@@ -1703,53 +1477,28 @@
 
         const marker = new kakao.maps.Marker({
           position,
-          image: createMarkerImage(item),
+          image: createMarkerImage(item, state.selectedMarkerId === item.id),
           clickable: true
         });
 
         marker.__property = item;
 
-        const contentNode = createOverlayContent(item);
-
-        const overlay = new kakao.maps.CustomOverlay({
-          position,
-          content: contentNode,
-          yAnchor: 1.15
-        });
-
-        const closeBtn = contentNode.querySelector(".close");
-        closeBtn.addEventListener("click", function (e) {
-          e.preventDefault();
-          e.stopPropagation();
-          overlay.setMap(null);
-          if (state.activeOverlay === overlay) {
-            state.activeOverlay = null;
-          }
-        });
-
         kakao.maps.event.addListener(marker, "click", async function () {
           await hideRoadview();
           highlightCard(item.id);
+          updateMarkerSelection(item.id);
           openDetailPanel(item);
-          moveMapToProperty(item, 4);
-
-          setTimeout(() => {
-            closeOverlay();
-            overlay.setMap(state.map);
-            state.activeOverlay = overlay;
-          }, 80);
         });
 
         markerList.push(marker);
         state.markers.push(marker);
-        state.overlays.push({ id: item.id, overlay });
         bounds.extend(position);
       });
 
       state.clusterer.addMarkers(markerList);
 
       if (data.length === 1) {
-        moveMapToProperty(data[0], 4);
+        state.map.setCenter(new kakao.maps.LatLng(data[0].lat, data[0].lng));
       } else {
         state.map.setBounds(bounds);
       }
@@ -1761,11 +1510,8 @@
 
       await hideRoadview();
       highlightCard(id);
-      moveMapToProperty(item, 4);
-
-      setTimeout(() => {
-        openOverlayById(id);
-      }, 80);
+      updateMarkerSelection(id);
+      moveMapToProperty(item);
     }
 
     function renderList(data) {
@@ -1842,6 +1588,7 @@
           if (!item) return;
 
           openDetailPanel(item);
+          updateMarkerSelection(item.id);
           await focusProperty(item.id);
         });
       });
@@ -1905,6 +1652,7 @@
         return okKeyword && okDeal && okType && okFeature;
       });
 
+      state.selectedMarkerId = null;
       renderList(state.filtered);
       renderMarkers(state.filtered);
       setResultInfo(`총 ${state.filtered.length}건`);
@@ -1973,34 +1721,10 @@
           applyFilter();
         });
       });
-    }
 
-    function initResizer() {
-      if (!resizer) return;
-
-      resizer.addEventListener("mousedown", (e) => {
-        if (window.innerWidth <= 980) return;
-        e.preventDefault();
-        isResizing = true;
-        document.body.style.cursor = "col-resize";
-        document.body.style.userSelect = "none";
-      });
-
-      window.addEventListener("mousemove", (e) => {
-        if (!isResizing) return;
-
-        const min = 280;
-        const max = 520;
-        const nextWidth = Math.min(Math.max(e.clientX, min), max);
-        document.documentElement.style.setProperty("--sidebar-list-width", `${nextWidth}px`);
-        updateSidebarWidth();
-      });
-
-      window.addEventListener("mouseup", () => {
-        if (!isResizing) return;
-        isResizing = false;
-        document.body.style.cursor = "";
-        document.body.style.userSelect = "";
+      window.addEventListener("resize", () => {
+        if (!state.map) return;
+        state.map.relayout();
       });
     }
 
@@ -2014,7 +1738,6 @@
       initMap();
       initRoadview();
       initEvents();
-      //initResizer();
       loadProperties();
       syncFeatureButtons();
     }
