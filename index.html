@@ -3,21 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도</title>
+  <title>제주도 부동산 지도 Ver 1.009</title>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  
+
   <style>
     :root {
       --sidebar-list-width: 360px;
       --detail-panel-width: 420px;
       --sidebar-current-width: var(--sidebar-list-width);
-      --resizer-hit-width: 0px;
       --brand: #14b8a6;
       --bg: #f4f7fb;
       --line: #e7edf3;
       --text: #17212b;
       --shadow: 0 12px 30px rgba(15, 41, 66, 0.12);
+      --blue: #2563eb;
     }
 
     * { box-sizing: border-box; }
@@ -34,18 +34,15 @@
     body { overflow: hidden; }
 
     .app {
-      position: relative;
       display: grid;
       grid-template-columns: var(--sidebar-current-width) 1fr;
       height: 100vh;
-      gap: 0;
     }
 
     .sidebar {
       height: 100vh;
       overflow: hidden;
       background: #f7f8fa;
-      color: #1f2a36;
       min-width: 280px;
       border-right: 1px solid #e6ebf0;
     }
@@ -70,7 +67,9 @@
       -ms-overflow-style: none;
     }
 
-    .sidebar-list-panel::-webkit-scrollbar {
+    .sidebar-list-panel::-webkit-scrollbar,
+    .detail-scroll::-webkit-scrollbar,
+    .sidebar-detail-panel::-webkit-scrollbar {
       display: none;
     }
 
@@ -85,12 +84,273 @@
       -ms-overflow-style: none;
     }
 
-    .sidebar-detail-panel::-webkit-scrollbar {
-      display: none;
-    }
-
     .sidebar.expanded .sidebar-detail-panel {
       opacity: 1;
+    }
+
+    .brand-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      height: 58px;
+      padding: 0 16px;
+      background: #fff;
+      border-bottom: 1px solid #e6ebf0;
+    }
+
+    .brand-title {
+      font-size: 17px;
+      font-weight: 900;
+      color: #1f2a36;
+      white-space: nowrap;
+    }
+
+    .panel {
+      margin: 0;
+      padding: 10px 16px;
+      background: #fff;
+      border-bottom: 1px solid #e6ebf0;
+    }
+
+    .search-box input {
+      width: 100%;
+      height: 42px;
+      padding: 0 14px;
+      border: 1px solid #dfe5eb;
+      border-radius: 12px;
+      outline: none;
+      font-size: 14px;
+      background: #fff;
+      color: #17212b;
+      margin-bottom: 10px;
+    }
+
+    .filter-title {
+      margin: 2px 0 8px;
+      font-size: 12px;
+      font-weight: 800;
+      color: #7a8794;
+    }
+
+    .feature-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .feature-buttons button,
+    .reset-list-btn {
+      border: 1px solid #dfe5eb;
+      border-radius: 10px;
+      padding: 8px 11px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      background: #fff;
+      color: #304050;
+      transition: 0.2s ease;
+    }
+
+    .feature-buttons button.active,
+    .feature-buttons button.all-active {
+      background: #f1f7ff;
+      color: #1f6fff;
+      border-color: #bfd6ff;
+    }
+
+    .reset-list-btn {
+      width: 100%;
+      margin-bottom: 10px;
+      border-radius: 12px;
+    }
+
+    .list-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 14px 16px 10px;
+      background: #f7f8fa;
+      border-bottom: 1px solid #eceff3;
+    }
+
+    .list-head strong {
+      font-size: 14px;
+      color: #1f6fff;
+      font-weight: 900;
+    }
+
+    .list-head span {
+      font-size: 13px;
+      color: #1f2a36;
+      font-weight: 800;
+    }
+
+    .property-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      padding-bottom: 24px;
+      background: #f7f8fa;
+    }
+
+    .card {
+      background: #fff;
+      border: 0;
+      border-bottom: 1px solid #eceff3;
+      cursor: pointer;
+      transition: background 0.15s ease;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .card:hover,
+    .card.active {
+      background: #f8fbff;
+    }
+
+    .card-inner-row {
+      display: flex;
+      gap: 12px;
+      padding: 14px 14px 12px;
+    }
+
+    .thumb {
+      width: 92px;
+      min-width: 92px;
+      height: 92px;
+      border-radius: 10px;
+      background-size: cover;
+      background-position: center;
+      overflow: hidden;
+    }
+
+    .card-body {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .card-top-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .card-badge {
+      display: inline-flex;
+      align-items: center;
+      height: 22px;
+      padding: 0 8px;
+      border-radius: 6px;
+      background: #f3eefe;
+      color: #8d59ff;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .card-date {
+      font-size: 12px;
+      color: #9aa7b4;
+      white-space: nowrap;
+    }
+
+    .card-address {
+      font-size: 14px;
+      color: #5d6b78;
+      line-height: 1.45;
+      margin-bottom: 6px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-price-line {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      margin-bottom: 4px;
+      flex-wrap: wrap;
+    }
+
+    .card-deal {
+      font-size: 16px;
+      font-weight: 900;
+      color: #1f6fff;
+    }
+
+    .card-price {
+      font-size: 20px;
+      font-weight: 900;
+      color: #1d2733;
+      letter-spacing: -0.4px;
+    }
+
+    .card-spec {
+      font-size: 13px;
+      color: #6a7785;
+      line-height: 1.4;
+      margin-bottom: 10px;
+    }
+
+    .card-agent-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding-top: 10px;
+      border-top: 1px solid #f1f3f6;
+    }
+
+    .card-agent-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .card-agent-avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: #eef3f7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 800;
+      color: #506070;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .card-agent-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .card-agent-name {
+      font-size: 13px;
+      font-weight: 800;
+      color: #1f2a36;
+    }
+
+    .card-agent-title {
+      font-size: 12px;
+      color: #8a97a5;
+      margin-left: 4px;
+    }
+
+    .card-agent-office {
+      font-size: 12px;
+      color: #8a97a5;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .detail-panel-inner {
@@ -135,10 +395,6 @@
       background: #fff;
       scrollbar-width: none;
       -ms-overflow-style: none;
-    }
-
-    .detail-scroll::-webkit-scrollbar {
-      display: none;
     }
 
     .detail-hero {
@@ -189,7 +445,6 @@
       font-size: 18px;
       line-height: 1.5;
       color: #1d2733;
-      letter-spacing: -0.4px;
       font-weight: 900;
     }
 
@@ -205,9 +460,7 @@
       word-break: break-all;
     }
 
-    .detail-link-row a:hover {
-      text-decoration: underline;
-    }
+    .detail-link-row a:hover { text-decoration: underline; }
 
     .detail-desc {
       margin-bottom: 16px;
@@ -243,7 +496,6 @@
       font-size: 20px;
       font-weight: 900;
       color: #1d2733;
-      letter-spacing: -0.5px;
     }
 
     .detail-address {
@@ -255,7 +507,6 @@
     .detail-meta-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 0;
       overflow: hidden;
       border-radius: 14px;
       border: 1px solid #eceff3;
@@ -268,9 +519,7 @@
       border-right: 1px solid #eceff3;
     }
 
-    .detail-meta-item:last-child {
-      border-right: 0;
-    }
+    .detail-meta-item:last-child { border-right: 0; }
 
     .detail-meta-label {
       display: block;
@@ -285,7 +534,6 @@
       font-size: 16px;
       color: #1f6fff;
       font-weight: 900;
-      letter-spacing: -0.3px;
     }
 
     .detail-agent-card {
@@ -393,303 +641,6 @@
       color: #fff;
     }
 
-    .brand-card {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      height: 58px;
-      padding: 0 16px;
-      background: #fff;
-      border-bottom: 1px solid #e6ebf0;
-    }
-
-    .brand-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      min-width: 0;
-    }
-
-    .brand-title {
-      font-size: 17px;
-      font-weight: 900;
-      color: #1f2a36;
-      white-space: nowrap;
-    }
-
-    .panel {
-      margin: 0;
-      padding: 10px 16px;
-      border-radius: 0;
-      background: #fff;
-      border-bottom: 1px solid #e6ebf0;
-      backdrop-filter: none;
-    }
-
-    .search-box input {
-      width: 100%;
-      height: 42px;
-      padding: 0 14px;
-      border: 1px solid #dfe5eb;
-      border-radius: 12px;
-      outline: none;
-      font-size: 14px;
-      background: #fff;
-      color: #17212b;
-      box-shadow: none;
-      margin-bottom: 10px;
-    }
-
-    .filter-title {
-      margin: 2px 0 8px;
-      font-size: 12px;
-      font-weight: 800;
-      color: #7a8794;
-      letter-spacing: 0.1px;
-    }
-
-    .feature-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .feature-buttons button,
-    .reset-list-btn {
-      border: 1px solid #dfe5eb;
-      border-radius: 10px;
-      padding: 8px 11px;
-      font-size: 12px;
-      font-weight: 800;
-      cursor: pointer;
-      transition: 0.2s ease;
-      background: #fff;
-      color: #304050;
-    }
-
-    .feature-buttons button.active,
-    .feature-buttons button.all-active {
-      background: #f1f7ff;
-      color: #1f6fff;
-      border-color: #bfd6ff;
-      box-shadow: none;
-    }
-
-    .reset-list-btn {
-      width: 100%;
-      margin-top: 0;
-      margin-bottom: 10px;
-      border-radius: 12px;
-    }
-
-    .list-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      margin: 0;
-      padding: 14px 16px 10px;
-      background: #f7f8fa;
-      border-bottom: 1px solid #eceff3;
-    }
-
-    .list-head strong {
-      font-size: 14px;
-      color: #1f6fff;
-      letter-spacing: -0.2px;
-      font-weight: 900;
-    }
-
-    .list-head span {
-      font-size: 13px;
-      color: #1f2a36;
-      font-weight: 800;
-    }
-
-    .property-list {
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-      padding-bottom: 24px;
-      background: #f7f8fa;
-    }
-
-    .card {
-      background: #fff;
-      border: 0;
-      border-bottom: 1px solid #eceff3;
-      border-radius: 0;
-      box-shadow: none;
-      cursor: pointer;
-      transition: background 0.15s ease;
-      padding: 0;
-      overflow: hidden;
-    }
-
-    .card:hover,
-    .card.active {
-      background: #f8fbff;
-      transform: none;
-      box-shadow: none;
-      border-color: transparent;
-      border-bottom: 1px solid #eceff3;
-    }
-
-    .card-inner-row {
-      display: flex;
-      gap: 12px;
-      padding: 14px 14px 12px;
-    }
-
-    .thumb {
-      width: 92px;
-      min-width: 92px;
-      height: 92px;
-      border-radius: 10px;
-      background-size: cover;
-      background-position: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .thumb::after { display: none; }
-
-    .card-body {
-      flex: 1;
-      min-width: 0;
-      padding: 0;
-    }
-
-    .card-top-line {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 8px;
-      margin-bottom: 6px;
-    }
-
-    .card-badge {
-      display: inline-flex;
-      align-items: center;
-      height: 22px;
-      padding: 0 8px;
-      border-radius: 6px;
-      background: #f3eefe;
-      color: #8d59ff;
-      font-size: 11px;
-      font-weight: 800;
-      line-height: 1;
-    }
-
-    .card-date {
-      font-size: 12px;
-      color: #9aa7b4;
-      white-space: nowrap;
-    }
-
-    .card-address {
-      font-size: 14px;
-      color: #5d6b78;
-      line-height: 1.45;
-      margin-bottom: 6px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .card-price-line {
-      display: flex;
-      align-items: baseline;
-      gap: 6px;
-      margin-bottom: 4px;
-      flex-wrap: wrap;
-    }
-
-    .card-deal {
-      font-size: 16px;
-      font-weight: 900;
-      color: #1f6fff;
-    }
-
-    .card-price {
-      font-size: 20px;
-      font-weight: 900;
-      color: #1d2733;
-      letter-spacing: -0.4px;
-    }
-
-    .card-spec {
-      font-size: 13px;
-      color: #6a7785;
-      line-height: 1.4;
-      margin-bottom: 10px;
-    }
-
-    .card-agent-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      padding-top: 10px;
-      border-top: 1px solid #f1f3f6;
-    }
-
-    .card-agent-left {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      min-width: 0;
-    }
-
-    .card-agent-avatar {
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      background: #eef3f7;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      font-weight: 800;
-      color: #506070;
-      overflow: hidden;
-      flex-shrink: 0;
-    }
-
-    .card-agent-avatar img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    .card-agent-name {
-      font-size: 13px;
-      font-weight: 800;
-      color: #1f2a36;
-    }
-
-    .card-agent-title {
-      font-size: 12px;
-      color: #8a97a5;
-      margin-left: 4px;
-    }
-
-    .card-agent-office {
-      font-size: 12px;
-      color: #8a97a5;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .actions { display: none; }
-
-    .resizer {
-      display: none;
-    }
-
     .map-wrap {
       position: relative;
       min-width: 0;
@@ -765,7 +716,6 @@
       font-weight: 900;
       box-shadow: var(--shadow);
       backdrop-filter: blur(10px);
-      letter-spacing: -0.2px;
     }
 
     .map-result-count::before {
@@ -774,10 +724,37 @@
       font-size: 12px;
     }
 
+    .map-refresh-btn {
+      position: absolute;
+      top: 176px;
+      left: 12px;
+      z-index: 31;
+      min-height: 42px;
+      padding: 0 14px;
+      border: 0;
+      border-radius: 12px;
+      background: #fff;
+      color: #1f2a36;
+      font-size: 13px;
+      font-weight: 900;
+      box-shadow: 0 10px 24px rgba(15,41,66,0.12);
+      cursor: pointer;
+      display: none;
+    }
+
+    .map-refresh-btn.show {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .map-refresh-btn i {
+      color: #2563eb;
+    }
+
     @media (max-width: 980px) {
       :root {
         --sidebar-current-width: 100%;
-        --resizer-hit-width: 0px;
       }
 
       body { overflow: auto; }
@@ -786,8 +763,6 @@
         grid-template-columns: 1fr;
         height: auto;
       }
-
-      .resizer { display: none; }
 
       .sidebar {
         height: auto;
@@ -808,6 +783,7 @@
       }
 
       .map-result-count { top: 124px; }
+      .map-refresh-btn { top: 178px; }
     }
   </style>
 </head>
@@ -817,9 +793,7 @@
       <div class="sidebar-inner">
         <div class="sidebar-list-panel">
           <div class="brand-card">
-            <div class="brand-left">
-              <div class="brand-title">제주도 부동산 지도 Ver 1.007</div>
-            </div>
+            <div class="brand-title">제주도 부동산 지도 Ver 1.009</div>
           </div>
 
           <div class="panel search-box">
@@ -839,7 +813,7 @@
 
           <div class="list-head">
             <strong id="listInfoText">총 0개 매물</strong>
-            <span>최신순</span>
+            <span id="listModeText">최신순</span>
           </div>
 
           <div class="property-list" id="propertyList"></div>
@@ -866,9 +840,7 @@
               <div class="detail-content">
                 <div class="detail-badges" id="detailBadges"></div>
                 <h2 class="detail-title" id="detailTitle">매물을 선택하세요</h2>
-
                 <div class="detail-link-row" id="detailLinkRow"></div>
-
                 <div class="detail-desc" id="detailDesc"></div>
 
                 <div class="detail-price-box">
@@ -877,7 +849,7 @@
                   <div class="detail-address" id="detailAddress"></div>
                 </div>
 
-                <div class="detail-meta-grid" id="detailMetaGrid">
+                <div class="detail-meta-grid">
                   <div class="detail-meta-item">
                     <span class="detail-meta-label">면적</span>
                     <span class="detail-meta-value" id="detailAreaValue">-</span>
@@ -906,7 +878,6 @@
 
                 <div class="detail-action-box">
                   <div class="detail-phone" id="detailPhone"></div>
-
                   <div class="detail-actions">
                     <button type="button" class="detail-action-btn primary" id="detailMapBtn">지도보기</button>
                     <button type="button" class="detail-action-btn" id="detailRoadviewBtn">로드뷰</button>
@@ -919,8 +890,6 @@
         </div>
       </div>
     </aside>
-
-    <div class="resizer" id="resizer" aria-label="패널 크기 조절"></div>
 
     <main class="map-wrap">
       <div id="map"></div>
@@ -946,6 +915,10 @@
       </div>
 
       <div class="map-result-count" id="mapResultCount">총 0건</div>
+      <button type="button" class="map-refresh-btn" id="mapRefreshBtn">
+        <i class="fa-solid fa-rotate-right"></i>
+        이 지역 재검색
+      </button>
     </main>
   </div>
 
@@ -959,7 +932,12 @@
       all: [],
       filtered: [],
       selectedFeatures: new Set(),
-      selectedMarkerId: null
+      selectedMarkerId: null,
+      selectedCluster: null,
+      currentListItems: [],
+      pendingVisibleItems: [],
+      visibleSearchDirty: false,
+      isProgrammaticMove: false
     };
 
     let roadview = null;
@@ -979,6 +957,8 @@
     const typeButtons = document.querySelectorAll("#typeButtons button");
     const featureButtons = document.querySelectorAll("#featureButtons button");
     const listInfoText = document.getElementById("listInfoText");
+    const listModeText = document.getElementById("listModeText");
+    const mapRefreshBtn = document.getElementById("mapRefreshBtn");
 
     const detailCloseBtn = document.getElementById("detailCloseBtn");
     const detailHero = document.getElementById("detailHero");
@@ -1013,7 +993,6 @@
 
     function refreshMapLayout() {
       if (!state.map) return;
-
       setTimeout(() => {
         state.map.relayout();
       }, 320);
@@ -1033,10 +1012,8 @@
       const now = new Date();
       const target = new Date(dateString);
       if (isNaN(target.getTime())) return "";
-
       const diffMs = now - target;
       const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-
       if (diffDays <= 0) return "오늘";
       if (diffDays === 1) return "1일 전";
       if (diffDays < 7) return `${diffDays}일 전`;
@@ -1053,7 +1030,6 @@
         type: item.typeFilter ?? item.type ?? "",
         features: Array.isArray(item.features) ? item.features : [],
         price: item.price ?? "-",
-        markerPrice: item.markerPrice ?? "",
         area: item.area ?? "-",
         address: item.address ?? "-",
         region: item.region ?? "",
@@ -1072,32 +1048,55 @@
       };
     }
 
-    function setResultInfo(text) {
-      if (mapResultCount) mapResultCount.textContent = text;
+    function makeAgentInitial(text) {
+      const raw = String(text || "담당").trim();
+      return raw.length >= 2 ? raw.slice(-2) : raw;
     }
 
-    function setListInfo(text) {
-      if (listInfoText) listInfoText.textContent = text;
+    function setResultInfo(text) {
+      mapResultCount.textContent = text;
+    }
+
+    function setListInfo(text, modeText = "최신순") {
+      listInfoText.textContent = text;
+      listModeText.textContent = modeText;
+    }
+
+    function sameIdList(a, b) {
+      if (a.length !== b.length) return false;
+      const aIds = a.map(v => v.id).sort((x, y) => x - y);
+      const bIds = b.map(v => v.id).sort((x, y) => x - y);
+      return aIds.every((id, idx) => id === bIds[idx]);
+    }
+
+    function hideMapRefreshButton() {
+      state.visibleSearchDirty = false;
+      mapRefreshBtn.classList.remove("show");
+    }
+
+    function showMapRefreshButton() {
+      state.visibleSearchDirty = true;
+      mapRefreshBtn.classList.add("show");
     }
 
     async function loadProperties() {
       try {
         const res = await fetch("./properties.json");
         if (!res.ok) throw new Error("properties.json 불러오기 실패");
-
         const data = await res.json();
+
         state.all = data
           .map(normalizeProperty)
           .filter(item => Number.isFinite(item.lat) && Number.isFinite(item.lng));
 
         applyFilter();
       } catch (err) {
-        console.error("매물 데이터 불러오기 실패:", err);
+        console.error(err);
         propertyList.innerHTML = `
           <div class="card" style="padding:18px; cursor:default; border-bottom:0;">
             <div class="card-body" style="padding:0;">
-              <h3 class="title" style="margin-bottom:6px;">매물 데이터를 불러오지 못했습니다</h3>
-              <div class="address-text">properties.json 파일 경로와 형식을 확인해 주세요.</div>
+              <h3 style="margin-bottom:6px;">매물 데이터를 불러오지 못했습니다</h3>
+              <div>properties.json 파일 경로와 형식을 확인해 주세요.</div>
             </div>
           </div>
         `;
@@ -1110,7 +1109,7 @@
       const bgColor = isSelected ? "#2563eb" : "rgba(255,255,255,0.82)";
       const textColor = isSelected ? "#ffffff" : "#2563eb";
       const borderColor = isSelected ? "#2563eb" : "rgba(255,255,255,0.55)";
-    
+
       const svg = `
         <svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" viewBox="0 0 52 52">
           <defs>
@@ -1118,13 +1117,11 @@
               <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="rgba(15,41,66,0.12)"/>
             </filter>
           </defs>
-    
           <g filter="url(#shadow)">
             <rect x="0.5" y="0.5" width="51" height="51" rx="14" ry="14"
                   fill="${bgColor}"
                   stroke="${borderColor}"
                   stroke-width="1"/>
-    
             <text x="26" y="32"
                   text-anchor="middle"
                   font-size="16"
@@ -1134,7 +1131,7 @@
           </g>
         </svg>
       `;
-    
+
       return new kakao.maps.MarkerImage(
         "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg),
         new kakao.maps.Size(52, 52),
@@ -1142,14 +1139,32 @@
       );
     }
 
-    function updateMarkerSelection(selectedId) {
-      state.selectedMarkerId = selectedId;
-
+    function updateMarkerSelection(id) {
+      state.selectedMarkerId = id;
       state.markers.forEach(marker => {
         const item = marker.__property;
-        const isSelected = item && item.id === selectedId;
-        marker.setImage(createMarkerImage(item, isSelected));
+        marker.setImage(createMarkerImage(item, item.id === id));
       });
+    }
+
+    function resetClusterSelection() {
+      if (!state.selectedCluster) return;
+      const el = state.selectedCluster._clusterMarker?.getElement?.();
+      if (el) {
+        el.style.background = "rgba(255,255,255,0.82)";
+        el.style.color = "#2563eb";
+      }
+      state.selectedCluster = null;
+    }
+
+    function setClusterSelected(cluster) {
+      resetClusterSelection();
+      const el = cluster?._clusterMarker?.getElement?.();
+      if (el) {
+        el.style.background = "#2563eb";
+        el.style.color = "#ffffff";
+        state.selectedCluster = cluster;
+      }
     }
 
     async function closeRoadviewPanel() {
@@ -1158,7 +1173,7 @@
           await document.exitFullscreen();
         }
       } catch (err) {
-        console.error("전체화면 해제 실패:", err);
+        console.error(err);
       }
 
       if (roadviewOverlay) {
@@ -1170,11 +1185,6 @@
       await closeRoadviewPanel();
     }
 
-    function makeAgentInitial(text) {
-      const raw = String(text || "담당").trim();
-      return raw.length >= 2 ? raw.slice(-2) : raw;
-    }
-
     function openDetailPanel(item) {
       currentDetailItem = item;
       sidebar.classList.add("expanded");
@@ -1183,7 +1193,6 @@
 
       detailHero.style.backgroundImage = `url('${escapeHtml(item.image)}')`;
       detailBadges.innerHTML = `<span>${escapeHtml(item.type || "-")}</span>`;
-
       detailTitle.textContent = item.title || "";
       detailPrice.textContent = `${item.dealType || ""} ${item.price || ""}`.trim();
       detailPriceBadge.textContent = item.type || "매물";
@@ -1197,7 +1206,6 @@
       detailAreaValue.textContent = item.area || "-";
       detailTypeValue.textContent = item.type || "-";
       detailRegionValue.textContent = item.region || "-";
-
       detailAgentName.textContent = `${item.agentName || "담당자"} ${item.agentTitle || "대표"}`;
       detailAgentOffice.textContent = item.agentOffice || "중개사무소";
 
@@ -1229,6 +1237,245 @@
       currentDetailItem = null;
       updateSidebarWidth();
       refreshMapLayout();
+    }
+
+    function getVisibleItems() {
+      if (!state.map) return [];
+      const bounds = state.map.getBounds();
+
+      return state.filtered.filter(item => {
+        const latlng = new kakao.maps.LatLng(item.lat, item.lng);
+        return bounds.contain(latlng);
+      });
+    }
+
+    function renderList(data) {
+      state.currentListItems = data.slice();
+
+      if (!data.length) {
+        propertyList.innerHTML = `
+          <div class="card" style="padding:18px; cursor:default; border-bottom:0;">
+            <div class="card-body" style="padding:0;">
+              <h3 style="margin-bottom:6px;">표시할 매물이 없습니다</h3>
+              <div>검색 조건을 바꿔보세요.</div>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      propertyList.innerHTML = data.map(item => {
+        const thumb = escapeHtml(item.image || "");
+        const dealLabel = escapeHtml(item.dealType || "매매");
+        const priceText = escapeHtml(item.price || "-");
+        const addressText = escapeHtml(item.address || "-");
+        const areaText = escapeHtml(item.area || "-");
+        const typeText = escapeHtml(item.type || "-");
+        const titleText = escapeHtml(item.title || "매물명");
+        const dateText = item.dateLabel || (item.date ? getRelativeDate(item.date) : "");
+
+        const agentName = escapeHtml(item.agentName || "담당자");
+        const agentTitle = escapeHtml(item.agentTitle || "대표");
+        const officeName = escapeHtml(item.agentOffice || "중개사무소");
+        const agentInitial = makeAgentInitial(item.agentName || "담당자");
+
+        return `
+          <article class="card" data-id="${item.id}">
+            <div class="card-inner-row">
+              <div class="thumb" style="background-image:url('${thumb}')"></div>
+
+              <div class="card-body">
+                <div class="card-top-line">
+                  <span class="card-badge">${typeText}</span>
+                  <span class="card-date">${escapeHtml(dateText)}</span>
+                </div>
+
+                <div class="card-address">${addressText}</div>
+
+                <div class="card-price-line">
+                  <span class="card-deal">${dealLabel}</span>
+                  <span class="card-price">${priceText}</span>
+                </div>
+
+                <div class="card-spec">${areaText} · ${titleText}</div>
+
+                <div class="card-agent-row">
+                  <div class="card-agent-left">
+                    <div class="card-agent-avatar">
+                      ${item.agentImage ? `<img src="${escapeHtml(item.agentImage)}" alt="agent">` : agentInitial}
+                    </div>
+                    <div>
+                      <span class="card-agent-name">${agentName}</span>
+                      <span class="card-agent-title">${agentTitle}</span>
+                      <div class="card-agent-office">${officeName}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join("");
+
+      document.querySelectorAll(".card").forEach(card => {
+        card.addEventListener("click", async function (e) {
+          if (e.target.closest("a, button")) return;
+          const item = data.find(v => v.id === Number(card.dataset.id));
+          if (!item) return;
+
+          resetClusterSelection();
+          openDetailPanel(item);
+          updateMarkerSelection(item.id);
+          await focusProperty(item.id);
+        });
+      });
+
+      highlightCard(state.selectedMarkerId);
+    }
+
+    function highlightCard(id) {
+      document.querySelectorAll(".card").forEach(card => {
+        card.classList.toggle("active", Number(card.dataset.id) === id);
+      });
+    }
+
+    function clearMapObjects() {
+      if (state.clusterer) state.clusterer.clear();
+      state.markers.forEach(marker => marker.setMap(null));
+      state.markers = [];
+    }
+
+    function moveMapToProperty(item) {
+      if (!item || !state.map) return;
+      const position = new kakao.maps.LatLng(item.lat, item.lng);
+      state.isProgrammaticMove = true;
+      state.map.setCenter(position);
+      state.map.relayout();
+      setTimeout(() => {
+        state.isProgrammaticMove = false;
+      }, 250);
+    }
+
+    function renderMarkers(data) {
+      clearMapObjects();
+      if (!data.length) return;
+
+      const bounds = new kakao.maps.LatLngBounds();
+      const markerList = [];
+
+      data.forEach(item => {
+        const position = new kakao.maps.LatLng(item.lat, item.lng);
+        const marker = new kakao.maps.Marker({
+          position,
+          image: createMarkerImage(item, state.selectedMarkerId === item.id),
+          clickable: true
+        });
+
+        marker.__property = item;
+
+        kakao.maps.event.addListener(marker, "click", async function () {
+          await hideRoadview();
+
+          renderList([item]);
+          setListInfo("총 1개 매물", "선택 매물");
+          setResultInfo("선택 매물 1건");
+
+          resetClusterSelection();
+          highlightCard(item.id);
+          updateMarkerSelection(item.id);
+          openDetailPanel(item);
+          hideMapRefreshButton();
+        });
+
+        markerList.push(marker);
+        state.markers.push(marker);
+        bounds.extend(position);
+      });
+
+      state.clusterer.addMarkers(markerList);
+
+      if (data.length === 1) {
+        state.map.setCenter(new kakao.maps.LatLng(data[0].lat, data[0].lng));
+      } else {
+        state.map.setBounds(bounds);
+      }
+    }
+
+    async function focusProperty(id) {
+      const item = state.filtered.find(v => v.id === id) || state.all.find(v => v.id === id);
+      if (!item || !state.map) return;
+      await hideRoadview();
+      highlightCard(id);
+      updateMarkerSelection(id);
+      moveMapToProperty(item);
+    }
+
+    function syncFeatureButtons() {
+      const isAll = state.selectedFeatures.size === 0;
+      featureButtons.forEach(btn => {
+        const value = btn.dataset.value;
+        if (value === "all") {
+          btn.classList.toggle("all-active", isAll);
+          btn.classList.remove("active");
+        } else {
+          btn.classList.toggle("active", state.selectedFeatures.has(value));
+          btn.classList.remove("all-active");
+        }
+      });
+    }
+
+    function renderDefaultFilteredList() {
+      renderList(state.filtered);
+      setResultInfo(`총 ${state.filtered.length}건`);
+      setListInfo(`총 ${state.filtered.length}개 매물`, "최신순");
+      hideMapRefreshButton();
+    }
+
+    function applyFilter() {
+      const keyword = keywordInput.value.trim().toLowerCase();
+      const dealValue = selectedDeal;
+      const typeValue = selectedType;
+
+      state.filtered = state.all.filter(item => {
+        const text = [
+          item.title ?? "",
+          item.region ?? "",
+          item.address ?? "",
+          item.desc ?? "",
+          item.type ?? "",
+          item.agentName ?? "",
+          item.agentOffice ?? "",
+          item.date ?? "",
+          item.dateLabel ?? "",
+          ...(item.features ?? [])
+        ].join(" ").toLowerCase();
+
+        const okKeyword = !keyword || text.includes(keyword);
+        const okDeal = dealValue === "all" || item.dealType === dealValue;
+
+        const itemType = (item.type ?? "").trim();
+        const okType =
+          typeValue === "all" ||
+          (typeValue === "단독" && ["단독", "단독주택"].includes(itemType)) ||
+          (typeValue === "다가구" && ["다가구", "다세대", "다가구ㆍ다세대", "다세대주택"].includes(itemType)) ||
+          (typeValue === "원룸" && ["원룸", "투룸", "원룸ㆍ투룸"].includes(itemType)) ||
+          (typeValue === "아파트" && ["아파트", "빌라", "아파트ㆍ빌라"].includes(itemType)) ||
+          (typeValue === "상가" && ["상가", "사무실", "공장", "상가ㆍ사무실"].includes(itemType)) ||
+          (typeValue === "토지" && ["토지", "임야", "토지ㆍ임야"].includes(itemType));
+
+        const okFeature =
+          state.selectedFeatures.size === 0 ||
+          [...state.selectedFeatures].every(feature =>
+            Array.isArray(item.features) && item.features.includes(feature)
+          );
+
+        return okKeyword && okDeal && okType && okFeature;
+      });
+
+      state.selectedMarkerId = null;
+      resetClusterSelection();
+      renderMarkers(state.filtered);
+      renderDefaultFilteredList();
     }
 
     function initMap() {
@@ -1319,18 +1566,43 @@
           .filter(Boolean);
 
         renderList(clusterItems);
-        propertyList.scrollTop = 0;
+        setListInfo(`총 ${clusterItems.length}개 매물`, "선택 묶음");
         setResultInfo(`선택 지역 ${clusterItems.length}건`);
-        setListInfo(`총 ${clusterItems.length}개 매물`);
+
+        updateMarkerSelection(null);
+        setClusterSelected(cluster);
+
+        const level = state.map.getLevel();
+        state.isProgrammaticMove = true;
+        state.map.setLevel(Math.max(level - 1, 1), {
+          anchor: cluster.getCenter(),
+          animate: { duration: 300 }
+        });
+        setTimeout(() => {
+          state.isProgrammaticMove = false;
+        }, 350);
+
+        hideMapRefreshButton();
       });
 
       kakao.maps.event.addListener(state.map, "click", async function () {
         await hideRoadview();
         highlightCard(-1);
         updateMarkerSelection(null);
-        renderList(state.filtered);
-        setResultInfo(`총 ${state.filtered.length}건`);
-        setListInfo(`총 ${state.filtered.length}개 매물`);
+        resetClusterSelection();
+        renderDefaultFilteredList();
+      });
+
+      kakao.maps.event.addListener(state.map, "idle", function () {
+        if (state.isProgrammaticMove) return;
+        const visibleItems = getVisibleItems();
+        state.pendingVisibleItems = visibleItems;
+
+        if (!sameIdList(visibleItems, state.currentListItems) && !sameIdList(visibleItems, state.filtered)) {
+          showMapRefreshButton();
+        } else {
+          hideMapRefreshButton();
+        }
       });
     }
 
@@ -1405,7 +1677,7 @@
             await document.exitFullscreen();
           }
         } catch (err) {
-          console.error("전체화면 전환 실패:", err);
+          console.error(err);
         }
       });
 
@@ -1432,263 +1704,44 @@
       }
 
       const position = new kakao.maps.LatLng(lat, lng);
-
       roadviewClient.getNearestPanoId(position, 100, function (panoId) {
         if (!panoId) {
           alert("이 위치 주변에는 로드뷰가 없습니다.");
           return;
         }
-
         roadviewOverlay.style.display = "block";
         roadview.setPanoId(panoId, position);
       });
     }
 
-    function clearMapObjects() {
-      if (state.clusterer) {
-        state.clusterer.clear();
-      }
-
-      state.markers.forEach(marker => marker.setMap(null));
-      state.markers = [];
-    }
-
-    function highlightCard(id) {
-      document.querySelectorAll(".card").forEach(card => {
-        card.classList.toggle("active", Number(card.dataset.id) === id);
-      });
-    }
-
-    function moveMapToProperty(item) {
-      if (!item || !state.map) return;
-      const position = new kakao.maps.LatLng(item.lat, item.lng);
-      state.map.setCenter(position);
-      state.map.relayout();
-    }
-
-    function renderMarkers(data) {
-      clearMapObjects();
-      if (!data.length) return;
-
-      const bounds = new kakao.maps.LatLngBounds();
-      const markerList = [];
-
-      data.forEach(item => {
-        const position = new kakao.maps.LatLng(item.lat, item.lng);
-
-        const marker = new kakao.maps.Marker({
-          position,
-          image: createMarkerImage(item, state.selectedMarkerId === item.id),
-          clickable: true
-        });
-
-        marker.__property = item;
-
-        kakao.maps.event.addListener(marker, "click", async function () {
-          await hideRoadview();
-        
-          // 리스트를 항상 전체 필터 기준으로 복원
-          renderList(state.filtered);
-          setListInfo(`총 ${state.filtered.length}개 매물`);
-          setResultInfo(`총 ${state.filtered.length}건`);
-        
-          highlightCard(item.id);
-          updateMarkerSelection(item.id);
-          openDetailPanel(item);
-        });
-
-        markerList.push(marker);
-        state.markers.push(marker);
-        bounds.extend(position);
-      });
-
-      state.clusterer.addMarkers(markerList);
-
-      if (data.length === 1) {
-        state.map.setCenter(new kakao.maps.LatLng(data[0].lat, data[0].lng));
-      } else {
-        state.map.setBounds(bounds);
-      }
-    }
-
-    async function focusProperty(id) {
-      const item = state.filtered.find(v => v.id === id) || state.all.find(v => v.id === id);
-      if (!item || !state.map) return;
-
-      await hideRoadview();
-      highlightCard(id);
-      updateMarkerSelection(id);
-      moveMapToProperty(item);
-    }
-
-    function renderList(data) {
-      if (!data.length) {
-        propertyList.innerHTML = `
-          <div class="card" style="padding:18px; cursor:default; border-bottom:0;">
-            <div class="card-body" style="padding:0;">
-              <h3 class="title" style="margin-bottom:6px;">표시할 매물이 없습니다</h3>
-              <div class="address-text">검색 조건을 바꿔보세요.</div>
-            </div>
-          </div>
-        `;
-        return;
-      }
-
-      propertyList.innerHTML = data.map(item => {
-        const thumb = escapeHtml(item.image || "");
-        const dealLabel = escapeHtml(item.dealType || "매매");
-        const priceText = escapeHtml(item.price || "-");
-        const addressText = escapeHtml(item.address || "-");
-        const areaText = escapeHtml(item.area || "-");
-        const typeText = escapeHtml(item.type || "-");
-        const titleText = escapeHtml(item.title || "매물명");
-        const dateText = item.dateLabel || (item.date ? getRelativeDate(item.date) : "");
-
-        const agentName = escapeHtml(item.agentName || "담당자");
-        const agentTitle = escapeHtml(item.agentTitle || "대표");
-        const officeName = escapeHtml(item.agentOffice || "중개사무소");
-        const agentInitial = makeAgentInitial(item.agentName || "담당자");
-
-        return `
-          <article class="card" data-id="${item.id}">
-            <div class="card-inner-row">
-              <div class="thumb" style="background-image:url('${thumb}')"></div>
-
-              <div class="card-body">
-                <div class="card-top-line">
-                  <span class="card-badge">${typeText}</span>
-                  <span class="card-date">${escapeHtml(dateText)}</span>
-                </div>
-
-                <div class="card-address">${addressText}</div>
-
-                <div class="card-price-line">
-                  <span class="card-deal">${dealLabel}</span>
-                  <span class="card-price">${priceText}</span>
-                </div>
-
-                <div class="card-spec">${areaText} · ${titleText}</div>
-
-                <div class="card-agent-row">
-                  <div class="card-agent-left">
-                    <div class="card-agent-avatar">
-                      ${item.agentImage ? `<img src="${escapeHtml(item.agentImage)}" alt="agent">` : agentInitial}
-                    </div>
-                    <div>
-                      <span class="card-agent-name">${agentName}</span>
-                      <span class="card-agent-title">${agentTitle}</span>
-                      <div class="card-agent-office">${officeName}</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </article>
-        `;
-      }).join("");
-
-      document.querySelectorAll(".card").forEach(card => {
-        card.addEventListener("click", async function (e) {
-          if (e.target.closest("a, button")) return;
-
-          const item = data.find(v => v.id === Number(card.dataset.id));
-          if (!item) return;
-
-          openDetailPanel(item);
-          updateMarkerSelection(item.id);
-          await focusProperty(item.id);
-        });
-      });
-    }
-
-    function syncFeatureButtons() {
-      const isAll = state.selectedFeatures.size === 0;
-
-      featureButtons.forEach(btn => {
-        const value = btn.dataset.value;
-
-        if (value === "all") {
-          btn.classList.toggle("all-active", isAll);
-          btn.classList.remove("active");
-        } else {
-          btn.classList.toggle("active", state.selectedFeatures.has(value));
-          btn.classList.remove("all-active");
-        }
-      });
-    }
-
-    function applyFilter() {
-      const keyword = keywordInput.value.trim().toLowerCase();
-      const dealValue = selectedDeal;
-      const typeValue = selectedType;
-
-      state.filtered = state.all.filter(item => {
-        const text = [
-          item.title ?? "",
-          item.region ?? "",
-          item.address ?? "",
-          item.desc ?? "",
-          item.type ?? "",
-          item.agentName ?? "",
-          item.agentOffice ?? "",
-          item.date ?? "",
-          item.dateLabel ?? "",
-          ...(item.features ?? [])
-        ].join(" ").toLowerCase();
-
-        const okKeyword = !keyword || text.includes(keyword);
-        const okDeal = dealValue === "all" || item.dealType === dealValue;
-
-        const itemType = (item.type ?? "").trim();
-
-        const okType =
-          typeValue === "all" ||
-          (typeValue === "단독" && ["단독", "단독주택"].includes(itemType)) ||
-          (typeValue === "다가구" && ["다가구", "다세대", "다가구ㆍ다세대", "다세대주택"].includes(itemType)) ||
-          (typeValue === "원룸" && ["원룸", "투룸", "원룸ㆍ투룸"].includes(itemType)) ||
-          (typeValue === "아파트" && ["아파트", "빌라", "아파트ㆍ빌라"].includes(itemType)) ||
-          (typeValue === "상가" && ["상가", "사무실", "공장", "상가ㆍ사무실"].includes(itemType)) ||
-          (typeValue === "토지" && ["토지", "임야", "토지ㆍ임야"].includes(itemType));
-
-        const okFeature =
-          state.selectedFeatures.size === 0 ||
-          [...state.selectedFeatures].every(feature =>
-            Array.isArray(item.features) && item.features.includes(feature)
-          );
-
-        return okKeyword && okDeal && okType && okFeature;
-      });
-
-      state.selectedMarkerId = null;
-      renderList(state.filtered);
-      renderMarkers(state.filtered);
-      setResultInfo(`총 ${state.filtered.length}건`);
-      setListInfo(`총 ${state.filtered.length}개 매물`);
-    }
-
     function initEvents() {
       keywordInput.addEventListener("input", applyFilter);
 
-      if (resetListBtn) {
-        resetListBtn.addEventListener("click", () => {
-          renderList(state.filtered);
-          setResultInfo(`총 ${state.filtered.length}건`);
-          setListInfo(`총 ${state.filtered.length}개 매물`);
-        });
-      }
+      resetListBtn.addEventListener("click", () => {
+        updateMarkerSelection(null);
+        resetClusterSelection();
+        renderDefaultFilteredList();
+      });
+
+      mapRefreshBtn.addEventListener("click", () => {
+        const visible = state.pendingVisibleItems.slice();
+        renderList(visible);
+        setListInfo(`총 ${visible.length}개 매물`, "현재 지도 기준");
+        setResultInfo(`현재 지도 ${visible.length}건`);
+        updateMarkerSelection(null);
+        resetClusterSelection();
+        hideMapRefreshButton();
+      });
 
       detailCloseBtn.addEventListener("click", closeDetailPanel);
 
       detailShareBtn.addEventListener("click", async () => {
         if (!currentDetailItem) return;
         const url = currentDetailItem.link && currentDetailItem.link !== "#" ? currentDetailItem.link : location.href;
-
         try {
           await navigator.clipboard.writeText(url);
           detailShareBtn.textContent = "복사";
-          setTimeout(() => {
-            detailShareBtn.textContent = "⤴";
-          }, 1000);
+          setTimeout(() => { detailShareBtn.textContent = "⤴"; }, 1000);
         } catch (err) {
           console.error(err);
         }
@@ -1715,7 +1768,6 @@
       featureButtons.forEach(btn => {
         btn.addEventListener("click", () => {
           const value = btn.dataset.value;
-
           if (value === "all") {
             state.selectedFeatures.clear();
           } else if (state.selectedFeatures.has(value)) {
@@ -1723,7 +1775,6 @@
           } else {
             state.selectedFeatures.add(value);
           }
-
           syncFeatureButtons();
           applyFilter();
         });
