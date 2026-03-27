@@ -12,7 +12,6 @@
       --sidebar-list-width: 360px;
       --detail-panel-width: 420px;
       --sidebar-current-width: var(--sidebar-list-width);
-      --resizer-hit-width: 0px;
       --brand: #14b8a6;
       --bg: #f4f7fb;
       --line: #e7edf3;
@@ -70,9 +69,7 @@
       -ms-overflow-style: none;
     }
 
-    .sidebar-list-panel::-webkit-scrollbar {
-      display: none;
-    }
+    .sidebar-list-panel::-webkit-scrollbar { display: none; }
 
     .sidebar-detail-panel {
       height: 100%;
@@ -85,13 +82,9 @@
       -ms-overflow-style: none;
     }
 
-    .sidebar-detail-panel::-webkit-scrollbar {
-      display: none;
-    }
+    .sidebar-detail-panel::-webkit-scrollbar { display: none; }
 
-    .sidebar.expanded .sidebar-detail-panel {
-      opacity: 1;
-    }
+    .sidebar.expanded .sidebar-detail-panel { opacity: 1; }
 
     .detail-panel-inner {
       height: 100%;
@@ -137,9 +130,7 @@
       -ms-overflow-style: none;
     }
 
-    .detail-scroll::-webkit-scrollbar {
-      display: none;
-    }
+    .detail-scroll::-webkit-scrollbar { display: none; }
 
     .detail-hero {
       height: 235px;
@@ -195,32 +186,6 @@
       line-height: 1;
     }
 
-    .detail-price-box {
-      padding: 14px 14px 12px;
-      border-radius: 14px;
-      background: #f7f8fa;
-      border: 1px solid #eceff3;
-      margin-bottom: 16px;
-    }
-
-    .detail-price-badge {
-      display: none;
-    }
-
-    .detail-price {
-      margin-bottom: 8px;
-      font-size: 20px;
-      font-weight: 900;
-      color: #1d2733;
-      letter-spacing: -0.5px;
-    }
-
-    .detail-address {
-      font-size: 13px;
-      color: #667788;
-      line-height: 1.6;
-    }
-
     .detail-meta-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -257,6 +222,32 @@
       letter-spacing: -0.3px;
     }
 
+    .detail-price-box {
+      padding: 14px 14px 12px;
+      border-radius: 14px;
+      background: #f7f8fa;
+      border: 1px solid #eceff3;
+      margin-bottom: 16px;
+    }
+
+    .detail-price-badge {
+      display: none;
+    }
+
+    .detail-price {
+      margin-bottom: 8px;
+      font-size: 20px;
+      font-weight: 900;
+      color: #1d2733;
+      letter-spacing: -0.5px;
+    }
+
+    .detail-address {
+      font-size: 13px;
+      color: #667788;
+      line-height: 1.6;
+    }
+
     .detail-desc {
       margin-bottom: 16px;
       font-size: 14px;
@@ -274,11 +265,31 @@
       border-top: 1px solid #eceff3;
     }
 
-    .detail-info-list {
+    .detail-info-sections {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
       margin-bottom: 16px;
+    }
+
+    .detail-info-section {
       background: #fff;
-      border-top: none;
-      border-bottom: none;
+      border: 1px solid #eceff3;
+      border-radius: 16px;
+      padding: 14px 16px;
+    }
+
+    .detail-info-section-title {
+      font-size: 13px;
+      font-weight: 900;
+      color: #1f2a36;
+      margin-bottom: 8px;
+    }
+
+    .detail-info-list {
+      margin-bottom: 0;
+      background: transparent;
+      border: 0;
     }
 
     .detail-info-row {
@@ -446,7 +457,6 @@
       border-radius: 0;
       background: #fff;
       border-bottom: 1px solid #e6ebf0;
-      backdrop-filter: none;
     }
 
     .search-box input {
@@ -706,11 +716,7 @@
       text-overflow: ellipsis;
     }
 
-    .actions { display: none; }
-
-    .resizer {
-      display: none;
-    }
+    .resizer { display: none; }
 
     .map-wrap {
       position: relative;
@@ -799,7 +805,6 @@
     @media (max-width: 980px) {
       :root {
         --sidebar-current-width: 100%;
-        --resizer-hit-width: 0px;
       }
 
       body { overflow: auto; }
@@ -808,8 +813,6 @@
         grid-template-columns: 1fr;
         height: auto;
       }
-
-      .resizer { display: none; }
 
       .sidebar {
         height: auto;
@@ -916,7 +919,7 @@
 
                 <div class="detail-section-title">매물정보</div>
 
-                <div class="detail-info-list" id="detailInfoList"></div>
+                <div id="detailInfoList"></div>
 
                 <div class="detail-agent-card">
                   <div class="detail-agent-top">
@@ -1107,18 +1110,13 @@
 
     function formatAreaWithPyeong(areaText) {
       if (!areaText) return "-";
-
       const match = String(areaText).match(/공급\s*([\d.]+)㎡\s*\/\s*전용\s*([\d.]+)㎡/);
-
       if (!match) return areaText;
 
       const supply = Number(match[1]);
       const privateArea = Number(match[2]);
 
-      const supplyPy = sqmToPyeong(supply);
-      const privatePy = sqmToPyeong(privateArea);
-
-      return `공급 ${supply}㎡ (${supplyPy}평) / 전용 ${privateArea}㎡ (${privatePy}평)`;
+      return `공급 ${supply}㎡ (${sqmToPyeong(supply)}평) / 전용 ${privateArea}㎡ (${sqmToPyeong(privateArea)}평)`;
     }
 
     function setResultInfo(text) {
@@ -1145,8 +1143,8 @@
         propertyList.innerHTML = `
           <div class="card" style="padding:18px; cursor:default; border-bottom:0;">
             <div class="card-body" style="padding:0;">
-              <h3 class="title" style="margin-bottom:6px;">매물 데이터를 불러오지 못했습니다</h3>
-              <div class="address-text">properties.json 파일 경로와 형식을 확인해 주세요.</div>
+              <h3 style="margin-bottom:6px;">매물 데이터를 불러오지 못했습니다</h3>
+              <div>properties.json 파일 경로와 형식을 확인해 주세요.</div>
             </div>
           </div>
         `;
@@ -1202,7 +1200,6 @@
 
     function updateMarkerSelection(selectedId) {
       state.selectedMarkerId = selectedId;
-
       state.markers.forEach(marker => {
         const item = marker.__property;
         const isSelected = item && item.id === selectedId;
@@ -1211,10 +1208,7 @@
     }
 
     function getClusterKeyFromItems(items) {
-      return items
-        .map(item => item.id)
-        .sort((a, b) => a - b)
-        .join(",");
+      return items.map(item => item.id).sort((a, b) => a - b).join(",");
     }
 
     function getClusterBadgeWidth(count) {
@@ -1228,10 +1222,7 @@
       const clusterMarker = cluster.getClusterMarker ? cluster.getClusterMarker() : null;
       if (!clusterMarker) return;
 
-      const clusterItems = cluster.getMarkers()
-        .map(marker => marker.__property)
-        .filter(Boolean);
-
+      const clusterItems = cluster.getMarkers().map(marker => marker.__property).filter(Boolean);
       if (!clusterItems.length) return;
 
       const count = clusterItems.length;
@@ -1274,22 +1265,16 @@
 
     function refreshClusterBadges() {
       if (!state.clusterer) return;
-
       const clusters = state.clusterer.getClusters ? state.clusterer.getClusters() : state.clusterer._clusters;
       if (!clusters || !clusters.length) return;
 
       clusters.forEach(cluster => {
         if (!cluster || typeof cluster.getClusterMarker !== "function") return;
-
-        const clusterItems = cluster.getMarkers()
-          .map(marker => marker.__property)
-          .filter(Boolean);
-
+        const clusterItems = cluster.getMarkers().map(marker => marker.__property).filter(Boolean);
         if (!clusterItems.length) return;
 
         const key = getClusterKeyFromItems(clusterItems);
         const isSelected = state.selectedClusterKey === key;
-
         setClusterBadgeSelected(cluster, isSelected);
       });
     }
@@ -1319,7 +1304,6 @@
 
     async function loadPropertyInfo(item) {
       if (!item.desc_folder) return {};
-
       try {
         const res = await fetch(item.desc_folder, { cache: "no-store" });
         if (!res.ok) throw new Error(`info.json 불러오기 실패: ${res.status}`);
@@ -1331,45 +1315,60 @@
     }
 
     function renderDetailInfoRows(info) {
-      let rows = [];
+      const sections = Array.isArray(info.sections) ? info.sections : [];
 
-      if (Array.isArray(info.infoRows)) {
-        rows = info.infoRows;
-      } else {
-        rows = [
-          { label: "월관리비", value: info.monthlyFee },
-          { label: "관리비 포함 내역", value: info.feeIncluded },
-          { label: "관리비 미포함 내역", value: info.feeExcluded },
-          { label: "부과사유", value: info.feeReason },
-          { label: "부과기준", value: info.feeBasis },
-          { label: "해당동", value: info.buildingDong },
-          { label: "입주가능일", value: info.moveInDate },
-          { label: "방향", value: info.direction },
-          { label: "현관구조", value: info.entranceType },
-          { label: "해당층/총층", value: info.floorInfo },
-          { label: "방/욕실수", value: info.roomBath },
-          { label: "주차가능여부", value: info.parkingAvailable },
-          { label: "건축물용도", value: info.buildingUse },
-          { label: "총세대수", value: info.totalHouseholds },
-          { label: "사용승인일", value: info.approvalDate },
-          { label: "옵션", value: info.parkingInfo },
-          { label: "매물번호", value: info.propertyNo }
-        ];
+      if (sections.length) {
+        detailInfoList.innerHTML = `
+          <div class="detail-info-sections">
+            ${sections.map(section => {
+              const rows = Array.isArray(section.rows)
+                ? section.rows.filter(row => String(row?.value || "").trim() !== "")
+                : [];
+
+              if (!rows.length) return "";
+
+              return `
+                <div class="detail-info-section">
+                  <div class="detail-info-section-title">${escapeHtml(section.title || "")}</div>
+                  <div class="detail-info-list">
+                    ${rows.map(row => `
+                      <div class="detail-info-row">
+                        <div class="detail-info-label">${escapeHtml(row.label || "")}</div>
+                        <div class="detail-info-value">${escapeHtml(row.value || "")}</div>
+                      </div>
+                    `).join("")}
+                  </div>
+                </div>
+              `;
+            }).join("")}
+          </div>
+        `;
+        return;
       }
 
-      rows = rows.filter(row => String(row?.value || "").trim() !== "");
+      const rows = Array.isArray(info.infoRows)
+        ? info.infoRows.filter(row => String(row?.value || "").trim() !== "")
+        : [];
 
       if (!rows.length) {
         detailInfoList.innerHTML = "";
         return;
       }
 
-      detailInfoList.innerHTML = rows.map(row => `
-        <div class="detail-info-row">
-          <div class="detail-info-label">${escapeHtml(row.label || "")}</div>
-          <div class="detail-info-value">${escapeHtml(row.value || "")}</div>
+      detailInfoList.innerHTML = `
+        <div class="detail-info-sections">
+          <div class="detail-info-section">
+            <div class="detail-info-list">
+              ${rows.map(row => `
+                <div class="detail-info-row">
+                  <div class="detail-info-label">${escapeHtml(row.label || "")}</div>
+                  <div class="detail-info-value">${escapeHtml(row.value || "")}</div>
+                </div>
+              `).join("")}
+            </div>
+          </div>
         </div>
-      `).join("");
+      `;
     }
 
     async function openDetailPanel(item) {
@@ -1436,10 +1435,7 @@
     async function handleClusterSelection(cluster) {
       await hideRoadview();
 
-      const clusterItems = cluster.getMarkers()
-        .map(marker => marker.__property)
-        .filter(Boolean);
-
+      const clusterItems = cluster.getMarkers().map(marker => marker.__property).filter(Boolean);
       if (!clusterItems.length) return;
 
       const topItem = clusterItems[0];
@@ -1775,8 +1771,8 @@
         propertyList.innerHTML = `
           <div class="card" style="padding:18px; cursor:default; border-bottom:0;">
             <div class="card-body" style="padding:0;">
-              <h3 class="title" style="margin-bottom:6px;">표시할 매물이 없습니다</h3>
-              <div class="address-text">검색 조건을 바꿔보세요.</div>
+              <h3 style="margin-bottom:6px;">표시할 매물이 없습니다</h3>
+              <div>검색 조건을 바꿔보세요.</div>
             </div>
           </div>
         `;
