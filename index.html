@@ -193,22 +193,6 @@
       font-weight: 900;
     }
 
-    .detail-link-row {
-      margin-bottom: 12px;
-      font-size: 13px;
-      line-height: 1.6;
-    }
-
-    .detail-link-row a {
-      color: #1f6fff;
-      text-decoration: none;
-      word-break: break-all;
-    }
-
-    .detail-link-row a:hover {
-      text-decoration: underline;
-    }
-
     .detail-desc {
       margin-bottom: 16px;
       font-size: 14px;
@@ -907,17 +891,15 @@
                 <div class="detail-badges" id="detailBadges"></div>
                 <h2 class="detail-title" id="detailTitle">매물을 선택하세요</h2>
 
-                <div class="detail-link-row" id="detailLinkRow"></div>
-
                 <div class="detail-desc" id="detailDesc"></div>
-
-                <div class="detail-info-list" id="detailInfoList"></div>
 
                 <div class="detail-price-box">
                   <div class="detail-price-badge" id="detailPriceBadge">매물</div>
                   <div class="detail-price" id="detailPrice"></div>
                   <div class="detail-address" id="detailAddress"></div>
                 </div>
+
+                <div class="detail-info-list" id="detailInfoList"></div>
 
                 <div class="detail-meta-grid" id="detailMetaGrid">
                   <div class="detail-meta-item">
@@ -1027,7 +1009,6 @@
     const detailHero = document.getElementById("detailHero");
     const detailBadges = document.getElementById("detailBadges");
     const detailTitle = document.getElementById("detailTitle");
-    const detailLinkRow = document.getElementById("detailLinkRow");
     const detailPrice = document.getElementById("detailPrice");
     const detailPriceBadge = document.getElementById("detailPriceBadge");
     const detailAddress = document.getElementById("detailAddress");
@@ -1316,7 +1297,7 @@
       if (!item.desc_folder) return {};
 
       try {
-        const res = await fetch(item.desc_folder);
+        const res = await fetch(item.desc_folder, { cache: "no-store" });
         if (!res.ok) throw new Error("info.json 불러오기 실패");
         return await res.json();
       } catch (err) {
@@ -1354,15 +1335,13 @@
       detailBadges.innerHTML = `<span>${escapeHtml(item.type || "-")}</span>`;
 
       detailTitle.textContent = item.title || "";
+      detailDesc.textContent = item.desc || "";
+
       detailPrice.textContent = `${item.dealType || ""} ${item.price || ""}`.trim();
       detailPriceBadge.textContent = item.type || "매물";
       detailAddress.textContent = `${item.region || ""} ${item.address || ""}`.trim();
 
-      /* 지도로 매물확인 */
-      detailLinkRow.innerHTML = "";
-
-      detailDesc.textContent = item.desc || "";
-
+      detailInfoList.innerHTML = "";
       const info = await loadPropertyInfo(item);
       renderDetailInfoRows(info);
 
