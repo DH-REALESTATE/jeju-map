@@ -1,0 +1,20 @@
+{
+  "monthlyFee": "380,000원",
+  "feeIncluded": "공용관리비, 기타관리비",
+  "feeExcluded": "전기료, 가스, 수도, 난방비, 인터넷, TV",
+  "feeReason": "관리규약 등에 따라 부과",
+  "feeBasis": "최근 3개월 관리비 평균",
+  "buildingDong": "104동",
+  "moveInDate": "2026-06-01 협의가능",
+  "direction": "남동향 (거실 방향 기준)",
+  "entranceType": "계단식",
+  "floorInfo": "고층/4",
+  "roomBath": "3/2개",
+  "parkingAvailable": "주차가능",
+  "buildingUse": "공동주택",
+  "totalHouseholds": "160세대",
+  "approvalDate": "2024-02-05",
+  "parkingInfo": "총 주차대수: 240대 (세대당 1.5대)",
+
+  "propertyNo": "디-235"
+}
