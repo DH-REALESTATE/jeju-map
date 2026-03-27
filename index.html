@@ -818,7 +818,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title">제주도 부동산 지도 Ver 1.006</div>
+              <div class="brand-title">제주도 부동산 지도 Ver 1.007</div>
             </div>
           </div>
 
@@ -958,7 +958,8 @@
       markers: [],
       all: [],
       filtered: [],
-      selectedFeatures: new Set()
+      selectedFeatures: new Set(),
+      selectedMarkerId: null
     };
 
     let roadview = null;
@@ -1105,14 +1106,11 @@
       }
     }
 
-    function getMarkerColor(dealType, type) {
-      if (["토지", "임야", "토지ㆍ임야"].includes(type)) return "#22c55e";
-      if (dealType === "월세" || dealType === "년세") return "#f97316";
-      if (dealType === "전세") return "#8b5cf6";
-      return "#0ea5e9";
-    }
+    function createMarkerImage(item, isSelected = false) {
+      const bgColor = isSelected ? "#2563eb" : "rgba(255,255,255,0.82)";
+      const textColor = isSelected ? "#ffffff" : "#2563eb";
+      const borderColor = isSelected ? "#2563eb" : "rgba(255,255,255,0.55)";
 
-    function createMarkerImage(item) {
       const svg = `
         <svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" viewBox="0 0 52 52">
           <defs>
@@ -1120,27 +1118,37 @@
               <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="rgba(15,41,66,0.12)"/>
             </filter>
           </defs>
-    
+
           <g filter="url(#shadow)">
             <rect x="6" y="6" width="40" height="40" rx="12" ry="12"
-                  fill="rgba(255,255,255,0.82)"
-                  stroke="rgba(255,255,255,0.55)"
+                  fill="${bgColor}"
+                  stroke="${borderColor}"
                   stroke-width="1"/>
             <text x="26" y="32"
                   text-anchor="middle"
                   font-size="16"
                   font-weight="900"
                   font-family="Apple SD Gothic Neo, Malgun Gothic, sans-serif"
-                  fill="#2563eb">1</text>
+                  fill="${textColor}">1</text>
           </g>
         </svg>
       `;
-    
+
       return new kakao.maps.MarkerImage(
         "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg),
         new kakao.maps.Size(52, 52),
         { offset: new kakao.maps.Point(26, 26) }
       );
+    }
+
+    function updateMarkerSelection(selectedId) {
+      state.selectedMarkerId = selectedId;
+
+      state.markers.forEach(marker => {
+        const item = marker.__property;
+        const isSelected = item && item.id === selectedId;
+        marker.setImage(createMarkerImage(item, isSelected));
+      });
     }
 
     async function closeRoadviewPanel() {
@@ -1253,47 +1261,51 @@
             fontWeight: "900",
             lineHeight: "52px",
             fontSize: "16px",
+            letterSpacing: "-0.5px",
             border: "1px solid rgba(255,255,255,0.55)",
             boxShadow: "0 6px 16px rgba(15,41,66,0.12)"
           },
           {
-            width: "56px",
-            height: "56px",
-            background: "rgba(255,255,255,0.84)",
-            borderRadius: "15px",
+            width: "52px",
+            height: "52px",
+            background: "rgba(255,255,255,0.82)",
+            borderRadius: "14px",
             color: "#2563eb",
             textAlign: "center",
             fontWeight: "900",
-            lineHeight: "56px",
-            fontSize: "18px",
-            border: "1px solid rgba(255,255,255,0.58)",
-            boxShadow: "0 6px 16px rgba(15,41,66,0.14)"
+            lineHeight: "52px",
+            fontSize: "16px",
+            letterSpacing: "-0.5px",
+            border: "1px solid rgba(255,255,255,0.55)",
+            boxShadow: "0 6px 16px rgba(15,41,66,0.12)"
           },
           {
-            width: "60px",
-            height: "60px",
-            background: "rgba(255,255,255,0.86)",
-            borderRadius: "16px",
+            width: "52px",
+            height: "52px",
+            background: "rgba(255,255,255,0.82)",
+            borderRadius: "14px",
             color: "#2563eb",
             textAlign: "center",
             fontWeight: "900",
-            lineHeight: "60px",
-            fontSize: "20px",
-            border: "1px solid rgba(255,255,255,0.6)",
-            boxShadow: "0 8px 20px rgba(15,41,66,0.15)"
+            lineHeight: "52px",
+            fontSize: "16px",
+            letterSpacing: "-0.5px",
+            border: "1px solid rgba(255,255,255,0.55)",
+            boxShadow: "0 6px 16px rgba(15,41,66,0.12)"
           },
           {
-            width: "64px",
-            height: "64px",
-            background: "rgba(255,255,255,0.88)",
-            borderRadius: "17px",
+            width: "52px",
+            height: "52px",
+            background: "rgba(255,255,255,0.82)",
+            borderRadius: "14px",
             color: "#2563eb",
             textAlign: "center",
             fontWeight: "900",
-            lineHeight: "64px",
-            fontSize: "22px",
-            border: "1px solid rgba(255,255,255,0.62)",
-            boxShadow: "0 8px 20px rgba(15,41,66,0.16)"
+            lineHeight: "52px",
+            fontSize: "16px",
+            letterSpacing: "-0.5px",
+            border: "1px solid rgba(255,255,255,0.55)",
+            boxShadow: "0 6px 16px rgba(15,41,66,0.12)"
           }
         ]
       });
@@ -1309,16 +1321,12 @@
         propertyList.scrollTop = 0;
         setResultInfo(`선택 지역 ${clusterItems.length}건`);
         setListInfo(`총 ${clusterItems.length}개 매물`);
-
-        const bounds = new kakao.maps.LatLngBounds();
-        clusterItems.forEach(item => {
-          bounds.extend(new kakao.maps.LatLng(item.lat, item.lng));
-        });
-        state.map.setBounds(bounds);
       });
 
       kakao.maps.event.addListener(state.map, "click", async function () {
         await hideRoadview();
+        highlightCard(-1);
+        updateMarkerSelection(null);
         renderList(state.filtered);
         setResultInfo(`총 ${state.filtered.length}건`);
         setListInfo(`총 ${state.filtered.length}개 매물`);
@@ -1450,10 +1458,9 @@
       });
     }
 
-    function moveMapToProperty(item, zoomLevel = 4) {
+    function moveMapToProperty(item) {
       if (!item || !state.map) return;
       const position = new kakao.maps.LatLng(item.lat, item.lng);
-      state.map.setLevel(zoomLevel);
       state.map.setCenter(position);
       state.map.relayout();
     }
@@ -1470,7 +1477,7 @@
 
         const marker = new kakao.maps.Marker({
           position,
-          image: createMarkerImage(item),
+          image: createMarkerImage(item, state.selectedMarkerId === item.id),
           clickable: true
         });
 
@@ -1479,8 +1486,8 @@
         kakao.maps.event.addListener(marker, "click", async function () {
           await hideRoadview();
           highlightCard(item.id);
+          updateMarkerSelection(item.id);
           openDetailPanel(item);
-          moveMapToProperty(item, 4);
         });
 
         markerList.push(marker);
@@ -1491,7 +1498,7 @@
       state.clusterer.addMarkers(markerList);
 
       if (data.length === 1) {
-        moveMapToProperty(data[0], 4);
+        state.map.setCenter(new kakao.maps.LatLng(data[0].lat, data[0].lng));
       } else {
         state.map.setBounds(bounds);
       }
@@ -1503,7 +1510,8 @@
 
       await hideRoadview();
       highlightCard(id);
-      moveMapToProperty(item, 4);
+      updateMarkerSelection(id);
+      moveMapToProperty(item);
     }
 
     function renderList(data) {
@@ -1580,6 +1588,7 @@
           if (!item) return;
 
           openDetailPanel(item);
+          updateMarkerSelection(item.id);
           await focusProperty(item.id);
         });
       });
@@ -1643,6 +1652,7 @@
         return okKeyword && okDeal && okType && okFeature;
       });
 
+      state.selectedMarkerId = null;
       renderList(state.filtered);
       renderMarkers(state.filtered);
       setResultInfo(`총 ${state.filtered.length}건`);
