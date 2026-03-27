@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>제주도 부동산 지도 Ver 1.010</title>
+<title>제주도 부동산 지도 Ver 1.008</title>
 
 <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b7db2d3c35122f3ec33c88ea6d3195fb&libraries=clusterer"></script>
 
@@ -11,7 +11,6 @@ body { margin:0; font-family:sans-serif; }
 
 #wrap { display:flex; height:100vh; }
 
-/* ===== 좌측 카드 영역 (기존 유지) ===== */
 #sidebar {
   width:340px;
   overflow-y:auto;
@@ -25,62 +24,21 @@ body { margin:0; font-family:sans-serif; }
 }
 .card:hover { background:#f8fafc; }
 
-/* ===== 지도 영역 ===== */
-#mapWrap {
-  flex:1;
-  position:relative;
-}
-
-#map {
-  width:100%;
-  height:100%;
-}
-
-/* ===== 재검색 버튼 (추가된 기능) ===== */
-.search-btn {
-  position:absolute;
-  top:16px;
-  left:50%;
-  transform:translateX(-50%);
-  z-index:10;
-
-  background:#2563eb;
-  color:#fff;
-  border:none;
-  border-radius:20px;
-  padding:10px 18px;
-  font-size:14px;
-  font-weight:700;
-
-  box-shadow:0 6px 16px rgba(0,0,0,0.15);
-  cursor:pointer;
-  display:none;
-}
+#map { flex:1; height:100%; }
 </style>
 </head>
 
 <body>
 
 <div id="wrap">
-
-  <!-- 좌측 카드 -->
   <div id="sidebar">
     <div id="propertyList"></div>
   </div>
-
-  <!-- 지도 -->
-  <div id="mapWrap">
-    <div id="map"></div>
-    <button id="searchBtn" class="search-btn">이 지역에서 재검색</button>
-  </div>
-
+  <div id="map"></div>
 </div>
 
 <script>
 
-/* =======================
-   상태
-======================= */
 const state = {
   map:null,
   clusterer:null,
@@ -92,18 +50,25 @@ const state = {
 };
 
 /* =======================
-   마커
+   마커 디자인 (프리미엄)
 ======================= */
 function createMarkerImage(item, selected=false){
 
-  const bg = selected ? "#2563eb" : "rgba(255,255,255,0.9)";
+  const bg = selected ? "#2563eb" : "rgba(255,255,255,0.92)";
   const color = selected ? "#fff" : "#2563eb";
+  const scale = selected ? 1.15 : 1;
 
   const svg = `
   <svg xmlns="http://www.w3.org/2000/svg" width="52" height="52">
-    <rect x="0.5" y="0.5" width="51" height="51" rx="14" fill="${bg}"/>
-    <text x="26" y="32" text-anchor="middle"
-      font-size="16" font-weight="900" fill="${color}">1</text>
+    <g transform="scale(${scale}) translate(${(1-scale)*26}, ${(1-scale)*26})">
+      <rect x="0.5" y="0.5" width="51" height="51" rx="14"
+        fill="${bg}"/>
+      <text x="26" y="32"
+        text-anchor="middle"
+        font-size="16"
+        font-weight="900"
+        fill="${color}">1</text>
+    </g>
   </svg>`;
 
   return new kakao.maps.MarkerImage(
@@ -143,7 +108,7 @@ function initMap(){
     styles:[{
       width:"52px",
       height:"52px",
-      background:"rgba(255,255,255,0.9)",
+      background:"rgba(255,255,255,0.92)",
       borderRadius:"14px",
       color:"#2563eb",
       lineHeight:"52px",
@@ -152,38 +117,14 @@ function initMap(){
     }]
   });
 
-  /* ===== 지도 이동 감지 (추가 기능) ===== */
-  kakao.maps.event.addListener(state.map,"dragend",()=>{
-    searchBtn.style.display="block";
-  });
-
-  kakao.maps.event.addListener(state.map,"zoom_changed",()=>{
-    searchBtn.style.display="block";
-  });
-
-  /* ===== 지도 클릭 초기화 ===== */
-  kakao.maps.event.addListener(state.map,"click",()=>{
-    renderList(state.filtered);
-    updateMarkerSelection(null);
-
-    if(state.selectedCluster){
-      const el = state.selectedCluster._clusterMarker.getElement();
-      if(el){
-        el.style.background="rgba(255,255,255,0.9)";
-        el.style.color="#2563eb";
-      }
-      state.selectedCluster=null;
-    }
-  });
-
-  /* ===== 클러스터 클릭 ===== */
+  /* 클러스터 클릭 */
   kakao.maps.event.addListener(state.clusterer,"clusterclick",(cluster)=>{
 
     const items = cluster.getMarkers().map(m=>m.__property);
 
     renderList(items);
 
-    // 첫 매물 상세
+    // 첫 매물 강조
     if(items[0]){
       highlightCard(items[0].id);
     }
@@ -194,7 +135,7 @@ function initMap(){
       if(state.selectedCluster){
         const prev = state.selectedCluster._clusterMarker.getElement();
         if(prev){
-          prev.style.background="rgba(255,255,255,0.9)";
+          prev.style.background="rgba(255,255,255,0.92)";
           prev.style.color="#2563eb";
         }
       }
@@ -208,25 +149,7 @@ function initMap(){
       state.selectedCluster = cluster;
     },0);
   });
-}
 
-/* =======================
-   영역 필터 (추가 기능)
-======================= */
-function filterByBounds(){
-  const bounds = state.map.getBounds();
-
-  const visible = state.all.filter(item=>{
-    const pos = new kakao.maps.LatLng(item.lat,item.lng);
-    return bounds.contain(pos);
-  });
-
-  state.filtered = visible;
-
-  renderList(visible);
-  renderMarkers(visible);
-
-  searchBtn.style.display="none";
 }
 
 /* =======================
@@ -250,6 +173,7 @@ function renderMarkers(data){
 
     marker.__property=item;
 
+    /* 클릭 */
     kakao.maps.event.addListener(marker,"click",()=>{
 
       renderList([item]);
@@ -257,13 +181,23 @@ function renderMarkers(data){
       if(state.selectedCluster){
         const el = state.selectedCluster._clusterMarker.getElement();
         if(el){
-          el.style.background="rgba(255,255,255,0.9)";
+          el.style.background="rgba(255,255,255,0.92)";
           el.style.color="#2563eb";
         }
         state.selectedCluster=null;
       }
 
       updateMarkerSelection(item.id);
+    });
+
+    /* hover */
+    kakao.maps.event.addListener(marker,"mouseover",()=>{
+      marker.setImage(createMarkerImage(item,true));
+    });
+
+    kakao.maps.event.addListener(marker,"mouseout",()=>{
+      const selected = state.selectedMarkerId===item.id;
+      marker.setImage(createMarkerImage(item,selected));
     });
 
     markers.push(marker);
@@ -309,11 +243,6 @@ async function load(){
   renderList(data);
   renderMarkers(data);
 }
-
-/* =======================
-   이벤트
-======================= */
-searchBtn.onclick = filterByBounds;
 
 /* 시작 */
 initMap();
