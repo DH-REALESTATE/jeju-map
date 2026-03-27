@@ -818,7 +818,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title">제주도 부동산 지도 Ver 1.005</div>
+              <div class="brand-title">제주도 부동산 지도 Ver 1.006</div>
             </div>
           </div>
 
@@ -1052,6 +1052,7 @@
         type: item.typeFilter ?? item.type ?? "",
         features: Array.isArray(item.features) ? item.features : [],
         price: item.price ?? "-",
+        markerPrice: item.markerPrice ?? "",
         area: item.area ?? "-",
         address: item.address ?? "-",
         region: item.region ?? "",
@@ -1113,37 +1114,47 @@
 
     function createMarkerImage(item) {
       const color = getMarkerColor(item.dealType, item.type);
-    
+      const label = `${item.dealType || ""} ${item.markerPrice || item.price || ""}`.trim();
+
+      const safeLabel = String(label)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+
       const svg = `
-        <svg xmlns="http://www.w3.org/2000/svg" width="54" height="68" viewBox="0 0 54 68">
+        <svg xmlns="http://www.w3.org/2000/svg" width="140" height="74" viewBox="0 0 140 74">
           <defs>
             <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
-              <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="rgba(15,41,66,0.22)"/>
+              <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="rgba(15,41,66,0.20)"/>
             </filter>
           </defs>
-    
+
           <g filter="url(#shadow)">
-            <path d="M27 2
-                     C14.3 2 4 12.3 4 25
-                     C4 41.5 27 64 27 64
-                     S50 41.5 50 25
-                     C50 12.3 39.7 2 27 2Z"
-                  fill="${color}"
-                  stroke="#ffffff"
-                  stroke-width="3"/>
+            <rect x="18" y="10" rx="18" ry="18" width="104" height="34"
+                  fill="#ffffff" stroke="${color}" stroke-width="2.5"/>
             
-            <circle cx="27" cy="25" r="10.5" fill="#ffffff"/>
-            <circle cx="27" cy="25" r="4.5" fill="${color}"/>
-    
-            <circle cx="20.5" cy="17.5" r="2.3" fill="rgba(255,255,255,0.55)"/>
+            <text x="70" y="32"
+                  text-anchor="middle"
+                  font-size="15"
+                  font-weight="900"
+                  font-family="Apple SD Gothic Neo, Malgun Gothic, sans-serif"
+                  fill="${color}">${safeLabel}</text>
+
+            <path d="M70 44 C62 44 55.5 50.5 55.5 58.5 C55.5 67.5 70 74 70 74
+                     C70 74 84.5 67.5 84.5 58.5 C84.5 50.5 78 44 70 44 Z"
+                  fill="${color}" stroke="#ffffff" stroke-width="2"/>
+
+            <circle cx="70" cy="58.5" r="5.2" fill="#ffffff"/>
           </g>
         </svg>
       `;
-    
+
       return new kakao.maps.MarkerImage(
         "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg),
-        new kakao.maps.Size(54, 68),
-        { offset: new kakao.maps.Point(27, 68) }
+        new kakao.maps.Size(140, 74),
+        { offset: new kakao.maps.Point(70, 74) }
       );
     }
 
