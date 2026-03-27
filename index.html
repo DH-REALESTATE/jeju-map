@@ -1486,6 +1486,12 @@
 
         kakao.maps.event.addListener(marker, "click", async function () {
           await hideRoadview();
+        
+          // 리스트를 항상 전체 필터 기준으로 복원
+          renderList(state.filtered);
+          setListInfo(`총 ${state.filtered.length}개 매물`);
+          setResultInfo(`총 ${state.filtered.length}건`);
+        
           highlightCard(item.id);
           updateMarkerSelection(item.id);
           openDetailPanel(item);
