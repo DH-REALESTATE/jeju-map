@@ -252,16 +252,7 @@
     }
 
     .detail-price-badge {
-      display: inline-flex;
-      align-items: center;
-      height: 24px;
-      padding: 0 10px;
-      border-radius: 999px;
-      background: #f3eefe;
-      color: #8d59ff;
-      font-size: 11px;
-      font-weight: 900;
-      margin-bottom: 10px;
+      display: none;
     }
 
     .detail-price {
@@ -896,7 +887,7 @@
                 </div>
 
                 <div class="detail-price-box">
-                  <div class="detail-price-badge" id="detailPriceBadge">매물</div>
+                  <div class="detail-price-badge" id="detailPriceBadge"></div>
                   <div class="detail-price" id="detailPrice"></div>
                   <div class="detail-address" id="detailAddress"></div>
                 </div>
@@ -1390,8 +1381,10 @@
       detailTypeBadge.textContent = item.type || "";
       detailTypeBadge.style.display = item.type ? "inline-flex" : "none";
 
+      detailPriceBadge.textContent = "";
+      detailPriceBadge.style.display = "none";
+
       detailPrice.textContent = `${item.dealType || ""} ${item.price || ""}`.trim();
-      detailPriceBadge.textContent = item.type || "매물";
       detailAddress.textContent = `${item.address || ""}`.trim();
 
       detailAreaValue.textContent = item.area || "-";
