@@ -774,126 +774,6 @@
       font-size: 12px;
     }
 
-    .custom-overlay {
-      position: relative;
-      width: 315px;
-      max-width: 315px;
-      padding: 16px;
-      border-radius: 18px;
-      background: #fff;
-      border: 1px solid rgba(0,0,0,0.06);
-      box-shadow: 0 20px 40px rgba(0,0,0,0.18);
-      overflow: hidden;
-    }
-
-    .custom-overlay .close {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      width: 30px;
-      height: 30px;
-      border: 0;
-      border-radius: 50%;
-      background: #eef3f7;
-      color: #203040;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: 900;
-    }
-
-    .custom-overlay h3 {
-      margin: 0 34px 8px 0;
-      font-size: 16px;
-      line-height: 1.4;
-      color: #122033;
-      word-break: keep-all;
-      overflow-wrap: break-word;
-    }
-
-    .custom-overlay .overlay-price {
-      margin-bottom: 8px;
-      font-size: 14px;
-      font-weight: 900;
-      color: #0d7b68;
-    }
-
-    .custom-overlay p {
-      margin: 0;
-      font-size: 13px;
-      line-height: 1.65;
-      color: #5c6c7c;
-      word-break: keep-all;
-      overflow-wrap: break-word;
-    }
-
-    .area-row {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
-
-    .area-toggle-btn {
-      border: 0;
-      border-radius: 999px;
-      padding: 4px 8px;
-      font-size: 11px;
-      font-weight: 900;
-      background: #eef3f7;
-      color: #203040;
-      cursor: pointer;
-    }
-
-    .overlay-features {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 10px;
-    }
-
-    .overlay-features span {
-      display: inline-flex;
-      align-items: center;
-      min-height: 28px;
-      padding: 5px 8px;
-      border-radius: 999px;
-      background: #e7fbf5;
-      color: #0d7b68;
-      font-size: 11px;
-      font-weight: 900;
-    }
-
-    .custom-overlay .overlay-actions {
-      display: flex;
-      gap: 8px;
-      margin-top: 12px;
-    }
-
-    .custom-overlay .overlay-btn {
-      flex: 1;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 42px;
-      padding: 10px 12px;
-      border: 0;
-      border-radius: 12px;
-      font-size: 12px;
-      font-weight: 900;
-      text-decoration: none;
-      cursor: pointer;
-    }
-
-    .overlay-primary {
-      background: #0f2942;
-      color: #fff;
-    }
-
-    .overlay-secondary {
-      background: #eef3f7;
-      color: #203040;
-    }
-
     @media (max-width: 980px) {
       :root {
         --sidebar-current-width: 100%;
@@ -938,7 +818,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title">제주도 부동산 지도 Ver 1.004</div>
+              <div class="brand-title">제주도 부동산 지도 Ver 1.005</div>
             </div>
           </div>
 
@@ -1076,8 +956,6 @@
       map: null,
       clusterer: null,
       markers: [],
-      overlays: [],
-      activeOverlay: null,
       all: [],
       filtered: [],
       selectedFeatures: new Set()
@@ -1089,7 +967,6 @@
     let roadviewFullscreenBtn = null;
     let selectedDeal = "all";
     let selectedType = "all";
-    let isResizing = false;
     let currentDetailItem = null;
 
     const sidebar = document.getElementById("sidebar");
@@ -1100,7 +977,6 @@
     const dealButtons = document.querySelectorAll("#dealButtons button");
     const typeButtons = document.querySelectorAll("#typeButtons button");
     const featureButtons = document.querySelectorAll("#featureButtons button");
-    const resizer = document.getElementById("resizer");
     const listInfoText = document.getElementById("listInfoText");
 
     const detailCloseBtn = document.getElementById("detailCloseBtn");
@@ -1136,7 +1012,7 @@
 
     function refreshMapLayout() {
       if (!state.map) return;
-    
+
       setTimeout(() => {
         state.map.relayout();
       }, 320);
@@ -1191,19 +1067,6 @@
         agentImage: item.agentImage ?? "",
         date: item.date ?? "",
         dateLabel: item.dateLabel ?? ""
-      };
-    }
-
-    function parseAreaInfo(areaText) {
-      const match = String(areaText || "").match(/[\d,.]+/);
-      if (!match) return null;
-
-      const sqm = parseFloat(match[0].replace(/,/g, ""));
-      if (isNaN(sqm)) return null;
-
-      return {
-        original: areaText,
-        pyeongText: `${(sqm / 3.3058).toFixed(1)}평`
       };
     }
 
@@ -1427,7 +1290,6 @@
 
       kakao.maps.event.addListener(state.clusterer, "clusterclick", async function (cluster) {
         await hideRoadview();
-        closeOverlay();
 
         const clusterItems = cluster.getMarkers()
           .map(marker => marker.__property)
@@ -1446,7 +1308,6 @@
       });
 
       kakao.maps.event.addListener(state.map, "click", async function () {
-        closeOverlay();
         await hideRoadview();
         renderList(state.filtered);
         setResultInfo(`총 ${state.filtered.length}건`);
@@ -1564,122 +1425,19 @@
       });
     }
 
-    function closeOverlay() {
-      if (state.activeOverlay) {
-        state.activeOverlay.setMap(null);
-        state.activeOverlay = null;
-      }
-    }
-
     function clearMapObjects() {
       if (state.clusterer) {
         state.clusterer.clear();
       }
 
       state.markers.forEach(marker => marker.setMap(null));
-      state.overlays.forEach(item => item.overlay.setMap(null));
-
       state.markers = [];
-      state.overlays = [];
-      state.activeOverlay = null;
-    }
-
-    function createOverlayContent(item) {
-      const wrap = document.createElement("div");
-      const featuresHtml = (item.features || [])
-        .map(feature => `<span>${escapeHtml(feature)}</span>`)
-        .join("");
-      const areaInfo = parseAreaInfo(item.area);
-
-      wrap.innerHTML = `
-        <div class="custom-overlay">
-          <button class="close" type="button">✕</button>
-          <h3>${escapeHtml(item.title)}</h3>
-          <div class="overlay-price">${escapeHtml(item.dealType)} · ${escapeHtml(item.price)}</div>
-          <p>
-            ${escapeHtml(item.address)}<br>
-            <span class="area-row">
-              <span class="area-text">${escapeHtml(item.area)}</span>
-              <button class="area-toggle-btn" type="button" data-mode="sqm">평으로</button>
-            </span><br>
-            ${escapeHtml(item.desc)}
-          </p>
-          ${featuresHtml ? `<div class="overlay-features">${featuresHtml}</div>` : ""}
-          <div class="overlay-actions">
-            <button class="overlay-btn overlay-primary btn-detail" type="button">상세보기</button>
-            <button class="overlay-btn overlay-secondary btn-roadview" type="button" data-lat="${item.lat}" data-lng="${item.lng}">로드뷰</button>
-          </div>
-        </div>
-      `;
-
-      const contentNode = wrap.firstElementChild;
-      const detailBtn = contentNode.querySelector(".btn-detail");
-      const roadBtn = contentNode.querySelector(".btn-roadview");
-      const areaBtn = contentNode.querySelector(".area-toggle-btn");
-      const areaTextEl = contentNode.querySelector(".area-text");
-
-      ["click","mousedown","mouseup","touchstart","touchend","pointerdown","pointerup"]
-        .forEach(eventName => {
-          contentNode.addEventListener(eventName, function (e) {
-            e.stopPropagation();
-          });
-        });
-
-      if (detailBtn) {
-        detailBtn.addEventListener("click", function (e) {
-          e.preventDefault();
-          e.stopPropagation();
-          openDetailPanel(item);
-
-          const link = item.link;
-          if (link && link !== "#") {
-            window.open(link, "_blank", "noopener,noreferrer");
-          }
-        });
-      }
-
-      if (roadBtn) {
-        roadBtn.addEventListener("click", async function (e) {
-          e.preventDefault();
-          e.stopPropagation();
-          await hideRoadview();
-          showRoadview(parseFloat(this.dataset.lat), parseFloat(this.dataset.lng));
-        });
-      }
-
-      if (areaBtn && areaTextEl && areaInfo) {
-        areaBtn.addEventListener("click", function (e) {
-          e.preventDefault();
-          e.stopPropagation();
-
-          if (this.dataset.mode === "sqm") {
-            areaTextEl.textContent = areaInfo.pyeongText;
-            this.textContent = "㎡로";
-            this.dataset.mode = "pyeong";
-          } else {
-            areaTextEl.textContent = areaInfo.original;
-            this.textContent = "평으로";
-            this.dataset.mode = "sqm";
-          }
-        });
-      }
-
-      return contentNode;
     }
 
     function highlightCard(id) {
       document.querySelectorAll(".card").forEach(card => {
         card.classList.toggle("active", Number(card.dataset.id) === id);
       });
-    }
-
-    function openOverlayById(id) {
-      const found = state.overlays.find(v => v.id === id);
-      if (!found) return;
-
-      closeOverlay();
-      found.overlay.setMap(state.map);
-      state.activeOverlay = found.overlay;
     }
 
     function moveMapToProperty(item, zoomLevel = 4) {
@@ -1708,40 +1466,15 @@
 
         marker.__property = item;
 
-        const contentNode = createOverlayContent(item);
-
-        const overlay = new kakao.maps.CustomOverlay({
-          position,
-          content: contentNode,
-          yAnchor: 1.15
-        });
-
-        const closeBtn = contentNode.querySelector(".close");
-        closeBtn.addEventListener("click", function (e) {
-          e.preventDefault();
-          e.stopPropagation();
-          overlay.setMap(null);
-          if (state.activeOverlay === overlay) {
-            state.activeOverlay = null;
-          }
-        });
-
         kakao.maps.event.addListener(marker, "click", async function () {
           await hideRoadview();
           highlightCard(item.id);
           openDetailPanel(item);
           moveMapToProperty(item, 4);
-
-          setTimeout(() => {
-            closeOverlay();
-            overlay.setMap(state.map);
-            state.activeOverlay = overlay;
-          }, 80);
         });
 
         markerList.push(marker);
         state.markers.push(marker);
-        state.overlays.push({ id: item.id, overlay });
         bounds.extend(position);
       });
 
@@ -1761,10 +1494,6 @@
       await hideRoadview();
       highlightCard(id);
       moveMapToProperty(item, 4);
-
-      setTimeout(() => {
-        openOverlayById(id);
-      }, 80);
     }
 
     function renderList(data) {
@@ -1976,35 +1705,6 @@
       window.addEventListener("resize", () => {
         if (!state.map) return;
         state.map.relayout();
-      });
-    }
-
-    function initResizer() {
-      if (!resizer) return;
-
-      resizer.addEventListener("mousedown", (e) => {
-        if (window.innerWidth <= 980) return;
-        e.preventDefault();
-        isResizing = true;
-        document.body.style.cursor = "col-resize";
-        document.body.style.userSelect = "none";
-      });
-
-      window.addEventListener("mousemove", (e) => {
-        if (!isResizing) return;
-
-        const min = 280;
-        const max = 520;
-        const nextWidth = Math.min(Math.max(e.clientX, min), max);
-        document.documentElement.style.setProperty("--sidebar-list-width", `${nextWidth}px`);
-        updateSidebarWidth();
-      });
-
-      window.addEventListener("mouseup", () => {
-        if (!isResizing) return;
-        isResizing = false;
-        document.body.style.cursor = "";
-        document.body.style.userSelect = "";
       });
     }
 
