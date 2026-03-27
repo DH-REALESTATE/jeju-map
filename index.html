@@ -1115,46 +1115,48 @@
     function createMarkerImage(item) {
       const color = getMarkerColor(item.dealType, item.type);
       const label = `${item.dealType || ""} ${item.markerPrice || item.price || ""}`.trim();
-
+    
       const safeLabel = String(label)
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#39;");
-
+    
       const svg = `
-        <svg xmlns="http://www.w3.org/2000/svg" width="140" height="74" viewBox="0 0 140 74">
+        <svg xmlns="http://www.w3.org/2000/svg" width="150" height="76" viewBox="0 0 150 76">
           <defs>
             <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
-              <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="rgba(15,41,66,0.20)"/>
+              <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="rgba(15,41,66,0.18)"/>
             </filter>
           </defs>
-
+    
           <g filter="url(#shadow)">
-            <rect x="18" y="10" rx="18" ry="18" width="104" height="34"
-                  fill="#ffffff" stroke="${color}" stroke-width="2.5"/>
-            
-            <text x="70" y="32"
+            <!-- 가격 사각 라벨 -->
+            <rect x="20" y="10" width="110" height="34"
+                  fill="#ffffff" stroke="#d9e1e8" stroke-width="1.5"/>
+    
+            <text x="75" y="32"
                   text-anchor="middle"
                   font-size="15"
-                  font-weight="900"
+                  font-weight="800"
                   font-family="Apple SD Gothic Neo, Malgun Gothic, sans-serif"
-                  fill="${color}">${safeLabel}</text>
-
-            <path d="M70 44 C62 44 55.5 50.5 55.5 58.5 C55.5 67.5 70 74 70 74
-                     C70 74 84.5 67.5 84.5 58.5 C84.5 50.5 78 44 70 44 Z"
+                  fill="#17212b">${safeLabel}</text>
+    
+            <!-- 아래 핀 -->
+            <path d="M75 44 C67 44 60.5 50.5 60.5 58.5 C60.5 67.5 75 74 75 74
+                     C75 74 89.5 67.5 89.5 58.5 C89.5 50.5 83 44 75 44 Z"
                   fill="${color}" stroke="#ffffff" stroke-width="2"/>
-
-            <circle cx="70" cy="58.5" r="5.2" fill="#ffffff"/>
+    
+            <circle cx="75" cy="58.5" r="5.2" fill="#ffffff"/>
           </g>
         </svg>
       `;
-
+    
       return new kakao.maps.MarkerImage(
         "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg),
-        new kakao.maps.Size(140, 74),
-        { offset: new kakao.maps.Point(70, 74) }
+        new kakao.maps.Size(150, 76),
+        { offset: new kakao.maps.Point(75, 76) }
       );
     }
 
