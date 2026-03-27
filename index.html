@@ -1113,23 +1113,37 @@
 
     function createMarkerImage(item) {
       const color = getMarkerColor(item.dealType, item.type);
+    
       const svg = `
-        <svg xmlns="http://www.w3.org/2000/svg" width="44" height="56" viewBox="0 0 44 56">
+        <svg xmlns="http://www.w3.org/2000/svg" width="54" height="68" viewBox="0 0 54 68">
           <defs>
             <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
-              <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="rgba(0,0,0,0.18)"/>
+              <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="rgba(15,41,66,0.22)"/>
             </filter>
           </defs>
+    
           <g filter="url(#shadow)">
-            <path d="M22 0C10.1 0 0.5 9.6 0.5 21.5C0.5 36.4 22 55 22 55S43.5 36.4 43.5 21.5C43.5 9.6 33.9 0 22 0Z" fill="${color}"/>
-            <circle cx="22" cy="21.5" r="9.2" fill="#ffffff"/>
+            <path d="M27 2
+                     C14.3 2 4 12.3 4 25
+                     C4 41.5 27 64 27 64
+                     S50 41.5 50 25
+                     C50 12.3 39.7 2 27 2Z"
+                  fill="${color}"
+                  stroke="#ffffff"
+                  stroke-width="3"/>
+            
+            <circle cx="27" cy="25" r="10.5" fill="#ffffff"/>
+            <circle cx="27" cy="25" r="4.5" fill="${color}"/>
+    
+            <circle cx="20.5" cy="17.5" r="2.3" fill="rgba(255,255,255,0.55)"/>
           </g>
         </svg>
       `;
+    
       return new kakao.maps.MarkerImage(
         "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg),
-        new kakao.maps.Size(44, 56),
-        { offset: new kakao.maps.Point(22, 56) }
+        new kakao.maps.Size(54, 68),
+        { offset: new kakao.maps.Point(27, 68) }
       );
     }
 
