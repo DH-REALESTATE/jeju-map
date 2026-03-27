@@ -1175,19 +1175,6 @@
       return "46px";
     }
 
-    function getClusterMarkerElement(cluster) {
-      if (!cluster || typeof cluster.getClusterMarker !== "function") return null;
-      const clusterMarker = cluster.getClusterMarker();
-      if (!clusterMarker) return null;
-
-      if (typeof clusterMarker.getContent === "function") {
-        const content = clusterMarker.getContent();
-        if (content instanceof HTMLElement) return content;
-      }
-
-      return null;
-    }
-
     function setClusterBadgeSelected(cluster, isSelected) {
       const clusterMarker = cluster.getClusterMarker ? cluster.getClusterMarker() : null;
       if (!clusterMarker) return;
@@ -1223,7 +1210,15 @@
       el.style.boxShadow = "0 6px 16px rgba(15,41,66,0.12)";
       el.style.boxSizing = "border-box";
       el.style.whiteSpace = "nowrap";
+      el.style.cursor = "pointer";
+      el.style.pointerEvents = "auto";
       el.textContent = String(count);
+
+      el.addEventListener("click", async function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        await handleClusterSelection(cluster);
+      });
 
       clusterMarker.setContent(el);
     }
@@ -1329,6 +1324,36 @@
       refreshMapLayout();
     }
 
+    async function handleClusterSelection(cluster) {
+      await hideRoadview();
+
+      const clusterItems = cluster.getMarkers()
+        .map(marker => marker.__property)
+        .filter(Boolean);
+
+      if (!clusterItems.length) return;
+
+      const topItem = clusterItems[0];
+
+      state.selectedMarkerId = null;
+      state.selectedClusterKey = getClusterKeyFromItems(clusterItems);
+
+      updateMarkerSelection(null);
+      renderList(clusterItems);
+      propertyList.scrollTop = 0;
+
+      openDetailPanel(topItem);
+      highlightCard(topItem.id);
+
+      setResultInfo(`선택 지역 ${clusterItems.length}건`);
+      setListInfo(`총 ${clusterItems.length}개 매물`);
+
+      setTimeout(() => {
+        refreshClusterBadges();
+        setClusterBadgeSelected(cluster, true);
+      }, 0);
+    }
+
     function initMap() {
       state.map = new kakao.maps.Map(document.getElementById("map"), {
         center: new kakao.maps.LatLng(33.38, 126.55),
@@ -1410,33 +1435,7 @@
       });
 
       kakao.maps.event.addListener(state.clusterer, "clusterclick", async function (cluster) {
-        await hideRoadview();
-
-        const clusterItems = cluster.getMarkers()
-          .map(marker => marker.__property)
-          .filter(Boolean);
-
-        if (!clusterItems.length) return;
-
-        const topItem = clusterItems[0];
-
-        state.selectedMarkerId = null;
-        state.selectedClusterKey = getClusterKeyFromItems(clusterItems);
-
-        updateMarkerSelection(null);
-        renderList(clusterItems);
-        propertyList.scrollTop = 0;
-
-        openDetailPanel(topItem);
-        highlightCard(topItem.id);
-
-        setResultInfo(`선택 지역 ${clusterItems.length}건`);
-        setListInfo(`총 ${clusterItems.length}개 매물`);
-
-        setTimeout(() => {
-          refreshClusterBadges();
-          setClusterBadgeSelected(cluster, true);
-        }, 0);
+        await handleClusterSelection(cluster);
       });
 
       kakao.maps.event.addListener(state.map, "click", async function () {
