@@ -1348,12 +1348,7 @@
     function moveMapToProperty(item) {
       if (!item || !state.map) return;
       const position = new kakao.maps.LatLng(item.lat, item.lng);
-      state.isProgrammaticMove = true;
       state.map.setCenter(position);
-      state.map.relayout();
-      setTimeout(() => {
-        state.isProgrammaticMove = false;
-      }, 250);
     }
 
     function renderMarkers(data) {
