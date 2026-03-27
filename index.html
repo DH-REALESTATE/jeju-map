@@ -165,13 +165,37 @@
       padding: 18px;
     }
 
+    .detail-title-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
     .detail-title {
-      margin: 0 0 10px;
+      margin: 0;
+      flex: 1;
       font-size: 18px;
       line-height: 1.5;
       color: #1d2733;
       letter-spacing: -0.4px;
       font-weight: 900;
+    }
+
+    .detail-type-badge {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: #f3f6fb;
+      color: #7f4dff;
+      font-size: 11px;
+      font-weight: 900;
+      line-height: 1;
+      white-space: nowrap;
     }
 
     .detail-desc {
@@ -869,17 +893,16 @@
               </div>
 
               <div class="detail-content">
-                <h2 class="detail-title" id="detailTitle">매물을 선택하세요</h2>
+                <div class="detail-title-row">
+                  <h2 class="detail-title" id="detailTitle">매물을 선택하세요</h2>
+                  <div class="detail-type-badge" id="detailTypeBadge"></div>
+                </div>
 
                 <div class="detail-price-box">
                   <div class="detail-price-badge" id="detailPriceBadge">매물</div>
                   <div class="detail-price" id="detailPrice"></div>
                   <div class="detail-address" id="detailAddress"></div>
                 </div>
-
-                <div class="detail-desc" id="detailDesc"></div>
-
-                <div class="detail-info-list" id="detailInfoList"></div>
 
                 <div class="detail-meta-grid" id="detailMetaGrid">
                   <div class="detail-meta-item">
@@ -895,6 +918,10 @@
                     <span class="detail-meta-value" id="detailRegionValue">-</span>
                   </div>
                 </div>
+
+                <div class="detail-desc" id="detailDesc"></div>
+
+                <div class="detail-info-list" id="detailInfoList"></div>
 
                 <div class="detail-agent-card">
                   <div class="detail-agent-top">
@@ -988,6 +1015,7 @@
     const detailCloseBtn = document.getElementById("detailCloseBtn");
     const detailHero = document.getElementById("detailHero");
     const detailTitle = document.getElementById("detailTitle");
+    const detailTypeBadge = document.getElementById("detailTypeBadge");
     const detailPrice = document.getElementById("detailPrice");
     const detailPriceBadge = document.getElementById("detailPriceBadge");
     const detailAddress = document.getElementById("detailAddress");
@@ -1363,19 +1391,27 @@
 
       detailTitle.textContent = item.title || "";
 
+      if (item.type) {
+        detailTypeBadge.textContent = item.type;
+        detailTypeBadge.style.display = "inline-flex";
+      } else {
+        detailTypeBadge.textContent = "";
+        detailTypeBadge.style.display = "none";
+      }
+
       detailPrice.textContent = `${item.dealType || ""} ${item.price || ""}`.trim();
       detailPriceBadge.textContent = item.type || "매물";
-      detailAddress.textContent = `${item.region || ""} ${item.address || ""}`.trim();
+      detailAddress.textContent = `${item.address || ""}`.trim();
+
+      detailAreaValue.textContent = item.area || "-";
+      detailTypeValue.textContent = item.type || "-";
+      detailRegionValue.textContent = item.region || "-";
 
       detailDesc.textContent = item.desc || "";
       detailInfoList.innerHTML = "";
 
       const info = await loadPropertyInfo(item);
       renderDetailInfoRows(info);
-
-      detailAreaValue.textContent = item.area || "-";
-      detailTypeValue.textContent = item.type || "-";
-      detailRegionValue.textContent = item.region || "-";
 
       detailAgentName.textContent = `${item.agentName || "담당자"} ${item.agentTitle || ""}`.trim();
       detailAgentOffice.textContent = item.agentOffice || "중개사무소";
