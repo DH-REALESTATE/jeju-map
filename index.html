@@ -12,7 +12,7 @@
       --sidebar-list-width: 360px;
       --detail-panel-width: 420px;
       --sidebar-current-width: var(--sidebar-list-width);
-      --resizer-hit-width: 16px;
+      --resizer-hit-width: 0px;
       --brand: #14b8a6;
       --bg: #f4f7fb;
       --line: #e7edf3;
@@ -683,6 +683,8 @@
     .actions { display: none; }
 
     .resizer {
+      display: none;
+      /*
       position: absolute;
       top: 0;
       left: calc(var(--sidebar-current-width) - (var(--resizer-hit-width) / 2));
@@ -696,6 +698,7 @@
       cursor: col-resize;
       user-select: none;
       z-index: 999;
+      */
     }
 
     .map-wrap {
