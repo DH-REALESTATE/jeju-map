@@ -217,6 +217,46 @@
       white-space: pre-line;
     }
 
+    .detail-info-list {
+      margin-bottom: 16px;
+      border-top: 1px solid #eceff3;
+      border-bottom: 1px solid #eceff3;
+      background: #fff;
+    }
+
+    .detail-info-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 12px 2px;
+      border-bottom: 1px solid #f1f3f6;
+    }
+
+    .detail-info-row:last-child {
+      border-bottom: 0;
+    }
+
+    .detail-info-label {
+      min-width: 120px;
+      font-size: 13px;
+      font-weight: 800;
+      color: #5f6b78;
+      text-align: left;
+      line-height: 1.6;
+    }
+
+    .detail-info-value {
+      flex: 1;
+      font-size: 13px;
+      font-weight: 700;
+      color: #1f2a36;
+      text-align: right;
+      line-height: 1.6;
+      white-space: pre-line;
+      word-break: keep-all;
+    }
+
     .detail-price-box {
       padding: 14px 14px 12px;
       border-radius: 14px;
@@ -818,7 +858,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title">제주도 부동산 지도 Ver 1.008</div>
+              <div class="brand-title">제주도 부동산 지도 Ver 1.009</div>
             </div>
           </div>
 
@@ -870,6 +910,8 @@
                 <div class="detail-link-row" id="detailLinkRow"></div>
 
                 <div class="detail-desc" id="detailDesc"></div>
+
+                <div class="detail-info-list" id="detailInfoList"></div>
 
                 <div class="detail-price-box">
                   <div class="detail-price-badge" id="detailPriceBadge">매물</div>
@@ -990,6 +1032,7 @@
     const detailPriceBadge = document.getElementById("detailPriceBadge");
     const detailAddress = document.getElementById("detailAddress");
     const detailDesc = document.getElementById("detailDesc");
+    const detailInfoList = document.getElementById("detailInfoList");
     const detailFeatures = document.getElementById("detailFeatures");
     const detailPhone = document.getElementById("detailPhone");
     const detailMapBtn = document.getElementById("detailMapBtn");
@@ -1068,7 +1111,8 @@
         agentOffice: item.agentOffice ?? "중개사무소",
         agentImage: item.agentImage ?? "",
         date: item.date ?? "",
-        dateLabel: item.dateLabel ?? ""
+        dateLabel: item.dateLabel ?? "",
+        desc_folder: item.desc_folder ?? ""
       };
     }
 
@@ -1268,7 +1312,39 @@
       return raw.length >= 2 ? raw.slice(-2) : raw;
     }
 
-    function openDetailPanel(item) {
+    async function loadPropertyInfo(item) {
+      if (!item.desc_folder) return {};
+
+      try {
+        const res = await fetch(item.desc_folder);
+        if (!res.ok) throw new Error("info.json 불러오기 실패");
+        return await res.json();
+      } catch (err) {
+        console.error("상세 정보 불러오기 실패:", err);
+        return {};
+      }
+    }
+
+    function renderDetailInfoRows(info) {
+      const rows = Array.isArray(info.infoRows) ? info.infoRows : [];
+
+      if (!rows.length) {
+        detailInfoList.innerHTML = "";
+        return;
+      }
+
+      detailInfoList.innerHTML = rows
+        .filter(row => String(row?.value || "").trim() !== "")
+        .map(row => `
+          <div class="detail-info-row">
+            <div class="detail-info-label">${escapeHtml(row.label || "")}</div>
+            <div class="detail-info-value">${escapeHtml(row.value || "")}</div>
+          </div>
+        `)
+        .join("");
+    }
+
+    async function openDetailPanel(item) {
       currentDetailItem = item;
       sidebar.classList.add("expanded");
       updateSidebarWidth();
@@ -1287,11 +1363,15 @@
       `;
 
       detailDesc.textContent = item.desc || "";
+
+      const info = await loadPropertyInfo(item);
+      renderDetailInfoRows(info);
+
       detailAreaValue.textContent = item.area || "-";
       detailTypeValue.textContent = item.type || "-";
       detailRegionValue.textContent = item.region || "-";
 
-      detailAgentName.textContent = `${item.agentName || "담당자"} ${item.agentTitle || "대표"}`;
+      detailAgentName.textContent = `${item.agentName || "담당자"} ${item.agentTitle || ""}`.trim();
       detailAgentOffice.textContent = item.agentOffice || "중개사무소";
 
       if (item.agentImage) {
@@ -1342,7 +1422,7 @@
       renderList(clusterItems);
       propertyList.scrollTop = 0;
 
-      openDetailPanel(topItem);
+      await openDetailPanel(topItem);
       highlightCard(topItem.id);
 
       setResultInfo(`선택 지역 ${clusterItems.length}건`);
@@ -1616,7 +1696,7 @@
 
           highlightCard(item.id);
           updateMarkerSelection(item.id);
-          openDetailPanel(item);
+          await openDetailPanel(item);
 
           setResultInfo("선택 매물 1건");
           setListInfo("총 1개 매물");
@@ -1734,7 +1814,7 @@
           const item = data.find(v => v.id === Number(card.dataset.id));
           if (!item) return;
 
-          openDetailPanel(item);
+          await openDetailPanel(item);
           updateMarkerSelection(item.id);
           await focusProperty(item.id);
         });
