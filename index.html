@@ -6,7 +6,7 @@
   <title>제주 프리미엄 부동산 지도</title>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  
+
   <style>
     :root {
       --sidebar-list-width: 360px;
@@ -167,35 +167,32 @@
 
     .detail-title-row {
       display: flex;
-      align-items: flex-start;
       justify-content: space-between;
+      align-items: center;
       gap: 10px;
       margin-bottom: 10px;
     }
 
     .detail-title {
       margin: 0;
-      flex: 1;
       font-size: 18px;
-      line-height: 1.5;
+      font-weight: 900;
       color: #1d2733;
       letter-spacing: -0.4px;
-      font-weight: 900;
+      flex: 1;
+      line-height: 1.5;
     }
 
     .detail-type-badge {
       flex-shrink: 0;
-      display: inline-flex;
-      align-items: center;
-      min-height: 28px;
-      padding: 5px 10px;
+      padding: 6px 10px;
       border-radius: 999px;
       background: #f3f6fb;
       color: #7f4dff;
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 900;
-      line-height: 1;
       white-space: nowrap;
+      line-height: 1;
     }
 
     .detail-desc {
@@ -1390,14 +1387,8 @@
       detailHero.style.backgroundImage = `url('${escapeHtml(item.image)}')`;
 
       detailTitle.textContent = item.title || "";
-
-      if (item.type) {
-        detailTypeBadge.textContent = item.type;
-        detailTypeBadge.style.display = "inline-flex";
-      } else {
-        detailTypeBadge.textContent = "";
-        detailTypeBadge.style.display = "none";
-      }
+      detailTypeBadge.textContent = item.type || "";
+      detailTypeBadge.style.display = item.type ? "inline-flex" : "none";
 
       detailPrice.textContent = `${item.dealType || ""} ${item.price || ""}`.trim();
       detailPriceBadge.textContent = item.type || "매물";
