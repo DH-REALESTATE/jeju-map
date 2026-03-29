@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.014</title>
+  <title>제주 프리미엄 부동산 지도 Ver 1.015</title>
 
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"/>
@@ -343,22 +343,23 @@
     }
 
     .detail-agent-card {
-      border-radius: 14px;
-      border: 1px solid #eceff3;
-      background: #fff;
-      padding: 14px;
+      border-radius: 18px;
+      border: 1px solid #e9eef4;
+      background: linear-gradient(180deg, #ffffff, #fafcff);
+      padding: 16px;
       margin-bottom: 16px;
+      box-shadow: 0 6px 18px rgba(15, 41, 66, 0.04);
     }
 
     .detail-agent-top {
       display: flex;
-      align-items: center;
-      gap: 10px;
+      align-items: flex-start;
+      gap: 14px;
     }
 
     .detail-agent-avatar {
-      width: 42px;
-      height: 42px;
+      width: 52px;
+      height: 52px;
       border-radius: 50%;
       background: #eef3f7;
       display: flex;
@@ -366,8 +367,10 @@
       justify-content: center;
       color: #4d5d6d;
       font-weight: 900;
+      font-size: 13px;
       overflow: hidden;
       flex-shrink: 0;
+      border: 1px solid #e5ebf1;
     }
 
     .detail-agent-avatar img {
@@ -377,16 +380,60 @@
       display: block;
     }
 
+    .detail-agent-main {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .detail-agent-name-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 4px;
+    }
+
     .detail-agent-name {
       font-size: 15px;
       font-weight: 900;
       color: #1f2a36;
+      line-height: 1.4;
+    }
+
+    .detail-agent-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: #5f6b78;
+      line-height: 1.4;
     }
 
     .detail-agent-office {
+      font-size: 13px;
+      font-weight: 800;
+      color: #223244;
+      line-height: 1.5;
+      margin-bottom: 4px;
+    }
+
+    .detail-agent-address {
       font-size: 12px;
-      color: #8a97a5;
-      margin-top: 3px;
+      color: #7f8b98;
+      line-height: 1.55;
+      margin-bottom: 3px;
+    }
+
+    .detail-agent-regno {
+      font-size: 12px;
+      color: #7f8b98;
+      line-height: 1.55;
+      margin-bottom: 3px;
+    }
+
+    .detail-agent-phone-inline {
+      font-size: 13px;
+      font-weight: 800;
+      color: #223244;
+      line-height: 1.5;
     }
 
     .detail-features {
@@ -413,10 +460,7 @@
     }
 
     .detail-phone {
-      margin-bottom: 12px;
-      font-size: 14px;
-      color: #233345;
-      font-weight: 800;
+      display: none;
     }
 
     .detail-actions {
@@ -864,7 +908,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title">제주도 부동산 지도 Ver 1.014</div>
+              <div class="brand-title">제주도 부동산 지도 Ver 1.015</div>
             </div>
           </div>
 
@@ -944,9 +988,17 @@
                 <div class="detail-agent-card">
                   <div class="detail-agent-top">
                     <div class="detail-agent-avatar" id="detailAgentAvatar">담당</div>
-                    <div>
-                      <div class="detail-agent-name" id="detailAgentName">담당자 대표</div>
-                      <div class="detail-agent-office" id="detailAgentOffice">중개사무소</div>
+
+                    <div class="detail-agent-main">
+                      <div class="detail-agent-name-row">
+                        <div class="detail-agent-name" id="detailAgentName"></div>
+                        <div class="detail-agent-title" id="detailAgentTitle"></div>
+                      </div>
+
+                      <div class="detail-agent-office" id="detailAgentOffice"></div>
+                      <div class="detail-agent-address" id="detailAgentAddress"></div>
+                      <div class="detail-agent-regno" id="detailAgentRegNo"></div>
+                      <div class="detail-agent-phone-inline" id="detailAgentPhoneInline"></div>
                     </div>
                   </div>
                 </div>
@@ -1021,6 +1073,7 @@
     let selectedDeal = "all";
     let selectedType = "all";
     let currentDetailItem = null;
+    let agentCache = {};
 
     const sidebar = document.getElementById("sidebar");
     const propertyList = document.getElementById("propertyList");
@@ -1050,9 +1103,14 @@
     const detailAreaValue = document.getElementById("detailAreaValue");
     const detailTypeValue = document.getElementById("detailTypeValue");
     const detailRegionValue = document.getElementById("detailRegionValue");
-    const detailAgentOffice = document.getElementById("detailAgentOffice");
+
     const detailAgentAvatar = document.getElementById("detailAgentAvatar");
     const detailAgentName = document.getElementById("detailAgentName");
+    const detailAgentTitle = document.getElementById("detailAgentTitle");
+    const detailAgentOffice = document.getElementById("detailAgentOffice");
+    const detailAgentAddress = document.getElementById("detailAgentAddress");
+    const detailAgentRegNo = document.getElementById("detailAgentRegNo");
+    const detailAgentPhoneInline = document.getElementById("detailAgentPhoneInline");
 
     function updateSidebarWidth() {
       const listWidth = getComputedStyle(document.documentElement).getPropertyValue("--sidebar-list-width").trim() || "360px";
@@ -1115,10 +1173,7 @@
         phone: item.phone ?? "",
         image: item.image ?? "",
         link: item.link ?? "#",
-        agentName: item.agentName ?? "담당자",
-        agentTitle: item.agentTitle ?? "대표",
-        agentOffice: item.agentOffice ?? "중개사무소",
-        agentImage: item.agentImage ?? "",
+        agent_folder: item.agent_folder ?? "",
         date: item.date ?? "",
         dateLabel: item.dateLabel ?? "",
         desc_folder: item.desc_folder ?? ""
@@ -1185,6 +1240,22 @@
         `;
         setResultInfo("총 0건");
         setListInfo("총 0개 매물");
+      }
+    }
+
+    async function loadAgent(agentPath) {
+      if (!agentPath) return null;
+      if (agentCache[agentPath]) return agentCache[agentPath];
+
+      try {
+        const res = await fetch(agentPath, { cache: "no-store" });
+        if (!res.ok) throw new Error(`agent.json 불러오기 실패: ${res.status}`);
+        const data = await res.json();
+        agentCache[agentPath] = data;
+        return data;
+      } catch (e) {
+        console.error("agent 로딩 실패", e);
+        return null;
       }
     }
 
@@ -1433,20 +1504,34 @@
       const info = await loadPropertyInfo(item);
       renderDetailInfoRows(info);
 
-      detailAgentName.textContent = `${item.agentName || "담당자"} ${item.agentTitle || ""}`.trim();
-      detailAgentOffice.textContent = item.agentOffice || "중개사무소";
+      const agent = await loadAgent(item.agent_folder);
 
-      if (item.agentImage) {
-        detailAgentAvatar.innerHTML = `<img src="${escapeHtml(item.agentImage)}" alt="agent">`;
+      if (agent) {
+        detailAgentName.textContent = agent.agentName || "";
+        detailAgentTitle.textContent = agent.agentTitle || "";
+        detailAgentOffice.textContent = agent.agentOffice || "";
+        detailAgentAddress.textContent = agent.agentAddress || "";
+        detailAgentRegNo.textContent = agent.agentRegNo || "";
+
+        const phoneText = [agent.phone1, agent.phone2].filter(Boolean).join(" / ");
+        detailAgentPhoneInline.textContent = phoneText || "";
+
+        detailAgentAvatar.textContent = makeAgentInitial(agent.agentName || "담당");
       } else {
-        detailAgentAvatar.textContent = makeAgentInitial(item.agentName || "담당자");
+        detailAgentName.textContent = "";
+        detailAgentTitle.textContent = "";
+        detailAgentOffice.textContent = "";
+        detailAgentAddress.textContent = "";
+        detailAgentRegNo.textContent = "";
+        detailAgentPhoneInline.textContent = "";
+        detailAgentAvatar.textContent = "담당";
       }
 
       detailFeatures.innerHTML = (item.features || [])
         .map(feature => `<span>${escapeHtml(feature)}</span>`)
         .join("");
 
-      detailPhone.textContent = item.phone ? `문의 ${item.phone}` : "문의 가능";
+      detailPhone.textContent = "";
       detailLinkBtn.href = item.link && item.link !== "#" ? item.link : "#";
 
       detailMapBtn.onclick = async () => {
@@ -1829,11 +1914,6 @@
         const titleText = escapeHtml(item.title || "매물명");
         const dateText = item.dateLabel || (item.date ? getRelativeDate(item.date) : "");
 
-        const agentName = escapeHtml(item.agentName || "담당자");
-        const agentTitle = escapeHtml(item.agentTitle || "대표");
-        const officeName = escapeHtml(item.agentOffice || "중개사무소");
-        const agentInitial = makeAgentInitial(item.agentName || "담당자");
-
         return `
           <article class="card" data-id="${item.id}">
             <div class="card-inner-row">
@@ -1853,19 +1933,6 @@
                 </div>
 
                 <div class="card-spec">${areaText}<br>${titleText}</div>
-
-                <div class="card-agent-row">
-                  <div class="card-agent-left">
-                    <div class="card-agent-avatar">
-                      ${item.agentImage ? `<img src="${escapeHtml(item.agentImage)}" alt="agent">` : agentInitial}
-                    </div>
-                    <div>
-                      <span class="card-agent-name">${agentName}</span>
-                      <span class="card-agent-title">${agentTitle}</span>
-                      <div class="card-agent-office">${officeName}</div>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </article>
@@ -1915,8 +1982,6 @@
           item.address ?? "",
           item.desc ?? "",
           item.type ?? "",
-          item.agentName ?? "",
-          item.agentOffice ?? "",
           item.date ?? "",
           item.dateLabel ?? "",
           ...(item.features ?? [])
