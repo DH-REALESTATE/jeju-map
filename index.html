@@ -159,9 +159,14 @@
     .detail-title-row {
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: flex-start;
       gap: 10px;
       margin-bottom: 10px;
+    }
+
+    .detail-title-wrap {
+      flex: 1;
+      min-width: 0;
     }
 
     .detail-title {
@@ -174,6 +179,14 @@
       line-height: 1.5;
     }
 
+    .detail-listing-no {
+      margin-top: 4px;
+      font-size: 12px;
+      font-weight: 800;
+      color: #8a97a5;
+      line-height: 1.4;
+    }
+
     .detail-type-badge {
       flex-shrink: 0;
       padding: 6px 10px;
@@ -184,6 +197,7 @@
       font-weight: 900;
       white-space: nowrap;
       line-height: 1;
+      margin-top: 2px;
     }
 
     .detail-meta-grid {
@@ -890,7 +904,10 @@
 
               <div class="detail-content">
                 <div class="detail-title-row">
-                  <h2 class="detail-title" id="detailTitle">매물을 선택하세요</h2>
+                  <div class="detail-title-wrap">
+                    <h2 class="detail-title" id="detailTitle">매물을 선택하세요</h2>
+                    <div class="detailListingNo detail-listing-no" id="detailListingNo"></div>
+                  </div>
                   <div class="detail-type-badge" id="detailTypeBadge"></div>
                 </div>
 
@@ -1013,6 +1030,7 @@
     const detailCloseBtn = document.getElementById("detailCloseBtn");
     const detailHero = document.getElementById("detailHero");
     const detailTitle = document.getElementById("detailTitle");
+    const detailListingNo = document.getElementById("detailListingNo");
     const detailTypeBadge = document.getElementById("detailTypeBadge");
     const detailPrice = document.getElementById("detailPrice");
     const detailPriceBadge = document.getElementById("detailPriceBadge");
@@ -1078,6 +1096,7 @@
       return {
         id: item.id ?? index + 1,
         title: item.title ?? "제목 없음",
+        listingNo: item.listingNo ?? "",
         dealType: item.dealFilter ?? item.dealType ?? "매매",
         type: item.typeFilter ?? item.type ?? "",
         features: Array.isArray(item.features) ? item.features : [],
@@ -1392,6 +1411,7 @@
       detailHero.style.backgroundImage = `url('${escapeHtml(item.image)}')`;
 
       detailTitle.textContent = item.title || "";
+      detailListingNo.textContent = item.listingNo ? `매물번호 ${item.listingNo}` : "";
       detailTypeBadge.textContent = item.type || "";
       detailTypeBadge.style.display = item.type ? "inline-flex" : "none";
 
@@ -1882,6 +1902,7 @@
       state.filtered = state.all.filter(item => {
         const text = [
           item.title ?? "",
+          item.listingNo ?? "",
           item.region ?? "",
           item.address ?? "",
           item.desc ?? "",
