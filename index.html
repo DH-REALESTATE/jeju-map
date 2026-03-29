@@ -1190,46 +1190,38 @@
 
     function getBadgeWidthByText(text) {
       const len = String(text ?? "").length;
-      if (len >= 8) return 108;
-      if (len >= 6) return 92;
-      if (len >= 4) return 78;
-      if (len === 3) return 66;
+      if (len >= 3) return 70;
       if (len === 2) return 58;
-      return 50;
+      return 46;
     }
 
-    function getMarkerDisplayText(item, fallback = "") {
-      const text = String(fallback || item.markerPrice || item.price || "매물").trim();
-      return text;
-    }
-
-    function createMarkerImage(item, isSelected = false, label = "") {
-      const text = getMarkerDisplayText(item, label);
+    function createMarkerImage(item, isSelected = false, label = "1") {
+      const text = String(label ?? "1");
       const boxWidth = getBadgeWidthByText(text);
-      const svgWidth = boxWidth + 20;
+      const svgWidth = boxWidth + 12;
 
-      const bgColor = isSelected ? "#2563eb" : "rgba(255,255,255,0.96)";
-      const textColor = isSelected ? "#ffffff" : "#1f6fff";
-      const borderColor = isSelected ? "#2563eb" : "rgba(31,111,255,0.20)";
+      const bgColor = isSelected ? "#2563eb" : "rgba(255,255,255,0.82)";
+      const textColor = isSelected ? "#ffffff" : "#2563eb";
+      const borderColor = isSelected ? "#2563eb" : "rgba(255,255,255,0.55)";
 
       const svg = `
         <svg xmlns="http://www.w3.org/2000/svg" width="${svgWidth}" height="46" viewBox="0 0 ${svgWidth} 46">
           <defs>
             <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
-              <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="rgba(15,41,66,0.16)"/>
+              <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="rgba(15,41,66,0.12)"/>
             </filter>
           </defs>
           <g filter="url(#shadow)">
-            <rect x="6" y="0.5" width="${boxWidth + 8}" height="45" rx="14" ry="14"
+            <rect x="6" y="0.5" width="${boxWidth}" height="45" rx="14" ry="14"
                   fill="${bgColor}"
                   stroke="${borderColor}"
                   stroke-width="1"/>
-            <text x="${svgWidth / 2}" y="29"
+            <text x="${6 + (boxWidth / 2)}" y="29"
                   text-anchor="middle"
-                  font-size="15"
+                  font-size="16"
                   font-weight="900"
                   font-family="${UI_FONT_STACK}"
-                  fill="${textColor}">${escapeHtml(text)}</text>
+                  fill="${textColor}">${text}</text>
           </g>
         </svg>
       `;
@@ -1246,7 +1238,7 @@
       state.markers.forEach(marker => {
         const item = marker.__property;
         const isSelected = item && item.id === selectedId;
-        marker.setImage(createMarkerImage(item, isSelected, item.markerPrice || ""));
+        marker.setImage(createMarkerImage(item, isSelected, "1"));
       });
     }
 
@@ -1753,7 +1745,7 @@
 
         const marker = new kakao.maps.Marker({
           position,
-          image: createMarkerImage(item, state.selectedMarkerId === item.id, item.markerPrice || ""),
+          image: createMarkerImage(item, state.selectedMarkerId === item.id, "1"),
           clickable: true
         });
 
