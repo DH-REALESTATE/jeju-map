@@ -1,1 +1,9 @@
-
+{
+  "agentName": "박날아",
+  "agentImage": "./agent_01/agent.jpg",
+  "agentTitle": "대표",
+  "agentOffice": "날아올라부동산중개",
+  "agentAddress": "제주특별자치도 제주시 국기로 43",
+  "agentRegNo": "50110-2019-00232",
+  "phone1": "010-8844-2366"
+}
