@@ -1170,10 +1170,17 @@
         desc: item.desc ?? "",
         lat: Number(item.lat),
         lng: Number(item.lng),
-        phone: item.phone ?? "",
         image: item.image ?? "",
         link: item.link ?? "#",
         agent_folder: item.agent_folder ?? "",
+        agentName: "",
+        agentTitle: "",
+        agentOffice: "",
+        agentAddress: "",
+        agentRegNo: "",
+        agentImage: "",
+        phone1: "",
+        phone2: "",
         date: item.date ?? "",
         dateLabel: item.dateLabel ?? "",
         desc_folder: item.desc_folder ?? ""
@@ -1217,32 +1224,6 @@
       if (listInfoText) listInfoText.textContent = text;
     }
 
-    async function loadProperties() {
-      try {
-        const res = await fetch("./properties.json");
-        if (!res.ok) throw new Error("properties.json 불러오기 실패");
-
-        const data = await res.json();
-        state.all = data
-          .map(normalizeProperty)
-          .filter(item => Number.isFinite(item.lat) && Number.isFinite(item.lng));
-
-        applyFilter();
-      } catch (err) {
-        console.error("매물 데이터 불러오기 실패:", err);
-        propertyList.innerHTML = `
-          <div class="card" style="padding:18px; cursor:default; border-bottom:0;">
-            <div class="card-body" style="padding:0;">
-              <h3 style="margin-bottom:6px;">매물 데이터를 불러오지 못했습니다</h3>
-              <div>properties.json 파일 경로와 형식을 확인해 주세요.</div>
-            </div>
-          </div>
-        `;
-        setResultInfo("총 0건");
-        setListInfo("총 0개 매물");
-      }
-    }
-
     async function loadAgent(agentPath) {
       if (!agentPath) return null;
       if (agentCache[agentPath]) return agentCache[agentPath];
@@ -1256,6 +1237,52 @@
       } catch (e) {
         console.error("agent 로딩 실패", e);
         return null;
+      }
+    }
+
+    async function loadProperties() {
+      try {
+        const res = await fetch("./properties.json");
+        if (!res.ok) throw new Error("properties.json 불러오기 실패");
+
+        const data = await res.json();
+
+        const normalized = data
+          .map(normalizeProperty)
+          .filter(item => Number.isFinite(item.lat) && Number.isFinite(item.lng));
+
+        const enriched = await Promise.all(
+          normalized.map(async (item) => {
+            const agent = await loadAgent(item.agent_folder);
+
+            return {
+              ...item,
+              agentName: agent?.agentName ?? "",
+              agentTitle: agent?.agentTitle ?? "",
+              agentOffice: agent?.agentOffice ?? "",
+              agentAddress: agent?.agentAddress ?? "",
+              agentRegNo: agent?.agentRegNo ?? "",
+              agentImage: agent?.agentImage ?? "",
+              phone1: agent?.phone1 ?? "",
+              phone2: agent?.phone2 ?? ""
+            };
+          })
+        );
+
+        state.all = enriched;
+        applyFilter();
+      } catch (err) {
+        console.error("매물 데이터 불러오기 실패:", err);
+        propertyList.innerHTML = `
+          <div class="card" style="padding:18px; cursor:default; border-bottom:0;">
+            <div class="card-body" style="padding:0;">
+              <h3 style="margin-bottom:6px;">매물 데이터를 불러오지 못했습니다</h3>
+              <div>properties.json 파일 경로와 형식을 확인해 주세요.</div>
+            </div>
+          </div>
+        `;
+        setResultInfo("총 0건");
+        setListInfo("총 0개 매물");
       }
     }
 
@@ -1516,7 +1543,11 @@
         const phoneText = [agent.phone1, agent.phone2].filter(Boolean).join(" / ");
         detailAgentPhoneInline.textContent = phoneText || "";
 
-        detailAgentAvatar.textContent = makeAgentInitial(agent.agentName || "담당");
+        if (agent.agentImage) {
+          detailAgentAvatar.innerHTML = `<img src="${escapeHtml(agent.agentImage)}" alt="agent">`;
+        } else {
+          detailAgentAvatar.textContent = makeAgentInitial(agent.agentName || "담당");
+        }
       } else {
         detailAgentName.textContent = "";
         detailAgentTitle.textContent = "";
@@ -1914,6 +1945,11 @@
         const titleText = escapeHtml(item.title || "매물명");
         const dateText = item.dateLabel || (item.date ? getRelativeDate(item.date) : "");
 
+        const agentName = escapeHtml(item.agentName || "담당자");
+        const agentTitle = escapeHtml(item.agentTitle || "");
+        const officeName = escapeHtml(item.agentOffice || "");
+        const agentInitial = makeAgentInitial(item.agentName || "담당자");
+
         return `
           <article class="card" data-id="${item.id}">
             <div class="card-inner-row">
@@ -1933,6 +1969,19 @@
                 </div>
 
                 <div class="card-spec">${areaText}<br>${titleText}</div>
+
+                <div class="card-agent-row">
+                  <div class="card-agent-left">
+                    <div class="card-agent-avatar">
+                      ${item.agentImage ? `<img src="${escapeHtml(item.agentImage)}" alt="agent">` : agentInitial}
+                    </div>
+                    <div>
+                      <span class="card-agent-name">${agentName}</span>
+                      <span class="card-agent-title">${agentTitle}</span>
+                      <div class="card-agent-office">${officeName}</div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </article>
@@ -1982,6 +2031,8 @@
           item.address ?? "",
           item.desc ?? "",
           item.type ?? "",
+          item.agentName ?? "",
+          item.agentOffice ?? "",
           item.date ?? "",
           item.dateLabel ?? "",
           ...(item.features ?? [])
