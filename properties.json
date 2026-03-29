@@ -2,9 +2,9 @@
 
   {
     "id": 235,
+    "listingNo": "디-235",
     "date": "2026-01-25",
     "title": "제주푸르지오더퍼스트 104동",
-    "listingNo": "디-235",
     "desc": "제주 영어교육도시 핵심 입지의 브랜드 아파트 매물입니다. 국제학교 최고의 입지를 자랑합니다.",
     "type": "아파트",
     "dealFilter": "매매",
@@ -27,8 +27,10 @@
   
   {
     "id": 2,
+    "listingNo": "테-002",
     "date": "2026-01-27",
     "title": "영어교육도시 인근 수익형 상가",
+    "desc": "유동인구가 안정적인 핵심 입지의 수익형 상가 매물입니다.",
     "type": "상가",
     "dealFilter": "매매",
     "region": "영어교육도시",
@@ -38,7 +40,6 @@
     "lat": 33.3025,
     "lng": 126.2863,
     "features": ["영어교육도시", "투자용"],
-    "desc": "유동인구가 안정적인 핵심 입지의 수익형 상가 매물입니다.",
     "image": "https://raw.githubusercontent.com/DH-REALESTATE/jeju-map/main/dh_real/235/image1.jpeg",
     "link": "https://land.jejukcr.com/offer/80360494",
     "phone": "064-000-0000",
@@ -50,6 +51,8 @@
   
   {
     "id": 3,
+    "listingNo": "테-003",
+    "desc": "도로 접한 정방형 토지로 전원주택이나 장기 투자 검토에 적합합니다.",
     "date": "2026-03-25",
     "title": "구좌 감귤밭 인접 토지",
     "type": "토지",
@@ -61,7 +64,6 @@
     "lat": 33.5169,
     "lng": 126.8302,
     "features": ["투자용", "전원형"],
-    "desc": "도로 접한 정방형 토지로 전원주택이나 장기 투자 검토에 적합합니다.",
     "image": "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1200&q=80",
     "link": "https://land.jejukcr.com/offer/64166600",
     "phone": "064-745-0531",
@@ -73,6 +75,8 @@
   
   {
     "id": 4,
+    "listingNo": "테-004",
+    "desc": "중문권 생활 편의성과 관광 수요 접근성이 좋은 실속형 오피스텔.",
     "date": "2026-02-15",
     "title": "중문 관광단지 근처 오피스텔",
     "type": "원룸",
@@ -84,7 +88,6 @@
     "lat": 33.2497,
     "lng": 126.4128,
     "features": ["오션뷰", "단기수요"],
-    "desc": "중문권 생활 편의성과 관광 수요 접근성이 좋은 실속형 오피스텔.",
     "image": "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1200&q=80",
     "link": "https://land.jejukcr.com/offer/80100718",
     "phone": "064-745-0531",
@@ -95,6 +98,8 @@
   
   {
     "id": 5,
+    "listingNo": "테-005",
+    "desc": "학교, 병원, 마트 접근이 좋은 도심 신축 아파트 매물입니다.",
     "date": "2026-03-26",
     "title": "제주시 노형 신축 아파트",
     "type": "아파트",
@@ -106,7 +111,6 @@
     "lat": 33.4851,
     "lng": 126.4788,
     "features": ["신축", "생활권"],
-    "desc": "학교, 병원, 마트 접근이 좋은 도심 신축 아파트 매물입니다.",
     "image": "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1200&q=80",
     "link": "https://land.jejukcr.com/offer/79918569",
     "phone": "010-2134-7806",
@@ -117,6 +121,8 @@
 
   {
     "id": 6,
+    "listingNo": "테-006",
+    "desc": "학교, 병원, 마트 접근이 좋은 도심 아파트 단지입니다.",
     "date": "2026-02-17",
     "title": "제주시 뜨란채",
     "type": "아파트",
@@ -128,7 +134,6 @@
     "lat": 33.4851,
     "lng": 126.4788,
     "features": ["초품아", "이마트"],
-    "desc": "학교, 병원, 마트 접근이 좋은 도심 아파트 단지입니다.",
     "image": "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1200&q=80",
     "link": "https://land.jejukcr.com/offer/79918569",
     "phone": "010-2134-7806",
@@ -139,6 +144,8 @@
 
   {
     "id": 236,
+    "listingNo": "테-236",
+    "desc": "유동인구가 안정적인 핵심 입지의 수익형 상가 매물입니다.",
     "date": "2026-03-05",
     "title": "영어교육도시 이편한세상",
     "type": "아파트",
@@ -149,8 +156,7 @@
     "address": "서귀포시 대정읍",
     "lat": 33.3025,
     "lng": 126.2863,
-    "features": ["영어교육도시"],
-    "desc": "유동인구가 안정적인 핵심 입지의 수익형 상가 매물입니다.",
+    "features": ["영어교육도시"], 
     "image": "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1200&q=80",
     "link": "https://land.jejukcr.com/offer/80360494",
     "phone": "064-678-8665",
