@@ -38,7 +38,7 @@
     "features": ["영어교육도시", "투자용"],
     "image": "https://raw.githubusercontent.com/DH-REALESTATE/jeju-map/main/dh_real/235/image1.jpeg",
     "link": "https://land.jejukcr.com/offer/80360494",
-    "agent_folder": "./agent_01/agent.json"
+    "agent_folder": "./agent_01/agent_01.json"
   },
   
   {
@@ -58,7 +58,7 @@
     "features": ["투자용", "전원형"],
     "image": "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1200&q=80",
     "link": "https://land.jejukcr.com/offer/64166600",
-    "agent_folder": "./agent_01/agent.json"
+    "agent_folder": "./agent_01/agent_01.json"
   },
   
   {
@@ -78,7 +78,7 @@
     "features": ["오션뷰", "단기수요"],
     "image": "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1200&q=80",
     "link": "https://land.jejukcr.com/offer/80100718",
-    "agent_folder": "./agent_02/agent.json"
+    "agent_folder": "./agent_02/agent_02.json"
   },
   
   {
@@ -98,7 +98,7 @@
     "features": ["신축", "생활권"],
     "image": "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1200&q=80",
     "link": "https://land.jejukcr.com/offer/79918569",
-    "agent_folder": "./agent_01/agent.json"
+    "agent_folder": "./agent_01/agent_01.json"
   },
 
   {
@@ -118,7 +118,7 @@
     "features": ["초품아", "이마트"],
     "image": "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1200&q=80",
     "link": "https://land.jejukcr.com/offer/79918569",
-    "agent_folder": "./agent_03/agent.json"
+    "agent_folder": "./agent_03/agent_03.json"
   },
 
   {
@@ -138,7 +138,7 @@
     "features": ["영어교육도시"], 
     "image": "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1200&q=80",
     "link": "https://land.jejukcr.com/offer/80360494",
-    "agent_folder": "./agent_02/agent.json"
+    "agent_folder": "./agent_02/agent_02.json"
   }
   
 ]
