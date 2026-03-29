@@ -161,7 +161,7 @@
       justify-content: space-between;
       align-items: flex-start;
       gap: 10px;
-      margin-bottom: 10px;
+      margin-bottom: 14px;
     }
 
     .detail-title-wrap {
@@ -175,7 +175,6 @@
       font-weight: 900;
       color: #1d2733;
       letter-spacing: -0.4px;
-      flex: 1;
       line-height: 1.5;
     }
 
@@ -185,6 +184,22 @@
       font-weight: 800;
       color: #8a97a5;
       line-height: 1.4;
+    }
+
+    .detail-inline-price {
+      margin-top: 10px;
+      font-size: 22px;
+      font-weight: 900;
+      color: #1d2733;
+      letter-spacing: -0.5px;
+      line-height: 1.3;
+    }
+
+    .detail-inline-address {
+      margin-top: 6px;
+      font-size: 13px;
+      color: #667788;
+      line-height: 1.6;
     }
 
     .detail-type-badge {
@@ -234,32 +249,6 @@
       color: #1f6fff;
       font-weight: 900;
       letter-spacing: -0.3px;
-    }
-
-    .detail-price-box {
-      padding: 14px 14px 12px;
-      border-radius: 14px;
-      background: #f7f8fa;
-      border: 1px solid #eceff3;
-      margin-bottom: 16px;
-    }
-
-    .detail-price-badge {
-      display: none;
-    }
-
-    .detail-price {
-      margin-bottom: 8px;
-      font-size: 20px;
-      font-weight: 900;
-      color: #1d2733;
-      letter-spacing: -0.5px;
-    }
-
-    .detail-address {
-      font-size: 13px;
-      color: #667788;
-      line-height: 1.6;
     }
 
     .detail-desc {
@@ -906,7 +895,9 @@
                 <div class="detail-title-row">
                   <div class="detail-title-wrap">
                     <h2 class="detail-title" id="detailTitle">매물을 선택하세요</h2>
-                    <div class="detailListingNo detail-listing-no" id="detailListingNo"></div>
+                    <div class="detail-listing-no" id="detailListingNo"></div>
+                    <div class="detail-inline-price" id="detailPrice"></div>
+                    <div class="detail-inline-address" id="detailAddress"></div>
                   </div>
                   <div class="detail-type-badge" id="detailTypeBadge"></div>
                 </div>
@@ -924,12 +915,6 @@
                     <span class="detail-meta-label">지역</span>
                     <span class="detail-meta-value" id="detailRegionValue">-</span>
                   </div>
-                </div>
-
-                <div class="detail-price-box">
-                  <div class="detail-price-badge" id="detailPriceBadge"></div>
-                  <div class="detail-price" id="detailPrice"></div>
-                  <div class="detail-address" id="detailAddress"></div>
                 </div>
 
                 <div class="detail-desc" id="detailDesc"></div>
@@ -1033,7 +1018,6 @@
     const detailListingNo = document.getElementById("detailListingNo");
     const detailTypeBadge = document.getElementById("detailTypeBadge");
     const detailPrice = document.getElementById("detailPrice");
-    const detailPriceBadge = document.getElementById("detailPriceBadge");
     const detailAddress = document.getElementById("detailAddress");
     const detailDesc = document.getElementById("detailDesc");
     const detailInfoList = document.getElementById("detailInfoList");
@@ -1414,9 +1398,6 @@
       detailListingNo.textContent = item.listingNo ? `매물번호 ${item.listingNo}` : "";
       detailTypeBadge.textContent = item.type || "";
       detailTypeBadge.style.display = item.type ? "inline-flex" : "none";
-
-      detailPriceBadge.textContent = "";
-      detailPriceBadge.style.display = "none";
 
       detailAreaValue.textContent = item.area || "-";
       detailTypeValue.textContent = item.type || "-";
