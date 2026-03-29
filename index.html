@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>제주 프리미엄 부동산 지도</title>
 
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
   <style>
@@ -17,17 +19,23 @@
       --line: #e7edf3;
       --text: #17212b;
       --shadow: 0 12px 30px rgba(15, 41, 66, 0.12);
+      --font-ui: "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+      font-family: var(--font-ui);
+    }
 
     html, body {
       margin: 0;
       padding: 0;
       height: 100%;
-      font-family: "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
       background: var(--bg);
       color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
     }
 
     body { overflow: hidden; }
@@ -167,6 +175,17 @@
     .detail-title-wrap {
       flex: 1;
       min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .detail-listing-no {
+      margin: 0;
+      font-size: 12px;
+      font-weight: 800;
+      color: #8a97a5;
+      line-height: 1.45;
     }
 
     .detail-title {
@@ -175,31 +194,23 @@
       font-weight: 900;
       color: #1d2733;
       letter-spacing: -0.4px;
-      line-height: 1.5;
-    }
-
-    .detail-listing-no {
-      margin-top: 6px;
-      font-size: 12px;
-      font-weight: 800;
-      color: #8a97a5;
-      line-height: 1.4;
+      line-height: 1.45;
     }
 
     .detail-inline-price {
-      margin-top: 10px;
+      margin: 0;
       font-size: 22px;
       font-weight: 900;
       color: #1d2733;
       letter-spacing: -0.5px;
-      line-height: 1.3;
+      line-height: 1.45;
     }
 
     .detail-inline-address {
-      margin-top: 6px;
+      margin: 0;
       font-size: 13px;
       color: #667788;
-      line-height: 1.6;
+      line-height: 1.45;
     }
 
     .detail-type-badge {
@@ -846,7 +857,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title">제주도 부동산 지도 Ver 1.009</div>
+              <div class="brand-title">제주도 부동산 지도 Ver 1.012</div>
             </div>
           </div>
 
@@ -983,6 +994,8 @@
   <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=b7db2d3c35122f3ec33c88ea6d3195fb&libraries=clusterer"></script>
 
   <script>
+    const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
+
     const state = {
       map: null,
       clusterer: null,
@@ -1200,7 +1213,7 @@
                   text-anchor="middle"
                   font-size="16"
                   font-weight="900"
-                  font-family="Apple SD Gothic Neo, Malgun Gothic, sans-serif"
+                  font-family="${UI_FONT_STACK}"
                   fill="${textColor}">${text}</text>
           </g>
         </svg>
@@ -1259,6 +1272,7 @@
       el.style.color = color;
       el.style.fontSize = "16px";
       el.style.fontWeight = "900";
+      el.style.fontFamily = UI_FONT_STACK;
       el.style.lineHeight = "46px";
       el.style.letterSpacing = "-0.5px";
       el.style.border = `1px solid ${border}`;
@@ -1394,17 +1408,17 @@
 
       detailHero.style.backgroundImage = `url('${escapeHtml(item.image)}')`;
 
-      detailTitle.textContent = item.title || "";
       detailListingNo.textContent = item.listingNo ? `매물번호 ${item.listingNo}` : "";
+      detailTitle.textContent = item.title || "";
+      detailPrice.textContent = `${item.dealType || ""} ${item.price || ""}`.trim();
+      detailAddress.textContent = `${item.address || ""}`.trim();
+
       detailTypeBadge.textContent = item.type || "";
       detailTypeBadge.style.display = item.type ? "inline-flex" : "none";
 
       detailAreaValue.textContent = item.area || "-";
       detailTypeValue.textContent = item.type || "-";
       detailRegionValue.textContent = item.region || "-";
-
-      detailPrice.textContent = `${item.dealType || ""} ${item.price || ""}`.trim();
-      detailAddress.textContent = `${item.address || ""}`.trim();
 
       detailDesc.textContent = item.desc || "";
       detailInfoList.innerHTML = "";
@@ -1501,6 +1515,7 @@
             color: "#2563eb",
             textAlign: "center",
             fontWeight: "900",
+            fontFamily: UI_FONT_STACK,
             lineHeight: "46px",
             fontSize: "16px",
             letterSpacing: "-0.5px",
@@ -1515,6 +1530,7 @@
             color: "#2563eb",
             textAlign: "center",
             fontWeight: "900",
+            fontFamily: UI_FONT_STACK,
             lineHeight: "46px",
             fontSize: "16px",
             letterSpacing: "-0.5px",
@@ -1529,6 +1545,7 @@
             color: "#2563eb",
             textAlign: "center",
             fontWeight: "900",
+            fontFamily: UI_FONT_STACK,
             lineHeight: "46px",
             fontSize: "16px",
             letterSpacing: "-0.5px",
@@ -1543,6 +1560,7 @@
             color: "#2563eb",
             textAlign: "center",
             fontWeight: "900",
+            fontFamily: UI_FONT_STACK,
             lineHeight: "46px",
             fontSize: "16px",
             letterSpacing: "-0.5px",
@@ -1609,6 +1627,7 @@
         cursor:pointer;
         font-size:14px;
         font-weight:900;
+        font-family:${UI_FONT_STACK};
       `;
 
       const fullscreenBtn = document.createElement("button");
@@ -1627,6 +1646,7 @@
         cursor:pointer;
         font-size:12px;
         font-weight:900;
+        font-family:${UI_FONT_STACK};
       `;
 
       const inner = document.createElement("div");
