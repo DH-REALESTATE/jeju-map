@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.015</title>
+  <title>제주 프리미엄 부동산 지도 Ver 1.016</title>
 
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"/>
@@ -824,6 +824,19 @@
       white-space: nowrap;
     }
 
+    .card-title {
+      font-size: 15px;
+      font-weight: 900;
+      color: #1d2733;
+      line-height: 1.4;
+      margin-bottom: 4px;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      word-break: keep-all;
+    }
+
     .card-address {
       font-size: 14px;
       color: #5d6b78;
@@ -1132,7 +1145,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title">제주도 부동산 지도 Ver 1.015</div>
+              <div class="brand-title">제주도 부동산 지도 Ver 1.016</div>
             </div>
           </div>
 
@@ -2339,6 +2352,8 @@
                   <span class="card-date">${escapeHtml(dateText)}</span>
                 </div>
 
+                <div class="card-title">${titleText}</div>
+
                 <div class="card-address">${addressText}</div>
 
                 <div class="card-price-line">
@@ -2346,7 +2361,7 @@
                   <span class="card-price">${priceText}</span>
                 </div>
 
-                <div class="card-spec">${areaText}<br>${titleText}</div>
+                <div class="card-spec">${areaText}</div>
 
                 <div class="card-agent-row">
                   <div class="card-agent-left">
