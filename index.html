@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.021</title>
+  <title id="appTitle">제주 프리미엄 부동산 지도 Ver 1.024</title>
 
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"/>
@@ -1054,10 +1054,9 @@
     .detail-image-lightbox-close,
     .detail-image-lightbox-nav {
       position: absolute;
-      top: 18px;
-      width: 36px;
-      height: 36px;
-      min-width: 36px;
+      width: 40px;
+      height: 40px;
+      min-width: 40px;
       border: 0;
       border-radius: 10px;
       background: rgba(255,255,255,0.14);
@@ -1070,19 +1069,20 @@
     }
 
     .detail-image-lightbox-nav {
-      transform: none;
+      top: 50%;
+      transform: translateY(-50%);
     }
 
     .detail-image-lightbox-nav.prev {
-      left: 18px;
+      left: 24px;
     }
 
     .detail-image-lightbox-nav.next {
-      left: 60px;
-      right: auto;
+      right: 24px;
     }
 
     .detail-image-lightbox-close {
+      top: 18px;
       right: 18px;
     }
 
@@ -1136,10 +1136,11 @@
       }
 
       .detail-image-lightbox-nav.next {
-        left: 54px;
+        right: 12px;
       }
 
       .detail-image-lightbox-close {
+        top: 12px;
         right: 12px;
       }
     }
@@ -1152,7 +1153,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title">제주도 부동산 지도 Ver 1.021</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.024</div>
             </div>
           </div>
 
@@ -1333,6 +1334,9 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
+    const APP_VERSION = '1.024';
+
+    document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
     const state = {
       map: null,
@@ -1365,6 +1369,11 @@
     const typeButtons = document.querySelectorAll("#typeButtons button");
     const featureButtons = document.querySelectorAll("#featureButtons button");
     const listInfoText = document.getElementById("listInfoText");
+    const appVersionText = document.getElementById("appVersionText");
+
+    if (appVersionText) {
+      appVersionText.textContent = `제주도 부동산 지도 Ver ${APP_VERSION}`;
+    }
 
     const detailCloseBtn = document.getElementById("detailCloseBtn");
     const detailHero = document.getElementById("detailHero");
@@ -2542,12 +2551,6 @@
       });
 
       detailImageLightboxClose.addEventListener("click", closeDetailImageLightbox);
-
-      detailImageLightbox.addEventListener("click", (e) => {
-        if (e.target === detailImageLightbox) {
-          closeDetailImageLightbox();
-        }
-      });
 
       document.addEventListener("keydown", (e) => {
         if (e.key === "Escape") {
