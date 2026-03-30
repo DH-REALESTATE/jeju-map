@@ -1212,7 +1212,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.035</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.037</div>
             </div>
           </div>
 
@@ -1294,7 +1294,7 @@
 
                 <div class="detail-meta-grid" id="detailMetaGrid">
                   <div class="detail-meta-item">
-                    <span class="detail-meta-label">면적</span>
+                    <span class="detail-meta-label" id="detailAreaLabel">면적</span>
                     <div class="detail-area-wrap">
                       <span class="detail-meta-value area-display" id="detailAreaValue" data-area-raw="-" data-area-unit="m2">-</span>
                       <button type="button" class="area-toggle-btn" id="detailAreaToggleBtn">평</button>
@@ -1398,7 +1398,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.035';
+    const APP_VERSION = '1.037';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -1466,6 +1466,7 @@
     const detailShareBtn = document.getElementById("detailShareBtn");
     const detailAreaValue = document.getElementById("detailAreaValue");
     const detailAreaToggleBtn = document.getElementById("detailAreaToggleBtn");
+    const detailAreaLabel = document.getElementById("detailAreaLabel");
     const detailTypeValue = document.getElementById("detailTypeValue");
     const detailRegionValue = document.getElementById("detailRegionValue");
 
@@ -1608,7 +1609,7 @@
 
       if (isApartmentType(typeText) && values.length >= 2) {
         const privateArea = formatSingleAreaValue(values[1], unit);
-        return `<span class="area-line">전용 ${privateArea}</span>`;
+        return `<span class="area-line">${privateArea}</span>`;
       }
 
       if (values.length >= 1) {
@@ -2037,6 +2038,9 @@
       detailAreaValue.dataset.areaUnit = "m2";
       detailAreaValue.dataset.areaType = item.type || "";
       if (detailAreaToggleBtn) detailAreaToggleBtn.textContent = "평";
+      if (detailAreaLabel) {
+        detailAreaLabel.textContent = /아파트|빌라/.test(item.type || "") ? "면적(전용)" : "면적";
+      }
       detailTypeValue.textContent = item.type || "-";
       detailRegionValue.textContent = item.region || "-";
 
