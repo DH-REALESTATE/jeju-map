@@ -879,6 +879,30 @@
       color: #6a7785;
       line-height: 1.55;
       margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .area-toggle-btn {
+      height: 22px;
+      padding: 0 7px;
+      border: 1px solid #d1d9e0;
+      border-radius: 6px;
+      background: #fff;
+      color: #51606f;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .area-toggle-btn:hover {
+      background: #f7faff;
+      border-color: #bfd6ff;
+      color: #1f6fff;
     }
 
     .card-agent-row {
@@ -1168,7 +1192,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.027</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.028</div>
             </div>
           </div>
 
@@ -1351,7 +1375,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.027';
+    const APP_VERSION = '1.028';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -1529,6 +1553,27 @@
       const privateArea = match[2];
 
       return `공급 ${escapeHtml(supply)}㎡<br>전용 ${escapeHtml(privateArea)}㎡`;
+    }
+
+    function parsePrimaryArea(areaText) {
+      const text = String(areaText || "").trim();
+      const match = text.match(/([\d.]+)\s*㎡/);
+      if (!match) return null;
+      const value = Number(match[1]);
+      return Number.isFinite(value) ? value : null;
+    }
+
+    function formatAreaByUnit(areaText, unit) {
+      const raw = String(areaText || "-").trim();
+      const areaValue = parsePrimaryArea(raw);
+      if (!areaValue) return raw;
+
+      if (unit === "py") {
+        const py = areaValue / 3.3058;
+        return `${py.toFixed(1)}평`;
+      }
+
+      return raw;
     }
 
     function setResultInfo(text) {
