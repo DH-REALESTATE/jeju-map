@@ -19,7 +19,10 @@
     "images": [ 
                 "./dh_real/235/image1.jpg",
                 "./dh_real/235/image2.jpg",
-                "./dh_real/235/image3.jpg"
+                "./dh_real/235/image3.jpg",
+                "./dh_real/235/image4.jpg",
+                "./dh_real/235/image5.jpg",
+                "./dh_real/235/image6.jpg"
               ],
     "desc_folder": "./dh_real/235/info.json",
     "link": "https://land.jejukcr.com/offer/80576184",
