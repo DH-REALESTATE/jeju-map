@@ -1042,43 +1042,42 @@
     .detail-image-lightbox-close,
     .detail-image-lightbox-nav {
       position: absolute;
-      top: 18px;
-      width: 36px;
-      height: 36px;
-      min-width: 36px;
       border: 0;
-      border-radius: 10px;
-      background: rgba(255,255,255,0.14);
       color: #fff;
+      cursor: pointer;
+      backdrop-filter: blur(6px);
+      background: rgba(255,255,255,0.14);
       display: flex;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
-      backdrop-filter: blur(6px);
-    }
-
-    .detail-image-lightbox-nav {
-      transform: none;
-    }
-
-    .detail-image-lightbox-nav.prev {
-      left: 18px;
-    }
-
-    .detail-image-lightbox-nav.next {
-      left: 60px;
-      right: auto;
     }
 
     .detail-image-lightbox-close {
+      top: 18px;
       right: 18px;
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      font-size: 20px;
+      font-weight: 900;
     }
 
-    .detail-image-lightbox-nav i,
-    .detail-image-lightbox-close i {
-      font-size: 16px;
+    .detail-image-lightbox-nav {
+      top: 50%;
+      transform: translateY(-50%);
+      width: 52px;
+      height: 52px;
+      border-radius: 999px;
+      font-size: 28px;
       font-weight: 900;
-      line-height: 1;
+    }
+
+    .detail-image-lightbox-nav.prev {
+      left: 20px;
+    }
+
+    .detail-image-lightbox-nav.next {
+      right: 20px;
     }
 
     @media (max-width: 980px) {
@@ -1113,10 +1112,10 @@
 
       .map-result-count { top: 124px; }
 
-      .detail-image-lightbox-nav,
-      .detail-image-lightbox-close {
-        width: 36px;
-        height: 36px;
+      .detail-image-lightbox-nav {
+        width: 46px;
+        height: 46px;
+        font-size: 24px;
       }
 
       .detail-image-lightbox-nav.prev {
@@ -1124,10 +1123,6 @@
       }
 
       .detail-image-lightbox-nav.next {
-        left: 54px;
-      }
-
-      .detail-image-lightbox-close {
         right: 12px;
       }
     }
@@ -1299,15 +1294,9 @@
   </div>
 
   <div class="detail-image-lightbox" id="detailImageLightbox">
-    <button type="button" class="detail-image-lightbox-nav prev" id="detailImageLightboxPrev">
-      <i class="fa-solid fa-chevron-left"></i>
-    </button>
-    <button type="button" class="detail-image-lightbox-nav next" id="detailImageLightboxNext">
-      <i class="fa-solid fa-chevron-right"></i>
-    </button>
-    <button type="button" class="detail-image-lightbox-close" id="detailImageLightboxClose">
-      <i class="fa-solid fa-xmark"></i>
-    </button>
+    <button type="button" class="detail-image-lightbox-nav prev" id="detailImageLightboxPrev">‹</button>
+    <button type="button" class="detail-image-lightbox-nav next" id="detailImageLightboxNext">›</button>
+    <button type="button" class="detail-image-lightbox-close" id="detailImageLightboxClose">✕</button>
     <img id="detailImageLightboxImg" src="" alt="매물 사진 확대">
   </div>
 
@@ -1473,6 +1462,12 @@
         dateLabel: item.dateLabel ?? "",
         desc_folder: item.desc_folder ?? ""
       };
+    }
+
+    function sqmToPyeong(value) {
+      const num = Number(value);
+      if (!Number.isFinite(num)) return "";
+      return (num / 3.305785).toFixed(2);
     }
 
     function formatAreaTwoLines(areaText) {
