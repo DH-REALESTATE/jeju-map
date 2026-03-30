@@ -201,15 +201,11 @@
     .detail-hero-expand {
       top: 12px;
       right: 12px;
-      font-size: 16px;
-      font-weight: 900;
     }
 
     .detail-hero-nav {
       top: 50%;
       transform: translateY(-50%);
-      font-size: 16px;
-      font-weight: 900;
     }
 
     .detail-hero-nav.prev {
@@ -218,6 +214,12 @@
 
     .detail-hero-nav.next {
       right: 12px;
+    }
+
+    .detail-hero-expand i,
+    .detail-hero-nav i {
+      font-size: 15px;
+      line-height: 1;
     }
 
     .detail-hero-dots {
@@ -1049,10 +1051,6 @@
       backdrop-filter: blur(6px);
     }
 
-    .detail-image-lightbox-nav {
-      transform: none;
-    }
-
     .detail-image-lightbox-nav.prev {
       left: 18px;
     }
@@ -1183,7 +1181,7 @@
                   <i class="fa-solid fa-chevron-right"></i>
                 </button>
                 <button type="button" class="detail-hero-expand" id="detailHeroExpandBtn">
-                  <i class="fa-solid fa-expand"></i>
+                  <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
                 </button>
 
                 <div class="detail-hero-badge" id="detailHeroBadge"></div>
@@ -1360,7 +1358,6 @@
     const detailHeroFeatures = document.getElementById("detailHeroFeatures");
     const detailTitle = document.getElementById("detailTitle");
     const detailListingNo = document.getElementById("detailListingNo");
-    const detailTypeBadge = document.getElementById("detailTypeBadge");
     const detailPrice = document.getElementById("detailPrice");
     const detailAddress = document.getElementById("detailAddress");
     const detailDesc = document.getElementById("detailDesc");
@@ -1400,9 +1397,7 @@
 
     function refreshMapLayout() {
       if (!state.map) return;
-      setTimeout(() => {
-        state.map.relayout();
-      }, 320);
+      setTimeout(() => state.map.relayout(), 320);
     }
 
     function escapeHtml(str) {
@@ -1432,9 +1427,7 @@
     }
 
     function normalizeImageArray(item) {
-      if (Array.isArray(item.images) && item.images.length) {
-        return item.images.filter(Boolean);
-      }
+      if (Array.isArray(item.images) && item.images.length) return item.images.filter(Boolean);
       if (item.image) return [item.image];
       return [];
     }
@@ -1475,14 +1468,9 @@
 
     function formatAreaTwoLines(areaText) {
       if (!areaText) return "-";
-
       const match = String(areaText).match(/공급\s*([\d.]+)㎡\s*\/\s*전용\s*([\d.]+)㎡/);
       if (!match) return escapeHtml(areaText);
-
-      const supply = match[1];
-      const privateArea = match[2];
-
-      return `공급 ${escapeHtml(supply)}㎡<br>전용 ${escapeHtml(privateArea)}㎡`;
+      return `공급 ${escapeHtml(match[1])}㎡<br>전용 ${escapeHtml(match[2])}㎡`;
     }
 
     function setResultInfo(text) {
@@ -1496,7 +1484,6 @@
     async function loadAgent(agentPath) {
       if (!agentPath) return null;
       if (agentCache[agentPath]) return agentCache[agentPath];
-
       try {
         const res = await fetch(agentPath, { cache: "no-store" });
         if (!res.ok) throw new Error(`agent.json 불러오기 실패: ${res.status}`);
@@ -1515,7 +1502,6 @@
         if (!res.ok) throw new Error("properties.json 불러오기 실패");
 
         const data = await res.json();
-
         const normalized = data
           .map(normalizeProperty)
           .filter(item => Number.isFinite(item.lat) && Number.isFinite(item.lng));
@@ -1523,7 +1509,6 @@
         const enriched = await Promise.all(
           normalized.map(async (item) => {
             const agent = await loadAgent(item.agent_folder);
-
             return {
               ...item,
               agentName: agent?.agentName ?? "",
@@ -1566,7 +1551,6 @@
       const text = String(label ?? "1");
       const boxWidth = getBadgeWidthByText(text);
       const svgWidth = boxWidth + 12;
-
       const bgColor = isSelected ? "#2563eb" : "rgba(255,255,255,0.82)";
       const textColor = isSelected ? "#ffffff" : "#2563eb";
       const borderColor = isSelected ? "#2563eb" : "rgba(255,255,255,0.55)";
@@ -1629,7 +1613,6 @@
 
       const count = clusterItems.length;
       const width = getClusterBadgeWidth(count);
-
       const bg = isSelected ? "#2563eb" : "rgba(255,255,255,0.82)";
       const color = isSelected ? "#ffffff" : "#2563eb";
       const border = isSelected ? "#2563eb" : "rgba(255,255,255,0.55)";
@@ -1684,16 +1667,11 @@
 
     async function closeRoadviewPanel() {
       try {
-        if (document.fullscreenElement === roadviewOverlay) {
-          await document.exitFullscreen();
-        }
+        if (document.fullscreenElement === roadviewOverlay) await document.exitFullscreen();
       } catch (err) {
         console.error("전체화면 해제 실패:", err);
       }
-
-      if (roadviewOverlay) {
-        roadviewOverlay.style.display = "none";
-      }
+      if (roadviewOverlay) roadviewOverlay.style.display = "none";
     }
 
     async function hideRoadview() {
@@ -1727,7 +1705,6 @@
               const rows = Array.isArray(section.rows)
                 ? section.rows.filter(row => String(row?.value || "").trim() !== "")
                 : [];
-
               if (!rows.length) return "";
 
               return `
@@ -1776,17 +1753,10 @@
 
     function getHeroImages(item) {
       const fallback = item.image ? [item.image] : [];
+      if (!Array.isArray(item.images) || !item.images.length) return fallback;
 
-      if (!Array.isArray(item.images) || !item.images.length) {
-        return fallback;
-      }
-
-      const cleaned = item.images
-        .map(v => String(v || "").trim())
-        .filter(Boolean);
-
+      const cleaned = item.images.map(v => String(v || "").trim()).filter(Boolean);
       if (!cleaned.length) return fallback;
-
       return cleaned;
     }
 
@@ -1805,7 +1775,6 @@
       detailHeroPrevBtn.style.display = images.length > 1 ? "flex" : "none";
       detailHeroNextBtn.style.display = images.length > 1 ? "flex" : "none";
       detailHeroDots.style.display = images.length > 1 ? "flex" : "none";
-
       detailHero.style.backgroundImage = images.length ? `url('${escapeHtml(images[0])}')` : "";
     }
 
@@ -1816,13 +1785,8 @@
       const slides = detailHeroSlides.querySelectorAll(".detail-hero-slide");
       const dots = detailHeroDots.querySelectorAll(".detail-hero-dot");
 
-      slides.forEach((slide, i) => {
-        slide.classList.toggle("active", i === currentHeroIndex);
-      });
-
-      dots.forEach((dot, i) => {
-        dot.classList.toggle("active", i === currentHeroIndex);
-      });
+      slides.forEach((slide, i) => slide.classList.toggle("active", i === currentHeroIndex));
+      dots.forEach((dot, i) => dot.classList.toggle("active", i === currentHeroIndex));
 
       detailHero.style.backgroundImage = `url('${escapeHtml(currentHeroImages[currentHeroIndex])}')`;
     }
@@ -1850,11 +1814,10 @@
 
     function updateLightboxImage() {
       if (!currentHeroImages.length) return;
-
       detailImageLightboxImg.src = currentHeroImages[currentHeroIndex];
       const hasMultiple = currentHeroImages.length > 1;
-      detailImageLightboxPrev.style.display = hasMultiple ? "flex" : "flex";
-      detailImageLightboxNext.style.display = hasMultiple ? "flex" : "flex";
+      detailImageLightboxPrev.style.display = "flex";
+      detailImageLightboxNext.style.display = "flex";
       detailImageLightboxPrev.style.visibility = hasMultiple ? "visible" : "hidden";
       detailImageLightboxNext.style.visibility = hasMultiple ? "visible" : "hidden";
     }
@@ -1962,12 +1925,10 @@
 
     async function handleClusterSelection(cluster) {
       await hideRoadview();
-
       const clusterItems = cluster.getMarkers().map(marker => marker.__property).filter(Boolean);
       if (!clusterItems.length) return;
 
       const topItem = clusterItems[0];
-
       state.selectedMarkerId = null;
       state.selectedClusterKey = getClusterKeyFromItems(clusterItems);
 
@@ -2077,19 +2038,13 @@
 
       kakao.maps.event.addListener(state.map, "click", async function () {
         await hideRoadview();
-
         state.selectedClusterKey = null;
-
         highlightCard(-1);
         updateMarkerSelection(null);
         renderList(state.filtered);
-
         setResultInfo(`총 ${state.filtered.length}건`);
         setListInfo(`총 ${state.filtered.length}개 매물`);
-
-        setTimeout(() => {
-          refreshClusterBadges();
-        }, 0);
+        setTimeout(() => refreshClusterBadges(), 0);
       });
     }
 
@@ -2206,10 +2161,7 @@
     }
 
     function clearMapObjects() {
-      if (state.clusterer) {
-        state.clusterer.clear();
-      }
-
+      if (state.clusterer) state.clusterer.clear();
       state.markers.forEach(marker => marker.setMap(null));
       state.markers = [];
     }
@@ -2247,7 +2199,6 @@
 
         kakao.maps.event.addListener(marker, "click", async function () {
           await hideRoadview();
-
           state.selectedClusterKey = null;
 
           renderList([item]);
@@ -2260,9 +2211,7 @@
           setResultInfo("선택 매물 1건");
           setListInfo("총 1개 매물");
 
-          setTimeout(() => {
-            refreshClusterBadges();
-          }, 0);
+          setTimeout(() => refreshClusterBadges(), 0);
         });
 
         markerList.push(marker);
@@ -2271,10 +2220,7 @@
       });
 
       state.clusterer.addMarkers(markerList);
-
-      setTimeout(() => {
-        refreshClusterBadges();
-      }, 0);
+      setTimeout(() => refreshClusterBadges(), 0);
 
       if (data.length === 1) {
         state.map.setCenter(new kakao.maps.LatLng(data[0].lat, data[0].lng));
@@ -2288,16 +2234,13 @@
       if (!item || !state.map) return;
 
       await hideRoadview();
-
       state.selectedClusterKey = null;
 
       highlightCard(id);
       updateMarkerSelection(id);
       moveMapToProperty(item);
 
-      setTimeout(() => {
-        refreshClusterBadges();
-      }, 0);
+      setTimeout(() => refreshClusterBadges(), 0);
     }
 
     function renderList(data) {
@@ -2369,7 +2312,6 @@
       document.querySelectorAll(".card").forEach(card => {
         card.addEventListener("click", async function (e) {
           if (e.target.closest("a, button")) return;
-
           const item = data.find(v => v.id === Number(card.dataset.id));
           if (!item) return;
 
@@ -2385,7 +2327,6 @@
 
       featureButtons.forEach(btn => {
         const value = btn.dataset.value;
-
         if (value === "all") {
           btn.classList.toggle("all-active", isAll);
           btn.classList.remove("active");
@@ -2418,7 +2359,6 @@
 
         const okKeyword = !keyword || text.includes(keyword);
         const okDeal = dealValue === "all" || item.dealType === dealValue;
-
         const itemType = (item.type ?? "").trim();
 
         const okType =
@@ -2458,10 +2398,7 @@
           renderList(state.filtered);
           setResultInfo(`총 ${state.filtered.length}건`);
           setListInfo(`총 ${state.filtered.length}개 매물`);
-
-          setTimeout(() => {
-            refreshClusterBadges();
-          }, 0);
+          setTimeout(() => refreshClusterBadges(), 0);
         });
       }
 
@@ -2495,8 +2432,7 @@
       detailHeroDots.addEventListener("click", (e) => {
         const btn = e.target.closest(".detail-hero-dot");
         if (!btn) return;
-        const index = Number(btn.dataset.index);
-        setHeroSlide(index);
+        setHeroSlide(Number(btn.dataset.index));
       });
 
       detailHeroExpandBtn.addEventListener("click", (e) => {
@@ -2517,9 +2453,7 @@
       detailImageLightboxClose.addEventListener("click", closeDetailImageLightbox);
 
       detailImageLightbox.addEventListener("click", (e) => {
-        if (e.target === detailImageLightbox) {
-          closeDetailImageLightbox();
-        }
+        if (e.target === detailImageLightbox) closeDetailImageLightbox();
       });
 
       document.addEventListener("keydown", (e) => {
