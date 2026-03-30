@@ -1146,7 +1146,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title">제주도 부동산 지도 Ver 1.018</div>
+              <div class="brand-title">제주도 부동산 지도 Ver 1.019</div>
             </div>
           </div>
 
@@ -2345,8 +2345,7 @@
         const agentName = escapeHtml(item.agentName || "담당자");
         const agentTitle = escapeHtml(item.agentTitle || "");
         const officeName = escapeHtml(item.agentOffice || "");
-        const callNumber = escapeHtml(callNumberRaw);
-        const agentInitial = makeAgentInitial(item.agentName || "담당자");
+          const agentInitial = makeAgentInitial(item.agentName || "담당자");
 
         return `
           <article class="card" data-id="${item.id}">
