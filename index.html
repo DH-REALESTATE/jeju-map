@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title id="appTitle">제주 프리미엄 부동산 지도 Ver 1.024</title>
+  <title id="appTitle">제주 프리미엄 부동산 지도 Ver 1.039</title>
 
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"/>
@@ -423,9 +423,10 @@
 
     .detail-area-wrap {
       display: inline-flex;
-      align-items: flex-start;
+      align-items: center;
       gap: 6px;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
+      white-space: nowrap;
     }
 
     .detail-desc {
@@ -1215,7 +1216,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.038</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.039</div>
             </div>
           </div>
 
@@ -1401,7 +1402,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.038';
+    const APP_VERSION = '1.039';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
