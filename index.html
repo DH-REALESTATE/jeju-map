@@ -141,7 +141,7 @@
     .detail-scroll::-webkit-scrollbar { display: none; }
 
     .detail-hero {
-      height: 280px;
+      height: 312px;
       background: #dbe6ef center / cover no-repeat;
       position: relative;
       overflow: hidden;
@@ -153,26 +153,100 @@
       inset: 0;
       background: linear-gradient(
         180deg,
-        rgba(0,0,0,0.08) 0%,
-        rgba(0,0,0,0.16) 35%,
-        rgba(0,0,0,0.58) 100%
+        rgba(0,0,0,0.06) 0%,
+        rgba(0,0,0,0.14) 30%,
+        rgba(0,0,0,0.62) 100%
       );
       pointer-events: none;
+      z-index: 1;
+    }
+
+    .detail-hero-slides {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+
+    .detail-hero-slide {
+      position: absolute;
+      inset: 0;
+      background-position: center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+
+    .detail-hero-slide.active {
+      opacity: 1;
+    }
+
+    .detail-hero-expand,
+    .detail-hero-nav {
+      position: absolute;
+      z-index: 3;
+      border: 0;
+      cursor: pointer;
+      color: #fff;
+      backdrop-filter: blur(6px);
+      background: rgba(0,0,0,0.42);
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .detail-hero-expand {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      width: 30px;
-      height: 30px;
-      border: 0;
-      border-radius: 8px;
-      background: rgba(0,0,0,0.35);
-      color: #fff;
-      cursor: pointer;
+      top: 12px;
+      right: 12px;
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      font-size: 20px;
       font-weight: 900;
-      z-index: 2;
+    }
+
+    .detail-hero-nav {
+      top: 50%;
+      transform: translateY(-50%);
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    .detail-hero-nav.prev {
+      left: 12px;
+    }
+
+    .detail-hero-nav.next {
+      right: 12px;
+    }
+
+    .detail-hero-dots {
+      position: absolute;
+      left: 50%;
+      bottom: 14px;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      z-index: 3;
+    }
+
+    .detail-hero-dot {
+      width: 8px;
+      height: 8px;
+      border: 0;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.42);
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .detail-hero-dot.active {
+      width: 20px;
+      background: rgba(255,255,255,0.98);
     }
 
     .detail-hero-overlay {
@@ -180,8 +254,8 @@
       left: 0;
       right: 0;
       bottom: 0;
-      z-index: 1;
-      padding: 18px 18px 16px;
+      z-index: 2;
+      padding: 18px 18px 38px;
       color: #fff;
     }
 
@@ -196,22 +270,38 @@
       font-size: 11px;
       font-weight: 900;
       letter-spacing: -0.2px;
+      margin-bottom: 9px;
+    }
+
+    .detail-hero-price-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      flex-wrap: wrap;
       margin-bottom: 8px;
     }
 
-    .detail-hero-price {
-      font-size: 28px;
+    .detail-hero-deal {
+      font-size: 16px;
       font-weight: 900;
-      line-height: 1.2;
-      letter-spacing: -0.8px;
-      margin-bottom: 6px;
+      color: #8bd2ff;
       text-shadow: 0 2px 10px rgba(0,0,0,0.25);
+      letter-spacing: -0.2px;
+      line-height: 1.1;
+    }
+
+    .detail-hero-price {
+      font-size: 34px;
+      font-weight: 900;
+      line-height: 1.04;
+      letter-spacing: -1px;
+      text-shadow: 0 3px 14px rgba(0,0,0,0.32);
     }
 
     .detail-hero-address {
       font-size: 13px;
       line-height: 1.45;
-      color: rgba(255,255,255,0.92);
+      color: rgba(255,255,255,0.94);
       text-shadow: 0 1px 6px rgba(0,0,0,0.2);
     }
 
@@ -287,34 +377,14 @@
     }
 
     .detail-inline-price {
-      margin: 0;
-      font-size: 22px;
-      font-weight: 900;
-      color: #1d2733;
-      letter-spacing: -0.5px;
-      line-height: 1.45;
       display: none;
     }
 
     .detail-inline-address {
-      margin: 0;
-      font-size: 13px;
-      color: #667788;
-      line-height: 1.45;
       display: none;
     }
 
     .detail-type-badge {
-      flex-shrink: 0;
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: #f3f6fb;
-      color: #7f4dff;
-      font-size: 12px;
-      font-weight: 900;
-      white-space: nowrap;
-      line-height: 1;
-      margin-top: 2px;
       display: none;
     }
 
@@ -943,6 +1013,47 @@
       font-size: 12px;
     }
 
+    .detail-image-lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(15, 23, 42, 0.92);
+      backdrop-filter: blur(6px);
+      padding: 32px;
+    }
+
+    .detail-image-lightbox.open {
+      display: flex;
+    }
+
+    .detail-image-lightbox img {
+      max-width: min(1400px, 94vw);
+      max-height: 92vh;
+      object-fit: contain;
+      border-radius: 14px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+      background: #111;
+    }
+
+    .detail-image-lightbox-close {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      width: 42px;
+      height: 42px;
+      border: 0;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.14);
+      color: #fff;
+      font-size: 20px;
+      font-weight: 900;
+      cursor: pointer;
+      backdrop-filter: blur(6px);
+    }
+
     @media (max-width: 980px) {
       :root {
         --sidebar-current-width: 100%;
@@ -1026,14 +1137,25 @@
 
             <div class="detail-scroll">
               <div class="detail-hero" id="detailHero">
-                <button type="button" class="detail-hero-expand">⤢</button>
+                <div class="detail-hero-slides" id="detailHeroSlides"></div>
+
+                <button type="button" class="detail-hero-nav prev" id="detailHeroPrevBtn">‹</button>
+                <button type="button" class="detail-hero-nav next" id="detailHeroNextBtn">›</button>
+                <button type="button" class="detail-hero-expand" id="detailHeroExpandBtn">⤢</button>
 
                 <div class="detail-hero-overlay">
                   <div class="detail-hero-badge" id="detailHeroBadge"></div>
-                  <div class="detail-hero-price" id="detailHeroPrice"></div>
+
+                  <div class="detail-hero-price-row">
+                    <div class="detail-hero-deal" id="detailHeroDeal"></div>
+                    <div class="detail-hero-price" id="detailHeroPrice"></div>
+                  </div>
+
                   <div class="detail-hero-address" id="detailHeroAddress"></div>
                   <div class="detail-hero-features" id="detailHeroFeatures"></div>
                 </div>
+
+                <div class="detail-hero-dots" id="detailHeroDots"></div>
               </div>
 
               <div class="detail-content">
@@ -1131,6 +1253,11 @@
     </main>
   </div>
 
+  <div class="detail-image-lightbox" id="detailImageLightbox">
+    <button type="button" class="detail-image-lightbox-close" id="detailImageLightboxClose">✕</button>
+    <img id="detailImageLightboxImg" src="" alt="매물 사진 확대">
+  </div>
+
   <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=b7db2d3c35122f3ec33c88ea6d3195fb&libraries=clusterer"></script>
 
   <script>
@@ -1155,6 +1282,8 @@
     let selectedType = "all";
     let currentDetailItem = null;
     let agentCache = {};
+    let currentHeroImages = [];
+    let currentHeroIndex = 0;
 
     const sidebar = document.getElementById("sidebar");
     const propertyList = document.getElementById("propertyList");
@@ -1168,7 +1297,13 @@
 
     const detailCloseBtn = document.getElementById("detailCloseBtn");
     const detailHero = document.getElementById("detailHero");
+    const detailHeroSlides = document.getElementById("detailHeroSlides");
+    const detailHeroPrevBtn = document.getElementById("detailHeroPrevBtn");
+    const detailHeroNextBtn = document.getElementById("detailHeroNextBtn");
+    const detailHeroDots = document.getElementById("detailHeroDots");
+    const detailHeroExpandBtn = document.getElementById("detailHeroExpandBtn");
     const detailHeroBadge = document.getElementById("detailHeroBadge");
+    const detailHeroDeal = document.getElementById("detailHeroDeal");
     const detailHeroPrice = document.getElementById("detailHeroPrice");
     const detailHeroAddress = document.getElementById("detailHeroAddress");
     const detailHeroFeatures = document.getElementById("detailHeroFeatures");
@@ -1196,6 +1331,10 @@
     const detailAgentAddress = document.getElementById("detailAgentAddress");
     const detailAgentRegNo = document.getElementById("detailAgentRegNo");
     const detailAgentPhoneInline = document.getElementById("detailAgentPhoneInline");
+
+    const detailImageLightbox = document.getElementById("detailImageLightbox");
+    const detailImageLightboxImg = document.getElementById("detailImageLightboxImg");
+    const detailImageLightboxClose = document.getElementById("detailImageLightboxClose");
 
     function updateSidebarWidth() {
       const listWidth = getComputedStyle(document.documentElement).getPropertyValue("--sidebar-list-width").trim() || "360px";
@@ -1239,6 +1378,14 @@
       return `${Math.floor(diffDays / 365)}년 전`;
     }
 
+    function normalizeImageArray(item) {
+      if (Array.isArray(item.images) && item.images.length) {
+        return item.images.filter(Boolean);
+      }
+      if (item.image) return [item.image];
+      return [];
+    }
+
     function normalizeProperty(item, index) {
       return {
         id: item.id ?? index + 1,
@@ -1256,6 +1403,7 @@
         lat: Number(item.lat),
         lng: Number(item.lng),
         image: item.image ?? "",
+        images: normalizeImageArray(item),
         link: item.link ?? "#",
         agent_folder: item.agent_folder ?? "",
         agentName: "",
@@ -1276,17 +1424,6 @@
       const num = Number(value);
       if (!Number.isFinite(num)) return "";
       return (num / 3.305785).toFixed(2);
-    }
-
-    function formatAreaWithPyeong(areaText) {
-      if (!areaText) return "-";
-      const match = String(areaText).match(/공급\s*([\d.]+)㎡\s*\/\s*전용\s*([\d.]+)㎡/);
-      if (!match) return areaText;
-
-      const supply = Number(match[1]);
-      const privateArea = Number(match[2]);
-
-      return `공급 ${supply}㎡ (${sqmToPyeong(supply)}평) / 전용 ${privateArea}㎡ (${sqmToPyeong(privateArea)}평)`;
     }
 
     function formatAreaTwoLines(areaText) {
@@ -1590,13 +1727,78 @@
       `;
     }
 
+    function getHeroImages(item) {
+      const images = Array.isArray(item.images) && item.images.length ? item.images : [];
+      if (images.length) return images;
+      return item.image ? [item.image] : [];
+    }
+
+    function renderHeroSlider(images) {
+      currentHeroImages = images;
+      currentHeroIndex = 0;
+
+      detailHeroSlides.innerHTML = images.map((src, index) => `
+        <div class="detail-hero-slide ${index === 0 ? 'active' : ''}" style="background-image:url('${escapeHtml(src)}')"></div>
+      `).join("");
+
+      detailHeroDots.innerHTML = images.map((_, index) => `
+        <button type="button" class="detail-hero-dot ${index === 0 ? 'active' : ''}" data-index="${index}"></button>
+      `).join("");
+
+      detailHeroPrevBtn.style.display = images.length > 1 ? "flex" : "none";
+      detailHeroNextBtn.style.display = images.length > 1 ? "flex" : "none";
+      detailHeroDots.style.display = images.length > 1 ? "flex" : "none";
+
+      detailHero.style.backgroundImage = images.length ? `url('${escapeHtml(images[0])}')` : "";
+    }
+
+    function setHeroSlide(index) {
+      if (!currentHeroImages.length) return;
+      currentHeroIndex = (index + currentHeroImages.length) % currentHeroImages.length;
+
+      const slides = detailHeroSlides.querySelectorAll(".detail-hero-slide");
+      const dots = detailHeroDots.querySelectorAll(".detail-hero-dot");
+
+      slides.forEach((slide, i) => {
+        slide.classList.toggle("active", i === currentHeroIndex);
+      });
+
+      dots.forEach((dot, i) => {
+        dot.classList.toggle("active", i === currentHeroIndex);
+      });
+
+      detailHero.style.backgroundImage = `url('${escapeHtml(currentHeroImages[currentHeroIndex])}')`;
+    }
+
+    function nextHeroSlide() {
+      setHeroSlide(currentHeroIndex + 1);
+    }
+
+    function prevHeroSlide() {
+      setHeroSlide(currentHeroIndex - 1);
+    }
+
+    function openDetailImageLightbox() {
+      if (!currentHeroImages.length) return;
+      detailImageLightboxImg.src = currentHeroImages[currentHeroIndex];
+      detailImageLightbox.classList.add("open");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeDetailImageLightbox() {
+      detailImageLightbox.classList.remove("open");
+      detailImageLightboxImg.src = "";
+      document.body.style.overflow = "";
+    }
+
     async function openDetailPanel(item) {
       currentDetailItem = item;
       sidebar.classList.add("expanded");
       updateSidebarWidth();
       refreshMapLayout();
 
-      detailHero.style.backgroundImage = `url('${escapeHtml(item.image)}')`;
+      const heroImages = getHeroImages(item);
+      renderHeroSlider(heroImages);
 
       detailListingNo.textContent = item.listingNo ? `매물번호 ${item.listingNo}` : "";
       detailTitle.textContent = item.title || "";
@@ -1606,7 +1808,8 @@
       detailHeroBadge.textContent = item.type || "";
       detailHeroBadge.style.display = item.type ? "inline-flex" : "none";
 
-      detailHeroPrice.textContent = `${item.dealType || ""} ${item.price || ""}`.trim();
+      detailHeroDeal.textContent = item.dealType || "";
+      detailHeroPrice.textContent = item.price || "";
       detailHeroAddress.textContent = `${item.address || ""}`.trim();
 
       detailHeroFeatures.innerHTML = (item.features || [])
@@ -1660,6 +1863,8 @@
 
       detailPhone.textContent = "";
       detailLinkBtn.href = item.link && item.link !== "#" ? item.link : "#";
+      detailLinkBtn.style.pointerEvents = item.link && item.link !== "#" ? "auto" : "none";
+      detailLinkBtn.style.opacity = item.link && item.link !== "#" ? "1" : "0.55";
 
       detailMapBtn.onclick = async () => {
         await focusProperty(item.id);
@@ -2197,6 +2402,48 @@
           }, 1000);
         } catch (err) {
           console.error(err);
+        }
+      });
+
+      detailHeroPrevBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        prevHeroSlide();
+      });
+
+      detailHeroNextBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        nextHeroSlide();
+      });
+
+      detailHeroDots.addEventListener("click", (e) => {
+        const btn = e.target.closest(".detail-hero-dot");
+        if (!btn) return;
+        const index = Number(btn.dataset.index);
+        setHeroSlide(index);
+      });
+
+      detailHeroExpandBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        openDetailImageLightbox();
+      });
+
+      detailImageLightboxClose.addEventListener("click", closeDetailImageLightbox);
+
+      detailImageLightbox.addEventListener("click", (e) => {
+        if (e.target === detailImageLightbox) {
+          closeDetailImageLightbox();
+        }
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          closeDetailImageLightbox();
+        }
+        if (e.key === "ArrowLeft" && sidebar.classList.contains("expanded")) {
+          prevHeroSlide();
+        }
+        if (e.key === "ArrowRight" && sidebar.classList.contains("expanded")) {
+          nextHeroSlide();
         }
       });
 
