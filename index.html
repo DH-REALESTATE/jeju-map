@@ -423,7 +423,7 @@
 
     .detail-area-wrap {
       display: inline-flex;
-      align-items: center;
+      align-items: flex-start;
       gap: 6px;
       flex-wrap: wrap;
     }
@@ -912,6 +912,17 @@
       color: #1f6fff;
     }
 
+    .area-display {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: flex-start;
+      line-height: 1.45;
+    }
+
+    .area-line {
+      display: block;
+    }
+
     .card-agent-row {
       display: flex;
       align-items: center;
@@ -1199,7 +1210,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.032</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.033</div>
             </div>
           </div>
 
@@ -1385,7 +1396,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.032';
+    const APP_VERSION = '1.033';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -1566,25 +1577,44 @@
       return `공급 ${escapeHtml(supply)}㎡<br>전용 ${escapeHtml(privateArea)}㎡`;
     }
 
-    function parsePrimaryArea(areaText) {
+    function parseAreaNumbers(areaText) {
       const text = String(areaText || "").trim();
-      const match = text.match(/([\d,.]+)\s*㎡/);
-      if (!match) return null;
-      const value = Number(String(match[1]).replace(/,/g, ""));
-      return Number.isFinite(value) ? value : null;
+      const matches = [...text.matchAll(/([\d,.]+)\s*㎡/g)].map(match => {
+        const value = Number(String(match[1]).replace(/,/g, ""));
+        return Number.isFinite(value) ? value : null;
+      }).filter(v => v !== null);
+
+      return matches;
     }
 
-    function formatAreaByUnit(areaText, unit) {
-      const raw = String(areaText || "-").trim();
-      const areaValue = parsePrimaryArea(raw);
-      if (!areaValue) return raw;
+    function isApartmentType(typeText) {
+      const text = String(typeText || "").trim();
+      return /아파트|빌라/.test(text);
+    }
 
+    function formatSingleAreaValue(value, unit) {
+      if (!Number.isFinite(value)) return "-";
       if (unit === "py") {
-        const py = areaValue / 3.3058;
-        return `${py.toFixed(1)}평`;
+        return `${(value / 3.3058).toFixed(1)}평`;
+      }
+      return `${value.toLocaleString('ko-KR')}㎡`;
+    }
+
+    function formatAreaByUnit(areaText, unit, typeText = "") {
+      const raw = String(areaText || "-").trim();
+      const values = parseAreaNumbers(raw);
+
+      if (isApartmentType(typeText) && values.length >= 2) {
+        const supply = formatSingleAreaValue(values[0], unit);
+        const privateArea = formatSingleAreaValue(values[1], unit);
+        return `<span class="area-line">공급 ${supply}</span><span class="area-line">전용 ${privateArea}</span>`;
       }
 
-      return raw;
+      if (values.length >= 1) {
+        return formatSingleAreaValue(values[0], unit);
+      }
+
+      return escapeHtml(raw);
     }
 
     function setResultInfo(text) {
@@ -2001,9 +2031,10 @@
         })
         .join("");
 
-      detailAreaValue.textContent = item.area || "-";
+      detailAreaValue.innerHTML = formatAreaByUnit(item.area || "-", "m2", item.type || "");
       detailAreaValue.dataset.areaRaw = item.area || "-";
       detailAreaValue.dataset.areaUnit = "m2";
+      detailAreaValue.dataset.areaType = item.type || "";
       if (detailAreaToggleBtn) detailAreaToggleBtn.textContent = "평";
       detailTypeValue.textContent = item.type || "-";
       detailRegionValue.textContent = item.region || "-";
@@ -2459,7 +2490,7 @@
                 </div>
 
                 <div class="card-spec">
-              <span class="area-display" data-area-raw="${escapeHtml(item.area || "-")}" data-area-unit="m2">${areaText}</span>
+              <span class="area-display" data-area-raw="${escapeHtml(item.area || "-")}" data-area-unit="m2" data-area-type="${escapeHtml(item.type || "")}">${formatAreaByUnit(item.area || "-", "m2", item.type || "")}</span>
               <button type="button" class="area-toggle-btn">평</button>
             </div>
 
@@ -2578,11 +2609,12 @@
         if (!areaDisplay) return;
 
         const raw = areaDisplay.dataset.areaRaw || areaDisplay.textContent || "-";
+        const areaType = areaDisplay.dataset.areaType || "";
         const currentUnit = areaDisplay.dataset.areaUnit || "m2";
         const nextUnit = currentUnit === "m2" ? "py" : "m2";
 
         areaDisplay.dataset.areaUnit = nextUnit;
-        areaDisplay.textContent = formatAreaByUnit(raw, nextUnit);
+        areaDisplay.innerHTML = formatAreaByUnit(raw, nextUnit, areaType);
         toggleBtn.textContent = nextUnit === "m2" ? "평" : "㎡";
       });
 
@@ -2592,11 +2624,12 @@
           e.stopPropagation();
 
           const raw = detailAreaValue.dataset.areaRaw || detailAreaValue.textContent || "-";
+          const areaType = detailAreaValue.dataset.areaType || "";
           const currentUnit = detailAreaValue.dataset.areaUnit || "m2";
           const nextUnit = currentUnit === "m2" ? "py" : "m2";
 
           detailAreaValue.dataset.areaUnit = nextUnit;
-          detailAreaValue.textContent = formatAreaByUnit(raw, nextUnit);
+          detailAreaValue.innerHTML = formatAreaByUnit(raw, nextUnit, areaType);
           detailAreaToggleBtn.textContent = nextUnit === "m2" ? "평" : "㎡";
         });
       }
