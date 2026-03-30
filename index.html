@@ -242,6 +242,7 @@
       background: rgba(255,255,255,0.42);
       cursor: pointer;
       padding: 0;
+      transition: width 0.2s ease, background 0.2s ease;
     }
 
     .detail-hero-dot.active {
@@ -1038,20 +1039,45 @@
       background: #111;
     }
 
-    .detail-image-lightbox-close {
+    .detail-image-lightbox-close,
+    .detail-image-lightbox-nav {
       position: absolute;
+      border: 0;
+      color: #fff;
+      cursor: pointer;
+      backdrop-filter: blur(6px);
+      background: rgba(255,255,255,0.14);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .detail-image-lightbox-close {
       top: 18px;
       right: 18px;
       width: 42px;
       height: 42px;
-      border: 0;
       border-radius: 999px;
-      background: rgba(255,255,255,0.14);
-      color: #fff;
       font-size: 20px;
       font-weight: 900;
-      cursor: pointer;
-      backdrop-filter: blur(6px);
+    }
+
+    .detail-image-lightbox-nav {
+      top: 50%;
+      transform: translateY(-50%);
+      width: 52px;
+      height: 52px;
+      border-radius: 999px;
+      font-size: 28px;
+      font-weight: 900;
+    }
+
+    .detail-image-lightbox-nav.prev {
+      left: 20px;
+    }
+
+    .detail-image-lightbox-nav.next {
+      right: 20px;
     }
 
     @media (max-width: 980px) {
@@ -1085,6 +1111,20 @@
       }
 
       .map-result-count { top: 124px; }
+
+      .detail-image-lightbox-nav {
+        width: 46px;
+        height: 46px;
+        font-size: 24px;
+      }
+
+      .detail-image-lightbox-nav.prev {
+        left: 12px;
+      }
+
+      .detail-image-lightbox-nav.next {
+        right: 12px;
+      }
     }
   </style>
 </head>
@@ -1254,6 +1294,8 @@
   </div>
 
   <div class="detail-image-lightbox" id="detailImageLightbox">
+    <button type="button" class="detail-image-lightbox-nav prev" id="detailImageLightboxPrev">‹</button>
+    <button type="button" class="detail-image-lightbox-nav next" id="detailImageLightboxNext">›</button>
     <button type="button" class="detail-image-lightbox-close" id="detailImageLightboxClose">✕</button>
     <img id="detailImageLightboxImg" src="" alt="매물 사진 확대">
   </div>
@@ -1335,6 +1377,8 @@
     const detailImageLightbox = document.getElementById("detailImageLightbox");
     const detailImageLightboxImg = document.getElementById("detailImageLightboxImg");
     const detailImageLightboxClose = document.getElementById("detailImageLightboxClose");
+    const detailImageLightboxPrev = document.getElementById("detailImageLightboxPrev");
+    const detailImageLightboxNext = document.getElementById("detailImageLightboxNext");
 
     function updateSidebarWidth() {
       const listWidth = getComputedStyle(document.documentElement).getPropertyValue("--sidebar-list-width").trim() || "360px";
@@ -1728,9 +1772,19 @@
     }
 
     function getHeroImages(item) {
-      const images = Array.isArray(item.images) && item.images.length ? item.images : [];
-      if (images.length) return images;
-      return item.image ? [item.image] : [];
+      const fallback = item.image ? [item.image] : [];
+
+      if (!Array.isArray(item.images) || !item.images.length) {
+        return fallback;
+      }
+
+      const cleaned = item.images
+        .map(v => String(v || "").trim())
+        .filter(Boolean);
+
+      if (!cleaned.length) return fallback;
+
+      return cleaned;
     }
 
     function renderHeroSlider(images) {
@@ -1780,15 +1834,38 @@
 
     function openDetailImageLightbox() {
       if (!currentHeroImages.length) return;
-      detailImageLightboxImg.src = currentHeroImages[currentHeroIndex];
       detailImageLightbox.classList.add("open");
       document.body.style.overflow = "hidden";
+      updateLightboxImage();
     }
 
     function closeDetailImageLightbox() {
       detailImageLightbox.classList.remove("open");
       detailImageLightboxImg.src = "";
       document.body.style.overflow = "";
+    }
+
+    function updateLightboxImage() {
+      if (!currentHeroImages.length) return;
+
+      detailImageLightboxImg.src = currentHeroImages[currentHeroIndex];
+      const hasMultiple = currentHeroImages.length > 1;
+      detailImageLightboxPrev.style.display = hasMultiple ? "flex" : "flex";
+      detailImageLightboxNext.style.display = hasMultiple ? "flex" : "flex";
+      detailImageLightboxPrev.style.visibility = hasMultiple ? "visible" : "hidden";
+      detailImageLightboxNext.style.visibility = hasMultiple ? "visible" : "hidden";
+    }
+
+    function nextLightboxImage() {
+      if (!currentHeroImages.length) return;
+      setHeroSlide(currentHeroIndex + 1);
+      updateLightboxImage();
+    }
+
+    function prevLightboxImage() {
+      if (!currentHeroImages.length) return;
+      setHeroSlide(currentHeroIndex - 1);
+      updateLightboxImage();
     }
 
     async function openDetailPanel(item) {
@@ -2427,6 +2504,16 @@
         openDetailImageLightbox();
       });
 
+      detailImageLightboxPrev.addEventListener("click", (e) => {
+        e.stopPropagation();
+        prevLightboxImage();
+      });
+
+      detailImageLightboxNext.addEventListener("click", (e) => {
+        e.stopPropagation();
+        nextLightboxImage();
+      });
+
       detailImageLightboxClose.addEventListener("click", closeDetailImageLightbox);
 
       detailImageLightbox.addEventListener("click", (e) => {
@@ -2438,12 +2525,26 @@
       document.addEventListener("keydown", (e) => {
         if (e.key === "Escape") {
           closeDetailImageLightbox();
+          return;
         }
-        if (e.key === "ArrowLeft" && sidebar.classList.contains("expanded")) {
-          prevHeroSlide();
+
+        if (detailImageLightbox.classList.contains("open")) {
+          if (e.key === "ArrowLeft") {
+            prevLightboxImage();
+          }
+          if (e.key === "ArrowRight") {
+            nextLightboxImage();
+          }
+          return;
         }
-        if (e.key === "ArrowRight" && sidebar.classList.contains("expanded")) {
-          nextHeroSlide();
+
+        if (sidebar.classList.contains("expanded")) {
+          if (e.key === "ArrowLeft") {
+            prevHeroSlide();
+          }
+          if (e.key === "ArrowRight") {
+            nextHeroSlide();
+          }
         }
       });
 
