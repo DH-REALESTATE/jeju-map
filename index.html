@@ -141,9 +141,23 @@
     .detail-scroll::-webkit-scrollbar { display: none; }
 
     .detail-hero {
-      height: 235px;
+      height: 280px;
       background: #dbe6ef center / cover no-repeat;
       position: relative;
+      overflow: hidden;
+    }
+
+    .detail-hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        180deg,
+        rgba(0,0,0,0.08) 0%,
+        rgba(0,0,0,0.16) 35%,
+        rgba(0,0,0,0.58) 100%
+      );
+      pointer-events: none;
     }
 
     .detail-hero-expand {
@@ -158,6 +172,75 @@
       color: #fff;
       cursor: pointer;
       font-weight: 900;
+      z-index: 2;
+    }
+
+    .detail-hero-overlay {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 1;
+      padding: 18px 18px 16px;
+      color: #fff;
+    }
+
+    .detail-hero-badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      padding: 0 9px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.18);
+      backdrop-filter: blur(8px);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: -0.2px;
+      margin-bottom: 8px;
+    }
+
+    .detail-hero-price {
+      font-size: 28px;
+      font-weight: 900;
+      line-height: 1.2;
+      letter-spacing: -0.8px;
+      margin-bottom: 6px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.25);
+    }
+
+    .detail-hero-address {
+      font-size: 13px;
+      line-height: 1.45;
+      color: rgba(255,255,255,0.92);
+      text-shadow: 0 1px 6px rgba(0,0,0,0.2);
+    }
+
+    .detail-hero-features {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 12px;
+    }
+
+    .detail-hero-features span {
+      display: inline-flex;
+      align-items: center;
+      height: 26px;
+      padding: 0 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.16);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.18);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: -0.2px;
+    }
+
+    .detail-hero-features span.highlight {
+      background: rgba(37,99,235,0.88);
+      border-color: rgba(37,99,235,0.92);
+      box-shadow: 0 4px 12px rgba(37,99,235,0.25);
     }
 
     .detail-content {
@@ -184,7 +267,7 @@
       display: block;
       font-size: 11px;
       font-weight: 800;
-      letter-spacing: -0.3px;
+      letter-spacing: -0.2px;
       color: #6b7280;
       background: none;
       padding: 0;
@@ -210,6 +293,7 @@
       color: #1d2733;
       letter-spacing: -0.5px;
       line-height: 1.45;
+      display: none;
     }
 
     .detail-inline-address {
@@ -217,6 +301,7 @@
       font-size: 13px;
       color: #667788;
       line-height: 1.45;
+      display: none;
     }
 
     .detail-type-badge {
@@ -230,6 +315,7 @@
       white-space: nowrap;
       line-height: 1;
       margin-top: 2px;
+      display: none;
     }
 
     .detail-meta-grid {
@@ -273,7 +359,7 @@
       font-size: 14px;
       color: #334355;
       line-height: 1.6;
-    
+      white-space: pre-line;
       background: linear-gradient(180deg, #ffffff, #fafcff);
       border: 1px solid #eceff3;
       border-radius: 16px;
@@ -281,18 +367,14 @@
     }
 
     .detail-section-title {
-      font-size: 14px;
-      font-weight: 900;
-      color: #1f2a36;
-      margin: 18px 0 10px;
-      padding-top: 14px;
-      border-top: 1px solid #eceff3;
+      display: none;
     }
 
     .detail-info-sections {
       display: flex;
       flex-direction: column;
       gap: 14px;
+      margin-top: 6px;
       margin-bottom: 16px;
     }
 
@@ -309,7 +391,8 @@
       color: #111827;
       margin-bottom: 10px;
       letter-spacing: -0.3px;
-      padding-left: 0px;
+      padding-left: 0;
+      margin-left: 0;
     }
 
     .detail-info-list {
@@ -323,18 +406,17 @@
       align-items: flex-start;
       justify-content: space-between;
       gap: 16px;
-      padding: 10px 0;
+      padding: 6px 0;
       border-bottom: none;
     }
 
-    /* 오른쪽 패널 매물상세 */
     .detail-info-label {
       min-width: 120px;
       font-size: 13px;
       font-weight: 800;
       color: #5f6b78;
       text-align: left;
-      line-height: 1.35;
+      line-height: 1.25;
     }
 
     .detail-info-value {
@@ -343,7 +425,7 @@
       font-weight: 700;
       color: #1f2a36;
       text-align: right;
-      line-height: 1.0;
+      line-height: 1.25;
       white-space: normal;
       word-break: keep-all;
     }
@@ -443,17 +525,7 @@
     }
 
     .detail-features {
-      margin-top: 8px;
-      margin-bottom: 14px;
-    }
-
-    .detail-features span {
-      background: #eef8ff;
-      color: #2563eb;
-      border-radius: 999px;
-      padding: 6px 10px;
-      font-size: 12px;
-      font-weight: 800;
+      display: none;
     }
 
     .detail-action-box {
@@ -955,6 +1027,13 @@
             <div class="detail-scroll">
               <div class="detail-hero" id="detailHero">
                 <button type="button" class="detail-hero-expand">⤢</button>
+
+                <div class="detail-hero-overlay">
+                  <div class="detail-hero-badge" id="detailHeroBadge"></div>
+                  <div class="detail-hero-price" id="detailHeroPrice"></div>
+                  <div class="detail-hero-address" id="detailHeroAddress"></div>
+                  <div class="detail-hero-features" id="detailHeroFeatures"></div>
+                </div>
               </div>
 
               <div class="detail-content">
@@ -964,9 +1043,6 @@
                     <h2 class="detail-title" id="detailTitle">매물을 선택하세요</h2>
                     <div class="detail-inline-price" id="detailPrice"></div>
                     <div class="detail-inline-address" id="detailAddress"></div>
-      
-                    <div class="detail-features" id="detailFeatures"></div>
-                  
                   </div>
                   <div class="detail-type-badge" id="detailTypeBadge"></div>
                 </div>
@@ -1007,6 +1083,8 @@
                     </div>
                   </div>
                 </div>
+
+                <div class="detail-features" id="detailFeatures"></div>
 
                 <div class="detail-action-box">
                   <div class="detail-phone" id="detailPhone"></div>
@@ -1090,6 +1168,10 @@
 
     const detailCloseBtn = document.getElementById("detailCloseBtn");
     const detailHero = document.getElementById("detailHero");
+    const detailHeroBadge = document.getElementById("detailHeroBadge");
+    const detailHeroPrice = document.getElementById("detailHeroPrice");
+    const detailHeroAddress = document.getElementById("detailHeroAddress");
+    const detailHeroFeatures = document.getElementById("detailHeroFeatures");
     const detailTitle = document.getElementById("detailTitle");
     const detailListingNo = document.getElementById("detailListingNo");
     const detailTypeBadge = document.getElementById("detailTypeBadge");
@@ -1521,8 +1603,21 @@
       detailPrice.textContent = `${item.dealType || ""} ${item.price || ""}`.trim();
       detailAddress.textContent = `${item.address || ""}`.trim();
 
+      detailHeroBadge.textContent = item.type || "";
+      detailHeroBadge.style.display = item.type ? "inline-flex" : "none";
+
+      detailHeroPrice.textContent = `${item.dealType || ""} ${item.price || ""}`.trim();
+      detailHeroAddress.textContent = `${item.address || ""}`.trim();
+
+      detailHeroFeatures.innerHTML = (item.features || [])
+        .map(f => {
+          const isHighlight = ["오션뷰", "급매", "핵심입지"].includes(f);
+          return `<span class="${isHighlight ? "highlight" : ""}">${escapeHtml(f)}</span>`;
+        })
+        .join("");
+
       detailTypeBadge.textContent = item.type || "";
-      detailTypeBadge.style.display = item.type ? "inline-flex" : "none";
+      detailTypeBadge.style.display = "none";
 
       detailAreaValue.textContent = item.area || "-";
       detailTypeValue.textContent = item.type || "-";
@@ -1561,9 +1656,7 @@
         detailAgentAvatar.textContent = "담당";
       }
 
-      detailFeatures.innerHTML = (item.features || [])
-        .map(feature => `<span>${escapeHtml(feature)}</span>`)
-        .join("");
+      detailFeatures.innerHTML = "";
 
       detailPhone.textContent = "";
       detailLinkBtn.href = item.link && item.link !== "#" ? item.link : "#";
