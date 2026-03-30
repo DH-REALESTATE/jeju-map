@@ -1192,7 +1192,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.030</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.031</div>
             </div>
           </div>
 
@@ -1375,7 +1375,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.030';
+    const APP_VERSION = '1.031';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -2550,6 +2550,28 @@
 
     function initEvents() {
       keywordInput.addEventListener("input", applyFilter);
+
+
+      propertyList.addEventListener("click", function (e) {
+        const toggleBtn = e.target.closest(".area-toggle-btn");
+        if (!toggleBtn) return;
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        const spec = toggleBtn.closest(".card-spec");
+        const areaDisplay = spec ? spec.querySelector(".area-display") : null;
+        if (!areaDisplay) return;
+
+        const raw = areaDisplay.dataset.areaRaw || areaDisplay.textContent || "-";
+        const currentUnit = areaDisplay.dataset.areaUnit || "m2";
+        const nextUnit = currentUnit === "m2" ? "py" : "m2";
+
+        areaDisplay.dataset.areaUnit = nextUnit;
+        areaDisplay.textContent = formatAreaByUnit(raw, nextUnit);
+        toggleBtn.textContent = nextUnit === "m2" ? "평" : "㎡";
+      });
+
 
       if (resetListBtn) {
         resetListBtn.addEventListener("click", () => {
