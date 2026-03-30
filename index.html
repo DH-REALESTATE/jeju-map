@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.017</title>
+  <title>제주 프리미엄 부동산 지도 Ver 1.018</title>
 
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"/>
@@ -933,30 +933,6 @@
       text-overflow: ellipsis;
     }
 
-    .card-call-btn {
-      height: 38px;
-      padding: 0 12px;
-      border-radius: 10px;
-      border: 1px solid #14b8a6;
-      background: #fff;
-      color: #0f8f82;
-      font-size: 13px;
-      font-weight: 900;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      cursor: pointer;
-      flex-shrink: 0;
-      transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
-    }
-
-    .card-call-btn:hover {
-      background: #14b8a6;
-      color: #fff;
-      border-color: #14b8a6;
-      transform: translateY(-1px);
-    }
 
     .resizer { display: none; }
 
@@ -1170,7 +1146,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title">제주도 부동산 지도 Ver 1.017</div>
+              <div class="brand-title">제주도 부동산 지도 Ver 1.018</div>
             </div>
           </div>
 
@@ -1295,7 +1271,7 @@
                   <div class="detail-actions">
                     <button type="button" class="detail-action-btn primary" id="detailMapBtn">지도보기</button>
                     <button type="button" class="detail-action-btn" id="detailRoadviewBtn">로드뷰</button>
-                    <a class="detail-action-btn" id="detailLinkBtn" href="#" target="_blank" rel="noopener noreferrer">상세보기</a>
+                    <button type="button" class="detail-action-btn" id="detailCallBtn">전화</button>
                   </div>
                 </div>
               </div>
@@ -1407,7 +1383,7 @@
     const detailPhone = document.getElementById("detailPhone");
     const detailMapBtn = document.getElementById("detailMapBtn");
     const detailRoadviewBtn = document.getElementById("detailRoadviewBtn");
-    const detailLinkBtn = document.getElementById("detailLinkBtn");
+    const detailCallBtn = document.getElementById("detailCallBtn");
     const detailShareBtn = document.getElementById("detailShareBtn");
     const detailAreaValue = document.getElementById("detailAreaValue");
     const detailTypeValue = document.getElementById("detailTypeValue");
@@ -1977,9 +1953,14 @@
       detailFeatures.innerHTML = "";
 
       detailPhone.textContent = "";
-      detailLinkBtn.href = item.link && item.link !== "#" ? item.link : "#";
-      detailLinkBtn.style.pointerEvents = item.link && item.link !== "#" ? "auto" : "none";
-      detailLinkBtn.style.opacity = item.link && item.link !== "#" ? "1" : "0.55";
+      const detailCallNumber = [item.phone1, item.phone2].filter(Boolean)[0] || "";
+      detailCallBtn.disabled = !detailCallNumber;
+      detailCallBtn.style.opacity = detailCallNumber ? "1" : "0.55";
+      detailCallBtn.style.cursor = detailCallNumber ? "pointer" : "default";
+      detailCallBtn.onclick = () => {
+        if (!detailCallNumber) return;
+        location.href = `tel:${detailCallNumber}`;
+      };
 
       detailMapBtn.onclick = async () => {
         await focusProperty(item.id);
@@ -2364,7 +2345,6 @@
         const agentName = escapeHtml(item.agentName || "담당자");
         const agentTitle = escapeHtml(item.agentTitle || "");
         const officeName = escapeHtml(item.agentOffice || "");
-        const callNumberRaw = String(item.phone1 || item.phone2 || "").trim();
         const callNumber = escapeHtml(callNumberRaw);
         const agentInitial = makeAgentInitial(item.agentName || "담당자");
 
@@ -2401,7 +2381,6 @@
                       <div class="card-agent-office">${officeName}</div>
                     </div>
                   </div>
-                  ${callNumberRaw ? `<button type="button" class="card-call-btn" onclick="event.stopPropagation(); location.href='tel:${callNumberRaw.replace(/'/g, "&#39;")}'"><i class="fa-solid fa-phone"></i> 전화</button>` : ""}
                 </div>
               </div>
             </div>
