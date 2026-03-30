@@ -914,9 +914,12 @@
 
     .area-display {
       display: inline-flex;
-      flex-direction: column;
-      align-items: flex-start;
+      flex-direction: row;
+      align-items: center;
+      gap: 4px;
       line-height: 1.45;
+      flex-wrap: nowrap;
+      white-space: nowrap;
     }
 
     .area-line {
@@ -1212,7 +1215,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.037</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.038</div>
             </div>
           </div>
 
@@ -1398,7 +1401,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.037';
+    const APP_VERSION = '1.038';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -1609,7 +1612,7 @@
 
       if (isApartmentType(typeText) && values.length >= 2) {
         const privateArea = formatSingleAreaValue(values[1], unit);
-        return `<span class="area-line">${privateArea}</span>`;
+        return privateArea;
       }
 
       if (values.length >= 1) {
