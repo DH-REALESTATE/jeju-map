@@ -1763,25 +1763,19 @@
       const borderColor = isSelected ? "#2563eb" : "rgba(255,255,255,0.55)";
 
       const svg = `
-        <svg xmlns="http://www.w3.org/2000/svg" width="${svgWidth}" height="38" viewBox="0 0 ${svgWidth} 38">
-          <defs>
-            <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
-              <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="rgba(15,41,66,0.12)"/>
-            </filter>
-          </defs>
-          <g filter="url(#shadow)">
-            <rect x="6" y="0.5" width="${boxWidth}" height="38" rx="14" ry="14"
-                  fill="${bgColor}"
-                  stroke="${borderColor}"
-                  stroke-width="1"/>
-            <text x="${6 + (boxWidth / 2)}" y="29"
-                  text-anchor="middle"
-                  font-size="16"
-                  font-weight="900"
-                  font-family="${UI_FONT_STACK}"
-                  fill="${textColor}">${text}</text>
-          </g>
-        </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="${svgWidth}" height="34" viewBox="0 0 ${svgWidth} 34">
+              <rect x="6" y="0.5" width="${boxWidth}" height="33" rx="10"
+                    fill="${bgColor}"
+                    stroke="${borderColor}"
+                    stroke-width="1"/>
+              <text x="${6 + (boxWidth / 2)}" y="22"
+                    text-anchor="middle"
+                    font-size="13"
+                    font-weight="900"
+                    fill="${textColor}">
+                    ${text}
+              </text>
+            </svg>
       `;
 
       return new kakao.maps.MarkerImage(
