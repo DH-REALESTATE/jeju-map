@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.058</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.058" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.059</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.059" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -1269,7 +1269,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.058</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.059</div>
             </div>
           </div>
 
@@ -1455,7 +1455,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.058';
+    const APP_VERSION = '1.059';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -1747,49 +1747,40 @@
     }
 
     function getBadgeWidthByText(text) {
-      const len = String(text ?? "").length;
-      if (len >= 3) return 70;
-      if (len === 2) return 58;
-      return 46;
-    }
+  return 38;
+}
 
     function createMarkerImage(item, isSelected = false, label = "1") {
-      const text = String(label ?? "1");
-      const boxWidth = getBadgeWidthByText(text);
-      const svgWidth = boxWidth + 8;
+  const text = String(label ?? "1");
+  const size = 38;
 
-      const bgColor = isSelected ? "#2563eb" : "rgba(255,255,255,0.82)";
-      const textColor = isSelected ? "#ffffff" : "#2563eb";
-      const borderColor = isSelected ? "#2563eb" : "rgba(255,255,255,0.55)";
+  const bgColor = isSelected ? "#2563eb" : "rgba(255,255,255,0.9)";
+  const textColor = isSelected ? "#ffffff" : "#2563eb";
+  const borderColor = isSelected ? "#2563eb" : "rgba(255,255,255,0.6)";
 
-      const svg = `
-        <svg xmlns="http://www.w3.org/2000/svg" width="${svgWidth}" height="38" viewBox="0 0 ${svgWidth} 38">
-          <defs>
-            <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
-              <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="rgba(15,41,66,0.10)"/>
-            </filter>
-          </defs>
-          <g filter="url(#shadow)">
-            <rect x="4" y="0.5" width="${boxWidth}" height="37" rx="10" ry="10"
-                  fill="${bgColor}"
-                  stroke="${borderColor}"
-                  stroke-width="1"/>
-            <text x="${4 + (boxWidth / 2)}" y="24"
-                  text-anchor="middle"
-                  font-size="13"
-                  font-weight="900"
-                  font-family="${UI_FONT_STACK}"
-                  fill="${textColor}">${text}</text>
-          </g>
-        </svg>
-      `;
+  const svg = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
+      <rect x="0.5" y="0.5" width="${size-1}" height="${size-1}" rx="10"
+            fill="${bgColor}"
+            stroke="${borderColor}"
+            stroke-width="1"/>
+      <text x="50%" y="50%"
+            text-anchor="middle"
+            dominant-baseline="middle"
+            font-size="15"
+            font-weight="900"
+            fill="${textColor}">
+            ${text}
+      </text>
+    </svg>
+  `;
 
-      return new kakao.maps.MarkerImage(
-        "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg),
-        new kakao.maps.Size(svgWidth, 38),
-        { offset: new kakao.maps.Point(svgWidth / 2, 19) }
-      );
-    }
+  return new kakao.maps.MarkerImage(
+    "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg),
+    new kakao.maps.Size(size, size),
+    { offset: new kakao.maps.Point(size/2, size/2) }
+  );
+}
 
     function updateMarkerSelection(selectedId) {
       state.selectedMarkerId = selectedId;
