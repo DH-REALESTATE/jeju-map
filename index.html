@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.063</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.063" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.064</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.064" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -1269,7 +1269,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.063</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.064</div>
             </div>
           </div>
 
@@ -1455,7 +1455,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.063';
+    const APP_VERSION = '1.064';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -1751,14 +1751,17 @@
 }
 
     function createBadgeSvg(text, isSelected = false) {
-  const size = 40;
+  const value = String(text ?? "1");
+  const len = value.length;
+  const width = len >= 3 ? 60 : len === 2 ? 50 : 40;
+  const height = 40;
   const bgColor = isSelected ? "#2563eb" : "rgba(255,255,255,0.9)";
   const textColor = isSelected ? "#ffffff" : "#2563eb";
   const borderColor = isSelected ? "#2563eb" : "rgba(255,255,255,0.6)";
 
   return `
-    <svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
-      <rect x="0.5" y="0.5" width="${size - 1}" height="${size - 1}" rx="10" ry="10"
+    <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
+      <rect x="0.5" y="0.5" width="${width - 1}" height="${height - 1}" rx="10" ry="10"
             fill="${bgColor}"
             stroke="${borderColor}"
             stroke-width="1"/>
@@ -1768,19 +1771,22 @@
             font-size="15"
             font-weight="900"
             font-family="${UI_FONT_STACK}"
-            fill="${textColor}">${String(text ?? "1")}</text>
+            fill="${textColor}">${value}</text>
     </svg>
   `;
 }
 
 function createMarkerImage(item, isSelected = false, label = "1") {
-  const size = 40;
-  const svg = createBadgeSvg(label, isSelected);
+  const value = String(label ?? "1");
+  const len = value.length;
+  const width = len >= 3 ? 60 : len === 2 ? 50 : 40;
+  const height = 40;
+  const svg = createBadgeSvg(value, isSelected);
 
   return new kakao.maps.MarkerImage(
     "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg),
-    new kakao.maps.Size(size, size),
-    { offset: new kakao.maps.Point(size / 2, size / 2) }
+    new kakao.maps.Size(width, height),
+    { offset: new kakao.maps.Point(width / 2, height / 2) }
   );
 }
 
@@ -1798,6 +1804,9 @@ function createMarkerImage(item, isSelected = false, label = "1") {
     }
 
     function getClusterBadgeWidth(count) {
+  const len = String(count ?? "").length;
+  if (len >= 3) return "60px";
+  if (len === 2) return "50px";
   return "40px";
 }
 
@@ -1809,11 +1818,12 @@ function createMarkerImage(item, isSelected = false, label = "1") {
       if (!clusterItems.length) return;
 
       const count = clusterItems.length;
-      const size = 40;
+      const width = getClusterBadgeWidth(count);
+      const height = "40px";
 
       const el = document.createElement("div");
-      el.style.width = `${size}px`;
-      el.style.height = `${size}px`;
+      el.style.width = width;
+      el.style.height = height;
       el.style.display = "flex";
       el.style.alignItems = "center";
       el.style.justifyContent = "center";
@@ -2186,64 +2196,64 @@ function createMarkerImage(item, isSelected = false, label = "1") {
         calculator: [5, 10, 20, 50],
         styles: [
           {
-            width: "46px",
-            height: "46px",
-            background: "rgba(255,255,255,0.82)",
-            borderRadius: "14px",
+            width: "40px",
+            height: "40px",
+            background: "rgba(255,255,255,0.90)",
+            borderRadius: "10px",
             color: "#2563eb",
             textAlign: "center",
             fontWeight: "900",
             fontFamily: UI_FONT_STACK,
-            lineHeight: "46px",
-            fontSize: "16px",
-            letterSpacing: "-0.5px",
-            border: "1px solid rgba(255,255,255,0.55)",
-            boxShadow: "0 6px 16px rgba(15,41,66,0.12)"
+            lineHeight: "40px",
+            fontSize: "15px",
+            letterSpacing: "-0.2px",
+            border: "1px solid rgba(255,255,255,0.60)",
+            boxShadow: "0 2px 6px rgba(15,41,66,0.10)"
           },
           {
-            width: "58px",
-            height: "46px",
-            background: "rgba(255,255,255,0.82)",
-            borderRadius: "14px",
+            width: "50px",
+            height: "40px",
+            background: "rgba(255,255,255,0.90)",
+            borderRadius: "10px",
             color: "#2563eb",
             textAlign: "center",
             fontWeight: "900",
             fontFamily: UI_FONT_STACK,
-            lineHeight: "46px",
-            fontSize: "16px",
-            letterSpacing: "-0.5px",
-            border: "1px solid rgba(255,255,255,0.55)",
-            boxShadow: "0 6px 16px rgba(15,41,66,0.12)"
+            lineHeight: "40px",
+            fontSize: "15px",
+            letterSpacing: "-0.2px",
+            border: "1px solid rgba(255,255,255,0.60)",
+            boxShadow: "0 2px 6px rgba(15,41,66,0.10)"
+          },
+          {
+            width: "60px",
+            height: "40px",
+            background: "rgba(255,255,255,0.90)",
+            borderRadius: "10px",
+            color: "#2563eb",
+            textAlign: "center",
+            fontWeight: "900",
+            fontFamily: UI_FONT_STACK,
+            lineHeight: "40px",
+            fontSize: "15px",
+            letterSpacing: "-0.2px",
+            border: "1px solid rgba(255,255,255,0.60)",
+            boxShadow: "0 2px 6px rgba(15,41,66,0.10)"
           },
           {
             width: "70px",
-            height: "46px",
-            background: "rgba(255,255,255,0.82)",
-            borderRadius: "14px",
+            height: "40px",
+            background: "rgba(255,255,255,0.90)",
+            borderRadius: "10px",
             color: "#2563eb",
             textAlign: "center",
             fontWeight: "900",
             fontFamily: UI_FONT_STACK,
-            lineHeight: "46px",
-            fontSize: "16px",
-            letterSpacing: "-0.5px",
-            border: "1px solid rgba(255,255,255,0.55)",
-            boxShadow: "0 6px 16px rgba(15,41,66,0.12)"
-          },
-          {
-            width: "82px",
-            height: "46px",
-            background: "rgba(255,255,255,0.82)",
-            borderRadius: "14px",
-            color: "#2563eb",
-            textAlign: "center",
-            fontWeight: "900",
-            fontFamily: UI_FONT_STACK,
-            lineHeight: "46px",
-            fontSize: "16px",
-            letterSpacing: "-0.5px",
-            border: "1px solid rgba(255,255,255,0.55)",
-            boxShadow: "0 6px 16px rgba(15,41,66,0.12)"
+            lineHeight: "40px",
+            fontSize: "15px",
+            letterSpacing: "-0.2px",
+            border: "1px solid rgba(255,255,255,0.60)",
+            boxShadow: "0 2px 6px rgba(15,41,66,0.10)"
           }
         ]
       });
