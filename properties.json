@@ -5,30 +5,19 @@
     "listingNo": "디-235",
     "date": "2026-01-25",
     "title": "제주푸르지오더퍼스트",
-    "desc": "제주 영어교육도시 핵심 입지의 브랜드 아파트 매물입니다. 국제학교 최고의 입지를 자랑합니다.",
     "type": "아파트",
     "dealFilter": "매매",
     "region": "영어교육도시",
     "price": "6억 9,000",
     "area": "공급 125.77㎡ / 전용 102.36㎡",
-    "address": "제주도 서귀포시 대정읍 구억리 34",
+    "address": "제주특별자치도 서귀포시 대정읍 구억리 34",
     "lat": 33.2500,
     "lng": 126.3000,
     "features": ["오션뷰", "신축", "실거주"],
-    "image": "./dh_real/235/image1.jpg",
-    "images": [ 
-                "./dh_real/235/image1.jpg",
-                "./dh_real/235/image2.jpg",
-                "./dh_real/235/image3.jpg",
-                "./dh_real/235/image4.jpg",
-                "./dh_real/235/image5.jpg",
-                "./dh_real/235/image6.jpg"
-              ],
     "desc_folder": "./dh_real/235/info.json",
-    "link": "https://land.jejukcr.com/offer/80576184",
     "agent_folder": "./dh_real/agent.json"
   },
-  
+
   {
     "id": 2,
     "listingNo": "테-002",
