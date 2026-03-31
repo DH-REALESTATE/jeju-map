@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.057</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.057" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.058</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.058" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -1269,7 +1269,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.057</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.058</div>
             </div>
           </div>
 
@@ -1455,7 +1455,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.057';
+    const APP_VERSION = '1.058';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -1756,36 +1756,27 @@
     function createMarkerImage(item, isSelected = false, label = "1") {
       const text = String(label ?? "1");
       const boxWidth = getBadgeWidthByText(text);
-      const horizontalPadding = isSelected ? 16 : 12;
-      const svgWidth = boxWidth + horizontalPadding;
-      const markerHeight = isSelected ? 54 : 46;
-      const rectHeight = isSelected ? 53 : 45;
-      const radius = isSelected ? 16 : 14;
-      const fontSize = isSelected ? 18 : 16;
-      const textY = isSelected ? 33 : 29;
+      const svgWidth = boxWidth + 8;
 
       const bgColor = isSelected ? "#2563eb" : "rgba(255,255,255,0.82)";
       const textColor = isSelected ? "#ffffff" : "#2563eb";
       const borderColor = isSelected ? "#2563eb" : "rgba(255,255,255,0.55)";
-      const shadowColor = isSelected ? "rgba(37,99,235,0.32)" : "rgba(15,41,66,0.12)";
-      const shadowDy = isSelected ? 6 : 3;
-      const shadowStd = isSelected ? 7 : 4;
 
       const svg = `
-        <svg xmlns="http://www.w3.org/2000/svg" width="${svgWidth}" height="${markerHeight}" viewBox="0 0 ${svgWidth} ${markerHeight}">
+        <svg xmlns="http://www.w3.org/2000/svg" width="${svgWidth}" height="38" viewBox="0 0 ${svgWidth} 38">
           <defs>
-            <filter id="shadow" x="-60%" y="-60%" width="220%" height="240%">
-              <feDropShadow dx="0" dy="${shadowDy}" stdDeviation="${shadowStd}" flood-color="${shadowColor}"/>
+            <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+              <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="rgba(15,41,66,0.10)"/>
             </filter>
           </defs>
           <g filter="url(#shadow)">
-            <rect x="6" y="0.5" width="${boxWidth}" height="${rectHeight}" rx="${radius}" ry="${radius}"
+            <rect x="4" y="0.5" width="${boxWidth}" height="37" rx="10" ry="10"
                   fill="${bgColor}"
                   stroke="${borderColor}"
-                  stroke-width="${isSelected ? 1.2 : 1}"/>
-            <text x="${6 + (boxWidth / 2)}" y="${textY}"
+                  stroke-width="1"/>
+            <text x="${4 + (boxWidth / 2)}" y="24"
                   text-anchor="middle"
-                  font-size="${fontSize}"
+                  font-size="13"
                   font-weight="900"
                   font-family="${UI_FONT_STACK}"
                   fill="${textColor}">${text}</text>
@@ -1795,8 +1786,8 @@
 
       return new kakao.maps.MarkerImage(
         "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg),
-        new kakao.maps.Size(svgWidth, markerHeight),
-        { offset: new kakao.maps.Point(svgWidth / 2, markerHeight / 2) }
+        new kakao.maps.Size(svgWidth, 38),
+        { offset: new kakao.maps.Point(svgWidth / 2, 19) }
       );
     }
 
@@ -1833,18 +1824,18 @@
       const bg = isSelected ? "#2563eb" : "rgba(255,255,255,0.82)";
       const color = isSelected ? "#ffffff" : "#2563eb";
       const border = isSelected ? "#2563eb" : "rgba(255,255,255,0.55)";
-      const height = isSelected ? "52px" : "46px";
-      const radius = isSelected ? "16px" : "14px";
-      const fontSize = isSelected ? "17px" : "16px";
-      const shadow = isSelected ? "0 10px 22px rgba(37,99,235,0.28)" : "0 6px 16px rgba(15,41,66,0.12)";
+      const height = "38px";
+      const radius = "10px";
+      const fontSize = "13px";
+      const shadow = "0 2px 8px rgba(15,41,66,0.10)";
 
       const el = document.createElement("div");
       el.style.display = "flex";
       el.style.alignItems = "center";
       el.style.justifyContent = "center";
-      el.style.minWidth = width;
+      el.style.minWidth = (count >= 3 ? "60px" : count === 2 ? "50px" : "40px");
       el.style.height = height;
-      el.style.padding = isSelected ? "0 14px" : "0 12px";
+      el.style.padding = "0 8px";
       el.style.borderRadius = radius;
       el.style.background = bg;
       el.style.color = color;
