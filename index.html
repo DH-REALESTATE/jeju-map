@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.059</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.059" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.060</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.060" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -1269,7 +1269,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.059</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.060</div>
             </div>
           </div>
 
@@ -1455,7 +1455,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.059';
+    const APP_VERSION = '1.060';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -1752,7 +1752,7 @@
 
     function createMarkerImage(item, isSelected = false, label = "1") {
   const text = String(label ?? "1");
-  const size = 38;
+  const size = 40;
 
   const bgColor = isSelected ? "#2563eb" : "rgba(255,255,255,0.9)";
   const textColor = isSelected ? "#ffffff" : "#2563eb";
@@ -1760,7 +1760,7 @@
 
   const svg = `
     <svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
-      <rect x="0.5" y="0.5" width="${size-1}" height="${size-1}" rx="10"
+      <rect x="0.5" y="0.5" width="${size - 1}" height="${size - 1}" rx="10" ry="10"
             fill="${bgColor}"
             stroke="${borderColor}"
             stroke-width="1"/>
@@ -1769,16 +1769,15 @@
             dominant-baseline="middle"
             font-size="15"
             font-weight="900"
-            fill="${textColor}">
-            ${text}
-      </text>
+            font-family="${UI_FONT_STACK}"
+            fill="${textColor}">${text}</text>
     </svg>
   `;
 
   return new kakao.maps.MarkerImage(
     "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg),
     new kakao.maps.Size(size, size),
-    { offset: new kakao.maps.Point(size/2, size/2) }
+    { offset: new kakao.maps.Point(size / 2, size / 2) }
   );
 }
 
@@ -1796,11 +1795,8 @@
     }
 
     function getClusterBadgeWidth(count) {
-      const len = String(count).length;
-      if (len >= 3) return "70px";
-      if (len === 2) return "58px";
-      return "46px";
-    }
+  return "40px";
+}
 
     function setClusterBadgeSelected(cluster, isSelected) {
       const clusterMarker = cluster.getClusterMarker ? cluster.getClusterMarker() : null;
@@ -1824,9 +1820,9 @@
       el.style.display = "flex";
       el.style.alignItems = "center";
       el.style.justifyContent = "center";
-      el.style.minWidth = (count >= 3 ? "60px" : count === 2 ? "50px" : "40px");
+      el.style.minWidth = width;
       el.style.height = height;
-      el.style.padding = "0 8px";
+      el.style.padding = "0";
       el.style.borderRadius = radius;
       el.style.background = bg;
       el.style.color = color;
