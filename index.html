@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.062</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.062" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.063</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.063" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -1269,7 +1269,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.062</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.063</div>
             </div>
           </div>
 
@@ -1455,7 +1455,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.062';
+    const APP_VERSION = '1.063';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -1750,15 +1750,13 @@
   return 38;
 }
 
-    function createMarkerImage(item, isSelected = false, label = "1") {
-  const text = String(label ?? "1");
+    function createBadgeSvg(text, isSelected = false) {
   const size = 40;
-
   const bgColor = isSelected ? "#2563eb" : "rgba(255,255,255,0.9)";
   const textColor = isSelected ? "#ffffff" : "#2563eb";
   const borderColor = isSelected ? "#2563eb" : "rgba(255,255,255,0.6)";
 
-  const svg = `
+  return `
     <svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
       <rect x="0.5" y="0.5" width="${size - 1}" height="${size - 1}" rx="10" ry="10"
             fill="${bgColor}"
@@ -1770,9 +1768,14 @@
             font-size="15"
             font-weight="900"
             font-family="${UI_FONT_STACK}"
-            fill="${textColor}">${text}</text>
+            fill="${textColor}">${String(text ?? "1")}</text>
     </svg>
   `;
+}
+
+function createMarkerImage(item, isSelected = false, label = "1") {
+  const size = 40;
+  const svg = createBadgeSvg(label, isSelected);
 
   return new kakao.maps.MarkerImage(
     "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg),
@@ -1806,42 +1809,18 @@
       if (!clusterItems.length) return;
 
       const count = clusterItems.length;
-      const width = getClusterBadgeWidth(count);
-
-      const bg = isSelected ? "#2563eb" : "rgba(255,255,255,0.82)";
-      const color = isSelected ? "#ffffff" : "#2563eb";
-      const border = isSelected ? "#2563eb" : "rgba(255,255,255,0.55)";
-      const height = "40px";
-      const radius = "10px";
-      const fontSize = "15px";
-      const shadow = "0 2px 6px rgba(15,41,66,0.10)";
+      const size = 40;
 
       const el = document.createElement("div");
+      el.style.width = `${size}px`;
+      el.style.height = `${size}px`;
       el.style.display = "flex";
       el.style.alignItems = "center";
       el.style.justifyContent = "center";
-      el.style.width = width;
-      el.style.height = width;
-      el.style.display = "flex";
-      el.style.alignItems = "center";
-      el.style.justifyContent = "center";
-      
-      el.style.padding = "0";
-      el.style.borderRadius = radius;
-      el.style.background = bg;
-      el.style.color = color;
-      el.style.fontSize = fontSize;
-      el.style.fontWeight = "900";
-      el.style.fontFamily = UI_FONT_STACK;
-      el.style.lineHeight = height;
-      el.style.letterSpacing = "-0.5px";
-      el.style.border = `1px solid ${border}`;
-      el.style.boxShadow = shadow;
       el.style.boxSizing = "border-box";
-      el.style.whiteSpace = "nowrap";
       el.style.cursor = "pointer";
       el.style.pointerEvents = "auto";
-      el.textContent = String(count);
+      el.innerHTML = createBadgeSvg(String(count), isSelected);
 
       el.addEventListener("click", async function (e) {
         e.preventDefault();
