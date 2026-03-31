@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.064</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.064" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.058</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.058" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -1269,7 +1269,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.064</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.058</div>
             </div>
           </div>
 
@@ -1455,7 +1455,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.064';
+    const APP_VERSION = '1.058';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -1747,48 +1747,49 @@
     }
 
     function getBadgeWidthByText(text) {
-  return 38;
-}
+      const len = String(text ?? "").length;
+      if (len >= 3) return 70;
+      if (len === 2) return 58;
+      return 46;
+    }
 
-    function createBadgeSvg(text, isSelected = false) {
-  const value = String(text ?? "1");
-  const len = value.length;
-  const width = len >= 3 ? 60 : len === 2 ? 50 : 40;
-  const height = 40;
-  const bgColor = isSelected ? "#2563eb" : "rgba(255,255,255,0.9)";
-  const textColor = isSelected ? "#ffffff" : "#2563eb";
-  const borderColor = isSelected ? "#2563eb" : "rgba(255,255,255,0.6)";
+    function createMarkerImage(item, isSelected = false, label = "1") {
+      const text = String(label ?? "1");
+      const boxWidth = getBadgeWidthByText(text);
+      const svgWidth = boxWidth + 8;
 
-  return `
-    <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
-      <rect x="0.5" y="0.5" width="${width - 1}" height="${height - 1}" rx="10" ry="10"
-            fill="${bgColor}"
-            stroke="${borderColor}"
-            stroke-width="1"/>
-      <text x="50%" y="50%"
-            text-anchor="middle"
-            dominant-baseline="middle"
-            font-size="15"
-            font-weight="900"
-            font-family="${UI_FONT_STACK}"
-            fill="${textColor}">${value}</text>
-    </svg>
-  `;
-}
+      const bgColor = isSelected ? "#2563eb" : "rgba(255,255,255,0.82)";
+      const textColor = isSelected ? "#ffffff" : "#2563eb";
+      const borderColor = isSelected ? "#2563eb" : "rgba(255,255,255,0.55)";
 
-function createMarkerImage(item, isSelected = false, label = "1") {
-  const value = String(label ?? "1");
-  const len = value.length;
-  const width = len >= 3 ? 60 : len === 2 ? 50 : 40;
-  const height = 40;
-  const svg = createBadgeSvg(value, isSelected);
+      const svg = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="${svgWidth}" height="38" viewBox="0 0 ${svgWidth} 38">
+          <defs>
+            <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+              <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="rgba(15,41,66,0.10)"/>
+            </filter>
+          </defs>
+          <g filter="url(#shadow)">
+            <rect x="4" y="0.5" width="${boxWidth}" height="37" rx="10" ry="10"
+                  fill="${bgColor}"
+                  stroke="${borderColor}"
+                  stroke-width="1"/>
+            <text x="${4 + (boxWidth / 2)}" y="24"
+                  text-anchor="middle"
+                  font-size="13"
+                  font-weight="900"
+                  font-family="${UI_FONT_STACK}"
+                  fill="${textColor}">${text}</text>
+          </g>
+        </svg>
+      `;
 
-  return new kakao.maps.MarkerImage(
-    "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg),
-    new kakao.maps.Size(width, height),
-    { offset: new kakao.maps.Point(width / 2, height / 2) }
-  );
-}
+      return new kakao.maps.MarkerImage(
+        "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg),
+        new kakao.maps.Size(svgWidth, 38),
+        { offset: new kakao.maps.Point(svgWidth / 2, 19) }
+      );
+    }
 
     function updateMarkerSelection(selectedId) {
       state.selectedMarkerId = selectedId;
@@ -1804,11 +1805,11 @@ function createMarkerImage(item, isSelected = false, label = "1") {
     }
 
     function getClusterBadgeWidth(count) {
-  const len = String(count ?? "").length;
-  if (len >= 3) return "60px";
-  if (len === 2) return "50px";
-  return "40px";
-}
+      const len = String(count).length;
+      if (len >= 3) return "70px";
+      if (len === 2) return "58px";
+      return "46px";
+    }
 
     function setClusterBadgeSelected(cluster, isSelected) {
       const clusterMarker = cluster.getClusterMarker ? cluster.getClusterMarker() : null;
@@ -1819,18 +1820,37 @@ function createMarkerImage(item, isSelected = false, label = "1") {
 
       const count = clusterItems.length;
       const width = getClusterBadgeWidth(count);
-      const height = "40px";
+
+      const bg = isSelected ? "#2563eb" : "rgba(255,255,255,0.82)";
+      const color = isSelected ? "#ffffff" : "#2563eb";
+      const border = isSelected ? "#2563eb" : "rgba(255,255,255,0.55)";
+      const height = "38px";
+      const radius = "10px";
+      const fontSize = "13px";
+      const shadow = "0 2px 8px rgba(15,41,66,0.10)";
 
       const el = document.createElement("div");
-      el.style.width = width;
-      el.style.height = height;
       el.style.display = "flex";
       el.style.alignItems = "center";
       el.style.justifyContent = "center";
+      el.style.minWidth = (count >= 3 ? "60px" : count === 2 ? "50px" : "40px");
+      el.style.height = height;
+      el.style.padding = "0 8px";
+      el.style.borderRadius = radius;
+      el.style.background = bg;
+      el.style.color = color;
+      el.style.fontSize = fontSize;
+      el.style.fontWeight = "900";
+      el.style.fontFamily = UI_FONT_STACK;
+      el.style.lineHeight = height;
+      el.style.letterSpacing = "-0.5px";
+      el.style.border = `1px solid ${border}`;
+      el.style.boxShadow = shadow;
       el.style.boxSizing = "border-box";
+      el.style.whiteSpace = "nowrap";
       el.style.cursor = "pointer";
       el.style.pointerEvents = "auto";
-      el.innerHTML = createBadgeSvg(String(count), isSelected);
+      el.textContent = String(count);
 
       el.addEventListener("click", async function (e) {
         e.preventDefault();
@@ -2196,64 +2216,64 @@ function createMarkerImage(item, isSelected = false, label = "1") {
         calculator: [5, 10, 20, 50],
         styles: [
           {
-            width: "40px",
-            height: "40px",
-            background: "rgba(255,255,255,0.90)",
-            borderRadius: "10px",
+            width: "46px",
+            height: "46px",
+            background: "rgba(255,255,255,0.82)",
+            borderRadius: "14px",
             color: "#2563eb",
             textAlign: "center",
             fontWeight: "900",
             fontFamily: UI_FONT_STACK,
-            lineHeight: "40px",
-            fontSize: "15px",
-            letterSpacing: "-0.2px",
-            border: "1px solid rgba(255,255,255,0.60)",
-            boxShadow: "0 2px 6px rgba(15,41,66,0.10)"
+            lineHeight: "46px",
+            fontSize: "16px",
+            letterSpacing: "-0.5px",
+            border: "1px solid rgba(255,255,255,0.55)",
+            boxShadow: "0 6px 16px rgba(15,41,66,0.12)"
           },
           {
-            width: "50px",
-            height: "40px",
-            background: "rgba(255,255,255,0.90)",
-            borderRadius: "10px",
+            width: "58px",
+            height: "46px",
+            background: "rgba(255,255,255,0.82)",
+            borderRadius: "14px",
             color: "#2563eb",
             textAlign: "center",
             fontWeight: "900",
             fontFamily: UI_FONT_STACK,
-            lineHeight: "40px",
-            fontSize: "15px",
-            letterSpacing: "-0.2px",
-            border: "1px solid rgba(255,255,255,0.60)",
-            boxShadow: "0 2px 6px rgba(15,41,66,0.10)"
-          },
-          {
-            width: "60px",
-            height: "40px",
-            background: "rgba(255,255,255,0.90)",
-            borderRadius: "10px",
-            color: "#2563eb",
-            textAlign: "center",
-            fontWeight: "900",
-            fontFamily: UI_FONT_STACK,
-            lineHeight: "40px",
-            fontSize: "15px",
-            letterSpacing: "-0.2px",
-            border: "1px solid rgba(255,255,255,0.60)",
-            boxShadow: "0 2px 6px rgba(15,41,66,0.10)"
+            lineHeight: "46px",
+            fontSize: "16px",
+            letterSpacing: "-0.5px",
+            border: "1px solid rgba(255,255,255,0.55)",
+            boxShadow: "0 6px 16px rgba(15,41,66,0.12)"
           },
           {
             width: "70px",
-            height: "40px",
-            background: "rgba(255,255,255,0.90)",
-            borderRadius: "10px",
+            height: "46px",
+            background: "rgba(255,255,255,0.82)",
+            borderRadius: "14px",
             color: "#2563eb",
             textAlign: "center",
             fontWeight: "900",
             fontFamily: UI_FONT_STACK,
-            lineHeight: "40px",
-            fontSize: "15px",
-            letterSpacing: "-0.2px",
-            border: "1px solid rgba(255,255,255,0.60)",
-            boxShadow: "0 2px 6px rgba(15,41,66,0.10)"
+            lineHeight: "46px",
+            fontSize: "16px",
+            letterSpacing: "-0.5px",
+            border: "1px solid rgba(255,255,255,0.55)",
+            boxShadow: "0 6px 16px rgba(15,41,66,0.12)"
+          },
+          {
+            width: "82px",
+            height: "46px",
+            background: "rgba(255,255,255,0.82)",
+            borderRadius: "14px",
+            color: "#2563eb",
+            textAlign: "center",
+            fontWeight: "900",
+            fontFamily: UI_FONT_STACK,
+            lineHeight: "46px",
+            fontSize: "16px",
+            letterSpacing: "-0.5px",
+            border: "1px solid rgba(255,255,255,0.55)",
+            boxShadow: "0 6px 16px rgba(15,41,66,0.12)"
           }
         ]
       });
