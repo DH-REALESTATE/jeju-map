@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.056</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.056" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.057</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.057" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -1269,7 +1269,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.056</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.057</div>
             </div>
           </div>
 
@@ -1455,7 +1455,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.056';
+    const APP_VERSION = '1.057';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -1478,6 +1478,8 @@
     let selectedType = "all";
     let currentDetailItem = null;
     let agentCache = {};
+    const infoCache = {};
+    const imageCache = {};
     let currentHeroImages = [];
     let currentHeroIndex = 0;
 
@@ -1621,7 +1623,8 @@
         phone2: "",
         date: item.date ?? "",
         dateLabel: item.dateLabel ?? "",
-        desc_folder: item.desc_folder ?? ""
+        desc_folder: item.desc_folder ?? "",
+        image_folder: item.image_folder ?? ""
       };
     }
 
@@ -1896,16 +1899,66 @@
       return raw.length >= 2 ? raw.slice(-2) : raw;
     }
 
-    async function loadPropertyInfo(item) {
-      if (!item.desc_folder) return {};
+    async function loadJsonFile(path, cacheStore, errorLabel) {
+      if (!path) return {};
+      if (cacheStore[path]) return cacheStore[path];
+
       try {
-        const res = await fetch(item.desc_folder, { cache: "no-store" });
-        if (!res.ok) throw new Error(`info.json 불러오기 실패: ${res.status}`);
-        return await res.json();
+        const res = await fetch(path, { cache: "no-store" });
+        if (!res.ok) throw new Error(`${errorLabel} 불러오기 실패: ${res.status}`);
+        const data = await res.json();
+        cacheStore[path] = data;
+        return data;
       } catch (err) {
-        console.error("상세 정보 불러오기 실패:", err);
+        console.error(`${errorLabel} 로딩 실패:`, err);
         return {};
       }
+    }
+
+    async function loadPropertyInfo(item) {
+      return await loadJsonFile(item.desc_folder, infoCache, "info.json");
+    }
+
+    async function loadPropertyImages(item) {
+      return await loadJsonFile(item.image_folder, imageCache, "image.json");
+    }
+
+    async function resolveDetailData(item) {
+      const [info, imageData, agent] = await Promise.all([
+        loadPropertyInfo(item),
+        loadPropertyImages(item),
+        loadAgent(item.agent_folder)
+      ]);
+
+      const imageList = Array.isArray(imageData.images)
+        ? imageData.images.map(v => String(v || "").trim()).filter(Boolean)
+        : [];
+
+      const mainImage = String(imageData.image || "").trim()
+        || imageList[0]
+        || String(item.image || "").trim();
+
+      const mergedImages = imageList.length
+        ? imageList
+        : (mainImage ? [mainImage] : normalizeImageArray(item));
+
+      return {
+        ...item,
+        desc: info.desc ?? item.desc ?? "",
+        sections: Array.isArray(info.sections) ? info.sections : [],
+        infoRows: Array.isArray(info.infoRows) ? info.infoRows : [],
+        propertyType: info.propertyType ?? "",
+        image: mainImage,
+        images: mergedImages,
+        agentName: agent?.agentName ?? item.agentName ?? "",
+        agentTitle: agent?.agentTitle ?? item.agentTitle ?? "",
+        agentOffice: agent?.agentOffice ?? item.agentOffice ?? "",
+        agentAddress: agent?.agentAddress ?? item.agentAddress ?? "",
+        agentRegNo: agent?.agentRegNo ?? item.agentRegNo ?? "",
+        agentImage: agent?.agentImage ?? item.agentImage ?? "",
+        phone1: agent?.phone1 ?? item.phone1 ?? "",
+        phone2: agent?.phone2 ?? item.phone2 ?? ""
+      };
     }
 
     function renderDetailInfoRows(info) {
@@ -2063,66 +2116,65 @@
     }
 
     async function openDetailPanel(item) {
-      currentDetailItem = item;
       sidebar.classList.add("expanded");
       updateSidebarWidth();
       refreshMapLayout();
 
-      const heroImages = getHeroImages(item);
+      const detailItem = await resolveDetailData(item);
+      currentDetailItem = detailItem;
+
+      const heroImages = getHeroImages(detailItem);
       renderHeroSlider(heroImages);
 
-      detailListingNo.textContent = item.listingNo ? `매물번호 ${item.listingNo}` : "";
-      detailTitle.textContent = item.title || "";
-      detailPrice.textContent = `${item.dealType || ""} ${item.price || ""}`.trim();
-      detailAddress.textContent = `${item.address || ""}`.trim();
+      detailListingNo.textContent = detailItem.listingNo ? `매물번호 ${detailItem.listingNo}` : "";
+      detailTitle.textContent = detailItem.title || "";
+      detailPrice.textContent = `${detailItem.dealType || ""} ${detailItem.price || ""}`.trim();
+      detailAddress.textContent = `${detailItem.address || ""}`.trim();
 
-      detailHeroBadge.textContent = item.type || "";
-      detailHeroBadge.style.display = item.type ? "inline-flex" : "none";
+      detailHeroBadge.textContent = detailItem.type || "";
+      detailHeroBadge.style.display = detailItem.type ? "inline-flex" : "none";
 
-      detailHeroDeal.textContent = item.dealType || "";
-      detailHeroPrice.textContent = item.price || "";
-      detailHeroAddress.textContent = `${item.address || ""}`.trim();
+      detailHeroDeal.textContent = detailItem.dealType || "";
+      detailHeroPrice.textContent = detailItem.price || "";
+      detailHeroAddress.textContent = `${detailItem.address || ""}`.trim();
 
-      detailHeroFeatures.innerHTML = (item.features || [])
+      detailHeroFeatures.innerHTML = (detailItem.features || [])
         .map(f => {
           const isHighlight = ["오션뷰", "급매", "핵심입지"].includes(f);
           return `<span class="${isHighlight ? "highlight" : ""}">${escapeHtml(f)}</span>`;
         })
         .join("");
 
-      detailAreaValue.innerHTML = formatAreaByUnit(item.area || "-", "m2", item.type || "");
-      detailAreaValue.dataset.areaRaw = item.area || "-";
+      detailAreaValue.innerHTML = formatAreaByUnit(detailItem.area || "-", "m2", detailItem.type || "");
+      detailAreaValue.dataset.areaRaw = detailItem.area || "-";
       detailAreaValue.dataset.areaUnit = "m2";
-      detailAreaValue.dataset.areaType = item.type || "";
+      detailAreaValue.dataset.areaType = detailItem.type || "";
       if (detailAreaToggleBtn) detailAreaToggleBtn.textContent = "평";
       if (detailAreaLabel) {
-        detailAreaLabel.textContent = /아파트|빌라/.test(item.type || "") ? "면적(전용)" : "면적";
+        detailAreaLabel.textContent = /아파트|빌라/.test(detailItem.type || "") ? "면적(전용)" : "면적";
       }
-      detailTypeValue.textContent = item.type || "-";
-      detailRegionValue.textContent = item.region || "-";
+      detailTypeValue.textContent = detailItem.type || "-";
+      detailRegionValue.textContent = detailItem.region || "-";
 
-      detailDesc.textContent = item.desc || "";
+      detailDesc.textContent = detailItem.desc || "";
       detailInfoList.innerHTML = "";
 
-      const info = await loadPropertyInfo(item);
-      renderDetailInfoRows(info);
+      renderDetailInfoRows(detailItem);
 
-      const agent = await loadAgent(item.agent_folder);
+      if (detailItem.agentName || detailItem.agentOffice || detailItem.phone1 || detailItem.phone2 || detailItem.agentImage) {
+        detailAgentName.textContent = detailItem.agentName || "";
+        detailAgentTitle.textContent = detailItem.agentTitle || "";
+        detailAgentOffice.textContent = detailItem.agentOffice || "";
+        detailAgentAddress.textContent = detailItem.agentAddress || "";
+        detailAgentRegNo.textContent = detailItem.agentRegNo || "";
 
-      if (agent) {
-        detailAgentName.textContent = agent.agentName || "";
-        detailAgentTitle.textContent = agent.agentTitle || "";
-        detailAgentOffice.textContent = agent.agentOffice || "";
-        detailAgentAddress.textContent = agent.agentAddress || "";
-        detailAgentRegNo.textContent = agent.agentRegNo || "";
-
-        const phoneText = [agent.phone1, agent.phone2].filter(Boolean).join(" / ");
+        const phoneText = [detailItem.phone1, detailItem.phone2].filter(Boolean).join(" / ");
         detailAgentPhoneInline.textContent = phoneText || "";
 
-        if (agent.agentImage) {
-          detailAgentAvatar.innerHTML = `<img src="${escapeHtml(agent.agentImage)}" alt="agent">`;
+        if (detailItem.agentImage) {
+          detailAgentAvatar.innerHTML = `<img src="${escapeHtml(detailItem.agentImage)}" alt="agent">`;
         } else {
-          detailAgentAvatar.textContent = makeAgentInitial(agent.agentName || "담당");
+          detailAgentAvatar.textContent = makeAgentInitial(detailItem.agentName || "담당");
         }
       } else {
         detailAgentName.textContent = "";
@@ -2137,7 +2189,7 @@
       detailFeatures.innerHTML = "";
 
       detailPhone.textContent = "";
-      const detailCallNumber = [item.phone1, item.phone2].filter(Boolean)[0] || "";
+      const detailCallNumber = [detailItem.phone1, detailItem.phone2].filter(Boolean)[0] || "";
       detailCallBtn.disabled = !detailCallNumber;
       detailCallBtn.style.opacity = detailCallNumber ? "1" : "0.55";
       detailCallBtn.style.cursor = detailCallNumber ? "pointer" : "default";
@@ -2147,12 +2199,12 @@
       };
 
       detailMapBtn.onclick = async () => {
-        await focusProperty(item.id);
+        await focusProperty(detailItem.id);
       };
 
       detailRoadviewBtn.onclick = async () => {
         await hideRoadview();
-        showRoadview(item.lat, item.lng);
+        showRoadview(detailItem.lat, detailItem.lng);
       };
     }
 
@@ -2583,7 +2635,7 @@
 
           await openDetailPanel(item);
           updateMarkerSelection(item.id);
-          await focusProperty(item.id);
+          await focusProperty(detailItem.id);
         });
       });
     }
