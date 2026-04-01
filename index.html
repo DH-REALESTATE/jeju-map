@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.057</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.057" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.058</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.058" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -362,7 +362,7 @@
 
     .detail-listing-no {
       display: block;
-      font-size: 11px;
+      font-size: 12.8px;
       font-weight: 800;
       letter-spacing: -0.2px;
       color: #6b7280;
@@ -849,18 +849,51 @@
       margin-bottom: 7px;
     }
 
+    .card-badge-row {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      min-width: 0;
+    }
+
     .card-badge {
       display: inline-flex;
       align-items: center;
       height: 22px;
-      padding: 0 8px;
-      border-radius: 7px;
+      padding: 0 10px;
+      border-radius: 999px;
       background: #f3eefe;
       color: #7c4dff;
       font-size: 11px;
       font-weight: 800;
       line-height: 1;
       box-shadow: inset 0 0 0 1px rgba(124, 77, 255, 0.06);
+      white-space: nowrap;
+    }
+
+    .card-badge.deal[data-type="매매"] {
+      background: #eef5ff;
+      color: #2563eb;
+      box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.08);
+    }
+
+    .card-badge.deal[data-type="전세"] {
+      background: #e8f7ef;
+      color: #16a34a;
+      box-shadow: inset 0 0 0 1px rgba(22, 163, 74, 0.08);
+    }
+
+    .card-badge.deal[data-type="월세"] {
+      background: #fff7ed;
+      color: #ea580c;
+      box-shadow: inset 0 0 0 1px rgba(234, 88, 12, 0.08);
+    }
+
+    .card-badge.deal[data-type="년세"] {
+      background: #fef3f2;
+      color: #dc2626;
+      box-shadow: inset 0 0 0 1px rgba(220, 38, 38, 0.08);
     }
 
     .card-date {
@@ -1269,7 +1302,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.057</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.058</div>
             </div>
           </div>
 
@@ -1395,8 +1428,8 @@
                   <div class="detail-phone" id="detailPhone"></div>
 
                   <div class="detail-actions">
-                    <button type="button" class="detail-action-btn primary" id="detailMapBtn">교차로</button>
-                    <button type="button" class="detail-action-btn" id="detailRoadviewBtn">카카오톡</button>
+                    <button type="button" class="detail-action-btn primary" id="detailMapBtn">지도보기</button>
+                    <button type="button" class="detail-action-btn" id="detailRoadviewBtn">로드뷰</button>
                     <button type="button" class="detail-action-btn" id="detailCallBtn"><i class="fa-solid fa-phone"></i> 문의전화</button>
                   </div>
                 </div>
@@ -1455,7 +1488,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.057';
+    const APP_VERSION = '1.058';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -1621,8 +1654,6 @@
         agentImage: "",
         phone1: "",
         phone2: "",
-        linkCrossroad: "",
-        linkKakaotalk: "",
         date: item.date ?? "",
         dateLabel: item.dateLabel ?? "",
         desc_folder: item.desc_folder ?? "",
@@ -1729,9 +1760,7 @@
               agentRegNo: agent?.agentRegNo ?? "",
               agentImage: agent?.agentImage ?? "",
               phone1: agent?.phone1 ?? "",
-              phone2: agent?.phone2 ?? "",
-              linkCrossroad: agent?.Link_crossroad ?? "",
-              linkKakaotalk: agent?.Link_kakaotalk ?? ""
+              phone2: agent?.phone2 ?? ""
             };
           })
         );
@@ -1961,9 +1990,7 @@
         agentRegNo: agent?.agentRegNo ?? item.agentRegNo ?? "",
         agentImage: agent?.agentImage ?? item.agentImage ?? "",
         phone1: agent?.phone1 ?? item.phone1 ?? "",
-        phone2: agent?.phone2 ?? item.phone2 ?? "",
-        linkCrossroad: agent?.Link_crossroad ?? item.linkCrossroad ?? "",
-        linkKakaotalk: agent?.Link_kakaotalk ?? item.linkKakaotalk ?? ""
+        phone2: agent?.phone2 ?? item.phone2 ?? ""
       };
     }
 
@@ -2204,22 +2231,13 @@
         location.href = `tel:${detailCallNumber}`;
       };
 
-      const crossroadLink = String(detailItem.linkCrossroad || "").trim();
-      detailMapBtn.disabled = !crossroadLink;
-      detailMapBtn.style.opacity = crossroadLink ? "1" : "0.55";
-      detailMapBtn.style.cursor = crossroadLink ? "pointer" : "default";
-      detailMapBtn.onclick = () => {
-        if (!crossroadLink) return;
-        window.open(crossroadLink, "_blank", "noopener,noreferrer");
+      detailMapBtn.onclick = async () => {
+        await focusProperty(detailItem.id);
       };
 
-      const kakaotalkLink = String(detailItem.linkKakaotalk || "").trim();
-      detailRoadviewBtn.disabled = !kakaotalkLink;
-      detailRoadviewBtn.style.opacity = kakaotalkLink ? "1" : "0.55";
-      detailRoadviewBtn.style.cursor = kakaotalkLink ? "pointer" : "default";
-      detailRoadviewBtn.onclick = () => {
-        if (!kakaotalkLink) return;
-        window.open(kakaotalkLink, "_blank", "noopener,noreferrer");
+      detailRoadviewBtn.onclick = async () => {
+        await hideRoadview();
+        showRoadview(detailItem.lat, detailItem.lng);
       };
     }
 
@@ -2605,7 +2623,10 @@
 
               <div class="card-body">
                 <div class="card-top-line">
-                  <span class="card-badge">${typeText}</span>
+                  <div class="card-badge-row">
+                    <span class="card-badge">${typeText}</span>
+                    <span class="card-badge deal" data-type="${dealLabel}">${dealLabel}</span>
+                  </div>
                   <span class="card-date">${escapeHtml(dateText)}</span>
                 </div>
 
