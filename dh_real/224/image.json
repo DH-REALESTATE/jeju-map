@@ -1,0 +1,11 @@
+{
+  "image": "./dh_real/224/image1.jpg",
+  "images": [
+    "./dh_real/224/image1.jpg",
+    "./dh_real/224/image2.jpg",
+    "./dh_real/224/image3.jpg",
+    "./dh_real/224/image4.jpg",
+    "./dh_real/224/image5.jpg",
+    "./dh_real/224/image6.jpg"
+  ]
+}
