@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.058</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.058" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.062</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.062" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -362,7 +362,7 @@
 
     .detail-listing-no {
       display: block;
-      font-size: 11px;
+      font-size: 12.5px;
       font-weight: 800;
       letter-spacing: -0.2px;
       color: #6b7280;
@@ -760,6 +760,11 @@
       margin-top: 0;
       margin-bottom: 10px;
       border-radius: 12px;
+      background: #f1f4f8;
+    }
+
+    .reset-list-btn:hover {
+      background: #e7edf3;
     }
 
     .list-head {
@@ -891,7 +896,7 @@
     }
 
     .card-badge.deal[data-type="년세"] {
-      background: #fef3f2;
+      background: #fef2f2;
       color: #dc2626;
       box-shadow: inset 0 0 0 1px rgba(220, 38, 38, 0.08);
     }
@@ -1302,7 +1307,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.058</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.062</div>
             </div>
           </div>
 
@@ -1428,8 +1433,8 @@
                   <div class="detail-phone" id="detailPhone"></div>
 
                   <div class="detail-actions">
-                    <button type="button" class="detail-action-btn primary" id="detailMapBtn">지도보기</button>
-                    <button type="button" class="detail-action-btn" id="detailRoadviewBtn">로드뷰</button>
+                    <button type="button" class="detail-action-btn primary" id="detailMapBtn">교차로</button>
+                    <button type="button" class="detail-action-btn" id="detailRoadviewBtn">카카오톡</button>
                     <button type="button" class="detail-action-btn" id="detailCallBtn"><i class="fa-solid fa-phone"></i> 문의전화</button>
                   </div>
                 </div>
@@ -1488,7 +1493,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.058';
+    const APP_VERSION = '1.062';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -1760,7 +1765,9 @@
               agentRegNo: agent?.agentRegNo ?? "",
               agentImage: agent?.agentImage ?? "",
               phone1: agent?.phone1 ?? "",
-              phone2: agent?.phone2 ?? ""
+              phone2: agent?.phone2 ?? "",
+              linkCrossroad: agent?.Link_crossroad ?? "",
+              linkKakaotalk: agent?.Link_kakaotalk ?? ""
             };
           })
         );
@@ -1990,7 +1997,9 @@
         agentRegNo: agent?.agentRegNo ?? item.agentRegNo ?? "",
         agentImage: agent?.agentImage ?? item.agentImage ?? "",
         phone1: agent?.phone1 ?? item.phone1 ?? "",
-        phone2: agent?.phone2 ?? item.phone2 ?? ""
+        phone2: agent?.phone2 ?? item.phone2 ?? "",
+        linkCrossroad: agent?.Link_crossroad ?? item.linkCrossroad ?? "",
+        linkKakaotalk: agent?.Link_kakaotalk ?? item.linkKakaotalk ?? ""
       };
     }
 
@@ -2231,13 +2240,17 @@
         location.href = `tel:${detailCallNumber}`;
       };
 
-      detailMapBtn.onclick = async () => {
-        await focusProperty(detailItem.id);
+      detailMapBtn.style.display = detailItem.linkCrossroad ? "inline-flex" : "none";
+      detailRoadviewBtn.style.display = detailItem.linkKakaotalk ? "inline-flex" : "none";
+
+      detailMapBtn.onclick = () => {
+        if (!detailItem.linkCrossroad) return;
+        window.open(detailItem.linkCrossroad, "_blank");
       };
 
-      detailRoadviewBtn.onclick = async () => {
-        await hideRoadview();
-        showRoadview(detailItem.lat, detailItem.lng);
+      detailRoadviewBtn.onclick = () => {
+        if (!detailItem.linkKakaotalk) return;
+        window.open(detailItem.linkKakaotalk, "_blank");
       };
     }
 
