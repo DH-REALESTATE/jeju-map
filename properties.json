@@ -22,23 +22,22 @@
   },
 
   {
-    "id": 2,
-    "listingNo": "테-002",
-    "date": "2026-01-27",
-    "title": "영어교육도시 인근 수익형 상가",
-    "desc": "유동인구가 안정적인 핵심 입지의 수익형 상가 매물입니다.",
-    "type": "상가",
+    "id": 224,
+    "listingNo": "디-224",
+    "date": "2026-03-27",
+    "title": "노형2차 아이파크 ",
+    "desc": "노형동 핵심 입지, 대형마트 및 병원 / 학군",
+    "image": ".dh_real/224/image1.jpg",
+    "type": "아파트",
     "dealFilter": "매매",
-    "region": "영어교육도시",
-    "price": "7억 5,000",
-    "area": "94㎡",
-    "address": "서귀포시 대정읍",
-    "lat": 33.3025,
-    "lng": 126.2863,
-    "features": ["영어교육도시", "투자용"],
-    "image": "https://raw.githubusercontent.com/DH-REALESTATE/jeju-map/main/dh_real/235/image1.jpg",
-    "link": "https://land.jejukcr.com/offer/80360494",
-    "agent_folder": "./agent_01/agent_01.json"
+    "region": "노형동",
+    "price": "10억 6,000",
+    "area": "공급면적 139.25㎡ / 전용면적 115.16㎡",
+    "address": "제주시 노형동 3791-1",
+    "lat": 33.4830,
+    "lng": 126.4795,
+    "features": ["오션뷰", "신축", "실거주"],
+    "agent_folder": "./dh_real/agent.json"
   },
   
   {
