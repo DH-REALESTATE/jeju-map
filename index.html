@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.065</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.065" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.066</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.066" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -1307,7 +1307,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.065</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.066</div>
             </div>
           </div>
 
@@ -1493,7 +1493,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.065';
+    const APP_VERSION = '1.066';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -1580,6 +1580,7 @@
     const detailImageLightboxClose = document.getElementById("detailImageLightboxClose");
     const detailImageLightboxPrev = document.getElementById("detailImageLightboxPrev");
     const detailImageLightboxNext = document.getElementById("detailImageLightboxNext");
+    const detailScroll = document.querySelector(".detail-scroll");
 
     function updateSidebarWidth() {
       const listWidth = getComputedStyle(document.documentElement).getPropertyValue("--sidebar-list-width").trim() || "360px";
@@ -2158,6 +2159,7 @@
     }
 
     async function openDetailPanel(item) {
+      if (detailScroll) detailScroll.scrollTop = 0;
       sidebar.classList.add("expanded");
       updateSidebarWidth();
       refreshMapLayout();
@@ -2202,6 +2204,7 @@
       detailInfoList.innerHTML = "";
 
       renderDetailInfoRows(detailItem);
+      if (detailScroll) detailScroll.scrollTop = 0;
 
       if (detailItem.agentName || detailItem.agentOffice || detailItem.phone1 || detailItem.phone2 || detailItem.agentImage) {
         detailAgentName.textContent = detailItem.agentName || "";
@@ -2681,7 +2684,9 @@
           const item = data.find(v => v.id === Number(card.dataset.id));
           if (!item) return;
 
+          if (detailScroll) detailScroll.scrollTop = 0;
           await openDetailPanel(item);
+          if (detailScroll) detailScroll.scrollTop = 0;
           updateMarkerSelection(item.id);
           await focusProperty(detailItem.id);
         });
