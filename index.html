@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.057</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.057" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.058</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.058" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -298,7 +298,7 @@
     }
 
     .detail-hero-price {
-      font-size: 28px;
+      font-size: 34px;
       font-weight: 900;
       line-height: 1.04;
       letter-spacing: -1px;
@@ -362,7 +362,7 @@
 
     .detail-listing-no {
       display: block;
-      font-size: 13px;
+      font-size: 11px;
       font-weight: 800;
       letter-spacing: -0.2px;
       color: #6b7280;
@@ -760,11 +760,6 @@
       margin-top: 0;
       margin-bottom: 10px;
       border-radius: 12px;
-      background: #f1f4f8;
-    }
-
-    .reset-list-btn:hover {
-      background: #e7edf3;
     }
 
     .list-head {
@@ -854,18 +849,51 @@
       margin-bottom: 7px;
     }
 
+    .card-badge-row {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      min-width: 0;
+    }
+
     .card-badge {
       display: inline-flex;
       align-items: center;
       height: 22px;
-      padding: 0 8px;
-      border-radius: 7px;
+      padding: 0 10px;
+      border-radius: 999px;
       background: #f3eefe;
       color: #7c4dff;
       font-size: 11px;
       font-weight: 800;
       line-height: 1;
       box-shadow: inset 0 0 0 1px rgba(124, 77, 255, 0.06);
+      white-space: nowrap;
+    }
+
+    .card-badge.deal[data-type="매매"] {
+      background: #e8f7ef;
+      color: #16a34a;
+      box-shadow: inset 0 0 0 1px rgba(22, 163, 74, 0.08);
+    }
+
+    .card-badge.deal[data-type="전세"] {
+      background: #eef5ff;
+      color: #2563eb;
+      box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.08);
+    }
+
+    .card-badge.deal[data-type="월세"] {
+      background: #fff7ed;
+      color: #ea580c;
+      box-shadow: inset 0 0 0 1px rgba(234, 88, 12, 0.08);
+    }
+
+    .card-badge.deal[data-type="년세"] {
+      background: #fef3f2;
+      color: #dc2626;
+      box-shadow: inset 0 0 0 1px rgba(220, 38, 38, 0.08);
     }
 
     .card-date {
@@ -1274,7 +1302,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.057</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.058</div>
             </div>
           </div>
 
@@ -1460,7 +1488,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.057';
+    const APP_VERSION = '1.058';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -2595,7 +2623,10 @@
 
               <div class="card-body">
                 <div class="card-top-line">
-                  <span class="card-badge">${typeText}</span>
+                  <div class="card-badge-row">
+                    <span class="card-badge">${typeText}</span>
+                    <span class="card-badge deal" data-type="${dealLabel}">${dealLabel}</span>
+                  </div>
                   <span class="card-date">${escapeHtml(dateText)}</span>
                 </div>
 
