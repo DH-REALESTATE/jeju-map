@@ -17,7 +17,7 @@
     "address": "제주특별자치도 서귀포시 대정읍 구억리 34",
     "lat": 33.2500,
     "lng": 126.3000,
-    "features": ["신축", "실거주"],
+    "features": ["영어교육도시", "실거주"],
     "agent_folder": "./dh_real/agent.json"
   },
 
@@ -38,7 +38,7 @@
     "address": "제주시 노형동 3791-1",
     "lat": 33.4830,
     "lng": 126.4795,
-    "features": ["신축", "실거주"],
+    "features": ["생활권", "실거주"],
     "agent_folder": "./dh_real/agent.json"
   },
   
