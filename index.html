@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.134</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.134" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.135</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.135" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -786,6 +786,40 @@
       margin-right: 0;
       font-size: 13px;
       line-height: 1;
+    }
+
+    .detail-price-address {
+      margin-bottom: 14px;
+    }
+
+    .detail-price-below {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 6px;
+    }
+
+    .detail-price-below-deal {
+      font-size: 14px;
+      font-weight: 900;
+      color: #1f6fff;
+      letter-spacing: -0.2px;
+    }
+
+    .detail-price-below-value {
+      font-size: 28px;
+      font-weight: 900;
+      color: #111827;
+      letter-spacing: -0.9px;
+      line-height: 1.08;
+    }
+
+    .detail-address-below {
+      font-size: 13px;
+      line-height: 1.5;
+      color: #6f7c89;
+      letter-spacing: -0.1px;
     }
 
     .detail-action-box {
@@ -1634,7 +1668,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.134</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.135</div>
             </div>
           </div>
 
@@ -1716,6 +1750,14 @@
 
               <div class="detail-content">
                 <div class="detail-features" id="detailFeatures"></div>
+
+                <div class="detail-price-address">
+                  <div class="detail-price-below">
+                    <span class="detail-price-below-deal" id="detailPriceDealBelow"></span>
+                    <span class="detail-price-below-value" id="detailPriceBelow"></span>
+                  </div>
+                  <div class="detail-address-below" id="detailAddressBelow"></div>
+                </div>
 
                 <div class="detail-title-row">
                   <div class="detail-title-wrap">
@@ -1837,7 +1879,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.134';
+    const APP_VERSION = '1.135';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -1897,6 +1939,9 @@
     const detailTypeBadge = document.getElementById("detailTypeBadge");
     const detailPrice = document.getElementById("detailPrice");
     const detailAddress = document.getElementById("detailAddress");
+    const detailPriceDealBelow = document.getElementById("detailPriceDealBelow");
+    const detailPriceBelow = document.getElementById("detailPriceBelow");
+    const detailAddressBelow = document.getElementById("detailAddressBelow");
     const detailDesc = document.getElementById("detailDesc");
     const detailInfoList = document.getElementById("detailInfoList");
     const detailFeatures = document.getElementById("detailFeatures");
@@ -2634,9 +2679,13 @@
       detailHeroBadge.textContent = detailItem.type || "";
       detailHeroBadge.style.display = detailItem.type ? "inline-flex" : "none";
 
-      detailHeroDeal.textContent = detailItem.dealType || "";
-      detailHeroPrice.textContent = detailItem.price || "";
-      detailHeroAddress.textContent = `${detailItem.address || ""}`.trim();
+      detailHeroDeal.textContent = "";
+      detailHeroPrice.textContent = "";
+      detailHeroAddress.textContent = "";
+
+      if (detailPriceDealBelow) detailPriceDealBelow.textContent = detailItem.dealType || "";
+      if (detailPriceBelow) detailPriceBelow.textContent = detailItem.price || "";
+      if (detailAddressBelow) detailAddressBelow.textContent = `${detailItem.address || ""}`.trim();
 
       detailHeroFeatures.innerHTML = (detailItem.features || [])
         .map(f => {
