@@ -1493,7 +1493,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.068';
+    const APP_VERSION = '1.069';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -1699,13 +1699,32 @@
       return ["단독", "단독주택"].includes(text);
     }
 
-    function formatDetachedHouseAreaDisplay(areaText) {
+    function parseDetachedHouseAreas(areaText) {
       const raw = String(areaText || "-").trim();
       const landMatch = raw.match(/대지면적\s*([\d,.]+)㎡/);
       const totalMatch = raw.match(/연면적\s*([\d,.]+)㎡/);
 
-      if (landMatch && totalMatch) {
-        return `(대지) ${escapeHtml(landMatch[1])}㎡ / (연) ${escapeHtml(totalMatch[1])}㎡`;
+      const land = landMatch ? Number(String(landMatch[1]).replace(/,/g, "")) : null;
+      const total = totalMatch ? Number(String(totalMatch[1]).replace(/,/g, "")) : null;
+
+      return { raw, land, total };
+    }
+
+    function formatDetachedHouseAreaDisplay(areaText) {
+      const { raw, land, total } = parseDetachedHouseAreas(areaText);
+
+      if (Number.isFinite(land) && Number.isFinite(total)) {
+        return `(대지) ${formatSingleAreaValue(land, "m2")} / (연) ${formatSingleAreaValue(total, "m2")}`;
+      }
+
+      return escapeHtml(raw);
+    }
+
+    function formatDetachedHouseCardAreaDisplay(areaText, unit) {
+      const { raw, land, total } = parseDetachedHouseAreas(areaText);
+
+      if (Number.isFinite(land) && Number.isFinite(total)) {
+        return `(대지) ${formatSingleAreaValue(land, unit)} / (연) ${formatSingleAreaValue(total, unit)}`;
       }
 
       return escapeHtml(raw);
@@ -1741,7 +1760,7 @@
 
     function formatCardAreaByUnit(areaText, unit, typeText = "") {
       if (isDetachedHouseType(typeText)) {
-        return formatDetachedHouseAreaDisplay(areaText);
+        return formatDetachedHouseCardAreaDisplay(areaText, unit);
       }
 
       if (isApartmentType(typeText)) {
@@ -2666,7 +2685,8 @@
 
         const isDetachedHouse = isDetachedHouseType(item.type || "");
         const cardAreaHtml = isDetachedHouse
-          ? `<span class="area-display" data-area-raw="${escapeHtml(item.area || "-")}" data-area-unit="m2" data-area-type="${escapeHtml(item.type || "")}">${formatDetachedHouseAreaDisplay(item.area || "-")}</span>`
+          ? `<span class="area-display" data-area-raw="${escapeHtml(item.area || "-")}" data-area-unit="m2" data-area-type="${escapeHtml(item.type || "")}">${formatCardAreaByUnit(item.area || "-", "m2", item.type || "")}</span>
+              <button type="button" class="area-toggle-btn">평</button>`
           : `<span class="area-display" data-area-raw="${escapeHtml(item.area || "-")}" data-area-unit="m2" data-area-type="${escapeHtml(item.type || "")}">${formatCardAreaByUnit(item.area || "-", "m2", item.type || "")}</span>
               <button type="button" class="area-toggle-btn">평</button>`;
 
