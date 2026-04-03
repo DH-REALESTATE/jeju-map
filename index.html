@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>제주 프리미엄 부동산 지도 Ver 1.067</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.067" />
+  <meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.073" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -978,8 +978,8 @@
       vertical-align: middle;
 
       height: 22px;
-      width: 32px;
-      min-width: 32px;
+      width: 26px;
+      min-width: 26px;
       padding: 0;
       border: 1px solid #d1d9e0;
       border-radius: 6px;
@@ -996,9 +996,28 @@
       text-align: center;
     }
 
-    .area-toggle-btn:hover {
+        .area-toggle-btn:hover {
       background: #f7faff;
       border-color: #bfd6ff;
+      color: #1f6fff;
+    }
+
+    .area-type-toggle-btn {
+      margin-left: 6px;
+      border: 0;
+      background: none;
+      cursor: pointer;
+      padding: 0;
+      color: #6b7280;
+      font-size: 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      vertical-align: middle;
+    }
+
+    .area-type-toggle-btn:hover {
       color: #1f6fff;
     }
 
@@ -1390,6 +1409,9 @@
                 <div class="detail-meta-grid" id="detailMetaGrid">
                   <div class="detail-meta-item">
                     <span class="detail-meta-label" id="detailAreaLabel">면적</span>
+                      <button type="button" class="area-type-toggle-btn" id="detailAreaTypeToggleBtn" style="display:none;" aria-label="면적 전환">
+                        <i class="fa-solid fa-right-left"></i>
+                      </button>
                     <div class="detail-area-wrap">
                       <span class="detail-meta-value area-display" id="detailAreaValue" data-area-raw="-" data-area-unit="m2">-</span>
                       <button type="button" class="area-toggle-btn" id="detailAreaToggleBtn">평</button>
@@ -1520,6 +1542,7 @@
     const imageCache = {};
     let currentHeroImages = [];
     let currentHeroIndex = 0;
+    let detailAreaMode = "total";
 
     const sidebar = document.getElementById("sidebar");
     const propertyList = document.getElementById("propertyList");
