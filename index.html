@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.133</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.133" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.134</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.134" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -368,85 +368,7 @@
     }
 
     .detail-hero-features {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 12px;
-    }
-
-    .detail-hero-features span {
-      display: inline-flex;
-      align-items: center;
-      height: 26px;
-      padding: 0 10px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.16);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(255,255,255,0.18);
-      color: #fff;
-      font-size: 12px;
-      font-weight: 900;
-      letter-spacing: -0.2px;
-    }
-
-
-    .detail-hero-features-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-top: 12px;
-      width: 100%;
-    }
-
-    .detail-hero-features-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      min-width: 0;
-    }
-
-    .detail-hero-roadview-btn {
-      margin-left: auto;
-      flex: 0 0 auto;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      height: 28px;
-      padding: 0 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.24);
-      background: rgba(255,255,255,0.16);
-      backdrop-filter: blur(8px);
-      color: #fff;
-      font-size: 12px;
-      font-weight: 900;
-      cursor: pointer;
-      white-space: nowrap;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.14);
-    }
-
-    .detail-hero-roadview-btn:hover {
-      background: rgba(255,255,255,0.24);
-    }
-
-    .detail-hero-roadview-btn i {
-      margin-right: 0;
-      font-size: 13px;
-      line-height: 1;
-    }
-
-    @media (max-width: 980px) {
-      .detail-hero-features-row {
-        flex-wrap: wrap;
-        align-items: flex-start;
-      }
-    }
-
-    .detail-hero-features span.highlight {
-      background: rgba(37,99,235,0.88);
-      border-color: rgba(37,99,235,0.92);
-      box-shadow: 0 4px 12px rgba(37,99,235,0.25);
+      display: none;
     }
 
     .detail-content {
@@ -781,6 +703,71 @@
       gap: 6px;
       height: 32px;
       padding: 0 11px;
+      border-radius: 999px;
+      border: 1px solid rgba(3, 199, 90, 0.28);
+      background: rgba(3, 199, 90, 0.08);
+      color: #03C75A;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .detail-roadview-inline-btn:hover {
+      background: rgba(3, 199, 90, 0.14);
+    }
+
+    .detail-roadview-inline-btn i {
+      margin-right: 0;
+      font-size: 13px;
+      line-height: 1;
+    }
+
+
+    .detail-features {
+      display: block;
+      margin-bottom: 14px;
+    }
+
+    .detail-tags-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      width: 100%;
+    }
+
+    .detail-tags {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      min-width: 0;
+    }
+
+    .detail-feature-tag {
+      display: inline-flex;
+      align-items: center;
+      height: 28px;
+      padding: 0 10px;
+      border-radius: 999px;
+      background: rgba(3, 199, 90, 0.08);
+      border: 1px solid rgba(3, 199, 90, 0.18);
+      color: #03C75A;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: -0.15px;
+      white-space: nowrap;
+    }
+
+    .detail-roadview-inline-btn {
+      margin-left: auto;
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      height: 28px;
+      padding: 0 10px;
       border-radius: 999px;
       border: 1px solid rgba(3, 199, 90, 0.28);
       background: rgba(3, 199, 90, 0.08);
@@ -1647,7 +1634,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.133</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.134</div>
             </div>
           </div>
 
@@ -1728,6 +1715,8 @@
               </div>
 
               <div class="detail-content">
+                <div class="detail-features" id="detailFeatures"></div>
+
                 <div class="detail-title-row">
                   <div class="detail-title-wrap">
                     <div class="detail-listing-no" id="detailListingNo"></div>
@@ -1848,7 +1837,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.133';
+    const APP_VERSION = '1.134';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -2697,22 +2686,24 @@
       }
 
       const featureTagHtml = (detailItem.features || [])
-        .map(feature => `<span>${escapeHtml(feature)}</span>`)
+        .map(feature => `<span class="detail-feature-tag">${escapeHtml(feature)}</span>`)
         .join("");
 
-      detailHeroFeatures.innerHTML = `
-        <div class="detail-hero-features-row">
-          <div class="detail-hero-features-tags">${featureTagHtml}</div>
-          <button type="button" class="detail-hero-roadview-btn" id="detailHeroRoadviewBtn">
+      detailHeroFeatures.innerHTML = "";
+
+      detailFeatures.innerHTML = `
+        <div class="detail-tags-row">
+          <div class="detail-tags">${featureTagHtml}</div>
+          <button type="button" class="detail-roadview-inline-btn" id="detailTopRoadviewBtn">
             <i class="fa-solid fa-street-view"></i>
             로드뷰
           </button>
         </div>
       `;
 
-      const detailHeroRoadviewBtn = document.getElementById("detailHeroRoadviewBtn");
-      if (detailHeroRoadviewBtn) {
-        detailHeroRoadviewBtn.onclick = () => {
+      const detailTopRoadviewBtn = document.getElementById("detailTopRoadviewBtn");
+      if (detailTopRoadviewBtn) {
+        detailTopRoadviewBtn.onclick = () => {
           showRoadview(detailItem.lat, detailItem.lng);
         };
       }
