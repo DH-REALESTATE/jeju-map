@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.115</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.115" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.116</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.116" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -723,47 +723,18 @@
       box-shadow: 0 8px 22px rgba(15, 41, 66, 0.05);
     }
 
-    .search-box {
-      position: relative;
-    }
-
     .search-box input {
       width: 100%;
-      height: 60px;
-      padding: 0 74px 0 22px;
-      border: 2px solid rgba(3, 199, 90, 0.9);
-      border-radius: 14px;
+      height: 42px;
+      padding: 0 14px;
+      border: 1px solid #dfe5eb;
+      border-radius: 12px;
       outline: none;
-      font-size: 16px;
-      font-weight: 700;
+      font-size: 14px;
       background: #fff;
       color: #17212b;
       box-shadow: none;
       margin-bottom: 10px;
-    }
-
-    .search-box input::placeholder {
-      color: #7b8794;
-      font-weight: 700;
-    }
-
-    .search-box::after {
-      content: "002";
-      font-family: "Font Awesome 6 Free";
-      font-weight: 900;
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 62px;
-      height: 60px;
-      border-radius: 0 14px 14px 0;
-      background: rgba(3, 199, 90, 0.9);
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      pointer-events: none;
     }
 
     .filter-title {
@@ -874,6 +845,11 @@
   transform: none;
   box-shadow: 0 8px 24px rgba(15, 41, 66, 0.05);
   border-color: #e9eef4;
+}
+
+.card.active {
+  border-left: 4px solid #03C75A;
+  padding-left: 0;
 }
 
     .card-inner-row {
@@ -1385,12 +1361,16 @@
 
 
 .detail-action-btn.cross-btn {
-  background: #C95A57 !important;
+  background: rgba(3, 199, 90, 0.9) !important;
   color: #fff !important;
 }
 
+.detail-action-btn.cross-btn:hover {
+  background: #03C75A !important;
+}
+
 .detail-action-btn.cross-btn {
-  background: #C95A57 !important;
+  background: rgba(3, 199, 90, 0.9) !important;
   color: #fff !important;
 }
 
@@ -1470,7 +1450,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.115</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.116</div>
             </div>
           </div>
 
@@ -1661,7 +1641,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.115';
+    const APP_VERSION = '1.116';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
