@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.080</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.080" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.081</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.081" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -675,6 +675,20 @@
       line-height: 1;
     }
 
+    .detail-action-btn.kakao-btn {
+      background: #FEE500;
+      color: #111;
+      border-radius: 999px;
+      font-weight: 800;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .detail-action-btn.kakao-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+    }
+
     .brand-card {
       display: flex;
       align-items: center;
@@ -1337,7 +1351,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.080</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.081</div>
             </div>
           </div>
 
@@ -1469,7 +1483,7 @@
 
                   <div class="detail-actions">
                     <button type="button" class="detail-action-btn primary" id="detailMapBtn">교차로</button>
-                    <button type="button" class="detail-action-btn" id="detailRoadviewBtn">카카오톡</button>
+                    <button type="button" class="detail-action-btn kakao-btn" id="detailRoadviewBtn"><i class="fa-solid fa-comment"></i> 카톡상담</button>
                     <button type="button" class="detail-action-btn" id="detailCallBtn"><i class="fa-solid fa-phone"></i> 문의전화</button>
                   </div>
                 </div>
@@ -1528,7 +1542,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.080';
+    const APP_VERSION = '1.081';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
