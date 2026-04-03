@@ -1493,7 +1493,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.069';
+    const APP_VERSION = '1.070';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -1710,11 +1710,11 @@
       return { raw, land, total };
     }
 
-    function formatDetachedHouseAreaDisplay(areaText) {
-      const { raw, land, total } = parseDetachedHouseAreas(areaText);
+    function formatDetachedHouseAreaDisplay(areaText, unit = "m2") {
+      const { raw, total } = parseDetachedHouseAreas(areaText);
 
-      if (Number.isFinite(land) && Number.isFinite(total)) {
-        return `(대지) ${formatSingleAreaValue(land, "m2")} / (연) ${formatSingleAreaValue(total, "m2")}`;
+      if (Number.isFinite(total)) {
+        return `(연) ${formatSingleAreaValue(total, unit)}`;
       }
 
       return escapeHtml(raw);
@@ -1743,7 +1743,7 @@
       const values = parseAreaNumbers(raw);
 
       if (isDetachedHouseType(typeText)) {
-        return formatDetachedHouseAreaDisplay(raw);
+        return formatDetachedHouseAreaDisplay(raw, unit);
       }
 
       if (isApartmentType(typeText) && values.length >= 2) {
