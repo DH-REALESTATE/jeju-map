@@ -72,7 +72,7 @@
     "image": "./dh_real/232/1.png",
     "desc_folder": "./dh_real/232/info.json",
     "image_folder": "./dh_real/232/image.json",    
-    "type": "농어촌민박(단독주택)",
+    "type": "단독주택",
     "dealFilter": "매매",
     "region": "서귀포시",
     "price": "22억",
