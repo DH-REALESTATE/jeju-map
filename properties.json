@@ -84,8 +84,26 @@
     "agent_folder": "./dh_real/agent.json"
   },
 
-
-
+  {
+    "id": 225,
+    "listingNo": "디-225",
+    "date": "2026-03-15",
+    "title": "비자림 치유의 숲 타운하우스",
+    "desc": "비자림 자연경관의 세화리 타운하우스(단독주택, 개별필지)",
+    "image": "./dh_real/225/1.png",
+    "desc_folder": "./dh_real/225/info.json",
+    "image_folder": "./dh_real/225/image.json",    
+    "type": "단독주택",
+    "dealFilter": "매매",
+    "region": "세화리",
+    "price": "1억 9,500",
+    "area": "대지면적 275㎡ / 건축면적 55.11㎡ / 연면적 69.87㎡",
+    "address": "제주시 구좌읍 세화리",
+    "lat": 33.4897,
+    "lng": 126.8052,
+    "features": ["자연림", "한달살이"],
+    "agent_folder": "./dh_real/agent.json"
+  }
 
 
   
