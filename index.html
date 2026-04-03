@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.122</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.122" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.123</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.123" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -151,12 +151,12 @@
       display: none;
       flex-direction: column;
       gap: 6px;
-      z-index: 999;
+      z-index: 9999;
       pointer-events: auto;
     }
 
     .detail-share-menu.open {
-      display: flex !important;
+      display: flex;
     }
 
     .detail-share-option {
@@ -1529,7 +1529,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.122</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.123</div>
             </div>
           </div>
 
@@ -1567,7 +1567,7 @@
                 <button type="button" class="detail-icon-btn"><i class="fa-regular fa-bookmark"></i></button>
                 <button type="button" class="detail-icon-btn"><i class="fa-solid fa-ellipsis-vertical"></i></button>
 
-                <div class="detail-share-menu" id="detailShareMenu" hidden>
+                <div class="detail-share-menu" id="detailShareMenu">
                   <button type="button" class="detail-share-option" id="detailShareKakaoBtn">
                     <i class="fa-solid fa-comment"></i>
                     카카오톡 공유
@@ -1731,7 +1731,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.122';
+    const APP_VERSION = '1.123';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -3175,19 +3175,19 @@
 
       function openShareMenu() {
         if (!detailShareMenu) return;
-        detailShareMenu.hidden = false;
+        detailShareMenu.style.display = "flex";
         detailShareMenu.classList.add("open");
       }
 
       function closeShareMenu() {
         if (!detailShareMenu) return;
         detailShareMenu.classList.remove("open");
-        detailShareMenu.hidden = true;
+        detailShareMenu.style.display = "none";
       }
 
       function toggleShareMenu() {
         if (!detailShareMenu) return;
-        const isOpen = detailShareMenu.classList.contains("open");
+        const isOpen = detailShareMenu.style.display === "flex" || detailShareMenu.classList.contains("open");
         if (isOpen) {
           closeShareMenu();
         } else {
