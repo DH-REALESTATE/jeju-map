@@ -1493,7 +1493,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.070';
+    const APP_VERSION = '1.071';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -2247,7 +2247,13 @@
       detailAreaValue.dataset.areaType = detailItem.type || "";
       if (detailAreaToggleBtn) detailAreaToggleBtn.textContent = "평";
       if (detailAreaLabel) {
-        detailAreaLabel.textContent = /아파트|빌라/.test(detailItem.type || "") ? "면적(전용)" : "면적";
+        if (isDetachedHouseType(detailItem.type || "")) {
+          detailAreaLabel.textContent = "면적(연)";
+        } else if (/아파트|빌라/.test(detailItem.type || "")) {
+          detailAreaLabel.textContent = "면적(전용)";
+        } else {
+          detailAreaLabel.textContent = "면적";
+        }
       }
       detailTypeValue.textContent = detailItem.type || "-";
       detailRegionValue.textContent = detailItem.region || "-";
