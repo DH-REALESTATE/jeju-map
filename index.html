@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.079</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.079" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.080</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.080" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -1337,7 +1337,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.079</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.080</div>
             </div>
           </div>
 
@@ -1528,7 +1528,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.079';
+    const APP_VERSION = '1.080';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -1747,6 +1747,23 @@
       return { raw, land, total };
     }
 
+    function parseApartmentAreas(areaText) {
+      const raw = String(areaText || "-").trim();
+      const supplyMatch = raw.match(/공급(?:면적)?\s*([\d,.]+)㎡/);
+      const privateMatch = raw.match(/전용(?:면적)?\s*([\d,.]+)㎡/);
+
+      let supply = supplyMatch ? Number(String(supplyMatch[1]).replace(/,/g, "")) : null;
+      let privateArea = privateMatch ? Number(String(privateMatch[1]).replace(/,/g, "")) : null;
+
+      if (!Number.isFinite(supply) || !Number.isFinite(privateArea)) {
+        const values = parseAreaNumbers(raw);
+        if (!Number.isFinite(supply) && values.length >= 1) supply = values[0];
+        if (!Number.isFinite(privateArea) && values.length >= 2) privateArea = values[1];
+      }
+
+      return { raw, supply, private: privateArea };
+    }
+
     function formatDetachedHouseAreaDisplay(areaText, unit = "m2") {
       const { raw, total } = parseDetachedHouseAreas(areaText);
 
@@ -1827,11 +1844,20 @@
       }
 
       if (isApartmentType(typeText)) {
-        detailAreaLabel.textContent = "면적(전용)";
-      } else {
-        detailAreaLabel.textContent = "면적";
+        const parsed = parseApartmentAreas(detailItem.area || "-");
+        const showSupply = detailAreaMode === "supply";
+        const targetValue = showSupply ? parsed.supply : parsed.private;
+
+        detailAreaLabel.textContent = showSupply ? "면적(공급)" : "면적(전용)";
+        detailAreaValue.textContent = Number.isFinite(targetValue) ? formatSingleAreaValue(targetValue, unit) : "-";
+
+        if (detailAreaTypeToggleBtn) {
+          detailAreaTypeToggleBtn.style.display = "inline-flex";
+        }
+        return;
       }
 
+      detailAreaLabel.textContent = "면적";
       detailAreaValue.textContent = formatAreaByUnit(detailItem.area || "-", unit, typeText);
 
       if (detailAreaTypeToggleBtn) {
@@ -2310,7 +2336,7 @@
         })
         .join("");
 
-      detailAreaMode = "total";
+      detailAreaMode = isApartmentType(detailItem.type || "") ? "private" : "total";
       detailAreaValue.dataset.areaRaw = detailItem.area || "-";
       detailAreaValue.dataset.areaUnit = "m2";
       detailAreaValue.dataset.areaType = detailItem.type || "";
@@ -2931,10 +2957,20 @@
           e.preventDefault();
           e.stopPropagation();
 
-          if (!currentDetailItem || !isDetachedHouseType(currentDetailItem.type || "")) return;
+          if (!currentDetailItem) return;
 
-          detailAreaMode = detailAreaMode === "land" ? "total" : "land";
-          syncDetailAreaDisplay(currentDetailItem);
+          const typeText = currentDetailItem.type || "";
+
+          if (isDetachedHouseType(typeText)) {
+            detailAreaMode = detailAreaMode === "land" ? "total" : "land";
+            syncDetailAreaDisplay(currentDetailItem);
+            return;
+          }
+
+          if (isApartmentType(typeText)) {
+            detailAreaMode = detailAreaMode === "supply" ? "private" : "supply";
+            syncDetailAreaDisplay(currentDetailItem);
+          }
         });
       }
 
