@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.134</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.134" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.135</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.135" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -208,17 +208,7 @@
     }
 
     .detail-hero::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        180deg,
-        rgba(0,0,0,0.06) 0%,
-        rgba(0,0,0,0.14) 30%,
-        rgba(0,0,0,0.62) 100%
-      );
-      pointer-events: none;
-      z-index: 1;
+      display: none;
     }
 
     .detail-hero-slides {
@@ -235,10 +225,15 @@
       background-repeat: no-repeat;
       opacity: 0;
       transition: opacity 0.35s ease;
+      filter: contrast(1.05) brightness(1.03) saturate(1.05);
     }
 
     .detail-hero-slide.active {
       opacity: 1;
+    }
+
+    .detail-hero img {
+      filter: contrast(1.05) brightness(1.03) saturate(1.05);
     }
 
     .detail-hero-expand,
@@ -373,6 +368,49 @@
 
     .detail-content {
       padding: 18px;
+    }
+
+
+    .detail-summary-block {
+      margin-bottom: 14px;
+    }
+
+    .detail-summary-badges {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .detail-summary-badge {
+      display: inline-flex;
+      align-items: center;
+      height: 24px;
+      padding: 0 10px;
+      border-radius: 999px;
+      background: #eef5ff;
+      color: #2563eb;
+      font-size: 12px;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -0.15px;
+      white-space: nowrap;
+    }
+
+    .detail-summary-price {
+      font-size: 28px;
+      font-weight: 900;
+      line-height: 1.15;
+      letter-spacing: -0.8px;
+      color: #111827;
+      margin-bottom: 8px;
+    }
+
+    .detail-summary-address {
+      font-size: 13px;
+      line-height: 1.5;
+      color: #6f7c89;
     }
 
     .detail-title-row {
@@ -1634,7 +1672,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.134</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.135</div>
             </div>
           </div>
 
@@ -1703,11 +1741,11 @@
 
                 <div class="detail-hero-overlay">
                   <div class="detail-hero-price-row">
-                    <div class="detail-hero-deal" id="detailHeroDeal"></div>
-                    <div class="detail-hero-price" id="detailHeroPrice"></div>
+                    <div class="" id="detailHeroDeal" style="display:none;"></div>
+                    <div class="" id="detailHeroPrice" style="display:none;"></div>
                   </div>
 
-                  <div class="detail-hero-address" id="detailHeroAddress"></div>
+                  <div class="" id="detailHeroAddress" style="display:none;"></div>
                   <div class="detail-hero-features" id="detailHeroFeatures"></div>
                 </div>
 
@@ -1716,6 +1754,12 @@
 
               <div class="detail-content">
                 <div class="detail-features" id="detailFeatures"></div>
+
+                <div class="detail-summary-block">
+                  <div class="detail-summary-badges" id="detailSummaryBadges"></div>
+                  <div class="detail-summary-price" id="detailSummaryPrice"></div>
+                  <div class="detail-summary-address" id="detailSummaryAddress"></div>
+                </div>
 
                 <div class="detail-title-row">
                   <div class="detail-title-wrap">
@@ -1837,7 +1881,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.134';
+    const APP_VERSION = '1.135';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -2654,6 +2698,12 @@
       detailTypeValue.textContent = detailItem.type || "-";
       detailRegionValue.textContent = detailItem.region || "-";
 
+      const detailSummaryBadges = document.getElementById("detailSummaryBadges");
+      const detailSummaryPrice = document.getElementById("detailSummaryPrice");
+      const detailSummaryAddress = document.getElementById("detailSummaryAddress");
+      if (detailSummaryBadges) { detailSummaryBadges.innerHTML = detailItem.dealType ? `<span class="detail-summary-badge>${escapeHtml(detailItem.dealType)}</span>` : ""; }
+      if (detailSummaryPrice) { detailSummaryPrice.textContent = detailItem.price || ""; }
+      if (detailSummaryAddress) { detailSummaryAddress.textContent = detailItem.address || ""; }
       detailDesc.textContent = detailItem.desc || "";
       detailInfoList.innerHTML = "";
 
