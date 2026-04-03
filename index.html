@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.098</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.098" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.100</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.100" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -1441,7 +1441,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.098</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.100</div>
             </div>
           </div>
 
@@ -1632,7 +1632,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.098';
+    const APP_VERSION = '1.100';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -2098,11 +2098,8 @@
       return items.map(item => item.id).sort((a, b) => a - b).join(",");
     }
 
-    function getClusterBadgeWidth(count) {
-      const len = String(count).length;
-      if (len >= 3) return "70px";
-      if (len === 2) return "58px";
-      return "46px";
+    function getClusterBadgeSize() {
+      return 44;
     }
 
     function setClusterBadgeSelected(cluster, isSelected) {
@@ -2113,34 +2110,36 @@
       if (!clusterItems.length) return;
 
       const count = clusterItems.length;
-      const width = getClusterBadgeWidth(count);
+      const size = getClusterBadgeSize();
 
-      const bg = isSelected ? "#2563eb" : "rgba(255,255,255,0.82)";
-      const color = isSelected ? "#ffffff" : "#2563eb";
-      const border = isSelected ? "#2563eb" : "rgba(255,255,255,0.55)";
+      const bg = isSelected ? "#029e49" : "#03C75A";
+      const color = "#ffffff";
+      const border = isSelected ? "#028a47" : "#02b350";
 
       const el = document.createElement("div");
+      el.style.width = `${size}px`;
+      el.style.height = `${size}px`;
+      el.style.minWidth = `${size}px`;
+      el.style.minHeight = `${size}px`;
+      el.style.borderRadius = "50%";
       el.style.display = "flex";
       el.style.alignItems = "center";
       el.style.justifyContent = "center";
-      el.style.minWidth = width;
-      el.style.height = "46px";
-      el.style.padding = "0 12px";
-      el.style.borderRadius = "14px";
       el.style.background = bg;
       el.style.color = color;
-      el.style.fontSize = "16px";
+      el.style.fontSize = "14px";
       el.style.fontWeight = "900";
       el.style.fontFamily = UI_FONT_STACK;
-      el.style.lineHeight = "46px";
-      el.style.letterSpacing = "-0.5px";
-      el.style.border = `1px solid ${border}`;
-      el.style.boxShadow = "0 6px 16px rgba(15,41,66,0.12)";
+      el.style.lineHeight = "1";
+      el.style.letterSpacing = "-0.2px";
+      el.style.border = `2px solid ${border}`;
+      el.style.boxShadow = "0 4px 10px rgba(0,0,0,0.18)";
       el.style.boxSizing = "border-box";
       el.style.whiteSpace = "nowrap";
       el.style.cursor = "pointer";
       el.style.pointerEvents = "auto";
-      el.textContent = String(count);
+      el.style.userSelect = "none";
+      el.textContent = count > 99 ? "99+" : String(count);
 
       el.addEventListener("click", async function (e) {
         e.preventDefault();
