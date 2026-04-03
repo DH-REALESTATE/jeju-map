@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.082</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.082" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.085</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.085" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -650,9 +650,10 @@
     .detail-action-btn {
       flex: 1;
       min-width: 100px;
-      min-height: 42px;
+      min-height: 38px;
+      padding: 0 14px;
       border: 0;
-      border-radius: 12px;
+      border-radius: 999px;
       background: #eef3f7;
       color: #203040;
       font-size: 13px;
@@ -662,6 +663,8 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      transition: box-shadow 0.2s ease;
     }
 
     .detail-action-btn.primary {
@@ -675,18 +678,15 @@
       line-height: 1;
     }
 
+    .detail-action-btn:hover {
+      box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+    }
+
     .detail-action-btn.kakao-btn {
       background: #FEE500;
       color: #111;
       border-radius: 999px;
       font-weight: 800;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .detail-action-btn.kakao-btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 6px 14px rgba(0,0,0,0.12);
     }
 
     .brand-card {
@@ -1351,7 +1351,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.082</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.085</div>
             </div>
           </div>
 
@@ -1542,7 +1542,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.082';
+    const APP_VERSION = '1.085';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -2456,7 +2456,7 @@
         level: 9
       });
 
-      state.map.setMapTypeId(kakao.maps.MapTypeId.SKYVIEW);
+      state.map.setMapTypeId(kakao.maps.MapTypeId.HYBRID);
 
       const mapTypeControl = new kakao.maps.MapTypeControl();
       state.map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
