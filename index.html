@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.089</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.089" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.090</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.090" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -1370,12 +1370,12 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.089</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.090</div>
             </div>
           </div>
 
           <div class="panel search-box">
-            <button class="reset-list-btn" id="resetListBtn" type="button">전체 매물 보기</button>
+            
             <input type="text" id="keyword" placeholder="지역명, 주소, 키워드 검색" />
 
             <div class="filter-title">특징 태그</div>
@@ -1561,7 +1561,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.089';
+    const APP_VERSION = '1.090';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -1594,8 +1594,7 @@
     const propertyList = document.getElementById("propertyList");
     const keywordInput = document.getElementById("keyword");
     const mapResultCount = document.getElementById("mapResultCount");
-    const resetListBtn = document.getElementById("resetListBtn");
-    const dealButtons = document.querySelectorAll("#dealButtons button");
+        const dealButtons = document.querySelectorAll("#dealButtons button");
     const typeButtons = document.querySelectorAll("#typeButtons button");
     const featureButtons = document.querySelectorAll("#featureButtons button");
     const listInfoText = document.getElementById("listInfoText");
@@ -3007,36 +3006,7 @@
         });
       }
 
-      if (resetListBtn) {
-        resetListBtn.addEventListener("click", async () => {
-          keywordInput.value = "";
-          selectedDeal = "all";
-          selectedType = "all";
-          state.selectedFeatures.clear();
-
-          dealButtons.forEach(btn => {
-            btn.classList.toggle("active", btn.dataset.value === "all");
-          });
-
-          typeButtons.forEach(btn => {
-            btn.classList.toggle("active", btn.dataset.value === "all");
-          });
-
-          syncFeatureButtons();
-
-          state.selectedMarkerId = null;
-          state.selectedClusterKey = null;
-          updateMarkerSelection(null);
-
-          await hideRoadview();
-          applyFilter();
-
-          setTimeout(() => {
-            refreshClusterBadges();
-          }, 0);
-        });
-      }
-
+      
       detailCloseBtn.addEventListener("click", closeDetailPanel);
 
       detailShareBtn.addEventListener("click", async () => {
