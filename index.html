@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.067</title>
-  <meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.073" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.075</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.075" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -1587,6 +1587,7 @@
     const detailAreaValue = document.getElementById("detailAreaValue");
     const detailAreaToggleBtn = document.getElementById("detailAreaToggleBtn");
     const detailAreaLabel = document.getElementById("detailAreaLabel");
+    const detailAreaTypeToggleBtn = document.getElementById("detailAreaTypeToggleBtn");
     const detailTypeValue = document.getElementById("detailTypeValue");
     const detailRegionValue = document.getElementById("detailRegionValue");
 
@@ -2264,20 +2265,12 @@
         })
         .join("");
 
-      detailAreaValue.innerHTML = formatAreaByUnit(detailItem.area || "-", "m2", detailItem.type || "");
+      detailAreaMode = "total";
       detailAreaValue.dataset.areaRaw = detailItem.area || "-";
       detailAreaValue.dataset.areaUnit = "m2";
       detailAreaValue.dataset.areaType = detailItem.type || "";
       if (detailAreaToggleBtn) detailAreaToggleBtn.textContent = "평";
-      if (detailAreaLabel) {
-        if (isDetachedHouseType(detailItem.type || "")) {
-          detailAreaLabel.textContent = "면적(연)";
-        } else if (/아파트|빌라/.test(detailItem.type || "")) {
-          detailAreaLabel.textContent = "면적(전용)";
-        } else {
-          detailAreaLabel.textContent = "면적";
-        }
-      }
+      syncDetailAreaDisplay(detailItem);
       detailTypeValue.textContent = detailItem.type || "-";
       detailRegionValue.textContent = detailItem.region || "-";
 
@@ -2876,14 +2869,27 @@
           e.preventDefault();
           e.stopPropagation();
 
-          const raw = detailAreaValue.dataset.areaRaw || detailAreaValue.textContent || "-";
-          const areaType = detailAreaValue.dataset.areaType || "";
           const currentUnit = detailAreaValue.dataset.areaUnit || "m2";
           const nextUnit = currentUnit === "m2" ? "py" : "m2";
 
           detailAreaValue.dataset.areaUnit = nextUnit;
-          detailAreaValue.innerHTML = formatAreaByUnit(raw, nextUnit, areaType);
           detailAreaToggleBtn.textContent = nextUnit === "m2" ? "평" : "㎡";
+
+          if (currentDetailItem) {
+            syncDetailAreaDisplay(currentDetailItem);
+          }
+        });
+      }
+
+      if (detailAreaTypeToggleBtn) {
+        detailAreaTypeToggleBtn.addEventListener("click", function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+
+          if (!currentDetailItem || !isDetachedHouseType(currentDetailItem.type || "")) return;
+
+          detailAreaMode = detailAreaMode === "land" ? "total" : "land";
+          syncDetailAreaDisplay(currentDetailItem);
         });
       }
 
