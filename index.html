@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.131</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.131" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.132</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.132" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -387,6 +387,58 @@
       font-size: 12px;
       font-weight: 900;
       letter-spacing: -0.2px;
+    }
+
+
+    .detail-hero-features-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .detail-hero-features-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .detail-hero-roadview-btn {
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      height: 28px;
+      padding: 0 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.24);
+      background: rgba(255,255,255,0.16);
+      backdrop-filter: blur(8px);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 900;
+      cursor: pointer;
+      white-space: nowrap;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.14);
+    }
+
+    .detail-hero-roadview-btn:hover {
+      background: rgba(255,255,255,0.24);
+    }
+
+    .detail-hero-roadview-btn i {
+      margin-right: 0;
+      font-size: 13px;
+      line-height: 1;
+    }
+
+    @media (max-width: 980px) {
+      .detail-hero-features-row {
+        flex-wrap: wrap;
+        align-items: flex-start;
+      }
     }
 
     .detail-hero-features span.highlight {
@@ -1582,10 +1634,6 @@
 }
 
 
-.detail-features {
-  display: block !important;
-  margin-bottom: 14px;
-}
 
 </style>
 
@@ -1597,7 +1645,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.131</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.132</div>
             </div>
           </div>
 
@@ -1688,7 +1736,6 @@
                   <div class="detail-type-badge" id="detailTypeBadge"></div>
                 </div>
 
-                <div class="detail-features" id="detailFeatures"></div>
 
                 <div class="detail-meta-grid" id="detailMetaGrid">
                   <div class="detail-meta-item">
@@ -1799,7 +1846,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.131';
+    const APP_VERSION = '1.132';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -2648,22 +2695,22 @@
       }
 
       const featureTagHtml = (detailItem.features || [])
-        .map(feature => `<span class="detail-feature-tag">${escapeHtml(feature)}</span>`)
+        .map(feature => `<span>${escapeHtml(feature)}</span>`)
         .join("");
 
-      detailFeatures.innerHTML = `
-        <div class="detail-tags-row">
-          <div class="detail-tags">${featureTagHtml}</div>
-          <button type="button" class="detail-roadview-inline-btn" id="detailTopRoadviewBtn">
+      detailHeroFeatures.innerHTML = `
+        <div class="detail-hero-features-row">
+          <div class="detail-hero-features-tags">${featureTagHtml}</div>
+          <button type="button" class="detail-hero-roadview-btn" id="detailHeroRoadviewBtn">
             <i class="fa-solid fa-street-view"></i>
             로드뷰
           </button>
         </div>
       `;
 
-      const detailTopRoadviewBtn = document.getElementById("detailTopRoadviewBtn");
-      if (detailTopRoadviewBtn) {
-        detailTopRoadviewBtn.onclick = () => {
+      const detailHeroRoadviewBtn = document.getElementById("detailHeroRoadviewBtn");
+      if (detailHeroRoadviewBtn) {
+        detailHeroRoadviewBtn.onclick = () => {
           showRoadview(detailItem.lat, detailItem.lng);
         };
       }
