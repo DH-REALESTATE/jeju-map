@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.075</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.075" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.076</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.076" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -1792,6 +1792,38 @@
       }
 
       return formatAreaByUnit(areaText, unit, typeText);
+    }
+
+    function syncDetailAreaDisplay(detailItem) {
+      if (!detailItem || !detailAreaValue || !detailAreaLabel) return;
+
+      const unit = detailAreaValue.dataset.areaUnit || "m2";
+      const typeText = detailItem.type || "";
+
+      if (isDetachedHouseType(typeText)) {
+        const parsed = parseDetachedHouseAreas(detailItem.area || "-");
+        const targetValue = detailAreaMode === "land" ? parsed.land : parsed.total;
+
+        detailAreaLabel.textContent = detailAreaMode === "land" ? "면적(대지)" : "면적(연)";
+        detailAreaValue.textContent = Number.isFinite(targetValue) ? formatSingleAreaValue(targetValue, unit) : "-";
+
+        if (detailAreaTypeToggleBtn) {
+          detailAreaTypeToggleBtn.style.display = "inline-flex";
+        }
+        return;
+      }
+
+      if (isApartmentType(typeText)) {
+        detailAreaLabel.textContent = "면적(전용)";
+      } else {
+        detailAreaLabel.textContent = "면적";
+      }
+
+      detailAreaValue.textContent = formatAreaByUnit(detailItem.area || "-", unit, typeText);
+
+      if (detailAreaTypeToggleBtn) {
+        detailAreaTypeToggleBtn.style.display = "none";
+      }
     }
 
     function setResultInfo(text) {
