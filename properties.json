@@ -64,24 +64,31 @@
   },
   
   {
-    "id": 4,
-    "listingNo": "테-004",
-    "desc": "중문권 생활 편의성과 관광 수요 접근성이 좋은 실속형 오피스텔.",
-    "date": "2026-02-15",
-    "title": "중문 관광단지 근처 오피스텔",
-    "type": "원룸",
-    "dealFilter": "월세",
+    "id": 232,
+    "listingNo": "디-232",
+    "date": "2026-03-15",
+    "title": "환상적인 경관, 아늑한 펜션",
+    "desc": "제주바다를 한 눈에 즐길 수 서귀포 농어촌민박(단독주택)",
+    "image": "./dh_real/232/1.png",
+    "desc_folder": "./dh_real/232/info.json",
+    "image_folder": "./dh_real/232/image.json",    
+    "type": "농어촌민박(단독주택)",
+    "dealFilter": "매매",
     "region": "서귀포시",
-    "price": "1,000 / 85 만원",
-    "area": "38㎡",
-    "address": "서귀포시 중문동",
-    "lat": 33.2497,
-    "lng": 126.4128,
-    "features": ["오션뷰", "단기수요"],
-    "image": "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1200&q=80",
-    "link": "https://land.jejukcr.com/offer/80100718",
-    "agent_folder": "./agent_02/agent_02.json"
+    "price": "22억",
+    "area": "대지면적 415.00㎡ / 건축면적 226.25㎡ / 연면적 429.02㎡",
+    "address": "제주도 서귀포시 법환동",
+    "lat": 33.2376,
+    "lng": 126.5152,
+    "features": ["오션뷰", "수익상품"],
+    "agent_folder": "./dh_real/agent.json"
   },
+
+
+
+
+
+
   
   {
     "id": 5,
