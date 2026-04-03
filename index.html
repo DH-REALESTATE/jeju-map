@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.129</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.129" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.130</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.130" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -683,6 +683,68 @@
       font-weight: 800;
       color: #223244;
       line-height: 1.5;
+    }
+
+
+    .detail-features {
+      margin-bottom: 14px;
+    }
+
+    .detail-tags-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .detail-tags {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      min-width: 0;
+    }
+
+    .detail-feature-tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 0 10px;
+      border-radius: 999px;
+      background: rgba(3, 199, 90, 0.08);
+      border: 1px solid rgba(3, 199, 90, 0.18);
+      color: #03C75A;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: -0.15px;
+      white-space: nowrap;
+    }
+
+    .detail-roadview-inline-btn {
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      height: 32px;
+      padding: 0 11px;
+      border-radius: 999px;
+      border: 1px solid rgba(3, 199, 90, 0.28);
+      background: rgba(3, 199, 90, 0.08);
+      color: #03C75A;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .detail-roadview-inline-btn:hover {
+      background: rgba(3, 199, 90, 0.14);
+    }
+
+    .detail-roadview-inline-btn i {
+      margin-right: 0;
+      font-size: 13px;
+      line-height: 1;
     }
 
     .detail-action-box {
@@ -1378,126 +1440,6 @@
       font-size: 16px;
     }
 
-
-    .detail-tags-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 14px;
-    }
-
-    .detail-roadview-mini-btn {
-      flex: 0 0 auto;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      height: 32px;
-      padding: 0 10px;
-      border: 1px solid rgba(3, 199, 90, 0.26);
-      border-radius: 999px;
-      background: rgba(3, 199, 90, 0.08);
-      color: #03C75A;
-      font-size: 12px;
-      font-weight: 800;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-
-    .detail-roadview-mini-btn:hover {
-      background: rgba(3, 199, 90, 0.14);
-    }
-
-    .detail-roadview-mini-btn i {
-      margin-right: 0;
-      font-size: 13px;
-      line-height: 1;
-    }
-
-    .roadview-overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 10000;
-      display: none;
-      background: rgba(15, 23, 42, 0.72);
-      backdrop-filter: blur(4px);
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-    }
-
-    .roadview-overlay.open {
-      display: flex;
-    }
-
-    .roadview-panel {
-      width: min(1100px, 96vw);
-      height: min(760px, 88vh);
-      background: #fff;
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.28);
-      display: flex;
-      flex-direction: column;
-    }
-
-    .roadview-panel-topbar {
-      height: 54px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      padding: 0 14px 0 18px;
-      border-bottom: 1px solid #e8eef5;
-      background: rgba(255,255,255,0.98);
-    }
-
-    .roadview-panel-title {
-      font-size: 15px;
-      font-weight: 900;
-      color: #17212b;
-      letter-spacing: -0.2px;
-    }
-
-    .roadview-close-btn {
-      width: 38px;
-      height: 38px;
-      border: 0;
-      border-radius: 10px;
-      background: #f4f7fb;
-      color: #223244;
-      font-size: 18px;
-      font-weight: 900;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .roadview-map {
-      width: 100%;
-      height: 100%;
-      min-height: 420px;
-      background: #dbe6ef;
-    }
-
-    @media (max-width: 980px) {
-      .detail-tags-row {
-        flex-wrap: wrap;
-        align-items: flex-start;
-      }
-
-      .roadview-overlay {
-        padding: 12px;
-      }
-
-      .roadview-panel {
-        width: 100%;
-        height: min(86vh, 680px);
-        border-radius: 16px;
-      }
-    }
-
     @media (max-width: 980px) {
       :root {
         --sidebar-current-width: 100%;
@@ -1649,7 +1591,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.129</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.130</div>
             </div>
           </div>
 
@@ -1740,6 +1682,8 @@
                   <div class="detail-type-badge" id="detailTypeBadge"></div>
                 </div>
 
+                <div class="detail-features" id="detailFeatures"></div>
+
                 <div class="detail-meta-grid" id="detailMetaGrid">
                   <div class="detail-meta-item">
                     <span class="detail-meta-label">
@@ -1784,8 +1728,6 @@
                     </div>
                   </div>
                 </div>
-
-                <div class="detail-features" id="detailFeatures"></div>
 
                 <div class="detail-action-box">
                   <div class="detail-phone" id="detailPhone"></div>
@@ -1851,7 +1793,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.129';
+    const APP_VERSION = '1.130';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -1870,7 +1812,6 @@
     let roadviewClient = null;
     let roadviewOverlay = null;
     let roadviewFullscreenBtn = null;
-    let roadviewPosition = null;
     let selectedDeal = "all";
     let selectedType = "all";
     let currentDetailItem = null;
@@ -1944,7 +1885,6 @@
     const detailImageLightboxPrev = document.getElementById("detailImageLightboxPrev");
     const detailImageLightboxNext = document.getElementById("detailImageLightboxNext");
     const detailScroll = document.querySelector(".detail-scroll");
-    const roadviewCloseBtn = document.getElementById("roadviewCloseBtn");
 
     function updateSidebarWidth() {
       const listWidth = getComputedStyle(document.documentElement).getPropertyValue("--sidebar-list-width").trim() || "360px";
@@ -2404,55 +2344,7 @@
     }
 
     async function hideRoadview() {
-      if (roadviewOverlay) {
-        roadviewOverlay.classList.remove("open");
-        roadviewOverlay.style.display = "none";
-      }
-    }
-
-
-    function ensureRoadview() {
-      if (!roadviewOverlay) return false;
-      if (!roadview) {
-        roadview = new kakao.maps.Roadview(document.getElementById("roadview"));
-      }
-      if (!roadviewClient) {
-        roadviewClient = new kakao.maps.RoadviewClient();
-      }
-      return true;
-    }
-
-    function openRoadviewForPosition(lat, lng) {
-      if (!ensureRoadview()) return;
-      const position = new kakao.maps.LatLng(lat, lng);
-      roadviewPosition = position;
-
-      roadviewClient.getNearestPanoId(position, 50, function (panoId) {
-        roadviewOverlay.classList.add("open");
-        roadviewOverlay.style.display = "flex";
-
-        if (panoId) {
-          roadview.setPanoId(panoId, position);
-          setTimeout(() => {
-            if (roadview) roadview.relayout();
-          }, 80);
-          return;
-        }
-
-        roadviewClient.getNearestPanoId(position, 200, function (fallbackPanoId) {
-          roadviewOverlay.classList.add("open");
-          roadviewOverlay.style.display = "flex";
-          if (fallbackPanoId) {
-            roadview.setPanoId(fallbackPanoId, position);
-            setTimeout(() => {
-              if (roadview) roadview.relayout();
-            }, 80);
-            return;
-          }
-          document.getElementById("roadview").innerHTML =
-            '<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:14px;font-weight:800;color:#6b7280;background:#fff;">주변 로드뷰를 찾을 수 없습니다.</div>';
-        });
-      });
+      await closeRoadviewPanel();
     }
 
     function makeAgentInitial(text) {
@@ -2749,7 +2641,26 @@
         detailAgentAvatar.textContent = "담당";
       }
 
-      detailFeatures.innerHTML = "";
+      const featureTagHtml = (detailItem.features || [])
+        .map(feature => `<span class="detail-feature-tag">${escapeHtml(feature)}</span>`)
+        .join("");
+
+      detailFeatures.innerHTML = `
+        <div class="detail-tags-row">
+          <div class="detail-tags">${featureTagHtml}</div>
+          <button type="button" class="detail-roadview-inline-btn" id="detailTopRoadviewBtn">
+            <i class="fa-solid fa-street-view"></i>
+            로드뷰
+          </button>
+        </div>
+      `;
+
+      const detailTopRoadviewBtn = document.getElementById("detailTopRoadviewBtn");
+      if (detailTopRoadviewBtn) {
+        detailTopRoadviewBtn.onclick = () => {
+          showRoadview(detailItem.lat, detailItem.lng);
+        };
+      }
 
       detailPhone.textContent = "";
       const detailCallNumber = [detailItem.phone1, detailItem.phone2].filter(Boolean)[0] || "";
@@ -3344,16 +3255,6 @@
       
       detailCloseBtn.addEventListener("click", closeDetailPanel);
 
-      if (roadviewCloseBtn) {
-        roadviewCloseBtn.addEventListener("click", hideRoadview);
-      }
-
-      if (roadviewOverlay) {
-        roadviewOverlay.addEventListener("click", (e) => {
-          if (e.target === roadviewOverlay) hideRoadview();
-        });
-      }
-
       function openShareMenu() {
         if (!detailShareMenu) return;
         detailShareMenu.style.display = "flex";
@@ -3678,18 +3579,5 @@
 
     bootstrap();
   </script>
-
-  <div class="roadview-overlay" id="roadviewOverlay">
-    <div class="roadview-panel">
-      <div class="roadview-panel-topbar">
-        <div class="roadview-panel-title">로드뷰</div>
-        <button type="button" class="roadview-close-btn" id="roadviewCloseBtn">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-      <div class="roadview-map" id="roadview"></div>
-    </div>
-  </div>
-
 </body>
 </html>
