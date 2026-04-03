@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.123</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.123" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.124</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.124" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -135,58 +135,6 @@
       position: relative;
       display: flex;
       gap: 6px;
-    }
-
-    .detail-share-menu {
-      position: absolute;
-      top: calc(100% + 8px);
-      right: 0;
-      min-width: 168px;
-      padding: 8px;
-      border-radius: 14px;
-      background: rgba(255,255,255,0.98);
-      border: 1px solid #e7edf3;
-      box-shadow: 0 12px 28px rgba(15, 41, 66, 0.14);
-      backdrop-filter: blur(10px);
-      display: none;
-      flex-direction: column;
-      gap: 6px;
-      z-index: 9999;
-      pointer-events: auto;
-    }
-
-    .detail-share-menu.open {
-      display: flex;
-    }
-
-    .detail-share-option {
-      width: 100%;
-      min-height: 40px;
-      border: 0;
-      border-radius: 10px;
-      background: #f7fafc;
-      color: #223244;
-      font-size: 13px;
-      font-weight: 800;
-      display: inline-flex;
-      align-items: center;
-      justify-content: flex-start;
-      gap: 8px;
-      padding: 0 12px;
-      cursor: pointer;
-    }
-
-    .detail-share-option:hover {
-      background: rgba(3, 199, 90, 0.08);
-      color: #03C75A;
-    }
-
-    .detail-share-option i {
-      width: 16px;
-      text-align: center;
-      font-size: 14px;
-      margin-right: 0;
-      line-height: 1;
     }
 
 
@@ -1378,6 +1326,66 @@
       font-size: 16px;
     }
 
+
+    .detail-top-actions {
+      position: relative;
+      display: flex;
+      gap: 6px;
+    }
+
+    .detail-share-menu {
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      min-width: 168px;
+      padding: 8px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.98);
+      border: 1px solid #e7edf3;
+      box-shadow: 0 12px 28px rgba(15, 41, 66, 0.14);
+      backdrop-filter: blur(10px);
+      display: none;
+      flex-direction: column;
+      gap: 6px;
+      z-index: 9999;
+      pointer-events: auto;
+    }
+
+    .detail-share-menu.open {
+      display: flex !important;
+    }
+
+    .detail-share-option {
+      width: 100%;
+      min-height: 40px;
+      border: 0;
+      border-radius: 10px;
+      background: #f7fafc;
+      color: #223244;
+      font-size: 13px;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 8px;
+      padding: 0 12px;
+      cursor: pointer;
+    }
+
+    .detail-share-option:hover {
+      background: rgba(3, 199, 90, 0.08);
+      color: #03C75A;
+    }
+
+    .detail-share-option i {
+      width: 16px;
+      text-align: center;
+      font-size: 14px;
+      margin-right: 0;
+      line-height: 1;
+    }
+
+
     @media (max-width: 980px) {
       :root {
         --sidebar-current-width: 100%;
@@ -1529,7 +1537,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.123</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.124</div>
             </div>
           </div>
 
@@ -1731,7 +1739,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.123';
+    const APP_VERSION = '1.124';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -3173,92 +3181,6 @@
       
       detailCloseBtn.addEventListener("click", closeDetailPanel);
 
-      function openShareMenu() {
-        if (!detailShareMenu) return;
-        detailShareMenu.style.display = "flex";
-        detailShareMenu.classList.add("open");
-      }
-
-      function closeShareMenu() {
-        if (!detailShareMenu) return;
-        detailShareMenu.classList.remove("open");
-        detailShareMenu.style.display = "none";
-      }
-
-      function toggleShareMenu() {
-        if (!detailShareMenu) return;
-        const isOpen = detailShareMenu.style.display === "flex" || detailShareMenu.classList.contains("open");
-        if (isOpen) {
-          closeShareMenu();
-        } else {
-          openShareMenu();
-        }
-      }
-
-      if (detailShareBtn) {
-        detailShareBtn.addEventListener("click", (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          toggleShareMenu();
-        });
-      }
-
-      if (detailCopyLinkBtn) {
-        detailCopyLinkBtn.addEventListener("click", async (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          if (!currentDetailItem) return;
-          const url = currentDetailItem.link && currentDetailItem.link !== "#" ? currentDetailItem.link : location.href;
-
-          try {
-            await navigator.clipboard.writeText(url);
-            detailShareBtn.innerHTML = "복사";
-            closeShareMenu();
-            setTimeout(() => {
-              detailShareBtn.innerHTML = '<i class="fa-solid fa-arrow-up-from-bracket"></i>';
-            }, 1000);
-          } catch (err) {
-            console.error(err);
-          }
-        });
-      }
-
-      if (detailShareKakaoBtn) {
-        detailShareKakaoBtn.addEventListener("click", async (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          if (!currentDetailItem) return;
-          const url = currentDetailItem.link && currentDetailItem.link !== "#" ? currentDetailItem.link : location.href;
-          const shareTitle = currentDetailItem.title || "제주 프리미엄 부동산";
-
-          try {
-            if (navigator.share) {
-              await navigator.share({
-                title: shareTitle,
-                text: shareTitle,
-                url
-              });
-              closeShareMenu();
-              return;
-            }
-
-            await navigator.clipboard.writeText(url);
-            detailShareBtn.innerHTML = "복사";
-            closeShareMenu();
-            setTimeout(() => {
-              detailShareBtn.innerHTML = '<i class="fa-solid fa-arrow-up-from-bracket"></i>';
-            }, 1000);
-          } catch (err) {
-            console.error(err);
-          }
-        });
-      }
-
-      document.addEventListener("click", (e) => {
-        if (!detailShareMenu) return;
-        if (e.target.closest("#detailShareBtn") || e.target.closest("#detailShareMenu")) return;
-        closeShareMenu();
-      });
 
       detailHeroPrevBtn.addEventListener("click", (e) => {
         e.stopPropagation();
@@ -3350,6 +3272,104 @@
         state.map.relayout();
       });
     }
+
+
+    function openShareMenu() {
+      if (!detailShareMenu) return;
+      detailShareMenu.classList.add("open");
+      detailShareMenu.style.display = "flex";
+    }
+
+    function closeShareMenu() {
+      if (!detailShareMenu) return;
+      detailShareMenu.classList.remove("open");
+      detailShareMenu.style.display = "none";
+    }
+
+    function toggleShareMenu() {
+      if (!detailShareMenu) return;
+      const isOpen = detailShareMenu.classList.contains("open");
+      if (isOpen) {
+        closeShareMenu();
+      } else {
+        openShareMenu();
+      }
+    }
+
+    if (detailShareMenu) {
+      detailShareMenu.style.display = "none";
+    }
+
+    if (detailShareBtn) {
+      detailShareBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        toggleShareMenu();
+      });
+    }
+
+    if (detailCopyLinkBtn) {
+      detailCopyLinkBtn.addEventListener("click", async function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const url = currentDetailItem && currentDetailItem.link && currentDetailItem.link !== "#"
+          ? currentDetailItem.link
+          : location.href;
+
+        try {
+          await navigator.clipboard.writeText(url);
+          detailShareBtn.innerHTML = "복사";
+          closeShareMenu();
+          setTimeout(() => {
+            detailShareBtn.innerHTML = '<i class="fa-solid fa-arrow-up-from-bracket"></i>';
+          }, 1000);
+        } catch (err) {
+          console.error("링크 복사 실패:", err);
+        }
+      });
+    }
+
+    if (detailShareKakaoBtn) {
+      detailShareKakaoBtn.addEventListener("click", async function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const url = currentDetailItem && currentDetailItem.link && currentDetailItem.link !== "#"
+          ? currentDetailItem.link
+          : location.href;
+
+        const shareTitle = currentDetailItem && currentDetailItem.title
+          ? currentDetailItem.title
+          : "제주 프리미엄 부동산";
+
+        try {
+          if (navigator.share) {
+            await navigator.share({
+              title: shareTitle,
+              text: shareTitle,
+              url
+            });
+          } else {
+            await navigator.clipboard.writeText(url);
+            detailShareBtn.innerHTML = "복사";
+            setTimeout(() => {
+              detailShareBtn.innerHTML = '<i class="fa-solid fa-arrow-up-from-bracket"></i>';
+            }, 1000);
+          }
+          closeShareMenu();
+        } catch (err) {
+          console.error("공유 실패:", err);
+        }
+      });
+    }
+
+    document.addEventListener("click", function (e) {
+      if (!detailShareMenu) return;
+      if (e.target.closest("#detailShareBtn") || e.target.closest("#detailShareMenu")) return;
+      closeShareMenu();
+    });
+
 
     function bootstrap() {
       if (!window.kakao || !window.kakao.maps) {
