@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.066</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.066" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.067</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.067" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -1307,7 +1307,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.066</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.067</div>
             </div>
           </div>
 
@@ -1493,7 +1493,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.066';
+    const APP_VERSION = '1.067';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -1694,6 +1694,23 @@
       return /아파트|빌라/.test(text);
     }
 
+    function isDetachedHouseType(typeText) {
+      const text = String(typeText || "").trim();
+      return ["단독", "단독주택"].includes(text);
+    }
+
+    function formatDetachedHouseAreaDisplay(areaText) {
+      const raw = String(areaText || "-").trim();
+      const landMatch = raw.match(/대지면적\s*([\d,.]+)㎡/);
+      const totalMatch = raw.match(/연면적\s*([\d,.]+)㎡/);
+
+      if (landMatch && totalMatch) {
+        return `대지면적 ${escapeHtml(landMatch[1])}㎡ / 연면적 ${escapeHtml(totalMatch[1])}㎡`;
+      }
+
+      return escapeHtml(raw);
+    }
+
     function formatSingleAreaValue(value, unit) {
       if (!Number.isFinite(value)) return "-";
       if (unit === "py") {
@@ -1705,6 +1722,10 @@
     function formatAreaByUnit(areaText, unit, typeText = "") {
       const raw = String(areaText || "-").trim();
       const values = parseAreaNumbers(raw);
+
+      if (isDetachedHouseType(typeText)) {
+        return formatDetachedHouseAreaDisplay(raw);
+      }
 
       if (isApartmentType(typeText) && values.length >= 2) {
         const privateArea = formatSingleAreaValue(values[1], unit);
@@ -2632,6 +2653,12 @@
         const officeName = escapeHtml(item.agentOffice || "");
           const agentInitial = makeAgentInitial(item.agentName || "담당자");
 
+        const isDetachedHouse = isDetachedHouseType(item.type || "");
+        const cardAreaHtml = isDetachedHouse
+          ? `<span class="area-display" data-area-raw="${escapeHtml(item.area || "-")}" data-area-unit="m2" data-area-type="${escapeHtml(item.type || "")}">${formatDetachedHouseAreaDisplay(item.area || "-")}</span>`
+          : `<span class="area-display" data-area-raw="${escapeHtml(item.area || "-")}" data-area-unit="m2" data-area-type="${escapeHtml(item.type || "")}">${formatAreaByUnit(item.area || "-", "m2", item.type || "")}</span>
+              <button type="button" class="area-toggle-btn">평</button>`;
+
         return `
           <article class="card" data-id="${item.id}">
             <div class="card-inner-row">
@@ -2655,9 +2682,8 @@
                 </div>
 
                 <div class="card-spec">
-              <span class="area-display" data-area-raw="${escapeHtml(item.area || "-")}" data-area-unit="m2" data-area-type="${escapeHtml(item.type || "")}">${formatAreaByUnit(item.area || "-", "m2", item.type || "")}</span>
-              <button type="button" class="area-toggle-btn">평</button>
-            </div>
+                  ${cardAreaHtml}
+                </div>
 
                 <div class="card-agent-row">
                   <div class="card-agent-left">
