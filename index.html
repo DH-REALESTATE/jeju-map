@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.154</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.154" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.155</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.155" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -860,10 +860,7 @@
     }
 
     .detail-action-box {
-      padding: 16px;
-      border-radius: 18px;
-      background: #f8fafc;
-      border: 1px solid #e7edf3;
+      display: none !important;
     }
 
     .detail-phone {
@@ -871,9 +868,7 @@
     }
 
     .detail-actions {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
+      display: none !important;
     }
 
     .detail-action-btn {
@@ -909,6 +904,55 @@
 
     .detail-action-btn:hover {
       box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+    }
+
+
+    .detail-agent-cta-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .detail-agent-cta-btn {
+      flex: 1;
+      min-width: 0;
+      height: 40px;
+      border: 0;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 900;
+      cursor: pointer;
+      text-decoration: none;
+      box-shadow: 0 4px 12px rgba(15, 41, 66, 0.08);
+    }
+
+    .detail-agent-cta-btn i {
+      margin-right: 0;
+      line-height: 1;
+      font-size: 13px;
+    }
+
+    .detail-agent-cta-btn.kakao {
+      background: #FEE500;
+      color: #191919;
+    }
+
+    .detail-agent-cta-btn.kakao:hover {
+      background: #f2da00;
+    }
+
+    .detail-agent-cta-btn.phone {
+      background: #fff;
+      color: #111827;
+      border: 1px solid #e5e7eb;
+    }
+
+    .detail-agent-cta-btn.phone:hover {
+      background: #f8fafc;
     }
 
     .detail-action-btn.kakao-btn {
@@ -1704,7 +1748,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.154</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.155</div>
             </div>
           </div>
 
@@ -1850,6 +1894,17 @@
                       <div class="detail-agent-address" id="detailAgentAddress"></div>
                       <div class="detail-agent-regno" id="detailAgentRegNo"></div>
                       <div class="detail-agent-phone-inline" id="detailAgentPhoneInline"></div>
+
+                      <div class="detail-agent-cta-row">
+                        <button type="button" class="detail-agent-cta-btn kakao" id="detailRoadviewBtn">
+                          <i class="fa-solid fa-comment"></i>
+                          카톡상담
+                        </button>
+                        <button type="button" class="detail-agent-cta-btn phone" id="detailCallBtn">
+                          <i class="fa-solid fa-phone"></i>
+                          문의전화
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1859,8 +1914,8 @@
 
                   <div class="detail-actions">
                     <button type="button" class="detail-action-btn cross-btn" id="detailMapBtn">교차로</button>
-                    <button type="button" class="detail-action-btn kakao-btn" id="detailRoadviewBtn"><i class="fa-solid fa-comment"></i> 카톡상담</button>
-                    <button type="button" class="detail-action-btn" id="detailCallBtn"><i class="fa-solid fa-phone"></i> 문의전화</button>
+                    <button type="button" class="detail-action-btn kakao-btn" id="detailRoadviewBtnBottom"><i class="fa-solid fa-comment"></i> 카톡상담</button>
+                    <button type="button" class="detail-action-btn" id="detailCallBtnBottom"><i class="fa-solid fa-phone"></i> 문의전화</button>
                   </div>
                 </div>
               </div>
@@ -1918,7 +1973,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.154';
+    const APP_VERSION = '1.155';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
