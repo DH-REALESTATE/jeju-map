@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.160</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.160" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.161</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.161" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -936,14 +936,27 @@
     .detail-agent-cta-row {
       display: flex;
       gap: 8px;
-      margin-top: 14px;
+      margin-top: 10px;
       justify-content: flex-start;
     }
 
     .detail-agent-cta-btn {
+      flex: 0 0 auto;
+      min-width: 0;
+      height: 30px;
       padding: 0 12px;
-      min-width: 96px;
-      max-width: 140px;
+      border: 0;
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      font-size: 12px;
+      letter-spacing: -0.1px;
+      font-weight: 900;
+      cursor: pointer;
+      text-decoration: none;
+      box-shadow: 0 2px 6px rgba(15, 41, 66, 0.06);
     }
 
 
@@ -978,8 +991,7 @@
     }
 
     .detail-agent-cta-btn.kakao:hover {
-      background: #FEE500;
-      color: #191919;
+      background: #f2da00;
     }
 
     .detail-agent-cta-btn.phone {
@@ -1802,7 +1814,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.160</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.161</div>
             </div>
           </div>
 
@@ -2027,7 +2039,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.160';
+    const APP_VERSION = '1.161';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
