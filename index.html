@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.172</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.172" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.173</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.173" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -1803,7 +1803,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.172</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.173</div>
             </div>
           </div>
 
@@ -2028,7 +2028,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.172';
+    const APP_VERSION = '1.173';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -2238,6 +2238,11 @@
       return ["단독", "단독주택"].includes(text);
     }
 
+    function isOfficetelType(typeText) {
+      const text = String(typeText || "").trim();
+      return /오피스텔/.test(text);
+    }
+
     function parseDetachedHouseAreas(areaText) {
       const raw = String(areaText || "-").trim();
       const landMatch = raw.match(/대지면적\s*([\d,.]+)㎡/);
@@ -2345,12 +2350,17 @@
         return;
       }
 
-      if (isApartmentType(typeText)) {
+      if (isApartmentType(typeText) || isOfficetelType(typeText)) {
         const parsed = parseApartmentAreas(detailItem.area || "-");
-        const showSupply = detailAreaMode === "supply";
-        const targetValue = showSupply ? parsed.supply : parsed.private;
+        const showSecondary = detailAreaMode === "supply";
+        const targetValue = showSecondary ? parsed.supply : parsed.private;
 
-        detailAreaLabel.textContent = showSupply ? "면적(공급)" : "면적(전용)";
+        if (isOfficetelType(typeText)) {
+          detailAreaLabel.textContent = showSecondary ? "면적(계약)" : "면적(전용)";
+        } else {
+          detailAreaLabel.textContent = showSecondary ? "면적(공급)" : "면적(전용)";
+        }
+
         detailAreaValue.textContent = Number.isFinite(targetValue) ? formatSingleAreaValue(targetValue, unit) : "-";
 
         if (detailAreaTypeToggleBtn) {
@@ -2837,7 +2847,7 @@
         })
         .join("");
 
-      detailAreaMode = isApartmentType(detailItem.type || "") ? "private" : "total";
+      detailAreaMode = (isApartmentType(detailItem.type || "") || isOfficetelType(detailItem.type || "")) ? "private" : "total";
       detailAreaValue.dataset.areaRaw = detailItem.area || "-";
       detailAreaValue.dataset.areaUnit = "m2";
       detailAreaValue.dataset.areaType = detailItem.type || "";
@@ -3502,7 +3512,7 @@
             return;
           }
 
-          if (isApartmentType(typeText)) {
+          if (isApartmentType(typeText) || isOfficetelType(typeText)) {
             detailAreaMode = detailAreaMode === "supply" ? "private" : "supply";
             syncDetailAreaDisplay(currentDetailItem);
           }
