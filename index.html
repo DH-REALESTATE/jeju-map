@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.143</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.143" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.144</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.144" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -357,31 +357,6 @@
     }
 
 
-
-    .detail-summary-top {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-bottom: 8px;
-    }
-
-    .detail-summary-type-badge {
-      display: inline-flex;
-      align-items: center;
-      height: 24px;
-      padding: 0 10px;
-      border-radius: 999px;
-      background: #f5f1ff;
-      color: #7c4dff;
-      font-size: 12px;
-      font-weight: 900;
-      line-height: 1;
-      letter-spacing: -0.15px;
-      white-space: nowrap;
-      box-shadow: inset 0 0 0 1px rgba(124, 77, 255, 0.06);
-    }
-
     .detail-summary-price-row {
       display: flex;
       align-items: center;
@@ -393,72 +368,43 @@
     .detail-summary-deal-badge {
       display: inline-flex;
       align-items: center;
-      height: 24px;
-      padding: 0 8px;
+      height: 26px;
+      padding: 0 10px;
       border-radius: 999px;
-      background: #eef5ff;
-      color: #2563eb;
+      background: #e8f7ef;
+      color: #16a34a;
       font-size: 12px;
       font-weight: 900;
       line-height: 1;
       letter-spacing: -0.15px;
       white-space: nowrap;
-      box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.08);
-    }
-
-    .detail-summary-block {
-      margin-bottom: 10px;
+      box-shadow: inset 0 0 0 1px rgba(22, 163, 74, 0.08);
     }
 
     .detail-summary-price {
       font-size: 30px;
       font-weight: 900;
-      line-height: 1.05;
-      letter-spacing: -1px;
+      line-height: 1.02;
+      letter-spacing: -0.9px;
       color: #111827;
       margin-bottom: 0;
+    }
+
+    .detail-summary-type {
+      font-size: 14px;
+      font-weight: 800;
+      line-height: 1.4;
+      color: #5f6b78;
+      margin-bottom: 8px;
+      letter-spacing: -0.15px;
     }
 
     .detail-summary-address {
       font-size: 13px;
       line-height: 1.55;
       color: #6f7c89;
-      margin-bottom: 12px;
-    }
-
-    .detail-title-row {
-      display: block;
-      margin-bottom: 16px;
-    }
-
-    .detail-title-wrap {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .detail-title {
-      order: 1;
-      margin: 0;
-      font-size: 19px;
-      font-weight: 900;
-      color: #16202a;
-      letter-spacing: -0.35px;
-      line-height: 1.42;
-      word-break: keep-all;
-    }
-
-    .detail-listing-no {
-      order: 2;
-      display: block;
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: -0.12px;
-      color: #9aa7b4;
       margin-bottom: 0;
-      line-height: 1.35;
     }
-
     .detail-title-row {
       display: flex;
       justify-content: space-between;
@@ -1718,7 +1664,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.143</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.144</div>
             </div>
           </div>
 
@@ -1802,13 +1748,11 @@
                 <div class="detail-features" id="detailFeatures"></div>
 
                 <div class="detail-summary-block">
-                  <div class="detail-summary-top">
-                    <div class="detail-summary-type-badge" id="detailSummaryTypeBadge"></div>
-                  </div>
                   <div class="detail-summary-price-row">
                     <div class="detail-summary-deal-badge" id="detailSummaryDealBadge"></div>
                     <div class="detail-summary-price" id="detailSummaryPrice"></div>
                   </div>
+                  <div class="detail-summary-type" id="detailSummaryType"></div>
                   <div class="detail-summary-address" id="detailSummaryAddress"></div>
                 </div>
 
@@ -1932,7 +1876,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.143';
+    const APP_VERSION = '1.144';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -2750,14 +2694,14 @@
       detailTypeValue.textContent = detailItem.type || "-";
       detailRegionValue.textContent = detailItem.region || "-";
 
-      const detailSummaryTypeBadge = document.getElementById("detailSummaryTypeBadge");
+      const detailSummaryType = document.getElementById("detailSummaryType");
       const detailSummaryDealBadge = document.getElementById("detailSummaryDealBadge");
       const detailSummaryPrice = document.getElementById("detailSummaryPrice");
       const detailSummaryAddress = document.getElementById("detailSummaryAddress");
 
-      if (detailSummaryTypeBadge) {
-        detailSummaryTypeBadge.textContent = detailItem.type || "";
-        detailSummaryTypeBadge.style.display = detailItem.type ? "inline-flex" : "none";
+      if (detailSummaryType) {
+        detailSummaryType.textContent = detailItem.type || "";
+        detailSummaryType.style.display = detailItem.type ? "block" : "none";
       }
       if (detailSummaryDealBadge) {
         detailSummaryDealBadge.textContent = detailItem.dealType || "";
