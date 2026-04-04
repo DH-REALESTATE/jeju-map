@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.168</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.168" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.169</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.169" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -86,8 +86,7 @@
 
     .sidebar-detail-panel {
       height: 100%;
-      overflow-y: auto;
-      overflow-x: hidden;
+      overflow: hidden;
       opacity: 0;
       background: #fff;
       border-left: 1px solid #e6ebf0;
@@ -105,7 +104,6 @@
       display: flex;
       flex-direction: column;
       background: #fff;
-      min-height: 0;
     }
 
     .detail-topbar {
@@ -132,76 +130,17 @@
       font-size: 18px;
     }
 
-
     .detail-top-actions {
-      position: relative;
       display: flex;
-      gap: 4px;
+      gap: 6px;
     }
-
-    .detail-share-menu {
-      position: absolute;
-      top: calc(100% + 8px);
-      right: 0;
-      min-width: 168px;
-      padding: 8px;
-      border-radius: 14px;
-      background: rgba(255,255,255,0.98);
-      border: 1px solid #e7edf3;
-      box-shadow: 0 12px 28px rgba(15, 41, 66, 0.14);
-      backdrop-filter: blur(10px);
-      display: none;
-      flex-direction: column;
-      gap: 4px;
-      z-index: 9999;
-      pointer-events: auto;
-    }
-
-    .detail-share-menu.open {
-      display: flex;
-    }
-
-    .detail-share-option {
-      width: 100%;
-      min-height: 30px;
-      border: 0;
-      border-radius: 10px;
-      background: #f7fafc;
-      color: #223244;
-      font-size: 12px;
-      letter-spacing: -0.1px;
-      font-weight: 800;
-      display: inline-flex;
-      align-items: center;
-      justify-content: flex-start;
-      gap: 8px;
-      padding: 0 12px;
-      cursor: pointer;
-    }
-
-    .detail-share-option:hover {
-      background: rgba(3, 199, 90, 0.08);
-      color: #03C75A;
-    }
-
-    .detail-share-option i {
-      width: 16px;
-      text-align: center;
-      font-size: 14px;
-      margin-right: 0;
-      line-height: 1;
-    }
-
 
     .detail-scroll {
       flex: 1;
-      min-height: 0;
       overflow-y: auto;
-      overflow-x: hidden;
       background: #fff;
       scrollbar-width: none;
       -ms-overflow-style: none;
-      -webkit-overflow-scrolling: touch;
     }
 
     .detail-scroll::-webkit-scrollbar { display: none; }
@@ -214,7 +153,17 @@
     }
 
     .detail-hero::after {
-      display: none;
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        180deg,
+        rgba(0,0,0,0.06) 0%,
+        rgba(0,0,0,0.14) 30%,
+        rgba(0,0,0,0.62) 100%
+      );
+      pointer-events: none;
+      z-index: 1;
     }
 
     .detail-hero-slides {
@@ -231,22 +180,17 @@
       background-repeat: no-repeat;
       opacity: 0;
       transition: opacity 0.35s ease;
-      filter: contrast(1.05) brightness(1.03) saturate(1.05);
     }
 
     .detail-hero-slide.active {
       opacity: 1;
     }
 
-    .detail-hero img {
-      filter: contrast(1.05) brightness(1.03) saturate(1.05);
-    }
-
     .detail-hero-expand,
     .detail-hero-nav {
       position: absolute;
       width: 40px;
-      height: 30px;
+      height: 40px;
       border: 0;
       border-radius: 10px;
       background: rgba(0,0,0,0.42);
@@ -288,7 +232,7 @@
       transform: translateX(-50%);
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 6px;
       z-index: 3;
     }
 
@@ -296,7 +240,7 @@
       width: 8px;
       height: 8px;
       border: 0;
-      border-radius: 20px;
+      border-radius: 999px;
       background: rgba(255,255,255,0.42);
       cursor: pointer;
       padding: 0;
@@ -309,7 +253,21 @@
     }
 
     .detail-hero-badge {
-      display: none !important;
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      z-index: 3;
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 0 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.18);
+      backdrop-filter: blur(8px);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: -0.2px;
+      color: #fff;
     }
 
     .detail-hero-overlay {
@@ -348,113 +306,42 @@
     }
 
     .detail-hero-address {
-      font-size: 12px;
-      letter-spacing: -0.1px;
+      font-size: 13px;
       line-height: 1.45;
       color: rgba(255,255,255,0.94);
       text-shadow: 0 1px 6px rgba(0,0,0,0.2);
     }
 
     .detail-hero-features {
-      display: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 12px;
+    }
+
+    .detail-hero-features span {
+      display: inline-flex;
+      align-items: center;
+      height: 26px;
+      padding: 0 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.16);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.18);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: -0.2px;
+    }
+
+    .detail-hero-features span.highlight {
+      background: rgba(37,99,235,0.88);
+      border-color: rgba(37,99,235,0.92);
+      box-shadow: 0 4px 12px rgba(37,99,235,0.25);
     }
 
     .detail-content {
       padding: 18px;
-    }
-
-
-
-    .detail-summary-top {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-bottom: 8px;
-    }
-
-    .detail-summary-type-badge {
-      display: inline-flex;
-      align-items: center;
-      height: 24px;
-      padding: 0 10px;
-      border-radius: 20px;
-      background: #f3eefe;
-      color: #7c4dff;
-      font-size: 12px;
-      letter-spacing: -0.1px;
-      font-weight: 900;
-      line-height: 1;
-      letter-spacing: -0.15px;
-      white-space: nowrap;
-    }
-
-    .detail-summary-price-row {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      flex-wrap: wrap;
-      margin-bottom: 8px;
-    }
-
-    .detail-summary-deal-badge {
-      display: inline-flex;
-      align-items: center;
-      height: 24px;
-      padding: 0 8px;
-      border-radius: 20px;
-      background: #eef5ff;
-      color: #2563eb;
-      font-size: 12px;
-      letter-spacing: -0.1px;
-      font-weight: 900;
-      line-height: 1;
-      letter-spacing: -0.15px;
-      white-space: nowrap;
-    }
-
-    .detail-summary-block {
-      margin-bottom: 14px;
-    }
-
-    .detail-summary-badges {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      flex-wrap: wrap;
-      margin-bottom: 10px;
-    }
-
-    .detail-summary-badge {
-      display: inline-flex;
-      align-items: center;
-      height: 24px;
-      padding: 0 10px;
-      border-radius: 20px;
-      background: #eef5ff;
-      color: #2563eb;
-      font-size: 12px;
-      letter-spacing: -0.1px;
-      font-weight: 900;
-      line-height: 1;
-      letter-spacing: -0.15px;
-      white-space: nowrap;
-    }
-
-    .detail-summary-price {
-      font-size: 28px;
-      font-weight: 900;
-      line-height: 1.15;
-      letter-spacing: -0.8px;
-      color: #111827;
-      margin-bottom: 8px;
-    }
-
-    .detail-summary-address {
-      font-size: 12px;
-      letter-spacing: -0.1px;
-      line-height: 1.5;
-      color: #6f7c89;
     }
 
     .detail-title-row {
@@ -466,7 +353,7 @@
     }
 
     .detail-title-wrap {
-      flex: 0 0 auto;
+      flex: 1;
       min-width: 0;
       display: flex;
       flex-direction: column;
@@ -498,8 +385,9 @@
 
     .detail-inline-price,
     .detail-inline-address,
-    .detail-type-badge {
-      display: none !important;
+    .detail-type-badge,
+    .detail-features {
+      display: none;
     }
 
     .detail-meta-grid {
@@ -528,7 +416,6 @@
       align-items: center;
       gap: 4px;
       font-size: 12px;
-      letter-spacing: -0.1px;
       color: #7a8794;
       margin-bottom: 6px;
       font-weight: 700;
@@ -629,7 +516,6 @@
     .detail-info-label {
       min-width: 90px;
       font-size: 12px;
-      letter-spacing: -0.1px;
       font-weight: 800;
       color: #7a8794;
       text-align: left;
@@ -638,7 +524,7 @@
     }
 
     .detail-info-value {
-      flex: 0 0 auto;
+      flex: 1;
       font-size: 14px;
       font-weight: 800;
       color: #1f2a36;
@@ -675,8 +561,7 @@
       justify-content: center;
       color: #4d5d6d;
       font-weight: 900;
-      font-size: 12px;
-      letter-spacing: -0.1px;
+      font-size: 13px;
       overflow: hidden;
       flex-shrink: 0;
       border: 1px solid #e5ebf1;
@@ -690,14 +575,14 @@
     }
 
     .detail-agent-main {
-      flex: 0 0 auto;
+      flex: 1;
       min-width: 0;
     }
 
     .detail-agent-name-row {
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 6px;
       flex-wrap: wrap;
       margin-bottom: 4px;
     }
@@ -717,8 +602,7 @@
     }
 
     .detail-agent-office {
-      font-size: 12px;
-      letter-spacing: -0.1px;
+      font-size: 13px;
       font-weight: 800;
       color: #223244;
       line-height: 1.5;
@@ -727,7 +611,6 @@
 
     .detail-agent-address {
       font-size: 12px;
-      letter-spacing: -0.1px;
       color: #7f8b98;
       line-height: 1.55;
       margin-bottom: 3px;
@@ -735,156 +618,23 @@
 
     .detail-agent-regno {
       font-size: 12px;
-      letter-spacing: -0.1px;
       color: #7f8b98;
       line-height: 1.55;
       margin-bottom: 3px;
     }
 
     .detail-agent-phone-inline {
-      font-size: 12px;
-      letter-spacing: -0.1px;
+      font-size: 13px;
       font-weight: 800;
       color: #223244;
       line-height: 1.5;
     }
 
-
-    .detail-features {
-      display: block;
-      margin-bottom: 14px;
-    }
-
-    .detail-tags-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    .detail-tags {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      flex-wrap: wrap;
-      min-width: 0;
-    }
-
-    .detail-feature-tag {
-      display: inline-flex;
-      align-items: center;
-      min-height: 28px;
-      padding: 0 10px;
-      border-radius: 20px;
-      background: rgba(3, 199, 90, 0.08);
-      border: 1px solid rgba(3, 199, 90, 0.18);
-      color: #03C75A;
-      font-size: 12px;
-      letter-spacing: -0.1px;
-      font-weight: 800;
-      letter-spacing: -0.15px;
-      white-space: nowrap;
-    }
-
-    .detail-roadview-inline-btn {
-      flex: 0 0 auto;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      height: 32px;
-      padding: 0 11px;
-      border-radius: 20px;
-      border: 1px solid rgba(3, 199, 90, 0.28);
-      background: rgba(3, 199, 90, 0.08);
-      color: #03C75A;
-      font-size: 12px;
-      letter-spacing: -0.1px;
-      font-weight: 800;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-
-    .detail-roadview-inline-btn:hover {
-      background: rgba(3, 199, 90, 0.14);
-    }
-
-    .detail-roadview-inline-btn i {
-      margin-right: 0;
-      font-size: 12px;
-      letter-spacing: -0.1px;
-      line-height: 1;
-    }
-
-
-    .detail-features {
-      display: block;
-      margin-bottom: 14px;
-    }
-
-    .detail-tags-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      width: 100%;
-    }
-
-    .detail-tags {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      flex-wrap: wrap;
-      min-width: 0;
-    }
-
-    .detail-feature-tag {
-      display: inline-flex;
-      align-items: center;
-      height: 28px;
-      padding: 0 10px;
-      border-radius: 20px;
-      background: rgba(3, 199, 90, 0.08);
-      border: 1px solid rgba(3, 199, 90, 0.18);
-      color: #03C75A;
-      font-size: 12px;
-      letter-spacing: -0.1px;
-      font-weight: 800;
-      letter-spacing: -0.15px;
-      white-space: nowrap;
-    }
-
-    .detail-roadview-inline-btn {
-      margin-left: auto;
-      flex: 0 0 auto;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      height: 28px;
-      padding: 0 10px;
-      border-radius: 20px;
-      border: 1px solid rgba(3, 199, 90, 0.28);
-      background: rgba(3, 199, 90, 0.08);
-      color: #03C75A;
-      font-size: 12px;
-      letter-spacing: -0.1px;
-      font-weight: 800;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-
-    .detail-roadview-inline-btn:hover {
-      background: rgba(3, 199, 90, 0.14);
-    }
-
-    .detail-roadview-inline-btn i {
-      margin-right: 0;
-      font-size: 12px;
-      letter-spacing: -0.1px;
-      line-height: 1;
-    }
-
     .detail-action-box {
-      display: none !important;
+      padding: 16px;
+      border-radius: 18px;
+      background: #f8fafc;
+      border: 1px solid #e7edf3;
     }
 
     .detail-phone {
@@ -892,20 +642,21 @@
     }
 
     .detail-actions {
-      display: none !important;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
     }
 
     .detail-action-btn {
-      flex: 0 0 auto;
+      flex: 1;
       min-width: 100px;
       min-height: 38px;
-      padding: 0 12px;
+      padding: 0 14px;
       border: 0;
-      border-radius: 20px;
+      border-radius: 999px;
       background: #eef3f7;
       color: #203040;
-      font-size: 12px;
-      letter-spacing: -0.1px;
+      font-size: 13px;
       font-weight: 900;
       text-decoration: none;
       display: inline-flex;
@@ -931,70 +682,10 @@
       box-shadow: 0 6px 14px rgba(0,0,0,0.12);
     }
 
-
-    
-    .detail-agent-cta-row {
-      display: flex;
-      gap: 8px;
-      margin-top: 14px;
-      justify-content: flex-start;
-    }
-
-    .detail-agent-cta-btn {
-      padding: 0 12px;
-      min-width: 96px;
-      max-width: 140px;
-    }
-
-
-    .detail-agent-cta-btn {
-      flex: 0 0 auto;
-      min-width: 0;
-      height: 30px;
-      border: 0;
-      border-radius: 20px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 4px;
-      font-size: 12px;
-      letter-spacing: -0.1px;
-      font-weight: 900;
-      cursor: pointer;
-      text-decoration: none;
-      box-shadow: 0 2px 6px rgba(15, 41, 66, 0.06);
-    }
-
-    .detail-agent-cta-btn i {
-      margin-right: 0;
-      line-height: 1;
-      font-size: 12px;
-      letter-spacing: -0.1px;
-    }
-
-    .detail-agent-cta-btn.kakao {
-      background: #FEE500;
-      color: #191919;
-    }
-
-    .detail-agent-cta-btn.kakao:hover {
-      background: #f2da00;
-    }
-
-    .detail-agent-cta-btn.phone {
-      background: #fff;
-      color: #111827;
-      border: 1px solid #e5e7eb;
-    }
-
-    .detail-agent-cta-btn.phone:hover {
-      background: #f8fafc;
-    }
-
     .detail-action-btn.kakao-btn {
       background: #FEE500;
       color: #111;
-      border-radius: 20px;
+      border-radius: 999px;
       font-weight: 800;
     }
 
@@ -1032,53 +723,23 @@
       box-shadow: 0 8px 22px rgba(15, 41, 66, 0.05);
     }
 
-    .search-box {
-      position: relative;
-    }
-
     .search-box input {
       width: 100%;
-      height: 60px;
-      padding: 0 74px 0 22px;
-      border: 2px solid rgba(3, 199, 90, 0.9);
-      border-radius: 14px;
+      height: 42px;
+      padding: 0 14px;
+      border: 1px solid #dfe5eb;
+      border-radius: 12px;
       outline: none;
-      font-size: 16px;
-      font-weight: 700;
+      font-size: 14px;
       background: #fff;
       color: #17212b;
       box-shadow: none;
       margin-bottom: 10px;
     }
 
-    .search-box input::placeholder {
-      color: #7b8794;
-      font-weight: 700;
-    }
-
-    .search-box::after {
-      content: "002";
-      font-family: "Font Awesome 6 Free";
-      font-weight: 900;
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 62px;
-      height: 60px;
-      border-radius: 0 14px 14px 0;
-      background: rgba(3, 199, 90, 0.9);
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      pointer-events: none;
-    }
-
     .filter-title {
       margin: 2px 0 8px;
       font-size: 12px;
-      letter-spacing: -0.1px;
       font-weight: 800;
       color: #7a8794;
       letter-spacing: 0.1px;
@@ -1100,10 +761,9 @@
     .feature-buttons button,
     .reset-list-btn {
       border: 1px solid #dfe5eb;
-      border-radius: 20px;
+      border-radius: 999px;
       padding: 7px 9px;
       font-size: 12px;
-      letter-spacing: -0.1px;
       font-weight: 800;
       cursor: pointer;
       transition: 0.2s ease;
@@ -1156,8 +816,7 @@
     }
 
     .list-head span {
-      font-size: 12px;
-      letter-spacing: -0.1px;
+      font-size: 13px;
       color: #1f2a36;
       font-weight: 800;
     }
@@ -1166,7 +825,7 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
-      padding: 0 12px 18px;
+      padding: 0 12px 24px;
       background: #f7f8fa;
     }
 
@@ -1209,7 +868,7 @@
     .thumb::after { display: none; }
 
     .card-body {
-      flex: 0 0 auto;
+      flex: 1;
       min-width: 0;
       padding: 0;
     }
@@ -1225,7 +884,7 @@
     .card-badge-row {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
+      gap: 6px;
       flex-wrap: wrap;
       min-width: 0;
     }
@@ -1235,7 +894,7 @@
       align-items: center;
       height: 22px;
       padding: 0 10px;
-      border-radius: 20px;
+      border-radius: 999px;
       background: #f3eefe;
       color: #7c4dff;
       font-size: 11px;
@@ -1271,7 +930,6 @@
 
     .card-date {
       font-size: 12px;
-      letter-spacing: -0.1px;
       color: #9aa7b4;
       white-space: nowrap;
     }
@@ -1291,8 +949,7 @@
     }
 
     .card-address {
-      font-size: 12px;
-      letter-spacing: -0.1px;
+      font-size: 13px;
       color: #6f7c89;
       line-height: 1.45;
       margin-bottom: 8px;
@@ -1314,11 +971,10 @@
       align-items: center;
       height: 24px;
       padding: 0 8px;
-      border-radius: 20px;
+      border-radius: 999px;
       background: #eef5ff;
       color: #1f6fff;
       font-size: 12px;
-      letter-spacing: -0.1px;
       font-weight: 900;
       line-height: 1;
       letter-spacing: -0.15px;
@@ -1333,14 +989,13 @@
     }
 
     .card-spec {
-      font-size: 12px;
-      letter-spacing: -0.1px;
+      font-size: 13px;
       color: #667382;
       line-height: 1.5;
       margin-bottom: 12px;
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 6px;
       flex-wrap: wrap;
     }
 
@@ -1382,7 +1037,6 @@
       padding: 0;
       color: #6b7280;
       font-size: 12px;
-      letter-spacing: -0.1px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -1436,7 +1090,6 @@
       align-items: center;
       justify-content: center;
       font-size: 12px;
-      letter-spacing: -0.1px;
       font-weight: 800;
       color: #506070;
       overflow: hidden;
@@ -1452,8 +1105,7 @@
     }
 
     .card-agent-name {
-      font-size: 12px;
-      letter-spacing: -0.1px;
+      font-size: 13px;
       font-weight: 800;
       color: #1f2a36;
       letter-spacing: -0.15px;
@@ -1461,14 +1113,12 @@
 
     .card-agent-title {
       font-size: 12px;
-      letter-spacing: -0.1px;
       color: #94a0ad;
       margin-left: 4px;
     }
 
     .card-agent-office {
       font-size: 12px;
-      letter-spacing: -0.1px;
       color: #94a0ad;
       white-space: nowrap;
       overflow: hidden;
@@ -1518,10 +1168,9 @@
     .deal-buttons button,
     .type-buttons button {
       border: 0;
-      border-radius: 20px;
+      border-radius: 999px;
       padding: 8px 12px;
       font-size: 12px;
-      letter-spacing: -0.1px;
       font-weight: 900;
       background: #eef3f7;
       color: #203040;
@@ -1561,7 +1210,6 @@
       content: "●";
       color: #34d399;
       font-size: 12px;
-      letter-spacing: -0.1px;
     }
 
     .detail-image-lightbox {
@@ -1603,7 +1251,7 @@
     .detail-image-lightbox-nav {
       position: absolute;
       width: 40px;
-      height: 30px;
+      height: 40px;
       min-width: 40px;
       border: 0;
       border-radius: 10px;
@@ -1708,15 +1356,12 @@
 
 
 .detail-action-btn.cross-btn {
-  display: none !important;
-}
-
-.detail-action-btn.cross-btn:hover {
-  display: none !important;
+  background: #C95A57 !important;
+  color: #fff !important;
 }
 
 .detail-action-btn.cross-btn {
-  background: #03C75A !important;
+  background: #C95A57 !important;
   color: #fff !important;
 }
 
@@ -1729,7 +1374,6 @@
 .filter-title {
   margin: 4px 0 10px;
   font-size: 12px;
-      letter-spacing: -0.1px;
   font-weight: 900;
   color: #6b7785;
   letter-spacing: -0.1px;
@@ -1746,7 +1390,6 @@
 
 .list-head span {
   font-size: 12px;
-      letter-spacing: -0.1px;
   color: #768391;
 }
 
@@ -1765,15 +1408,14 @@
 
 /* area layout fix */
 .card-spec {
-  font-size: 12px;
-      letter-spacing: -0.1px;
+  font-size: 13px;
   color: #667382;
   line-height: 1.5;
   margin-bottom: 12px;
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 4px;
+  gap: 6px;
   flex-wrap: nowrap;
 }
 
@@ -1788,8 +1430,6 @@
   align-self: center;
   margin-left: 0;
 }
-
-
 
 
 #detailListingNo {
@@ -1817,7 +1457,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.168</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.169</div>
             </div>
           </div>
 
@@ -1851,20 +1491,9 @@
                 <i class="fa-solid fa-arrow-left"></i>
               </button>
               <div class="detail-top-actions">
-                <button type="button" class="detail-icon-btn" id="detailShareBtn" onclick="toggleDetailShareMenu(event)"><i class="fa-solid fa-arrow-up-from-bracket"></i></button>
-                <button type="button" class="detail-icon-btn"><i class="fa-regular fa-bookmark"></i></button>
-                <button type="button" class="detail-icon-btn"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-
-                <div class="detail-share-menu" id="detailShareMenu">
-                  <button type="button" class="detail-share-option" id="detailShareKakaoBtn" onclick="shareDetailToKakao(event)">
-                    <i class="fa-solid fa-comment"></i>
-                    카카오톡 공유
-                  </button>
-                  <button type="button" class="detail-share-option" id="detailCopyLinkBtn" onclick="copyDetailLink(event)">
-                    <i class="fa-solid fa-link"></i>
-                    링크 복사
-                  </button>
-                </div>
+                <button type="button" class="detail-icon-btn" id="detailShareBtn">⤴</button>
+                <button type="button" class="detail-icon-btn">🔖</button>
+                <button type="button" class="detail-icon-btn">⋮</button>
               </div>
             </div>
 
@@ -1882,15 +1511,15 @@
                   <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
                 </button>
 
-                <div class="detail-hero-badge" id="detailHeroBadge" style="display:none !important;"></div>
+                <div class="detail-hero-badge" id="detailHeroBadge"></div>
 
                 <div class="detail-hero-overlay">
                   <div class="detail-hero-price-row">
-                    <div class="" id="detailHeroDeal" style="display:none;"></div>
-                    <div class="" id="detailHeroPrice" style="display:none;"></div>
+                    <div class="detail-hero-deal" id="detailHeroDeal"></div>
+                    <div class="detail-hero-price" id="detailHeroPrice"></div>
                   </div>
 
-                  <div class="" id="detailHeroAddress" style="display:none;"></div>
+                  <div class="detail-hero-address" id="detailHeroAddress"></div>
                   <div class="detail-hero-features" id="detailHeroFeatures"></div>
                 </div>
 
@@ -1898,19 +1527,6 @@
               </div>
 
               <div class="detail-content">
-                <div class="detail-features" id="detailFeatures"></div>
-
-                <div class="detail-summary-block">
-                  <div class="detail-summary-top">
-                    <div class="detail-summary-type-badge" id="detailSummaryTypeBadge"></div>
-                  </div>
-                  <div class="detail-summary-price-row">
-                    <div class="detail-summary-deal-badge" id="detailSummaryDealBadge"></div>
-                    <div class="detail-summary-price" id="detailSummaryPrice"></div>
-                  </div>
-                  <div class="detail-summary-address" id="detailSummaryAddress"></div>
-                </div>
-
                 <div class="detail-title-row">
                   <div class="detail-title-wrap">
                     <div class="detail-listing-no" id="detailListingNo"></div>
@@ -1918,9 +1534,8 @@
                     <div class="detail-inline-price" id="detailPrice"></div>
                     <div class="detail-inline-address" id="detailAddress"></div>
                   </div>
-                  <div class="detail-type-badge" id="detailTypeBadge" style="display:none;"></div>
+                  <div class="detail-type-badge" id="detailTypeBadge"></div>
                 </div>
-
 
                 <div class="detail-meta-grid" id="detailMetaGrid">
                   <div class="detail-meta-item">
@@ -1963,28 +1578,19 @@
                       <div class="detail-agent-address" id="detailAgentAddress"></div>
                       <div class="detail-agent-regno" id="detailAgentRegNo"></div>
                       <div class="detail-agent-phone-inline" id="detailAgentPhoneInline"></div>
-
-                      <div class="detail-agent-cta-row">
-                        <button type="button" class="detail-agent-cta-btn kakao" id="detailRoadviewBtn">
-                          <i class="fa-solid fa-comment"></i>
-                          카톡상담
-                        </button>
-                        <button type="button" class="detail-agent-cta-btn phone" id="detailCallBtn">
-                          <i class="fa-solid fa-phone"></i>
-                          문의전화
-                        </button>
-                      </div>
                     </div>
                   </div>
                 </div>
+
+                <div class="detail-features" id="detailFeatures"></div>
 
                 <div class="detail-action-box">
                   <div class="detail-phone" id="detailPhone"></div>
 
                   <div class="detail-actions">
                     <button type="button" class="detail-action-btn cross-btn" id="detailMapBtn">교차로</button>
-                    <button type="button" class="detail-action-btn kakao-btn" id="detailRoadviewBtnBottom"><i class="fa-solid fa-comment"></i> 카톡상담</button>
-                    <button type="button" class="detail-action-btn" id="detailCallBtnBottom"><i class="fa-solid fa-phone"></i> 문의전화</button>
+                    <button type="button" class="detail-action-btn kakao-btn" id="detailRoadviewBtn"><i class="fa-solid fa-comment"></i> 카톡상담</button>
+                    <button type="button" class="detail-action-btn" id="detailCallBtn"><i class="fa-solid fa-phone"></i> 문의전화</button>
                   </div>
                 </div>
               </div>
@@ -2042,7 +1648,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.168';
+    const APP_VERSION = '1.169';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -2110,9 +1716,6 @@
     const detailRoadviewBtn = document.getElementById("detailRoadviewBtn");
     const detailCallBtn = document.getElementById("detailCallBtn");
     const detailShareBtn = document.getElementById("detailShareBtn");
-    const detailShareMenu = document.getElementById("detailShareMenu");
-    const detailShareKakaoBtn = document.getElementById("detailShareKakaoBtn");
-    const detailCopyLinkBtn = document.getElementById("detailCopyLinkBtn");
     const detailAreaValue = document.getElementById("detailAreaValue");
     const detailAreaToggleBtn = document.getElementById("detailAreaToggleBtn");
     const detailAreaLabel = document.getElementById("detailAreaLabel");
@@ -2831,12 +2434,18 @@
       const heroImages = getHeroImages(detailItem);
       renderHeroSlider(heroImages);
 
-      detailListingNo.innerHTML = `<i class="fa-solid fa-circle"></i> 매물번호 ${detailItem.listingNo ? `매물번호 ${detailItem.listingNo}` : ""}`;
+      
       detailTitle.textContent = detailItem.title || "";
+      {
+        const rawNo = String(detailItem.listingNo || "");
+        const cleanNo = rawNo.replace(/^매물번호\s*/, "").trim();
+        detailListingNo.innerHTML = cleanNo
+          ? `<i class="fa-solid fa-circle"></i> ${cleanNo}`
+          : "";
+      }
       detailPrice.textContent = `${detailItem.dealType || ""} ${detailItem.price || ""}`.trim();
       detailAddress.textContent = `${detailItem.address || ""}`.trim();
 
-      if (detailHeroBadge) detailHeroBadge.style.display = "none";
       detailHeroBadge.textContent = detailItem.type || "";
       detailHeroBadge.style.display = detailItem.type ? "inline-flex" : "none";
 
@@ -2860,25 +2469,6 @@
       detailTypeValue.textContent = detailItem.type || "-";
       detailRegionValue.textContent = detailItem.region || "-";
 
-      const detailSummaryTypeBadge = document.getElementById("detailSummaryTypeBadge");
-      const detailSummaryDealBadge = document.getElementById("detailSummaryDealBadge");
-      const detailSummaryPrice = document.getElementById("detailSummaryPrice");
-      const detailSummaryAddress = document.getElementById("detailSummaryAddress");
-
-      if (detailSummaryTypeBadge) {
-        detailSummaryTypeBadge.textContent = detailItem.type || "";
-        detailSummaryTypeBadge.style.display = detailItem.type ? "inline-flex" : "none";
-      }
-      if (detailSummaryDealBadge) {
-        detailSummaryDealBadge.textContent = detailItem.dealType || "";
-        detailSummaryDealBadge.style.display = detailItem.dealType ? "inline-flex" : "none";
-      }
-      if (detailSummaryPrice) {
-        detailSummaryPrice.textContent = detailItem.price || "";
-      }
-      if (detailSummaryAddress) {
-        detailSummaryAddress.textContent = detailItem.address || "";
-      }
       detailDesc.textContent = detailItem.desc || "";
       detailInfoList.innerHTML = "";
 
@@ -2910,28 +2500,7 @@
         detailAgentAvatar.textContent = "담당";
       }
 
-      const featureTagHtml = (detailItem.features || [])
-        .map(feature => `<span class="detail-feature-tag">${escapeHtml(feature)}</span>`)
-        .join("");
-
-      detailHeroFeatures.innerHTML = "";
-
-      detailFeatures.innerHTML = `
-        <div class="detail-tags-row">
-          <div class="detail-tags">${featureTagHtml}</div>
-          <button type="button" class="detail-roadview-inline-btn" id="detailTopRoadviewBtn">
-            <i class="fa-solid fa-street-view"></i>
-            로드뷰
-          </button>
-        </div>
-      `;
-
-      const detailTopRoadviewBtn = document.getElementById("detailTopRoadviewBtn");
-      if (detailTopRoadviewBtn) {
-        detailTopRoadviewBtn.onclick = () => {
-          showRoadview(detailItem.lat, detailItem.lng);
-        };
-      }
+      detailFeatures.innerHTML = "";
 
       detailPhone.textContent = "";
       const detailCallNumber = [detailItem.phone1, detailItem.phone2].filter(Boolean)[0] || "";
@@ -2943,7 +2512,7 @@
         location.href = `tel:${detailCallNumber}`;
       };
 
-      detailMapBtn.style.display = "none";
+      detailMapBtn.style.display = detailItem.linkCrossroad ? "inline-flex" : "none";
       detailRoadviewBtn.style.display = detailItem.linkKakaotalk ? "inline-flex" : "none";
 
       detailMapBtn.onclick = () => {
@@ -2997,7 +2566,7 @@
         level: 9
       });
 
-      state.map.setMapTypeId(kakao.maps.MapTypeId.ROADMAP);
+      state.map.setMapTypeId(kakao.maps.MapTypeId.HYBRID);
 
       const mapTypeControl = new kakao.maps.MapTypeControl();
       state.map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
@@ -3219,7 +2788,6 @@
     function moveMapToProperty(item) {
       if (!item || !state.map) return;
       const position = new kakao.maps.LatLng(item.lat, item.lng);
-      state.map.setLevel(4);
       state.map.setCenter(position);
       state.map.relayout();
     }
@@ -3526,91 +3094,19 @@
       
       detailCloseBtn.addEventListener("click", closeDetailPanel);
 
-      function openShareMenu() {
-        if (!detailShareMenu) return;
-        detailShareMenu.style.display = "flex";
-        detailShareMenu.classList.add("open");
-      }
+      detailShareBtn.addEventListener("click", async () => {
+        if (!currentDetailItem) return;
+        const url = currentDetailItem.link && currentDetailItem.link !== "#" ? currentDetailItem.link : location.href;
 
-      function closeShareMenu() {
-        if (!detailShareMenu) return;
-        detailShareMenu.classList.remove("open");
-        detailShareMenu.style.display = "none";
-      }
-
-      function toggleShareMenu() {
-        if (!detailShareMenu) return;
-        const isOpen = detailShareMenu.style.display === "flex" || detailShareMenu.classList.contains("open");
-        if (isOpen) {
-          closeShareMenu();
-        } else {
-          openShareMenu();
+        try {
+          await navigator.clipboard.writeText(url);
+          detailShareBtn.textContent = "복사";
+          setTimeout(() => {
+            detailShareBtn.textContent = "⤴";
+          }, 1000);
+        } catch (err) {
+          console.error(err);
         }
-      }
-
-      if (detailShareBtn) {
-        detailShareBtn.addEventListener("click", (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          toggleShareMenu();
-        });
-      }
-
-      if (detailCopyLinkBtn) {
-        detailCopyLinkBtn.addEventListener("click", async (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          if (!currentDetailItem) return;
-          const url = currentDetailItem.link && currentDetailItem.link !== "#" ? currentDetailItem.link : location.href;
-
-          try {
-            await navigator.clipboard.writeText(url);
-            detailShareBtn.innerHTML = "복사";
-            closeShareMenu();
-            setTimeout(() => {
-              detailShareBtn.innerHTML = '<i class="fa-solid fa-arrow-up-from-bracket"></i>';
-            }, 1000);
-          } catch (err) {
-            console.error(err);
-          }
-        });
-      }
-
-      if (detailShareKakaoBtn) {
-        detailShareKakaoBtn.addEventListener("click", async (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          if (!currentDetailItem) return;
-          const url = currentDetailItem.link && currentDetailItem.link !== "#" ? currentDetailItem.link : location.href;
-          const shareTitle = currentDetailItem.title || "제주 프리미엄 부동산";
-
-          try {
-            if (navigator.share) {
-              await navigator.share({
-                title: shareTitle,
-                text: shareTitle,
-                url
-              });
-              closeShareMenu();
-              return;
-            }
-
-            await navigator.clipboard.writeText(url);
-            detailShareBtn.innerHTML = "복사";
-            closeShareMenu();
-            setTimeout(() => {
-              detailShareBtn.innerHTML = '<i class="fa-solid fa-arrow-up-from-bracket"></i>';
-            }, 1000);
-          } catch (err) {
-            console.error(err);
-          }
-        });
-      }
-
-      document.addEventListener("click", (e) => {
-        if (!detailShareMenu) return;
-        if (e.target.closest("#detailShareBtn") || e.target.closest("#detailShareMenu")) return;
-        closeShareMenu();
       });
 
       detailHeroPrevBtn.addEventListener("click", (e) => {
@@ -3703,136 +3199,6 @@
         state.map.relayout();
       });
     }
-
-
-    function getDetailShareUrl() {
-      if (currentDetailItem && currentDetailItem.link && currentDetailItem.link !== "#") {
-        try {
-          return new URL(currentDetailItem.link, location.href).href;
-        } catch (err) {
-          return currentDetailItem.link;
-        }
-      }
-      return location.href;
-    }
-
-    function getDetailShareTitle() {
-      return currentDetailItem && currentDetailItem.title
-        ? currentDetailItem.title
-        : "제주 프리미엄 부동산";
-    }
-
-    async function copyTextWithFallback(textToCopy) {
-      try {
-        if (navigator.clipboard && window.isSecureContext) {
-          await navigator.clipboard.writeText(textToCopy);
-          return true;
-        }
-      } catch (err) {
-        console.error("clipboard api 실패:", err);
-      }
-
-      try {
-        const textarea = document.createElement("textarea");
-        textarea.value = textToCopy;
-        textarea.setAttribute("readonly", "");
-        textarea.style.position = "fixed";
-        textarea.style.top = "-9999px";
-        textarea.style.left = "-9999px";
-        document.body.appendChild(textarea);
-        textarea.focus();
-        textarea.select();
-        textarea.setSelectionRange(0, textarea.value.length);
-
-        const ok = document.execCommand("copy");
-        document.body.removeChild(textarea);
-        return !!ok;
-      } catch (err) {
-        console.error("execCommand 복사 실패:", err);
-        return false;
-      }
-    }
-
-    function showShareCopiedFeedback(success) {
-      if (!detailShareBtn) return;
-      detailShareBtn.innerHTML = success ? "복사됨" : "실패";
-      setTimeout(() => {
-        detailShareBtn.innerHTML = '<i class="fa-solid fa-arrow-up-from-bracket"></i>';
-      }, 1200);
-    }
-
-    function openShareMenu() {
-      if (!detailShareMenu) return;
-      detailShareMenu.style.display = "flex";
-      detailShareMenu.classList.add("open");
-    }
-
-    function closeShareMenu() {
-      if (!detailShareMenu) return;
-      detailShareMenu.style.display = "none";
-      detailShareMenu.classList.remove("open");
-    }
-
-    window.toggleDetailShareMenu = function (event) {
-      if (event) {
-        event.preventDefault();
-        event.stopPropagation();
-      }
-      if (!detailShareMenu) return;
-      const isOpen = detailShareMenu.style.display === "flex" || detailShareMenu.classList.contains("open");
-      if (isOpen) {
-        closeShareMenu();
-      } else {
-        openShareMenu();
-      }
-    };
-
-    window.copyDetailLink = async function (event) {
-      if (event) {
-        event.preventDefault();
-        event.stopPropagation();
-      }
-
-      const ok = await copyTextWithFallback(getDetailShareUrl());
-      showShareCopiedFeedback(ok);
-      closeShareMenu();
-    };
-
-    window.shareDetailToKakao = async function (event) {
-      if (event) {
-        event.preventDefault();
-        event.stopPropagation();
-      }
-
-      try {
-        if (navigator.share) {
-          await navigator.share({
-            title: getDetailShareTitle(),
-            text: getDetailShareTitle(),
-            url: getDetailShareUrl()
-          });
-          closeShareMenu();
-          return;
-        }
-      } catch (err) {
-        console.error("공유 실패:", err);
-      }
-
-      const ok = await copyTextWithFallback(getDetailShareUrl());
-      showShareCopiedFeedback(ok);
-      closeShareMenu();
-    };
-
-    document.addEventListener("click", function (e) {
-      if (!detailShareMenu) return;
-      if (e.target.closest("#detailShareBtn") || e.target.closest("#detailShareMenu")) return;
-      closeShareMenu();
-    });
-
-    if (detailShareMenu) {
-      detailShareMenu.style.display = "none";
-    }
-
 
     function bootstrap() {
       if (!window.kakao || !window.kakao.maps) {
