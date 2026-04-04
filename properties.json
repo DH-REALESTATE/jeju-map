@@ -103,6 +103,27 @@
     "lng": 126.8052,
     "features": ["자연림", "한달살이"],
     "agent_folder": "./dh_real/agent.json"
+  },
+
+  {
+    "id": 231,
+    "listingNo": "디-231",
+    "date": "2026-03-15",
+    "title": "제주 북촌리 감성펜션",
+    "desc": "제주시 조천읍 북촌리에 위치한 곳으로 제주 어촌 마을의 정취를 간직한 곳입니다.",
+    "image": "./dh_real/231/1.jpeg",
+    "desc_folder": "./dh_real/231/info.json",
+    "image_folder": "./dh_real/231/image.json",    
+    "type": "단독주택",
+    "dealFilter": "매매",
+    "region": "북촌리",
+    "price": "5억",
+    "area": "대지면적 344.00㎡ / 건축면적 147.83㎡ / 연면적 126.75㎡",
+    "address": "제주도 제주시 조천읍 북촌리",
+    "lat": 33.5432,
+    "lng": 126.6884,
+    "features": ["농어촌민박", "단독주택"],
+    "agent_folder": "./dh_real/agent.json"
   }
 
 ]
