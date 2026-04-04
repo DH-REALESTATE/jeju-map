@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.140</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.140" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.141</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.141" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -1399,50 +1399,6 @@
       height: 100vh;
     }
 
-
-    .map-type-toggle {
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      z-index: 31;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 4px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.94);
-      border: 1px solid rgba(0,0,0,0.05);
-      box-shadow: 0 10px 24px rgba(15, 41, 66, 0.10);
-      backdrop-filter: blur(10px);
-    }
-
-    .map-type-toggle button {
-      height: 32px;
-      min-width: 58px;
-      padding: 0 12px;
-      border: 0;
-      border-radius: 999px;
-      background: transparent;
-      color: #4b5b6b;
-      font-size: 12px;
-      font-weight: 900;
-      letter-spacing: -0.15px;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
-    }
-
-    .map-type-toggle button.active {
-      background: rgba(3, 199, 90, 0.9);
-      color: #fff;
-      box-shadow: 0 8px 18px rgba(3, 199, 90, 0.22);
-    }
-
-    .map-type-toggle button:not(.active):hover {
-      background: rgba(15, 41, 66, 0.06);
-      color: #203040;
-    }
-
     .map-filter-bar {
       position: absolute;
       top: 12px;
@@ -1749,7 +1705,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.140</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.141</div>
             </div>
           </div>
 
@@ -1930,11 +1886,6 @@
     <main class="map-wrap">
       <div id="map"></div>
 
-      <div class="map-type-toggle" id="mapTypeToggle">
-        <button type="button" id="mapTypeRoadBtn" class="active">지도</button>
-        <button type="button" id="mapTypeSkyBtn">스카이뷰</button>
-      </div>
-
       <div class="map-filter-bar">
         <div class="deal-buttons" id="dealButtons">
           <button type="button" data-value="all" class="active">전체</button>
@@ -1978,7 +1929,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.140';
+    const APP_VERSION = '1.141';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -2070,8 +2021,6 @@
     const detailImageLightboxPrev = document.getElementById("detailImageLightboxPrev");
     const detailImageLightboxNext = document.getElementById("detailImageLightboxNext");
     const detailScroll = document.querySelector(".detail-scroll");
-    const mapTypeRoadBtn = document.getElementById("mapTypeRoadBtn");
-    const mapTypeSkyBtn = document.getElementById("mapTypeSkyBtn");
 
     function updateSidebarWidth() {
       const listWidth = getComputedStyle(document.documentElement).getPropertyValue("--sidebar-list-width").trim() || "360px";
@@ -2937,30 +2886,8 @@
 
       state.map.setMapTypeId(kakao.maps.MapTypeId.ROADMAP);
 
-      function syncMapTypeButtons(typeId) {
-        if (!mapTypeRoadBtn || !mapTypeSkyBtn) return;
-        const isRoad = typeId === kakao.maps.MapTypeId.ROADMAP;
-        mapTypeRoadBtn.classList.toggle("active", isRoad);
-        mapTypeSkyBtn.classList.toggle("active", !isRoad);
-      }
-
-      if (mapTypeRoadBtn) {
-        mapTypeRoadBtn.addEventListener("click", () => {
-          if (!state.map) return;
-          state.map.setMapTypeId(kakao.maps.MapTypeId.ROADMAP);
-          syncMapTypeButtons(kakao.maps.MapTypeId.ROADMAP);
-        });
-      }
-
-      if (mapTypeSkyBtn) {
-        mapTypeSkyBtn.addEventListener("click", () => {
-          if (!state.map) return;
-          state.map.setMapTypeId(kakao.maps.MapTypeId.HYBRID);
-          syncMapTypeButtons(kakao.maps.MapTypeId.HYBRID);
-        });
-      }
-
-      syncMapTypeButtons(kakao.maps.MapTypeId.ROADMAP);
+      const mapTypeControl = new kakao.maps.MapTypeControl();
+      state.map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
 
       const zoomControl = new kakao.maps.ZoomControl();
       state.map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
