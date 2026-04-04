@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.152</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.152" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.153</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.153" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -112,7 +112,7 @@
       justify-content: space-between;
       padding: 10px 12px;
       border-bottom: 1px solid #eef2f6;
-      background: #ffffff
+      background: rgba(255,255,255,0.98);
       backdrop-filter: blur(8px);
     }
 
@@ -144,7 +144,7 @@
       min-width: 168px;
       padding: 8px;
       border-radius: 14px;
-      background: #ffffff
+      background: rgba(255,255,255,0.98);
       border: 1px solid #e7edf3;
       box-shadow: 0 12px 28px rgba(15, 41, 66, 0.14);
       backdrop-filter: blur(10px);
@@ -171,7 +171,7 @@
       display: inline-flex;
       align-items: center;
       justify-content: flex-start;
-      gap: 6px;
+      gap: 8px;
       padding: 0 12px;
       cursor: pointer;
     }
@@ -278,7 +278,7 @@
     .detail-hero-dots {
       position: absolute;
       left: 50%;
-      bottom: 60px;
+      bottom: 14px;
       transform: translateX(-50%);
       display: flex;
       align-items: center;
@@ -299,7 +299,7 @@
 
     .detail-hero-dot.active {
       width: 20px;
-      background: #ffffff
+      background: rgba(255,255,255,0.98);
     }
 
     .detail-hero-badge {
@@ -313,70 +313,7 @@
       bottom: 0;
       z-index: 2;
       padding: 18px 18px 38px;
-      color: #17212b;
-    }
-
-
-    .detail-hero-features-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      width: 100%;
-    }
-
-    .detail-hero-features-tags {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex-wrap: wrap;
-      min-width: 0;
-    }
-
-    .detail-hero-feature-tag {
-      display: inline-flex;
-      align-items: center;
-      height: 30px;
-      padding: 0 10px;
-      border-radius: 999px;
-      background: #ffffff
-      border: 1px solid rgba(15,41,66,0.12);
-      backdrop-filter: blur(8px);
-      color: #17212b;
-      font-size: 12px;
-      font-weight: 900;
-      letter-spacing: -0.15px;
-      white-space: nowrap;
-    }
-
-    .detail-hero-roadview-btn {
-      margin-left: auto;
-      flex: 0 0 auto;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      height: 30px;
-      padding: 0 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(15,41,66,0.12);
-      background: #ffffff
-      backdrop-filter: blur(8px);
-      color: #17212b;
-      font-size: 12px;
-      font-weight: 900;
-      cursor: pointer;
-      white-space: nowrap;
-      box-shadow: 0 10px 24px rgba(15,41,66,0.20);
-    }
-
-    .detail-hero-roadview-btn:hover {
-      background: rgba(255,255,255,0.24);
-    }
-
-    .detail-hero-roadview-btn i {
-      margin-right: 0;
-      font-size: 13px;
-      line-height: 1;
+      color: #fff;
     }
 
     .detail-hero-price-row {
@@ -412,13 +349,7 @@
     }
 
     .detail-hero-features {
-      display: block;
-      position: absolute;
-      left: 18px;
-      right: 18px;
-      bottom: 60px;
-      z-index: 4;
-      margin: 0;
+      display: none;
     }
 
     .detail-content {
@@ -426,10 +357,34 @@
     }
 
 
-    .detail-summary-price-row {
+
+    .detail-summary-top {
       display: flex;
       align-items: center;
       gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+
+    .detail-summary-type-badge {
+      display: inline-flex;
+      align-items: center;
+      height: 24px;
+      padding: 0 10px;
+      border-radius: 999px;
+      background: #f3eefe;
+      color: #7c4dff;
+      font-size: 12px;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -0.15px;
+      white-space: nowrap;
+    }
+
+    .detail-summary-price-row {
+      display: flex;
+      align-items: center;
+      gap: 7px;
       flex-wrap: wrap;
       margin-bottom: 8px;
     }
@@ -438,48 +393,65 @@
       display: inline-flex;
       align-items: center;
       height: 24px;
-      padding: 0 10px;
+      padding: 0 8px;
       border-radius: 999px;
-      background: #e8f7ef;
-      color: #16a34a;
+      background: #eef5ff;
+      color: #2563eb;
       font-size: 12px;
       font-weight: 900;
       line-height: 1;
       letter-spacing: -0.15px;
       white-space: nowrap;
-      box-shadow: inset 0 0 0 1px rgba(22, 163, 74, 0.08);
+    }
+
+    .detail-summary-block {
+      margin-bottom: 14px;
+    }
+
+    .detail-summary-badges {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .detail-summary-badge {
+      display: inline-flex;
+      align-items: center;
+      height: 24px;
+      padding: 0 10px;
+      border-radius: 999px;
+      background: #eef5ff;
+      color: #2563eb;
+      font-size: 12px;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -0.15px;
+      white-space: nowrap;
     }
 
     .detail-summary-price {
-      font-size: 30px;
+      font-size: 28px;
       font-weight: 900;
-      line-height: 1.02;
-      letter-spacing: -0.9px;
-      color: #17212b;
-      margin-bottom: 0;
-    }
-
-    .detail-summary-type {
-      font-size: 14px;
-      font-weight: 800;
-      line-height: 1.4;
-      color: #5f6b78;
+      line-height: 1.15;
+      letter-spacing: -0.8px;
+      color: #111827;
       margin-bottom: 8px;
-      letter-spacing: -0.15px;
     }
 
     .detail-summary-address {
       font-size: 13px;
-      line-height: 1.55;
+      line-height: 1.5;
       color: #6f7c89;
-      margin-bottom: 0;
     }
+
     .detail-title-row {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
       gap: 10px;
-      margin-bottom: 60px;
+      margin-bottom: 14px;
     }
 
     .detail-title-wrap {
@@ -614,8 +586,8 @@
     .detail-info-section-title {
       font-size: 16px;
       font-weight: 900;
-      color: #17212b;
-      margin-bottom: 60px;
+      color: #111827;
+      margin-bottom: 14px;
       letter-spacing: -0.35px;
       padding-left: 0;
       margin-left: 0;
@@ -761,17 +733,18 @@
 
 
     .detail-features {
-      display: none !important;
+      display: block;
+      margin-bottom: 14px;
     }
 
-    .detail-hero-features-row {
+    .detail-tags-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
     }
 
-    .detail-hero-features-tags {
+    .detail-tags {
       display: flex;
       align-items: center;
       gap: 6px;
@@ -779,7 +752,7 @@
       min-width: 0;
     }
 
-    .detail-hero-feature-tag {
+    .detail-feature-tag {
       display: inline-flex;
       align-items: center;
       min-height: 28px;
@@ -794,7 +767,7 @@
       white-space: nowrap;
     }
 
-    .detail-hero-roadview-btn {
+    .detail-roadview-inline-btn {
       flex: 0 0 auto;
       display: inline-flex;
       align-items: center;
@@ -811,11 +784,11 @@
       white-space: nowrap;
     }
 
-    .detail-hero-roadview-btn:hover {
+    .detail-roadview-inline-btn:hover {
       background: rgba(3, 199, 90, 0.14);
     }
 
-    .detail-hero-roadview-btn i {
+    .detail-roadview-inline-btn i {
       margin-right: 0;
       font-size: 13px;
       line-height: 1;
@@ -824,10 +797,10 @@
 
     .detail-features {
       display: block;
-      margin-bottom: 60px;
+      margin-bottom: 14px;
     }
 
-    .detail-hero-features-row {
+    .detail-tags-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -835,7 +808,7 @@
       width: 100%;
     }
 
-    .detail-hero-features-tags {
+    .detail-tags {
       display: flex;
       align-items: center;
       gap: 6px;
@@ -843,7 +816,7 @@
       min-width: 0;
     }
 
-    .detail-hero-feature-tag {
+    .detail-feature-tag {
       display: inline-flex;
       align-items: center;
       height: 28px;
@@ -858,7 +831,7 @@
       white-space: nowrap;
     }
 
-    .detail-hero-roadview-btn {
+    .detail-roadview-inline-btn {
       margin-left: auto;
       flex: 0 0 auto;
       display: inline-flex;
@@ -876,11 +849,11 @@
       white-space: nowrap;
     }
 
-    .detail-hero-roadview-btn:hover {
+    .detail-roadview-inline-btn:hover {
       background: rgba(3, 199, 90, 0.14);
     }
 
-    .detail-hero-roadview-btn i {
+    .detail-roadview-inline-btn i {
       margin-right: 0;
       font-size: 13px;
       line-height: 1;
@@ -925,7 +898,7 @@
 
     .detail-action-btn.primary {
       background: #0f2942;
-      color: #17212b;
+      color: #fff;
     }
 
     .detail-action-btn i {
@@ -940,7 +913,7 @@
 
     .detail-action-btn.kakao-btn {
       background: #FEE500;
-      color: #17212b;
+      color: #111;
       border-radius: 999px;
       font-weight: 800;
     }
@@ -1014,7 +987,7 @@
       height: 60px;
       border-radius: 0 14px 14px 0;
       background: rgba(3, 199, 90, 0.9);
-      color: #17212b;
+      color: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -1065,7 +1038,7 @@
     .feature-buttons button.active,
     .feature-buttons button.all-active {
       background: rgba(3, 199, 90, 0.9);
-      color: #17212b;
+      color: #fff;
       border-color: rgba(3, 199, 90, 0.9);
       box-shadow: none;
     }
@@ -1268,7 +1241,7 @@
     .card-price {
       font-size: 24px;
       font-weight: 900;
-      color: #17212b;
+      color: #111827;
       letter-spacing: -0.8px;
       line-height: 1.02;
     }
@@ -1438,7 +1411,7 @@
       padding: 12px;
       border-radius: 18px;
       background: rgba(255,255,255,0.94);
-      border: 1px solid rgba(15,41,66,0.12);
+      border: 1px solid rgba(0,0,0,0.05);
       box-shadow: var(--shadow);
       backdrop-filter: blur(10px);
     }
@@ -1467,7 +1440,7 @@
     .deal-buttons button.active,
     .type-buttons button.active {
       background: rgba(3, 199, 90, 0.9);
-      color: #17212b;
+      color: #fff;
       box-shadow: 0 8px 18px rgba(3, 199, 90, 0.22);
     }
 
@@ -1483,7 +1456,7 @@
       padding: 10px 15px;
       border-radius: 16px;
       background: rgba(15,41,66,0.92);
-      color: #17212b;
+      color: #fff;
       font-size: 14px;
       font-weight: 900;
       box-shadow: var(--shadow);
@@ -1541,7 +1514,7 @@
       border: 0;
       border-radius: 10px;
       background: rgba(0,0,0,0.65);
-      color: #17212b;
+      color: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -1732,7 +1705,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.152</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.153</div>
             </div>
           </div>
 
@@ -1816,11 +1789,13 @@
                 <div class="detail-features" id="detailFeatures"></div>
 
                 <div class="detail-summary-block">
+                  <div class="detail-summary-top">
+                    <div class="detail-summary-type-badge" id="detailSummaryTypeBadge"></div>
+                  </div>
                   <div class="detail-summary-price-row">
                     <div class="detail-summary-deal-badge" id="detailSummaryDealBadge"></div>
                     <div class="detail-summary-price" id="detailSummaryPrice"></div>
                   </div>
-                  <div class="detail-summary-type" id="detailSummaryType"></div>
                   <div class="detail-summary-address" id="detailSummaryAddress"></div>
                 </div>
 
@@ -1944,7 +1919,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.152';
+    const APP_VERSION = '1.153';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -2762,14 +2737,14 @@
       detailTypeValue.textContent = detailItem.type || "-";
       detailRegionValue.textContent = detailItem.region || "-";
 
-      const detailSummaryType = document.getElementById("detailSummaryType");
+      const detailSummaryTypeBadge = document.getElementById("detailSummaryTypeBadge");
       const detailSummaryDealBadge = document.getElementById("detailSummaryDealBadge");
       const detailSummaryPrice = document.getElementById("detailSummaryPrice");
       const detailSummaryAddress = document.getElementById("detailSummaryAddress");
 
-      if (detailSummaryType) {
-        detailSummaryType.textContent = detailItem.type || "";
-        detailSummaryType.style.display = detailItem.type ? "block" : "none";
+      if (detailSummaryTypeBadge) {
+        detailSummaryTypeBadge.textContent = detailItem.type || "";
+        detailSummaryTypeBadge.style.display = detailItem.type ? "inline-flex" : "none";
       }
       if (detailSummaryDealBadge) {
         detailSummaryDealBadge.textContent = detailItem.dealType || "";
@@ -2813,25 +2788,24 @@
       }
 
       const featureTagHtml = (detailItem.features || [])
-        .map(feature => `<span class="detail-hero-feature-tag">${escapeHtml(feature)}</span>`)
+        .map(feature => `<span class="detail-feature-tag">${escapeHtml(feature)}</span>`)
         .join("");
 
-      detailFeatures.innerHTML = "";
       detailHeroFeatures.innerHTML = "";
 
-      detailHeroFeatures.innerHTML = `
-        <div class="detail-hero-features-row">
-          <div class="detail-hero-features-tags">${featureTagHtml}</div>
-          <button type="button" class="detail-hero-roadview-btn" id="detailHeroRoadviewBtn">
+      detailFeatures.innerHTML = `
+        <div class="detail-tags-row">
+          <div class="detail-tags">${featureTagHtml}</div>
+          <button type="button" class="detail-roadview-inline-btn" id="detailTopRoadviewBtn">
             <i class="fa-solid fa-street-view"></i>
             로드뷰
           </button>
         </div>
       `;
 
-      const detailHeroRoadviewBtn = document.getElementById("detailHeroRoadviewBtn");
-      if (detailHeroRoadviewBtn) {
-        detailHeroRoadviewBtn.onclick = () => {
+      const detailTopRoadviewBtn = document.getElementById("detailTopRoadviewBtn");
+      if (detailTopRoadviewBtn) {
+        detailTopRoadviewBtn.onclick = () => {
           showRoadview(detailItem.lat, detailItem.lng);
         };
       }
