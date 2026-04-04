@@ -978,9 +978,7 @@
     }
 
     .detail-agent-cta-btn.kakao:hover {
-      background: #FEE500;
-      color: #191919;
-      box-shadow: 0 2px 6px rgba(15, 41, 66, 0.06);
+      background: #f2da00;
     }
 
     .detail-agent-cta-btn.phone {
@@ -1792,6 +1790,22 @@
 }
 
 
+
+
+#detailListingNo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #7c4dff;
+  font-weight: 900;
+  font-size: 12.5px;
+  opacity: 0.9;
+}
+#detailListingNo i {
+  font-size: 6px;
+  color: #7c4dff;
+  opacity: 0.8;
+}
 
 </style>
 
@@ -2817,7 +2831,7 @@
       const heroImages = getHeroImages(detailItem);
       renderHeroSlider(heroImages);
 
-      detailListingNo.innerHTML = detailItem.listingNo ? `<i class="fa-solid fa-circle" style="color:#7c4dff; font-size:6px; margin-right:6px;"></i> 매물번호 ${detailItem.listingNo.replace(/^매물번호\s*/, "")}` : "";
+      detailListingNo.innerHTML = `<i class="fa-solid fa-circle"></i> 매물번호 ${detailItem.listingNo ? `매물번호 ${detailItem.listingNo}` : ""}`;
       detailTitle.textContent = detailItem.title || "";
       detailPrice.textContent = `${detailItem.dealType || ""} ${detailItem.price || ""}`.trim();
       detailAddress.textContent = `${detailItem.address || ""}`.trim();
