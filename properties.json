@@ -1,6 +1,27 @@
 [  
 
   {
+    "id": 227,
+    "listingNo": "디-227",
+    "date": "2026-02-25",
+    "title": "노형동 한빛지비조아 오피스텔",
+    "desc": "공항, 도청, 이마트ㆍ롯데마트 등 생활 인프라 밀집",
+    "image": "./dh_real/227/1.png",
+    "desc_folder": "./dh_real/227/info.json",
+    "image_folder": "./dh_real/227/image.json",
+    "type": "오피스텔",
+    "dealFilter": "매매",
+    "region": "노형동",
+    "price": "6억 9,000",
+    "area": "계약면적 78.11㎡ / 전용면적 46.75㎡",
+    "address": "제주시 노형동 3781",
+    "lat": 33.4848,
+    "lng": 126.4766,
+    "features": ["노형동", "생활권", "인프라"],
+    "agent_folder": "./dh_real/agent.json"
+  },
+  
+  {
     "id": 235,
     "listingNo": "디-235",
     "date": "2026-01-25",
@@ -53,7 +74,7 @@
     "image_folder": "./dh_real/228/image.json",
     "type": "아파트",
     "dealFilter": "전세",
-    "region": "제주시",
+    "region": "노형동",
     "price": "4억",
     "area": "공급면적 111.9㎡ / 전용면적 84.67㎡",
     "address": "제주시 노형동 수덕로 44",
@@ -137,7 +158,7 @@
     "image_folder": "./dh_real/229/image.json",    
     "type": "단독주택",
     "dealFilter": "매매",
-    "region": "북촌리",
+    "region": "삼도일동",
     "price": "9억",
     "area": "대지면적 327.80㎡ / 건축면적 211.48㎡ / 연면적 443.98㎡",
     "address": "제주시 삼도일동",
