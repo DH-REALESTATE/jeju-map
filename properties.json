@@ -123,8 +123,8 @@
     "lat": 33.5432,
     "lng": 126.6884,
     "features": ["농어촌민박", "단독주택"],
-    "agent_folder": "./dh_real/agent.json",
-  }
+    "agent_folder": "./dh_real/agent.json"
+  },
 
   {
     "id": 229,
