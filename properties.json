@@ -126,4 +126,25 @@
     "agent_folder": "./dh_real/agent.json"
   }
 
+  {
+    "id": 229,
+    "listingNo": "디-229",
+    "date": "2026-03-30",
+    "title": "삼도일동 채광 좋은 집",
+    "desc": "구도심의 정겨움과 현대적인 편리함이 공존하는 이곳, 직접 와서 보시면 더 마음에 드실 거예요!",
+    "image": "./dh_real/229/1.jpg",
+    "desc_folder": "./dh_real/229/info.json",
+    "image_folder": "./dh_real/229/image.json",    
+    "type": "단독주택",
+    "dealFilter": "매매",
+    "region": "북촌리",
+    "price": "9억",
+    "area": "대지면적 327.80㎡ / 건축면적 211.48㎡ / 연면적 443.98㎡",
+    "address": "제주시 삼도일동",
+    "lat": 33.5095,
+    "lng": 126.5186,
+    "features": ["단독주택", "원도심"],
+    "agent_folder": "./dh_real/agent.json"
+  }  
+
 ]
