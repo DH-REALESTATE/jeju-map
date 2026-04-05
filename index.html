@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.230</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.230" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.232</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.232" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -1833,6 +1833,42 @@
   display: block;
 }
 
+
+.detail-summary-deal-badge[data-deal="전세"] {
+  background:#E6F0FF;
+  color:#2563EB;
+}
+.detail-summary-deal-badge[data-deal="월세"] {
+  background:#E6FFF2;
+  color:#16A34A;
+}
+.detail-summary-deal-badge[data-deal="년세"] {
+  background:#FFF7E6;
+  color:#D97706;
+}
+
+
+.detail-summary-type-badge {
+  box-shadow: inset 0 0 0 1px rgba(124, 77, 255, 0.06);
+}
+
+.detail-summary-deal-badge[data-deal="매매"],
+.detail-summary-deal-badge:not([data-deal]) {
+  box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.08);
+}
+
+.detail-summary-deal-badge[data-deal="전세"] {
+  box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.08);
+}
+
+.detail-summary-deal-badge[data-deal="월세"] {
+  box-shadow: inset 0 0 0 1px rgba(22, 163, 74, 0.08);
+}
+
+.detail-summary-deal-badge[data-deal="년세"] {
+  box-shadow: inset 0 0 0 1px rgba(217, 119, 6, 0.08);
+}
+
 </style>
 
 
@@ -1855,7 +1891,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.230</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.232</div>
             </div>
           </div>
 
@@ -2079,7 +2115,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.230';
+    const APP_VERSION = '1.232';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
