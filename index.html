@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.232</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.232" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.233</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.233" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -395,12 +395,7 @@
       gap: 7px;
       flex-wrap: wrap;
       margin-bottom: 8px;
-    
-  display:flex;
-  flex-direction:column;
-  align-items:flex-start;
-  gap:6px;
-}
+    }
 
     .detail-summary-deal-badge {
       display: inline-flex;
@@ -416,9 +411,7 @@
       line-height: 1;
       letter-spacing: -0.15px;
       white-space: nowrap;
-    
-  margin-top:0;
-}
+    }
 
     .detail-summary-block {
       margin-bottom: 14px;
@@ -1800,75 +1793,6 @@
 
 
 
-
-/* right detail summary: type + deal on one line, same feel as left card badges */
-.detail-summary-top {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-wrap: wrap;
-  margin-bottom: 8px;
-}
-
-.detail-summary-type-badge,
-.detail-summary-deal-badge {
-  display: inline-flex;
-  align-items: center;
-  height: 22px;
-  padding: 0 10px;
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: 800;
-  line-height: 1;
-  letter-spacing: -0.15px;
-  white-space: nowrap;
-}
-
-.detail-summary-price-row {
-  display: block;
-  margin-bottom: 8px;
-}
-
-.detail-summary-price {
-  display: block;
-}
-
-
-.detail-summary-deal-badge[data-deal="전세"] {
-  background:#E6F0FF;
-  color:#2563EB;
-}
-.detail-summary-deal-badge[data-deal="월세"] {
-  background:#E6FFF2;
-  color:#16A34A;
-}
-.detail-summary-deal-badge[data-deal="년세"] {
-  background:#FFF7E6;
-  color:#D97706;
-}
-
-
-.detail-summary-type-badge {
-  box-shadow: inset 0 0 0 1px rgba(124, 77, 255, 0.06);
-}
-
-.detail-summary-deal-badge[data-deal="매매"],
-.detail-summary-deal-badge:not([data-deal]) {
-  box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.08);
-}
-
-.detail-summary-deal-badge[data-deal="전세"] {
-  box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.08);
-}
-
-.detail-summary-deal-badge[data-deal="월세"] {
-  box-shadow: inset 0 0 0 1px rgba(22, 163, 74, 0.08);
-}
-
-.detail-summary-deal-badge[data-deal="년세"] {
-  box-shadow: inset 0 0 0 1px rgba(217, 119, 6, 0.08);
-}
-
 </style>
 
 
@@ -1891,7 +1815,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.232</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.233</div>
             </div>
           </div>
 
@@ -2000,7 +1924,7 @@
                   <div class="detail-meta-item">
                     <span class="detail-meta-label">
                         <span id="detailAreaLabel">면적</span>
-                        <button type="button" class="area-type-toggle-btn" id="detailAreaTypeToggleBtn" style="display:none;" aria-label="면적 전환">
+                        <button type="button" class="area-type-toggle-btn" id="detailAreaTypeToggleBtn" style="display:none;" aria-label="면적<br>전환">
                           <i class="fa-solid fa-rotate"></i>
                         </button>
                       </span>
@@ -2115,7 +2039,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.232';
+    const APP_VERSION = '1.233';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -2207,16 +2131,6 @@
     const detailImageLightboxClose = document.getElementById("detailImageLightboxClose");
     const detailImageLightboxPrev = document.getElementById("detailImageLightboxPrev");
     const detailImageLightboxNext = document.getElementById("detailImageLightboxNext");
-    const detailSummaryTop = document.querySelector(".detail-summary-top");
-    const detailSummaryPriceRow = document.querySelector(".detail-summary-price-row");
-
-    function syncSummaryBadgeRow() {
-      if (!detailSummaryTop || !detailSummaryDealBadge || !detailSummaryTypeBadge) return;
-      if (detailSummaryDealBadge.parentElement !== detailSummaryTop) {
-        detailSummaryTop.appendChild(detailSummaryDealBadge);
-      }
-    }
-
     const detailScroll = document.querySelector(".detail-scroll");
 
     function updateSidebarWidth() {
@@ -2429,8 +2343,6 @@
 
       return formatAreaByUnit(areaText, unit, typeText);
     }
-
-    syncSummaryBadgeRow();
 
     function syncDetailAreaDisplay(detailItem) {
       if (!detailItem || !detailAreaValue || !detailAreaLabel) return;
