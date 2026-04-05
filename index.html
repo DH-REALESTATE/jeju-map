@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.238</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.238" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.239</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.239" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -1881,10 +1881,12 @@
 
 
 .detail-area-wrap.land-two-line {
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: flex-start !important;
-  gap: 4px;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px;
+  flex-wrap: nowrap !important;
+  white-space: nowrap !important;
+  width: auto !important;
 }
 
 .detail-area-wrap.land-two-line .area-display,
@@ -1902,6 +1904,7 @@
   align-items: center;
   gap: 4px;
   margin-bottom: 8px;
+  width: 100%;
 }
 
 .detail-meta-item:first-child .detail-area-wrap {
@@ -1944,7 +1947,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.238</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.239</div>
             </div>
           </div>
 
@@ -2168,7 +2171,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.238';
+    const APP_VERSION = '1.239';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
