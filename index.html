@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.197</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.197" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.199</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.199" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -145,7 +145,7 @@
       right: 0;
       min-width: 168px;
       padding: 8px;
-      border-radius: 999px;
+      border-radius: 14px;
       background: rgba(255,255,255,0.98);
       border: 1px solid #e7edf3;
       box-shadow: 0 12px 28px rgba(15, 41, 66, 0.14);
@@ -683,7 +683,6 @@
     }
 
     .detail-agent-avatar img {
-      border-radius: 50%;
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -1044,7 +1043,7 @@
       height: 60px;
       padding: 0 74px 0 22px;
       border: 2px solid rgba(3, 199, 90, 0.9);
-      border-radius: 999px;
+      border-radius: 14px;
       outline: none;
       font-size: 16px;
       font-weight: 700;
@@ -1433,7 +1432,7 @@
     .card-agent-avatar {
       width: 30px;
       height: 30px;
-      border-radius: 14px;
+      border-radius: 50%;
       background: #eef3f7;
       display: flex;
       align-items: center;
@@ -1596,7 +1595,7 @@
       max-width: min(1400px, 94vw);
       max-height: 92vh;
       object-fit: contain;
-      border-radius: 999px;
+      border-radius: 14px;
       box-shadow: 0 20px 50px rgba(0,0,0,0.35);
       background: #111;
       display: block;
@@ -1726,7 +1725,7 @@
 
 .search-box input {
   height: 44px;
-  border-radius: 999px;
+  border-radius: 14px;
 }
 
 .filter-title {
@@ -1754,7 +1753,7 @@
 }
 
 .thumb {
-  border-radius: 12px;
+  border-radius: 14px;
 }
 
 .card-address {
@@ -1796,51 +1795,6 @@
 
 </style>
 
-
-<style>
-/* Fix: agent photo must be circular */
-.agent-photo, .agent-photo img {
-  border-radius: 50% !important;
-  overflow: hidden;
-  object-fit: cover;
-}
-</style>
-
-
-<style>
-/* force agent image circular */
-.detail-agent img,
-.agent img,
-.agent-photo img {
-  border-radius: 50% !important;
-  width: 44px;
-  height: 44px;
-  object-fit: cover;
-}
-</style>
-
-
-<style>
-.agent-photo,
-.agent-photo img {
-  width: 44px !important;
-  height: 44px !important;
-  aspect-ratio: 1 / 1;
-  border-radius: 50% !important;
-  object-fit: cover;
-}
-</style>
-
-
-<style>
-.lightbox img,
-.modal img,
-.viewer img,
-.detail-image img {
-  border-radius: 0 !important;
-}
-</style>
-
 </head>
 <body>
   <div class="app">
@@ -1849,7 +1803,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.197</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.199</div>
             </div>
           </div>
 
@@ -2042,10 +1996,10 @@
 
         <div class="type-buttons" id="typeButtons">
           <button type="button" data-value="all" class="active">전체</button>
-          <button type="button" data-value="단독">빌라ㆍ주택</button>
+          <button type="button" data-value="단독">단독주택</button>
           <button type="button" data-value="다가구">다가구ㆍ다세대</button>
           <button type="button" data-value="원룸">원룸ㆍ투룸</button>
-          <button type="button" data-value="아파트">아파트ㆍ오피스텔</button>
+          <button type="button" data-value="아파트">아파트ㆍ빌라</button>
           <button type="button" data-value="상가">상가ㆍ사무실</button>
           <button type="button" data-value="토지">토지ㆍ임야</button>
         </div>
@@ -2074,7 +2028,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.197';
+    const APP_VERSION = '1.199';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -2281,7 +2235,7 @@
 
     function isDetachedHouseType(typeText) {
       const text = String(typeText || "").trim();
-      return ["단독", "빌라ㆍ주택"].includes(text);
+      return ["단독", "단독주택"].includes(text);
     }
 
     function parseDetachedHouseAreas(areaText) {
@@ -2365,12 +2319,6 @@
         return formatDetachedHouseCardAreaDisplay(areaText, unit);
       }
 
-      if (/오피스텔/.test(typeText)) {
-        const parsed = parseApartmentAreas(areaText || "-");
-        const targetValue = parsed.private;
-        return `(전용) ${Number.isFinite(targetValue) ? formatSingleAreaValue(targetValue, unit) : formatAreaByUnit(areaText, unit, typeText)}`;
-      }
-
       if (isApartmentType(typeText)) {
         return `(전용) ${formatAreaByUnit(areaText, unit, typeText)}`;
       }
@@ -2397,15 +2345,12 @@
         return;
       }
 
-      if (isApartmentType(typeText) || /오피스텔/.test(typeText)) {
+      if (isApartmentType(typeText)) {
         const parsed = parseApartmentAreas(detailItem.area || "-");
-        const isOfficetel = /오피스텔/.test(typeText);
         const showSupply = detailAreaMode === "supply";
         const targetValue = showSupply ? parsed.supply : parsed.private;
 
-        detailAreaLabel.textContent = isOfficetel
-          ? (showSupply ? "면적(계약)" : "면적(전용)")
-          : (showSupply ? "면적(공급)" : "면적(전용)");
+        detailAreaLabel.textContent = showSupply ? "면적(공급)" : "면적(전용)";
         detailAreaValue.textContent = Number.isFinite(targetValue) ? formatSingleAreaValue(targetValue, unit) : "-";
 
         if (detailAreaTypeToggleBtn) {
@@ -3476,10 +3421,10 @@
 
         const okType =
           typeValue === "all" ||
-          (typeValue === "단독" && ["단독", "빌라ㆍ주택"].includes(itemType)) ||
+          (typeValue === "단독" && ["단독", "단독주택"].includes(itemType)) ||
           (typeValue === "다가구" && ["다가구", "다세대", "다가구ㆍ다세대", "다세대주택"].includes(itemType)) ||
           (typeValue === "원룸" && ["원룸", "투룸", "원룸ㆍ투룸"].includes(itemType)) ||
-          (typeValue === "아파트" && ["아파트", "빌라", "아파트ㆍ오피스텔"].includes(itemType)) ||
+          (typeValue === "아파트" && ["아파트", "빌라", "아파트ㆍ빌라"].includes(itemType)) ||
           (typeValue === "상가" && ["상가", "사무실", "공장", "상가ㆍ사무실"].includes(itemType)) ||
           (typeValue === "토지" && ["토지", "임야", "토지ㆍ임야"].includes(itemType));
 
@@ -3557,7 +3502,7 @@
             return;
           }
 
-          if (isApartmentType(typeText) || /오피스텔/.test(typeText)) {
+          if (isApartmentType(typeText)) {
             detailAreaMode = detailAreaMode === "supply" ? "private" : "supply";
             syncDetailAreaDisplay(currentDetailItem);
           }
