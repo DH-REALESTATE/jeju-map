@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.190</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.190" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.191</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.191" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -1803,7 +1803,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.190</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.191</div>
             </div>
           </div>
 
@@ -1996,10 +1996,10 @@
 
         <div class="type-buttons" id="typeButtons">
           <button type="button" data-value="all" class="active">전체</button>
-          <button type="button" data-value="단독">단독주택</button>
+          <button type="button" data-value="단독">빌라ㆍ주택</button>
           <button type="button" data-value="다가구">다가구ㆍ다세대</button>
           <button type="button" data-value="원룸">원룸ㆍ투룸</button>
-          <button type="button" data-value="아파트">아파트ㆍ빌라</button>
+          <button type="button" data-value="아파트">아파트ㆍ오피스텔</button>
           <button type="button" data-value="상가">상가ㆍ사무실</button>
           <button type="button" data-value="토지">토지ㆍ임야</button>
         </div>
@@ -2028,7 +2028,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.190';
+    const APP_VERSION = '1.191';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -2235,7 +2235,7 @@
 
     function isDetachedHouseType(typeText) {
       const text = String(typeText || "").trim();
-      return ["단독", "단독주택"].includes(text);
+      return ["단독", "빌라ㆍ주택"].includes(text);
     }
 
     function parseDetachedHouseAreas(areaText) {
@@ -3430,10 +3430,10 @@
 
         const okType =
           typeValue === "all" ||
-          (typeValue === "단독" && ["단독", "단독주택"].includes(itemType)) ||
+          (typeValue === "단독" && ["단독", "빌라ㆍ주택"].includes(itemType)) ||
           (typeValue === "다가구" && ["다가구", "다세대", "다가구ㆍ다세대", "다세대주택"].includes(itemType)) ||
           (typeValue === "원룸" && ["원룸", "투룸", "원룸ㆍ투룸"].includes(itemType)) ||
-          (typeValue === "아파트" && ["아파트", "빌라", "아파트ㆍ빌라"].includes(itemType)) ||
+          (typeValue === "아파트" && ["아파트", "빌라", "아파트ㆍ오피스텔"].includes(itemType)) ||
           (typeValue === "상가" && ["상가", "사무실", "공장", "상가ㆍ사무실"].includes(itemType)) ||
           (typeValue === "토지" && ["토지", "임야", "토지ㆍ임야"].includes(itemType));
 
