@@ -2008,10 +2008,10 @@
 
         <div class="type-buttons" id="typeButtons">
           <button type="button" data-value="all" class="active">전체</button>
-          <button type="button" data-value="단독">빌라ㆍ주택</button>
-          <button type="button" data-value="다가구">빌라ㆍ주택</button>
+          <button type="button" data-value="단독">단독주택</button>
+          <button type="button" data-value="다가구">다가구ㆍ다세대</button>
           <button type="button" data-value="원룸">원룸ㆍ투룸</button>
-          <button type="button" data-value="아파트">아파트ㆍ오피스텔</button>
+          <button type="button" data-value="아파트">아파트ㆍ빌라</button>
           <button type="button" data-value="상가">상가ㆍ사무실</button>
           <button type="button" data-value="토지">토지ㆍ임야</button>
         </div>
@@ -2248,7 +2248,7 @@
 
     function isDetachedHouseType(typeText) {
       const text = String(typeText || "").trim();
-      return ["단독", "빌라ㆍ주택"].includes(text);
+      return ["단독", "단독주택"].includes(text);
     }
 
     function parseDetachedHouseAreas(areaText) {
@@ -3472,10 +3472,10 @@
 
         const okType =
           typeValue === "all" ||
-          (typeValue === "단독" && ["단독", "빌라ㆍ주택"].includes(itemType)) ||
-          (typeValue === "다가구" && ["다가구", "다세대", "빌라ㆍ주택", "다세대주택"].includes(itemType)) ||
+          (typeValue === "단독" && ["단독", "단독주택"].includes(itemType)) ||
+          (typeValue === "다가구" && ["다가구", "다세대", "다가구ㆍ다세대", "다세대주택"].includes(itemType)) ||
           (typeValue === "원룸" && ["원룸", "투룸", "원룸ㆍ투룸"].includes(itemType)) ||
-          (typeValue === "아파트" && ["아파트", "빌라", "아파트ㆍ오피스텔"].includes(itemType)) ||
+          (typeValue === "아파트" && ["아파트", "빌라", "아파트ㆍ빌라"].includes(itemType)) ||
           (typeValue === "상가" && ["상가", "사무실", "공장", "상가ㆍ사무실"].includes(itemType)) ||
           (typeValue === "토지" && ["토지", "임야", "토지ㆍ임야"].includes(itemType));
 
