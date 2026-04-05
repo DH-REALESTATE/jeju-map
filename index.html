@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.239</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.239" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.240</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.240" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -370,14 +370,14 @@
       align-items: center;
       gap: 8px;
       flex-wrap: wrap;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
     }
 
     .detail-summary-type-badge {
       display: inline-flex;
       align-items: center;
-      height: 24px;
-      padding: 0 10px;
+      height: 26px;
+      padding: 0 12px;
       border-radius: 20px;
       background: #f3eefe;
       color: #7c4dff;
@@ -387,6 +387,7 @@
       line-height: 1;
       letter-spacing: -0.15px;
       white-space: nowrap;
+      box-shadow: inset 0 0 0 1px rgba(124, 77, 255, 0.08);
     }
 
     .detail-summary-price-row {
@@ -449,18 +450,18 @@
     }
 
     .detail-summary-price {
-      font-size: 28px;
+      font-size: 34px;
       font-weight: 900;
-      line-height: 1.15;
-      letter-spacing: -0.8px;
-      color: #111827;
-      margin-bottom: 8px;
+      line-height: 1.02;
+      letter-spacing: -1.05px;
+      color: #0f172a;
+      margin-bottom: 10px;
     }
 
     .detail-summary-address {
       font-size: 12px;
       letter-spacing: -0.1px;
-      line-height: 1.5;
+      line-height: 1.55;
       color: #6f7c89;
     }
 
@@ -485,22 +486,22 @@
       font-size: 12.5px;
       font-weight: 800;
       letter-spacing: -0.2px;
-      color: #6b7280;
+      color: #6d4aff;
       background: none;
       padding: 0;
       border-radius: 0;
       box-shadow: none;
-      margin-bottom: 4px;
+      margin-bottom: 8px;
       line-height: 1.3;
     }
 
     .detail-title {
       margin: 0;
-      font-size: 18px;
+      font-size: 20px;
       font-weight: 900;
-      color: #1d2733;
-      letter-spacing: -0.4px;
-      line-height: 1.45;
+      color: #111827;
+      letter-spacing: -0.55px;
+      line-height: 1.4;
     }
 
     .detail-inline-price,
@@ -514,14 +515,15 @@
       grid-template-columns: minmax(120px, 1.15fr) minmax(100px, 0.95fr) minmax(100px, 0.95fr);
       gap: 0;
       overflow: hidden;
-      border-radius: 14px;
-      border: 1px solid #eceff3;
-      margin-bottom: 16px;
-      background: #fff;
+      border-radius: 20px;
+      border: 1px solid #e8edf3;
+      margin-bottom: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+      box-shadow: 0 10px 26px rgba(15, 41, 66, 0.04);
     }
 
     .detail-meta-item {
-      padding: 14px 12px;
+      padding: 18px 16px;
       border-right: 1px solid #eceff3;
       min-width: 0;
     }
@@ -537,16 +539,17 @@
       font-size: 12px;
       letter-spacing: -0.1px;
       color: #7a8794;
-      margin-bottom: 6px;
-      font-weight: 700;
+      margin-bottom: 8px;
+      font-weight: 800;
     }
 
     .detail-meta-value {
       display: block;
-      font-size: 16px;
-      color: #1f6fff;
+      font-size: 18px;
+      color: #2458f5;
       font-weight: 900;
-      letter-spacing: -0.3px;
+      letter-spacing: -0.35px;
+      line-height: 1.15;
     }
 
     .detail-area-wrap {
@@ -658,12 +661,12 @@
     }
 
     .detail-agent-card {
-      border-radius: 18px;
+      border-radius: 20px;
       border: 1px solid #e9eef4;
       background: linear-gradient(180deg, #ffffff, #fafcff);
-      padding: 16px;
-      margin-bottom: 16px;
-      box-shadow: 0 6px 18px rgba(15, 41, 66, 0.04);
+      padding: 18px;
+      margin-bottom: 18px;
+      box-shadow: 0 10px 24px rgba(15, 41, 66, 0.05);
     }
 
     .detail-agent-top {
@@ -1933,6 +1936,41 @@
   margin-left: 0 !important;
 }
 
+
+/* Best-design polish for right detail panel badges */
+.detail-summary-deal-badge[data-deal="매매"] {
+  background: #eef5ff;
+  color: #2563eb;
+  box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.08);
+}
+.detail-summary-deal-badge[data-deal="전세"] {
+  background: #e8f7ef;
+  color: #16a34a;
+  box-shadow: inset 0 0 0 1px rgba(22, 163, 74, 0.08);
+}
+.detail-summary-deal-badge[data-deal="월세"] {
+  background: #fff7ed;
+  color: #ea580c;
+  box-shadow: inset 0 0 0 1px rgba(234, 88, 12, 0.08);
+}
+.detail-summary-deal-badge[data-deal="년세"] {
+  background: #fef2f2;
+  color: #dc2626;
+  box-shadow: inset 0 0 0 1px rgba(220, 38, 38, 0.08);
+}
+
+.detail-content {
+  padding: 22px 20px 20px;
+}
+
+.detail-summary-block {
+  margin-bottom: 18px;
+}
+
+.detail-title-row {
+  margin-bottom: 18px;
+}
+
 </style>
 
 
@@ -1947,7 +1985,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.239</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.240</div>
             </div>
           </div>
 
@@ -2171,7 +2209,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.239';
+    const APP_VERSION = '1.240';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
