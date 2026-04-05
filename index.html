@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.246</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.246" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.245</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.245" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -1573,64 +1573,6 @@
       letter-spacing: -0.1px;
     }
 
-
-    .current-location-btn {
-      position: absolute;
-      right: 14px;
-      bottom: 18px;
-      z-index: 35;
-      width: 52px;
-      height: 52px;
-      border: 0;
-      border-radius: 18px;
-      background: rgba(255,255,255,0.96);
-      color: #1f2a36;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 12px 24px rgba(15, 41, 66, 0.16);
-      backdrop-filter: blur(10px);
-    }
-
-    .current-location-btn:hover {
-      background: #ffffff;
-    }
-
-    .current-location-btn i {
-      font-size: 18px;
-      line-height: 1;
-    }
-
-    .current-location-btn.active {
-      color: #03C75A;
-    }
-
-    .location-status-toast {
-      position: absolute;
-      right: 14px;
-      bottom: 78px;
-      z-index: 35;
-      display: none;
-      align-items: center;
-      gap: 8px;
-      min-height: 38px;
-      padding: 0 12px;
-      border-radius: 14px;
-      background: rgba(15, 41, 66, 0.92);
-      color: #fff;
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: -0.1px;
-      box-shadow: 0 10px 20px rgba(15, 41, 66, 0.18);
-      backdrop-filter: blur(10px);
-      white-space: nowrap;
-    }
-
-    .location-status-toast.show {
-      display: inline-flex;
-    }
-
     .detail-image-lightbox {
       position: fixed;
       inset: 0;
@@ -2005,7 +1947,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.246</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.245</div>
             </div>
           </div>
 
@@ -2207,12 +2149,6 @@
       </div>
 
       <div class="map-result-count" id="mapResultCount">총 0건</div>
-
-      <div class="location-status-toast" id="locationStatusToast">현재 위치를 찾는 중…</div>
-      <button type="button" class="current-location-btn" id="currentLocationBtn" aria-label="현 위치로 이동">
-        <i class="fa-solid fa-location-crosshairs"></i>
-      </button>
-
     </main>
   </div>
 
@@ -2235,7 +2171,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.246';
+    const APP_VERSION = '1.245';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -2263,15 +2199,11 @@
     let currentHeroImages = [];
     let currentHeroIndex = 0;
     let detailAreaMode = "total";
-    let currentLocationMarker = null;
-    let currentLocationCircle = null;
 
     const sidebar = document.getElementById("sidebar");
     const propertyList = document.getElementById("propertyList");
     const keywordInput = document.getElementById("keyword");
     const mapResultCount = document.getElementById("mapResultCount");
-    const currentLocationBtn = document.getElementById("currentLocationBtn");
-    const locationStatusToast = document.getElementById("locationStatusToast");
         const dealButtons = document.querySelectorAll("#dealButtons button");
     const typeButtons = document.querySelectorAll("#typeButtons button");
     const featureButtons = document.querySelectorAll("#featureButtons button");
@@ -2342,101 +2274,6 @@
     }
 
     const detailScroll = document.querySelector(".detail-scroll");
-
-
-    function showLocationToast(message, autoHide = true) {
-      if (!locationStatusToast) return;
-      locationStatusToast.textContent = message;
-      locationStatusToast.classList.add("show");
-      if (autoHide) {
-        clearTimeout(showLocationToast._timer);
-        showLocationToast._timer = setTimeout(() => {
-          locationStatusToast.classList.remove("show");
-        }, 1800);
-      }
-    }
-
-    function clearCurrentLocationOverlay() {
-      if (currentLocationMarker) {
-        currentLocationMarker.setMap(null);
-        currentLocationMarker = null;
-      }
-      if (currentLocationCircle) {
-        currentLocationCircle.setMap(null);
-        currentLocationCircle = null;
-      }
-    }
-
-    function renderCurrentLocation(lat, lng, accuracy = 0) {
-      if (!state.map || !window.kakao || !kakao.maps) return;
-
-      clearCurrentLocationOverlay();
-
-      const position = new kakao.maps.LatLng(lat, lng);
-
-      currentLocationCircle = new kakao.maps.Circle({
-        center: position,
-        radius: Math.max(accuracy || 0, 40),
-        strokeWeight: 1,
-        strokeColor: "#03C75A",
-        strokeOpacity: 0.35,
-        fillColor: "#03C75A",
-        fillOpacity: 0.12
-      });
-      currentLocationCircle.setMap(state.map);
-
-      const markerNode = document.createElement("div");
-      markerNode.style.width = "18px";
-      markerNode.style.height = "18px";
-      markerNode.style.borderRadius = "50%";
-      markerNode.style.background = "#03C75A";
-      markerNode.style.border = "3px solid #ffffff";
-      markerNode.style.boxShadow = "0 6px 14px rgba(3, 199, 90, 0.28)";
-
-      currentLocationMarker = new kakao.maps.CustomOverlay({
-        position,
-        content: markerNode,
-        yAnchor: 0.5
-      });
-      currentLocationMarker.setMap(state.map);
-
-      state.map.setLevel(3);
-      state.map.panTo(position);
-
-      if (currentLocationBtn) currentLocationBtn.classList.add("active");
-      showLocationToast("현재 위치로 이동했어요");
-    }
-
-    function moveToCurrentLocation() {
-      if (!navigator.geolocation) {
-        showLocationToast("브라우저에서 위치 기능을 지원하지 않아요");
-        return;
-      }
-
-      showLocationToast("현재 위치를 찾는 중…", false);
-
-      navigator.geolocation.getCurrentPosition(
-        position => {
-          renderCurrentLocation(
-            position.coords.latitude,
-            position.coords.longitude,
-            position.coords.accuracy || 0
-          );
-        },
-        error => {
-          let message = "현재 위치를 가져오지 못했어요";
-          if (error && error.code === 1) message = "위치 권한을 허용해 주세요";
-          if (error && error.code === 2) message = "위치 정보를 찾지 못했어요";
-          if (error && error.code === 3) message = "위치 확인 시간이 초과됐어요";
-          showLocationToast(message);
-        },
-        {
-          enableHighAccuracy: true,
-          timeout: 10000,
-          maximumAge: 0
-        }
-      );
-    }
 
     function updateSidebarWidth() {
       const listWidth = getComputedStyle(document.documentElement).getPropertyValue("--sidebar-list-width").trim() || "360px";
@@ -2555,6 +2392,11 @@
       return ["단독", "단독주택"].includes(text);
     }
 
+    function isCommercialType(typeText) {
+      const text = String(typeText || "").trim();
+      return /상가|사무실|공장/.test(text);
+    }
+
     function parseDetachedHouseAreas(areaText) {
       const raw = String(areaText || "-").trim();
       const landMatch = raw.match(/대지면적\s*([\d,.]+)㎡/);
@@ -2636,6 +2478,14 @@
         return formatDetachedHouseCardAreaDisplay(areaText, unit);
       }
 
+      if (isCommercialType(typeText)) {
+        const parsed = parseDetachedHouseAreas(areaText || "-");
+        if (Number.isFinite(parsed.total)) {
+          return `(연) ${formatSingleAreaValue(parsed.total, unit)}`;
+        }
+        return `(연) ${formatAreaByUnit(areaText, unit, typeText)}`;
+      }
+
       if (/오피스텔/.test(typeText)) {
         const parsed = parseApartmentAreas(areaText || "-");
         const targetValue = parsed.supply;
@@ -2666,6 +2516,20 @@
         const targetValue = detailAreaMode === "land" ? parsed.land : parsed.total;
 
         detailAreaLabel.textContent = detailAreaMode === "land" ? "면적(대지)" : "면적(연)";
+        detailAreaValue.textContent = Number.isFinite(targetValue) ? formatSingleAreaValue(targetValue, unit) : "-";
+
+        if (detailAreaTypeToggleBtn) {
+          detailAreaTypeToggleBtn.style.display = "inline-flex";
+        }
+        return;
+      }
+
+      if (isCommercialType(typeText)) {
+        const parsed = parseDetachedHouseAreas(detailItem.area || "-");
+        const showLand = detailAreaMode === "land";
+        const targetValue = showLand ? parsed.land : parsed.total;
+
+        detailAreaLabel.textContent = showLand ? "면적(대지)" : "면적(연)";
         detailAreaValue.textContent = Number.isFinite(targetValue) ? formatSingleAreaValue(targetValue, unit) : "-";
 
         if (detailAreaTypeToggleBtn) {
@@ -3852,7 +3716,7 @@
 
           const typeText = currentDetailItem.type || "";
 
-          if (isDetachedHouseType(typeText)) {
+          if (isDetachedHouseType(typeText) || isCommercialType(typeText)) {
             detailAreaMode = detailAreaMode === "land" ? "total" : "land";
             syncDetailAreaDisplay(currentDetailItem);
             return;
