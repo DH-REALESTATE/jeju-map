@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.234</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.234" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.235</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.235" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -1885,6 +1885,25 @@
   display:block !important;
 }
 
+
+.detail-area-wrap {
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:flex-start !important;
+  gap:4px;
+}
+
+.detail-area-wrap .area-display {
+  display:inline-flex !important;
+  align-items:center !important;
+  gap:4px;
+}
+
+#detailAreaValue {
+  display:inline-flex !important;
+  align-items:center !important;
+}
+
 </style>
 
 
@@ -1907,7 +1926,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.234</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.235</div>
             </div>
           </div>
 
@@ -2131,7 +2150,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.234';
+    const APP_VERSION = '1.235';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
