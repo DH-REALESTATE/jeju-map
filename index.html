@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.221</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.221" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.222</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.222" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -1211,7 +1211,7 @@
     .thumb::after { display: none; }
 
     .card-body {
-      flex: 1 1 auto;
+      flex: 0 0 auto;
       min-width: 0;
       padding: 0;
     }
@@ -1795,18 +1795,6 @@
 
 </style>
 
-
-<style>
-.detail-area-wrap.land-two-line {
-  display: block !important;
-}
-.detail-area-wrap.land-two-line #detailAreaValue {
-  display: inline-flex;
-  align-items: center;
-  white-space: nowrap;
-}
-</style>
-
 </head>
 <body>
   <div class="app">
@@ -1815,7 +1803,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.221</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.222</div>
             </div>
           </div>
 
@@ -2008,10 +1996,10 @@
 
         <div class="type-buttons" id="typeButtons">
           <button type="button" data-value="all" class="active">전체</button>
-          <button type="button" data-value="단독">빌라ㆍ주택</button>
-          <button type="button" data-value="다가구">빌라ㆍ주택</button>
+          <button type="button" data-value="단독">단독주택</button>
+          <button type="button" data-value="다가구">다가구ㆍ다세대</button>
           <button type="button" data-value="원룸">원룸ㆍ투룸</button>
-          <button type="button" data-value="아파트">아파트ㆍ오피스텔</button>
+          <button type="button" data-value="아파트">아파트ㆍ빌라</button>
           <button type="button" data-value="상가">상가ㆍ사무실</button>
           <button type="button" data-value="토지">토지ㆍ임야</button>
         </div>
@@ -2040,7 +2028,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.221';
+    const APP_VERSION = '1.222';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -2115,7 +2103,6 @@
     const detailAreaToggleBtn = document.getElementById("detailAreaToggleBtn");
     const detailAreaLabel = document.getElementById("detailAreaLabel");
     const detailAreaTypeToggleBtn = document.getElementById("detailAreaTypeToggleBtn");
-    const detailAreaWrap = document.querySelector(".detail-area-wrap");
     const detailTypeValue = document.getElementById("detailTypeValue");
     const detailRegionValue = document.getElementById("detailRegionValue");
 
@@ -2248,7 +2235,7 @@
 
     function isDetachedHouseType(typeText) {
       const text = String(typeText || "").trim();
-      return ["단독", "빌라ㆍ주택"].includes(text);
+      return ["단독", "단독주택"].includes(text);
     }
 
     function parseDetachedHouseAreas(areaText) {
@@ -2332,12 +2319,6 @@
         return formatDetachedHouseCardAreaDisplay(areaText, unit);
       }
 
-      if (/오피스텔/.test(typeText)) {
-        const parsed = parseApartmentAreas(areaText || "-");
-        const targetValue = parsed.supply;
-        return `(계약) ${Number.isFinite(targetValue) ? formatSingleAreaValue(targetValue, unit) : formatAreaByUnit(areaText, unit, typeText)}`;
-      }
-
       if (isApartmentType(typeText)) {
         return `(전용) ${formatAreaByUnit(areaText, unit, typeText)}`;
       }
@@ -2351,29 +2332,11 @@
       const unit = detailAreaValue.dataset.areaUnit || "m2";
       const typeText = detailItem.type || "";
 
-      if (detailAreaWrap) {
-        detailAreaWrap.classList.remove("land-two-line");
-      }
-
       if (isDetachedHouseType(typeText)) {
         const parsed = parseDetachedHouseAreas(detailItem.area || "-");
         const targetValue = detailAreaMode === "land" ? parsed.land : parsed.total;
 
         detailAreaLabel.textContent = detailAreaMode === "land" ? "면적(대지)" : "면적(연)";
-        detailAreaValue.textContent = Number.isFinite(targetValue) ? formatSingleAreaValue(targetValue, unit) : "-";
-
-        if (detailAreaTypeToggleBtn) {
-          detailAreaTypeToggleBtn.style.display = "inline-flex";
-        }
-        return;
-      }
-
-      if (/오피스텔/.test(typeText)) {
-        const parsed = parseApartmentAreas(detailItem.area || "-");
-        const showSupply = detailAreaMode === "supply";
-        const targetValue = showSupply ? parsed.supply : parsed.private;
-
-        detailAreaLabel.textContent = showSupply ? "면적(계약)" : "면적(전용)";
         detailAreaValue.textContent = Number.isFinite(targetValue) ? formatSingleAreaValue(targetValue, unit) : "-";
 
         if (detailAreaTypeToggleBtn) {
@@ -2392,20 +2355,6 @@
 
         if (detailAreaTypeToggleBtn) {
           detailAreaTypeToggleBtn.style.display = "inline-flex";
-        }
-        return;
-      }
-
-      if (/토지|임야/.test(typeText)) {
-        detailAreaLabel.textContent = "면적";
-        detailAreaValue.textContent = formatAreaByUnit(detailItem.area || "-", unit, typeText);
-
-        if (detailAreaWrap) {
-          detailAreaWrap.classList.add("land-two-line");
-        }
-
-        if (detailAreaTypeToggleBtn) {
-          detailAreaTypeToggleBtn.style.display = "none";
         }
         return;
       }
@@ -3472,10 +3421,10 @@
 
         const okType =
           typeValue === "all" ||
-          (typeValue === "단독" && ["단독", "빌라ㆍ주택"].includes(itemType)) ||
-          (typeValue === "다가구" && ["다가구", "다세대", "빌라ㆍ주택", "다세대주택"].includes(itemType)) ||
+          (typeValue === "단독" && ["단독", "단독주택"].includes(itemType)) ||
+          (typeValue === "다가구" && ["다가구", "다세대", "다가구ㆍ다세대", "다세대주택"].includes(itemType)) ||
           (typeValue === "원룸" && ["원룸", "투룸", "원룸ㆍ투룸"].includes(itemType)) ||
-          (typeValue === "아파트" && ["아파트", "빌라", "아파트ㆍ오피스텔"].includes(itemType)) ||
+          (typeValue === "아파트" && ["아파트", "빌라", "아파트ㆍ빌라"].includes(itemType)) ||
           (typeValue === "상가" && ["상가", "사무실", "공장", "상가ㆍ사무실"].includes(itemType)) ||
           (typeValue === "토지" && ["토지", "임야", "토지ㆍ임야"].includes(itemType));
 
@@ -3553,7 +3502,7 @@
             return;
           }
 
-          if (isApartmentType(typeText) || /오피스텔/.test(typeText)) {
+          if (isApartmentType(typeText)) {
             detailAreaMode = detailAreaMode === "supply" ? "private" : "supply";
             syncDetailAreaDisplay(currentDetailItem);
           }
