@@ -1,6 +1,27 @@
 [  
 
   {
+    "id": 226,
+    "listingNo": "디-226",
+    "date": "2026-02-25",
+    "title": "구좌읍 세화리 토지",
+    "desc": "관리 부담 없는 '임야' 향후 지가 상승 잠재력이 매우 큽니다.",
+    "image": "./dh_real/226/1.png",
+    "desc_folder": "./dh_real/226/info.json",
+    "image_folder": "./dh_real/226/image.json",
+    "type": "임야",
+    "dealFilter": "매매",
+    "region": "세화리",
+    "price": "8,000",
+    "area": "대지면적 662.00㎡",
+    "address": "제주도 제주시 구좌읍 세화리",
+    "lat": 33.483273,
+    "lng": 126.837127,
+    "features": ["임야", "계획관리지역"],
+    "agent_folder": "./dh_real/agent.json"
+  },
+  
+  {
     "id": 227,
     "listingNo": "디-227",
     "date": "2026-02-25",
