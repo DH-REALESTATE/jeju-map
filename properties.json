@@ -1,5 +1,26 @@
 [  
-
+  
+  {
+    "id": 221,
+    "listingNo": "디-221",
+    "date": "2026-01-25",
+    "title": "연북로 인근 상가 건물 매매",
+    "desc": "관리 부담 없는 '임야' 향후 지가 상승 잠재력이 매우 큽니다.",
+    "image": "./dh_real/221/1.jpg",
+    "desc_folder": "./dh_real/221/info.json",
+    "image_folder": "./dh_real/221/image.json",
+    "type": "상가건물",
+    "dealFilter": "매매",
+    "region": "노형동",
+    "price": "37억",
+    "area": "연면적 505.67㎡ / 대지면적 267.50㎡",
+    "address": "제주시 노형동",
+    "lat": 33.482823,
+    "lng": 126.486248,
+    "features": ["노형동", "상가건물", "무권리"],
+    "agent_folder": "./dh_real/agent.json"
+  },
+  
   {
     "id": 223,
     "listingNo": "디-223",
