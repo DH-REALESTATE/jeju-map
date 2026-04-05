@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.229</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.229" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.230</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.230" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -1800,6 +1800,39 @@
 
 
 
+
+/* right detail summary: type + deal on one line, same feel as left card badges */
+.detail-summary-top {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.detail-summary-type-badge,
+.detail-summary-deal-badge {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.15px;
+  white-space: nowrap;
+}
+
+.detail-summary-price-row {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.detail-summary-price {
+  display: block;
+}
+
 </style>
 
 
@@ -1822,7 +1855,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.229</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.230</div>
             </div>
           </div>
 
@@ -2046,7 +2079,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.229';
+    const APP_VERSION = '1.230';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -2138,6 +2171,16 @@
     const detailImageLightboxClose = document.getElementById("detailImageLightboxClose");
     const detailImageLightboxPrev = document.getElementById("detailImageLightboxPrev");
     const detailImageLightboxNext = document.getElementById("detailImageLightboxNext");
+    const detailSummaryTop = document.querySelector(".detail-summary-top");
+    const detailSummaryPriceRow = document.querySelector(".detail-summary-price-row");
+
+    function syncSummaryBadgeRow() {
+      if (!detailSummaryTop || !detailSummaryDealBadge || !detailSummaryTypeBadge) return;
+      if (detailSummaryDealBadge.parentElement !== detailSummaryTop) {
+        detailSummaryTop.appendChild(detailSummaryDealBadge);
+      }
+    }
+
     const detailScroll = document.querySelector(".detail-scroll");
 
     function updateSidebarWidth() {
@@ -2350,6 +2393,8 @@
 
       return formatAreaByUnit(areaText, unit, typeText);
     }
+
+    syncSummaryBadgeRow();
 
     function syncDetailAreaDisplay(detailItem) {
       if (!detailItem || !detailAreaValue || !detailAreaLabel) return;
