@@ -1,6 +1,27 @@
 [  
 
   {
+    "id": 218,
+    "listingNo": "디-218",
+    "date": "2026-01-25",
+    "title": "조천우회로, 조천읍 신촌리",
+    "desc": "조천우회로, 신촌남길교차로 인근 투자용 토지",
+    "image": "./dh_real/218/1.jpg",
+    "desc_folder": "./dh_real/218/info.json",
+    "image_folder": "./dh_real/218/image.json",
+    "type": "토지",
+    "dealFilter": "매매",
+    "region": "신촌리",
+    "price": "3억 3,000",
+    "area": "대지면적 4,214.00㎡",
+    "address": "제주시 조천읍 신촌리",
+    "lat": 33.522656,
+    "lng": 126.619226,
+    "features": ["조천읍", "신촌리", "계획관리"],
+    "agent_folder": "./dh_real/agent.json"
+  },
+
+  {
     "id": 219,
     "listingNo": "디-219",
     "date": "2026-01-25",
