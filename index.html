@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.266</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.266" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.267</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.267" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -2147,6 +2147,7 @@
 }
 
 
+    
     .map-side-tools {
       position: absolute;
       top: 182px;
@@ -2154,42 +2155,86 @@
       z-index: 31;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 14px;
     }
 
     .map-tool-group {
       display: flex;
       flex-direction: column;
-      gap: 6px;
-      padding: 8px;
-      border-radius: 16px;
-      background: rgba(255,255,255,0.94);
-      border: 1px solid rgba(0,0,0,0.05);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
+      gap: 8px;
+      padding: 0;
+      border-radius: 0;
+      background: transparent;
+      border: 0;
+      box-shadow: none;
+      backdrop-filter: none;
     }
 
     .map-tool-btn {
-      min-width: 68px;
-      height: 38px;
-      border: 0;
-      border-radius: 12px;
-      padding: 0 12px;
+      width: 68px;
+      height: 68px;
+      border: 1px solid #cfd7e2;
+      border-radius: 10px;
+      padding: 0;
       background: #ffffff;
       color: #223244;
-      font-size: 12px;
+      font-size: 15px;
       font-weight: 900;
-      letter-spacing: -0.1px;
+      letter-spacing: -0.2px;
       cursor: pointer;
       white-space: nowrap;
-      box-shadow: inset 0 0 0 1px #dfe6ee;
+      box-shadow: 0 6px 14px rgba(15, 41, 66, 0.12);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
     }
 
     .map-tool-btn.active {
       background: #1f6fff;
+      border-color: #1a5fe0;
       color: #fff;
       box-shadow: 0 8px 18px rgba(31,111,255,0.22);
     }
+
+    .map-unit-split {
+      width: 68px;
+      height: 68px;
+      border: 1px solid #cfd7e2;
+      border-radius: 10px;
+      background: #ffffff;
+      overflow: hidden;
+      box-shadow: 0 6px 14px rgba(15, 41, 66, 0.12);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .map-unit-half-btn {
+      flex: 1 1 50%;
+      border: 0;
+      background: #ffffff;
+      color: #223244;
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: -0.2px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      line-height: 1;
+      padding: 0;
+    }
+
+    .map-unit-half-btn + .map-unit-half-btn {
+      border-top: 1px solid #dbe2eb;
+    }
+
+    .map-unit-half-btn.active {
+      background: #1f6fff;
+      color: #fff;
+    }
+
 
 </style>
 
@@ -2205,7 +2250,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.266</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.267</div>
             </div>
           </div>
 
@@ -2416,8 +2461,10 @@
         </div>
 
         <div class="map-tool-group" id="areaUnitToolGroup">
-          <button type="button" class="map-tool-btn" data-area-unit="py" id="areaUnitPyBtn">평</button>
-          <button type="button" class="map-tool-btn active" data-area-unit="m2" id="areaUnitM2Btn">㎡</button>
+          <div class="map-unit-split">
+            <button type="button" class="map-unit-half-btn active" data-area-unit="py" id="areaUnitPyBtn">평</button>
+            <button type="button" class="map-unit-half-btn" data-area-unit="m2" id="areaUnitM2Btn">㎡</button>
+          </div>
         </div>
       </div>
     </main>
@@ -2446,7 +2493,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.266';
+    const APP_VERSION = '1.267';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -2474,7 +2521,7 @@
     let currentHeroImages = [];
     let currentHeroIndex = 0;
     let detailAreaMode = "total";
-    let globalAreaUnit = "m2";
+    let globalAreaUnit = "py";
     let currentMapTypeMode = "roadmap";
 
     const sidebar = document.getElementById("sidebar");
