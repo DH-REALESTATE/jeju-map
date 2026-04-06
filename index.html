@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.264</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.264" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.265</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.265" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -1814,9 +1814,7 @@
 }
 
 .card-spec .area-toggle-btn {
-  flex: 0 0 auto;
-  align-self: center;
-  margin-left: 0;
+  display: none !important;
 }
 
 
@@ -2147,6 +2145,51 @@
   flex: 0 1 auto;
 }
 
+
+    .map-side-tools {
+      position: absolute;
+      top: 182px;
+      left: 12px;
+      z-index: 31;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .map-tool-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 8px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.94);
+      border: 1px solid rgba(0,0,0,0.05);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+
+    .map-tool-btn {
+      min-width: 68px;
+      height: 38px;
+      border: 0;
+      border-radius: 12px;
+      padding: 0 12px;
+      background: #ffffff;
+      color: #223244;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: -0.1px;
+      cursor: pointer;
+      white-space: nowrap;
+      box-shadow: inset 0 0 0 1px #dfe6ee;
+    }
+
+    .map-tool-btn.active {
+      background: #1f6fff;
+      color: #fff;
+      box-shadow: 0 8px 18px rgba(31,111,255,0.22);
+    }
+
 </style>
 
 
@@ -2161,7 +2204,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.264</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.265</div>
             </div>
           </div>
 
@@ -2275,7 +2318,7 @@
                         </button>
                       </span>
                     <div class="detail-area-wrap">
-                      <span class="detail-meta-value area-display" id="detailAreaValue" data-area-raw="-" data-area-unit="m2">-</span>
+                      <span class="detail-meta-value area-display" id="detailAreaValue" data-area-raw="-" data-area-unit="${globalAreaUnit}">-</span>
                       <button type="button" class="area-toggle-btn" id="detailAreaToggleBtn">평</button>
                     </div>
                   </div>
@@ -2363,6 +2406,19 @@
       </div>
 
       <div class="map-result-count" id="mapResultCount">총 0건</div>
+
+      <div class="map-side-tools">
+        <div class="map-tool-group" id="mapTypeToolGroup">
+          <button type="button" class="map-tool-btn active" data-map-type="roadmap" id="mapTypeRoadBtn">일반</button>
+          <button type="button" class="map-tool-btn" data-map-type="satellite" id="mapTypeSatelliteBtn">위성</button>
+          <button type="button" class="map-tool-btn" data-map-type="cadastral" id="mapTypeCadastralBtn">지적</button>
+        </div>
+
+        <div class="map-tool-group" id="areaUnitToolGroup">
+          <button type="button" class="map-tool-btn" data-area-unit="py" id="areaUnitPyBtn">평</button>
+          <button type="button" class="map-tool-btn active" data-area-unit="m2" id="areaUnitM2Btn">㎡</button>
+        </div>
+      </div>
     </main>
   </div>
 
@@ -2389,7 +2445,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.264';
+    const APP_VERSION = '1.265';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -2417,11 +2473,18 @@
     let currentHeroImages = [];
     let currentHeroIndex = 0;
     let detailAreaMode = "total";
+    let globalAreaUnit = "m2";
+    let currentMapTypeMode = "roadmap";
 
     const sidebar = document.getElementById("sidebar");
     const propertyList = document.getElementById("propertyList");
     const keywordInput = document.getElementById("keyword");
     const mapResultCount = document.getElementById("mapResultCount");
+    const mapTypeRoadBtn = document.getElementById("mapTypeRoadBtn");
+    const mapTypeSatelliteBtn = document.getElementById("mapTypeSatelliteBtn");
+    const mapTypeCadastralBtn = document.getElementById("mapTypeCadastralBtn");
+    const areaUnitPyBtn = document.getElementById("areaUnitPyBtn");
+    const areaUnitM2Btn = document.getElementById("areaUnitM2Btn");
         const dealButtons = document.querySelectorAll("#dealButtons button");
     const typeButtons = document.querySelectorAll("#typeButtons button");
     const featureButtons = document.querySelectorAll("#featureButtons button");
@@ -2492,6 +2555,51 @@
     }
 
     const detailScroll = document.querySelector(".detail-scroll");
+
+
+    function updateGlobalAreaUnitButtons() {
+      if (areaUnitPyBtn) areaUnitPyBtn.classList.toggle("active", globalAreaUnit === "py");
+      if (areaUnitM2Btn) areaUnitM2Btn.classList.toggle("active", globalAreaUnit === "m2");
+    }
+
+    function updateMapTypeButtons() {
+      if (mapTypeRoadBtn) mapTypeRoadBtn.classList.toggle("active", currentMapTypeMode === "roadmap");
+      if (mapTypeSatelliteBtn) mapTypeSatelliteBtn.classList.toggle("active", currentMapTypeMode === "satellite");
+      if (mapTypeCadastralBtn) mapTypeCadastralBtn.classList.toggle("active", currentMapTypeMode === "cadastral");
+    }
+
+    function setMapTypeMode(mode) {
+      if (!state.map) return;
+      currentMapTypeMode = mode;
+      state.map.removeOverlayMapTypeId(kakao.maps.MapTypeId.USE_DISTRICT);
+
+      if (mode === "satellite") {
+        state.map.setMapTypeId(kakao.maps.MapTypeId.HYBRID);
+      } else if (mode === "cadastral") {
+        state.map.setMapTypeId(kakao.maps.MapTypeId.ROADMAP);
+      updateMapTypeButtons();
+      updateGlobalAreaUnitButtons();
+        state.map.addOverlayMapTypeId(kakao.maps.MapTypeId.USE_DISTRICT);
+      } else {
+        state.map.setMapTypeId(kakao.maps.MapTypeId.ROADMAP);
+      }
+      updateMapTypeButtons();
+    }
+
+    function applyGlobalAreaUnit() {
+      renderList(state.filtered);
+
+      if (state.selectedMarkerId != null) {
+        highlightCard(state.selectedMarkerId);
+      }
+
+      if (currentDetailItem && detailAreaValue) {
+        detailAreaValue.dataset.areaUnit = globalAreaUnit;
+        syncDetailAreaDisplay(currentDetailItem);
+      }
+
+      updateGlobalAreaUnitButtons();
+    }
 
     function updateSidebarWidth() {
       const listWidth = getComputedStyle(document.documentElement).getPropertyValue("--sidebar-list-width").trim() || "360px";
@@ -2800,6 +2908,32 @@
 
       if (detailAreaTypeToggleBtn) {
         detailAreaTypeToggleBtn.style.display = "none";
+      }
+
+      if (mapTypeRoadBtn) {
+        mapTypeRoadBtn.addEventListener("click", () => setMapTypeMode("roadmap"));
+      }
+      if (mapTypeSatelliteBtn) {
+        mapTypeSatelliteBtn.addEventListener("click", () => setMapTypeMode("satellite"));
+      }
+      if (mapTypeCadastralBtn) {
+        mapTypeCadastralBtn.addEventListener("click", () => setMapTypeMode("cadastral"));
+      }
+      if (areaUnitPyBtn) {
+        areaUnitPyBtn.addEventListener("click", () => {
+          globalAreaUnit = "py";
+          applyGlobalAreaUnit();
+        });
+      }
+      if (areaUnitM2Btn) {
+        areaUnitM2Btn.addEventListener("click", () => {
+          globalAreaUnit = "m2";
+          applyGlobalAreaUnit();
+        });
+      }
+
+      if (detailAreaToggleBtn) {
+        detailAreaToggleBtn.style.display = "none";
       }
     }
 
@@ -3275,9 +3409,9 @@
 
       detailAreaMode = isApartmentType(detailItem.type || "") ? "private" : "total";
       detailAreaValue.dataset.areaRaw = detailItem.area || "-";
-      detailAreaValue.dataset.areaUnit = "m2";
+      detailAreaValue.dataset.areaUnit = globalAreaUnit;
       detailAreaValue.dataset.areaType = detailItem.type || "";
-      if (detailAreaToggleBtn) detailAreaToggleBtn.textContent = "평";
+      if (detailAreaToggleBtn) detailAreaToggleBtn.style.display = "none";
       syncDetailAreaDisplay(detailItem);
       detailTypeValue.textContent = detailItem.type || "-";
       detailRegionValue.textContent = detailItem.region || "-";
@@ -3420,9 +3554,6 @@
       });
 
       state.map.setMapTypeId(kakao.maps.MapTypeId.ROADMAP);
-
-      const mapTypeControl = new kakao.maps.MapTypeControl();
-      state.map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
 
       const zoomControl = new kakao.maps.ZoomControl();
       state.map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
@@ -3748,10 +3879,8 @@
 
         const isDetachedHouse = isDetachedHouseType(item.type || "");
         const cardAreaHtml = isDetachedHouse
-          ? `<span class="area-display" data-area-raw="${escapeHtml(item.area || "-")}" data-area-unit="m2" data-area-type="${escapeHtml(item.type || "")}">${formatCardAreaByUnit(item.area || "-", "m2", item.type || "")}</span>
-              <button type="button" class="area-toggle-btn">평</button>`
-          : `<span class="area-display" data-area-raw="${escapeHtml(item.area || "-")}" data-area-unit="m2" data-area-type="${escapeHtml(item.type || "")}">${formatCardAreaByUnit(item.area || "-", "m2", item.type || "")}</span>
-              <button type="button" class="area-toggle-btn">평</button>`;
+          ? `<span class="area-display" data-area-raw="${escapeHtml(item.area || "-")}" data-area-unit="m2" data-area-type="${escapeHtml(item.type || "")}">${formatCardAreaByUnit(item.area || "-", globalAreaUnit, item.type || "")}</span>`
+          : `<span class="area-display" data-area-raw="${escapeHtml(item.area || "-")}" data-area-unit="m2" data-area-type="${escapeHtml(item.type || "")}">${formatCardAreaByUnit(item.area || "-", "m2", item.type || "")}</span>`;
 
         return `
           <article class="card" data-id="${item.id}">
@@ -3901,28 +4030,6 @@
 
     function initEvents() {
       keywordInput.addEventListener("input", applyFilter);
-
-
-      propertyList.addEventListener("click", function (e) {
-        const toggleBtn = e.target.closest(".area-toggle-btn");
-        if (!toggleBtn) return;
-
-        e.preventDefault();
-        e.stopPropagation();
-
-        const spec = toggleBtn.closest(".card-spec");
-        const areaDisplay = spec ? spec.querySelector(".area-display") : null;
-        if (!areaDisplay) return;
-
-        const raw = areaDisplay.dataset.areaRaw || areaDisplay.textContent || "-";
-        const areaType = areaDisplay.dataset.areaType || "";
-        const currentUnit = areaDisplay.dataset.areaUnit || "m2";
-        const nextUnit = currentUnit === "m2" ? "py" : "m2";
-
-        areaDisplay.dataset.areaUnit = nextUnit;
-        areaDisplay.innerHTML = formatCardAreaByUnit(raw, nextUnit, areaType);
-        toggleBtn.textContent = nextUnit === "m2" ? "평" : "㎡";
-      });
 
       if (detailAreaToggleBtn) {
         detailAreaToggleBtn.addEventListener("click", function (e) {
