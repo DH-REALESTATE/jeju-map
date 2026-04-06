@@ -1,6 +1,27 @@
 [  
   
   {
+    "id": 220,
+    "listingNo": "디-220",
+    "date": "2026-01-25",
+    "title": "제2공항예정지 인근 성산읍 임야",
+    "desc": "투자 가치 좋은 '임야' 입니다. 농취증 없이 취득 가능합니다.",
+    "image": "./dh_real/220/1.jpg",
+    "desc_folder": "./dh_real/220/info.json",
+    "image_folder": "./dh_real/220/image.json",
+    "type": "토지",
+    "dealFilter": "매매",
+    "region": "제2공항(예정)",
+    "price": "1억",
+    "area": "대지면적 1,778㎡㎡",
+    "address": "서귀포시 성산읍 시흥리",
+    "lat": 33.468736,
+    "lng": 126.874824,
+    "features": ["제2공항", "임야", "자연녹지"],
+    "agent_folder": "./dh_real/agent.json"
+  },
+  
+  {
     "id": 221,
     "listingNo": "디-221",
     "date": "2026-01-25",
