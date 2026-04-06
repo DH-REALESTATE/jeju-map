@@ -1,4 +1,25 @@
 [  
+
+  {
+    "id": 219,
+    "listingNo": "디-219",
+    "date": "2026-01-25",
+    "title": "제2공항예정지 인근 성산읍 임야",
+    "desc": "투자 가치 좋은 '임야' 입니다. 농취증 없이 취득 가능합니다.",
+    "image": "./dh_real/219/1.jpg",
+    "desc_folder": "./dh_real/219/info.json",
+    "image_folder": "./dh_real/219/image.json",
+    "type": "토지",
+    "dealFilter": "매매",
+    "region": "창천리",
+    "price": "3억 3,000",
+    "area": "대지면적 1,194.00㎡",
+    "address": "서귀포시 안덕면 창천리",
+    "lat": 33.266684,
+    "lng": 126.362468,
+    "features": ["안덕면", "창천리", "자연녹지"],
+    "agent_folder": "./dh_real/agent.json"
+  },
   
   {
     "id": 220,
@@ -13,7 +34,7 @@
     "dealFilter": "매매",
     "region": "시흥리",
     "price": "1억",
-    "area": "대지면적 1,778㎡㎡",
+    "area": "대지면적 1,778㎡",
     "address": "서귀포시 성산읍 시흥리",
     "lat": 33.468736,
     "lng": 126.874824,
