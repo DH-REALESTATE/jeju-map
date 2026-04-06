@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.258</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.258" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.259</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.259" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -1962,7 +1962,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.258</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.259</div>
             </div>
           </div>
 
@@ -2182,11 +2182,27 @@
     </div>
   </div>
 
-  <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=b7db2d3c35122f3ec33c88ea6d3195fb&libraries=clusterer"></script>
+  <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=b7db2d3c35122f3ec33c88ea6d3195fb&libraries=clusterer">
+// 🔥 agent line force single line merge
+document.addEventListener("DOMContentLoaded", () => {
+  const observer = new MutationObserver(() => {
+    document.querySelectorAll('.card-agent-row').forEach(row => {
+      const name = row.querySelector('.card-agent-name');
+      const office = row.querySelector('.card-agent-office');
+      if (name && office) {
+        office.textContent = name.textContent + ' · ' + office.textContent;
+        name.style.display = 'none';
+      }
+    });
+  });
+  observer.observe(document.body, { childList: true, subtree: true });
+});
+
+</script>
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.258';
+    const APP_VERSION = '1.259';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
