@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.253</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.253" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.254</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.254" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -1947,7 +1947,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.253</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.254</div>
             </div>
           </div>
 
@@ -2171,7 +2171,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.253';
+    const APP_VERSION = '1.254';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -2392,6 +2392,11 @@
       return ["단독", "단독주택"].includes(text);
     }
 
+    function isCommercialType(typeText) {
+      const text = String(typeText || "").trim();
+      return ["상가", "상가건물", "사무실", "공장", "상가ㆍ사무실"].includes(text);
+    }
+
     function parseDetachedHouseAreas(areaText) {
       const raw = String(areaText || "-").trim();
       const landMatch = raw.match(/대지면적\s*([\d,.]+)㎡/);
@@ -2473,6 +2478,12 @@
         return formatDetachedHouseCardAreaDisplay(areaText, unit);
       }
 
+      if (isCommercialType(typeText)) {
+        const parsed = parseDetachedHouseAreas(areaText || "-");
+        const targetValue = parsed.total;
+        return `(연) ${Number.isFinite(targetValue) ? formatSingleAreaValue(targetValue, unit) : formatAreaByUnit(areaText, unit, typeText)}`;
+      }
+
       if (/오피스텔/.test(typeText)) {
         const parsed = parseApartmentAreas(areaText || "-");
         const targetValue = parsed.supply;
@@ -2499,6 +2510,19 @@
       }
 
       if (isDetachedHouseType(typeText)) {
+        const parsed = parseDetachedHouseAreas(detailItem.area || "-");
+        const targetValue = detailAreaMode === "land" ? parsed.land : parsed.total;
+
+        detailAreaLabel.textContent = detailAreaMode === "land" ? "면적(대지)" : "면적(연)";
+        detailAreaValue.textContent = Number.isFinite(targetValue) ? formatSingleAreaValue(targetValue, unit) : "-";
+
+        if (detailAreaTypeToggleBtn) {
+          detailAreaTypeToggleBtn.style.display = "inline-flex";
+        }
+        return;
+      }
+
+      if (isCommercialType(typeText)) {
         const parsed = parseDetachedHouseAreas(detailItem.area || "-");
         const targetValue = detailAreaMode === "land" ? parsed.land : parsed.total;
 
@@ -3708,7 +3732,7 @@
 
           const typeText = currentDetailItem.type || "";
 
-          if (isDetachedHouseType(typeText)) {
+          if (isDetachedHouseType(typeText) || isCommercialType(typeText)) {
             detailAreaMode = detailAreaMode === "land" ? "total" : "land";
             syncDetailAreaDisplay(currentDetailItem);
             return;
