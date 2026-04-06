@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.272</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.272" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.273</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.273" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -1285,9 +1285,9 @@
     }
 
     .card-date {
-      font-size: 14px;
+      font-size: 12px;
       letter-spacing: -0.1px;
-      color: #9aa7b4;
+      color: #95a2af;
       white-space: nowrap;
     }
 
@@ -1831,18 +1831,19 @@
 }
 
 .detail-summary-type-badge,
-.detail-summary-deal-badge {
-  display: inline-flex;
-  align-items: center;
-  height: 22px;
-  padding: 0 10px;
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: 800;
-  line-height: 1;
-  letter-spacing: -0.15px;
-  white-space: nowrap;
-}
+    .detail-summary-deal-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 32px;
+      padding: 0 14px;
+      border-radius: 16px;
+      font-size: 14px;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -0.12px;
+      white-space: nowrap;
+    }
 
 .detail-summary-price-row {
   display: block;
@@ -2178,8 +2179,8 @@
       padding: 0;
       background: #ffffff;
       color: #223244;
-      font-size: 15px;
-      font-weight: 900;
+      font-size: 14px;
+      font-weight:  700;
       letter-spacing: -0.2px;
       cursor: pointer;
       white-space: nowrap;
@@ -2215,8 +2216,8 @@
       border: 0;
       background: #ffffff;
       color: #223244;
-      font-size: 14px;
-      font-weight: 900;
+      font-size: 13px;
+      font-weight:  700;
       letter-spacing: -0.2px;
       cursor: pointer;
       display: inline-flex;
@@ -2251,7 +2252,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.272</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.273</div>
             </div>
           </div>
 
@@ -2464,7 +2465,7 @@
         <div class="map-tool-group" id="areaUnitToolGroup">
           <div class="map-unit-split">
             <button type="button" class="map-unit-half-btn active" data-area-unit="py" id="areaUnitPyBtn">평</button>
-            <button type="button" class="map-unit-half-btn" data-area-unit="m2" id="areaUnitM2Btn">㎡</button>
+            <button type="button" class="map-unit-half-btn" data-area-unit="${globalAreaUnit}" id="areaUnitM2Btn">㎡</button>
           </div>
         </div>
       </div>
@@ -2494,7 +2495,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.271';
+    const APP_VERSION = '1.273';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -2626,6 +2627,8 @@
         state.map.setMapTypeId(kakao.maps.MapTypeId.HYBRID);
       } else if (mode === "cadastral") {
         state.map.setMapTypeId(kakao.maps.MapTypeId.ROADMAP);
+      updateMapTypeButtons();
+      updateGlobalAreaUnitButtons();
       updateMapTypeButtons();
       updateGlobalAreaUnitButtons();
         state.map.addOverlayMapTypeId(kakao.maps.MapTypeId.USE_DISTRICT);
@@ -3929,7 +3932,7 @@
         const isDetachedHouse = isDetachedHouseType(item.type || "");
         const cardAreaHtml = isDetachedHouse
           ? `<span class="area-display" data-area-raw="${escapeHtml(item.area || "-")}" data-area-unit="m2" data-area-type="${escapeHtml(item.type || "")}">${formatCardAreaByUnit(item.area || "-", globalAreaUnit, item.type || "")}</span>`
-          : `<span class="area-display" data-area-raw="${escapeHtml(item.area || "-")}" data-area-unit="m2" data-area-type="${escapeHtml(item.type || "")}">${formatCardAreaByUnit(item.area || "-", "m2", item.type || "")}</span>`;
+          : `<span class="area-display" data-area-raw="${escapeHtml(item.area || "-")}" data-area-unit="m2" data-area-type="${escapeHtml(item.type || "")}">${formatCardAreaByUnit(item.area || "-", globalAreaUnit, item.type || "")}</span>`;
 
         return `
           <article class="card" data-id="${item.id}">
