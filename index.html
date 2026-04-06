@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.277</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.277" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.278</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.278" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -47,8 +47,8 @@
       overflow: hidden;
       transform: scale(0.95);
       transform-origin: top left;
-      width: calc(100%ㆍ0.95);
-      height: calc(100%ㆍ0.95);
+      width: calc(100% / 0.95);
+      height: calc(100% / 0.95);
     }
 
     .app {
@@ -214,7 +214,7 @@
 
     .detail-hero {
       height: 312px;
-      background: #dbe6ef centerㆍcover no-repeat;
+      background: #dbe6ef center / cover no-repeat;
       position: relative;
       overflow: hidden;
     }
@@ -2252,7 +2252,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.277</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.278</div>
             </div>
           </div>
 
@@ -2495,7 +2495,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.273';
+    const APP_VERSION = '1.278';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -2685,14 +2685,14 @@
       if (isNaN(target.getTime())) return "";
 
       const diffMs = now - target;
-      const diffDays = Math.floor(diffMsㆍ(1000 * 60 * 60 * 24));
+      const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
 
       if (diffDays <= 0) return "오늘";
       if (diffDays === 1) return "1일 전";
       if (diffDays < 7) return `${diffDays}일 전`;
-      if (diffDays < 30) return `${Math.floor(diffDaysㆍ7)}주 전`;
-      if (diffDays < 365) return `${Math.floor(diffDaysㆍ30)}개월 전`;
-      return `${Math.floor(diffDaysㆍ365)}년 전`;
+      if (diffDays < 30) return `${Math.floor(diffDays / 7)}주 전`;
+      if (diffDays < 365) return `${Math.floor(diffDays / 30)}개월 전`;
+      return `${Math.floor(diffDays / 365)}년 전`;
     }
 
     function normalizeImageArray(item) {
@@ -2826,7 +2826,7 @@
     function formatSingleAreaValue(value, unit) {
       if (!Number.isFinite(value)) return "-";
       if (unit === "py") {
-        return `${(valueㆍ3.3058).toFixed(1)}평`;
+        return `${(value / 3.3058).toFixed(1)}평`;
       }
       return `${value.toLocaleString('ko-KR')}㎡`;
     }
@@ -2859,7 +2859,7 @@
       if (isCommercialType(typeText)) {
         const parsed = parseDetachedHouseAreas(areaText || "-");
         const targetValue = parsed.total;
-        return `연${Number.isFinite(targetValue) ? formatSingleAreaValue(targetValue, unit) : formatAreaByUnit(areaText, unit, typeText)}`;
+        return `(연) ${Number.isFinite(targetValue) ? formatSingleAreaValue(targetValue, unit) : formatAreaByUnit(areaText, unit, typeText)}`;
       }
 
       if (/오피스텔/.test(typeText)) {
@@ -2891,7 +2891,7 @@
         const parsed = parseDetachedHouseAreas(detailItem.area || "-");
         const targetValue = detailAreaMode === "land" ? parsed.land : parsed.total;
 
-        detailAreaLabel.textContent = detailAreaMode === "land" ? "면적대지" : "면적연";
+        detailAreaLabel.textContent = detailAreaMode === "land" ? "면적(대지)" : "면적(연)";
         detailAreaValue.textContent = Number.isFinite(targetValue) ? formatSingleAreaValue(targetValue, unit) : "-";
 
         if (detailAreaTypeToggleBtn) {
@@ -2904,7 +2904,7 @@
         const parsed = parseDetachedHouseAreas(detailItem.area || "-");
         const targetValue = detailAreaMode === "land" ? parsed.land : parsed.total;
 
-        detailAreaLabel.textContent = detailAreaMode === "land" ? "면적대지" : "면적연";
+        detailAreaLabel.textContent = detailAreaMode === "land" ? "면적(대지)" : "면적(연)";
         detailAreaValue.textContent = Number.isFinite(targetValue) ? formatSingleAreaValue(targetValue, unit) : "-";
 
         if (detailAreaTypeToggleBtn) {
@@ -3084,11 +3084,11 @@
             </filter>
           </defs>
           <g filter="url(#shadow)">
-            <circle cx="${sizeㆍ2}" cy="${sizeㆍ2}" r="${(sizeㆍ2) - 2}"
+            <circle cx="${size / 2}" cy="${size / 2}" r="${(size / 2) - 2}"
                     fill="${bgColor}"
                     stroke="${borderColor}"
                     stroke-width="1"/>
-            <text x="${sizeㆍ2}" y="${(sizeㆍ2) + 6}"
+            <text x="${size / 2}" y="${(size / 2) + 6}"
                   text-anchor="middle"
                   font-size="16"
                   font-weight="900"
@@ -3101,7 +3101,7 @@
       return new kakao.maps.MarkerImage(
         "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg),
         new kakao.maps.Size(size, size),
-        { offset: new kakao.maps.Point(sizeㆍ2, sizeㆍ2) }
+        { offset: new kakao.maps.Point(size / 2, size / 2) }
       );
     }
 
@@ -3500,7 +3500,7 @@
         detailAgentAddress.textContent = detailItem.agentAddress || "";
         detailAgentRegNo.textContent = detailItem.agentRegNo || "";
 
-        const phoneText = [detailItem.phone1, detailItem.phone2].filter(Boolean).join("ㆍ");
+        const phoneText = [detailItem.phone1, detailItem.phone2].filter(Boolean).join(" / ");
         detailAgentPhoneInline.textContent = phoneText || "";
 
         if (detailItem.agentImage) {
