@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.261</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.261" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.262</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.262" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -1971,6 +1971,30 @@
   -webkit-font-smoothing: antialiased;
 }
 
+
+.card-agent-text{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  min-width:0;
+  flex:1 1 auto;
+  white-space:nowrap;
+  overflow:hidden;
+}
+
+.card-agent-text .card-agent-name,
+.card-agent-text .card-agent-title,
+.card-agent-text .card-agent-office{
+  display:inline;
+  white-space:nowrap;
+}
+
+.card-agent-text .card-agent-office{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  min-width:0;
+}
+
 </style>
 
 
@@ -1985,7 +2009,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.261</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.262</div>
             </div>
           </div>
 
@@ -2208,39 +2232,12 @@
   <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=b7db2d3c35122f3ec33c88ea6d3195fb&libraries=clusterer">
 
 
-// premium single-line broker text
-document.addEventListener("DOMContentLoaded", () => {
-  const applyBrokerLine = () => {
-    document.querySelectorAll('.card-agent-row').forEach(row => {
-      const name = row.querySelector('.card-agent-name');
-      const title = row.querySelector('.card-agent-title');
-      const office = row.querySelector('.card-agent-office');
-      if (!office || office.dataset.merged === '1') return;
-
-      const nameText = name ? name.textContent.trim() : '';
-      const titleText = title ? title.textContent.trim() : '';
-      const officeText = office.textContent.trim();
-
-      const merged = [nameText, titleText, officeText].filter(Boolean).join(' ');
-      if (merged) {
-        office.textContent = merged;
-        office.dataset.merged = '1';
-      }
-      if (name) name.style.display = 'none';
-      if (title) title.style.display = 'none';
-    });
-  };
-
-  applyBrokerLine();
-  const observer = new MutationObserver(applyBrokerLine);
-  observer.observe(document.body, { childList: true, subtree: true });
-});
 
 </script>
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.261';
+    const APP_VERSION = '1.262';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -3635,10 +3632,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     <div class="card-agent-avatar">
                       ${item.agentImage ? `<img src="${escapeHtml(item.agentImage)}" alt="agent">` : agentInitial}
                     </div>
-                    <div>
+                    <div class="card-agent-text">
                       <span class="card-agent-name">${agentName}</span>
                       <span class="card-agent-title">${agentTitle}</span>
-                      <div class="card-agent-office">${officeName}</div>
+                      <span class="card-agent-office">${officeName}</span>
                     </div>
                   </div>
                 </div>
