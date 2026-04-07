@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.296</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.296" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.297</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.297" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -2253,7 +2253,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.296</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.297</div>
             </div>
           </div>
 
@@ -2494,7 +2494,7 @@
 
   <script>
     const UI_FONT_STACK = 'SUIT, Pretendard, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.296';
+    const APP_VERSION = '1.297';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -2872,10 +2872,31 @@
       }
 
       if (/상가|상가건물|사무실/.test(typeText)) {
-        const parsed = parseApartmentAreas(areaText || "-");
-        const totalText = Number.isFinite(parsed.private) ? formatSingleAreaValue(parsed.private, unit) : "-";
-        const landText = Number.isFinite(parsed.supply) ? formatSingleAreaValue(parsed.supply, unit) : "-";
-        return `대지${landText}ㆍ연${totalText}`;
+        const raw = String(areaText || "-").trim();
+
+        const totalMatch =
+          raw.match(/연면적\s*([\d,.]+)㎡/) ||
+          raw.match(/\(연\)\s*([\d,.]+)평/) ||
+          raw.match(/연\s*([\d,.]+)㎡/) ||
+          raw.match(/연\s*([\d,.]+)평/);
+
+        const landMatch =
+          raw.match(/대지면적\s*([\d,.]+)㎡/) ||
+          raw.match(/\(대지\)\s*([\d,.]+)평/) ||
+          raw.match(/대지\s*([\d,.]+)㎡/) ||
+          raw.match(/대지\s*([\d,.]+)평/);
+
+        const totalValue = totalMatch ? Number(String(totalMatch[1]).replace(/,/g, "")) : null;
+        const landValue = landMatch ? Number(String(landMatch[1]).replace(/,/g, "")) : null;
+
+        const totalText = Number.isFinite(totalValue) ? formatSingleAreaValue(totalValue, unit) : "-";
+        const landText = Number.isFinite(landValue) ? formatSingleAreaValue(landValue, unit) : "-";
+
+        if (Number.isFinite(landValue) || Number.isFinite(totalValue)) {
+          return `대지${landText}ㆍ연${totalText}`;
+        }
+
+        return formatAreaByUnit(areaText, unit, typeText);
       }
 
       if (/오피스텔/.test(typeText)) {
