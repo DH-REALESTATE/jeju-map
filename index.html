@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.298</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.298" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.299</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.299" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
   <meta property="og:image" content="https://your-domain.example/og-image.jpg" />
 
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sunn-us/SUIT/fonts/static/woff2/SUIT.css"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
   <style>
@@ -24,7 +24,7 @@
       --line: #e7edf3;
       --text: #17212b;
       --shadow: 0 12px 30px rgba(15, 41, 66, 0.12);
-      --font-ui: "Pretendard", "Noto Sans KR", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      --font-ui: "SUIT", "Pretendard", "Noto Sans KR", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
     }
 
     * {
@@ -2239,6 +2239,34 @@
     }
 
 
+
+/* SUIT font tuning */
+.card-title,
+.detail-title,
+.brand-title {
+  font-weight: 800;
+}
+
+.card-price,
+.detail-summary-price,
+.detail-hero-price {
+  font-weight: 900;
+  letter-spacing: -0.6px;
+}
+
+.card-spec {
+  font-weight: 600;
+}
+
+.card-badge,
+.card-deal,
+.detail-summary-type-badge,
+.detail-summary-deal-badge,
+.map-tool-btn,
+.map-unit-half-btn {
+  font-weight: 800;
+}
+
 </style>
 
 
@@ -2253,7 +2281,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.298</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.299</div>
             </div>
           </div>
 
@@ -2494,7 +2522,7 @@
 
   <script>
     const UI_FONT_STACK = 'SUIT, Pretendard, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.298';
+    const APP_VERSION = '1.299';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -2865,23 +2893,21 @@
         return formatDetachedHouseCardAreaDisplay(areaText, unit);
       }
 
-      if (isCommercialType(typeText)) {
-        const parsed = parseDetachedHouseAreas(areaText || "-");
-        const targetValue = parsed.total;
-        return `(연) ${Number.isFinite(targetValue) ? formatSingleAreaValue(targetValue, unit) : formatAreaByUnit(areaText, unit, typeText)}`;
-      }
-
-      if (/상가|상가건물|사무실/.test(typeText)) {
+      if (/상가|상가건물|사무실|공장/.test(typeText)) {
         const raw = String(areaText || "-").trim();
 
         const totalMatch =
           raw.match(/연면적\s*([\d,.]+)㎡/) ||
+          raw.match(/연면적\s*([\d,.]+)평/) ||
+          raw.match(/\(연\)\s*([\d,.]+)㎡/) ||
           raw.match(/\(연\)\s*([\d,.]+)평/) ||
           raw.match(/연\s*([\d,.]+)㎡/) ||
           raw.match(/연\s*([\d,.]+)평/);
 
         const landMatch =
           raw.match(/대지면적\s*([\d,.]+)㎡/) ||
+          raw.match(/대지면적\s*([\d,.]+)평/) ||
+          raw.match(/\(대지\)\s*([\d,.]+)㎡/) ||
           raw.match(/\(대지\)\s*([\d,.]+)평/) ||
           raw.match(/대지\s*([\d,.]+)㎡/) ||
           raw.match(/대지\s*([\d,.]+)평/);
@@ -2889,13 +2915,18 @@
         const totalValue = totalMatch ? Number(String(totalMatch[1]).replace(/,/g, "")) : null;
         const landValue = landMatch ? Number(String(landMatch[1]).replace(/,/g, "")) : null;
 
-        const totalText = Number.isFinite(totalValue) ? formatSingleAreaValue(totalValue, unit) : "-";
-        const landText = Number.isFinite(landValue) ? formatSingleAreaValue(landValue, unit) : "-";
+        const totalText = Number.isFinite(totalValue) ? formatSingleAreaValue(totalValue, unit) : null;
+        const landText = Number.isFinite(landValue) ? formatSingleAreaValue(landValue, unit) : null;
 
-        if (Number.isFinite(landValue) || Number.isFinite(totalValue)) {
+        if (landText && totalText) {
           return `대지${landText}ㆍ연${totalText}`;
         }
-
+        if (totalText) {
+          return `연${totalText}`;
+        }
+        if (landText) {
+          return `대지${landText}`;
+        }
         return formatAreaByUnit(areaText, unit, typeText);
       }
 
