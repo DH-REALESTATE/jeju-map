@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.310</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.310" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.311</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.311" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -2298,7 +2298,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.310</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.311</div>
             </div>
           </div>
 
@@ -2508,8 +2508,8 @@
 
         <div class="map-tool-group" id="areaUnitToolGroup">
           <div class="map-unit-split">
-            <button type="button" class="map-unit-half-btn" data-area-unit="py" id="areaUnitPyBtn" onclick="window.setGlobalAreaUnit && window.setGlobalAreaUnit('py')">평</button>
-            <button type="button" class="map-unit-half-btn active" data-area-unit="m2" id="areaUnitM2Btn" onclick="window.setGlobalAreaUnit && window.setGlobalAreaUnit('m2')">㎡</button>
+            <button type="button" class="map-unit-half-btn" data-area-unit="py" id="areaUnitPyBtn" onclick="setGlobalAreaUnit('py')">평</button>
+            <button type="button" class="map-unit-half-btn active" data-area-unit="m2" id="areaUnitM2Btn" onclick="setGlobalAreaUnit('m2')">㎡</button>
           </div>
         </div>
       </div>
@@ -2685,6 +2685,13 @@
     }
 
     window.setMapTypeMode = setMapTypeMode;
+
+    function setGlobalAreaUnit(unit) {
+      globalAreaUnit = unit;
+      applyGlobalAreaUnit();
+    }
+
+    window.setGlobalAreaUnit = setGlobalAreaUnit;
 
     function applyGlobalAreaUnit() {
       updateGlobalAreaUnitButtons();
@@ -3128,6 +3135,7 @@
 
         state.all = enriched;
         applyFilter();
+        setGlobalAreaUnit("m2");
         applyGlobalAreaUnit();
         updateMapTypeButtons();
       } catch (err) {
