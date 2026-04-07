@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.305</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.305" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.306</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.306" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -2298,7 +2298,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.305</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.306</div>
             </div>
           </div>
 
@@ -4122,6 +4122,11 @@ function closeDetailPanel() {
     }
 
     function applyFilter() {
+      // 👉 상단 필터 클릭 시 오른쪽 패널 닫기
+      if (detailPanel) {
+        detailPanel.classList.remove("open");
+        currentDetailItem = null;
+      }
       const keyword = keywordInput.value.trim().toLowerCase();
       const dealValue = selectedDeal;
       const typeValue = selectedType;
