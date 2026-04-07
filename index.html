@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.292</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.292" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.293</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.293" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
-  <meta property="og:type" content="website" />
+  <meta property="og:type" content="website" />ac
   <meta property="og:url" content="https://your-domain.example/" />
   <meta property="og:image" content="https://your-domain.example/og-image.jpg" />
 
@@ -17,7 +17,7 @@
   <style>
     :root {
       --sidebar-list-width: 350px;
-      --detail-panel-width: 360px;
+      --detail-panel-width: 400px;
       --sidebar-current-width: var(--sidebar-list-width);
       --brand: #14b8a6;
       --bg: #f4f7fb;
@@ -2253,7 +2253,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.292</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.293</div>
             </div>
           </div>
 
@@ -2496,7 +2496,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.292';
+    const APP_VERSION = '1.293';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -2884,14 +2884,14 @@
         const parsed = parseApartmentAreas(areaText || "-");
         const privateText = Number.isFinite(parsed.private) ? formatSingleAreaValue(parsed.private, unit) : "-";
         const supplyText = Number.isFinite(parsed.supply) ? formatSingleAreaValue(parsed.supply, unit) : "-";
-        return `전용${privateText}ㆍ계약${supplyText}`;
+        return `계약${supplyText}ㆍ전용${privateText}`;
       }
 
       if (isApartmentType(typeText)) {
         const parsed = parseApartmentAreas(areaText || "-");
         const privateText = Number.isFinite(parsed.private) ? formatSingleAreaValue(parsed.private, unit) : "-";
         const supplyText = Number.isFinite(parsed.supply) ? formatSingleAreaValue(parsed.supply, unit) : "-";
-        return `전용${privateText}ㆍ공급${supplyText}`;
+        return `공급${supplyText}ㆍ전용${privateText}`;
       }
 
       if (/토지|임야|과수원|대지|전|대|답/.test(typeText)) {
