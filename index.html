@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.299</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.299" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.300</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.300" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -2267,6 +2267,23 @@
   font-weight: 800;
 }
 
+
+/* hide right-panel m2/py toggle button */
+#detailAreaToggleBtn,
+.detail-meta-item:first-child #detailAreaToggleBtn,
+.detail-area-wrap .area-toggle-btn {
+  display: none !important;
+}
+
+
+/* stronger price emphasis */
+.card-price,
+.detail-summary-price,
+.detail-hero-price {
+  font-weight: 950;
+  letter-spacing: -0.7px;
+}
+
 </style>
 
 
@@ -2281,7 +2298,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.299</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.300</div>
             </div>
           </div>
 
@@ -2522,7 +2539,7 @@
 
   <script>
     const UI_FONT_STACK = 'SUIT, Pretendard, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.299';
+    const APP_VERSION = '1.300';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -2639,6 +2656,7 @@
       if (areaUnitM2Btn) areaUnitM2Btn.classList.toggle("active", globalAreaUnit === "m2");
     }
 
+    
     function updateMapTypeButtons() {
       if (mapTypeRoadBtn) mapTypeRoadBtn.classList.toggle("active", currentMapTypeMode === "roadmap");
       if (mapTypeSatelliteBtn) mapTypeSatelliteBtn.classList.toggle("active", currentMapTypeMode === "satellite");
@@ -2646,22 +2664,23 @@
     }
 
     function setMapTypeMode(mode) {
-      if (!state.map) return;
+      if (!state.map || !window.kakao || !kakao.maps) return;
+
       currentMapTypeMode = mode;
-      state.map.removeOverlayMapTypeId(kakao.maps.MapTypeId.USE_DISTRICT);
+
+      try {
+        state.map.removeOverlayMapTypeId(kakao.maps.MapTypeId.USE_DISTRICT);
+      } catch (e) {}
 
       if (mode === "satellite") {
         state.map.setMapTypeId(kakao.maps.MapTypeId.HYBRID);
       } else if (mode === "cadastral") {
         state.map.setMapTypeId(kakao.maps.MapTypeId.ROADMAP);
-      updateMapTypeButtons();
-      updateGlobalAreaUnitButtons();
-      updateMapTypeButtons();
-      updateGlobalAreaUnitButtons();
         state.map.addOverlayMapTypeId(kakao.maps.MapTypeId.USE_DISTRICT);
       } else {
         state.map.setMapTypeId(kakao.maps.MapTypeId.ROADMAP);
       }
+
       updateMapTypeButtons();
     }
 
@@ -3067,6 +3086,7 @@
       }
 
       if (detailAreaToggleBtn) {
+        detailAreaToggleBtn.style.display = "none";
         detailAreaToggleBtn.style.display = "none";
       }
     }
@@ -4175,6 +4195,7 @@ function closeDetailPanel() {
       keywordInput.addEventListener("input", applyFilter);
 
       if (detailAreaToggleBtn) {
+        detailAreaToggleBtn.style.display = "none";
         detailAreaToggleBtn.addEventListener("click", function (e) {
           e.preventDefault();
           e.stopPropagation();
