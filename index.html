@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.308</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.308" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.309</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.309" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -2298,7 +2298,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.308</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.309</div>
             </div>
           </div>
 
@@ -2501,15 +2501,15 @@
 
       <div class="map-side-tools">
         <div class="map-tool-group" id="mapTypeToolGroup">
-          <button type="button" class="map-tool-btn active" data-map-type="roadmap" id="mapTypeRoadBtn" onclick="setMapTypeMode('roadmap')">일반</button>
-          <button type="button" class="map-tool-btn" data-map-type="satellite" id="mapTypeSatelliteBtn" onclick="setMapTypeMode('satellite')">위성</button>
-          <button type="button" class="map-tool-btn" data-map-type="cadastral" id="mapTypeCadastralBtn" onclick="setMapTypeMode('cadastral')">지적</button>
+          <button type="button" class="map-tool-btn active" data-map-type="roadmap" id="mapTypeRoadBtn">일반</button>
+          <button type="button" class="map-tool-btn" data-map-type="satellite" id="mapTypeSatelliteBtn">위성</button>
+          <button type="button" class="map-tool-btn" data-map-type="cadastral" id="mapTypeCadastralBtn">지적</button>
         </div>
 
         <div class="map-tool-group" id="areaUnitToolGroup">
           <div class="map-unit-split">
-            <button type="button" class="map-unit-half-btn" data-area-unit="py" id="areaUnitPyBtn" onclick="setGlobalAreaUnit('py')">평</button>
-            <button type="button" class="map-unit-half-btn active" data-area-unit="m2" id="areaUnitM2Btn" onclick="setGlobalAreaUnit('m2')">㎡</button>
+            <button type="button" class="map-unit-half-btn" data-area-unit="py" id="areaUnitPyBtn">평</button>
+            <button type="button" class="map-unit-half-btn active" data-area-unit="m2" id="areaUnitM2Btn">㎡</button>
           </div>
         </div>
       </div>
@@ -2539,7 +2539,7 @@
 
   <script>
     const UI_FONT_STACK = 'SUIT, Pretendard, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.308';
+    const APP_VERSION = '1.309';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -2685,27 +2685,12 @@
     }
 
     function applyGlobalAreaUnit() {
-      if (areaUnitPyBtn) areaUnitPyBtn.classList.toggle("active", globalAreaUnit === "py");
-      if (areaUnitM2Btn) areaUnitM2Btn.classList.toggle("active", globalAreaUnit === "m2");
-
+      updateGlobalAreaUnitButtons();
       renderList(state.filtered);
 
       if (state.selectedMarkerId != null) {
         highlightCard(state.selectedMarkerId);
       }
-
-      if (currentDetailItem && detailAreaValue) {
-        detailAreaValue.dataset.areaUnit = globalAreaUnit;
-        syncDetailAreaDisplay(currentDetailItem);
-      }
-    }
-
-    function setGlobalAreaUnit(unit) {
-      globalAreaUnit = unit;
-      applyGlobalAreaUnit();
-    }
-
-    window.setGlobalAreaUnit = setGlobalAreaUnit;
 
       if (currentDetailItem && detailAreaValue) {
         detailAreaValue.dataset.areaUnit = globalAreaUnit;
@@ -3087,7 +3072,24 @@
       if (mapTypeCadastralBtn) {
         mapTypeCadastralBtn.addEventListener("click", () => setMapTypeMode("cadastral"));
       }
-      
+      if (areaUnitPyBtn) {
+        areaUnitPyBtn.addEventListener("click", () => {
+          globalAreaUnit = "py";
+          applyGlobalAreaUnit();
+        });
+      }
+      if (areaUnitM2Btn) {
+        areaUnitM2Btn.addEventListener("click", () => {
+          globalAreaUnit = "m2";
+          applyGlobalAreaUnit();
+        });
+      }
+
+      if (detailAreaToggleBtn) {
+        detailAreaToggleBtn.style.display = "none";
+        detailAreaToggleBtn.style.display = "none";
+      }
+    }
 
     function setResultInfo(text) {
       if (mapResultCount) mapResultCount.textContent = text;
@@ -3146,7 +3148,6 @@
 
         state.all = enriched;
         applyFilter();
-        setTimeout(() => applyGlobalAreaUnit(), 0);
         applyGlobalAreaUnit();
         applyGlobalAreaUnit();
       } catch (err) {
