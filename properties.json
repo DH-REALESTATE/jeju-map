@@ -1,6 +1,27 @@
 [  
 
   {
+    "id": 177,
+    "listingNo": "디-177",
+    "date": "2026-01-25",
+    "title": "대정읍 무릉리 타운하우스",
+    "desc": "무릉2리사무소 인접, 무릉리 한달살이 수익용 추천",
+    "image": "./dh_real/177/1.jpg",
+    "desc_folder": "./dh_real/177/info.json",
+    "image_folder": "./dh_real/177/image.json",
+    "type": "단독주택",
+    "dealFilter": "매매",
+    "region": "무릉리",
+    "price": "2억 5,000",
+    "area": "대지면적 276㎡ / 건축면적 60.03㎡ / 연면적 72.75㎡",
+    "address": "서귀포시 대정읍 무릉리",
+    "lat": 33.275333,
+    "lng": 126.235478,
+    "features": ["대정읍", "무릉리", "단독주택"],
+    "agent_folder": "./dh_real/agent.json"
+  },
+  
+  {
     "id": 218,
     "listingNo": "디-218",
     "date": "2026-01-25",
