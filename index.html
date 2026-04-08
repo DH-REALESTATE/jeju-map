@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.362</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.362" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.363</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.363" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -2342,7 +2342,7 @@
 </style>
 <style>
 
-/* Stable patch overrides - Ver 1.362 */
+/* Stable patch overrides - Ver 1.363 */
 .map-empty-state {
   text-align: left !important;
 }
@@ -2442,7 +2442,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.362</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.363</div>
             </div>
           </div>
 
@@ -2690,7 +2690,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, SUIT, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.362';
+    const APP_VERSION = '1.363';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -3373,15 +3373,15 @@
 
     function getBadgeWidthByText(text) {
       const len = String(text ?? "").length;
-      if (len >= 3) return 62;
-      if (len === 2) return 50;
-      return 38;
+      if (len >= 3) return 82;
+      if (len === 2) return 66;
+      return 50;
     }
 
     function createMarkerImage(item, isSelected = false, label = "1") {
       const text = String(label ?? "1");
       const width = getBadgeWidthByText(text);
-      const height = 38;
+      const height = 50;
 
       const bgColor = isSelected ? "rgba(31,111,255,0.96)" : "rgba(255,255,255,0.90)";
       const textColor = isSelected ? "#ffffff" : "#1f6fff";
@@ -3394,14 +3394,14 @@
             </filter>
           </defs>
           <g filter="url(#shadow)">
-            <rect x="0.5" y="0.5" width="${width - 1}" height="${height - 1}" rx="12" ry="12"
+            <rect x="0.5" y="0.5" width="${width - 1}" height="${height - 1}" rx="16" ry="16"
                   fill="${bgColor}"
                   stroke="none"
                   stroke-width="0"/>
             <text x="${width / 2}" y="${height / 2}"
                   dominant-baseline="middle"
                   text-anchor="middle"
-                  font-size="20"
+                  font-size="26"
                   font-weight="900"
                   font-family="${UI_FONT_STACK}"
                   fill="${textColor}">${text}</text>
@@ -3431,14 +3431,14 @@
     }
 
     function getClusterBadgeSize() {
-      return 38;
+      return 50;
     }
 
     function getBadgeWidthByText(text) {
       const len = String(text ?? "").length;
-      if (len >= 3) return 62;
-      if (len === 2) return 50;
-      return 38;
+      if (len >= 3) return 82;
+      if (len === 2) return 66;
+      return 50;
     }
 
     function setClusterBadgeSelected(cluster, isSelected) {
@@ -3456,16 +3456,16 @@
       const color = isSelected ? "#ffffff" : "#1f6fff";
 
       const el = document.createElement("div");
-      el.style.height = `38px`;
+      el.style.height = `50px`;
       el.style.minWidth = `${width}px`;
-      el.style.padding = "0 12px";
-      el.style.borderRadius = "12px";
+      el.style.padding = "0 14px";
+      el.style.borderRadius = "16px";
       el.style.display = "flex";
       el.style.alignItems = "center";
       el.style.justifyContent = "center";
       el.style.background = bg;
       el.style.color = color;
-      el.style.fontSize = "20px";
+      el.style.fontSize = "26px";
       el.style.fontWeight = "900";
       el.style.fontFamily = UI_FONT_STACK;
       el.style.lineHeight = "1";
