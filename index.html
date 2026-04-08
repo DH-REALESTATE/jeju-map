@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.384</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.384" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.385</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.385" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -1719,8 +1719,8 @@
     }
 
     .map-recommend-close:hover {
-      background: rgba(15, 41, 66, 0.14);
-      color: #1f2a36;
+      background: rgba(15, 41, 66, 0.08);
+      color: #506070;
     }
 
     .map-recommend-close i {
@@ -1813,11 +1813,12 @@
     }
 
     .map-recommend-price {
-      font-size: 22px;
+      font-size: 24px;
       font-weight: 950;
       color: #111827;
-      line-height: 1.05;
-      letter-spacing: -0.7px;
+      line-height: 1.08;
+      letter-spacing: -0.8px;
+      margin: 4px 0 6px;
     }
 
     .map-recommend-title-text {
@@ -2510,7 +2511,7 @@
 </style>
 <style>
 
-/* Stable patch overrides - Ver 1.384 */
+/* Stable patch overrides - Ver 1.385 */
 .map-empty-state {
   text-align: left !important;
 }
@@ -2676,7 +2677,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.384</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.385</div>
             </div>
           </div>
 
@@ -2946,7 +2947,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, SUIT, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.384';
+    const APP_VERSION = '1.385';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -3228,10 +3229,12 @@
       if (!item || state.isRecommendCardDismissed || state.hasShownRecommendCard) {
         mapRecommendCard.style.display = "none";
         mapRecommendCard.onclick = null;
+        mapRecommendCard.setAttribute("aria-hidden", "true");
         return;
       }
 
       mapRecommendCard.style.display = "block";
+      mapRecommendCard.setAttribute("aria-hidden", "false");
       state.hasShownRecommendCard = true;
 
       if (mapRecommendThumb) {
