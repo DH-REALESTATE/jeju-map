@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.316</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.316" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.317</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.317" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -2357,7 +2357,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.316</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.317</div>
             </div>
           </div>
 
@@ -2603,7 +2603,7 @@
 
   <script>
     const UI_FONT_STACK = 'SUIT, Pretendard, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.316';
+    const APP_VERSION = '1.317';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -2742,6 +2742,22 @@
         state.map.setMapTypeId(kakao.maps.MapTypeId.HYBRID);
       } else if (mode === "cadastral") {
         state.map.setMapTypeId(kakao.maps.MapTypeId.ROADMAP);
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            const lat = pos.coords.latitude;
+            const lng = pos.coords.longitude;
+            const currentLatLng = new kakao.maps.LatLng(lat, lng);
+            state.map.setCenter(currentLatLng);
+          },
+          () => {},
+          {
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 0
+          }
+        );
+      }
       kakao.maps.event.addListener(state.map, "idle", () => {
         renderMarkers(state.filtered);
         updateMapEmptyState();
