@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.341</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.341" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.342</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.342" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -61,12 +61,14 @@
     }
 
     .sidebar {
+      position: relative;
       height: 100vh;
-      overflow: hidden;
+      overflow: visible;
       background: #f7f8fa;
       color: #1f2a36;
       min-width: 280px;
       border-right: 1px solid #e6ebf0;
+      z-index: 120;
     }
 
     .sidebar-inner {
@@ -77,7 +79,7 @@
     }
 
     .sidebar.expanded .sidebar-inner {
-      grid-template-columns: var(--sidebar-list-width) var(--detail-panel-width);
+      grid-template-columns: var(--sidebar-list-width) 0px;
     }
 
     .sidebar-list-panel {
@@ -92,27 +94,32 @@
     .sidebar-list-panel::-webkit-scrollbar { display: none; }
 
     .sidebar-detail-panel {
-      position: fixed;
+      position: absolute;
       top: 0;
-      right: 0;
+      left: var(--sidebar-list-width);
       width: var(--detail-panel-width);
       height: 100vh;
       overflow-y: auto;
       overflow-x: hidden;
       opacity: 0;
+      transform: translateX(16px);
       pointer-events: none;
       background: #fff;
       border-left: 1px solid #e6ebf0;
-      box-shadow: -10px 0 28px rgba(15, 41, 66, 0.12);
-      transition: opacity 0.22s ease;
-      z-index: 300;
+      box-shadow: 18px 0 36px rgba(15, 41, 66, 0.16);
+      transition: opacity 0.22s ease, transform 0.22s ease;
       scrollbar-width: none;
       -ms-overflow-style: none;
+      z-index: 1000;
     }
 
     .sidebar-detail-panel::-webkit-scrollbar { display: none; }
 
-    .sidebar.expanded .sidebar-detail-panel { opacity: 1; pointer-events: auto; }
+    .sidebar.expanded .sidebar-detail-panel {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: auto;
+    }
 
     .detail-panel-inner {
       height: 100%;
@@ -370,11 +377,11 @@
     }
 
     .detail-hero-features {
-      display: none !important;
+      display: none;
     }
 
     .detail-content {
-      padding: 8px 18px 18px;
+      padding: 18px 18px 18px;
     }
 
 
@@ -382,19 +389,9 @@
     .detail-summary-top {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      flex-wrap: nowrap;
+      gap: 8px;
+      flex-wrap: wrap;
       margin-bottom: 8px;
-      width: 100%;
-    }
-
-    .detail-summary-left {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex-wrap: nowrap;
-      min-width: 0;
     }
 
     .detail-summary-type-badge {
@@ -1532,6 +1529,7 @@
       height: 100vh;
       overflow: hidden;
       background: #dde7ef;
+      z-index: 1;
     }
 
     #map {
@@ -1839,23 +1837,13 @@
 
 
 
-/* right detail summary: type + deal left, roadview right */
+/* right detail summary: type + deal on one line, same feel as left card badges */
 .detail-summary-top {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: nowrap;
-  margin-bottom: 8px;
-  width: 100%;
-}
-
-.detail-summary-left {
-  display: flex;
-  align-items: center;
   gap: 6px;
-  flex-wrap: nowrap;
-  min-width: 0;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
 }
 
 .detail-summary-type-badge,
@@ -2340,7 +2328,7 @@
       border: 1px solid rgba(15, 41, 66, 0.08);
       box-shadow: 0 16px 36px rgba(15, 41, 66, 0.14);
       backdrop-filter: blur(10px);
-      text-align: left;
+      text-align: center;
       pointer-events: none;
     }
 
@@ -2353,20 +2341,103 @@
       font-weight: 900;
       color: #17212b;
       letter-spacing: -0.25px;
-      margin-bottom: 2px;
+      margin-bottom: 8px;
       line-height: 1.35;
-      text-align: left;
     }
 
     .map-empty-state-desc {
       font-size: 14px;
-      font-weight: 500;
+      font-weight: 700;
       color: #6b7785;
       letter-spacing: -0.15px;
-      line-height: 1.4;
-      white-space: normal;
-      text-align: left;
+      line-height: 1.5;
+      white-space: pre-line;
     }
+
+
+/* stabilized overlay detail panel */
+.detail-content {
+  padding: 8px 18px 18px;
+}
+.detail-hero-features {
+  display: none !important;
+}
+.detail-features {
+  margin-bottom: 8px !important;
+}
+.detail-summary-top {
+  display: none !important;
+}
+.detail-summary-deal-badge {
+  display: none !important;
+}
+.detail-summary-price-row {
+  display: block !important;
+  margin-bottom: 6px !important;
+}
+.map-empty-state,
+.map-empty-state-desc,
+.empty-title,
+.empty-sub {
+  text-align: left !important;
+}
+.map-empty-state-desc {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.empty-title {
+  font-size: 16px;
+  font-weight: 900;
+  color: #17212b;
+  line-height: 1.35;
+}
+.empty-sub {
+  font-size: 14px;
+  font-weight: 500;
+  color: #6b7785;
+  line-height: 1.4;
+}
+.detail-tags-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+}
+.detail-tags {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: nowrap;
+  min-width: 0;
+}
+.detail-feature-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
+  padding: 0 10px;
+  border-radius: 14px;
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1;
+  white-space: nowrap;
+}
+.detail-feature-tag.type {
+  background: #f3eefe;
+  color: #7c4dff;
+  box-shadow: inset 0 0 0 1px rgba(124, 77, 255, 0.06);
+}
+.detail-feature-tag.deal {
+  background: #eef5ff;
+  color: #2563eb;
+  box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.08);
+}
+.detail-roadview-inline-btn {
+  margin-left: auto !important;
+  flex: 0 0 auto !important;
+}
 
 </style>
 
@@ -2382,7 +2453,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.341</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.342</div>
             </div>
           </div>
 
@@ -2465,16 +2536,10 @@
 
                 <div class="detail-summary-block">
                   <div class="detail-summary-top">
-                    <div class="detail-summary-left" id="detailSummaryLeft">
-                      <div class="detail-summary-type-badge" id="detailSummaryTypeBadge"></div>
-                      <div class="detail-summary-deal-badge" id="detailSummaryDealBadge"></div>
-                    </div>
-                    <button type="button" class="detail-roadview-inline-btn" id="detailTopRoadviewBtn">
-                      <i class="fa-solid fa-street-view"></i>
-                      로드뷰
-                    </button>
+                    <div class="detail-summary-type-badge" id="detailSummaryTypeBadge"></div>
                   </div>
                   <div class="detail-summary-price-row">
+                    <div class="detail-summary-deal-badge" id="detailSummaryDealBadge"></div>
                     <div class="detail-summary-price" id="detailSummaryPrice"></div>
                   </div>
                   <div class="detail-summary-address" id="detailSummaryAddress"></div>
@@ -2569,8 +2634,10 @@
       <div id="map"></div>
 
       <div class="map-empty-state" id="mapEmptyState">
-        <div class="map-empty-state-title">조건에 맞는 매물이 없습니다.</div>
-        <div class="map-empty-state-desc">지도를 이동 하거나 필터를 변경해 보세요.</div>
+        <div class="map-empty-state-desc">
+          <div class="empty-title">조건에 맞는 매물이 없습니다.</div>
+          <div class="empty-sub">지도를 이동 하거나 필터를 변경해 보세요.</div>
+        </div>
       </div>
 
       <div class="map-filter-bar">
@@ -2634,7 +2701,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, SUIT, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.321';
+    const APP_VERSION = '1.342';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -2736,16 +2803,12 @@
     const detailImageLightboxPrev = document.getElementById("detailImageLightboxPrev");
     const detailImageLightboxNext = document.getElementById("detailImageLightboxNext");
     const detailSummaryTop = document.querySelector(".detail-summary-top");
-    const detailSummaryLeft = document.getElementById("detailSummaryLeft");
     const detailSummaryPriceRow = document.querySelector(".detail-summary-price-row");
 
     function syncSummaryBadgeRow() {
-      if (!detailSummaryLeft || !detailSummaryDealBadge || !detailSummaryTypeBadge) return;
-      if (detailSummaryTypeBadge.parentElement !== detailSummaryLeft) {
-        detailSummaryLeft.appendChild(detailSummaryTypeBadge);
-      }
-      if (detailSummaryDealBadge.parentElement !== detailSummaryLeft) {
-        detailSummaryLeft.appendChild(detailSummaryDealBadge);
+      if (!detailSummaryTop || !detailSummaryDealBadge || !detailSummaryTypeBadge) return;
+      if (detailSummaryDealBadge.parentElement !== detailSummaryTop) {
+        detailSummaryTop.appendChild(detailSummaryDealBadge);
       }
     }
 
@@ -3281,9 +3344,9 @@
     }
 
     function getBadgeWidthByText(text) {
-      const len = String(text ?? "").length;
-      if (len >= 3) return 70;
-      if (len === 2) return 58;
+      const raw = String(text ?? "1");
+      if (raw.length <= 1) return 30;
+      if (raw.length === 2) return 38;
       return 46;
     }
 
@@ -3291,22 +3354,20 @@
       const text = String(label ?? "1");
       const width = getBadgeWidthByText(text);
       const height = 30;
-      const rx = 8;
 
       const bgColor = isSelected ? "#1f6fff" : "#ffffff";
       const textColor = isSelected ? "#ffffff" : "#1f6fff";
       const borderColor = isSelected ? "#1f6fff" : "#dbe3ee";
-      const shadow = isSelected ? "0 4px 10px rgba(31,111,255,0.22)" : "0 2px 6px rgba(15,41,66,0.10)";
 
       const svg = `
         <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
           <defs>
             <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
-              <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="rgba(0,0,0,0.14)"/>
+              <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="rgba(15,41,66,0.16)"/>
             </filter>
           </defs>
           <g filter="url(#shadow)">
-            <rect x="0.5" y="0.5" width="${width - 1}" height="${height - 1}" rx="${rx}" ry="${rx}"
+            <rect x="0.5" y="0.5" width="${width - 1}" height="${height - 1}" rx="8"
                   fill="${bgColor}"
                   stroke="${borderColor}"
                   stroke-width="1"/>
@@ -3340,8 +3401,8 @@
       return items.map(item => item.id).sort((a, b) => a - b).join(",");
     }
 
-    function getClusterBadgeSize() {
-      return 30;
+    function getClusterBadgeSize(label) {
+      return getBadgeWidthByText(label);
     }
 
     function setClusterBadgeSelected(cluster, isSelected) {
@@ -3352,9 +3413,9 @@
       if (!clusterItems.length) return;
 
       const count = clusterItems.length;
-      const textLabel = count > 99 ? "99+" : String(count);
-      const height = 32;
-      const width = Math.max(getBadgeWidthByText(textLabel), 32);
+      const label = count > 99 ? "99+" : String(count);
+      const width = getClusterBadgeSize(label);
+      const height = 30;
 
       const bg = isSelected ? "#1f6fff" : "#ffffff";
       const color = isSelected ? "#ffffff" : "#1f6fff";
@@ -3377,13 +3438,13 @@
       el.style.lineHeight = "1";
       el.style.letterSpacing = "-0.2px";
       el.style.border = `1px solid ${border}`;
-      el.style.boxShadow = isSelected ? "0 4px 10px rgba(31,111,255,0.22)" : "0 2px 6px rgba(15,41,66,0.10)";
+      el.style.boxShadow = isSelected ? "0 4px 10px rgba(31,111,255,0.22)" : "0 2px 6px rgba(15,41,66,0.12)";
       el.style.boxSizing = "border-box";
       el.style.whiteSpace = "nowrap";
       el.style.cursor = "pointer";
       el.style.pointerEvents = "auto";
       el.style.userSelect = "none";
-      el.textContent = textLabel;
+      el.textContent = label;
 
       el.addEventListener("click", async function (e) {
         e.preventDefault();
@@ -3742,15 +3803,24 @@
         detailAgentAvatar.textContent = "담당";
       }
 
-      const featureTagHtml = (detailItem.features || [])
-        .map(feature => `<span class="detail-feature-tag">${escapeHtml(feature)}</span>`)
-        .join("");
-
       detailHeroFeatures.innerHTML = "";
 
-      detailFeatures.innerHTML = featureTagHtml
-        ? `<div class="detail-tags-row"><div class="detail-tags">${featureTagHtml}</div></div>`
+      const typeTagHtml = detailItem.type
+        ? `<span class="detail-feature-tag type">${escapeHtml(detailItem.type)}</span>`
         : "";
+      const dealTagHtml = detailItem.dealType
+        ? `<span class="detail-feature-tag deal">${escapeHtml(detailItem.dealType)}</span>`
+        : "";
+
+      detailFeatures.innerHTML = `
+        <div class="detail-tags-row">
+          <div class="detail-tags">${typeTagHtml}${dealTagHtml}</div>
+          <button type="button" class="detail-roadview-inline-btn" id="detailTopRoadviewBtn">
+            <i class="fa-solid fa-street-view"></i>
+            로드뷰
+          </button>
+        </div>
+      `;
 
       const detailTopRoadviewBtn = document.getElementById("detailTopRoadviewBtn");
       if (detailTopRoadviewBtn) {
@@ -3842,56 +3912,56 @@ function closeDetailPanel() {
         calculator: [5, 10, 20, 50],
         styles: [
           {
-            width: "32px",
-            height: "32px",
-            background: "#ffffff",
-            color: "#1f6fff",
-            borderRadius: "8px",
-            border: "1px solid #dbe3ee",
-            boxShadow: "0 2px 6px rgba(15,41,66,0.10)",
+            width: "44px",
+            height: "44px",
+            background: "rgba(3, 199, 90, 0.9)",
+            color: "#ffffff",
+            borderRadius: "50%",
+            border: "1px solid #03C75A",
+            boxShadow: "0 4px 10px rgba(0,0,0,0.18)",
             textAlign: "center",
             fontWeight: "900",
-            fontSize: "16px",
-            lineHeight: "30px"
+            fontSize: "14px",
+            lineHeight: "40px"
           },
           {
-            width: "32px",
-            height: "32px",
-            background: "#ffffff",
-            color: "#1f6fff",
-            borderRadius: "8px",
-            border: "1px solid #dbe3ee",
-            boxShadow: "0 2px 6px rgba(15,41,66,0.10)",
+            width: "44px",
+            height: "44px",
+            background: "rgba(3, 199, 90, 0.9)",
+            color: "#ffffff",
+            borderRadius: "50%",
+            border: "1px solid #03C75A",
+            boxShadow: "0 4px 10px rgba(0,0,0,0.18)",
             textAlign: "center",
             fontWeight: "900",
-            fontSize: "16px",
-            lineHeight: "30px"
+            fontSize: "14px",
+            lineHeight: "40px"
           },
           {
-            width: "32px",
-            height: "32px",
-            background: "#ffffff",
-            color: "#1f6fff",
-            borderRadius: "8px",
-            border: "1px solid #dbe3ee",
-            boxShadow: "0 2px 6px rgba(15,41,66,0.10)",
+            width: "44px",
+            height: "44px",
+            background: "rgba(3, 199, 90, 0.9)",
+            color: "#ffffff",
+            borderRadius: "50%",
+            border: "1px solid #03C75A",
+            boxShadow: "0 4px 10px rgba(0,0,0,0.18)",
             textAlign: "center",
             fontWeight: "900",
-            fontSize: "16px",
-            lineHeight: "30px"
+            fontSize: "14px",
+            lineHeight: "40px"
           },
           {
-            width: "32px",
-            height: "32px",
-            background: "#ffffff",
-            color: "#1f6fff",
-            borderRadius: "8px",
-            border: "1px solid #dbe3ee",
-            boxShadow: "0 2px 6px rgba(15,41,66,0.10)",
+            width: "44px",
+            height: "44px",
+            background: "rgba(3, 199, 90, 0.9)",
+            color: "#ffffff",
+            borderRadius: "50%",
+            border: "1px solid #03C75A",
+            boxShadow: "0 4px 10px rgba(0,0,0,0.18)",
             textAlign: "center",
             fontWeight: "900",
-            fontSize: "16px",
-            lineHeight: "30px"
+            fontSize: "14px",
+            lineHeight: "40px"
           }
         ]
       });
@@ -4079,9 +4149,15 @@ function closeDetailPanel() {
 
           state.selectedClusterKey = null;
 
+          renderList([item]);
+          propertyList.scrollTop = 0;
+
           highlightCard(item.id);
           updateMarkerSelection(item.id);
           await openDetailPanel(item);
+
+          setResultInfo("선택 매물 1건");
+          setListInfo("총 1개 매물");
 
           setTimeout(() => {
             refreshClusterBadges();
@@ -4131,10 +4207,7 @@ function closeDetailPanel() {
         propertyList.innerHTML = `
           <div class="card" style="padding:18px; cursor:default; border-bottom:0;">
             <div class="card-body" style="padding:0; text-align:center;">
-              <div style="text-align:left;">
-                <div style="font-size:16px; font-weight:900; color:#17212b; line-height:1.35; margin-bottom:2px;">조건에 맞는 매물이 없습니다.</div>
-                <div style="font-size:14px; font-weight:500; color:#6b7785; line-height:1.4;">지도를 이동 하거나 필터를 변경해 보세요.</div>
-              </div>
+              <div style="font-size:16px; font-weight:900; color:#17212b; line-height:1.5; white-space:pre-line;">조건에 맞는 매물이 없습니다.<br>지도를 이동 하거나 필터를 변경해 보세요.</div>
             </div>
           </div>
         `;
