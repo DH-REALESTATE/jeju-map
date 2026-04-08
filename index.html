@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.344</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.344" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.345</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.345" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -456,7 +456,7 @@
     }
 
     .detail-summary-price {
-      font-size: 32px;
+      font-size: 28px;
       font-weight: 900;
       line-height: 1.15;
       letter-spacing: -0.8px;
@@ -2313,7 +2313,7 @@
       border: 1px solid rgba(15, 41, 66, 0.08);
       box-shadow: 0 16px 36px rgba(15, 41, 66, 0.14);
       backdrop-filter: blur(10px);
-      text-align: center;
+      text-align: left;
       pointer-events: none;
     }
 
@@ -2322,37 +2322,30 @@
     }
 
     .map-empty-state-title {
-      font-size: 17px;
+      font-size: 16px;
       font-weight: 900;
       color: #17212b;
-      letter-spacing: -0.25px;
-      margin-bottom: 8px;
+      letter-spacing: -0.2px;
+      margin: 0;
       line-height: 1.35;
     }
 
     .map-empty-state-desc {
       font-size: 14px;
-      font-weight: 700;
+      font-weight: 500;
       color: #6b7785;
-      letter-spacing: -0.15px;
-      line-height: 1.5;
-      white-space: pre-line;
+      letter-spacing: -0.1px;
+      line-height: 1.4;
+      white-space: normal;
+      margin: 0;
     }
 
-
-/* v1.344 overrides */
-.detail-summary-price {
-  font-size: 32px !important;
-}
-.detail-hero-features {
-  display: none !important;
-}
-.detail-features .detail-tags {
-  display: none !important;
-}
-.detail-features .detail-tags-row {
-  justify-content: flex-end !important;
-}
+    .map-empty-state-copy {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      text-align: left;
+    }
 
 </style>
 
@@ -2368,7 +2361,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.344</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.345</div>
             </div>
           </div>
 
@@ -2549,8 +2542,10 @@
       <div id="map"></div>
 
       <div class="map-empty-state" id="mapEmptyState">
-        <div class="map-empty-state-title">조건에 맞는 매물이 없습니다.</div>
-        <div class="map-empty-state-desc">지도를 이동 하거나 필터를 변경해 보세요.</div>
+        <div class="map-empty-state-copy">
+          <div class="map-empty-state-title">조건에 맞는 매물이 없습니다.</div>
+          <div class="map-empty-state-desc">지도를 이동 하거나 필터를 변경해 보세요.</div>
+        </div>
       </div>
 
       <div class="map-filter-bar">
@@ -2614,7 +2609,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, SUIT, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.344';
+    const APP_VERSION = '1.345';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -3262,35 +3257,34 @@
 
     function getBadgeWidthByText(text) {
       const len = String(text ?? "").length;
-      if (len >= 3) return 62;
-      if (len === 2) return 50;
-      return 38;
+      if (len >= 3) return 70;
+      if (len === 2) return 58;
+      return 46;
     }
 
     function createMarkerImage(item, isSelected = false, label = "1") {
       const text = String(label ?? "1");
-      const width = getBadgeWidthByText(text);
-      const height = 38;
+      const size = 44;
 
-      const bgColor = isSelected ? "#1f6fff" : "#ffffff";
-      const textColor = isSelected ? "#ffffff" : "#1f6fff";
-      const borderColor = isSelected ? "#1f6fff" : "#dbe3ee";
+      const bgColor = isSelected ? "#ffffff" : "rgba(3, 199, 90, 0.9)";
+      const textColor = isSelected ? "rgba(3, 199, 90, 0.9)" : "#ffffff";
+      const borderColor = "#03C75A";
 
       const svg = `
-        <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
+        <svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
           <defs>
             <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
-              <feDropShadow dx="0" dy="2" stdDeviation="2.5" flood-color="rgba(0,0,0,0.12)"/>
+              <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="rgba(0,0,0,0.18)"/>
             </filter>
           </defs>
           <g filter="url(#shadow)">
-            <rect x="0.5" y="0.5" width="${width - 1}" height="${height - 1}" rx="12"
-                  fill="${bgColor}"
-                  stroke="${borderColor}"
-                  stroke-width="1"/>
-            <text x="${width / 2}" y="${(height / 2) + 7}"
+            <circle cx="${size / 2}" cy="${size / 2}" r="${(size / 2) - 2}"
+                    fill="${bgColor}"
+                    stroke="${borderColor}"
+                    stroke-width="1"/>
+            <text x="${size / 2}" y="${(size / 2) + 6}"
                   text-anchor="middle"
-                  font-size="20"
+                  font-size="16"
                   font-weight="900"
                   font-family="${UI_FONT_STACK}"
                   fill="${textColor}">${text}</text>
@@ -3300,8 +3294,8 @@
 
       return new kakao.maps.MarkerImage(
         "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg),
-        new kakao.maps.Size(width, height),
-        { offset: new kakao.maps.Point(width / 2, height / 2) }
+        new kakao.maps.Size(size, size),
+        { offset: new kakao.maps.Point(size / 2, size / 2) }
       );
     }
 
@@ -3319,7 +3313,7 @@
     }
 
     function getClusterBadgeSize() {
-      return 38;
+      return 44;
     }
 
     function setClusterBadgeSelected(cluster, isSelected) {
@@ -3329,39 +3323,37 @@
       const clusterItems = cluster.getMarkers().map(marker => marker.__property).filter(Boolean);
       if (!clusterItems.length) return;
 
-      const text = clusterItems.length > 99 ? "99+" : String(clusterItems.length);
-      const width = getBadgeWidthByText(text);
-      const height = 38;
+      const count = clusterItems.length;
+      const size = getClusterBadgeSize();
 
-      const bg = isSelected ? "#1f6fff" : "#ffffff";
-      const color = isSelected ? "#ffffff" : "#1f6fff";
-      const border = isSelected ? "#1f6fff" : "#dbe3ee";
+      const bg = isSelected ? "#ffffff" : "rgba(3, 199, 90, 0.9)";
+      const color = isSelected ? "#03C75A" : "#ffffff";
+      const border = "#03C75A";
 
       const el = document.createElement("div");
-      el.style.width = `${width}px`;
-      el.style.height = `${height}px`;
-      el.style.minWidth = `${width}px`;
-      el.style.minHeight = `${height}px`;
-      el.style.padding = "0 12px";
-      el.style.borderRadius = "12px";
-      el.style.display = "inline-flex";
+      el.style.width = `${size}px`;
+      el.style.height = `${size}px`;
+      el.style.minWidth = `${size}px`;
+      el.style.minHeight = `${size}px`;
+      el.style.borderRadius = "50%";
+      el.style.display = "flex";
       el.style.alignItems = "center";
       el.style.justifyContent = "center";
       el.style.background = bg;
       el.style.color = color;
-      el.style.fontSize = "20px";
+      el.style.fontSize = "16px";
       el.style.fontWeight = "900";
       el.style.fontFamily = UI_FONT_STACK;
       el.style.lineHeight = "1";
       el.style.letterSpacing = "-0.2px";
       el.style.border = `1px solid ${border}`;
-      el.style.boxShadow = isSelected ? "0 4px 10px rgba(31,111,255,0.22)" : "0 2px 6px rgba(0,0,0,0.08)";
+      el.style.boxShadow = "0 4px 10px rgba(0,0,0,0.18)";
       el.style.boxSizing = "border-box";
       el.style.whiteSpace = "nowrap";
       el.style.cursor = "pointer";
       el.style.pointerEvents = "auto";
       el.style.userSelect = "none";
-      el.textContent = text;
+      el.textContent = count > 99 ? "99+" : String(count);
 
       el.addEventListener("click", async function (e) {
         e.preventDefault();
@@ -3720,11 +3712,15 @@
         detailAgentAvatar.textContent = "담당";
       }
 
+      const featureTagHtml = (detailItem.features || [])
+        .map(feature => `<span class="detail-feature-tag">${escapeHtml(feature)}</span>`)
+        .join("");
+
       detailHeroFeatures.innerHTML = "";
 
       detailFeatures.innerHTML = `
         <div class="detail-tags-row">
-          <div class="detail-tags"></div>
+          <div class="detail-tags">${featureTagHtml}</div>
           <button type="button" class="detail-roadview-inline-btn" id="detailTopRoadviewBtn">
             <i class="fa-solid fa-street-view"></i>
             로드뷰
@@ -3776,44 +3772,13 @@ function closeDetailPanel() {
       refreshMapLayout();
     }
 
-
-    function recenterMapSoft(lat, lng) {
-      if (!state.map || !window.kakao || !kakao.maps) return;
-      const projection = state.map.getProjection();
-      const mapEl = document.getElementById("map");
-      if (!projection || !mapEl) return;
-
-      const target = new kakao.maps.LatLng(lat, lng);
-      const point = projection.containerPointFromCoords(target);
-      const centerX = Math.round(mapEl.clientWidth / 2);
-      const centerY = Math.round(mapEl.clientHeight / 2);
-      const safeZoneX = 120;
-      const safeZoneY = 80;
-      let dx = 0;
-      let dy = 0;
-
-      if (point.x < centerX - safeZoneX) dx = point.x - (centerX - safeZoneX);
-      else if (point.x > centerX + safeZoneX) dx = point.x - (centerX + safeZoneX);
-
-      if (point.y < centerY - safeZoneY) dy = point.y - (centerY - safeZoneY);
-      else if (point.y > centerY + safeZoneY) dy = point.y - (centerY + safeZoneY);
-
-      const maxShiftX = 140;
-      const maxShiftY = 90;
-      dx = Math.max(-maxShiftX, Math.min(maxShiftX, dx));
-      dy = Math.max(-maxShiftY, Math.min(maxShiftY, dy));
-      if (dx === 0 && dy === 0) return;
-
-      const movedPoint = new kakao.maps.Point(point.x - dx, point.y - dy);
-      const movedLatLng = projection.coordsFromContainerPoint(movedPoint);
-      state.map.panTo(movedLatLng);
-    }
-
     async function handleClusterSelection(cluster) {
       await hideRoadview();
 
       const clusterItems = cluster.getMarkers().map(marker => marker.__property).filter(Boolean);
       if (!clusterItems.length) return;
+
+      const topItem = clusterItems[0];
 
       state.selectedMarkerId = null;
       state.selectedClusterKey = getClusterKeyFromItems(clusterItems);
@@ -3821,11 +3786,9 @@ function closeDetailPanel() {
       updateMarkerSelection(null);
       renderList(clusterItems);
       propertyList.scrollTop = 0;
-      closeDetailPanel();
 
-      const centerLat = clusterItems.reduce((sum, v) => sum + Number(v.lat || 0), 0) / clusterItems.length;
-      const centerLng = clusterItems.reduce((sum, v) => sum + Number(v.lng || 0), 0) / clusterItems.length;
-      recenterMapSoft(centerLat, centerLng);
+      await openDetailPanel(topItem);
+      highlightCard(topItem.id);
 
       setResultInfo(`선택 지역 ${clusterItems.length}건`);
       setListInfo(`총 ${clusterItems.length}개 매물`);
@@ -3855,56 +3818,56 @@ function closeDetailPanel() {
         calculator: [5, 10, 20, 50],
         styles: [
           {
-            width: "38px",
-            height: "38px",
-            background: "#ffffff",
-            color: "#1f6fff",
-            borderRadius: "12px",
-            border: "1px solid #dbe3ee",
+            width: "44px",
+            height: "44px",
+            background: "rgba(3, 199, 90, 0.9)",
+            color: "#ffffff",
+            borderRadius: "50%",
+            border: "1px solid #03C75A",
             boxShadow: "0 4px 10px rgba(0,0,0,0.18)",
             textAlign: "center",
             fontWeight: "900",
-            fontSize: "20px",
-            lineHeight: "36px"
+            fontSize: "14px",
+            lineHeight: "40px"
           },
           {
-            width: "38px",
-            height: "38px",
-            background: "#ffffff",
-            color: "#1f6fff",
-            borderRadius: "12px",
-            border: "1px solid #dbe3ee",
+            width: "44px",
+            height: "44px",
+            background: "rgba(3, 199, 90, 0.9)",
+            color: "#ffffff",
+            borderRadius: "50%",
+            border: "1px solid #03C75A",
             boxShadow: "0 4px 10px rgba(0,0,0,0.18)",
             textAlign: "center",
             fontWeight: "900",
-            fontSize: "20px",
-            lineHeight: "36px"
+            fontSize: "14px",
+            lineHeight: "40px"
           },
           {
-            width: "38px",
-            height: "38px",
-            background: "#ffffff",
-            color: "#1f6fff",
-            borderRadius: "12px",
-            border: "1px solid #dbe3ee",
+            width: "44px",
+            height: "44px",
+            background: "rgba(3, 199, 90, 0.9)",
+            color: "#ffffff",
+            borderRadius: "50%",
+            border: "1px solid #03C75A",
             boxShadow: "0 4px 10px rgba(0,0,0,0.18)",
             textAlign: "center",
             fontWeight: "900",
-            fontSize: "20px",
-            lineHeight: "36px"
+            fontSize: "14px",
+            lineHeight: "40px"
           },
           {
-            width: "38px",
-            height: "38px",
-            background: "#ffffff",
-            color: "#1f6fff",
-            borderRadius: "12px",
-            border: "1px solid #dbe3ee",
+            width: "44px",
+            height: "44px",
+            background: "rgba(3, 199, 90, 0.9)",
+            color: "#ffffff",
+            borderRadius: "50%",
+            border: "1px solid #03C75A",
             boxShadow: "0 4px 10px rgba(0,0,0,0.18)",
             textAlign: "center",
             fontWeight: "900",
-            fontSize: "20px",
-            lineHeight: "36px"
+            fontSize: "14px",
+            lineHeight: "40px"
           }
         ]
       });
@@ -4063,7 +4026,11 @@ function closeDetailPanel() {
     }
 
     function moveMapToProperty(item) {
-      return;
+      if (!item || !state.map) return;
+      const position = new kakao.maps.LatLng(item.lat, item.lng);
+      state.map.setLevel(4);
+      state.map.setCenter(position);
+      state.map.relayout();
     }
 
     function renderMarkers(data, options = {}) {
@@ -4091,15 +4058,13 @@ function closeDetailPanel() {
           await hideRoadview();
 
           state.selectedClusterKey = null;
-          state.selectedMarkerId = item.id;
 
           renderList([item]);
           propertyList.scrollTop = 0;
 
           highlightCard(item.id);
           updateMarkerSelection(item.id);
-          closeDetailPanel();
-          recenterMapSoft(item.lat, item.lng);
+          await openDetailPanel(item);
 
           setResultInfo("선택 매물 1건");
           setListInfo("총 1개 매물");
@@ -4120,7 +4085,15 @@ function closeDetailPanel() {
         refreshClusterBadges();
       }, 0);
 
-      return;
+      if (preserveViewport || preventMapViewportChange) {
+        return;
+      }
+
+      if (markerItems.length === 1) {
+        state.map.setCenter(new kakao.maps.LatLng(markerItems[0].lat, markerItems[0].lng));
+      } else {
+        state.map.setBounds(bounds);
+      }
     }
 
     async function focusProperty(id) {
@@ -4133,6 +4106,7 @@ function closeDetailPanel() {
 
       highlightCard(id);
       updateMarkerSelection(id);
+      moveMapToProperty(item);
 
       setTimeout(() => {
         refreshClusterBadges();
@@ -4143,8 +4117,11 @@ function closeDetailPanel() {
       if (!data.length) {
         propertyList.innerHTML = `
           <div class="card" style="padding:18px; cursor:default; border-bottom:0;">
-            <div class="card-body" style="padding:0; text-align:center;">
-              <div style="font-size:16px; font-weight:900; color:#17212b; line-height:1.5; white-space:pre-line;">조건에 맞는 매물이 없습니다.<br>지도를 이동 하거나 필터를 변경해 보세요.</div>
+            <div class="card-body" style="padding:0; text-align:left;">
+              <div style="display:flex; flex-direction:column; gap:2px; text-align:left;">
+                <div style="font-size:16px; font-weight:900; color:#17212b; line-height:1.35; margin:0;">조건에 맞는 매물이 없습니다.</div>
+                <div style="font-size:14px; font-weight:500; color:#6b7785; line-height:1.4; margin:0;">지도를 이동 하거나 필터를 변경해 보세요.</div>
+              </div>
             </div>
           </div>
         `;
@@ -4233,13 +4210,14 @@ function closeDetailPanel() {
     }
 
     function syncFeatureButtons() {
-      const isAll = state.selectedFeatures.size === 0;
+      const isMapAllState = selectedDeal === "all" && selectedType === "all";
+      const isFeatureAll = state.selectedFeatures.size === 0;
 
       featureButtons.forEach(btn => {
         const value = btn.dataset.value;
 
         if (value === "all") {
-          btn.classList.toggle("all-active", isAll);
+          btn.classList.toggle("all-active", isMapAllState && isFeatureAll);
           btn.classList.remove("active");
         } else {
           btn.classList.toggle("active", state.selectedFeatures.has(value));
@@ -4499,6 +4477,7 @@ function closeDetailPanel() {
           dealButtons.forEach(b => b.classList.remove("active"));
           btn.classList.add("active");
           selectedDeal = btn.dataset.value;
+          syncFeatureButtons();
           applyFilter();
         });
       });
@@ -4514,6 +4493,7 @@ function closeDetailPanel() {
           state.selectedMarkerId = null;
           state.selectedClusterKey = null;
 
+          syncFeatureButtons();
           applyFilter();
         });
       });
@@ -4524,7 +4504,13 @@ function closeDetailPanel() {
 
           state.selectedFeatures.clear();
 
-          if (value !== "all") {
+          if (value === "all") {
+            selectedDeal = "all";
+            selectedType = "all";
+
+            dealButtons.forEach(b => b.classList.toggle("active", b.dataset.value === "all"));
+            typeButtons.forEach(b => b.classList.toggle("active", b.dataset.value === "all"));
+          } else {
             state.selectedFeatures.add(value);
           }
 
@@ -4532,6 +4518,8 @@ function closeDetailPanel() {
           applyFilter();
         });
       });
+
+      syncFeatureButtons();
 
       window.addEventListener("resize", () => {
         if (!state.map) return;
