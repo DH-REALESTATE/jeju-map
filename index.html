@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.319</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.319" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.320</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.320" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -2357,7 +2357,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.319</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.320</div>
             </div>
           </div>
 
@@ -2603,7 +2603,7 @@
 
   <script>
     const UI_FONT_STACK = 'SUIT, Pretendard, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.319';
+    const APP_VERSION = '1.320';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -2791,9 +2791,7 @@
 
     function updateMapEmptyState(items) {
       if (!mapEmptyState) return;
-      const targetItems = Array.isArray(items) ? items : getViewportFilteredItems(state.filtered);
-      const hasItems = Array.isArray(targetItems) && targetItems.length > 0;
-      mapEmptyState.classList.toggle("open", !hasItems);
+      mapEmptyState.classList.remove("open");
     }
 
     function refreshViewportList() {
@@ -4113,9 +4111,8 @@ function closeDetailPanel() {
       if (!data.length) {
         propertyList.innerHTML = `
           <div class="card" style="padding:18px; cursor:default; border-bottom:0;">
-            <div class="card-body" style="padding:0;">
-              <h3 style="margin-bottom:6px;">표시할 매물이 없습니다</h3>
-              <div>검색 조건을 바꿔보세요.</div>
+            <div class="card-body" style="padding:0; text-align:center;">
+              <div style="font-size:16px; font-weight:900; color:#17212b; line-height:1.5; white-space:pre-line;">조건에 맞는 매물이 없습니다.<br>지도를 이동 하거나 필터를 변경해 보세요.</div>
             </div>
           </div>
         `;
