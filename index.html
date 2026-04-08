@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.338</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.338" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.339</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.339" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -2340,92 +2340,75 @@
     }
 
 
-/* ===== Stabilized overrides Ver 1.338 ===== */
+/* ===== Ver 1.339 stabilization overrides ===== */
+.detail-hero-features {
+  display: none !important;
+}
 .detail-content {
-  padding: 8px 18px 18px;
+  padding: 8px 18px 18px !important;
 }
-
 .detail-summary-block {
-  margin-top: 4px;
-  margin-bottom: 12px;
+  margin-top: 4px !important;
+  margin-bottom: 10px !important;
 }
-
 .detail-summary-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: nowrap;
-  margin-top: 0;
-  margin-bottom: 8px;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+  width: 100% !important;
+  flex-wrap: nowrap !important;
+  margin-bottom: 8px !important;
 }
-
 .detail-summary-left {
   display: flex;
   align-items: center;
   gap: 6px;
-  min-width: 0;
   flex-wrap: nowrap;
+  min-width: 0;
 }
-
 .detail-summary-type-badge,
 .detail-summary-deal-badge {
-  height: 30px;
-  padding: 0 10px;
-  border-radius: 14px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  white-space: nowrap;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: 30px !important;
+  padding: 0 10px !important;
+  border-radius: 14px !important;
+  white-space: nowrap !important;
 }
-
 .detail-roadview-inline-btn {
-  margin-left: auto;
-  flex: 0 0 auto;
+  margin-left: auto !important;
+  flex: 0 0 auto !important;
 }
-
-.detail-features {
-  margin-bottom: 6px;
+.marker-badge,
+.cluster-badge {
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: none !important;
 }
-
 .map-empty-state,
 .map-empty-state-desc {
   text-align: left !important;
 }
-
-.map-empty-state-title {
-  display: none;
-}
-
 .map-empty-state-desc {
   display: flex;
   flex-direction: column;
   gap: 2px;
   white-space: normal !important;
 }
-
 .empty-title {
   font-size: 16px;
   font-weight: 900;
   color: #17212b;
-  line-height: 1.35;
   margin: 0;
+  line-height: 1.35;
 }
-
 .empty-sub {
   font-size: 14px;
   font-weight: 500;
   color: #6b7785;
-  line-height: 1.4;
   margin: 0;
-}
-
-.card-badge,
-.card-deal {
-  height: 30px;
-  padding: 0 10px;
-  border-radius: 14px;
-  font-size: 13px;
+  line-height: 1.4;
 }
 
 </style>
@@ -2442,7 +2425,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.338</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.339</div>
             </div>
           </div>
 
@@ -2525,16 +2508,10 @@
 
                 <div class="detail-summary-block">
                   <div class="detail-summary-top">
-                    <div class="detail-summary-left" id="detailSummaryLeft">
-                      <div class="detail-summary-type-badge" id="detailSummaryTypeBadge"></div>
-                      <div class="detail-summary-deal-badge" id="detailSummaryDealBadge"></div>
-                    </div>
-                    <button type="button" class="detail-roadview-inline-btn" id="detailTopRoadviewBtn">
-                      <i class="fa-solid fa-street-view"></i>
-                      로드뷰
-                    </button>
+                    <div class="detail-summary-type-badge" id="detailSummaryTypeBadge"></div>
                   </div>
                   <div class="detail-summary-price-row">
+                    <div class="detail-summary-deal-badge" id="detailSummaryDealBadge"></div>
                     <div class="detail-summary-price" id="detailSummaryPrice"></div>
                   </div>
                   <div class="detail-summary-address" id="detailSummaryAddress"></div>
@@ -2629,10 +2606,8 @@
       <div id="map"></div>
 
       <div class="map-empty-state" id="mapEmptyState">
-        <div class="map-empty-state-desc">
-          <div class="empty-title">조건에 맞는 매물이 없습니다.</div>
-          <div class="empty-sub">지도를 이동 하거나 필터를 변경해 보세요.</div>
-        </div>
+        <div class="map-empty-state-title">조건에 맞는 매물이 없습니다.</div>
+        <div class="map-empty-state-desc">지도를 이동 하거나 필터를 변경해 보세요.</div>
       </div>
 
       <div class="map-filter-bar">
@@ -2696,7 +2671,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, SUIT, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.338';
+    const APP_VERSION = '1.339';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -2802,12 +2777,8 @@
 
     function syncSummaryBadgeRow() {
       if (!detailSummaryTop || !detailSummaryDealBadge || !detailSummaryTypeBadge) return;
-      const detailSummaryLeft = document.getElementById("detailSummaryLeft");
-      if (detailSummaryLeft && detailSummaryTypeBadge.parentElement !== detailSummaryLeft) {
-        detailSummaryLeft.appendChild(detailSummaryTypeBadge);
-      }
-      if (detailSummaryLeft && detailSummaryDealBadge.parentElement !== detailSummaryLeft) {
-        detailSummaryLeft.appendChild(detailSummaryDealBadge);
+      if (detailSummaryDealBadge.parentElement !== detailSummaryTop) {
+        detailSummaryTop.appendChild(detailSummaryDealBadge);
       }
     }
 
@@ -2893,7 +2864,6 @@
 
     function refreshViewportList() {
       const viewportItems = getViewportFilteredItems(state.filtered);
-      syncLeftAllButtonWithMapFilters();
       renderList(viewportItems);
       setResultInfo(`총 ${viewportItems.length}건`);
       setListInfo(`총 ${viewportItems.length}개 매물`);
@@ -3349,41 +3319,32 @@
 
     function getBadgeWidthByText(text) {
       const len = String(text ?? "").length;
-      if (len >= 3) return 70;
-      if (len === 2) return 58;
-      return 46;
+      if (len >= 3) return 36;
+      if (len === 2) return 30;
+      return 24;
     }
 
     function createMarkerImage(item, isSelected = false, label = "1") {
       const text = String(label ?? "1");
       const width = getBadgeWidthByText(text);
-      const height = 44;
-      const radius = 10;
+      const height = 24;
 
-      const bgColor = isSelected ? "#2563EB" : "#ffffff";
-      const textColor = isSelected ? "#ffffff" : "#2563EB";
-      const borderColor = "#2563EB";
+      const bgColor = isSelected ? "#1f6fff" : "#ffffff";
+      const textColor = isSelected ? "#ffffff" : "#1f6fff";
+      const borderColor = isSelected ? "#1f6fff" : "#e2e8f0";
 
       const svg = `
         <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
-          <defs>
-            <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
-              <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="rgba(0,0,0,0.18)"/>
-            </filter>
-          </defs>
-          <g filter="url(#shadow)">
-            <rect x="1" y="1" rx="${radius}" ry="${radius}"
-                  width="${width - 2}" height="${height - 2}"
-                  fill="${bgColor}"
-                  stroke="${borderColor}"
-                  stroke-width="1.4"/>
-            <text x="${width / 2}" y="${(height / 2) + 6}"
-                  text-anchor="middle"
-                  font-size="18"
-                  font-weight="900"
-                  font-family="${UI_FONT_STACK}"
-                  fill="${textColor}">${text}</text>
-          </g>
+          <rect x="0.5" y="0.5" width="${width - 1}" height="${height - 1}" rx="6"
+                fill="${bgColor}"
+                stroke="${borderColor}"
+                stroke-width="1"/>
+          <text x="${width / 2}" y="${(height / 2) + 5}"
+                text-anchor="middle"
+                font-size="15"
+                font-weight="900"
+                font-family="${UI_FONT_STACK}"
+                fill="${textColor}">${text}</text>
         </svg>
       `;
 
@@ -3407,8 +3368,8 @@
       return items.map(item => item.id).sort((a, b) => a - b).join(",");
     }
 
-    function getClusterBadgeSize(text = "1") {
-      return { width: getBadgeWidthByText(text), height: 44 };
+    function getClusterBadgeSize() {
+      return 24;
     }
 
     function setClusterBadgeSelected(cluster, isSelected) {
@@ -3419,38 +3380,39 @@
       if (!clusterItems.length) return;
 
       const count = clusterItems.length;
-      const countText = count > 99 ? "99+" : String(count);
-      const size = getClusterBadgeSize(countText);
+      const label = count > 99 ? "99+" : String(count);
+      const width = getBadgeWidthByText(label);
+      const height = getClusterBadgeSize();
 
-      const bg = isSelected ? "#2563EB" : "#ffffff";
-      const color = isSelected ? "#ffffff" : "#2563EB";
-      const border = "#2563EB";
+      const bg = isSelected ? "#1f6fff" : "#ffffff";
+      const color = isSelected ? "#ffffff" : "#1f6fff";
+      const border = isSelected ? "#1f6fff" : "#e2e8f0";
 
       const el = document.createElement("div");
-      el.style.width = `${size.width}px`;
-      el.style.height = `${size.height}px`;
-      el.style.minWidth = `${size.width}px`;
-      el.style.minHeight = `${size.height}px`;
-      el.style.padding = "0 8px";
-      el.style.borderRadius = "10px";
+      el.className = "cluster-badge" + (isSelected ? " active" : "");
+      el.style.width = `${width}px`;
+      el.style.height = `${height}px`;
+      el.style.minWidth = `${width}px`;
+      el.style.minHeight = `${height}px`;
+      el.style.borderRadius = "6px";
       el.style.display = "flex";
       el.style.alignItems = "center";
       el.style.justifyContent = "center";
       el.style.background = bg;
       el.style.color = color;
-      el.style.fontSize = "18px";
+      el.style.fontSize = "15px";
       el.style.fontWeight = "900";
       el.style.fontFamily = UI_FONT_STACK;
       el.style.lineHeight = "1";
       el.style.letterSpacing = "-0.2px";
       el.style.border = `1px solid ${border}`;
-      el.style.boxShadow = "0 4px 10px rgba(0,0,0,0.18)";
+      el.style.boxShadow = "none";
       el.style.boxSizing = "border-box";
       el.style.whiteSpace = "nowrap";
       el.style.cursor = "pointer";
       el.style.pointerEvents = "auto";
       el.style.userSelect = "none";
-      el.textContent = countText;
+      el.textContent = label;
 
       el.addEventListener("click", async function (e) {
         e.preventDefault();
@@ -3764,13 +3726,17 @@
       const detailSummaryPrice = document.getElementById("detailSummaryPrice");
       const detailSummaryAddress = document.getElementById("detailSummaryAddress");
 
-      if (detailSummaryTypeBadge) {
-        detailSummaryTypeBadge.textContent = detailItem.type || "";
-        detailSummaryTypeBadge.style.display = detailItem.type ? "inline-flex" : "none";
-      }
-      if (detailSummaryDealBadge) {
-        detailSummaryDealBadge.textContent = detailItem.dealType || "";
-        detailSummaryDealBadge.style.display = detailItem.dealType ? "inline-flex" : "none";
+      if (detailSummaryTop) {
+        detailSummaryTop.innerHTML = `
+          <div class="detail-summary-left">
+            <div class="detail-summary-type-badge" id="detailSummaryTypeBadgeInline">${escapeHtml(detailItem.type || "")}</div>
+            <div class="detail-summary-deal-badge" id="detailSummaryDealBadgeInline" data-deal="${escapeHtml(detailItem.dealType || "")}">${escapeHtml(detailItem.dealType || "")}</div>
+          </div>
+          <button type="button" class="detail-roadview-inline-btn" id="detailTopRoadviewBtn">
+            <i class="fa-solid fa-street-view"></i>
+            로드뷰
+          </button>
+        `;
       }
       if (detailSummaryPrice) {
         detailSummaryPrice.textContent = detailItem.price || "";
@@ -3809,15 +3775,8 @@
         detailAgentAvatar.textContent = "담당";
       }
 
-      const featureTagHtml = (detailItem.features || [])
-        .map(feature => `<span class="detail-feature-tag">${escapeHtml(feature)}</span>`)
-        .join("");
-
       detailHeroFeatures.innerHTML = "";
-
-      detailFeatures.innerHTML = featureTagHtml
-        ? `<div class="detail-tags-row"><div class="detail-tags">${featureTagHtml}</div></div>`
-        : "";
+      detailFeatures.innerHTML = "";
 
       const detailTopRoadviewBtn = document.getElementById("detailTopRoadviewBtn");
       if (detailTopRoadviewBtn) {
@@ -3837,7 +3796,7 @@
       };
 
       detailMapBtn.style.display = "none";
-      detailRoadviewBtn.style.display = detailItem.linkKakaotalk ? "inline-flex" : "none";
+      detailRoadviewBtn.style.display = "none";
 
       detailMapBtn.onclick = () => {
         if (!detailItem.linkCrossroad) return;
@@ -3909,56 +3868,56 @@ function closeDetailPanel() {
         calculator: [5, 10, 20, 50],
         styles: [
           {
-            width: "44px",
-            height: "44px",
-            background: "rgba(3, 199, 90, 0.9)",
-            color: "#ffffff",
-            borderRadius: "50%",
-            border: "1px solid #03C75A",
-            boxShadow: "0 4px 10px rgba(0,0,0,0.18)",
+            width: "24px",
+            height: "24px",
+            background: "#ffffff",
+            color: "#1f6fff",
+            borderRadius: "6px",
+            border: "1px solid #e2e8f0",
+            boxShadow: "none",
             textAlign: "center",
             fontWeight: "900",
-            fontSize: "14px",
-            lineHeight: "40px"
+            fontSize: "15px",
+            lineHeight: "22px"
           },
           {
-            width: "44px",
-            height: "44px",
-            background: "rgba(3, 199, 90, 0.9)",
-            color: "#ffffff",
-            borderRadius: "50%",
-            border: "1px solid #03C75A",
-            boxShadow: "0 4px 10px rgba(0,0,0,0.18)",
+            width: "24px",
+            height: "24px",
+            background: "#ffffff",
+            color: "#1f6fff",
+            borderRadius: "6px",
+            border: "1px solid #e2e8f0",
+            boxShadow: "none",
             textAlign: "center",
             fontWeight: "900",
-            fontSize: "14px",
-            lineHeight: "40px"
+            fontSize: "15px",
+            lineHeight: "22px"
           },
           {
-            width: "44px",
-            height: "44px",
-            background: "rgba(3, 199, 90, 0.9)",
-            color: "#ffffff",
-            borderRadius: "50%",
-            border: "1px solid #03C75A",
-            boxShadow: "0 4px 10px rgba(0,0,0,0.18)",
+            width: "24px",
+            height: "24px",
+            background: "#ffffff",
+            color: "#1f6fff",
+            borderRadius: "6px",
+            border: "1px solid #e2e8f0",
+            boxShadow: "none",
             textAlign: "center",
             fontWeight: "900",
-            fontSize: "14px",
-            lineHeight: "40px"
+            fontSize: "15px",
+            lineHeight: "22px"
           },
           {
-            width: "44px",
-            height: "44px",
-            background: "rgba(3, 199, 90, 0.9)",
-            color: "#ffffff",
-            borderRadius: "50%",
-            border: "1px solid #03C75A",
-            boxShadow: "0 4px 10px rgba(0,0,0,0.18)",
+            width: "24px",
+            height: "24px",
+            background: "#ffffff",
+            color: "#1f6fff",
+            borderRadius: "6px",
+            border: "1px solid #e2e8f0",
+            boxShadow: "none",
             textAlign: "center",
             fontWeight: "900",
-            fontSize: "14px",
-            lineHeight: "40px"
+            fontSize: "15px",
+            lineHeight: "22px"
           }
         ]
       });
@@ -4146,9 +4105,14 @@ function closeDetailPanel() {
 
           state.selectedClusterKey = null;
 
+          propertyList.scrollTop = propertyList.scrollTop;
+
           highlightCard(item.id);
           updateMarkerSelection(item.id);
           await openDetailPanel(item);
+
+          setResultInfo(`총 ${getViewportFilteredItems(state.filtered).length}건`);
+          setListInfo(`총 ${getViewportFilteredItems(state.filtered).length}개 매물`);
 
           setTimeout(() => {
             refreshClusterBadges();
@@ -4182,7 +4146,9 @@ function closeDetailPanel() {
       if (!item || !state.map) return;
 
       await hideRoadview();
+
       state.selectedClusterKey = null;
+
       highlightCard(id);
       updateMarkerSelection(id);
 
@@ -4195,8 +4161,11 @@ function closeDetailPanel() {
       if (!data.length) {
         propertyList.innerHTML = `
           <div class="card" style="padding:18px; cursor:default; border-bottom:0;">
-            <div class="card-body" style="padding:0; text-align:center;">
-              <div style="font-size:16px; font-weight:900; color:#17212b; line-height:1.5; white-space:pre-line;">조건에 맞는 매물이 없습니다.<br>지도를 이동 하거나 필터를 변경해 보세요.</div>
+            <div class="card-body" style="padding:0; text-align:left;">
+              <div class="map-empty-state-desc">
+                <div class="empty-title">조건에 맞는 매물이 없습니다.</div>
+                <div class="empty-sub">지도를 이동 하거나 필터를 변경해 보세요.</div>
+              </div>
             </div>
           </div>
         `;
@@ -4285,35 +4254,18 @@ function closeDetailPanel() {
     }
 
     function syncFeatureButtons() {
-      const isAll = state.selectedFeatures.size === 0;
+      const featureAll = state.selectedFeatures.size === 0;
+      const mapAll = selectedDeal === "all" && selectedType === "all";
 
       featureButtons.forEach(btn => {
         const value = btn.dataset.value;
 
         if (value === "all") {
-          btn.classList.toggle("all-active", isAll);
+          btn.classList.toggle("all-active", featureAll && mapAll);
           btn.classList.remove("active");
         } else {
           btn.classList.toggle("active", state.selectedFeatures.has(value));
           btn.classList.remove("all-active");
-        }
-      });
-    }
-
-
-    function syncMapButtonsToAll() {
-      dealButtons.forEach(btn => btn.classList.toggle("active", btn.dataset.value === "all"));
-      typeButtons.forEach(btn => btn.classList.toggle("active", btn.dataset.value === "all"));
-      selectedDeal = "all";
-      selectedType = "all";
-    }
-
-    function syncLeftAllButtonWithMapFilters() {
-      const isMapAll = selectedDeal === "all" && selectedType === "all";
-      featureButtons.forEach(btn => {
-        if (btn.dataset.value === "all") {
-          btn.classList.toggle("all-active", isMapAll && state.selectedFeatures.size === 0);
-          if (!isMapAll) btn.classList.remove("active");
         }
       });
     }
@@ -4364,7 +4316,6 @@ function closeDetailPanel() {
       state.selectedClusterKey = null;
 
       const viewportItems = getViewportFilteredItems(state.filtered);
-      syncLeftAllButtonWithMapFilters();
       renderList(viewportItems);
       preventMapViewportChange = true;
       renderMarkers(state.filtered, { preserveViewport: true });
@@ -4373,6 +4324,7 @@ function closeDetailPanel() {
 
       setResultInfo(`총 ${viewportItems.length}건`);
       setListInfo(`총 ${viewportItems.length}개 매물`);
+      syncFeatureButtons();
 
       if (!viewportItems.length) {
         closeDetailPanel();
@@ -4571,7 +4523,6 @@ function closeDetailPanel() {
           btn.classList.add("active");
           selectedDeal = btn.dataset.value;
           applyFilter();
-          syncLeftAllButtonWithMapFilters();
         });
       });
 
@@ -4587,7 +4538,6 @@ function closeDetailPanel() {
           state.selectedClusterKey = null;
 
           applyFilter();
-          syncLeftAllButtonWithMapFilters();
         });
       });
 
@@ -4597,10 +4547,13 @@ function closeDetailPanel() {
 
           state.selectedFeatures.clear();
 
-          if (value === "all") {
-            syncMapButtonsToAll();
-          } else {
+          if (value !== "all") {
             state.selectedFeatures.add(value);
+          } else {
+            selectedDeal = "all";
+            selectedType = "all";
+            dealButtons.forEach(b => b.classList.toggle("active", b.dataset.value === "all"));
+            typeButtons.forEach(b => b.classList.toggle("active", b.dataset.value === "all"));
           }
 
           syncFeatureButtons();
