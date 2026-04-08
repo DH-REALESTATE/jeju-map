@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.359</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.359" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.360</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.360" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -2342,7 +2342,7 @@
 </style>
 <style>
 
-/* Stable patch overrides - Ver 1.359 */
+/* Stable patch overrides - Ver 1.360 */
 .map-empty-state {
   text-align: left !important;
 }
@@ -2405,7 +2405,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.359</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.360</div>
             </div>
           </div>
 
@@ -2653,7 +2653,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, SUIT, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.359';
+    const APP_VERSION = '1.360';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -3008,6 +3008,13 @@
       return text || "-";
     }
 
+    function getDisplayTypeLabel(typeText) {
+      const text = String(typeText || "").trim();
+      if (["전", "대", "답", "과수원", "임야", "토지", "토지ㆍ임야"].includes(text)) return "토지";
+      if (["단독", "단독주택"].includes(text)) return "단독주택";
+      return text || "-";
+    }
+
     function isCommercialType(typeText) {
       const text = String(typeText || "").trim();
       return ["상가", "상가건물", "사무실", "공장", "상가ㆍ사무실"].includes(text);
@@ -3339,22 +3346,21 @@
       const width = getBadgeWidthByText(text);
       const height = 38;
 
-      const bgColor = isSelected ? "#1f6fff" : "#ffffff";
+      const bgColor = isSelected ? "rgba(31,111,255,0.94)" : "rgba(255,255,255,0.82)";
       const textColor = isSelected ? "#ffffff" : "#1f6fff";
-      const borderColor = "#1f6fff";
 
       const svg = `
         <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
           <defs>
             <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
-              <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="rgba(0,0,0,0.18)"/>
+              <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="rgba(0,0,0,0.12)"/>
             </filter>
           </defs>
           <g filter="url(#shadow)">
             <rect x="0.5" y="0.5" width="${width - 1}" height="${height - 1}" rx="12" ry="12"
                   fill="${bgColor}"
-                  stroke="${borderColor}"
-                  stroke-width="1"/>
+                  stroke="none"
+                  stroke-width="0"/>
             <text x="${width / 2}" y="${height / 2}"
                   dominant-baseline="middle"
                   text-anchor="middle"
@@ -3409,9 +3415,8 @@
       const label = count > 99 ? "99+" : String(count);
       const width = getBadgeWidthByText(label);
 
-      const bg = isSelected ? "#1f6fff" : "#ffffff";
+      const bg = isSelected ? "rgba(31,111,255,0.94)" : "rgba(255,255,255,0.82)";
       const color = isSelected ? "#ffffff" : "#1f6fff";
-      const border = "#1f6fff";
 
       const el = document.createElement("div");
       el.style.height = `38px`;
@@ -3428,7 +3433,7 @@
       el.style.fontFamily = UI_FONT_STACK;
       el.style.lineHeight = "1";
       el.style.letterSpacing = "-0.2px";
-      el.style.border = `1px solid ${border}`;
+      el.style.border = "0";
       el.style.boxShadow = "none";
       el.style.boxSizing = "border-box";
       el.style.whiteSpace = "nowrap";
@@ -3739,7 +3744,7 @@
       detailAreaValue.dataset.areaType = detailItem.type || "";
       if (detailAreaToggleBtn) detailAreaToggleBtn.style.display = "none";
       syncDetailAreaDisplay(detailItem);
-      detailTypeValue.textContent = detailItem.type || "-";
+      detailTypeValue.textContent = getDisplayTypeLabel(detailItem.type);
       detailRegionValue.textContent = detailItem.region || "-";
 
       const detailSummaryTypeBadge = document.getElementById("detailSummaryTypeBadge");
@@ -3748,7 +3753,7 @@
       const detailSummaryAddress = document.getElementById("detailSummaryAddress");
 
       if (detailSummaryTypeBadge) {
-        detailSummaryTypeBadge.textContent = detailItem.type || "";
+        detailSummaryTypeBadge.textContent = getDisplayTypeLabel(detailItem.type);
         detailSummaryTypeBadge.style.display = detailItem.type ? "inline-flex" : "none";
       }
       if (detailSummaryDealBadge) {
@@ -3792,9 +3797,12 @@
         detailAgentAvatar.textContent = "담당";
       }
 
-      const featureTagHtml = [detailItem.type, detailItem.dealType]
-        .filter(Boolean)
-        .map(feature => `<span class="detail-feature-tag">${escapeHtml(feature)}</span>`)
+      const featureTagHtml = [
+        { label: getDisplayTypeLabel(detailItem.type), kind: "type" },
+        { label: detailItem.dealType, kind: "deal" }
+      ]
+        .filter(item => item.label)
+        .map(item => `<span class="detail-feature-tag ${item.kind}">${escapeHtml(item.label)}</span>`)
         .join("");
 
       detailHeroFeatures.innerHTML = "";
