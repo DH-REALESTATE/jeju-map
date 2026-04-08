@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.313</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.313" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.314</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.314" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -2303,6 +2303,46 @@
   transform: translateZ(0);
 }
 
+
+    .map-empty-state {
+      position: absolute;
+      inset: 50% auto auto 50%;
+      transform: translate(-50%, -50%);
+      z-index: 29;
+      display: none;
+      width: min(420px, calc(100% - 48px));
+      padding: 18px 20px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.96);
+      border: 1px solid rgba(15, 41, 66, 0.08);
+      box-shadow: 0 16px 36px rgba(15, 41, 66, 0.14);
+      backdrop-filter: blur(10px);
+      text-align: center;
+      pointer-events: none;
+    }
+
+    .map-empty-state.open {
+      display: block;
+    }
+
+    .map-empty-state-title {
+      font-size: 17px;
+      font-weight: 900;
+      color: #17212b;
+      letter-spacing: -0.25px;
+      margin-bottom: 8px;
+      line-height: 1.35;
+    }
+
+    .map-empty-state-desc {
+      font-size: 14px;
+      font-weight: 700;
+      color: #6b7785;
+      letter-spacing: -0.15px;
+      line-height: 1.5;
+      white-space: pre-line;
+    }
+
 </style>
 
 
@@ -2317,7 +2357,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.313</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.314</div>
             </div>
           </div>
 
@@ -2497,6 +2537,11 @@
     <main class="map-wrap">
       <div id="map"></div>
 
+      <div class="map-empty-state" id="mapEmptyState">
+        <div class="map-empty-state-title">조건에 맞는 매물이 없습니다.</div>
+        <div class="map-empty-state-desc">지도를 이동 하거나 필터를 변경해 보세요.</div>
+      </div>
+
       <div class="map-filter-bar">
         <div class="deal-buttons" id="dealButtons">
           <button type="button" data-value="all" class="active">전체</button>
@@ -2558,7 +2603,7 @@
 
   <script>
     const UI_FONT_STACK = 'SUIT, Pretendard, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.313';
+    const APP_VERSION = '1.314';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -2593,6 +2638,7 @@
     const propertyList = document.getElementById("propertyList");
     const keywordInput = document.getElementById("keyword");
     const mapResultCount = document.getElementById("mapResultCount");
+    const mapEmptyState = document.getElementById("mapEmptyState");
     const mapTypeRoadBtn = document.getElementById("mapTypeRoadBtn");
     const mapTypeSatelliteBtn = document.getElementById("mapTypeSatelliteBtn");
     const mapTypeCadastralBtn = document.getElementById("mapTypeCadastralBtn");
@@ -2724,6 +2770,13 @@
         detailAreaValue.dataset.areaUnit = globalAreaUnit;
         syncDetailAreaDisplay(currentDetailItem);
       }
+    }
+
+
+    function updateMapEmptyState() {
+      if (!mapEmptyState) return;
+      const hasItems = Array.isArray(state.filtered) && state.filtered.length > 0;
+      mapEmptyState.classList.toggle("open", !hasItems);
     }
 
     function updateSidebarWidth() {
@@ -3154,6 +3207,7 @@
 
         state.all = enriched;
         applyFilter();
+        updateMapEmptyState();
         setGlobalAreaUnit("m2");
         applyGlobalAreaUnit();
         updateMapTypeButtons();
@@ -4160,7 +4214,7 @@ function closeDetailPanel() {
           (typeValue === "빌라주택" && ["빌라", "단독", "단독주택", "다가구", "다세대", "다가구ㆍ다세대", "다세대주택"].includes(itemType)) ||
           (typeValue === "원룸" && ["원룸", "투룸", "원룸ㆍ투룸"].includes(itemType)) ||
           (typeValue === "상가" && ["상가", "상가건물", "사무실", "공장", "상가ㆍ사무실"].includes(itemType)) ||
-          (typeValue === "토지" && ["토지", "임야", "토지ㆍ임야"].includes(itemType));
+          (typeValue === "토지" && ["토지", "임야", "토지ㆍ임야", "전", "대", "답", "과수원"].includes(itemType));
 
         const okFeature =
           state.selectedFeatures.size === 0 ||
@@ -4173,28 +4227,17 @@ function closeDetailPanel() {
 
       state.selectedMarkerId = null;
       state.selectedClusterKey = null;
+
       renderList(state.filtered);
       renderMarkers(state.filtered);
+      updateMapEmptyState();
+
       setResultInfo(`총 ${state.filtered.length}건`);
       setListInfo(`총 ${state.filtered.length}개 매물`);
 
       if (!state.filtered.length) {
         closeDetailPanel();
         return;
-      }
-
-      const wasDetailOpen = sidebar.classList.contains("expanded");
-
-      if (wasDetailOpen) {
-        const topItem = state.filtered[0];
-        highlightCard(topItem.id);
-        updateMarkerSelection(topItem.id);
-
-        Promise.resolve().then(async () => {
-          if (detailScroll) detailScroll.scrollTop = 0;
-          await openDetailPanel(topItem);
-          if (detailScroll) detailScroll.scrollTop = 0;
-        });
       }
     }
 
