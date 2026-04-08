@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.373</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.373" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.374</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.374" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -456,12 +456,22 @@
     }
 
     .detail-summary-price {
-      font-size: 28px;
-      font-weight: 900;
-      line-height: 1.15;
-      letter-spacing: -0.8px;
+      font-size: 44px;
+      font-weight: 950;
+      line-height: 1.02;
+      letter-spacing: -1.2px;
       color: #111827;
       margin-bottom: 8px;
+    }
+
+    .detail-summary-unit-price {
+      font-size: 13px;
+      font-weight: 800;
+      color: #6b7280;
+      letter-spacing: -0.1px;
+      line-height: 1.45;
+      white-space: pre-line;
+      margin-top: -2px;
     }
 
     .detail-summary-address {
@@ -2366,7 +2376,7 @@
 </style>
 <style>
 
-/* Stable patch overrides - Ver 1.373 */
+/* Stable patch overrides - Ver 1.374 */
 .map-empty-state {
   text-align: left !important;
 }
@@ -2532,7 +2542,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.373</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.374</div>
             </div>
           </div>
 
@@ -2620,6 +2630,7 @@
                   <div class="detail-summary-price-row">
                     <div class="detail-summary-deal-badge" id="detailSummaryDealBadge"></div>
                     <div class="detail-summary-price" id="detailSummaryPrice"></div>
+                    <div class="detail-summary-unit-price" id="detailSummaryUnitPrice"></div>
                   </div>
                   <div class="detail-summary-address" id="detailSummaryAddress"></div>
                 </div>
@@ -2780,7 +2791,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, SUIT, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.373';
+    const APP_VERSION = '1.374';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -3270,6 +3281,61 @@
       }
 
       return escapeHtml(raw);
+    }
+
+    function getPrimaryAreaForUnitPrice(areaText, typeText = "") {
+      const raw = String(areaText || "-").trim();
+
+      if (isDetachedHouseType(typeText)) {
+        const { total } = parseDetachedHouseAreas(raw);
+        return Number.isFinite(total) ? total : null;
+      }
+
+      if (isApartmentType(typeText)) {
+        const { private: privateArea } = parseApartmentAreas(raw);
+        return Number.isFinite(privateArea) ? privateArea : null;
+      }
+
+      const values = parseAreaNumbers(raw);
+      return values.length >= 1 && Number.isFinite(values[0]) ? values[0] : null;
+    }
+
+    function parsePriceTextToWon(priceText) {
+      const raw = String(priceText || "").replace(/\s+/g, "");
+      if (!raw || raw === "-") return null;
+
+      let totalWon = 0;
+
+      const eokMatch = raw.match(/([\d,.]+)억/);
+      if (eokMatch) {
+        totalWon += Number(String(eokMatch[1]).replace(/,/g, "")) * 100000000;
+      }
+
+      const manwonMatch = raw.match(/억([\d,]+)/) || (!eokMatch ? raw.match(/^([\d,]+)$/) : null);
+      if (manwonMatch) {
+        totalWon += Number(String(manwonMatch[1]).replace(/,/g, "")) * 10000;
+      }
+
+      if (!eokMatch && /만원/.test(raw)) {
+        const onlyManwon = raw.match(/([\d,]+)만원/);
+        if (onlyManwon) {
+          totalWon += Number(String(onlyManwon[1]).replace(/,/g, "")) * 10000;
+        }
+      }
+
+      return Number.isFinite(totalWon) && totalWon > 0 ? totalWon : null;
+    }
+
+    function formatUnitPriceLine(detailItem) {
+      const totalWon = parsePriceTextToWon(detailItem?.price || "");
+      const areaM2 = getPrimaryAreaForUnitPrice(detailItem?.area || "", detailItem?.type || "");
+
+      if (!Number.isFinite(totalWon) || !Number.isFinite(areaM2) || areaM2 <= 0) return "";
+
+      const manwonPerM2 = Math.round((totalWon / areaM2) / 10000);
+      const manwonPerPyeong = Math.round(((totalWon / areaM2) * 3.3058) / 10000);
+
+      return `단위 가격 ${manwonPerM2.toLocaleString('ko-KR')}만원/㎡\n단위 가격 ${manwonPerPyeong.toLocaleString('ko-KR')}만원/평`;
     }
 
     function formatCardAreaByUnit(areaText, unit, typeText = "") {
@@ -3954,6 +4020,7 @@
       const detailSummaryTypeBadge = document.getElementById("detailSummaryTypeBadge");
       const detailSummaryDealBadge = document.getElementById("detailSummaryDealBadge");
       const detailSummaryPrice = document.getElementById("detailSummaryPrice");
+      const detailSummaryUnitPrice = document.getElementById("detailSummaryUnitPrice");
       const detailSummaryAddress = document.getElementById("detailSummaryAddress");
 
       if (detailSummaryTypeBadge) {
@@ -3966,6 +4033,11 @@
       }
       if (detailSummaryPrice) {
         detailSummaryPrice.textContent = detailItem.price || "";
+      }
+      if (detailSummaryUnitPrice) {
+        const unitPriceText = formatUnitPriceLine(detailItem);
+        detailSummaryUnitPrice.textContent = unitPriceText;
+        detailSummaryUnitPrice.style.display = unitPriceText ? "block" : "none";
       }
       if (detailSummaryAddress) {
         detailSummaryAddress.textContent = detailItem.address || "";
