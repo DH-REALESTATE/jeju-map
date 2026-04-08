@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.320</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.320" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.322</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.322" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
   <meta property="og:image" content="https://your-domain.example/og-image.jpg" />
 
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sunn-us/SUIT/fonts/static/woff2/SUIT.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
   <style>
@@ -24,7 +24,7 @@
       --line: #e7edf3;
       --text: #17212b;
       --shadow: 0 12px 30px rgba(15, 41, 66, 0.12);
-      --font-ui: "SUIT", "Pretendard", "Noto Sans KR", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      --font-ui: "Pretendard", "Noto Sans KR", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
     }
 
     * {
@@ -2343,6 +2343,50 @@
       white-space: pre-line;
     }
 
+
+/* premium typography tuning */
+.brand-title,
+.card-title,
+.detail-title {
+  font-weight: 900 !important;
+  letter-spacing: -0.45px;
+}
+
+.card-price,
+.detail-summary-price,
+.detail-hero-price {
+  font-weight: 950 !important;
+  letter-spacing: -0.95px;
+  color: #0b1220;
+}
+
+.card-address,
+.card-spec,
+.detail-summary-address,
+.detail-desc,
+.detail-info-value,
+.detail-agent-office,
+.detail-agent-address,
+.detail-agent-regno,
+.detail-agent-phone-inline {
+  font-weight: 600;
+  color: #4b5a69;
+}
+
+.card-deal,
+.card-badge,
+.detail-summary-type-badge,
+.detail-summary-deal-badge,
+.map-tool-btn,
+.map-unit-half-btn {
+  font-weight: 900;
+}
+
+.map-empty-state {
+  display: none !important;
+}
+
+
 </style>
 
 
@@ -2357,7 +2401,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.320</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.322</div>
             </div>
           </div>
 
@@ -2602,8 +2646,8 @@
 </script>
 
   <script>
-    const UI_FONT_STACK = 'SUIT, Pretendard, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.320';
+    const UI_FONT_STACK = 'Pretendard, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
+    const APP_VERSION = '1.322';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -2742,6 +2786,26 @@
         state.map.setMapTypeId(kakao.maps.MapTypeId.HYBRID);
       } else if (mode === "cadastral") {
         state.map.setMapTypeId(kakao.maps.MapTypeId.ROADMAP);
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            const lat = pos.coords.latitude;
+            const lng = pos.coords.longitude;
+            const currentLatLng = new kakao.maps.LatLng(lat, lng);
+            state.map.setCenter(currentLatLng);
+          },
+          () => {},
+          {
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 0
+          }
+        );
+      }
+      kakao.maps.event.addListener(state.map, "idle", () => {
+        renderMarkers(state.filtered);
+        updateMapEmptyState();
+      });
         state.map.addOverlayMapTypeId(kakao.maps.MapTypeId.USE_DISTRICT);
       } else {
         state.map.setMapTypeId(kakao.maps.MapTypeId.ROADMAP);
@@ -2761,7 +2825,7 @@
 
     function applyGlobalAreaUnit() {
       updateGlobalAreaUnitButtons();
-      refreshViewportList();
+      renderList(state.filtered);
 
       if (state.selectedMarkerId != null) {
         highlightCard(state.selectedMarkerId);
@@ -2792,14 +2856,6 @@
     function updateMapEmptyState(items) {
       if (!mapEmptyState) return;
       mapEmptyState.classList.remove("open");
-    }
-
-    function refreshViewportList() {
-      const viewportItems = getViewportFilteredItems(state.filtered);
-      renderList(viewportItems);
-      setResultInfo(`총 ${viewportItems.length}건`);
-      setListInfo(`총 ${viewportItems.length}개 매물`);
-      return viewportItems;
     }
 
     function updateSidebarWidth() {
@@ -3877,18 +3933,14 @@ function closeDetailPanel() {
 
         highlightCard(-1);
         updateMarkerSelection(null);
-        refreshViewportList();
+        renderList(state.filtered);
+
+        setResultInfo(`총 ${state.filtered.length}건`);
+        setListInfo(`총 ${state.filtered.length}개 매물`);
 
         setTimeout(() => {
           refreshClusterBadges();
         }, 0);
-      });
-
-      kakao.maps.event.addListener(state.map, "idle", () => {
-        if (!state.filtered) return;
-        renderMarkers(state.filtered, { preserveViewport: true });
-        const viewportItems = refreshViewportList();
-        updateMapEmptyState(viewportItems);
       });
     }
 
@@ -4027,17 +4079,14 @@ function closeDetailPanel() {
       state.map.relayout();
     }
 
-    function renderMarkers(data, options = {}) {
+    function renderMarkers(data) {
       clearMapObjects();
-
-      const preserveViewport = !!options.preserveViewport;
-      const markerItems = preserveViewport ? getViewportFilteredItems(data) : (data || []);
-      if (!markerItems.length) return;
+      if (!data.length) return;
 
       const bounds = new kakao.maps.LatLngBounds();
       const markerList = [];
 
-      markerItems.forEach(item => {
+      data.forEach(item => {
         const position = new kakao.maps.LatLng(item.lat, item.lng);
 
         const marker = new kakao.maps.Marker({
@@ -4079,12 +4128,8 @@ function closeDetailPanel() {
         refreshClusterBadges();
       }, 0);
 
-      if (preserveViewport || preventMapViewportChange) {
-        return;
-      }
-
-      if (markerItems.length === 1) {
-        state.map.setCenter(new kakao.maps.LatLng(markerItems[0].lat, markerItems[0].lng));
+      if (data.length === 1) {
+        state.map.setCenter(new kakao.maps.LatLng(data[0].lat, data[0].lng));
       } else {
         state.map.setBounds(bounds);
       }
@@ -4110,9 +4155,12 @@ function closeDetailPanel() {
     function renderList(data) {
       if (!data.length) {
         propertyList.innerHTML = `
-          <div class="card" style="padding:18px; cursor:default; border-bottom:0;">
+          <div class="card" style="padding:22px 18px; cursor:default; border-bottom:0;">
             <div class="card-body" style="padding:0; text-align:center;">
-              <div style="font-size:16px; font-weight:900; color:#17212b; line-height:1.5; white-space:pre-line;">조건에 맞는 매물이 없습니다.<br>지도를 이동 하거나 필터를 변경해 보세요.</div>
+              <div style="font-size:16px; font-weight:900; line-height:1.6; color:#1f2a36;">
+                조건에 맞는 매물이 없습니다.<br>
+                지도를 이동 하거나 필터를 변경해 보세요.
+              </div>
             </div>
           </div>
         `;
@@ -4261,17 +4309,16 @@ function closeDetailPanel() {
       state.selectedMarkerId = null;
       state.selectedClusterKey = null;
 
-      const viewportItems = getViewportFilteredItems(state.filtered);
-      renderList(viewportItems);
+      renderList(state.filtered);
       preventMapViewportChange = true;
-      renderMarkers(state.filtered, { preserveViewport: true });
+      renderMarkers(state.filtered);
       preventMapViewportChange = false;
-      updateMapEmptyState(viewportItems);
+      updateMapEmptyState(getViewportFilteredItems(state.filtered));
 
-      setResultInfo(`총 ${viewportItems.length}건`);
-      setListInfo(`총 ${viewportItems.length}개 매물`);
+      setResultInfo(`총 ${state.filtered.length}건`);
+      setListInfo(`총 ${state.filtered.length}개 매물`);
 
-      if (!viewportItems.length) {
+      if (!state.filtered.length) {
         closeDetailPanel();
         return;
       }
