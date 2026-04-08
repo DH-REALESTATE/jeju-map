@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.321</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.321" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.329</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.329" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -1249,14 +1249,16 @@
     .card-badge {
       display: inline-flex;
       align-items: center;
-      height: 22px;
+      justify-content: center;
+      height: 30px;
       padding: 0 10px;
-      border-radius: 20px;
+      border-radius: 14px;
       background: #f3eefe;
       color: #7c4dff;
-      font-size: 11px;
-      font-weight: 800;
+      font-size: 13px;
+      font-weight: 900;
       line-height: 1;
+      letter-spacing: -0.12px;
       box-shadow: inset 0 0 0 1px rgba(124, 77, 255, 0.06);
       white-space: nowrap;
     }
@@ -2031,9 +2033,10 @@
 }
 
 .card-badge {
-  height: 23px;
+  height: 30px;
   padding: 0 10px;
-  font-size: 11px;
+  border-radius: 14px;
+  font-size: 13px;
   font-weight: 900;
   letter-spacing: -0.12px;
 }
@@ -2064,10 +2067,12 @@
 }
 
 .card-deal {
-  height: 25px;
-  padding: 0 9px;
-  font-size: 14px;
+  height: 30px;
+  padding: 0 10px;
+  border-radius: 14px;
+  font-size: 13px;
   font-weight: 900;
+  letter-spacing: -0.12px;
 }
 
 .card-price {
@@ -2353,7 +2358,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.321</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.329</div>
             </div>
           </div>
 
@@ -2599,7 +2604,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, SUIT, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.321';
+    const APP_VERSION = '1.329';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -2611,7 +2616,8 @@
       filtered: [],
       selectedFeatures: new Set(),
       selectedMarkerId: null,
-      selectedClusterKey: null
+      selectedClusterKey: null,
+      showAllListMode: false
     };
 
     let roadview = null;
@@ -3247,34 +3253,38 @@
 
     function getBadgeWidthByText(text) {
       const len = String(text ?? "").length;
-      if (len >= 3) return 70;
-      if (len === 2) return 58;
-      return 46;
+      if (len >= 3) return 68;
+      if (len === 2) return 56;
+      return 44;
     }
 
     function createMarkerImage(item, isSelected = false, label = "1") {
       const text = String(label ?? "1");
-      const size = 44;
+      const width = getBadgeWidthByText(text);
+      const height = 44;
+      const radius = 12;
 
-      const bgColor = isSelected ? "#ffffff" : "rgba(3, 199, 90, 0.9)";
-      const textColor = isSelected ? "rgba(3, 199, 90, 0.9)" : "#ffffff";
-      const borderColor = "#03C75A";
+      const bgColor = isSelected ? "#2563EB" : "#ffffff";
+      const textColor = isSelected ? "#ffffff" : "#2563EB";
+      const borderColor = isSelected ? "#2563EB" : "#BFDBFE";
+      const borderWidth = isSelected ? 1.5 : 1.5;
+      const shadowColor = isSelected ? "rgba(37, 99, 235, 0.24)" : "rgba(15,41,66,0.14)";
 
       const svg = `
-        <svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
+        <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
           <defs>
             <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
-              <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="rgba(0,0,0,0.18)"/>
+              <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="${shadowColor}"/>
             </filter>
           </defs>
           <g filter="url(#shadow)">
-            <circle cx="${size / 2}" cy="${size / 2}" r="${(size / 2) - 2}"
-                    fill="${bgColor}"
-                    stroke="${borderColor}"
-                    stroke-width="1"/>
-            <text x="${size / 2}" y="${(size / 2) + 6}"
+            <rect x="1.5" y="1.5" width="${width - 3}" height="${height - 3}" rx="${radius}" ry="${radius}"
+                  fill="${bgColor}"
+                  stroke="${borderColor}"
+                  stroke-width="${borderWidth}"/>
+            <text x="${width / 2}" y="${(height / 2) + 5.5}"
                   text-anchor="middle"
-                  font-size="16"
+                  font-size="17"
                   font-weight="900"
                   font-family="${UI_FONT_STACK}"
                   fill="${textColor}">${text}</text>
@@ -3284,8 +3294,8 @@
 
       return new kakao.maps.MarkerImage(
         "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg),
-        new kakao.maps.Size(size, size),
-        { offset: new kakao.maps.Point(size / 2, size / 2) }
+        new kakao.maps.Size(width, height),
+        { offset: new kakao.maps.Point(width / 2, height / 2) }
       );
     }
 
@@ -3302,7 +3312,7 @@
       return items.map(item => item.id).sort((a, b) => a - b).join(",");
     }
 
-    function getClusterBadgeSize() {
+    function getClusterBadgeHeight() {
       return 44;
     }
 
@@ -3314,36 +3324,34 @@
       if (!clusterItems.length) return;
 
       const count = clusterItems.length;
-      const size = getClusterBadgeSize();
-
-      const bg = isSelected ? "#ffffff" : "rgba(3, 199, 90, 0.9)";
-      const color = isSelected ? "#03C75A" : "#ffffff";
-      const border = "#03C75A";
+      const labelText = count > 99 ? "99+" : String(count);
+      const width = getBadgeWidthByText(labelText);
+      const height = getClusterBadgeHeight();
 
       const el = document.createElement("div");
-      el.style.width = `${size}px`;
-      el.style.height = `${size}px`;
-      el.style.minWidth = `${size}px`;
-      el.style.minHeight = `${size}px`;
-      el.style.borderRadius = "50%";
+      el.style.width = `${width}px`;
+      el.style.height = `${height}px`;
+      el.style.minWidth = `${width}px`;
+      el.style.minHeight = `${height}px`;
+      el.style.borderRadius = "12px";
       el.style.display = "flex";
       el.style.alignItems = "center";
       el.style.justifyContent = "center";
-      el.style.background = bg;
-      el.style.color = color;
-      el.style.fontSize = "16px";
+      el.style.background = isSelected ? "#2563EB" : "#ffffff";
+      el.style.color = isSelected ? "#ffffff" : "#2563EB";
+      el.style.fontSize = "17px";
       el.style.fontWeight = "900";
       el.style.fontFamily = UI_FONT_STACK;
       el.style.lineHeight = "1";
       el.style.letterSpacing = "-0.2px";
-      el.style.border = `1px solid ${border}`;
-      el.style.boxShadow = "0 4px 10px rgba(0,0,0,0.18)";
+      el.style.border = isSelected ? "1.5px solid #2563EB" : "1.5px solid #BFDBFE";
+      el.style.boxShadow = isSelected ? "0 6px 16px rgba(37,99,235,0.24)" : "0 4px 10px rgba(15,41,66,0.14)";
       el.style.boxSizing = "border-box";
       el.style.whiteSpace = "nowrap";
       el.style.cursor = "pointer";
       el.style.pointerEvents = "auto";
       el.style.userSelect = "none";
-      el.textContent = count > 99 ? "99+" : String(count);
+      el.textContent = labelText;
 
       el.addEventListener("click", async function (e) {
         e.preventDefault();
@@ -4096,7 +4104,6 @@ function closeDetailPanel() {
 
       highlightCard(id);
       updateMarkerSelection(id);
-      moveMapToProperty(item);
 
       setTimeout(() => {
         refreshClusterBadges();
@@ -4212,6 +4219,20 @@ function closeDetailPanel() {
       });
     }
 
+    function syncMapFiltersToAll() {
+      selectedDeal = "all";
+      selectedType = "all";
+
+      dealButtons.forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.value === "all");
+      });
+
+      typeButtons.forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.value === "all");
+      });
+    }
+
+
     function applyFilter() {
       const keyword = keywordInput.value.trim().toLowerCase();
       const dealValue = selectedDeal;
@@ -4258,16 +4279,18 @@ function closeDetailPanel() {
       state.selectedClusterKey = null;
 
       const viewportItems = getViewportFilteredItems(state.filtered);
-      renderList(viewportItems);
+      const listItems = state.showAllListMode ? state.filtered : viewportItems;
+
+      renderList(listItems);
       preventMapViewportChange = true;
       renderMarkers(state.filtered, { preserveViewport: true });
       preventMapViewportChange = false;
       updateMapEmptyState(viewportItems);
 
       setResultInfo(`총 ${viewportItems.length}건`);
-      setListInfo(`총 ${viewportItems.length}개 매물`);
+      setListInfo(`총 ${listItems.length}개 매물`);
 
-      if (!viewportItems.length) {
+      if (!listItems.length) {
         closeDetailPanel();
         return;
       }
@@ -4463,6 +4486,7 @@ function closeDetailPanel() {
           dealButtons.forEach(b => b.classList.remove("active"));
           btn.classList.add("active");
           selectedDeal = btn.dataset.value;
+          state.showAllListMode = false;
           applyFilter();
         });
       });
@@ -4472,6 +4496,7 @@ function closeDetailPanel() {
           typeButtons.forEach(b => b.classList.remove("active"));
           btn.classList.add("active");
           selectedType = btn.dataset.value;
+          state.showAllListMode = false;
 
           closeDetailPanel();
           currentDetailItem = null;
@@ -4487,9 +4512,12 @@ function closeDetailPanel() {
           const value = btn.dataset.value;
 
           state.selectedFeatures.clear();
+          state.showAllListMode = value === "all";
 
           if (value !== "all") {
             state.selectedFeatures.add(value);
+          } else {
+            syncMapFiltersToAll();
           }
 
           syncFeatureButtons();
