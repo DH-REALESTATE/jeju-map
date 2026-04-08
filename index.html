@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.370</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.370" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.371</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.371" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -528,7 +528,7 @@
     }
 
     .detail-meta-item {
-      padding: 14px 12px;
+      padding: 10px 12px;
       border-right: 1px solid #eceff3;
       min-width: 0;
     }
@@ -544,14 +544,14 @@
       font-size: 14px;
       letter-spacing: -0.1px;
       color: #7a8794;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
       font-weight: 700;
     }
 
     .detail-meta-value {
       display: flex;
       align-items: center;
-      min-height: 24px;
+      min-height: 20px;
       line-height: 1;
       font-size: 16px;
       color: #1f6fff;
@@ -2366,7 +2366,7 @@
 </style>
 <style>
 
-/* Stable patch overrides - Ver 1.370 */
+/* Stable patch overrides - Ver 1.371 */
 .map-empty-state {
   text-align: left !important;
 }
@@ -2470,6 +2470,23 @@
   line-height: 1 !important;
 }
 
+.detail-meta-item {
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+}
+
+.detail-meta-label {
+  margin-bottom: 4px !important;
+}
+
+.detail-meta-value,
+#detailAreaValue,
+#detailTypeValue,
+#detailRegionValue {
+  min-height: 20px !important;
+  line-height: 1 !important;
+}
+
 .detail-meta-item:first-child .detail-area-wrap {
   gap: 6px !important;
 }
@@ -2493,7 +2510,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.370</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.371</div>
             </div>
           </div>
 
@@ -2741,7 +2758,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, SUIT, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.370';
+    const APP_VERSION = '1.371';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
