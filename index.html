@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.379</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.379" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.380</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.380" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
-  <meta property="og:type" contenat="website" />
+  <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
   <meta property="og:image" content="https://your-domain.example/og-image.jpg" />
 
@@ -462,16 +462,6 @@
       letter-spacing: -1px;
       color: #111827;
       margin-bottom: 8px;
-    }
-
-    .detail-summary-unit-price {
-      font-size: 13px;
-      font-weight: 800;
-      color: #6b7280;
-      letter-spacing: -0.1px;
-      line-height: 1.45;
-      white-space: pre-line;
-      margin-top: -2px;
     }
 
     .detail-summary-address {
@@ -2376,7 +2366,7 @@
 </style>
 <style>
 
-/* Stable patch overrides - Ver 1.379 */
+/* Stable patch overrides - Ver 1.380 */
 .map-empty-state {
   text-align: left !important;
 }
@@ -2542,7 +2532,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.379</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.380</div>
             </div>
           </div>
 
@@ -2630,8 +2620,7 @@
                   <div class="detail-summary-price-row">
                     <div class="detail-summary-deal-badge" id="detailSummaryDealBadge"></div>
                     <div class="detail-summary-price" id="detailSummaryPrice"></div>
-                    <div class="detail-summary-unit-price" id="detailSummaryUnitPrice"></div>
-                  </div>
+                                      </div>
                   <div class="detail-summary-address" id="detailSummaryAddress"></div>
                 </div>
 
@@ -2791,7 +2780,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, SUIT, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.379';
+    const APP_VERSION = '1.380';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -3017,8 +3006,7 @@
         detailAreaValue.dataset.areaUnit = globalAreaUnit;
         syncDetailAreaDisplay(currentDetailItem);
 
-        const detailSummaryUnitPrice = document.getElementById("detailSummaryUnitPrice");
-        if (detailSummaryUnitPrice) {
+          if (detailSummaryUnitPrice) {
           const unitPriceText = formatUnitPriceLine(currentDetailItem);
           detailSummaryUnitPrice.textContent = unitPriceText;
           detailSummaryUnitPrice.style.display = unitPriceText ? "block" : "none";
@@ -4049,11 +4037,6 @@
       }
       if (detailSummaryPrice) {
         detailSummaryPrice.textContent = detailItem.price || "";
-      }
-      if (detailSummaryUnitPrice) {
-        const unitPriceText = formatUnitPriceLine(detailItem);
-        detailSummaryUnitPrice.textContent = unitPriceText;
-        detailSummaryUnitPrice.style.display = unitPriceText ? "block" : "none";
       }
       if (detailSummaryAddress) {
         detailSummaryAddress.textContent = detailItem.address || "";
