@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.361</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.361" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.362</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.362" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -2342,7 +2342,7 @@
 </style>
 <style>
 
-/* Stable patch overrides - Ver 1.361 */
+/* Stable patch overrides - Ver 1.362 */
 .map-empty-state {
   text-align: left !important;
 }
@@ -2379,20 +2379,57 @@
   background: #fff !important;
 }
 
-.detail-tags-row {
-  display: flex !important;
-  align-items: center !important;
-  width: 100% !important;
+.detail-features,
+#detailFeatures {
+  display: none !important;
 }
 
-.detail-tags {
+.detail-summary-block {
+  margin-bottom: 18px !important;
+}
+
+.detail-summary-top {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin-bottom: 18px !important;
+}
+
+.detail-summary-type-badge {
+  background: #f3eefe !important;
+  color: #7c4dff !important;
+}
+
+.detail-summary-deal-badge[data-deal="매매"],
+.detail-summary-deal-badge[data-deal="전세"],
+.detail-summary-deal-badge[data-deal="월세"],
+.detail-summary-deal-badge[data-deal="년세"],
+.detail-summary-deal-badge:not([data-deal]) {
+  background: #eef5ff !important;
+  color: #2563eb !important;
+}
+
+.detail-inline-roadview-btn {
+  margin-left: auto !important;
+  flex: 0 0 auto !important;
   display: inline-flex !important;
   align-items: center !important;
   gap: 4px !important;
+  height: 30px !important;
+  padding: 0 12px !important;
+  border-radius: 20px !important;
+  border: 0 !important;
+  background: #f3eefe !important;
+  color: #7c4dff !important;
+  font-size: 14px !important;
+  font-weight: 900 !important;
+  white-space: nowrap !important;
+  cursor: pointer !important;
 }
 
-.detail-roadview-inline-btn {
-  margin-left: auto !important;
+.detail-inline-roadview-btn i {
+  font-size: 14px !important;
+  line-height: 1 !important;
 }
 
 </style>
@@ -2405,7 +2442,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.361</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.362</div>
             </div>
           </div>
 
@@ -2653,7 +2690,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, SUIT, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.361';
+    const APP_VERSION = '1.362';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -3806,20 +3843,20 @@
         .join("");
 
       detailHeroFeatures.innerHTML = "";
+      detailFeatures.innerHTML = "";
 
-      detailFeatures.innerHTML = `
-        <div class="detail-tags-row">
-          <div class="detail-tags">${featureTagHtml}</div>
-          <button type="button" class="detail-roadview-inline-btn" id="detailTopRoadviewBtn">
-            <i class="fa-solid fa-street-view"></i>
-            로드뷰
-          </button>
-        </div>
-      `;
-
-      const detailTopRoadviewBtn = document.getElementById("detailTopRoadviewBtn");
-      if (detailTopRoadviewBtn) {
-        detailTopRoadviewBtn.onclick = () => {
+      if (detailSummaryTop) {
+        let inlineRoadviewBtn = document.getElementById("detailInlineRoadviewBtn");
+        if (!inlineRoadviewBtn) {
+          inlineRoadviewBtn = document.createElement("button");
+          inlineRoadviewBtn.type = "button";
+          inlineRoadviewBtn.id = "detailInlineRoadviewBtn";
+          inlineRoadviewBtn.className = "detail-inline-roadview-btn";
+          inlineRoadviewBtn.innerHTML = '<i class="fa-solid fa-street-view"></i>로드뷰';
+          detailSummaryTop.appendChild(inlineRoadviewBtn);
+        }
+        inlineRoadviewBtn.style.display = detailItem.lat && detailItem.lng ? "inline-flex" : "none";
+        inlineRoadviewBtn.onclick = () => {
           showRoadview(detailItem.lat, detailItem.lng);
         };
       }
