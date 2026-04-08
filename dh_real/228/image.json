@@ -1,11 +1,14 @@
 {
-  "image": "./dh_real/228/image1.png",
+  "image": "./dh_real/228/1.jpg",
   "images": [
-    "./dh_real/228/image1.png",
-    "./dh_real/228/image2.png",
-    "./dh_real/228/image3.png",
-    "./dh_real/228/image4.png",
-    "./dh_real/228/image5.png",
-    "./dh_real/228/image6.png"
+    "./dh_real/228/1.jpg",
+    "./dh_real/228/2.jpg",
+    "./dh_real/228/3.jpg",
+    "./dh_real/228/4.jpg",
+    "./dh_real/228/5.jpg",
+    "./dh_real/228/5.jpg",
+    "./dh_real/228/6.jpg",
+    "./dh_real/228/7.jpg",
+    "./dh_real/228/8.jpg"
   ]
 }
