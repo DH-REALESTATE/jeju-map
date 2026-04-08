@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.385</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.385" />
-  <meta property="og:description" content="제주도 부동산 지도 서비스" />
+  <title>제주도 부동산 지도 Ver 1.385</title>
+<meta property="og:title" content="제주도 부동산 지도 Ver 1.385" />
+  <meta property="og:description" content="제주도 부동산 지도 Ver 1.385" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
   <meta property="og:image" content="https://your-domain.example/og-image.jpg" />
@@ -1780,18 +1780,19 @@
     }
 
     .map-recommend-content {
-      min-width: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
 
     .map-recommend-badges {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      flex-wrap: wrap;
-    }
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-bottom: 0;
+}
 
     .map-recommend-badge {
       display: inline-flex;
@@ -1813,13 +1814,13 @@
     }
 
     .map-recommend-price {
-      font-size: 24px;
-      font-weight: 950;
-      color: #111827;
-      line-height: 1.08;
-      letter-spacing: -0.8px;
-      margin: 4px 0 6px;
-    }
+  font-size: 24px;
+  font-weight: 950;
+  color: #111827;
+  line-height: 1.08;
+  letter-spacing: -0.8px;
+  margin: 0;
+}
 
     .map-recommend-title-text {
       font-size: 15px;
@@ -3257,6 +3258,7 @@
       }
 
       mapRecommendCard.onclick = async (e) => {
+  if (e.target.closest(".map-recommend-close")) return;
         if (e.target.closest("a, button")) return;
         if (detailScroll) detailScroll.scrollTop = 0;
         await openDetailPanel(item);
