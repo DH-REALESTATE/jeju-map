@@ -3216,6 +3216,12 @@
       const list = Array.isArray(items) ? items : [];
       if (!list.length) return null;
 
+      const recommended = list.filter(item => item && item.recommend === true);
+      if (recommended.length > 0) {
+        const randomIndex = Math.floor(Math.random() * recommended.length);
+        return recommended[randomIndex];
+      }
+
       if (state.selectedMarkerId != null) {
         const selected = list.find(item => item.id === state.selectedMarkerId);
         if (selected) return selected;
