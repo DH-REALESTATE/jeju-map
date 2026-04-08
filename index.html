@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.318</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.318" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.319</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.319" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -2357,7 +2357,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.318</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.319</div>
             </div>
           </div>
 
@@ -2603,7 +2603,7 @@
 
   <script>
     const UI_FONT_STACK = 'SUIT, Pretendard, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.318';
+    const APP_VERSION = '1.319';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -2761,7 +2761,7 @@
 
     function applyGlobalAreaUnit() {
       updateGlobalAreaUnitButtons();
-      renderList(state.filtered);
+      refreshViewportList();
 
       if (state.selectedMarkerId != null) {
         highlightCard(state.selectedMarkerId);
@@ -2794,6 +2794,14 @@
       const targetItems = Array.isArray(items) ? items : getViewportFilteredItems(state.filtered);
       const hasItems = Array.isArray(targetItems) && targetItems.length > 0;
       mapEmptyState.classList.toggle("open", !hasItems);
+    }
+
+    function refreshViewportList() {
+      const viewportItems = getViewportFilteredItems(state.filtered);
+      renderList(viewportItems);
+      setResultInfo(`총 ${viewportItems.length}건`);
+      setListInfo(`총 ${viewportItems.length}개 매물`);
+      return viewportItems;
     }
 
     function updateSidebarWidth() {
@@ -3871,10 +3879,7 @@ function closeDetailPanel() {
 
         highlightCard(-1);
         updateMarkerSelection(null);
-        renderList(state.filtered);
-
-        setResultInfo(`총 ${state.filtered.length}건`);
-        setListInfo(`총 ${state.filtered.length}개 매물`);
+        refreshViewportList();
 
         setTimeout(() => {
           refreshClusterBadges();
@@ -3884,7 +3889,8 @@ function closeDetailPanel() {
       kakao.maps.event.addListener(state.map, "idle", () => {
         if (!state.filtered) return;
         renderMarkers(state.filtered, { preserveViewport: true });
-        updateMapEmptyState(getViewportFilteredItems(state.filtered));
+        const viewportItems = refreshViewportList();
+        updateMapEmptyState(viewportItems);
       });
     }
 
@@ -4258,16 +4264,17 @@ function closeDetailPanel() {
       state.selectedMarkerId = null;
       state.selectedClusterKey = null;
 
-      renderList(state.filtered);
+      const viewportItems = getViewportFilteredItems(state.filtered);
+      renderList(viewportItems);
       preventMapViewportChange = true;
       renderMarkers(state.filtered, { preserveViewport: true });
       preventMapViewportChange = false;
-      updateMapEmptyState(getViewportFilteredItems(state.filtered));
+      updateMapEmptyState(viewportItems);
 
-      setResultInfo(`총 ${state.filtered.length}건`);
-      setListInfo(`총 ${state.filtered.length}개 매물`);
+      setResultInfo(`총 ${viewportItems.length}건`);
+      setListInfo(`총 ${viewportItems.length}개 매물`);
 
-      if (!state.filtered.length) {
+      if (!viewportItems.length) {
         closeDetailPanel();
         return;
       }
