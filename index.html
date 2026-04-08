@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.380</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.380" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.381</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.381" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -1700,6 +1700,123 @@
       font-size: 16px;
     }
 
+
+    .map-recommend-card {
+      position: absolute;
+      right: 20px;
+      bottom: 20px;
+      z-index: 32;
+      width: 320px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.98);
+      border: 1px solid rgba(15, 41, 66, 0.08);
+      box-shadow: 0 16px 36px rgba(15, 41, 66, 0.16);
+      backdrop-filter: blur(10px);
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .map-recommend-head {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 14px 16px 10px;
+      border-bottom: 1px solid #eef2f6;
+    }
+
+    .map-recommend-title {
+      font-size: 18px;
+      font-weight: 900;
+      color: #2563eb;
+      letter-spacing: -0.3px;
+    }
+
+    .map-recommend-sub {
+      font-size: 15px;
+      font-weight: 900;
+      color: #1f2a36;
+      letter-spacing: -0.2px;
+    }
+
+    .map-recommend-body {
+      display: grid;
+      grid-template-columns: 124px 1fr;
+      gap: 12px;
+      padding: 12px 14px 14px;
+    }
+
+    .map-recommend-thumb {
+      height: 118px;
+      border-radius: 12px;
+      background: #eef3f7 center / cover no-repeat;
+      box-shadow: 0 8px 20px rgba(15, 41, 66, 0.10);
+    }
+
+    .map-recommend-content {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .map-recommend-badges {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+
+    .map-recommend-badge {
+      display: inline-flex;
+      align-items: center;
+      height: 22px;
+      padding: 0 10px;
+      border-radius: 20px;
+      background: #f3eefe;
+      color: #7c4dff;
+      font-size: 11px;
+      font-weight: 800;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .map-recommend-badge.deal {
+      background: #eef5ff;
+      color: #2563eb;
+    }
+
+    .map-recommend-price {
+      font-size: 22px;
+      font-weight: 950;
+      color: #111827;
+      line-height: 1.05;
+      letter-spacing: -0.7px;
+    }
+
+    .map-recommend-title-text {
+      font-size: 15px;
+      font-weight: 900;
+      color: #111827;
+      line-height: 1.35;
+      letter-spacing: -0.25px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      word-break: keep-all;
+    }
+
+    .map-recommend-address {
+      font-size: 13px;
+      font-weight: 700;
+      color: #6b7785;
+      line-height: 1.45;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
     @media (max-width: 980px) {
       :root {
         --sidebar-current-width: 100%;
@@ -2366,7 +2483,7 @@
 </style>
 <style>
 
-/* Stable patch overrides - Ver 1.380 */
+/* Stable patch overrides - Ver 1.381 */
 .map-empty-state {
   text-align: left !important;
 }
@@ -2532,7 +2649,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.380</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.381</div>
             </div>
           </div>
 
@@ -2740,6 +2857,25 @@
 
       <div class="map-result-count" id="mapResultCount">총 0건</div>
 
+      <div class="map-recommend-card" id="mapRecommendCard" style="display:none;">
+        <div class="map-recommend-head">
+          <span class="map-recommend-title">추천 매물</span>
+          <span class="map-recommend-sub">이 매물은 어때요?</span>
+        </div>
+        <div class="map-recommend-body" id="mapRecommendBody">
+          <div class="map-recommend-thumb" id="mapRecommendThumb"></div>
+          <div class="map-recommend-content">
+            <div class="map-recommend-badges">
+              <span class="map-recommend-badge" id="mapRecommendType"></span>
+              <span class="map-recommend-badge deal" id="mapRecommendDeal"></span>
+            </div>
+            <div class="map-recommend-price" id="mapRecommendPrice"></div>
+            <div class="map-recommend-title-text" id="mapRecommendTitleText"></div>
+            <div class="map-recommend-address" id="mapRecommendAddress"></div>
+          </div>
+        </div>
+      </div>
+
       <div class="map-side-tools">
         <div class="map-tool-group" id="mapTypeToolGroup">
           <button type="button" class="map-tool-btn active" data-map-type="roadmap" id="mapTypeRoadBtn" onclick="window.setMapTypeMode && window.setMapTypeMode('roadmap')">일반</button>
@@ -2780,7 +2916,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, SUIT, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.380';
+    const APP_VERSION = '1.381';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -2824,6 +2960,14 @@
     const mapTypeCadastralBtn = document.getElementById("mapTypeCadastralBtn");
     const areaUnitPyBtn = document.getElementById("areaUnitPyBtn");
     const areaUnitM2Btn = document.getElementById("areaUnitM2Btn");
+    const mapRecommendCard = document.getElementById("mapRecommendCard");
+    const mapRecommendBody = document.getElementById("mapRecommendBody");
+    const mapRecommendThumb = document.getElementById("mapRecommendThumb");
+    const mapRecommendType = document.getElementById("mapRecommendType");
+    const mapRecommendDeal = document.getElementById("mapRecommendDeal");
+    const mapRecommendPrice = document.getElementById("mapRecommendPrice");
+    const mapRecommendTitleText = document.getElementById("mapRecommendTitleText");
+    const mapRecommendAddress = document.getElementById("mapRecommendAddress");
         const dealButtons = document.querySelectorAll("#dealButtons button");
     const typeButtons = document.querySelectorAll("#typeButtons button");
     const featureButtons = document.querySelectorAll("#featureButtons button");
@@ -3035,6 +3179,61 @@
       mapEmptyState.classList.remove("open");
     }
 
+    function getRecommendationCandidate(items) {
+      const list = Array.isArray(items) ? items : [];
+      if (!list.length) return null;
+
+      if (state.selectedMarkerId != null) {
+        const selected = list.find(item => item.id === state.selectedMarkerId);
+        if (selected) return selected;
+      }
+
+      return list[0];
+    }
+
+    function renderRecommendationCard(item) {
+      if (!mapRecommendCard) return;
+
+      if (!item) {
+        mapRecommendCard.style.display = "none";
+        mapRecommendCard.onclick = null;
+        return;
+      }
+
+      mapRecommendCard.style.display = "block";
+      if (mapRecommendThumb) {
+        mapRecommendThumb.style.backgroundImage = `url('${escapeHtml(item.image || "")}')`;
+      }
+      if (mapRecommendType) {
+        mapRecommendType.textContent = getCardTypeBadgeLabel(item.type || "-");
+      }
+      if (mapRecommendDeal) {
+        mapRecommendDeal.textContent = item.dealType || "매매";
+      }
+      if (mapRecommendPrice) {
+        mapRecommendPrice.textContent = item.price || "-";
+      }
+      if (mapRecommendTitleText) {
+        mapRecommendTitleText.textContent = item.title || "추천 매물";
+      }
+      if (mapRecommendAddress) {
+        mapRecommendAddress.textContent = item.address || "-";
+      }
+
+      mapRecommendCard.onclick = async (e) => {
+        if (e.target.closest("a, button")) return;
+        if (detailScroll) detailScroll.scrollTop = 0;
+        await openDetailPanel(item);
+        if (detailScroll) detailScroll.scrollTop = 0;
+        updateMarkerSelection(item.id, [item.id]);
+        await focusProperty(item.id);
+      };
+    }
+
+    function refreshRecommendationCard(items) {
+      renderRecommendationCard(getRecommendationCandidate(items));
+    }
+
     function refreshViewportList() {
       const lockedItems = getLockedListItems();
       if (lockedItems) {
@@ -3042,6 +3241,7 @@
           renderList(lockedItems);
           setResultInfo(`선택 매물 ${lockedItems.length}건`);
           setListInfo(`총 ${lockedItems.length}개 매물`);
+          refreshRecommendationCard(lockedItems);
           return lockedItems;
         }
 
@@ -3059,6 +3259,7 @@
       renderList(viewportItems);
       setResultInfo(`총 ${viewportItems.length}건`);
       setListInfo(`총 ${viewportItems.length}개 매물`);
+      refreshRecommendationCard(viewportItems);
       return viewportItems;
     }
 
