@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.332</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.332" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.334</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.334" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -370,15 +370,31 @@
       padding: 18px 18px 18px;
     }
 
-
-
     .detail-summary-top {
       display: flex;
       align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: nowrap;
       margin-bottom: 8px;
+      width: 100%;
     }
+
+    .detail-summary-badge-group {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-width: 0;
+      flex-wrap: wrap;
+    }
+
+    .detail-summary-roadview-btn {
+      margin-left: auto;
+      flex: 0 0 auto;
+      height: 30px;
+      padding: 0 10px;
+    }
+
 
     .detail-summary-type-badge {
       display: inline-flex;
@@ -765,8 +781,8 @@
 
 
     .detail-features {
-      display: block;
-      margin-bottom: 14px;
+      display: none;
+      margin-bottom: 0;
     }
 
     .detail-tags-row {
@@ -831,8 +847,8 @@
 
 
     .detail-features {
-      display: block;
-      margin-bottom: 14px;
+      display: none;
+      margin-bottom: 0;
     }
 
     .detail-tags-row {
@@ -1822,13 +1838,30 @@
 
 
 
-/* right detail summary: type + deal on one line, same feel as left card badges */
+/* right detail summary: type + deal + roadview on one line */
 .detail-summary-top {
   display: flex;
   align-items: center;
-  gap: 6px;
-  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: nowrap;
   margin-bottom: 8px;
+  width: 100%;
+}
+
+.detail-summary-badge-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  flex-wrap: wrap;
+}
+
+.detail-summary-roadview-btn {
+  margin-left: auto;
+  flex: 0 0 auto;
+  height: 30px;
+  padding: 0 10px;
 }
 
 .detail-summary-type-badge,
@@ -2313,7 +2346,7 @@
       border: 1px solid rgba(15, 41, 66, 0.08);
       box-shadow: 0 16px 36px rgba(15, 41, 66, 0.14);
       backdrop-filter: blur(10px);
-      text-align: left;
+      text-align: center;
       pointer-events: none;
     }
 
@@ -2322,23 +2355,21 @@
     }
 
     .map-empty-state-title {
-      font-size: 16px;
+      font-size: 17px;
       font-weight: 900;
       color: #17212b;
       letter-spacing: -0.25px;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
       line-height: 1.35;
-      text-align: left;
     }
 
     .map-empty-state-desc {
       font-size: 14px;
-      font-weight: 500;
+      font-weight: 700;
       color: #6b7785;
       letter-spacing: -0.15px;
       line-height: 1.5;
-      text-align: left;
-      white-space: normal;
+      white-space: pre-line;
     }
 
 </style>
@@ -2355,7 +2386,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.332</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.334</div>
             </div>
           </div>
 
@@ -2438,10 +2469,16 @@
 
                 <div class="detail-summary-block">
                   <div class="detail-summary-top">
-                    <div class="detail-summary-type-badge" id="detailSummaryTypeBadge"></div>
+                    <div class="detail-summary-badge-group">
+                      <div class="detail-summary-type-badge" id="detailSummaryTypeBadge"></div>
+                      <div class="detail-summary-deal-badge" id="detailSummaryDealBadge"></div>
+                    </div>
+                    <button type="button" class="detail-roadview-inline-btn detail-summary-roadview-btn" id="detailSummaryRoadviewBtn">
+                      <i class="fa-solid fa-street-view"></i>
+                      로드뷰
+                    </button>
                   </div>
                   <div class="detail-summary-price-row">
-                    <div class="detail-summary-deal-badge" id="detailSummaryDealBadge"></div>
                     <div class="detail-summary-price" id="detailSummaryPrice"></div>
                   </div>
                   <div class="detail-summary-address" id="detailSummaryAddress"></div>
@@ -2601,7 +2638,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, SUIT, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.332';
+    const APP_VERSION = '1.334';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -3256,30 +3293,27 @@
 
     function createMarkerImage(item, isSelected = false, label = "1") {
       const text = String(label ?? "1");
-      const digits = text.length;
-      const height = 32;
-      const width = digits >= 3 ? 48 : (digits === 2 ? 40 : 32);
+      const size = 44;
 
-      const bgColor = isSelected ? "#1f6fff" : "#ffffff";
-      const textColor = isSelected ? "#ffffff" : "#1f6fff";
-      const borderColor = "#1f6fff";
-      const radius = 8;
+      const bgColor = isSelected ? "#ffffff" : "rgba(3, 199, 90, 0.9)";
+      const textColor = isSelected ? "rgba(3, 199, 90, 0.9)" : "#ffffff";
+      const borderColor = "#03C75A";
 
       const svg = `
-        <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
+        <svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
           <defs>
             <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
-              <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="rgba(15,41,66,0.16)"/>
+              <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="rgba(0,0,0,0.18)"/>
             </filter>
           </defs>
           <g filter="url(#shadow)">
-            <rect x="1" y="1" width="${width - 2}" height="${height - 2}" rx="${radius}" ry="${radius}"
-                  fill="${bgColor}"
-                  stroke="${borderColor}"
-                  stroke-width="1.5"/>
-            <text x="${width / 2}" y="${(height / 2) + 5}"
+            <circle cx="${size / 2}" cy="${size / 2}" r="${(size / 2) - 2}"
+                    fill="${bgColor}"
+                    stroke="${borderColor}"
+                    stroke-width="1"/>
+            <text x="${size / 2}" y="${(size / 2) + 6}"
                   text-anchor="middle"
-                  font-size="17"
+                  font-size="16"
                   font-weight="900"
                   font-family="${UI_FONT_STACK}"
                   fill="${textColor}">${text}</text>
@@ -3289,8 +3323,8 @@
 
       return new kakao.maps.MarkerImage(
         "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg),
-        new kakao.maps.Size(width, height),
-        { offset: new kakao.maps.Point(width / 2, height / 2) }
+        new kakao.maps.Size(size, size),
+        { offset: new kakao.maps.Point(size / 2, size / 2) }
       );
     }
 
@@ -3319,40 +3353,36 @@
       if (!clusterItems.length) return;
 
       const count = clusterItems.length;
-      const label = count > 99 ? "99+" : String(count);
-      const digits = label.length;
-      const height = 32;
-      const width = digits >= 3 ? 48 : (digits === 2 ? 40 : 32);
+      const size = getClusterBadgeSize();
 
-      const bg = isSelected ? "#1f6fff" : "#ffffff";
-      const color = isSelected ? "#ffffff" : "#1f6fff";
-      const border = "#1f6fff";
+      const bg = isSelected ? "#ffffff" : "rgba(3, 199, 90, 0.9)";
+      const color = isSelected ? "#03C75A" : "#ffffff";
+      const border = "#03C75A";
 
       const el = document.createElement("div");
-      el.style.width = `${width}px`;
-      el.style.height = `${height}px`;
-      el.style.minWidth = `${width}px`;
-      el.style.minHeight = `${height}px`;
-      el.style.padding = "0 8px";
-      el.style.borderRadius = "8px";
+      el.style.width = `${size}px`;
+      el.style.height = `${size}px`;
+      el.style.minWidth = `${size}px`;
+      el.style.minHeight = `${size}px`;
+      el.style.borderRadius = "50%";
       el.style.display = "flex";
       el.style.alignItems = "center";
       el.style.justifyContent = "center";
       el.style.background = bg;
       el.style.color = color;
-      el.style.fontSize = "17px";
+      el.style.fontSize = "16px";
       el.style.fontWeight = "900";
       el.style.fontFamily = UI_FONT_STACK;
       el.style.lineHeight = "1";
       el.style.letterSpacing = "-0.2px";
-      el.style.border = `1.5px solid ${border}`;
-      el.style.boxShadow = "0 4px 10px rgba(15,41,66,0.16)";
+      el.style.border = `1px solid ${border}`;
+      el.style.boxShadow = "0 4px 10px rgba(0,0,0,0.18)";
       el.style.boxSizing = "border-box";
       el.style.whiteSpace = "nowrap";
       el.style.cursor = "pointer";
       el.style.pointerEvents = "auto";
       el.style.userSelect = "none";
-      el.textContent = label;
+      el.textContent = count > 99 ? "99+" : String(count);
 
       el.addEventListener("click", async function (e) {
         e.preventDefault();
@@ -3680,6 +3710,10 @@
       if (detailSummaryAddress) {
         detailSummaryAddress.textContent = detailItem.address || "";
       }
+      const detailSummaryRoadviewBtn = document.getElementById("detailSummaryRoadviewBtn");
+      if (detailSummaryRoadviewBtn) {
+        detailSummaryRoadviewBtn.style.display = "inline-flex";
+      }
       detailDesc.textContent = detailItem.desc || "";
       detailInfoList.innerHTML = "";
 
@@ -3717,19 +3751,11 @@
 
       detailHeroFeatures.innerHTML = "";
 
-      detailFeatures.innerHTML = `
-        <div class="detail-tags-row">
-          <div class="detail-tags">${featureTagHtml}</div>
-          <button type="button" class="detail-roadview-inline-btn" id="detailTopRoadviewBtn">
-            <i class="fa-solid fa-street-view"></i>
-            로드뷰
-          </button>
-        </div>
-      `;
+      detailFeatures.innerHTML = "";
 
-      const detailTopRoadviewBtn = document.getElementById("detailTopRoadviewBtn");
-      if (detailTopRoadviewBtn) {
-        detailTopRoadviewBtn.onclick = () => {
+      const detailSummaryRoadviewBtn = document.getElementById("detailSummaryRoadviewBtn");
+      if (detailSummaryRoadviewBtn) {
+        detailSummaryRoadviewBtn.onclick = () => {
           showRoadview(detailItem.lat, detailItem.lng);
         };
       }
@@ -4115,9 +4141,8 @@ function closeDetailPanel() {
       if (!data.length) {
         propertyList.innerHTML = `
           <div class="card" style="padding:18px; cursor:default; border-bottom:0;">
-            <div class="card-body" style="padding:0; text-align:left;">
-              <div style="font-size:16px; font-weight:900; color:#17212b; line-height:1.5; margin-bottom:6px;">조건에 맞는 매물이 없습니다.</div>
-              <div style="font-size:14px; font-weight:500; color:#6b7785; line-height:1.5;">지도를 이동 하거나 필터를 변경해 보세요.</div>
+            <div class="card-body" style="padding:0; text-align:center;">
+              <div style="font-size:16px; font-weight:900; color:#17212b; line-height:1.5; white-space:pre-line;">조건에 맞는 매물이 없습니다.<br>지도를 이동 하거나 필터를 변경해 보세요.</div>
             </div>
           </div>
         `;
@@ -4221,24 +4246,10 @@ function closeDetailPanel() {
       });
     }
 
-    function syncLeftAllButton() {
-      const leftAllBtn = document.querySelector('#featureButtons button[data-value="all"]');
-      if (!leftAllBtn) return;
-
-      const isFeatureAll = state.selectedFeatures.size === 0;
-      const isDealAll = selectedDeal === "all";
-      const isTypeAll = selectedType === "all";
-
-      leftAllBtn.classList.toggle("all-active", isFeatureAll && isDealAll && isTypeAll);
-    }
-
-
     function applyFilter() {
       const keyword = keywordInput.value.trim().toLowerCase();
       const dealValue = selectedDeal;
       const typeValue = selectedType;
-      syncFeatureButtons();
-      syncLeftAllButton();
 
       state.filtered = state.all.filter(item => {
         const text = [
@@ -4487,7 +4498,6 @@ function closeDetailPanel() {
           btn.classList.add("active");
           selectedDeal = btn.dataset.value;
           applyFilter();
-          syncLeftAllButton();
         });
       });
 
@@ -4503,7 +4513,6 @@ function closeDetailPanel() {
           state.selectedClusterKey = null;
 
           applyFilter();
-          syncLeftAllButton();
         });
       });
 
@@ -4513,19 +4522,12 @@ function closeDetailPanel() {
 
           state.selectedFeatures.clear();
 
-          if (value === "all") {
-            selectedDeal = "all";
-            selectedType = "all";
-
-            dealButtons.forEach(b => b.classList.toggle("active", b.dataset.value === "all"));
-            typeButtons.forEach(b => b.classList.toggle("active", b.dataset.value === "all"));
-          } else {
+          if (value !== "all") {
             state.selectedFeatures.add(value);
           }
 
           syncFeatureButtons();
           applyFilter();
-          syncLeftAllButton();
         });
       });
 
