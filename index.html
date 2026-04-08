@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주도 부동산 지도 Ver 1.393</title>
-<meta property="og:title" content="제주도 부동산 지도 Ver 1.393" />
-  <meta property="og:description" content="제주도 부동산 지도 Ver 1.393" />
+  <title>제주도 부동산 지도 Ver 1.394</title>
+<meta property="og:title" content="제주도 부동산 지도 Ver 1.394" />
+  <meta property="og:description" content="제주도 부동산 지도 Ver 1.394" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
   <meta property="og:image" content="https://your-domain.example/og-image.jpg" />
@@ -2512,7 +2512,7 @@
 </style>
 <style>
 
-/* Stable patch overrides - Ver 1.393 */
+/* Stable patch overrides - Ver 1.394 */
 .map-empty-state {
   text-align: left !important;
 }
@@ -2678,7 +2678,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.393</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.394</div>
             </div>
           </div>
 
@@ -2944,11 +2944,33 @@
 
 
 
+
+// ===== SAFE RECOMMENDATION =====
+function getRecommendationCandidateSafe() {
+  const allItems = Array.isArray(state.all) ? state.all : [];
+  const recommended = allItems.filter(item => item && item.recommend === true);
+  if (!recommended.length) return null;
+  const i = Math.floor(Math.random() * recommended.length);
+  return recommended[i];
+}
+
+function initRecommendationSafe() {
+  if (state.recommendItem) return;
+  state.recommendItem = getRecommendationCandidateSafe();
+}
+
+function refreshRecommendationCardSafe() {
+  if (state.isRecommendCardDismissed) return;
+  if (!state.recommendItem) initRecommendationSafe();
+  renderRecommendationCard(state.recommendItem);
+}
+// ===== END =====
+
 </script>
 
   <script>
     const UI_FONT_STACK = 'Pretendard, SUIT, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.393';
+    const APP_VERSION = '1.394';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -3212,28 +3234,16 @@
       mapEmptyState.classList.remove("open");
     }
 
-    function getRecommendationCandidate() {
-      const allItems = Array.isArray(state.all) ? state.all : [];
-      if (!allItems.length) return null;
-
-      const recommended = allItems.filter(item => item && item.recommend === true);
-      if (recommended.length > 0) {
-        const randomIndex = Math.floor(Math.random() * recommended.length);
-        return recommended[randomIndex];
-      }
+    function getRecommendationCandidate(items) {
+      const list = Array.isArray(items) ? items : [];
+      if (!list.length) return null;
 
       if (state.selectedMarkerId != null) {
-        const selected = allItems.find(item => item.id === state.selectedMarkerId);
+        const selected = list.find(item => item.id === state.selectedMarkerId);
         if (selected) return selected;
       }
 
-      return allItems[0] || null;
-    }
-
-    function initRecommendation() {
-      if (state.recommendItem) return state.recommendItem;
-      state.recommendItem = getRecommendationCandidate();
-      return state.recommendItem;
+      return list[0];
     }
 
     function renderRecommendationCard(item) {
@@ -3280,24 +3290,9 @@
       };
     }
 
-    function refreshRecommendationCard() {
-      if (state.isRecommendCardDismissed) {
-        renderRecommendationCard(null);
-        return;
-      }
-
-      if (!state.recommendItem) {
-        initRecommendation();
-      }
-
-      renderRecommendationCard(state.recommendItem);
-    }
-
-      if (!state.recommendItem) {
-        initRecommendation();
-      }
-
-      renderRecommendationCard(state.recommendItem);
+    function refreshRecommendationCard(items) {
+      if (state.hasShownRecommendCard || state.isRecommendCardDismissed) return;
+      renderRecommendationCard(getRecommendationCandidate(items));
     }
 
     function refreshViewportList() {
@@ -3307,7 +3302,7 @@
           renderList(lockedItems);
           setResultInfo(`선택 매물 ${lockedItems.length}건`);
           setListInfo(`총 ${lockedItems.length}개 매물`);
-          refreshRecommendationCard();
+          refreshRecommendationCard(lockedItems);
           return lockedItems;
         }
 
@@ -3325,7 +3320,7 @@
       renderList(viewportItems);
       setResultInfo(`총 ${viewportItems.length}건`);
       setListInfo(`총 ${viewportItems.length}개 매물`);
-      refreshRecommendationCard();
+      refreshRecommendationCard(viewportItems);
       return viewportItems;
     }
 
@@ -3848,7 +3843,6 @@
         );
 
         state.all = enriched;
-        initRecommendation();
         applyFilter();
         updateMapEmptyState();
         setGlobalAreaUnit("m2");
@@ -5352,6 +5346,28 @@ function closeDetailPanel() {
     }
 
     bootstrap();
-  </script>
+  
+// ===== SAFE RECOMMENDATION =====
+function getRecommendationCandidateSafe() {
+  const allItems = Array.isArray(state.all) ? state.all : [];
+  const recommended = allItems.filter(item => item && item.recommend === true);
+  if (!recommended.length) return null;
+  const i = Math.floor(Math.random() * recommended.length);
+  return recommended[i];
+}
+
+function initRecommendationSafe() {
+  if (state.recommendItem) return;
+  state.recommendItem = getRecommendationCandidateSafe();
+}
+
+function refreshRecommendationCardSafe() {
+  if (state.isRecommendCardDismissed) return;
+  if (!state.recommendItem) initRecommendationSafe();
+  renderRecommendationCard(state.recommendItem);
+}
+// ===== END =====
+
+</script>
 </body>
 </html>
