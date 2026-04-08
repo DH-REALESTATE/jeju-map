@@ -2442,19 +2442,17 @@
   line-height: 1 !important;
 }
 
-.detail-summary-price {
-  font-size: 32px !important;
-  font-weight: 950 !important;
-  letter-spacing: -1px !important;
-  color: #0f172a !important;
+.detail-meta-item:first-child .detail-area-wrap {
+  gap: 6px !important;
 }
 
-.detail-title {
-  font-size: 20px !important;
-  font-weight: 950 !important;
-  letter-spacing: -0.5px !important;
-  line-height: 1.5 !important;
-  color: #0f172a !important;
+.detail-meta-item:first-child #detailAreaTypeToggleBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  flex: 0 0 auto;
+  margin-left: 0;
 }
 
 </style>
@@ -2574,12 +2572,12 @@
                   <div class="detail-meta-item">
                     <span class="detail-meta-label">
                         <span id="detailAreaLabel">면적</span>
-                        <button type="button" class="area-type-toggle-btn" id="detailAreaTypeToggleBtn" style="display:none;" aria-label="면적 전환">
-                          <i class="fa-solid fa-rotate"></i>
-                        </button>
                       </span>
                     <div class="detail-area-wrap">
                       <span class="detail-meta-value area-display" id="detailAreaValue" data-area-raw="-" data-area-unit="${globalAreaUnit}">-</span>
+                      <button type="button" class="area-type-toggle-btn" id="detailAreaTypeToggleBtn" style="display:none;" aria-label="면적 전환">
+                        <i class="fa-solid fa-rotate"></i>
+                      </button>
                       <button type="button" class="area-toggle-btn" id="detailAreaToggleBtn">평</button>
                     </div>
                   </div>
