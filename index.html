@@ -2630,7 +2630,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, SUIT, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.356';
+    const APP_VERSION = '1.357';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -2643,7 +2643,8 @@
       selectedFeatures: new Set(),
       selectedMarkerId: null,
       selectedMarkerIds: new Set(),
-      selectedClusterKey: null
+      selectedClusterKey: null,
+      lockedListItems: null
     };
 
     let roadview = null;
@@ -2824,6 +2825,14 @@
     }
 
     function refreshViewportList() {
+      if (Array.isArray(state.lockedListItems)) {
+        const lockedItems = state.lockedListItems.slice();
+        renderList(lockedItems);
+        setResultInfo(`총 ${lockedItems.length}건`);
+        setListInfo(`총 ${lockedItems.length}개 매물`);
+        return lockedItems;
+      }
+
       const viewportItems = getViewportFilteredItems(state.filtered);
       renderList(viewportItems);
       setResultInfo(`총 ${viewportItems.length}건`);
@@ -3811,6 +3820,7 @@ function closeDetailPanel() {
 
       state.selectedMarkerId = null;
       state.selectedClusterKey = getClusterKeyFromItems(clusterItems);
+      state.lockedListItems = clusterItems.slice();
 
       updateMarkerSelection(null, clusterItems.map(v => v.id));
       closeDetailPanel();
@@ -3909,6 +3919,7 @@ function closeDetailPanel() {
         await hideRoadview();
 
         state.selectedClusterKey = null;
+        state.lockedListItems = null;
 
         highlightCard(-1);
         updateMarkerSelection(null);
@@ -4119,6 +4130,7 @@ function closeDetailPanel() {
           await hideRoadview();
 
           state.selectedClusterKey = null;
+          state.lockedListItems = [item];
           closeDetailPanel();
 
           highlightCard(item.id);
@@ -4336,6 +4348,7 @@ function closeDetailPanel() {
 
       state.selectedMarkerId = null;
       state.selectedClusterKey = null;
+      state.lockedListItems = null;
 
       const viewportItems = getViewportFilteredItems(state.filtered);
       renderList(viewportItems);
