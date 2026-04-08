@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.365</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.365" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.366</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.366" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -554,6 +554,16 @@
       color: #1f6fff;
       font-weight: 900;
       letter-spacing: -0.3px;
+    }
+
+    .area-num {
+      font-weight: 900;
+    }
+
+    .area-rest {
+      font-weight: 500;
+      color: #5c6b7a;
+      margin-left: 1px;
     }
 
     .detail-area-wrap {
@@ -2342,7 +2352,7 @@
 </style>
 <style>
 
-/* Stable patch overrides - Ver 1.365 */
+/* Stable patch overrides - Ver 1.366 */
 .map-empty-state {
   text-align: left !important;
 }
@@ -2442,7 +2452,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.365</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.366</div>
             </div>
           </div>
 
@@ -2690,7 +2700,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, SUIT, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.365';
+    const APP_VERSION = '1.366';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -3047,7 +3057,7 @@
 
     function getDisplayTypeLabel(typeText) {
       const text = String(typeText || "").trim();
-      if (["전", "대", "답", "과수원", "임야", "토지", "토지ㆍ임야"].includes(text)) return "토지";
+      if (["전", "대", "답", "과수원", "임야", "토지", "토지ㆍ임야"].includes(text)) return getLandTypeDetailLabel(text);
       if (["단독", "단독주택"].includes(text)) return "단독주택";
       return text || "-";
     }
@@ -3202,6 +3212,27 @@
       return formatAreaByUnit(areaText, unit, typeText);
     }
 
+    function getLandTypeDetailLabel(typeText) {
+      const text = String(typeText || "").trim();
+      if (text === "임야") return "임야";
+      if (["전", "대", "답", "과수원"].includes(text)) return `토지(${text})`;
+      if (["토지", "토지ㆍ임야"].includes(text)) return "토지";
+      return text || "-";
+    }
+
+    function setDetailAreaValueHTML(valueText) {
+      if (!detailAreaValue) return;
+      const raw = String(valueText || "-").trim();
+      const matched = raw.match(/^(\d[\d,]*(?:\.\d+)?)([^0-9].*)$/);
+
+      if (matched) {
+        const [, num, rest] = matched;
+        detailAreaValue.innerHTML = `<span class="area-num">${num}</span><span class="area-rest">${rest}</span>`;
+      } else {
+        detailAreaValue.textContent = raw;
+      }
+    }
+
     syncSummaryBadgeRow();
 
     function syncDetailAreaDisplay(detailItem) {
@@ -3219,7 +3250,7 @@
         const targetValue = detailAreaMode === "land" ? parsed.land : parsed.total;
 
         detailAreaLabel.textContent = detailAreaMode === "land" ? "면적(대지)" : "면적(연)";
-        detailAreaValue.textContent = Number.isFinite(targetValue) ? formatSingleAreaValue(targetValue, unit) : "-";
+        setDetailAreaValueHTML(Number.isFinite(targetValue) ? formatSingleAreaValue(targetValue, unit) : "-");
 
         if (detailAreaTypeToggleBtn) {
           detailAreaTypeToggleBtn.style.display = "inline-flex";
@@ -3232,7 +3263,7 @@
         const targetValue = detailAreaMode === "land" ? parsed.land : parsed.total;
 
         detailAreaLabel.textContent = detailAreaMode === "land" ? "면적(대지)" : "면적(연)";
-        detailAreaValue.textContent = Number.isFinite(targetValue) ? formatSingleAreaValue(targetValue, unit) : "-";
+        setDetailAreaValueHTML(Number.isFinite(targetValue) ? formatSingleAreaValue(targetValue, unit) : "-");
 
         if (detailAreaTypeToggleBtn) {
           detailAreaTypeToggleBtn.style.display = "inline-flex";
@@ -3246,7 +3277,7 @@
         const targetValue = showSupply ? parsed.supply : parsed.private;
 
         detailAreaLabel.textContent = showSupply ? "면적(계약)" : "면적(전용)";
-        detailAreaValue.textContent = Number.isFinite(targetValue) ? formatSingleAreaValue(targetValue, unit) : "-";
+        setDetailAreaValueHTML(Number.isFinite(targetValue) ? formatSingleAreaValue(targetValue, unit) : "-");
 
         if (detailAreaTypeToggleBtn) {
           detailAreaTypeToggleBtn.style.display = "inline-flex";
@@ -3260,7 +3291,7 @@
         const targetValue = showSupply ? parsed.supply : parsed.private;
 
         detailAreaLabel.textContent = showSupply ? "면적(공급)" : "면적(전용)";
-        detailAreaValue.textContent = Number.isFinite(targetValue) ? formatSingleAreaValue(targetValue, unit) : "-";
+        setDetailAreaValueHTML(Number.isFinite(targetValue) ? formatSingleAreaValue(targetValue, unit) : "-");
 
         if (detailAreaTypeToggleBtn) {
           detailAreaTypeToggleBtn.style.display = "inline-flex";
@@ -3270,7 +3301,7 @@
 
       if (/토지|임야|과수원/.test(typeText)) {
         detailAreaLabel.textContent = "면적";
-        detailAreaValue.textContent = formatAreaByUnit(detailItem.area || "-", unit, typeText);
+        setDetailAreaValueHTML(formatAreaByUnit(detailItem.area || "-", unit, typeText));
 
         if (detailAreaWrap) {
           detailAreaWrap.classList.add("land-two-line");
@@ -3283,7 +3314,7 @@
       }
 
       detailAreaLabel.textContent = "면적";
-      detailAreaValue.textContent = formatAreaByUnit(detailItem.area || "-", unit, typeText);
+      setDetailAreaValueHTML(formatAreaByUnit(detailItem.area || "-", unit, typeText));
 
       if (detailAreaTypeToggleBtn) {
         detailAreaTypeToggleBtn.style.display = "none";
@@ -3402,9 +3433,13 @@
                   dominant-baseline="middle"
                   text-anchor="middle"
                   font-size="24"
-                  font-weight="700"
+                  font-weight="800"
                   font-family="${UI_FONT_STACK}"
-                  fill="${textColor}">${text}</text>
+                  fill="${textColor}"
+                  stroke="${textColor}"
+                  stroke-width="0.35"
+                  paint-order="stroke fill"
+                  style="font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1, 'lnum' 1; letter-spacing: -0.4px;">${text}</text>
           </g>
         </svg>
       `;
@@ -3465,11 +3500,14 @@
       el.style.justifyContent = "center";
       el.style.background = bg;
       el.style.color = color;
-      el.style.fontSize = "26px";
-      el.style.fontWeight = "900";
+      el.style.fontSize = "24px";
+      el.style.fontWeight = "800";
       el.style.fontFamily = UI_FONT_STACK;
       el.style.lineHeight = "1";
-      el.style.letterSpacing = "-0.2px";
+      el.style.letterSpacing = "-0.4px";
+      el.style.fontVariantNumeric = "tabular-nums";
+      el.style.fontFeatureSettings = "'tnum' 1, 'lnum' 1";
+      el.style.webkitFontSmoothing = "antialiased";
       el.style.border = "0";
       el.style.boxShadow = "0 6px 16px rgba(0,0,0,0.16)";
       el.style.boxSizing = "border-box";
@@ -3943,56 +3981,56 @@ function closeDetailPanel() {
         calculator: [5, 10, 20, 50],
         styles: [
           {
-            width: "50px",
-            height: "50px",
+            width: "38px",
+            height: "38px",
             background: "rgba(255,255,255,0.90)",
             color: "#1f6fff",
-            borderRadius: "16px",
+            borderRadius: "12px",
             border: "0",
             boxShadow: "0 6px 16px rgba(0,0,0,0.16)",
             textAlign: "center",
-            fontWeight: "800",
-            fontSize: "24px",
-            lineHeight: "50px"
+            fontWeight: "900",
+            fontSize: "20px",
+            lineHeight: "38px"
           },
           {
-            width: "50px",
-            height: "50px",
+            width: "38px",
+            height: "38px",
             background: "rgba(255,255,255,0.90)",
             color: "#1f6fff",
-            borderRadius: "16px",
+            borderRadius: "12px",
             border: "0",
             boxShadow: "0 6px 16px rgba(0,0,0,0.16)",
             textAlign: "center",
-            fontWeight: "800",
-            fontSize: "24px",
-            lineHeight: "50px"
+            fontWeight: "900",
+            fontSize: "20px",
+            lineHeight: "38px"
           },
           {
-            width: "50px",
-            height: "50px",
+            width: "38px",
+            height: "38px",
             background: "rgba(255,255,255,0.90)",
             color: "#1f6fff",
-            borderRadius: "16px",
+            borderRadius: "12px",
             border: "0",
             boxShadow: "0 6px 16px rgba(0,0,0,0.16)",
             textAlign: "center",
-            fontWeight: "800",
-            fontSize: "24px",
-            lineHeight: "50px"
+            fontWeight: "900",
+            fontSize: "20px",
+            lineHeight: "38px"
           },
           {
-            width: "50px",
-            height: "50px",
+            width: "38px",
+            height: "38px",
             background: "rgba(255,255,255,0.90)",
             color: "#1f6fff",
-            borderRadius: "16px",
+            borderRadius: "12px",
             border: "0",
             boxShadow: "0 6px 16px rgba(0,0,0,0.16)",
             textAlign: "center",
-            fontWeight: "800",
-            fontSize: "24px",
-            lineHeight: "50px"
+            fontWeight: "900",
+            fontSize: "20px",
+            lineHeight: "38px"
           }
         ]
       });
