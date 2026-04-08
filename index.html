@@ -2372,6 +2372,32 @@
   display: none !important;
 }
 
+
+.brand-card {
+  background: #fff !important;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+.detail-tags-row {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.detail-tags {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.detail-roadview-inline-btn {
+  margin-left: auto;
+}
+
 </style>
 
 </head>
@@ -2643,8 +2669,7 @@
       selectedFeatures: new Set(),
       selectedMarkerId: null,
       selectedMarkerIds: new Set(),
-      selectedClusterKey: null,
-      lockedListItems: null
+      selectedClusterKey: null
     };
 
     let roadview = null;
@@ -2825,12 +2850,12 @@
     }
 
     function refreshViewportList() {
-      if (Array.isArray(state.lockedListItems)) {
-        const lockedItems = state.lockedListItems.slice();
-        renderList(lockedItems);
-        setResultInfo(`총 ${lockedItems.length}건`);
-        setListInfo(`총 ${lockedItems.length}개 매물`);
-        return lockedItems;
+      const selectedClusterItems = getSelectedClusterItems();
+      if (selectedClusterItems && selectedClusterItems.length) {
+        renderList(selectedClusterItems);
+        setResultInfo(`선택 매물 ${selectedClusterItems.length}건`);
+        setListInfo(`총 ${selectedClusterItems.length}개 매물`);
+        return selectedClusterItems;
       }
 
       const viewportItems = getViewportFilteredItems(state.filtered);
@@ -3347,6 +3372,17 @@
       return items.map(item => item.id).sort((a, b) => a - b).join(",");
     }
 
+    function getSelectedClusterItems() {
+      if (!state.selectedClusterKey) return null;
+      const selectedItems = (state.filtered || []).filter(item => {
+        const id = Number(item?.id);
+        return state.selectedMarkerIds && state.selectedMarkerIds.has(id);
+      });
+      if (!selectedItems.length) return null;
+      const key = getClusterKeyFromItems(selectedItems);
+      return key === state.selectedClusterKey ? selectedItems : null;
+    }
+
     function getClusterBadgeSize() {
       return 38;
     }
@@ -3820,7 +3856,6 @@ function closeDetailPanel() {
 
       state.selectedMarkerId = null;
       state.selectedClusterKey = getClusterKeyFromItems(clusterItems);
-      state.lockedListItems = clusterItems.slice();
 
       updateMarkerSelection(null, clusterItems.map(v => v.id));
       closeDetailPanel();
@@ -3919,7 +3954,6 @@ function closeDetailPanel() {
         await hideRoadview();
 
         state.selectedClusterKey = null;
-        state.lockedListItems = null;
 
         highlightCard(-1);
         updateMarkerSelection(null);
@@ -4130,7 +4164,6 @@ function closeDetailPanel() {
           await hideRoadview();
 
           state.selectedClusterKey = null;
-          state.lockedListItems = [item];
           closeDetailPanel();
 
           highlightCard(item.id);
@@ -4348,7 +4381,6 @@ function closeDetailPanel() {
 
       state.selectedMarkerId = null;
       state.selectedClusterKey = null;
-      state.lockedListItems = null;
 
       const viewportItems = getViewportFilteredItems(state.filtered);
       renderList(viewportItems);
@@ -4557,6 +4589,11 @@ function closeDetailPanel() {
           btn.classList.add("active");
           selectedDeal = btn.dataset.value;
 
+          const leftAllBtn = document.querySelector('#featureButtons button[data-value="all"]');
+          if (leftAllBtn && btn.dataset.value !== "all") {
+            leftAllBtn.classList.remove("all-active");
+          }
+
           closeDetailPanel();
           currentDetailItem = null;
           state.selectedMarkerId = null;
@@ -4571,6 +4608,11 @@ function closeDetailPanel() {
           typeButtons.forEach(b => b.classList.remove("active"));
           btn.classList.add("active");
           selectedType = btn.dataset.value;
+
+          const leftAllBtn = document.querySelector('#featureButtons button[data-value="all"]');
+          if (leftAllBtn && btn.dataset.value !== "all") {
+            leftAllBtn.classList.remove("all-active");
+          }
 
           closeDetailPanel();
           currentDetailItem = null;
