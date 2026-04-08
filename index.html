@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.348</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.348" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.349</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.349" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -363,7 +363,7 @@
     }
 
     .detail-hero-features {
-      display: none;
+      display: none !important;
     }
 
     .detail-content {
@@ -456,7 +456,7 @@
     }
 
     .detail-summary-price {
-      font-size: 28px;
+      font-size: 31px;
       font-weight: 900;
       line-height: 1.15;
       letter-spacing: -0.8px;
@@ -897,7 +897,23 @@
       line-height: 1;
     }
 
-    .detail-action-box {
+    
+    .detail-summary-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      width: 100%;
+    }
+
+    .detail-summary-left {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: nowrap;
+      min-width: 0;
+    }
+.detail-action-box {
       display: none !important;
     }
 
@@ -2151,7 +2167,33 @@
 
 
     
-    .map-side-tools {
+    
+    .marker-badge,
+    .cluster-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      height: 38px;
+      min-width: 38px;
+      padding: 0 12px;
+      border-radius: 12px;
+      background: #fff;
+      color: #1f6fff;
+      border: 1px solid #dbe3ee;
+      font-size: 20px;
+      font-weight: 900;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .marker-badge.active,
+    .cluster-badge.active {
+      background: #1f6fff;
+      color: #fff;
+      border-color: #1f6fff;
+    }
+.map-side-tools {
       position: absolute;
       top: 182px;
       left: 18px;
@@ -2313,7 +2355,7 @@
       border: 1px solid rgba(15, 41, 66, 0.08);
       box-shadow: 0 16px 36px rgba(15, 41, 66, 0.14);
       backdrop-filter: blur(10px);
-      text-align: center;
+      text-align: left;
       pointer-events: none;
     }
 
@@ -2322,92 +2364,35 @@
     }
 
     .map-empty-state-title {
-      font-size: 17px;
-      font-weight: 900;
-      color: #17212b;
-      letter-spacing: -0.25px;
-      margin-bottom: 8px;
-      line-height: 1.35;
+      display: none !important;
     }
 
     .map-empty-state-desc {
-      font-size: 14px;
-      font-weight: 700;
-      color: #6b7785;
-      letter-spacing: -0.15px;
-      line-height: 1.5;
-      white-space: pre-line;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      text-align: left !important;
+      white-space: normal;
+      width: 100%;
     }
 
+    .empty-title {
+      font-size: 16px;
+      font-weight: 900;
+      color: #17212b;
+      line-height: 1.35;
+      margin: 0;
+      text-align: left !important;
+    }
 
-/* v1.348 stability overrides */
-.detail-hero-features,
-#detailHeroFeatures {
-  display: none !important;
-}
-.map-empty-state,
-.map-empty-state-desc {
-  text-align: left !important;
-}
-.map-empty-state-desc {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  white-space: normal !important;
-}
-.empty-title {
-  font-size: 16px;
-  font-weight: 900;
-  color: #17212b;
-  line-height: 1.35;
-  margin: 0;
-}
-.empty-sub {
-  font-size: 14px;
-  font-weight: 500;
-  color: #6b7785;
-  line-height: 1.4;
-  margin: 0;
-}
-.detail-content {
-  padding-top: 8px;
-}
-.detail-summary-block {
-  margin-top: 4px;
-  margin-bottom: 10px;
-}
-.detail-summary-top {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  gap: 12px !important;
-  width: 100% !important;
-  margin-bottom: 8px !important;
-}
-.detail-summary-left {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-wrap: nowrap;
-  min-width: 0;
-}
-.detail-summary-type-badge,
-.detail-summary-deal-badge {
-  display: inline-flex !important;
-  align-items: center;
-  justify-content: center;
-  height: 30px;
-  padding: 0 10px;
-  border-radius: 14px;
-  white-space: nowrap;
-}
-.detail-roadview-inline-btn {
-  margin-left: auto !important;
-  flex: 0 0 auto !important;
-}
-.detail-summary-price {
-  font-size: 32px !important;
-}
+    .empty-sub {
+      font-size: 14px;
+      font-weight: 500;
+      color: #6b7785;
+      line-height: 1.4;
+      margin: 0;
+      text-align: left !important;
+    }
 
 </style>
 
@@ -2423,7 +2408,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.348</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.349</div>
             </div>
           </div>
 
@@ -2604,7 +2589,10 @@
       <div id="map"></div>
 
       <div class="map-empty-state" id="mapEmptyState">
-        <div class="map-empty-state-desc"><div class="empty-title">조건에 맞는 매물이 없습니다.</div><div class="empty-sub">지도를 이동 하거나 필터를 변경해 보세요.</div></div>
+        <div class="map-empty-state-desc">
+          <div class="empty-title">조건에 맞는 매물이 없습니다.</div>
+          <div class="empty-sub">지도를 이동 하거나 필터를 변경해 보세요.</div>
+        </div>
       </div>
 
       <div class="map-filter-bar">
@@ -2668,7 +2656,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, SUIT, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.348';
+    const APP_VERSION = '1.349';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -3316,24 +3304,25 @@
 
     function getBadgeWidthByText(text) {
       const len = String(text ?? "").length;
-      if (len >= 3) return 70;
-      if (len === 2) return 58;
-      return 46;
+      if (len >= 3) return 62;
+      if (len === 2) return 50;
+      return 38;
     }
 
     function createMarkerImage(item, isSelected = false, label = "1") {
-      const text = String(label || item?.markerPrice || item?.markerLabel || "1");
+      const text = String(label ?? "1");
+      const width = getBadgeWidthByText(text);
       const height = 38;
-      const width = text.length === 1 ? 38 : 38 + (text.length - 1) * 12;
+
       const bgColor = isSelected ? "#1f6fff" : "#ffffff";
       const textColor = isSelected ? "#ffffff" : "#1f6fff";
-      const borderColor = "#1f6fff";
+      const borderColor = isSelected ? "#1f6fff" : "#dbe3ee";
 
       const svg = `
         <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
           <defs>
             <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
-              <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="rgba(0,0,0,0.12)"/>
+              <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="rgba(15,41,66,0.10)"/>
             </filter>
           </defs>
           <g filter="url(#shadow)">
@@ -3341,8 +3330,7 @@
                   fill="${bgColor}"
                   stroke="${borderColor}"
                   stroke-width="1"/>
-            <text x="${width / 2}" y="${(height / 2) + 1}"
-                  dominant-baseline="middle"
+            <text x="${width / 2}" y="${(height / 2) + 7}"
                   text-anchor="middle"
                   font-size="20"
                   font-weight="900"
@@ -3355,7 +3343,7 @@
       return new kakao.maps.MarkerImage(
         "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg),
         new kakao.maps.Size(width, height),
-        { offset: new kakao.maps.Point(Math.round(width / 2), Math.round(height / 2)) }
+        { offset: new kakao.maps.Point(width / 2, height / 2) }
       );
     }
 
@@ -3372,9 +3360,8 @@
       return items.map(item => item.id).sort((a, b) => a - b).join(",");
     }
 
-    function getClusterBadgeSize(label = "") {
-      const text = String(label || "");
-      return text.length <= 1 ? 38 : 38 + (text.length - 1) * 12;
+    function getClusterBadgeSize(text) {
+      return getBadgeWidthByText(text);
     }
 
     function setClusterBadgeSelected(cluster, isSelected) {
@@ -3384,20 +3371,20 @@
       const clusterItems = cluster.getMarkers().map(marker => marker.__property).filter(Boolean);
       if (!clusterItems.length) return;
 
-      const count = clusterItems.length;
-      const text = String(count);
-      const width = getClusterBadgeSize(text);
+      const countLabel = clusterItems.length > 99 ? "99+" : String(clusterItems.length);
+      const width = getClusterBadgeSize(countLabel);
       const height = 38;
 
       const bg = isSelected ? "#1f6fff" : "#ffffff";
       const color = isSelected ? "#ffffff" : "#1f6fff";
-      const border = "#1f6fff";
+      const border = isSelected ? "#1f6fff" : "#dbe3ee";
 
       const el = document.createElement("div");
-      el.style.height = `${height}px`;
-      el.style.minWidth = `${height}px`;
+      el.className = "cluster-badge" + (isSelected ? " active" : "");
       el.style.width = `${width}px`;
-      el.style.padding = "0 12px";
+      el.style.height = `${height}px`;
+      el.style.minWidth = `${width}px`;
+      el.style.minHeight = `${height}px`;
       el.style.borderRadius = "12px";
       el.style.display = "flex";
       el.style.alignItems = "center";
@@ -3408,18 +3395,103 @@
       el.style.fontWeight = "900";
       el.style.fontFamily = UI_FONT_STACK;
       el.style.lineHeight = "1";
-      el.style.letterSpacing = "-0.2px";
       el.style.border = `1px solid ${border}`;
-      el.style.boxShadow = "0 4px 10px rgba(0,0,0,0.12)";
+      el.style.boxShadow = "0 2px 6px rgba(15,41,66,0.10)";
       el.style.boxSizing = "border-box";
       el.style.whiteSpace = "nowrap";
       el.style.cursor = "pointer";
       el.style.pointerEvents = "auto";
       el.style.userSelect = "none";
-      el.textContent = text;
+      el.style.padding = width > 38 ? "0 12px" : "0";
+      el.textContent = countLabel;
 
-      clusterMarker.setStyles([{ width: `${width}px`, height: `${height}px`, lineHeight: `${height}px`, background: "transparent", border: "0", borderRadius: "0", color: "transparent" }]);
-      clusterMarker.setText("");
+      el.addEventListener("click", async function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        await handleClusterSelection(cluster);
+      });
+
+      clusterMarker.setContent(el);
+    }
+
+    function refreshClusterBadges() {
+      if (!state.clusterer) return;
+      const clusters = state.clusterer.getClusters ? state.clusterer.getClusters() : state.clusterer._clusters;
+      if (!clusters || !clusters.length) return;
+
+      clusters.forEach(cluster => {
+        if (!cluster || typeof cluster.getClusterMarker !== "function") return;
+        const clusterItems = cluster.getMarkers().map(marker => marker.__property).filter(Boolean);
+        if (!clusterItems.length) return;
+
+        const key = getClusterKeyFromItems(clusterItems);
+        const isSelected = state.selectedClusterKey === key;
+        setClusterBadgeSelected(cluster, isSelected);
+      });
+    }
+
+    function updateMarkerSelection(selectedId) {
+      state.selectedMarkerId = selectedId;
+      state.markers.forEach(marker => {
+        const item = marker.__property;
+        const isSelected = item && item.id === selectedId;
+        marker.setImage(createMarkerImage(item, isSelected, "1"));
+      });
+    }
+
+    function getClusterKeyFromItems(items) {
+      return items.map(item => item.id).sort((a, b) => a - b).join(",");
+    }
+
+    function getClusterBadgeSize() {
+      return 44;
+    }
+
+    function setClusterBadgeSelected(cluster, isSelected) {
+      const clusterMarker = cluster.getClusterMarker ? cluster.getClusterMarker() : null;
+      if (!clusterMarker) return;
+
+      const clusterItems = cluster.getMarkers().map(marker => marker.__property).filter(Boolean);
+      if (!clusterItems.length) return;
+
+      const count = clusterItems.length;
+      const size = getClusterBadgeSize();
+
+      const bg = isSelected ? "#ffffff" : "rgba(3, 199, 90, 0.9)";
+      const color = isSelected ? "#03C75A" : "#ffffff";
+      const border = "#03C75A";
+
+      const el = document.createElement("div");
+      el.style.width = `${size}px`;
+      el.style.height = `${size}px`;
+      el.style.minWidth = `${size}px`;
+      el.style.minHeight = `${size}px`;
+      el.style.borderRadius = "50%";
+      el.style.display = "flex";
+      el.style.alignItems = "center";
+      el.style.justifyContent = "center";
+      el.style.background = bg;
+      el.style.color = color;
+      el.style.fontSize = "16px";
+      el.style.fontWeight = "900";
+      el.style.fontFamily = UI_FONT_STACK;
+      el.style.lineHeight = "1";
+      el.style.letterSpacing = "-0.2px";
+      el.style.border = `1px solid ${border}`;
+      el.style.boxShadow = "0 4px 10px rgba(0,0,0,0.18)";
+      el.style.boxSizing = "border-box";
+      el.style.whiteSpace = "nowrap";
+      el.style.cursor = "pointer";
+      el.style.pointerEvents = "auto";
+      el.style.userSelect = "none";
+      el.textContent = count > 99 ? "99+" : String(count);
+
+      el.addEventListener("click", async function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        await handleClusterSelection(cluster);
+      });
+
       clusterMarker.setContent(el);
     }
 
@@ -3729,18 +3801,6 @@
         detailSummaryDealBadge.textContent = detailItem.dealType || "";
         detailSummaryDealBadge.style.display = detailItem.dealType ? "inline-flex" : "none";
       }
-      if (detailSummaryTop) {
-        detailSummaryTop.innerHTML = `
-          <div class="detail-summary-left">
-            ${detailItem.type ? `<div class="detail-summary-type-badge" id="detailSummaryTypeBadge">${escapeHtml(detailItem.type)}</div>` : ""}
-            ${detailItem.dealType ? `<div class="detail-summary-deal-badge" id="detailSummaryDealBadge" data-deal="${escapeHtml(detailItem.dealType)}">${escapeHtml(detailItem.dealType)}</div>` : ""}
-          </div>
-          <button type="button" class="detail-roadview-inline-btn" id="detailTopRoadviewBtn">
-            <i class="fa-solid fa-street-view"></i>
-            로드뷰
-          </button>
-        `;
-      }
       if (detailSummaryPrice) {
         detailSummaryPrice.textContent = detailItem.price || "";
       }
@@ -3778,7 +3838,21 @@
         detailAgentAvatar.textContent = "담당";
       }
 
-      detailFeatures.innerHTML = "";
+      detailHeroFeatures.innerHTML = "";
+
+      detailFeatures.innerHTML = `
+        <div class="detail-tags-row detail-summary-topbar">
+          <div class="detail-summary-left">
+            ${detailItem.type ? `<span class="detail-summary-type-badge">${escapeHtml(detailItem.type)}</span>` : ""}
+            ${detailItem.dealType ? `<span class="detail-summary-deal-badge" data-deal="${escapeHtml(detailItem.dealType)}">${escapeHtml(detailItem.dealType)}</span>` : ""}
+          </div>
+          <button type="button" class="detail-roadview-inline-btn" id="detailTopRoadviewBtn">
+            <i class="fa-solid fa-street-view"></i>
+            로드뷰
+          </button>
+        </div>
+      `;
+
       const detailTopRoadviewBtn = document.getElementById("detailTopRoadviewBtn");
       if (detailTopRoadviewBtn) {
         detailTopRoadviewBtn.onclick = () => {
@@ -3829,21 +3903,24 @@ function closeDetailPanel() {
       const clusterItems = cluster.getMarkers().map(marker => marker.__property).filter(Boolean);
       if (!clusterItems.length) return;
 
-      closeDetailPanel();
-
       state.selectedMarkerId = null;
       state.selectedClusterKey = getClusterKeyFromItems(clusterItems);
 
+      closeDetailPanel();
+      currentDetailItem = null;
       updateMarkerSelection(null);
-      propertyList.scrollTop = 0;
+
+      const centerLat = clusterItems.reduce((sum, v) => sum + Number(v.lat || 0), 0) / clusterItems.length;
+      const centerLng = clusterItems.reduce((sum, v) => sum + Number(v.lng || 0), 0) / clusterItems.length;
+      recenterMapSoft(centerLat, centerLng);
+
+      const viewportItems = refreshViewportList();
+      updateMapEmptyState(viewportItems);
 
       setTimeout(() => {
         refreshClusterBadges();
         setClusterBadgeSelected(cluster, true);
       }, 0);
-
-      const viewportItems = refreshViewportList();
-      updateMapEmptyState(viewportItems);
     }
 
     function initMap() {
@@ -3927,6 +4004,7 @@ function closeDetailPanel() {
         await hideRoadview();
 
         closeDetailPanel();
+        currentDetailItem = null;
         state.selectedClusterKey = null;
 
         highlightCard(-1);
@@ -4078,6 +4156,46 @@ function closeDetailPanel() {
       return;
     }
 
+    function recenterMapSoft(lat, lng) {
+      if (!state.map || !window.kakao || !kakao.maps) return;
+      const projection = state.map.getProjection();
+      const mapEl = document.getElementById("map");
+      if (!projection || !mapEl) return;
+
+      const target = new kakao.maps.LatLng(lat, lng);
+      const point = projection.containerPointFromCoords(target);
+
+      const centerX = Math.round(mapEl.clientWidth / 2);
+      const centerY = Math.round(mapEl.clientHeight / 2);
+      const safeZoneX = 120;
+      const safeZoneY = 80;
+      let dx = 0;
+      let dy = 0;
+
+      if (point.x < centerX - safeZoneX) {
+        dx = point.x - (centerX - safeZoneX);
+      } else if (point.x > centerX + safeZoneX) {
+        dx = point.x - (centerX + safeZoneX);
+      }
+
+      if (point.y < centerY - safeZoneY) {
+        dy = point.y - (centerY - safeZoneY);
+      } else if (point.y > centerY + safeZoneY) {
+        dy = point.y - (centerY + safeZoneY);
+      }
+
+      const maxShiftX = 140;
+      const maxShiftY = 90;
+      dx = Math.max(-maxShiftX, Math.min(maxShiftX, dx));
+      dy = Math.max(-maxShiftY, Math.min(maxShiftY, dy));
+
+      if (dx === 0 && dy === 0) return;
+
+      const movedPoint = new kakao.maps.Point(point.x - dx, point.y - dy);
+      const movedLatLng = projection.coordsFromContainerPoint(movedPoint);
+      state.map.panTo(movedLatLng);
+    }
+
     function renderMarkers(data, options = {}) {
       clearMapObjects();
 
@@ -4103,12 +4221,12 @@ function closeDetailPanel() {
           await hideRoadview();
 
           closeDetailPanel();
+          currentDetailItem = null;
           state.selectedClusterKey = null;
 
           highlightCard(item.id);
           updateMarkerSelection(item.id);
-
-          propertyList.scrollTop = 0;
+          recenterMapSoft(item.lat, item.lng);
           const viewportItems = refreshViewportList();
           updateMapEmptyState(viewportItems);
 
@@ -4159,8 +4277,11 @@ function closeDetailPanel() {
       if (!data.length) {
         propertyList.innerHTML = `
           <div class="card" style="padding:18px; cursor:default; border-bottom:0;">
-            <div class="card-body" style="padding:0; text-align:center;">
-              <div style="font-size:16px; font-weight:900; color:#17212b; line-height:1.5; white-space:pre-line;">조건에 맞는 매물이 없습니다.<br>지도를 이동 하거나 필터를 변경해 보세요.</div>
+            <div class="card-body" style="padding:0; text-align:left;">
+              <div class="map-empty-state-desc">
+                <div class="empty-title">조건에 맞는 매물이 없습니다.</div>
+                <div class="empty-sub">지도를 이동 하거나 필터를 변경해 보세요.</div>
+              </div>
             </div>
           </div>
         `;
@@ -4241,7 +4362,6 @@ function closeDetailPanel() {
           if (detailScroll) detailScroll.scrollTop = 0;
           await openDetailPanel(item);
           if (detailScroll) detailScroll.scrollTop = 0;
-          updateMarkerSelection(item.id);
           await focusProperty(item.id);
         });
       });
@@ -4263,17 +4383,13 @@ function closeDetailPanel() {
       });
     }
 
+
     function syncLeftAllButton() {
       const leftAllBtn = document.querySelector('#featureButtons button[data-value="all"]');
-      const typeActive = document.querySelector('.type-buttons button.active');
-      const dealActive = document.querySelector('.deal-buttons button.active');
       if (!leftAllBtn) return;
-      const isAllState =
-        typeActive?.dataset.value === 'all' &&
-        dealActive?.dataset.value === 'all';
-      leftAllBtn.classList.toggle('all-active', !!isAllState);
+      const isAllState = selectedDeal === "all" && selectedType === "all";
+      leftAllBtn.classList.toggle("all-active", isAllState && state.selectedFeatures.size === 0);
     }
-
 
     function applyFilter() {
       const keyword = keywordInput.value.trim().toLowerCase();
@@ -4326,10 +4442,10 @@ function closeDetailPanel() {
       renderMarkers(state.filtered, { preserveViewport: true });
       preventMapViewportChange = false;
       updateMapEmptyState(viewportItems);
-      syncLeftAllButton();
 
       setResultInfo(`총 ${viewportItems.length}건`);
       setListInfo(`총 ${viewportItems.length}개 매물`);
+      syncLeftAllButton();
 
       if (!viewportItems.length) {
         closeDetailPanel();
@@ -4527,9 +4643,13 @@ function closeDetailPanel() {
           dealButtons.forEach(b => b.classList.remove("active"));
           btn.classList.add("active");
           selectedDeal = btn.dataset.value;
+
           closeDetailPanel();
+          currentDetailItem = null;
+          state.selectedMarkerId = null;
+          state.selectedClusterKey = null;
+
           applyFilter();
-          syncLeftAllButton();
         });
       });
 
@@ -4545,7 +4665,6 @@ function closeDetailPanel() {
           state.selectedClusterKey = null;
 
           applyFilter();
-          syncLeftAllButton();
         });
       });
 
@@ -4555,18 +4674,22 @@ function closeDetailPanel() {
 
           state.selectedFeatures.clear();
 
-          if (value !== "all") {
-            state.selectedFeatures.add(value);
-          } else {
-            dealButtons.forEach(b => b.classList.toggle("active", b.dataset.value === "all"));
-            typeButtons.forEach(b => b.classList.toggle("active", b.dataset.value === "all"));
+          if (value === "all") {
             selectedDeal = "all";
             selectedType = "all";
+            dealButtons.forEach(b => b.classList.toggle("active", b.dataset.value === "all"));
+            typeButtons.forEach(b => b.classList.toggle("active", b.dataset.value === "all"));
+          } else {
+            state.selectedFeatures.add(value);
           }
+
+          closeDetailPanel();
+          currentDetailItem = null;
+          state.selectedMarkerId = null;
+          state.selectedClusterKey = null;
 
           syncFeatureButtons();
           applyFilter();
-          syncLeftAllButton();
         });
       });
 
