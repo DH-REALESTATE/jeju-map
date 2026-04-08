@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.352</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.352" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.353</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.353" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -363,7 +363,7 @@
     }
 
     .detail-hero-features {
-      display: none !important;
+      display: none;
     }
 
     .detail-content {
@@ -456,7 +456,7 @@
     }
 
     .detail-summary-price {
-      font-size: 32px;
+      font-size: 28px;
       font-weight: 900;
       line-height: 1.15;
       letter-spacing: -0.8px;
@@ -2353,7 +2353,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.352</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.353</div>
             </div>
           </div>
 
@@ -2791,7 +2791,6 @@
     }
 
     function refreshViewportList() {
-      syncLeftAllButtonByMapFilters();
       const viewportItems = getViewportFilteredItems(state.filtered);
       renderList(viewportItems);
       setResultInfo(`총 ${viewportItems.length}건`);
@@ -3255,28 +3254,27 @@
 
     function createMarkerImage(item, isSelected = false, label = "1") {
       const text = String(label ?? "1");
-      const height = 38;
-      const width = getBadgeWidthByText(text);
+      const size = 44;
 
-      const bgColor = isSelected ? "#1f6fff" : "#ffffff";
-      const textColor = isSelected ? "#ffffff" : "#1f6fff";
-      const borderColor = "#1f6fff";
+      const bgColor = isSelected ? "#ffffff" : "rgba(3, 199, 90, 0.9)";
+      const textColor = isSelected ? "rgba(3, 199, 90, 0.9)" : "#ffffff";
+      const borderColor = "#03C75A";
 
       const svg = `
-        <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
+        <svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
           <defs>
             <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
-              <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="rgba(0,0,0,0.16)"/>
+              <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="rgba(0,0,0,0.18)"/>
             </filter>
           </defs>
           <g filter="url(#shadow)">
-            <rect x="1" y="1" width="${width - 2}" height="${height - 2}" rx="12" ry="12"
-                  fill="${bgColor}"
-                  stroke="${borderColor}"
-                  stroke-width="1"/>
-            <text x="${width / 2}" y="${(height / 2) + 7}"
+            <circle cx="${size / 2}" cy="${size / 2}" r="${(size / 2) - 2}"
+                    fill="${bgColor}"
+                    stroke="${borderColor}"
+                    stroke-width="1"/>
+            <text x="${size / 2}" y="${(size / 2) + 6}"
                   text-anchor="middle"
-                  font-size="20"
+                  font-size="16"
                   font-weight="900"
                   font-family="${UI_FONT_STACK}"
                   fill="${textColor}">${text}</text>
@@ -3286,8 +3284,8 @@
 
       return new kakao.maps.MarkerImage(
         "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg),
-        new kakao.maps.Size(width, height),
-        { offset: new kakao.maps.Point(width / 2, height / 2) }
+        new kakao.maps.Size(size, size),
+        { offset: new kakao.maps.Point(size / 2, size / 2) }
       );
     }
 
@@ -3305,7 +3303,7 @@
     }
 
     function getClusterBadgeSize() {
-      return 38;
+      return 44;
     }
 
     function setClusterBadgeSelected(cluster, isSelected) {
@@ -3315,39 +3313,37 @@
       const clusterItems = cluster.getMarkers().map(marker => marker.__property).filter(Boolean);
       if (!clusterItems.length) return;
 
-      const countText = (clusterItems.length > 99 ? "99+" : String(clusterItems.length));
-      const baseSize = getClusterBadgeSize();
-      const width = getBadgeWidthByText(countText);
+      const count = clusterItems.length;
+      const size = getClusterBadgeSize();
 
-      const bg = isSelected ? "#1f6fff" : "#ffffff";
-      const color = isSelected ? "#ffffff" : "#1f6fff";
-      const border = "#1f6fff";
+      const bg = isSelected ? "#ffffff" : "rgba(3, 199, 90, 0.9)";
+      const color = isSelected ? "#03C75A" : "#ffffff";
+      const border = "#03C75A";
 
       const el = document.createElement("div");
-      el.className = "cluster-badge" + (isSelected ? " active" : "");
-      el.style.height = `${baseSize}px`;
-      el.style.minWidth = `${baseSize}px`;
-      el.style.width = `${width}px`;
-      el.style.padding = "0 12px";
-      el.style.borderRadius = "12px";
-      el.style.display = "inline-flex";
+      el.style.width = `${size}px`;
+      el.style.height = `${size}px`;
+      el.style.minWidth = `${size}px`;
+      el.style.minHeight = `${size}px`;
+      el.style.borderRadius = "50%";
+      el.style.display = "flex";
       el.style.alignItems = "center";
       el.style.justifyContent = "center";
       el.style.background = bg;
       el.style.color = color;
-      el.style.fontSize = "20px";
+      el.style.fontSize = "16px";
       el.style.fontWeight = "900";
       el.style.fontFamily = UI_FONT_STACK;
       el.style.lineHeight = "1";
       el.style.letterSpacing = "-0.2px";
       el.style.border = `1px solid ${border}`;
-      el.style.boxShadow = "0 4px 10px rgba(0,0,0,0.16)";
+      el.style.boxShadow = "0 4px 10px rgba(0,0,0,0.18)";
       el.style.boxSizing = "border-box";
       el.style.whiteSpace = "nowrap";
       el.style.cursor = "pointer";
       el.style.pointerEvents = "auto";
       el.style.userSelect = "none";
-      el.textContent = countText;
+      el.textContent = count > 99 ? "99+" : String(count);
 
       el.addEventListener("click", async function (e) {
         e.preventDefault();
@@ -3714,7 +3710,7 @@
 
       detailFeatures.innerHTML = `
         <div class="detail-tags-row">
-          <div class="detail-tags"></div>
+          <div class="detail-tags">${featureTagHtml}</div>
           <button type="button" class="detail-roadview-inline-btn" id="detailTopRoadviewBtn">
             <i class="fa-solid fa-street-view"></i>
             로드뷰
@@ -3766,59 +3762,25 @@ function closeDetailPanel() {
       refreshMapLayout();
     }
 
-    function recenterMapSoft(lat, lng) {
-      if (!state.map || !window.kakao || !kakao.maps) return;
-      const projection = state.map.getProjection();
-      if (!projection) return;
-      const mapEl = document.getElementById("map");
-      if (!mapEl) return;
-
-      const target = new kakao.maps.LatLng(lat, lng);
-      const point = projection.containerPointFromCoords(target);
-      const centerX = Math.round(mapEl.clientWidth / 2);
-      const centerY = Math.round(mapEl.clientHeight / 2);
-      const safeZoneX = 120;
-      const safeZoneY = 80;
-      let dx = 0;
-      let dy = 0;
-
-      if (point.x < centerX - safeZoneX) dx = point.x - (centerX - safeZoneX);
-      else if (point.x > centerX + safeZoneX) dx = point.x - (centerX + safeZoneX);
-
-      if (point.y < centerY - safeZoneY) dy = point.y - (centerY - safeZoneY);
-      else if (point.y > centerY + safeZoneY) dy = point.y - (centerY + safeZoneY);
-
-      const maxShiftX = 140;
-      const maxShiftY = 90;
-      dx = Math.max(-maxShiftX, Math.min(maxShiftX, dx));
-      dy = Math.max(-maxShiftY, Math.min(maxShiftY, dy));
-      if (dx === 0 && dy === 0) return;
-
-      const movedPoint = new kakao.maps.Point(point.x - dx, point.y - dy);
-      const movedLatLng = projection.coordsFromContainerPoint(movedPoint);
-      state.map.panTo(movedLatLng);
-    }
-
     async function handleClusterSelection(cluster) {
       await hideRoadview();
 
       const clusterItems = cluster.getMarkers().map(marker => marker.__property).filter(Boolean);
       if (!clusterItems.length) return;
 
-      closeDetailPanel();
       state.selectedMarkerId = null;
       state.selectedClusterKey = getClusterKeyFromItems(clusterItems);
-      updateMarkerSelection(null);
 
-      const centerLat = clusterItems.reduce((sum, v) => sum + Number(v.lat || 0), 0) / clusterItems.length;
-      const centerLng = clusterItems.reduce((sum, v) => sum + Number(v.lng || 0), 0) / clusterItems.length;
-      recenterMapSoft(centerLat, centerLng);
+      closeDetailPanel();
+      highlightCard(-1);
+      updateMarkerSelection(null);
 
       setTimeout(() => {
         refreshViewportList();
+        propertyList.scrollTop = 0;
         refreshClusterBadges();
         setClusterBadgeSelected(cluster, true);
-      }, 260);
+      }, 0);
     }
 
     function initMap() {
@@ -3840,56 +3802,56 @@ function closeDetailPanel() {
         calculator: [5, 10, 20, 50],
         styles: [
           {
-            width: "38px",
-            height: "38px",
-            background: "#ffffff",
-            color: "#1f6fff",
-            borderRadius: "12px",
-            border: "1px solid #1f6fff",
+            width: "44px",
+            height: "44px",
+            background: "rgba(3, 199, 90, 0.9)",
+            color: "#ffffff",
+            borderRadius: "50%",
+            border: "1px solid #03C75A",
             boxShadow: "0 4px 10px rgba(0,0,0,0.18)",
             textAlign: "center",
             fontWeight: "900",
-            fontSize: "20px",
-            lineHeight: "36px"
+            fontSize: "14px",
+            lineHeight: "40px"
           },
           {
-            width: "38px",
-            height: "38px",
-            background: "#ffffff",
-            color: "#1f6fff",
-            borderRadius: "12px",
-            border: "1px solid #1f6fff",
+            width: "44px",
+            height: "44px",
+            background: "rgba(3, 199, 90, 0.9)",
+            color: "#ffffff",
+            borderRadius: "50%",
+            border: "1px solid #03C75A",
             boxShadow: "0 4px 10px rgba(0,0,0,0.18)",
             textAlign: "center",
             fontWeight: "900",
-            fontSize: "20px",
-            lineHeight: "36px"
+            fontSize: "14px",
+            lineHeight: "40px"
           },
           {
-            width: "38px",
-            height: "38px",
-            background: "#ffffff",
-            color: "#1f6fff",
-            borderRadius: "12px",
-            border: "1px solid #1f6fff",
+            width: "44px",
+            height: "44px",
+            background: "rgba(3, 199, 90, 0.9)",
+            color: "#ffffff",
+            borderRadius: "50%",
+            border: "1px solid #03C75A",
             boxShadow: "0 4px 10px rgba(0,0,0,0.18)",
             textAlign: "center",
             fontWeight: "900",
-            fontSize: "20px",
-            lineHeight: "36px"
+            fontSize: "14px",
+            lineHeight: "40px"
           },
           {
-            width: "38px",
-            height: "38px",
-            background: "#ffffff",
-            color: "#1f6fff",
-            borderRadius: "12px",
-            border: "1px solid #1f6fff",
+            width: "44px",
+            height: "44px",
+            background: "rgba(3, 199, 90, 0.9)",
+            color: "#ffffff",
+            borderRadius: "50%",
+            border: "1px solid #03C75A",
             boxShadow: "0 4px 10px rgba(0,0,0,0.18)",
             textAlign: "center",
             fontWeight: "900",
-            fontSize: "20px",
-            lineHeight: "36px"
+            fontSize: "14px",
+            lineHeight: "40px"
           }
         ]
       });
@@ -3901,7 +3863,6 @@ function closeDetailPanel() {
       kakao.maps.event.addListener(state.map, "click", async function () {
         await hideRoadview();
 
-        closeDetailPanel();
         state.selectedClusterKey = null;
 
         highlightCard(-1);
@@ -4049,7 +4010,11 @@ function closeDetailPanel() {
     }
 
     function moveMapToProperty(item) {
-      return;
+      if (!item || !state.map) return;
+      const position = new kakao.maps.LatLng(item.lat, item.lng);
+      state.map.setLevel(4);
+      state.map.setCenter(position);
+      state.map.relayout();
     }
 
     function renderMarkers(data, options = {}) {
@@ -4076,17 +4041,18 @@ function closeDetailPanel() {
         kakao.maps.event.addListener(marker, "click", async function () {
           await hideRoadview();
 
-          closeDetailPanel();
           state.selectedClusterKey = null;
+          state.selectedMarkerId = item.id;
 
-          highlightCard(item.id);
+          closeDetailPanel();
+          highlightCard(-1);
           updateMarkerSelection(item.id);
-          recenterMapSoft(item.lat, item.lng);
 
           setTimeout(() => {
             refreshViewportList();
+            propertyList.scrollTop = 0;
             refreshClusterBadges();
-          }, 260);
+          }, 0);
         });
 
         markerList.push(marker);
@@ -4121,7 +4087,7 @@ function closeDetailPanel() {
 
       highlightCard(id);
       updateMarkerSelection(id);
-      await openDetailPanel(item);
+      moveMapToProperty(item);
 
       setTimeout(() => {
         refreshClusterBadges();
@@ -4132,11 +4098,8 @@ function closeDetailPanel() {
       if (!data.length) {
         propertyList.innerHTML = `
           <div class="card" style="padding:18px; cursor:default; border-bottom:0;">
-            <div class="card-body" style="padding:0; text-align:left;">
-              <div class="map-empty-state-desc" style="display:flex; flex-direction:column; gap:2px; text-align:left;">
-                <div class="empty-title" style="font-size:16px; font-weight:900; color:#17212b; line-height:1.35; margin:0;">조건에 맞는 매물이 없습니다.</div>
-                <div class="empty-sub" style="font-size:14px; font-weight:500; color:#6b7785; line-height:1.4; margin:0;">지도를 이동 하거나 필터를 변경해 보세요.</div>
-              </div>
+            <div class="card-body" style="padding:0; text-align:center;">
+              <div style="font-size:16px; font-weight:900; color:#17212b; line-height:1.5; white-space:pre-line;">조건에 맞는 매물이 없습니다.<br>지도를 이동 하거나 필터를 변경해 보세요.</div>
             </div>
           </div>
         `;
@@ -4238,13 +4201,6 @@ function closeDetailPanel() {
           btn.classList.remove("all-active");
         }
       });
-    }
-
-    function syncLeftAllButtonByMapFilters() {
-      const leftAllBtn = document.querySelector('#featureButtons button[data-value="all"]');
-      if (!leftAllBtn) return;
-      const isAllState = selectedDeal === "all" && selectedType === "all";
-      leftAllBtn.classList.toggle("all-active", isAllState && state.selectedFeatures.size === 0);
     }
 
     function applyFilter() {
@@ -4498,12 +4454,6 @@ function closeDetailPanel() {
           dealButtons.forEach(b => b.classList.remove("active"));
           btn.classList.add("active");
           selectedDeal = btn.dataset.value;
-
-          closeDetailPanel();
-          currentDetailItem = null;
-          state.selectedMarkerId = null;
-          state.selectedClusterKey = null;
-
           applyFilter();
         });
       });
@@ -4529,19 +4479,9 @@ function closeDetailPanel() {
 
           state.selectedFeatures.clear();
 
-          if (value === "all") {
-            selectedDeal = "all";
-            selectedType = "all";
-            dealButtons.forEach(b => b.classList.toggle("active", b.dataset.value === "all"));
-            typeButtons.forEach(b => b.classList.toggle("active", b.dataset.value === "all"));
-          } else {
+          if (value !== "all") {
             state.selectedFeatures.add(value);
           }
-
-          closeDetailPanel();
-          currentDetailItem = null;
-          state.selectedMarkerId = null;
-          state.selectedClusterKey = null;
 
           syncFeatureButtons();
           applyFilter();
