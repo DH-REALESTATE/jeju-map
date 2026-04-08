@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.381</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.381" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.382</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.382" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -1701,6 +1701,33 @@
     }
 
 
+    .map-recommend-close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 28px;
+      height: 28px;
+      border: 0;
+      border-radius: 10px;
+      background: rgba(15, 41, 66, 0.08);
+      color: #506070;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 1;
+    }
+
+    .map-recommend-close:hover {
+      background: rgba(15, 41, 66, 0.14);
+      color: #1f2a36;
+    }
+
+    .map-recommend-close i {
+      font-size: 14px;
+      line-height: 1;
+    }
+
     .map-recommend-card {
       position: absolute;
       right: 20px;
@@ -2483,7 +2510,7 @@
 </style>
 <style>
 
-/* Stable patch overrides - Ver 1.381 */
+/* Stable patch overrides - Ver 1.382 */
 .map-empty-state {
   text-align: left !important;
 }
@@ -2649,7 +2676,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.381</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.382</div>
             </div>
           </div>
 
@@ -2858,6 +2885,9 @@
       <div class="map-result-count" id="mapResultCount">총 0건</div>
 
       <div class="map-recommend-card" id="mapRecommendCard" style="display:none;">
+        <button type="button" class="map-recommend-close" id="mapRecommendCloseBtn" aria-label="추천 매물 닫기">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
         <div class="map-recommend-head">
           <span class="map-recommend-title">추천 매물</span>
           <span class="map-recommend-sub">이 매물은 어때요?</span>
@@ -2916,7 +2946,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, SUIT, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.381';
+    const APP_VERSION = '1.382';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -2961,6 +2991,7 @@
     const areaUnitPyBtn = document.getElementById("areaUnitPyBtn");
     const areaUnitM2Btn = document.getElementById("areaUnitM2Btn");
     const mapRecommendCard = document.getElementById("mapRecommendCard");
+    const mapRecommendCloseBtn = document.getElementById("mapRecommendCloseBtn");
     const mapRecommendBody = document.getElementById("mapRecommendBody");
     const mapRecommendThumb = document.getElementById("mapRecommendThumb");
     const mapRecommendType = document.getElementById("mapRecommendType");
@@ -3194,13 +3225,15 @@
     function renderRecommendationCard(item) {
       if (!mapRecommendCard) return;
 
-      if (!item) {
+      if (!item || state.isRecommendCardDismissed || state.hasShownRecommendCard) {
         mapRecommendCard.style.display = "none";
         mapRecommendCard.onclick = null;
         return;
       }
 
       mapRecommendCard.style.display = "block";
+      state.hasShownRecommendCard = true;
+
       if (mapRecommendThumb) {
         mapRecommendThumb.style.backgroundImage = `url('${escapeHtml(item.image || "")}')`;
       }
@@ -3231,6 +3264,7 @@
     }
 
     function refreshRecommendationCard(items) {
+      if (state.hasShownRecommendCard || state.isRecommendCardDismissed) return;
       renderRecommendationCard(getRecommendationCandidate(items));
     }
 
