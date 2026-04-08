@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.372</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.372" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.373</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.373" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -2366,7 +2366,7 @@
 </style>
 <style>
 
-/* Stable patch overrides - Ver 1.372 */
+/* Stable patch overrides - Ver 1.373 */
 .map-empty-state {
   text-align: left !important;
 }
@@ -2488,11 +2488,29 @@
 }
 
 #detailAreaValue {
-  transform: translateY(-2px) !important;
+  transform: none !important;
 }
 
 .detail-meta-item:first-child .detail-area-wrap {
   gap: 6px !important;
+  min-height: 26px !important;
+}
+
+.detail-meta-value,
+#detailAreaValue,
+#detailTypeValue,
+#detailRegionValue {
+  min-height: 26px !important;
+  height: 26px !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.detail-area-wrap {
+  min-height: 26px !important;
+  height: 26px !important;
+  display: inline-flex !important;
+  align-items: center !important;
 }
 
 .detail-meta-item:first-child #detailAreaTypeToggleBtn {
@@ -2514,7 +2532,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.372</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.373</div>
             </div>
           </div>
 
@@ -2762,7 +2780,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, SUIT, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.372';
+    const APP_VERSION = '1.373';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
