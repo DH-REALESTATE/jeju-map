@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.315</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.315" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.316</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.316" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -2357,7 +2357,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.315</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.316</div>
             </div>
           </div>
 
@@ -2603,7 +2603,7 @@
 
   <script>
     const UI_FONT_STACK = 'SUIT, Pretendard, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.315';
+    const APP_VERSION = '1.316';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -2742,6 +2742,10 @@
         state.map.setMapTypeId(kakao.maps.MapTypeId.HYBRID);
       } else if (mode === "cadastral") {
         state.map.setMapTypeId(kakao.maps.MapTypeId.ROADMAP);
+      kakao.maps.event.addListener(state.map, "idle", () => {
+        renderMarkers(state.filtered);
+        updateMapEmptyState();
+      });
         state.map.addOverlayMapTypeId(kakao.maps.MapTypeId.USE_DISTRICT);
       } else {
         state.map.setMapTypeId(kakao.maps.MapTypeId.ROADMAP);
@@ -2774,9 +2778,25 @@
     }
 
 
-    function updateMapEmptyState() {
+
+    function getViewportFilteredItems(items) {
+      if (!state.map || !window.kakao || !kakao.maps) return items || [];
+      const bounds = state.map.getBounds();
+      if (!bounds) return items || [];
+
+      return (items || []).filter(item => {
+        const lat = Number(item.lat);
+        const lng = Number(item.lng);
+        if (!Number.isFinite(lat) || !Number.isFinite(lng)) return false;
+        const pos = new kakao.maps.LatLng(lat, lng);
+        return bounds.contain(pos);
+      });
+    }
+
+    function updateMapEmptyState(items) {
       if (!mapEmptyState) return;
-      const hasItems = Array.isArray(state.filtered) && state.filtered.length > 0;
+      const targetItems = Array.isArray(items) ? items : getViewportFilteredItems(state.filtered);
+      const hasItems = Array.isArray(targetItems) && targetItems.length > 0;
       mapEmptyState.classList.toggle("open", !hasItems);
     }
 
@@ -4233,7 +4253,7 @@ function closeDetailPanel() {
       preventMapViewportChange = true;
       renderMarkers(state.filtered);
       preventMapViewportChange = false;
-      updateMapEmptyState();
+      updateMapEmptyState(getViewportFilteredItems(state.filtered));
 
       setResultInfo(`총 ${state.filtered.length}건`);
       setListInfo(`총 ${state.filtered.length}개 매물`);
