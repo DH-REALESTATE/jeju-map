@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.356</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.356" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.357</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.357" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -2342,7 +2342,7 @@
 </style>
 <style>
 
-/* Stable patch overrides - Ver 1.356 */
+/* Stable patch overrides - Ver 1.357 */
 .map-empty-state {
   text-align: left !important;
 }
@@ -2382,7 +2382,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.356</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.357</div>
             </div>
           </div>
 
@@ -2642,6 +2642,7 @@
       filtered: [],
       selectedFeatures: new Set(),
       selectedMarkerId: null,
+      selectedMarkerIds: new Set(),
       selectedClusterKey: null
     };
 
@@ -3323,11 +3324,12 @@
       );
     }
 
-    function updateMarkerSelection(selectedId) {
+    function updateMarkerSelection(selectedId, selectedIds = null) {
       state.selectedMarkerId = selectedId;
+      state.selectedMarkerIds = new Set(Array.isArray(selectedIds) ? selectedIds.map(Number) : (selectedId != null ? [Number(selectedId)] : []));
       state.markers.forEach(marker => {
         const item = marker.__property;
-        const isSelected = item && item.id === selectedId;
+        const isSelected = item && state.selectedMarkerIds.has(Number(item.id));
         marker.setImage(createMarkerImage(item, isSelected, "1"));
       });
     }
@@ -3378,7 +3380,7 @@
       el.style.lineHeight = "1";
       el.style.letterSpacing = "-0.2px";
       el.style.border = `1px solid ${border}`;
-      el.style.boxShadow = "0 4px 10px rgba(0,0,0,0.18)";
+      el.style.boxShadow = "none";
       el.style.boxSizing = "border-box";
       el.style.whiteSpace = "nowrap";
       el.style.cursor = "pointer";
@@ -3406,7 +3408,10 @@
         if (!clusterItems.length) return;
 
         const key = getClusterKeyFromItems(clusterItems);
-        const isSelected = state.selectedClusterKey === key;
+        const ids = clusterItems.map(item => Number(item.id));
+        const isSelected =
+          state.selectedClusterKey === key ||
+          (ids.length > 0 && ids.every(id => state.selectedMarkerIds && state.selectedMarkerIds.has(id)));
         setClusterBadgeSelected(cluster, isSelected);
       });
     }
@@ -3807,7 +3812,7 @@ function closeDetailPanel() {
       state.selectedMarkerId = null;
       state.selectedClusterKey = getClusterKeyFromItems(clusterItems);
 
-      updateMarkerSelection(null);
+      updateMarkerSelection(null, clusterItems.map(v => v.id));
       closeDetailPanel();
 
       const centerLat = clusterItems.reduce((sum, v) => sum + Number(v.lat || 0), 0) / clusterItems.length;
@@ -4117,7 +4122,7 @@ function closeDetailPanel() {
           closeDetailPanel();
 
           highlightCard(item.id);
-          updateMarkerSelection(item.id);
+          updateMarkerSelection(item.id, [item.id]);
           recenterMapSoft(item.lat, item.lng);
 
           setTimeout(() => {
@@ -4255,7 +4260,7 @@ function closeDetailPanel() {
           if (detailScroll) detailScroll.scrollTop = 0;
           await openDetailPanel(item);
           if (detailScroll) detailScroll.scrollTop = 0;
-          updateMarkerSelection(item.id);
+          updateMarkerSelection(item.id, [item.id]);
           await focusProperty(item.id);
         });
       });
