@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주도 부동산 지도 Ver 1.394</title>
-<meta property="og:title" content="제주도 부동산 지도 Ver 1.394" />
-  <meta property="og:description" content="제주도 부동산 지도 Ver 1.394" />
+  <title>제주도 부동산 지도 Ver 1.395</title>
+<meta property="og:title" content="제주도 부동산 지도 Ver 1.395" />
+  <meta property="og:description" content="제주도 부동산 지도 Ver 1.395" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
   <meta property="og:image" content="https://your-domain.example/og-image.jpg" />
@@ -2512,7 +2512,7 @@
 </style>
 <style>
 
-/* Stable patch overrides - Ver 1.394 */
+/* Stable patch overrides - Ver 1.395 */
 .map-empty-state {
   text-align: left !important;
 }
@@ -2678,7 +2678,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.394</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.395</div>
             </div>
           </div>
 
@@ -2945,32 +2945,12 @@
 
 
 
-// ===== SAFE RECOMMENDATION =====
-function getRecommendationCandidateSafe() {
-  const allItems = Array.isArray(state.all) ? state.all : [];
-  const recommended = allItems.filter(item => item && item.recommend === true);
-  if (!recommended.length) return null;
-  const i = Math.floor(Math.random() * recommended.length);
-  return recommended[i];
-}
-
-function initRecommendationSafe() {
-  if (state.recommendItem) return;
-  state.recommendItem = getRecommendationCandidateSafe();
-}
-
-function refreshRecommendationCardSafe() {
-  if (state.isRecommendCardDismissed) return;
-  if (!state.recommendItem) initRecommendationSafe();
-  renderRecommendationCard(state.recommendItem);
-}
-// ===== END =====
 
 </script>
 
   <script>
     const UI_FONT_STACK = 'Pretendard, SUIT, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.394';
+    const APP_VERSION = '1.395';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -2984,7 +2964,10 @@ function refreshRecommendationCardSafe() {
       selectedMarkerId: null,
       selectedMarkerIds: new Set(),
       selectedClusterKey: null,
-      lockedListIds: null
+      lockedListIds: null,
+      recommendItem: null,
+      lastRecommendPoolKey: "",
+      isRecommendCardDismissed: false
     };
 
     let roadview = null;
@@ -3234,31 +3217,42 @@ function refreshRecommendationCardSafe() {
       mapEmptyState.classList.remove("open");
     }
 
-    function getRecommendationCandidate(items) {
+    function getRecommendationPool(items) {
       const list = Array.isArray(items) ? items : [];
-      if (!list.length) return null;
+      return list.filter(item => item && item.recommend === true);
+    }
+
+    function getRecommendationCandidate(items) {
+      const pool = getRecommendationPool(items);
+      if (!pool.length) return null;
 
       if (state.selectedMarkerId != null) {
-        const selected = list.find(item => item.id === state.selectedMarkerId);
+        const selected = pool.find(item => Number(item.id) === Number(state.selectedMarkerId));
         if (selected) return selected;
       }
 
-      return list[0];
+      if (pool.length === 1) return pool[0];
+
+      const previousId = state.recommendItem ? Number(state.recommendItem.id) : null;
+      const candidates = pool.filter(item => Number(item.id) !== previousId);
+      const source = candidates.length ? candidates : pool;
+      const randomIndex = Math.floor(Math.random() * source.length);
+      return source[randomIndex];
     }
 
     function renderRecommendationCard(item) {
       if (!mapRecommendCard) return;
 
-      if (!item || state.isRecommendCardDismissed || state.hasShownRecommendCard) {
+      if (!item || state.isRecommendCardDismissed) {
         mapRecommendCard.style.display = "none";
         mapRecommendCard.onclick = null;
         mapRecommendCard.setAttribute("aria-hidden", "true");
         return;
       }
 
+      state.recommendItem = item;
       mapRecommendCard.style.display = "block";
       mapRecommendCard.setAttribute("aria-hidden", "false");
-      state.hasShownRecommendCard = true;
 
       if (mapRecommendThumb) {
         mapRecommendThumb.style.backgroundImage = `url('${escapeHtml(item.image || "")}')`;
@@ -3280,7 +3274,7 @@ function refreshRecommendationCardSafe() {
       }
 
       mapRecommendCard.onclick = async (e) => {
-  if (e.target.closest(".map-recommend-close")) return;
+        if (e.target.closest(".map-recommend-close")) return;
         if (e.target.closest("a, button")) return;
         if (detailScroll) detailScroll.scrollTop = 0;
         await openDetailPanel(item);
@@ -3291,8 +3285,32 @@ function refreshRecommendationCardSafe() {
     }
 
     function refreshRecommendationCard(items) {
-      if (state.hasShownRecommendCard || state.isRecommendCardDismissed) return;
-      renderRecommendationCard(getRecommendationCandidate(items));
+      if (!mapRecommendCard) return;
+      if (state.isRecommendCardDismissed) {
+        renderRecommendationCard(null);
+        return;
+      }
+
+      const pool = getRecommendationPool(items);
+      const poolKey = pool.map(item => item.id).sort((a, b) => Number(a) - Number(b)).join(",");
+
+      if (!pool.length) {
+        state.recommendItem = null;
+        state.lastRecommendPoolKey = "";
+        renderRecommendationCard(null);
+        return;
+      }
+
+      const keepCurrent = state.lastRecommendPoolKey === poolKey
+        && state.recommendItem
+        && pool.some(item => Number(item.id) === Number(state.recommendItem.id));
+
+      if (!keepCurrent) {
+        state.recommendItem = getRecommendationCandidate(pool);
+        state.lastRecommendPoolKey = poolKey;
+      }
+
+      renderRecommendationCard(state.recommendItem);
     }
 
     function refreshViewportList() {
@@ -4999,6 +5017,17 @@ function closeDetailPanel() {
       
       detailCloseBtn.addEventListener("click", closeDetailPanel);
 
+      if (mapRecommendCloseBtn) {
+        mapRecommendCloseBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          state.isRecommendCardDismissed = true;
+          state.recommendItem = null;
+          state.lastRecommendPoolKey = "";
+          renderRecommendationCard(null);
+        });
+      }
+
       function openShareMenu() {
         if (!detailShareMenu) return;
         detailShareMenu.style.display = "flex";
@@ -5347,26 +5376,6 @@ function closeDetailPanel() {
 
     bootstrap();
   
-// ===== SAFE RECOMMENDATION =====
-function getRecommendationCandidateSafe() {
-  const allItems = Array.isArray(state.all) ? state.all : [];
-  const recommended = allItems.filter(item => item && item.recommend === true);
-  if (!recommended.length) return null;
-  const i = Math.floor(Math.random() * recommended.length);
-  return recommended[i];
-}
-
-function initRecommendationSafe() {
-  if (state.recommendItem) return;
-  state.recommendItem = getRecommendationCandidateSafe();
-}
-
-function refreshRecommendationCardSafe() {
-  if (state.isRecommendCardDismissed) return;
-  if (!state.recommendItem) initRecommendationSafe();
-  renderRecommendationCard(state.recommendItem);
-}
-// ===== END =====
 
 </script>
 </body>
