@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.355</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.355" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.356</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.356" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -2342,7 +2342,7 @@
 </style>
 <style>
 
-/* Stable patch overrides - Ver 1.355 */
+/* Stable patch overrides - Ver 1.356 */
 .map-empty-state {
   text-align: left !important;
 }
@@ -2382,7 +2382,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.355</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.356</div>
             </div>
           </div>
 
@@ -2630,7 +2630,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, SUIT, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.355';
+    const APP_VERSION = '1.356';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -3279,9 +3279,9 @@
 
     function getBadgeWidthByText(text) {
       const len = String(text ?? "").length;
-      if (len >= 3) return 70;
-      if (len === 2) return 58;
-      return 46;
+      if (len >= 3) return 62;
+      if (len === 2) return 50;
+      return 38;
     }
 
     function createMarkerImage(item, isSelected = false, label = "1") {
@@ -3341,8 +3341,10 @@
     }
 
     function getBadgeWidthByText(text) {
-      const label = String(text || '1');
-      return label.length === 1 ? 38 : (38 + (Math.min(label.length, 3) - 1) * 12);
+      const len = String(text ?? "").length;
+      if (len >= 3) return 62;
+      if (len === 2) return 50;
+      return 38;
     }
 
     function setClusterBadgeSelected(cluster, isSelected) {
@@ -3813,7 +3815,9 @@ function closeDetailPanel() {
       recenterMapSoft(centerLat, centerLng);
 
       setTimeout(() => {
-        refreshViewportList();
+        renderList(clusterItems);
+        setResultInfo(`선택 매물 ${clusterItems.length}건`);
+        setListInfo(`총 ${clusterItems.length}개 매물`);
         refreshClusterBadges();
         setClusterBadgeSelected(cluster, true);
       }, 0);
@@ -4112,12 +4116,14 @@ function closeDetailPanel() {
           state.selectedClusterKey = null;
           closeDetailPanel();
 
-          highlightCard(-1);
+          highlightCard(item.id);
           updateMarkerSelection(item.id);
           recenterMapSoft(item.lat, item.lng);
 
           setTimeout(() => {
-            refreshViewportList();
+            renderList([item]);
+            setResultInfo("선택 매물 1건");
+            setListInfo("총 1개 매물");
             refreshClusterBadges();
           }, 0);
         });
