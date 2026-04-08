@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.331</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.331" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.332</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.332" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -2313,7 +2313,7 @@
       border: 1px solid rgba(15, 41, 66, 0.08);
       box-shadow: 0 16px 36px rgba(15, 41, 66, 0.14);
       backdrop-filter: blur(10px);
-      text-align: center;
+      text-align: left;
       pointer-events: none;
     }
 
@@ -2322,21 +2322,23 @@
     }
 
     .map-empty-state-title {
-      font-size: 17px;
+      font-size: 16px;
       font-weight: 900;
       color: #17212b;
       letter-spacing: -0.25px;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       line-height: 1.35;
+      text-align: left;
     }
 
     .map-empty-state-desc {
       font-size: 14px;
-      font-weight: 700;
+      font-weight: 500;
       color: #6b7785;
       letter-spacing: -0.15px;
       line-height: 1.5;
-      white-space: pre-line;
+      text-align: left;
+      white-space: normal;
     }
 
 </style>
@@ -2353,7 +2355,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.331</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.332</div>
             </div>
           </div>
 
@@ -2599,7 +2601,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, SUIT, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.331';
+    const APP_VERSION = '1.332';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -3247,35 +3249,35 @@
 
     function getBadgeWidthByText(text) {
       const len = String(text ?? "").length;
-      if (len >= 3) return 62;
-      if (len === 2) return 50;
-      return 38;
+      if (len >= 3) return 70;
+      if (len === 2) return 58;
+      return 46;
     }
 
     function createMarkerImage(item, isSelected = false, label = "1") {
       const text = String(label ?? "1");
-      const width = getBadgeWidthByText(text);
-      const height = 38;
-      const radius = 9;
+      const digits = text.length;
+      const height = 32;
+      const width = digits >= 3 ? 48 : (digits === 2 ? 40 : 32);
 
       const bgColor = isSelected ? "#1f6fff" : "#ffffff";
       const textColor = isSelected ? "#ffffff" : "#1f6fff";
       const borderColor = "#1f6fff";
+      const radius = 8;
 
       const svg = `
         <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
           <defs>
             <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
-              <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="rgba(0,0,0,0.16)"/>
+              <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="rgba(15,41,66,0.16)"/>
             </filter>
           </defs>
           <g filter="url(#shadow)">
-            <rect x="1.5" y="1.5" width="${width - 3}" height="${height - 3}" rx="${radius}" ry="${radius}"
+            <rect x="1" y="1" width="${width - 2}" height="${height - 2}" rx="${radius}" ry="${radius}"
                   fill="${bgColor}"
                   stroke="${borderColor}"
                   stroke-width="1.5"/>
-            <text x="${width / 2}" y="50%"
-                  dominant-baseline="middle"
+            <text x="${width / 2}" y="${(height / 2) + 5}"
                   text-anchor="middle"
                   font-size="17"
                   font-weight="900"
@@ -3306,7 +3308,7 @@
     }
 
     function getClusterBadgeSize() {
-      return 38;
+      return 44;
     }
 
     function setClusterBadgeSelected(cluster, isSelected) {
@@ -3318,8 +3320,9 @@
 
       const count = clusterItems.length;
       const label = count > 99 ? "99+" : String(count);
-      const height = getClusterBadgeSize();
-      const width = getBadgeWidthByText(label);
+      const digits = label.length;
+      const height = 32;
+      const width = digits >= 3 ? 48 : (digits === 2 ? 40 : 32);
 
       const bg = isSelected ? "#1f6fff" : "#ffffff";
       const color = isSelected ? "#ffffff" : "#1f6fff";
@@ -3330,8 +3333,9 @@
       el.style.height = `${height}px`;
       el.style.minWidth = `${width}px`;
       el.style.minHeight = `${height}px`;
-      el.style.borderRadius = "9px";
-      el.style.display = "inline-flex";
+      el.style.padding = "0 8px";
+      el.style.borderRadius = "8px";
+      el.style.display = "flex";
       el.style.alignItems = "center";
       el.style.justifyContent = "center";
       el.style.background = bg;
@@ -3342,14 +3346,12 @@
       el.style.lineHeight = "1";
       el.style.letterSpacing = "-0.2px";
       el.style.border = `1.5px solid ${border}`;
-      el.style.boxShadow = "0 4px 10px rgba(0,0,0,0.16)";
+      el.style.boxShadow = "0 4px 10px rgba(15,41,66,0.16)";
       el.style.boxSizing = "border-box";
       el.style.whiteSpace = "nowrap";
       el.style.cursor = "pointer";
       el.style.pointerEvents = "auto";
       el.style.userSelect = "none";
-      el.style.padding = "0";
-      el.style.aspectRatio = "auto";
       el.textContent = label;
 
       el.addEventListener("click", async function (e) {
@@ -4103,7 +4105,6 @@ function closeDetailPanel() {
 
       highlightCard(id);
       updateMarkerSelection(id);
-      moveMapToProperty(item);
 
       setTimeout(() => {
         refreshClusterBadges();
@@ -4114,8 +4115,9 @@ function closeDetailPanel() {
       if (!data.length) {
         propertyList.innerHTML = `
           <div class="card" style="padding:18px; cursor:default; border-bottom:0;">
-            <div class="card-body" style="padding:0; text-align:center;">
-              <div style="font-size:16px; font-weight:900; color:#17212b; line-height:1.5; white-space:pre-line;">조건에 맞는 매물이 없습니다.<br>지도를 이동 하거나 필터를 변경해 보세요.</div>
+            <div class="card-body" style="padding:0; text-align:left;">
+              <div style="font-size:16px; font-weight:900; color:#17212b; line-height:1.5; margin-bottom:6px;">조건에 맞는 매물이 없습니다.</div>
+              <div style="font-size:14px; font-weight:500; color:#6b7785; line-height:1.5;">지도를 이동 하거나 필터를 변경해 보세요.</div>
             </div>
           </div>
         `;
@@ -4219,10 +4221,24 @@ function closeDetailPanel() {
       });
     }
 
+    function syncLeftAllButton() {
+      const leftAllBtn = document.querySelector('#featureButtons button[data-value="all"]');
+      if (!leftAllBtn) return;
+
+      const isFeatureAll = state.selectedFeatures.size === 0;
+      const isDealAll = selectedDeal === "all";
+      const isTypeAll = selectedType === "all";
+
+      leftAllBtn.classList.toggle("all-active", isFeatureAll && isDealAll && isTypeAll);
+    }
+
+
     function applyFilter() {
       const keyword = keywordInput.value.trim().toLowerCase();
       const dealValue = selectedDeal;
       const typeValue = selectedType;
+      syncFeatureButtons();
+      syncLeftAllButton();
 
       state.filtered = state.all.filter(item => {
         const text = [
@@ -4471,6 +4487,7 @@ function closeDetailPanel() {
           btn.classList.add("active");
           selectedDeal = btn.dataset.value;
           applyFilter();
+          syncLeftAllButton();
         });
       });
 
@@ -4486,6 +4503,7 @@ function closeDetailPanel() {
           state.selectedClusterKey = null;
 
           applyFilter();
+          syncLeftAllButton();
         });
       });
 
@@ -4495,12 +4513,19 @@ function closeDetailPanel() {
 
           state.selectedFeatures.clear();
 
-          if (value !== "all") {
+          if (value === "all") {
+            selectedDeal = "all";
+            selectedType = "all";
+
+            dealButtons.forEach(b => b.classList.toggle("active", b.dataset.value === "all"));
+            typeButtons.forEach(b => b.classList.toggle("active", b.dataset.value === "all"));
+          } else {
             state.selectedFeatures.add(value);
           }
 
           syncFeatureButtons();
           applyFilter();
+          syncLeftAllButton();
         });
       });
 
