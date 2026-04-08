@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주 프리미엄 부동산 지도 Ver 1.342</title>
-<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.342" />
+  <title>제주 프리미엄 부동산 지도 Ver 1.343</title>
+<meta property="og:title" content="제주 프리미엄 부동산 지도 Ver 1.343" />
   <meta property="og:description" content="제주도 부동산 지도 서비스" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
@@ -61,14 +61,12 @@
     }
 
     .sidebar {
-      position: relative;
       height: 100vh;
-      overflow: visible;
+      overflow: hidden;
       background: #f7f8fa;
       color: #1f2a36;
       min-width: 280px;
       border-right: 1px solid #e6ebf0;
-      z-index: 120;
     }
 
     .sidebar-inner {
@@ -79,7 +77,7 @@
     }
 
     .sidebar.expanded .sidebar-inner {
-      grid-template-columns: var(--sidebar-list-width) 0px;
+      grid-template-columns: var(--sidebar-list-width) var(--detail-panel-width);
     }
 
     .sidebar-list-panel {
@@ -94,32 +92,20 @@
     .sidebar-list-panel::-webkit-scrollbar { display: none; }
 
     .sidebar-detail-panel {
-      position: absolute;
-      top: 0;
-      left: var(--sidebar-list-width);
-      width: var(--detail-panel-width);
-      height: 100vh;
+      height: 100%;
       overflow-y: auto;
       overflow-x: hidden;
       opacity: 0;
-      transform: translateX(16px);
-      pointer-events: none;
       background: #fff;
       border-left: 1px solid #e6ebf0;
-      box-shadow: 18px 0 36px rgba(15, 41, 66, 0.16);
-      transition: opacity 0.22s ease, transform 0.22s ease;
+      transition: opacity 0.22s ease;
       scrollbar-width: none;
       -ms-overflow-style: none;
-      z-index: 1000;
     }
 
     .sidebar-detail-panel::-webkit-scrollbar { display: none; }
 
-    .sidebar.expanded .sidebar-detail-panel {
-      opacity: 1;
-      transform: translateX(0);
-      pointer-events: auto;
-    }
+    .sidebar.expanded .sidebar-detail-panel { opacity: 1; }
 
     .detail-panel-inner {
       height: 100%;
@@ -1529,7 +1515,6 @@
       height: 100vh;
       overflow: hidden;
       background: #dde7ef;
-      z-index: 1;
     }
 
     #map {
@@ -2355,88 +2340,93 @@
     }
 
 
-/* stabilized overlay detail panel */
-.detail-content {
-  padding: 8px 18px 18px;
+/* === Ver 1.343 stability overrides === */
+.sidebar-inner,
+.sidebar.expanded .sidebar-inner {
+  grid-template-columns: var(--sidebar-list-width) 0px !important;
 }
+
+.sidebar-detail-panel {
+  position: fixed !important;
+  top: 0 !important;
+  right: 0 !important;
+  width: var(--detail-panel-width) !important;
+  height: 100vh !important;
+  z-index: 120 !important;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(100%);
+  transition: transform 0.28s ease, opacity 0.22s ease !important;
+  box-shadow: -18px 0 40px rgba(15, 41, 66, 0.18);
+  border-left: 1px solid #e6ebf0;
+}
+
+.sidebar.expanded .sidebar-detail-panel {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  transform: translateX(0) !important;
+}
+
+.detail-content {
+  padding: 8px 18px 18px !important;
+}
+
+.detail-summary-block {
+  margin-top: 2px !important;
+  margin-bottom: 10px !important;
+}
+
+.detail-summary-top {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 6px !important;
+  flex-wrap: nowrap !important;
+  width: 100% !important;
+  margin-top: 0 !important;
+  margin-bottom: 6px !important;
+}
+
+#detailSummaryRoadviewBtn {
+  margin-left: auto !important;
+  flex: 0 0 auto !important;
+}
+
 .detail-hero-features {
   display: none !important;
 }
-.detail-features {
-  margin-bottom: 8px !important;
-}
-.detail-summary-top {
-  display: none !important;
-}
-.detail-summary-deal-badge {
-  display: none !important;
-}
-.detail-summary-price-row {
-  display: block !important;
-  margin-bottom: 6px !important;
-}
+
 .map-empty-state,
-.map-empty-state-desc,
-.empty-title,
-.empty-sub {
+.map-empty-state-desc {
   text-align: left !important;
 }
+
 .map-empty-state-desc {
   display: flex;
   flex-direction: column;
   gap: 2px;
+  white-space: normal !important;
 }
+
 .empty-title {
   font-size: 16px;
   font-weight: 900;
   color: #17212b;
   line-height: 1.35;
+  margin: 0;
 }
+
 .empty-sub {
   font-size: 14px;
   font-weight: 500;
   color: #6b7785;
   line-height: 1.4;
+  margin: 0;
 }
-.detail-tags-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  width: 100%;
-}
-.detail-tags {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-wrap: nowrap;
-  min-width: 0;
-}
-.detail-feature-tag {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 30px;
-  padding: 0 10px;
-  border-radius: 14px;
-  font-size: 13px;
-  font-weight: 900;
-  line-height: 1;
-  white-space: nowrap;
-}
-.detail-feature-tag.type {
-  background: #f3eefe;
-  color: #7c4dff;
-  box-shadow: inset 0 0 0 1px rgba(124, 77, 255, 0.06);
-}
-.detail-feature-tag.deal {
-  background: #eef5ff;
-  color: #2563eb;
-  box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.08);
-}
-.detail-roadview-inline-btn {
-  margin-left: auto !important;
-  flex: 0 0 auto !important;
+
+.detail-summary-price-row {
+  display: block !important;
+  margin-bottom: 8px !important;
 }
 
 </style>
@@ -2453,7 +2443,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.342</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.343</div>
             </div>
           </div>
 
@@ -2537,9 +2527,9 @@
                 <div class="detail-summary-block">
                   <div class="detail-summary-top">
                     <div class="detail-summary-type-badge" id="detailSummaryTypeBadge"></div>
+                    <div class="detail-summary-deal-badge" id="detailSummaryDealBadge"></div>
                   </div>
                   <div class="detail-summary-price-row">
-                    <div class="detail-summary-deal-badge" id="detailSummaryDealBadge"></div>
                     <div class="detail-summary-price" id="detailSummaryPrice"></div>
                   </div>
                   <div class="detail-summary-address" id="detailSummaryAddress"></div>
@@ -2634,10 +2624,8 @@
       <div id="map"></div>
 
       <div class="map-empty-state" id="mapEmptyState">
-        <div class="map-empty-state-desc">
-          <div class="empty-title">조건에 맞는 매물이 없습니다.</div>
-          <div class="empty-sub">지도를 이동 하거나 필터를 변경해 보세요.</div>
-        </div>
+        <div class="map-empty-state-title">조건에 맞는 매물이 없습니다.</div>
+        <div class="map-empty-state-desc">지도를 이동 하거나 필터를 변경해 보세요.</div>
       </div>
 
       <div class="map-filter-bar">
@@ -2701,7 +2689,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, SUIT, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.342';
+    const APP_VERSION = '1.343';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -2734,6 +2722,7 @@
     let preventMapViewportChange = false;
 
     const sidebar = document.getElementById("sidebar");
+    const mapEl = document.getElementById("map");
     const propertyList = document.getElementById("propertyList");
     const keywordInput = document.getElementById("keyword");
     const mapResultCount = document.getElementById("mapResultCount");
@@ -2909,7 +2898,7 @@
       if (!state.map) return;
       setTimeout(() => {
         state.map.relayout();
-      }, 320);
+      }, 80);
     }
 
     function escapeHtml(str) {
@@ -3344,16 +3333,17 @@
     }
 
     function getBadgeWidthByText(text) {
-      const raw = String(text ?? "1");
-      if (raw.length <= 1) return 30;
-      if (raw.length === 2) return 38;
+      const len = String(text ?? "").length;
+      if (len >= 3) return 70;
+      if (len === 2) return 58;
       return 46;
     }
 
     function createMarkerImage(item, isSelected = false, label = "1") {
-      const text = String(label ?? "1");
-      const width = getBadgeWidthByText(text);
-      const height = 30;
+      const metrics = getBadgeMetrics(label);
+      const text = metrics.text;
+      const width = metrics.width;
+      const height = metrics.height;
 
       const bgColor = isSelected ? "#1f6fff" : "#ffffff";
       const textColor = isSelected ? "#ffffff" : "#1f6fff";
@@ -3363,17 +3353,18 @@
         <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
           <defs>
             <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
-              <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="rgba(15,41,66,0.16)"/>
+              <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="rgba(0,0,0,0.12)"/>
             </filter>
           </defs>
           <g filter="url(#shadow)">
-            <rect x="0.5" y="0.5" width="${width - 1}" height="${height - 1}" rx="8"
+            <rect x="0.5" y="0.5" width="${width - 1}" height="${height - 1}" rx="${metrics.radius}" ry="${metrics.radius}"
                   fill="${bgColor}"
                   stroke="${borderColor}"
                   stroke-width="1"/>
-            <text x="${width / 2}" y="${(height / 2) + 5}"
+            <text x="${width / 2}" y="${height / 2}"
                   text-anchor="middle"
-                  font-size="16"
+                  dominant-baseline="central"
+                  font-size="${metrics.fontSize}"
                   font-weight="900"
                   font-family="${UI_FONT_STACK}"
                   fill="${textColor}">${text}</text>
@@ -3384,7 +3375,7 @@
       return new kakao.maps.MarkerImage(
         "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg),
         new kakao.maps.Size(width, height),
-        { offset: new kakao.maps.Point(width / 2, height / 2) }
+        { offset: new kakao.maps.Point(Math.round(width / 2), Math.round(height / 2)) }
       );
     }
 
@@ -3401,8 +3392,8 @@
       return items.map(item => item.id).sort((a, b) => a - b).join(",");
     }
 
-    function getClusterBadgeSize(label) {
-      return getBadgeWidthByText(label);
+    function getClusterBadgeSize(label = "1") {
+      return getBadgeMetrics(label);
     }
 
     function setClusterBadgeSelected(cluster, isSelected) {
@@ -3412,39 +3403,37 @@
       const clusterItems = cluster.getMarkers().map(marker => marker.__property).filter(Boolean);
       if (!clusterItems.length) return;
 
-      const count = clusterItems.length;
-      const label = count > 99 ? "99+" : String(count);
-      const width = getClusterBadgeSize(label);
-      const height = 30;
+      const countLabel = clusterItems.length > 99 ? "99+" : String(clusterItems.length);
+      const metrics = getClusterBadgeSize(countLabel);
 
       const bg = isSelected ? "#1f6fff" : "#ffffff";
       const color = isSelected ? "#ffffff" : "#1f6fff";
       const border = isSelected ? "#1f6fff" : "#dbe3ee";
 
       const el = document.createElement("div");
-      el.style.width = `${width}px`;
-      el.style.height = `${height}px`;
-      el.style.minWidth = `${width}px`;
-      el.style.minHeight = `${height}px`;
-      el.style.borderRadius = "8px";
+      el.style.width = `${metrics.width}px`;
+      el.style.height = `${metrics.height}px`;
+      el.style.minWidth = `${metrics.width}px`;
+      el.style.minHeight = `${metrics.height}px`;
+      el.style.borderRadius = `${metrics.radius}px`;
       el.style.display = "flex";
       el.style.alignItems = "center";
       el.style.justifyContent = "center";
       el.style.background = bg;
       el.style.color = color;
-      el.style.fontSize = "16px";
+      el.style.fontSize = `${metrics.fontSize}px`;
       el.style.fontWeight = "900";
       el.style.fontFamily = UI_FONT_STACK;
       el.style.lineHeight = "1";
       el.style.letterSpacing = "-0.2px";
       el.style.border = `1px solid ${border}`;
-      el.style.boxShadow = isSelected ? "0 4px 10px rgba(31,111,255,0.22)" : "0 2px 6px rgba(15,41,66,0.12)";
+      el.style.boxShadow = isSelected ? "0 4px 10px rgba(31,111,255,0.25)" : "0 3px 8px rgba(0,0,0,0.10)";
       el.style.boxSizing = "border-box";
       el.style.whiteSpace = "nowrap";
       el.style.cursor = "pointer";
       el.style.pointerEvents = "auto";
       el.style.userSelect = "none";
-      el.textContent = label;
+      el.textContent = countLabel;
 
       el.addEventListener("click", async function (e) {
         e.preventDefault();
@@ -3715,8 +3704,6 @@
     async function openDetailPanel(item) {
       if (detailScroll) detailScroll.scrollTop = 0;
       sidebar.classList.add("expanded");
-      updateSidebarWidth();
-      refreshMapLayout();
 
       const detailItem = await resolveDetailData(item);
       currentDetailItem = detailItem;
@@ -3737,12 +3724,7 @@
       detailHeroPrice.textContent = detailItem.price || "";
       detailHeroAddress.textContent = `${detailItem.address || ""}`.trim();
 
-      detailHeroFeatures.innerHTML = (detailItem.features || [])
-        .map(f => {
-          const isHighlight = ["오션뷰", "급매", "핵심입지"].includes(f);
-          return `<span class="${isHighlight ? "highlight" : ""}">${escapeHtml(f)}</span>`;
-        })
-        .join("");
+      detailHeroFeatures.innerHTML = "";
 
       detailAreaMode = isApartmentType(detailItem.type || "") ? "private" : "total";
       detailAreaValue.dataset.areaRaw = detailItem.area || "-";
@@ -3803,18 +3785,15 @@
         detailAgentAvatar.textContent = "담당";
       }
 
-      detailHeroFeatures.innerHTML = "";
+      const featureTagHtml = (detailItem.features || [])
+        .map(feature => `<span class="detail-feature-tag">${escapeHtml(feature)}</span>`)
+        .join("");
 
-      const typeTagHtml = detailItem.type
-        ? `<span class="detail-feature-tag type">${escapeHtml(detailItem.type)}</span>`
-        : "";
-      const dealTagHtml = detailItem.dealType
-        ? `<span class="detail-feature-tag deal">${escapeHtml(detailItem.dealType)}</span>`
-        : "";
+      detailHeroFeatures.innerHTML = "";
 
       detailFeatures.innerHTML = `
         <div class="detail-tags-row">
-          <div class="detail-tags">${typeTagHtml}${dealTagHtml}</div>
+          <div class="detail-tags">${featureTagHtml}</div>
           <button type="button" class="detail-roadview-inline-btn" id="detailTopRoadviewBtn">
             <i class="fa-solid fa-street-view"></i>
             로드뷰
@@ -3862,8 +3841,6 @@ function forceCloseDetailPanel() {
 function closeDetailPanel() {
       sidebar.classList.remove("expanded");
       currentDetailItem = null;
-      updateSidebarWidth();
-      refreshMapLayout();
     }
 
     async function handleClusterSelection(cluster) {
@@ -3872,17 +3849,17 @@ function closeDetailPanel() {
       const clusterItems = cluster.getMarkers().map(marker => marker.__property).filter(Boolean);
       if (!clusterItems.length) return;
 
-      const topItem = clusterItems[0];
-
       state.selectedMarkerId = null;
       state.selectedClusterKey = getClusterKeyFromItems(clusterItems);
 
       updateMarkerSelection(null);
+      closeDetailPanel();
       renderList(clusterItems);
       propertyList.scrollTop = 0;
 
-      await openDetailPanel(topItem);
-      highlightCard(topItem.id);
+      const centerLat = clusterItems.reduce((sum, v) => sum + Number(v.lat || 0), 0) / clusterItems.length;
+      const centerLng = clusterItems.reduce((sum, v) => sum + Number(v.lng || 0), 0) / clusterItems.length;
+      recenterMapForOverlay(centerLat, centerLng);
 
       setResultInfo(`선택 지역 ${clusterItems.length}건`);
       setListInfo(`총 ${clusterItems.length}개 매물`);
@@ -3911,58 +3888,10 @@ function closeDetailPanel() {
         disableClickZoom: true,
         calculator: [5, 10, 20, 50],
         styles: [
-          {
-            width: "44px",
-            height: "44px",
-            background: "rgba(3, 199, 90, 0.9)",
-            color: "#ffffff",
-            borderRadius: "50%",
-            border: "1px solid #03C75A",
-            boxShadow: "0 4px 10px rgba(0,0,0,0.18)",
-            textAlign: "center",
-            fontWeight: "900",
-            fontSize: "14px",
-            lineHeight: "40px"
-          },
-          {
-            width: "44px",
-            height: "44px",
-            background: "rgba(3, 199, 90, 0.9)",
-            color: "#ffffff",
-            borderRadius: "50%",
-            border: "1px solid #03C75A",
-            boxShadow: "0 4px 10px rgba(0,0,0,0.18)",
-            textAlign: "center",
-            fontWeight: "900",
-            fontSize: "14px",
-            lineHeight: "40px"
-          },
-          {
-            width: "44px",
-            height: "44px",
-            background: "rgba(3, 199, 90, 0.9)",
-            color: "#ffffff",
-            borderRadius: "50%",
-            border: "1px solid #03C75A",
-            boxShadow: "0 4px 10px rgba(0,0,0,0.18)",
-            textAlign: "center",
-            fontWeight: "900",
-            fontSize: "14px",
-            lineHeight: "40px"
-          },
-          {
-            width: "44px",
-            height: "44px",
-            background: "rgba(3, 199, 90, 0.9)",
-            color: "#ffffff",
-            borderRadius: "50%",
-            border: "1px solid #03C75A",
-            boxShadow: "0 4px 10px rgba(0,0,0,0.18)",
-            textAlign: "center",
-            fontWeight: "900",
-            fontSize: "14px",
-            lineHeight: "40px"
-          }
+          { width: "30px", height: "30px", background: "transparent", color: "transparent", borderRadius: "8px", border: "0", boxShadow: "none", textAlign: "center", fontWeight: "900", fontSize: "14px", lineHeight: "30px" },
+          { width: "30px", height: "30px", background: "transparent", color: "transparent", borderRadius: "8px", border: "0", boxShadow: "none", textAlign: "center", fontWeight: "900", fontSize: "14px", lineHeight: "30px" },
+          { width: "30px", height: "30px", background: "transparent", color: "transparent", borderRadius: "8px", border: "0", boxShadow: "none", textAlign: "center", fontWeight: "900", fontSize: "14px", lineHeight: "30px" },
+          { width: "30px", height: "30px", background: "transparent", color: "transparent", borderRadius: "8px", border: "0", boxShadow: "none", textAlign: "center", fontWeight: "900", fontSize: "14px", lineHeight: "30px" }
         ]
       });
 
@@ -3977,6 +3906,7 @@ function closeDetailPanel() {
 
         highlightCard(-1);
         updateMarkerSelection(null);
+        closeDetailPanel();
         refreshViewportList();
 
         setTimeout(() => {
@@ -4123,10 +4053,46 @@ function closeDetailPanel() {
       return;
     }
 
+    
+function getOverlayAwareCenter(lat, lng) {
+      if (!state.map || !window.kakao || !kakao.maps || !mapEl) {
+        return new kakao.maps.LatLng(lat, lng);
+      }
+      const projection = state.map.getProjection();
+      if (!projection) {
+        return new kakao.maps.LatLng(lat, lng);
+      }
+
+      const target = new kakao.maps.LatLng(lat, lng);
+      const point = projection.containerPointFromCoords(target);
+      const overlayWidth = Math.min(parseInt(getComputedStyle(document.documentElement).getPropertyValue("--detail-panel-width")) || 400, Math.max(320, Math.floor(window.innerWidth * 0.42)));
+      const visibleWidth = Math.max(0, mapEl.clientWidth - overlayWidth);
+      const desiredX = Math.max(60, Math.round(visibleWidth * 0.5));
+      const dx = desiredX - point.x;
+      const movedPoint = new kakao.maps.Point(point.x - dx, point.y);
+      return projection.coordsFromContainerPoint(movedPoint);
+    }
+
+    function recenterMapForOverlay(lat, lng) {
+      if (!state.map || !Number.isFinite(Number(lat)) || !Number.isFinite(Number(lng))) return;
+      const nextCenter = getOverlayAwareCenter(Number(lat), Number(lng));
+      state.map.panTo(nextCenter);
+    }
+
+    function getBadgeMetrics(label) {
+      const text = String(label ?? "1");
+      const clean = text.length > 3 ? text.slice(0, 3) : text;
+      const len = clean.length;
+      if (len <= 1) return { width: 30, height: 30, radius: 8, fontSize: 16, text };
+      if (len === 2) return { width: 38, height: 30, radius: 8, fontSize: 16, text };
+      return { width: 46, height: 30, radius: 8, fontSize: 16, text };
+    }
+
+
     function renderMarkers(data, options = {}) {
       clearMapObjects();
 
-      const preserveViewport = !!options.preserveViewport;
+      const preserveViewport = true;
       const markerItems = preserveViewport ? getViewportFilteredItems(data) : (data || []);
       if (!markerItems.length) return;
 
@@ -4148,16 +4114,12 @@ function closeDetailPanel() {
           await hideRoadview();
 
           state.selectedClusterKey = null;
-
-          renderList([item]);
-          propertyList.scrollTop = 0;
+          state.selectedMarkerId = item.id;
 
           highlightCard(item.id);
           updateMarkerSelection(item.id);
-          await openDetailPanel(item);
-
-          setResultInfo("선택 매물 1건");
-          setListInfo("총 1개 매물");
+          closeDetailPanel();
+          recenterMapForOverlay(item.lat, item.lng);
 
           setTimeout(() => {
             refreshClusterBadges();
@@ -4175,15 +4137,7 @@ function closeDetailPanel() {
         refreshClusterBadges();
       }, 0);
 
-      if (preserveViewport || preventMapViewportChange) {
-        return;
-      }
-
-      if (markerItems.length === 1) {
-        state.map.setCenter(new kakao.maps.LatLng(markerItems[0].lat, markerItems[0].lng));
-      } else {
-        state.map.setBounds(bounds);
-      }
+      return;
     }
 
     async function focusProperty(id) {
@@ -4196,6 +4150,7 @@ function closeDetailPanel() {
 
       highlightCard(id);
       updateMarkerSelection(id);
+      await openDetailPanel(item);
 
       setTimeout(() => {
         refreshClusterBadges();
@@ -4206,9 +4161,7 @@ function closeDetailPanel() {
       if (!data.length) {
         propertyList.innerHTML = `
           <div class="card" style="padding:18px; cursor:default; border-bottom:0;">
-            <div class="card-body" style="padding:0; text-align:center;">
-              <div style="font-size:16px; font-weight:900; color:#17212b; line-height:1.5; white-space:pre-line;">조건에 맞는 매물이 없습니다.<br>지도를 이동 하거나 필터를 변경해 보세요.</div>
-            </div>
+            <div class="card-body" style="padding:0; text-align:left;">\n              <div class="map-empty-state-desc"><div class="empty-title">조건에 맞는 매물이 없습니다.</div><div class="empty-sub">지도를 이동 하거나 필터를 변경해 보세요.</div></div>\n            </div>
           </div>
         `;
         return;
@@ -4293,6 +4246,14 @@ function closeDetailPanel() {
         updateMarkerSelection(item.id);
         });
       });
+    }
+
+    
+    function syncLeftAllButtonWithMapFilters() {
+      const leftAllBtn = document.querySelector('#featureButtons button[data-value="all"]');
+      if (!leftAllBtn) return;
+      const isAllState = selectedDeal === "all" && selectedType === "all" && state.selectedFeatures.size === 0;
+      leftAllBtn.classList.toggle("all-active", isAllState);
     }
 
     function syncFeatureButtons() {
