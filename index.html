@@ -5373,6 +5373,16 @@ function closeDetailPanel() {
         });
       }
 
+      if (mapRecommendAgentCloseBtn) {
+        mapRecommendAgentCloseBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          state.isRecommendAgentDismissed = true;
+          state.recommendAgent = null;
+          renderRecommendAgentCard(null);
+        });
+      }
+
       function openShareMenu() {
         if (!detailShareMenu) return;
         detailShareMenu.style.display = "flex";
