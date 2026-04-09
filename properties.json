@@ -1,6 +1,27 @@
 [  
 
   {
+    "id": 209,
+    "listingNo": "디-209",
+    "date": "2026-01-25",
+    "title": "대정읍 투자용 토지",
+    "desc": "전대지 3필지 일괄(총 860㎡) 대정읍 투자용 토지, 면적(전체) : 860㎡ / 면적(전) : 235㎡ / 면적(대) : 268㎡ / 면적(대) : 357㎡",
+    "image": "./dh_real/209/1.JPG",
+    "desc_folder": "./dh_real/209/info.json",
+    "image_folder": "./dh_real/209/image.json",
+    "type": "대",
+    "dealFilter": "매매",
+    "region": "무릉리",
+    "price": "2억 5,000",
+    "area": "대지면적 860.00㎡",
+    "address": "서귀포시 대정읍 무릉리",
+    "lat": 33.268617,
+    "lng": 126.198247,
+    "features": ["대정읍", "무릉리", "투자용"],
+    "agent_folder": "./dh_real/agent.json"
+  },
+  
+  {
     "id": 177,
     "listingNo": "디-177",
     "date": "2026-01-25",
