@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주도 부동산 지도 Ver 1.398</title>
-<meta property="og:title" content="제주도 부동산 지도 Ver 1.398" />
-  <meta property="og:description" content="제주도 부동산 지도 Ver 1.398" />
+  <title>제주도 부동산 지도 Ver 1.400</title>
+<meta property="og:title" content="제주도 부동산 지도 Ver 1.400" />
+  <meta property="og:description" content="제주도 부동산 지도 Ver 1.400" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
   <meta property="og:image" content="https://your-domain.example/og-image.jpg" />
@@ -2514,7 +2514,7 @@
 </style>
 <style>
 
-/* Stable patch overrides - Ver 1.398 */
+/* Stable patch overrides - Ver 1.400 */
 .map-empty-state {
   text-align: left !important;
 }
@@ -2680,7 +2680,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.398</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.400</div>
             </div>
           </div>
 
@@ -2952,7 +2952,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, SUIT, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.398';
+    const APP_VERSION = '1.400';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -3885,15 +3885,27 @@
 
     function getBadgeWidthByText(text) {
       const len = String(text ?? "").length;
-      if (len >= 3) return 62;
-      if (len === 2) return 50;
-      return 38;
+      if (len >= 3) return 64;
+      if (len === 2) return 52;
+      return 39;
+    }
+
+    function getBadgeTextMetrics(text) {
+      const value = String(text ?? "");
+      if (value === "1") {
+        return { xOffset: 0.9, strokeWidth: 0.46, letterSpacing: "0px", clusterTranslateX: "0.9px" };
+      }
+      if (value === "4") {
+        return { xOffset: -0.35, strokeWidth: 0.35, letterSpacing: "-0.1px", clusterTranslateX: "-0.35px" };
+      }
+      return { xOffset: 0, strokeWidth: 0.35, letterSpacing: "-0.15px", clusterTranslateX: "0px" };
     }
 
     function createMarkerImage(item, isSelected = false, label = "1") {
       const text = String(label ?? "1");
       const width = getBadgeWidthByText(text);
-      const height = 38;
+      const height = 39;
+      const textMetrics = getBadgeTextMetrics(text);
 
       const bgColor = isSelected ? "rgba(31,111,255,0.96)" : "rgba(255,255,255,0.90)";
       const textColor = isSelected ? "#ffffff" : "#1f6fff";
@@ -3906,11 +3918,11 @@
             </filter>
           </defs>
           <g filter="url(#shadow)">
-            <rect x="0.5" y="0.5" width="${width - 1}" height="${height - 1}" rx="12" ry="12"
+            <rect x="0.5" y="0.5" width="${width - 1}" height="${height - 1}" rx="12.5" ry="12.5"
                   fill="${bgColor}"
                   stroke="none"
                   stroke-width="0"/>
-            <text x="${width / 2}" y="${height / 2 + 1}"
+            <text x="${width / 2 + textMetrics.xOffset}" y="${height / 2 + 1}"
                   dominant-baseline="middle"
                   text-anchor="middle"
                   font-size="24"
@@ -3918,9 +3930,9 @@
                   font-family="${UI_FONT_STACK}"
                   fill="${textColor}"
                   stroke="${textColor}"
-                  stroke-width="0.35"
+                  stroke-width="${textMetrics.strokeWidth}"
                   paint-order="stroke fill"
-                  style="font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1, 'lnum' 1; letter-spacing: -0.4px;">${text}</text>
+                  style="font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1, 'lnum' 1; letter-spacing: ${textMetrics.letterSpacing};">${text}</text>
           </g>
         </svg>
       `;
@@ -3947,14 +3959,14 @@
     }
 
     function getClusterBadgeSize() {
-      return 38;
+      return 39;
     }
 
     function getBadgeWidthByText(text) {
       const len = String(text ?? "").length;
-      if (len >= 3) return 62;
-      if (len === 2) return 50;
-      return 38;
+      if (len >= 3) return 64;
+      if (len === 2) return 52;
+      return 39;
     }
 
     function setClusterBadgeSelected(cluster, isSelected) {
@@ -3970,12 +3982,13 @@
 
       const bg = isSelected ? "rgba(31,111,255,0.96)" : "rgba(255,255,255,0.90)";
       const color = isSelected ? "#ffffff" : "#1f6fff";
+      const textMetrics = getBadgeTextMetrics(label);
 
       const el = document.createElement("div");
-      el.style.height = `38px`;
+      el.style.height = `39px`;
       el.style.minWidth = `${width}px`;
       el.style.padding = "0 4px";
-      el.style.borderRadius = "12px";
+      el.style.borderRadius = "12.5px";
       el.style.display = "flex";
       el.style.alignItems = "center";
       el.style.justifyContent = "center";
@@ -3985,7 +3998,7 @@
       el.style.fontWeight = "800";
       el.style.fontFamily = UI_FONT_STACK;
       el.style.lineHeight = "1";
-      el.style.letterSpacing = "-0.4px";
+      el.style.letterSpacing = textMetrics.letterSpacing;
       el.style.fontVariantNumeric = "tabular-nums";
       el.style.fontFeatureSettings = "'tnum' 1, 'lnum' 1";
       el.style.webkitFontSmoothing = "antialiased";
@@ -3996,6 +4009,7 @@
       el.style.cursor = "pointer";
       el.style.pointerEvents = "auto";
       el.style.userSelect = "none";
+      el.style.transform = `translateX(${textMetrics.clusterTranslateX})`;
       el.textContent = label;
 
       el.addEventListener("click", async function (e) {
