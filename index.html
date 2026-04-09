@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주도 부동산 지도 Ver 1.406</title>
-<meta property="og:title" content="제주도 부동산 지도 Ver 1.406" />
-  <meta property="og:description" content="제주도 부동산 지도 Ver 1.406" />
+  <title>제주도 부동산 지도 Ver 1.407</title>
+<meta property="og:title" content="제주도 부동산 지도 Ver 1.407" />
+  <meta property="og:description" content="제주도 부동산 지도 Ver 1.407" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
   <meta property="og:image" content="https://your-domain.example/og-image.jpg" />
@@ -1042,7 +1042,7 @@
     .global-topbar-inner {
       height: 100%;
       display: grid;
-      grid-template-columns: auto auto 1fr auto;
+      grid-template-columns: minmax(280px, var(--sidebar-list-width)) 1fr auto;
       align-items: center;
       gap: 18px;
       padding: 0 20px;
@@ -1053,12 +1053,14 @@
       align-items: center;
       gap: 12px;
       min-width: 0;
+      max-width: var(--sidebar-list-width);
+      overflow: hidden;
     }
 
     .global-back-btn {
-      width: 38px;
-      height: 38px;
-      min-width: 38px;
+      width: 40px;
+      height: 40px;
+      min-width: 40px;
       border: 0;
       border-radius: 12px;
       background: transparent;
@@ -1067,6 +1069,7 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
+      flex: 0 0 auto;
     }
 
     .global-back-btn:hover {
@@ -1079,6 +1082,8 @@
       color: #1f2a36;
       letter-spacing: -0.45px;
       white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .global-topbar-menu {
@@ -1087,15 +1092,6 @@
       gap: 16px;
       min-width: 0;
       overflow: hidden;
-    }
-
-    .global-nav-label {
-      flex: 0 0 auto;
-      font-size: 13px;
-      font-weight: 900;
-      color: #7b8794;
-      letter-spacing: -0.12px;
-      white-space: nowrap;
     }
 
     .global-topbar .map-filter-bar {
@@ -1160,31 +1156,46 @@
       align-items: center;
       gap: 10px;
       justify-self: end;
+      min-width: 0;
     }
 
-    .global-sort-chip {
-      display: inline-flex;
-      align-items: center;
-      height: 38px;
-      padding: 0 14px;
+    .global-search-box {
+      position: relative;
+      width: 320px;
+      max-width: min(320px, 28vw);
+      min-width: 220px;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .global-search-box input {
+      width: 100%;
+      height: 42px;
+      margin-bottom: 0;
+      padding: 0 52px 0 16px;
+      border: 1px solid #dfe5eb;
       border-radius: 12px;
-      background: #f7f9fc;
-      border: 1px solid #e6ebf0;
-      color: #1f2a36;
       font-size: 14px;
-      font-weight: 900;
-      white-space: nowrap;
+      font-weight: 700;
+      color: #17212b;
+      background: #fff;
+      box-shadow: none;
+    }
+
+    .global-search-box::after {
+      width: 42px;
+      height: 42px;
+      border-radius: 0 12px 12px 0;
+      background: transparent;
+      color: #7b8794;
+      font-size: 15px;
     }
 
     .brand-card {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      height: 58px;
-      padding: 0 16px;
-      background: #fff;
-      border-bottom: 1px solid #e6ebf0;
+      display: none;
     }
 
     .brand-left {
@@ -1263,7 +1274,7 @@
     }
 
     .feature-buttons {
-      display: flex;
+      display: none;
       flex-wrap: nowrap;
       gap: 5px;
       overflow-x: auto;
@@ -1316,13 +1327,16 @@
     }
 
     .list-head {
+      position: sticky;
+      top: 0;
+      z-index: 15;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 10px;
-      margin: 0 12px;
-      padding: 10px 4px 12px;
-      background: transparent;
+      margin: 0;
+      padding: 14px 16px 12px;
+      background: #f7f8fa;
       border-bottom: 0;
     }
 
@@ -2684,7 +2698,7 @@
 </style>
 <style>
 
-/* Stable patch overrides - Ver 1.406 */
+/* Stable patch overrides - Ver 1.407 */
 .map-empty-state {
   text-align: left !important;
 }
@@ -2847,13 +2861,19 @@
         <button type="button" class="global-back-btn" aria-label="뒤로가기" onclick="history.back()">
           <i class="fa-solid fa-arrow-left"></i>
         </button>
-        <div class="global-brand" id="appVersionText">제주도 부동산 지도 Ver 1.406</div>
+        <div class="global-brand" id="appVersionText">제주도 부동산 지도 Ver 1.407</div>
       </div>
-
-      <div class="global-nav-label">카테고리</div>
 
       <div class="global-topbar-menu">
         <div class="map-filter-bar">
+          <div class="deal-buttons" id="dealButtons">
+            <button type="button" data-value="all" class="active">전체</button>
+            <button type="button" data-value="매매">매매</button>
+            <button type="button" data-value="전세">전세</button>
+            <button type="button" data-value="월세">월세</button>
+            <button type="button" data-value="년세">년세</button>
+          </div>
+
           <div class="type-buttons" id="typeButtons">
             <button type="button" data-value="all" class="active">전체</button>
             <button type="button" data-value="아파트오피스텔">아파트ㆍ오피스텔</button>
@@ -2862,19 +2882,13 @@
             <button type="button" data-value="상가">상가ㆍ사무실</button>
             <button type="button" data-value="토지">토지ㆍ임야</button>
           </div>
-
-          <div class="deal-buttons" id="dealButtons">
-            <button type="button" data-value="all" class="active">전체</button>
-            <button type="button" data-value="매매">매매</button>
-            <button type="button" data-value="전세">전세</button>
-            <button type="button" data-value="월세">월세</button>
-            <button type="button" data-value="년세">년세</button>
-          </div>
         </div>
       </div>
 
       <div class="global-topbar-right">
-        <div class="global-sort-chip">최신순</div>
+        <div class="panel search-box global-search-box">
+          <input type="text" id="keyword" placeholder="지역명, 주소, 키워드 검색" />
+        </div>
       </div>
     </div>
   </header>
@@ -2883,25 +2897,6 @@
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-inner">
         <div class="sidebar-list-panel">
-          <div class="brand-card">
-            <div class="brand-left">
-              <div class="brand-title">제주도 부동산 지도 Ver 1.406</div>
-            </div>
-          </div>
-
-          <div class="panel search-box">
-            
-            <input type="text" id="keyword" placeholder="지역명, 주소, 키워드 검색" />
-<div class="feature-buttons" id="featureButtons">
-              <button type="button" data-value="all" class="all-active">전체</button>
-              <button type="button" data-value="신축">신축</button>
-              <button type="button" data-value="오션뷰">오션뷰</button>
-              <button type="button" data-value="생활권">생활권</button>
-              <button type="button" data-value="투자용">투자용</button>
-              <button type="button" data-value="급매">급매</button>
-            </div>
-          </div>
-
           <div class="list-head">
             <strong id="listInfoText">총 0개 매물</strong>
             <span>최신순</span>
@@ -3139,9 +3134,9 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.406';
+    const APP_VERSION = '1.407';
 
-    document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
+    document.title = `제주도 부동산 지도 Ver ${APP_VERSION}`;
 
     const state = {
       map: null,
