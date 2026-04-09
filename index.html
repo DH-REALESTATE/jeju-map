@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주도 부동산 지도 Ver 1.433</title>
-<meta property="og:title" content="제주도 부동산 지도 Ver 1.433" />
-  <meta property="og:description" content="제주도 부동산 지도 Ver 1.433" />
+  <title>제주도 부동산 지도 Ver 1.434</title>
+<meta property="og:title" content="제주도 부동산 지도 Ver 1.434" />
+  <meta property="og:description" content="제주도 부동산 지도 Ver 1.434" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
   <meta property="og:image" content="https://your-domain.example/og-image.jpg" />
@@ -2681,7 +2681,7 @@
 </style>
 <style>
 
-/* Stable patch overrides - Ver 1.433 */
+/* Stable patch overrides - Ver 1.434 */
 .map-empty-state {
   text-align: left !important;
 }
@@ -2841,7 +2841,7 @@
 
 
 <style>
-/* Map filter premium patch Ver 1.433 */
+/* Map filter premium patch Ver 1.434 */
 .map-filter-bar{
   gap: 10px !important;
   padding: 14px !important;
@@ -2903,7 +2903,7 @@
 
 
 <style>
-/* Recommend title weight fix Ver 1.433 */
+/* Recommend title weight fix Ver 1.434 */
 .map-recommend-title,
 .map-recommend-agent-title {
   font-weight: 900 !important;
@@ -2918,7 +2918,7 @@
 
 
 <style>
-/* Agent card text size up Ver 1.433 */
+/* Agent card text size up Ver 1.434 */
 .map-recommend-agent-reg{
   font-size: 12.5px !important;
 }
@@ -2934,7 +2934,7 @@
 
 
 <style>
-/* Sticky top filter patch Ver 1.433 */
+/* Sticky top filter patch Ver 1.434 */
 .map-filter-bar{
   position:absolute !important;
   top:0 !important;
@@ -3050,7 +3050,7 @@
 
 
 <style>
-/* FIX X buttons visible Ver 1.433 */
+/* FIX X buttons visible Ver 1.434 */
 .map-recommend-close,
 .map-recommend-agent-close{
   display:flex !important;
@@ -3070,7 +3070,7 @@
 
 
 <style>
-/* Fix hidden detail hero controls + recommend close buttons Ver 1.433 */
+/* Fix hidden detail hero controls + recommend close buttons Ver 1.434 */
 .detail-hero-nav,
 .detail-hero-expand,
 .detail-close-btn,
@@ -3097,7 +3097,7 @@
 
 
 <style>
-/* Hero controls + topbar align patch Ver 1.433 */
+/* Hero controls + topbar align patch Ver 1.434 */
 .detail-hero{
   position: relative !important;
   z-index: 5 !important;
@@ -3188,7 +3188,7 @@
 
 
 <style>
-/* Top area exact height align patch Ver 1.433 */
+/* Top area exact height align patch Ver 1.434 */
 :root{
   --topbar-height: 60px;
 }
@@ -3329,7 +3329,7 @@
 
 
 <style>
-/* Recommend agent order patch Ver 1.433 */
+/* Recommend agent order patch Ver 1.434 */
 .map-recommend-agent-content{
   display:flex !important;
   flex-direction:column !important;
@@ -3393,7 +3393,7 @@
 
 
 <style>
-/* Recommend agent card spacing patch Ver 1.433 */
+/* Recommend agent card spacing patch Ver 1.434 */
 .map-recommend-agent-content{
   gap: 2px !important;
 }
@@ -3465,7 +3465,7 @@
 
 
 <style>
-/* Top category underline patch Ver 1.433 */
+/* Top category underline patch Ver 1.434 */
 .brand-card,
 .detail-topbar{
   border-bottom: 2px solid #cfd6de !important;
@@ -3478,7 +3478,7 @@
 
 
 <style>
-/* refined subtle line Ver 1.433 */
+/* refined subtle line Ver 1.434 */
 .brand-card,
 .detail-topbar,
 .map-filter-bar{
@@ -3488,7 +3488,7 @@
 
 
 <style>
-/* Top unified background Ver 1.433 */
+/* Top unified background Ver 1.434 */
 .brand-card,
 .detail-topbar,
 .map-filter-bar{
@@ -3498,7 +3498,7 @@
 
 
 <style>
-/* 1.433 UI clean patch */
+/* 1.434 UI clean patch */
 
 /* 상단 전체 배경 통일 */
 .brand-card,
@@ -3528,7 +3528,7 @@
 
 
 <style>
-/* Search move to map top-right Ver 1.433 */
+/* Search move to map top-right Ver 1.434 */
 .left-search-panel{
   display:none !important;
 }
@@ -3585,6 +3585,16 @@
 }
 </style>
 
+
+<style>
+/* Remove left search + feature tags Ver 1.434 */
+.left-search,
+.panel.search-box,
+#featureButtons{
+  display:none !important;
+}
+</style>
+
 </head>
 <body>
   <div class="app">
@@ -3593,14 +3603,14 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.433</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.434</div>
             </div>
           </div>
 
-          <div class="panel search-box">
+          <div class="panel search-box" style="display:none !important;">
             
             <input type="text" id="keyword" placeholder="지역명, 주소, 키워드 검색" />
-<div class="feature-buttons" id="featureButtons">
+<div class="feature-buttons" id="featureButtons" style="display:none !important;">
               <button type="button" data-value="all" class="all-active">전체</button>
               <button type="button" data-value="신축">신축</button>
               <button type="button" data-value="오션뷰">오션뷰</button>
@@ -3884,7 +3894,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.433';
+    const APP_VERSION = '1.434';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -6502,7 +6512,7 @@ function closeDetailPanel() {
 </body>
 </html>
 <style>
-/* CTA unify patch Ver 1.433 */
+/* CTA unify patch Ver 1.434 */
 .detail-agent-cta-btn,
 .map-recommend-agent-btn {
   font-weight: 700 !important;
