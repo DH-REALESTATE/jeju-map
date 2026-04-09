@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주도 부동산 지도 Ver 1.464</title>
-<meta property="og:title" content="제주도 부동산 지도 Ver 1.464" />
-  <meta property="og:description" content="제주도 부동산 지도 Ver 1.464" />
+  <title>제주도 부동산 지도 Ver 1.465</title>
+<meta property="og:title" content="제주도 부동산 지도 Ver 1.465" />
+  <meta property="og:description" content="제주도 부동산 지도 Ver 1.465" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
   <meta property="og:image" content="https://your-domain.example/og-image.jpg" />
@@ -15,8 +15,13 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSans.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-  <style>
-    :root {
+
+
+<!-- Noto Sans KR -->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root{
       --sidebar-list-width: 350px;
       --detail-panel-width: 400px;
       --sidebar-current-width: var(--sidebar-list-width);
@@ -28,13 +33,11 @@
       --font-ui: "Pretendard", "Noto Sans KR", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
       --font-display: "GmarketSans", "Pretendard", "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
     }
-
-    * {
+*{
       box-sizing: border-box;
       font-family: var(--font-ui);
     }
-
-    html, body {
+html, body{
       margin: 0;
       padding: 0;
       height: 100%;
@@ -44,24 +47,21 @@
       -moz-osx-font-smoothing: grayscale;
       text-rendering: optimizeLegibility;
     }
-
-    body {
+body{
       overflow: hidden;
       transform: scale(0.95);
       transform-origin: top left;
       width: calc(100% / 0.95);
       height: calc(100% / 0.95);
     }
-
-    .app {
+.app{
       position: relative;
       display: grid;
       grid-template-columns: var(--sidebar-current-width) 1fr;
       height: 100vh;
       gap: 0;
     }
-
-    .sidebar {
+.sidebar{
       height: 100vh;
       overflow: hidden;
       background: #f7f8fa;
@@ -69,19 +69,16 @@
       min-width: 280px;
       border-right: 1px solid #e6ebf0;
     }
-
-    .sidebar-inner {
+.sidebar-inner{
       display: grid;
       grid-template-columns: var(--sidebar-list-width) 0px;
       height: 100%;
       transition: grid-template-columns 0.28s ease;
     }
-
-    .sidebar.expanded .sidebar-inner {
+.sidebar.expanded .sidebar-inner{
       grid-template-columns: var(--sidebar-list-width) var(--detail-panel-width);
     }
-
-    .sidebar-list-panel {
+.sidebar-list-panel{
       height: 100%;
       overflow-y: auto;
       overflow-x: hidden;
@@ -89,10 +86,8 @@
       scrollbar-width: none;
       -ms-overflow-style: none;
     }
-
-    .sidebar-list-panel::-webkit-scrollbar { display: none; }
-
-    .sidebar-detail-panel {
+.sidebar-list-panel::-webkit-scrollbar{ display: none; }
+.sidebar-detail-panel{
       height: 100%;
       overflow-y: auto;
       overflow-x: hidden;
@@ -103,20 +98,16 @@
       scrollbar-width: none;
       -ms-overflow-style: none;
     }
-
-    .sidebar-detail-panel::-webkit-scrollbar { display: none; }
-
-    .sidebar.expanded .sidebar-detail-panel { opacity: 1; }
-
-    .detail-panel-inner {
+.sidebar-detail-panel::-webkit-scrollbar{ display: none; }
+.sidebar.expanded .sidebar-detail-panel{ opacity: 1; }
+.detail-panel-inner{
       height: 100%;
       display: flex;
       flex-direction: column;
       background: #fff;
       min-height: 0;
     }
-
-    .detail-topbar {
+.detail-topbar{
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -125,9 +116,8 @@
       background: rgba(255,255,255,0.98);
       backdrop-filter: blur(8px);
     }
-
-    .detail-close-btn,
-    .detail-icon-btn {
+.detail-close-btn,
+    .detail-icon-btn{
       border: 0;
       background: transparent;
       color: #223244;
@@ -139,15 +129,12 @@
       font-weight: 700;
       font-size: 18px;
     }
-
-
-    .detail-top-actions {
+.detail-top-actions{
       position: relative;
       display: flex;
       gap: 4px;
     }
-
-    .detail-share-menu {
+.detail-share-menu{
       position: absolute;
       top: calc(100% + 8px);
       right: 0;
@@ -164,12 +151,10 @@
       z-index: 9999;
       pointer-events: auto;
     }
-
-    .detail-share-menu.open {
+.detail-share-menu.open{
       display: flex;
     }
-
-    .detail-share-option {
+.detail-share-option{
       width: 100%;
       min-height: 30px;
       border: 0;
@@ -186,22 +171,18 @@
       padding: 0 12px;
       cursor: pointer;
     }
-
-    .detail-share-option:hover {
+.detail-share-option:hover{
       background: rgba(3, 199, 90, 0.08);
       color: #03C75A;
     }
-
-    .detail-share-option i {
+.detail-share-option i{
       width: 16px;
       text-align: center;
       font-size: 14px;
       margin-right: 0;
       line-height: 1;
     }
-
-
-    .detail-scroll {
+.detail-scroll{
       flex: 1;
       min-height: 0;
       overflow-y: auto;
@@ -211,27 +192,22 @@
       -ms-overflow-style: none;
       -webkit-overflow-scrolling: touch;
     }
-
-    .detail-scroll::-webkit-scrollbar { display: none; }
-
-    .detail-hero {
+.detail-scroll::-webkit-scrollbar{ display: none; }
+.detail-hero{
       height: 272px;
       background: #dbe6ef center / cover no-repeat;
       position: relative;
       overflow: hidden;
     }
-
-    .detail-hero::after {
+.detail-hero::after{
       display: none;
     }
-
-    .detail-hero-slides {
+.detail-hero-slides{
       position: absolute;
       inset: 0;
       z-index: 0;
     }
-
-    .detail-hero-slide {
+.detail-hero-slide{
       position: absolute;
       inset: 0;
       background-position: center;
@@ -241,17 +217,14 @@
       transition: opacity 0.35s ease;
       filter: contrast(1.05) brightness(1.03) saturate(1.05);
     }
-
-    .detail-hero-slide.active {
+.detail-hero-slide.active{
       opacity: 1;
     }
-
-    .detail-hero img {
+.detail-hero img{
       filter: contrast(1.05) brightness(1.03) saturate(1.05);
     }
-
-    .detail-hero-expand,
-    .detail-hero-nav {
+.detail-hero-expand,
+    .detail-hero-nav{
       position: absolute;
       width: 40px;
       height: 40px;
@@ -266,30 +239,25 @@
       backdrop-filter: blur(6px);
       z-index: 3;
     }
-
-    .detail-hero-expand {
+.detail-hero-expand{
       top: 12px;
       right: 12px;
       font-size: 16px;
       font-weight: 700;
     }
-
-    .detail-hero-nav {
+.detail-hero-nav{
       top: 50%;
       transform: translateY(-50%);
       font-size: 16px;
       font-weight: 700;
     }
-
-    .detail-hero-nav.prev {
+.detail-hero-nav.prev{
       left: 12px;
     }
-
-    .detail-hero-nav.next {
+.detail-hero-nav.next{
       right: 12px;
     }
-
-    .detail-hero-dots {
+.detail-hero-dots{
       position: absolute;
       left: 50%;
       bottom: 14px;
@@ -299,8 +267,7 @@
       gap: 4px;
       z-index: 3;
     }
-
-    .detail-hero-dot {
+.detail-hero-dot{
       width: 8px;
       height: 8px;
       border: 0;
@@ -310,17 +277,14 @@
       padding: 0;
       transition: width 0.2s ease, background 0.2s ease;
     }
-
-    .detail-hero-dot.active {
+.detail-hero-dot.active{
       width: 20px;
       background: rgba(255,255,255,0.98);
     }
-
-    .detail-hero-badge {
+.detail-hero-badge{
       display: none !important;
     }
-
-    .detail-hero-overlay {
+.detail-hero-overlay{
       position: absolute;
       left: 0;
       right: 0;
@@ -329,16 +293,14 @@
       padding: 18px 18px 38px;
       color: #fff;
     }
-
-    .detail-hero-price-row {
+.detail-hero-price-row{
       display: flex;
       align-items: flex-end;
       gap: 8px;
       flex-wrap: wrap;
       margin-bottom: 8px;
     }
-
-    .detail-hero-deal {
+.detail-hero-deal{
       font-size: 16px;
       font-weight: 700;
       color: #8bd2ff;
@@ -346,42 +308,34 @@
       letter-spacing: -0.2px;
       line-height: 1.1;
     }
-
-    .detail-hero-price {
+.detail-hero-price{
       font-size: 34px;
       font-weight: 700;
       line-height: 1.04;
       letter-spacing: -1px;
       text-shadow: 0 3px 14px rgba(0,0,0,0.32);
     }
-
-    .detail-hero-address {
+.detail-hero-address{
       font-size: 14px;
       letter-spacing: -0.1px;
       line-height: 1.45;
       color: rgba(255,255,255,0.94);
       text-shadow: 0 1px 6px rgba(0,0,0,0.2);
     }
-
-    .detail-hero-features {
+.detail-hero-features{
       display: none;
     }
-
-    .detail-content {
+.detail-content{
       padding: 18px 18px 18px;
     }
-
-
-
-    .detail-summary-top {
+.detail-summary-top{
       display: flex;
       align-items: center;
       gap: 8px;
       flex-wrap: wrap;
       margin-bottom: 8px;
     }
-
-    .detail-summary-type-badge {
+.detail-summary-type-badge{
       display: inline-flex;
       align-items: center;
       height: 24px;
@@ -396,21 +350,19 @@
       letter-spacing: -0.15px;
       white-space: nowrap;
     }
-
-    .detail-summary-price-row {
+.detail-summary-price-row{
       display: flex;
       align-items: center;
       gap: 7px;
       flex-wrap: wrap;
       margin-bottom: 8px;
-    
+
   display:flex;
   flex-direction:column;
   align-items:flex-start;
   gap:6px;
 }
-
-    .detail-summary-deal-badge {
+.detail-summary-deal-badge{
       display: inline-flex;
       align-items: center;
       height: 24px;
@@ -424,23 +376,20 @@
       line-height: 1;
       letter-spacing: -0.15px;
       white-space: nowrap;
-    
+
   margin-top:0;
 }
-
-    .detail-summary-block {
+.detail-summary-block{
       margin-bottom: 14px;
     }
-
-    .detail-summary-badges {
+.detail-summary-badges{
       display: flex;
       align-items: center;
       gap: 4px;
       flex-wrap: wrap;
       margin-bottom: 10px;
     }
-
-    .detail-summary-badge {
+.detail-summary-badge{
       display: inline-flex;
       align-items: center;
       height: 24px;
@@ -455,8 +404,7 @@
       letter-spacing: -0.15px;
       white-space: nowrap;
     }
-
-    .detail-summary-price {
+.detail-summary-price{
       font-size: 36px;
       font-weight: 950;
       line-height: 1.05;
@@ -464,31 +412,27 @@
       color: #111827;
       margin-bottom: 8px;
     }
-
-    .detail-summary-address {
+.detail-summary-address{
       font-size: 14px;
       letter-spacing: -0.1px;
       line-height: 1.5;
       color: #6f7c89;
     }
-
-    .detail-title-row {
+.detail-title-row{
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
       gap: 10px;
       margin-bottom: 14px;
     }
-
-    .detail-title-wrap {
+.detail-title-wrap{
       flex: 0 0 auto;
       min-width: 0;
       display: flex;
       flex-direction: column;
       gap: 4px;
     }
-
-    .detail-listing-no {
+.detail-listing-no{
       display: block;
       font-size: 12.5px;
       font-weight: 800;
@@ -501,8 +445,7 @@
       margin-bottom: 4px;
       line-height: 1.3;
     }
-
-    .detail-title {
+.detail-title{
       margin: 0;
       font-size: 18px;
       font-weight: 700;
@@ -510,14 +453,12 @@
       letter-spacing: -0.4px;
       line-height: 1.45;
     }
-
-    .detail-inline-price,
+.detail-inline-price,
     .detail-inline-address,
-    .detail-type-badge {
+    .detail-type-badge{
       display: none !important;
     }
-
-    .detail-meta-grid {
+.detail-meta-grid{
       display: grid;
       grid-template-columns: minmax(120px, 1.15fr) minmax(100px, 0.95fr) minmax(100px, 0.95fr);
       gap: 0;
@@ -527,18 +468,15 @@
       margin-bottom: 16px;
       background: #fff;
     }
-
-    .detail-meta-item {
+.detail-meta-item{
       padding: 10px 12px;
       border-right: 1px solid #eceff3;
       min-width: 0;
     }
-
-    .detail-meta-item:last-child {
+.detail-meta-item:last-child{
       border-right: 0;
     }
-
-    .detail-meta-label {
+.detail-meta-label{
       display: inline-flex;
       align-items: center;
       gap: 4px;
@@ -548,8 +486,7 @@
       margin-bottom: 4px;
       font-weight: 700;
     }
-
-    .detail-meta-value {
+.detail-meta-value{
       display: flex;
       align-items: center;
       min-height: 20px;
@@ -559,18 +496,15 @@
       font-weight: 700;
       letter-spacing: -0.3px;
     }
-
-    .area-num {
+.area-num{
       font-weight: 700;
     }
-
-    .area-rest {
+.area-rest{
       font-weight: 500;
       color: #5c6b7a;
       margin-left: 1px;
     }
-
-    .detail-area-wrap {
+.detail-area-wrap{
       display: inline-flex;
       align-items: center;
       justify-content: flex-start;
@@ -581,8 +515,7 @@
       width: max-content;
       line-height: 1;
     }
-
-    #detailAreaValue {
+#detailAreaValue{
       display: inline-flex;
       align-items: center;
       white-space: nowrap;
@@ -591,8 +524,7 @@
       width: auto;
       margin: 0;
     }
-
-    .detail-desc {
+.detail-desc{
       margin-bottom: 16px;
       font-size: 14px;
       color: #334355;
@@ -603,28 +535,24 @@
       border-radius: 16px;
       padding: 16px 18px;
     }
-
-    .detail-section-title {
+.detail-section-title{
       display: none;
     }
-
-    .detail-info-sections {
+.detail-info-sections{
       display: flex;
       flex-direction: column;
       gap: 14px;
       margin-top: 6px;
       margin-bottom: 16px;
     }
-
-    .detail-info-section {
+.detail-info-section{
       background: linear-gradient(180deg, #ffffff, #fbfdff);
       border: 1px solid #e8eef5;
       border-radius: 18px;
       padding: 18px 18px 16px;
       box-shadow: 0 6px 18px rgba(15, 41, 66, 0.04);
     }
-
-    .detail-info-section-title {
+.detail-info-section-title{
       font-size: 16px;
       font-weight: 700;
       color: #111827;
@@ -634,14 +562,12 @@
       margin-left: 0;
       line-height: 1.3;
     }
-
-    .detail-info-list {
+.detail-info-list{
       margin-bottom: 0;
       background: transparent;
       border: 0;
     }
-
-    .detail-info-row {
+.detail-info-row{
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -649,13 +575,11 @@
       padding: 11px 0;
       border-bottom: 1px solid #f1f4f8;
     }
-
-    .detail-info-row:last-child {
+.detail-info-row:last-child{
       border-bottom: 0;
       padding-bottom: 2px;
     }
-
-    .detail-info-label {
+.detail-info-label{
       min-width: 90px;
       font-size: 14px;
       letter-spacing: -0.1px;
@@ -665,8 +589,7 @@
       line-height: 1.3;
       letter-spacing: -0.15px;
     }
-
-    .detail-info-value {
+.detail-info-value{
       flex: 0 0 auto;
       font-size: 14px;
       font-weight: 800;
@@ -678,8 +601,7 @@
       letter-spacing: -0.2px;
       min-width: 0;
     }
-
-    .detail-agent-card {
+.detail-agent-card{
       border-radius: 18px;
       border: 1px solid #e9eef4;
       background: linear-gradient(180deg, #ffffff, #fafcff);
@@ -687,14 +609,12 @@
       margin-bottom: 16px;
       box-shadow: 0 6px 18px rgba(15, 41, 66, 0.04);
     }
-
-    .detail-agent-top {
+.detail-agent-top{
       display: flex;
       align-items: flex-start;
       gap: 14px;
     }
-
-    .detail-agent-avatar {
+.detail-agent-avatar{
       width: 52px;
       height: 52px;
       border-radius: 50%;
@@ -710,42 +630,36 @@
       flex-shrink: 0;
       border: 1px solid #e5ebf1;
     }
-
-    .detail-agent-avatar img {
+.detail-agent-avatar img{
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
     }
-
-    .detail-agent-main {
+.detail-agent-main{
       flex: 0 0 auto;
       min-width: 0;
     }
-
-    .detail-agent-name-row {
+.detail-agent-name-row{
       display: flex;
       align-items: center;
       gap: 4px;
       flex-wrap: wrap;
       margin-bottom: 4px;
     }
-
-    .detail-agent-name {
+.detail-agent-name{
       font-size: 15px;
       font-weight: 700;
       color: #1f2a36;
       line-height: 1.4;
     }
-
-    .detail-agent-title {
+.detail-agent-title{
       font-size: 14px;
       font-weight: 800;
       color: #5f6b78;
       line-height: 1.4;
     }
-
-    .detail-agent-office {
+.detail-agent-office{
       font-size: 14px;
       letter-spacing: -0.1px;
       font-weight: 800;
@@ -753,53 +667,45 @@
       line-height: 1.5;
       margin-bottom: 4px;
     }
-
-    .detail-agent-address {
+.detail-agent-address{
       font-size: 14px;
       letter-spacing: -0.1px;
       color: #7f8b98;
       line-height: 1.55;
       margin-bottom: 3px;
     }
-
-    .detail-agent-regno {
+.detail-agent-regno{
       font-size: 14px;
       letter-spacing: -0.1px;
       color: #7f8b98;
       line-height: 1.55;
       margin-bottom: 3px;
     }
-
-    .detail-agent-phone-inline {
+.detail-agent-phone-inline{
       font-size: 14px;
       letter-spacing: -0.1px;
       font-weight: 800;
       color: #223244;
       line-height: 1.5;
     }
-
-
-    .detail-features {
+.detail-features{
       display: block;
       margin-bottom: 14px;
     }
-
-    .detail-tags-row {
+.detail-tags-row{
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
     }
-
-    .detail-tags {
+.detail-tags{
       display: flex;
       align-items: center;
       gap: 4px;
       flex-wrap: wrap;
       min-width: 0;
     }
-
-    .detail-feature-tag {
+.detail-feature-tag{
       display: inline-flex;
       align-items: center;
       min-height: 28px;
@@ -814,8 +720,7 @@
       letter-spacing: -0.15px;
       white-space: nowrap;
     }
-
-    .detail-roadview-inline-btn {
+.detail-roadview-inline-btn{
       flex: 0 0 auto;
       display: inline-flex;
       align-items: center;
@@ -832,99 +737,25 @@
       cursor: pointer;
       white-space: nowrap;
     }
-
-    .detail-roadview-inline-btn:hover {
+.detail-roadview-inline-btn:hover{
       background: rgba(3, 199, 90, 0.14);
     }
-
-    .detail-roadview-inline-btn i {
+.detail-roadview-inline-btn i{
       margin-right: 0;
       font-size: 14px;
       letter-spacing: -0.1px;
       line-height: 1;
     }
-
-
-    .detail-features {
-      display: block;
-      margin-bottom: 14px;
-    }
-
-    .detail-tags-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      width: 100%;
-    }
-
-    .detail-tags {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      flex-wrap: wrap;
-      min-width: 0;
-    }
-
-    .detail-feature-tag {
-      display: inline-flex;
-      align-items: center;
-      height: 28px;
-      padding: 0 10px;
-      border-radius: 20px;
-      background: rgba(3, 199, 90, 0.08);
-      border: 1px solid rgba(3, 199, 90, 0.18);
-      color: #03C75A;
-      font-size: 14px;
-      letter-spacing: -0.1px;
-      font-weight: 800;
-      letter-spacing: -0.15px;
-      white-space: nowrap;
-    }
-
-    .detail-roadview-inline-btn {
-      margin-left: auto;
-      flex: 0 0 auto;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      height: 28px;
-      padding: 0 10px;
-      border-radius: 20px;
-      border: 1px solid rgba(3, 199, 90, 0.28);
-      background: rgba(3, 199, 90, 0.08);
-      color: #03C75A;
-      font-size: 14px;
-      letter-spacing: -0.1px;
-      font-weight: 800;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-
-    .detail-roadview-inline-btn:hover {
-      background: rgba(3, 199, 90, 0.14);
-    }
-
-    .detail-roadview-inline-btn i {
-      margin-right: 0;
-      font-size: 14px;
-      letter-spacing: -0.1px;
-      line-height: 1;
-    }
-
-    .detail-action-box {
+.detail-action-box{
       display: none !important;
     }
-
-    .detail-phone {
+.detail-phone{
       display: none;
     }
-
-    .detail-actions {
+.detail-actions{
       display: none !important;
     }
-
-    .detail-action-btn {
+.detail-action-btn{
       flex: 0 0 auto;
       min-width: 100px;
       min-height: 38px;
@@ -944,92 +775,59 @@
       box-shadow: 0 4px 10px rgba(0,0,0,0.08);
       transition: box-shadow 0.2s ease;
     }
-
-    .detail-action-btn.primary {
+.detail-action-btn.primary{
       background: #0f2942;
       color: #fff;
     }
-
-    .detail-action-btn i {
+.detail-action-btn i{
       margin-right: 6px;
       font-size: 1em;
       line-height: 1;
     }
-
-    .detail-action-btn:hover {
+.detail-action-btn:hover{
       box-shadow: 0 6px 14px rgba(0,0,0,0.12);
     }
-
-
-    
-    .detail-agent-cta-row {
+.detail-agent-cta-row{
       display: flex;
       gap: 8px;
       margin-top: 14px;
       justify-content: flex-start;
     }
-
-    .detail-agent-cta-btn {
+.detail-agent-cta-btn{
       padding: 0 12px;
       min-width: 96px;
       max-width: 140px;
     }
-
-
-    .detail-agent-cta-btn {
-      flex: 0 0 auto;
-      min-width: 0;
-      height: 30px;
-      border: 0;
-      border-radius: 20px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 4px;
-      font-size: 14px;
-      letter-spacing: -0.1px;
-      font-weight: 700;
-      cursor: pointer;
-      text-decoration: none;
-      box-shadow: 0 2px 6px rgba(15, 41, 66, 0.06);
-    }
-
-    .detail-agent-cta-btn i {
+.detail-agent-cta-btn i{
       margin-right: 0;
       line-height: 1;
       font-size: 14px;
       letter-spacing: -0.1px;
     }
-
-    .detail-agent-cta-btn.kakao {
+.detail-agent-cta-btn.kakao{
       background: #FEE500;
       color: #191919;
     }
-
-    .detail-agent-cta-btn.kakao:hover {
+.detail-agent-cta-btn.kakao:hover{
       background: #FEE500;
       color: #191919;
       box-shadow: 0 2px 6px rgba(15, 41, 66, 0.06);
     }
-
-    .detail-agent-cta-btn.phone {
+.detail-agent-cta-btn.phone{
       background: #fff;
       color: #111827;
       border: 1px solid #e5e7eb;
     }
-
-    .detail-agent-cta-btn.phone:hover {
+.detail-agent-cta-btn.phone:hover{
       background: #f8fafc;
     }
-
-    .detail-action-btn.kakao-btn {
+.detail-action-btn.kakao-btn{
       background: #FEE500;
       color: #111;
       border-radius: 20px;
       font-weight: 800;
     }
-
-    .brand-card {
+.brand-card{
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -1039,22 +837,19 @@
       background: #fff;
       border-bottom: 1px solid #e6ebf0;
     }
-
-    .brand-left {
+.brand-left{
       display: flex;
       align-items: center;
       gap: 12px;
       min-width: 0;
     }
-
-    .brand-title {
+.brand-title{
       font-size: 15px;
       font-weight: 700;
       color: #1f2a36;
       white-space: nowrap;
     }
-
-    .panel {
+.panel{
       margin: 12px 12px 10px;
       padding: 14px;
       border-radius: 18px;
@@ -1062,12 +857,10 @@
       border: 1px solid #e8eef5;
       box-shadow: 0 8px 22px rgba(15, 41, 66, 0.05);
     }
-
-    .search-box {
+.search-box{
       position: relative;
     }
-
-    .search-box input {
+.search-box input{
       width: 100%;
       height: 60px;
       padding: 0 74px 0 22px;
@@ -1081,13 +874,11 @@
       box-shadow: none;
       margin-bottom: 10px;
     }
-
-    .search-box input::placeholder {
+.search-box input::placeholder{
       color: #7b8794;
       font-weight: 700;
     }
-
-    .search-box::after {
+.search-box::after{
       content: "002";
       font-family: "Font Awesome 6 Free";
       font-weight: 700;
@@ -1105,8 +896,7 @@
       font-size: 18px;
       pointer-events: none;
     }
-
-    .filter-title {
+.filter-title{
       margin: 2px 0 8px;
       font-size: 14px;
       letter-spacing: -0.1px;
@@ -1114,8 +904,7 @@
       color: #7a8794;
       letter-spacing: 0.1px;
     }
-
-    .feature-buttons {
+.feature-buttons{
       display: flex;
       flex-wrap: nowrap;
       gap: 5px;
@@ -1125,11 +914,9 @@
       -ms-overflow-style: none;
       white-space: nowrap;
     }
-
-    .feature-buttons::-webkit-scrollbar { display: none; }
-
-    .feature-buttons button,
-    .reset-list-btn {
+.feature-buttons::-webkit-scrollbar{ display: none; }
+.feature-buttons button,
+    .reset-list-btn{
       border: 1px solid #dfe5eb;
       border-radius: 20px;
       padding: 7px 9px;
@@ -1141,34 +928,29 @@
       background: #fff;
       color: #304050;
     }
-
-    .feature-buttons button {
+.feature-buttons button{
       flex: 0 0 auto;
       white-space: nowrap;
       line-height: 1;
     }
-
-    .feature-buttons button.active,
-    .feature-buttons button.all-active {
+.feature-buttons button.active,
+    .feature-buttons button.all-active{
       background: rgba(3, 199, 90, 0.9);
       color: #fff;
       border-color: rgba(3, 199, 90, 0.9);
       box-shadow: none;
     }
-
-    .reset-list-btn {
+.reset-list-btn{
       width: 100%;
       margin-top: 0;
       margin-bottom: 10px;
       border-radius: 12px;
       background: #f1f4f8;
     }
-
-    .reset-list-btn:hover {
+.reset-list-btn:hover{
       background: #e7edf3;
     }
-
-    .list-head {
+.list-head{
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -1178,30 +960,26 @@
       background: transparent;
       border-bottom: 0;
     }
-
-    .list-head strong {
+.list-head strong{
       font-size: 14px;
       color: #1f6fff;
       letter-spacing: -0.2px;
       font-weight: 700;
     }
-
-    .list-head span {
+.list-head span{
       font-size: 14px;
       letter-spacing: -0.1px;
       color: #1f2a36;
       font-weight: 800;
     }
-
-    .property-list {
+.property-list{
       display: flex;
       flex-direction: column;
       gap: 10px;
       padding: 0 12px 18px;
       background: #f7f8fa;
     }
-
-    .card {
+.card{
   background: linear-gradient(180deg, #ffffff 0%, #fcfdff 100%);
   border: 1px solid #e9eef4;
   border-radius: 18px;
@@ -1210,22 +988,19 @@
   padding: 0;
   overflow: hidden;
 }
-
-    .card:hover,
-.card.active {
+.card:hover,
+.card.active{
   background: linear-gradient(180deg, #fafdff 0%, #f5f9ff 100%);
   transform: none;
   box-shadow: 0 8px 24px rgba(15, 41, 66, 0.05);
   border-color: #e9eef4;
 }
-
-    .card-inner-row {
+.card-inner-row{
       display: flex;
       gap: 14px;
       padding: 17px 17px 16px;
     }
-
-    .thumb {
+.thumb{
       width: 96px;
       min-width: 96px;
       height: 96px;
@@ -1236,32 +1011,27 @@
       overflow: hidden;
       box-shadow: 0 8px 18px rgba(15, 41, 66, 0.10);
     }
-
-    .thumb::after { display: none; }
-
-    .card-body {
+.thumb::after{ display: none; }
+.card-body{
       flex: 1 1 auto;
       min-width: 0;
       padding: 0;
     }
-
-    .card-top-line {
+.card-top-line{
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
       gap: 8px;
       margin-bottom: 8px;
     }
-
-    .card-badge-row {
+.card-badge-row{
       display: inline-flex;
       align-items: center;
       gap: 4px;
       flex-wrap: wrap;
       min-width: 0;
     }
-
-    .card-badge {
+.card-badge{
       display: inline-flex;
       align-items: center;
       height: 22px;
@@ -1275,39 +1045,33 @@
       box-shadow: inset 0 0 0 1px rgba(124, 77, 255, 0.06);
       white-space: nowrap;
     }
-
-    .card-badge.deal[data-type="매매"] {
+.card-badge.deal[data-type="매매"]{
       background: #eef5ff;
       color: #2563eb;
       box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.08);
     }
-
-    .card-badge.deal[data-type="전세"] {
+.card-badge.deal[data-type="전세"]{
       background: #e8f7ef;
       color: #16a34a;
       box-shadow: inset 0 0 0 1px rgba(22, 163, 74, 0.08);
     }
-
-    .card-badge.deal[data-type="월세"] {
+.card-badge.deal[data-type="월세"]{
       background: #fff7ed;
       color: #ea580c;
       box-shadow: inset 0 0 0 1px rgba(234, 88, 12, 0.08);
     }
-
-    .card-badge.deal[data-type="년세"] {
+.card-badge.deal[data-type="년세"]{
       background: #fef2f2;
       color: #dc2626;
       box-shadow: inset 0 0 0 1px rgba(220, 38, 38, 0.08);
     }
-
-    .card-date {
+.card-date{
   font-size: 11px;
   letter-spacing: -0.1px;
   color: #95a2af;
   white-space: nowrap;
 }
-
-    .card-title {
+.card-title{
       font-size: 16px;
       font-weight: 700;
       color: #16202a;
@@ -1320,8 +1084,7 @@
       overflow: hidden;
       word-break: keep-all;
     }
-
-    .card-address {
+.card-address{
       font-size: 14px;
       letter-spacing: -0.1px;
       color: #6f7c89;
@@ -1331,16 +1094,14 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
-
-    .card-price-line {
+.card-price-line{
       display: flex;
       align-items: center;
       gap: 7px;
       margin-bottom: 7px;
       flex-wrap: wrap;
     }
-
-    .card-deal {
+.card-deal{
       display: inline-flex;
       align-items: center;
       height: 24px;
@@ -1354,16 +1115,14 @@
       line-height: 1;
       letter-spacing: -0.15px;
     }
-
-    .card-price {
+.card-price{
       font-size: 24px;
       font-weight: 700;
       color: #111827;
       letter-spacing: -0.8px;
       line-height: 1.02;
     }
-
-    .card-spec {
+.card-spec{
       font-size: 14px;
       letter-spacing: -0.1px;
       color: #667382;
@@ -1374,8 +1133,7 @@
       gap: 4px;
       flex-wrap: wrap;
     }
-
-    .area-toggle-btn {
+.area-toggle-btn{
       margin-left: 2px;
       display: inline-flex;
       vertical-align: middle;
@@ -1398,14 +1156,12 @@
       justify-content: center;
       text-align: center;
     }
-
-        .area-toggle-btn:hover {
+.area-toggle-btn:hover{
       background: #f7faff;
       border-color: #bfd6ff;
       color: #1f6fff;
     }
-
-    .area-type-toggle-btn {
+.area-type-toggle-btn{
       margin-left: 0;
       width: 26px;
       height: 26px;
@@ -1426,14 +1182,12 @@
       box-shadow: 0 1px 2px rgba(15, 41, 66, 0.04);
       flex: 0 0 auto;
     }
-
-    .area-type-toggle-btn:hover {
+.area-type-toggle-btn:hover{
       background: #f7faff;
       border-color: #bfd6ff;
       color: #1f6fff;
     }
-
-    .area-display {
+.area-display{
       display: inline-flex;
       flex-direction: row;
       align-items: center;
@@ -1442,14 +1196,12 @@
       flex-wrap: nowrap;
       white-space: nowrap;
     }
-
-    .area-line {
+.area-line{
       display: block;
       white-space: nowrap;
       word-break: keep-all;
     }
-
-    .card-agent-row {
+.card-agent-row{
       display: flex;
       align-items: center;
       justify-content: flex-start;
@@ -1463,8 +1215,7 @@
       white-space: nowrap;
       overflow: hidden;
     }
-
-    .card-agent-left {
+.card-agent-left{
       display: flex;
       align-items: center;
       gap: 8px;
@@ -1474,8 +1225,7 @@
       white-space: nowrap;
       overflow: hidden;
     }
-
-    .card-agent-avatar {
+.card-agent-avatar{
       width: 30px;
       height: 30px;
       border-radius: 50%;
@@ -1492,30 +1242,26 @@
       border: 1px solid #e5ebf1;
       box-shadow: 0 3px 8px rgba(15, 41, 66, 0.06);
     }
-
-    .card-agent-avatar img {
+.card-agent-avatar img{
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
     }
-
-    .card-agent-name {
+.card-agent-name{
       font-size: 14px;
       letter-spacing: -0.1px;
       font-weight: 800;
       color: #1f2a36;
       letter-spacing: -0.15px;
     }
-
-    .card-agent-title {
+.card-agent-title{
       font-size: 14px;
       letter-spacing: -0.1px;
       color: #94a0ad;
       margin-left: 4px;
     }
-
-    .card-agent-office {
+.card-agent-office{
       font-size: 14px;
       letter-spacing: -0.12px;
       color: #5d6875;
@@ -1528,24 +1274,19 @@
       font-weight: 800;
       line-height: 1.35;
     }
-
-
-    .resizer { display: none; }
-
-    .map-wrap {
+.resizer{ display: none; }
+.map-wrap{
       position: relative;
       min-width: 0;
       height: 100vh;
       overflow: hidden;
       background: #dde7ef;
     }
-
-    #map {
+#map{
       width: 100%;
       height: 100vh;
     }
-
-    .map-filter-bar {
+.map-filter-bar{
       position: absolute;
       top: 18px;
       left: 18px;
@@ -1561,16 +1302,14 @@
       box-shadow: var(--shadow);
       backdrop-filter: blur(10px);
     }
-
-    .deal-buttons,
-    .type-buttons {
+.deal-buttons,
+    .type-buttons{
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
     }
-
-    .deal-buttons button,
-    .type-buttons button {
+.deal-buttons button,
+    .type-buttons button{
       border: 0;
       border-radius: 20px;
       padding: 8px 12px;
@@ -1583,15 +1322,13 @@
       white-space: nowrap;
       transition: 0.2s ease;
     }
-
-    .deal-buttons button.active,
-    .type-buttons button.active {
+.deal-buttons button.active,
+    .type-buttons button.active{
       background: rgba(3, 199, 90, 0.9);
       color: #fff;
       box-shadow: 0 8px 18px rgba(3, 199, 90, 0.22);
     }
-
-    .map-result-count {
+.map-result-count{
       display: none !important;
       position: absolute;
       top: 120px;
@@ -1611,15 +1348,13 @@
       backdrop-filter: blur(10px);
       letter-spacing: -0.2px;
     }
-
-    .map-result-count::before {
+.map-result-count::before{
       content: "●";
       color: #34d399;
       font-size: 14px;
       letter-spacing: -0.1px;
     }
-
-    .detail-image-lightbox {
+.detail-image-lightbox{
       position: fixed;
       inset: 0;
       z-index: 9999;
@@ -1630,12 +1365,10 @@
       backdrop-filter: blur(6px);
       padding: 32px;
     }
-
-    .detail-image-lightbox.open {
+.detail-image-lightbox.open{
       display: flex;
     }
-
-    .detail-image-lightbox-stage {
+.detail-image-lightbox-stage{
       position: relative;
       display: inline-flex;
       align-items: center;
@@ -1643,8 +1376,7 @@
       max-width: min(1400px, 94vw);
       max-height: 92vh;
     }
-
-    .detail-image-lightbox img {
+.detail-image-lightbox img{
       max-width: min(1400px, 94vw);
       max-height: 92vh;
       object-fit: contain;
@@ -1653,9 +1385,8 @@
       background: #111;
       display: block;
     }
-
-    .detail-image-lightbox-close,
-    .detail-image-lightbox-nav {
+.detail-image-lightbox-close,
+    .detail-image-lightbox-nav{
       position: absolute;
       width: 40px;
       height: 40px;
@@ -1671,38 +1402,30 @@
       backdrop-filter: blur(6px);
       z-index: 2;
     }
-
-    .detail-image-lightbox-nav {
+.detail-image-lightbox-nav{
       top: 50%;
       transform: translateY(-50%);
     }
-
-    .detail-image-lightbox-nav.prev {
+.detail-image-lightbox-nav.prev{
       left: 18px;
     }
-
-    .detail-image-lightbox-nav.next {
+.detail-image-lightbox-nav.next{
       right: 18px;
     }
-
-    .detail-image-lightbox-close {
+.detail-image-lightbox-close{
       top: 18px;
       right: 18px;
     }
-
-    .detail-image-lightbox-nav i,
-    .detail-image-lightbox-close i {
+.detail-image-lightbox-nav i,
+    .detail-image-lightbox-close i{
       font-size: 18px;
       font-weight: 700;
       line-height: 1;
     }
-
-    .detail-image-lightbox-close i {
+.detail-image-lightbox-close i{
       font-size: 16px;
     }
-
-
-    .map-recommend-close {
+.map-recommend-close{
       position: absolute;
       top: 10px;
       right: 10px;
@@ -1718,18 +1441,15 @@
       cursor: pointer;
       z-index: 1;
     }
-
-    .map-recommend-close:hover {
+.map-recommend-close:hover{
       background: rgba(15, 41, 66, 0.08);
       color: #506070;
     }
-
-    .map-recommend-close i {
+.map-recommend-close i{
       font-size: 14px;
       line-height: 1;
     }
-
-    .map-recommend-card {
+.map-recommend-card{
       position: absolute;
       right: 20px;
       bottom: 20px;
@@ -1743,59 +1463,51 @@
       overflow: hidden;
       cursor: pointer;
     }
-
-    .map-recommend-head {
+.map-recommend-head{
       display: flex;
       align-items: center;
       gap: 6px;
       padding: 14px 16px 10px;
       border-bottom: 1px solid #eef2f6;
     }
-
-    .map-recommend-title {
+.map-recommend-title{
       font-size: 18px;
       font-weight: 700;
       color: #2563eb;
       letter-spacing: -0.3px;
     }
-
-    .map-recommend-sub {
+.map-recommend-sub{
       font-size: 15px;
       font-weight: 700;
       color: #1f2a36;
       letter-spacing: -0.2px;
     }
-
-    .map-recommend-body {
+.map-recommend-body{
       display: grid;
       grid-template-columns: 124px 1fr;
       gap: 12px;
       padding: 12px 14px 14px;
     }
-
-    .map-recommend-thumb {
+.map-recommend-thumb{
       height: 118px;
       border-radius: 12px;
       background: #eef3f7 center / cover no-repeat;
       box-shadow: 0 8px 20px rgba(15, 41, 66, 0.10);
     }
-
-    .map-recommend-content {
+.map-recommend-content{
   min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
-
-    .map-recommend-badges {
+.map-recommend-badges{
   display: inline-flex;
   align-items: center;
   gap: 4px;
   flex-wrap: wrap;
   margin-bottom: 0;
 }
-
-    .map-recommend-badge {
+.map-recommend-badge{
       display: inline-flex;
       align-items: center;
       height: 22px;
@@ -1808,13 +1520,11 @@
       line-height: 1;
       white-space: nowrap;
     }
-
-    .map-recommend-badge.deal {
+.map-recommend-badge.deal{
       background: #eef5ff;
       color: #2563eb;
     }
-
-    .map-recommend-price {
+.map-recommend-price{
   font-size: 24px;
   font-weight: 950;
   color: #111827;
@@ -1822,8 +1532,7 @@
   letter-spacing: -0.8px;
   margin: 0;
 }
-
-    .map-recommend-title-text {
+.map-recommend-title-text{
       font-size: 15px;
       font-weight: 700;
       color: #111827;
@@ -1835,8 +1544,7 @@
       overflow: hidden;
       word-break: keep-all;
     }
-
-    .map-recommend-address {
+.map-recommend-address{
       font-size: 11px;
       font-weight: 700;
       color: #6b7785;
@@ -1846,9 +1554,7 @@
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
-
-
-    .map-recommend-agent-card {
+.map-recommend-agent-card{
       position: absolute;
       top: 20px;
       right: 20px;
@@ -1861,40 +1567,35 @@
       backdrop-filter: blur(10px);
       overflow: hidden;
     }
-
-    .map-recommend-agent-head {
+.map-recommend-agent-head{
       display: flex;
       align-items: center;
       gap: 6px;
       padding: 14px 16px 10px;
       border-bottom: 1px solid #eef2f6;
     }
-
-    .map-recommend-agent-title {
+.map-recommend-agent-title{
       font-size: 18px;
       font-weight: 700;
       color: #7c4dff;
       letter-spacing: -0.3px;
       font-family: var(--font-display);
     }
-
-    .map-recommend-agent-sub {
+.map-recommend-agent-sub{
       font-size: 15px;
       font-weight: 700;
       color: #1f2a36;
       letter-spacing: -0.2px;
       font-family: var(--font-display);
     }
-
-    .map-recommend-agent-body {
+.map-recommend-agent-body{
       display: grid;
       grid-template-columns: 72px 1fr;
       gap: 12px;
       padding: 14px;
       align-items: start;
     }
-
-    .map-recommend-agent-avatar {
+.map-recommend-agent-avatar{
       width: 72px;
       height: 72px;
       border-radius: 18px;
@@ -1909,15 +1610,13 @@
       font-family: var(--font-display);
       overflow: hidden;
     }
-
-    .map-recommend-agent-content {
+.map-recommend-agent-content{
       min-width: 0;
       display: flex;
       flex-direction: column;
       gap: 6px;
     }
-
-    .map-recommend-agent-name {
+.map-recommend-agent-name{
       font-size: 18px;
       font-weight: 700;
       color: #111827;
@@ -1925,16 +1624,14 @@
       letter-spacing: -0.3px;
       font-family: var(--font-display);
     }
-
-    .map-recommend-agent-office {
+.map-recommend-agent-office{
       font-size: 14px;
       font-weight: 800;
       color: #4f5d6b;
       line-height: 1.4;
       letter-spacing: -0.12px;
     }
-
-    .map-recommend-agent-reg {
+.map-recommend-agent-reg{
       font-size: 11px;
       font-weight: 700;
       color: #9ca3af;
@@ -1942,8 +1639,7 @@
       letter-spacing: -0.1px;
       margin-top: 2px;
     }
-
-    .map-recommend-agent-address {
+.map-recommend-agent-address{
       font-size: 11px;
       font-weight: 800;
       color: #6b7785;
@@ -1952,16 +1648,14 @@
       word-break: keep-all;
       margin-top: -1px;
     }
-
-    .map-recommend-agent-desc {
+.map-recommend-agent-desc{
       font-size: 11px;
       font-weight: 700;
       color: #6b7785;
       line-height: 1.45;
       letter-spacing: -0.12px;
     }
-
-    .map-recommend-agent-actions {
+.map-recommend-agent-actions{
       display: flex;
       align-items: center;
       gap: 8px;
@@ -1969,8 +1663,7 @@
       flex-wrap: nowrap;
       white-space: nowrap;
     }
-
-    .map-recommend-agent-btn {
+.map-recommend-agent-btn{
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -1988,190 +1681,65 @@
       flex: 1 1 0;
       min-width: 0;
     }
-
-    .map-recommend-agent-btn.link {
+.map-recommend-agent-btn.link{
       background: #7c4dff;
       color: #fff;
     }
-
-    .map-recommend-agent-btn.phone {
+.map-recommend-agent-btn.phone{
       background: #f3f6fb;
       color: #1f2a36;
     }
-
-    .map-recommend-agent-btn:hover {
+.map-recommend-agent-btn:hover{
       opacity: 0.96;
     }
-
-    .map-recommend-agent-card .map-recommend-close {
+.map-recommend-agent-card .map-recommend-close{
       top: 10px;
       right: 10px;
     }
-
-
-    @media (max-width: 980px) {
+@media (max-width: 980px){
       :root {
         --sidebar-current-width: 100%;
       }
-
-      body { overflow: auto; }
-
-      .app {
-        grid-template-columns: 1fr;
-        height: auto;
-      }
-
-      .sidebar {
-        height: auto;
-        min-width: 0;
-      }
-
-      .sidebar-inner,
-      .sidebar.expanded .sidebar-inner {
+.sidebar-inner,
+      .sidebar.expanded .sidebar-inner{
         grid-template-columns: 1fr;
       }
-
-      .sidebar-detail-panel { display: none; }
-
-      .map-wrap,
-      #map {
+.map-wrap,
+      #map{
         height: 72vh;
         min-height: 520px;
       }
-
-      .map-result-count { top: 124px; }
-
-      .map-recommend-agent-card {
-        top: 12px;
-        right: 12px;
-        width: min(340px, calc(100% - 24px));
-      }
-
-      .detail-image-lightbox-nav,
-      .detail-image-lightbox-close {
+.detail-image-lightbox-nav,
+      .detail-image-lightbox-close{
         width: 36px;
         height: 36px;
       }
+}
 
-      .detail-image-lightbox-nav.prev {
-        left: 12px;
-      }
-
-      .detail-image-lightbox-nav.next {
-        right: 12px;
-      }
-
-      .detail-image-lightbox-close {
-        top: 12px;
-        right: 12px;
-      }
-    }
-  
-.area-type-toggle-btn i {
+.area-type-toggle-btn i{
   transition: transform 0.25s ease;
   font-size: 11px;
   line-height: 1;
 }
-
-.area-type-toggle-btn:hover i {
+.area-type-toggle-btn:hover i{
   transform: rotate(180deg);
 }
-
-
-.detail-action-btn.cross-btn {
+.detail-action-btn.cross-btn{
   display: none !important;
 }
-
-.detail-action-btn.cross-btn:hover {
+.detail-action-btn.cross-btn:hover{
   display: none !important;
 }
-
-.detail-action-btn.cross-btn {
-  background: #03C75A !important;
-  color: #fff !important;
-}
-
-
-.search-box input {
-  height: 44px;
-  border-radius: 14px;
-}
-
-.filter-title {
-  margin: 4px 0 10px;
-  font-size: 14px;
-      letter-spacing: -0.1px;
-  font-weight: 700;
-  color: #6b7785;
-  letter-spacing: -0.1px;
-}
-
-.brand-card {
-  background: #f7f8fa;
-}
-
-.list-head strong {
-  font-size: 15px;
-  color: #162f4d;
-}
-
-.list-head span {
-  font-size: 14px;
-      letter-spacing: -0.1px;
-  color: #768391;
-}
-
-.thumb {
-  border-radius: 14px;
-}
-
-.card-address {
-  margin-bottom: 9px;
-}
-
-.card-spec {
-  line-height: 1.55;
-}
-
-
-/* area layout fix */
-.card-spec {
-  font-size: 14px;
-      letter-spacing: -0.1px;
-  color: #667382;
-  line-height: 1.5;
-  margin-bottom: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 4px;
-  flex-wrap: nowrap;
-}
-
-.card-spec .area-display {
+.card-spec .area-display{
   min-width: 0;
   flex: 0 1 auto;
   white-space: nowrap;
 }
-
-.card-spec .area-toggle-btn {
+.card-spec .area-toggle-btn{
   display: none !important;
 }
-
-
-
-
-/* right detail summary: type + deal on one line, same feel as left card badges */
-.detail-summary-top {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-wrap: wrap;
-  margin-bottom: 8px;
-}
-
 .detail-summary-type-badge,
-.detail-summary-deal-badge {
+.detail-summary-deal-badge{
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -2184,64 +1752,29 @@
   letter-spacing: -0.12px;
   white-space: nowrap;
 }
-
-.detail-summary-price-row {
-  display: block;
-  margin-bottom: 8px;
-}
-
-.detail-summary-price {
-  display: block;
-}
-
-
-.detail-summary-deal-badge[data-deal="전세"] {
+.detail-summary-deal-badge[data-deal="전세"]{
   background:#E6F0FF;
   color:#2563EB;
 }
-.detail-summary-deal-badge[data-deal="월세"] {
+.detail-summary-deal-badge[data-deal="월세"]{
   background:#E6FFF2;
   color:#16A34A;
 }
-.detail-summary-deal-badge[data-deal="년세"] {
+.detail-summary-deal-badge[data-deal="년세"]{
   background:#FFF7E6;
   color:#D97706;
 }
-
-
-.detail-summary-type-badge {
-  box-shadow: inset 0 0 0 1px rgba(124, 77, 255, 0.06);
-}
-
 .detail-summary-deal-badge[data-deal="매매"],
-.detail-summary-deal-badge:not([data-deal]) {
+.detail-summary-deal-badge:not([data-deal]){
   box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.08);
 }
-
-.detail-summary-deal-badge[data-deal="전세"] {
-  box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.08);
-}
-
-.detail-summary-deal-badge[data-deal="월세"] {
-  box-shadow: inset 0 0 0 1px rgba(22, 163, 74, 0.08);
-}
-
-.detail-summary-deal-badge[data-deal="년세"] {
-  box-shadow: inset 0 0 0 1px rgba(217, 119, 6, 0.08);
-}
-
-
-
-
 .detail-area-wrap.land-two-line .area-display,
-.detail-area-wrap.land-two-line #detailAreaValue {
+.detail-area-wrap.land-two-line #detailAreaValue{
   display: inline-flex !important;
   align-items: center !important;
   gap: 4px;
 }
-
-
-.detail-area-wrap.land-two-line {
+.detail-area-wrap.land-two-line{
   display: inline-flex !important;
   align-items: center !important;
   gap: 6px;
@@ -2249,26 +1782,14 @@
   white-space: nowrap !important;
   width: auto !important;
 }
-
-.detail-area-wrap.land-two-line .area-display,
-.detail-area-wrap.land-two-line #detailAreaValue {
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 4px;
-  white-space: nowrap;
-}
-
-
-/* right panel area: always 2 lines, value and unit button inline */
-.detail-meta-item:first-child .detail-meta-label {
+.detail-meta-item:first-child .detail-meta-label{
   display: inline-flex;
   align-items: center;
   gap: 4px;
   margin-bottom: 8px;
   width: 100%;
 }
-
-.detail-meta-item:first-child .detail-area-wrap {
+.detail-meta-item:first-child .detail-area-wrap{
   display: inline-flex !important;
   align-items: center !important;
   gap: 6px;
@@ -2276,16 +1797,14 @@
   white-space: nowrap !important;
   width: auto !important;
 }
-
-.detail-meta-item:first-child #detailAreaValue {
+.detail-meta-item:first-child #detailAreaValue{
   display: inline-flex !important;
   align-items: center !important;
   white-space: nowrap !important;
   line-height: 1 !important;
   margin: 0 !important;
 }
-
-.detail-meta-item:first-child #detailAreaToggleBtn {
+.detail-meta-item:first-child #detailAreaToggleBtn{
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -2293,25 +1812,15 @@
   flex: 0 0 auto !important;
   margin-left: 0 !important;
 }
-
-
-/* premium tuning for left card broker line */
-.card-agent-left {
-  gap: 9px;
-}
-
 .card-agent-name,
-.card-agent-title {
+.card-agent-title{
   color: #4e5a67;
   font-weight: 800;
 }
-
-.card-agent-row .card-agent-office {
+.card-agent-row .card-agent-office{
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 }
-
-
 .card-agent-text{
   display:inline-flex;
   align-items:center;
@@ -2321,176 +1830,24 @@
   white-space:nowrap;
   overflow:hidden;
 }
-
 .card-agent-text .card-agent-name,
 .card-agent-text .card-agent-title,
 .card-agent-text .card-agent-office{
   display:inline;
   white-space:nowrap;
 }
-
 .card-agent-text .card-agent-office{
   overflow:hidden;
   text-overflow:ellipsis;
   min-width:0;
 }
-
-
-/* premium left card tuning */
-.card {
-  background: linear-gradient(180deg, #ffffff 0%, #fcfdff 100%);
-  border: 1px solid #e7edf4;
-  border-radius: 20px;
-  box-shadow: 0 10px 26px rgba(15, 41, 66, 0.06);
-}
-
-.card:hover,
-.card.active {
-  background: linear-gradient(180deg, #fcfdff 0%, #f6faff 100%);
-  box-shadow: 0 12px 28px rgba(15, 41, 66, 0.08);
-  border-color: #dfe8f2;
-}
-
-.card-inner-row {
-  gap: 15px;
-  padding: 18px 18px 17px;
-}
-
-.thumb {
-  border-radius: 15px;
-  box-shadow: 0 10px 22px rgba(15, 41, 66, 0.12);
-}
-
-.card-top-line {
-  margin-bottom: 8px;
-}
-
-.card-badge-row {
-  gap: 5px;
-}
-
-.card-badge {
-  height: 23px;
-  padding: 0 10px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: -0.12px;
-}
-
-.card-date {
-  font-size: 14px;
-  color: #95a2af;
-}
-
-.card-title {
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 1.44;
-  margin-bottom: 7px;
-  letter-spacing: -0.4px;
-  color: #111827;
-}
-
-.card-address {
-  line-height: 1.52;
-  margin-bottom: 9px;
-  color: #6c7886;
-}
-
-.card-price-line {
-  gap: 8px;
-  margin-bottom: 7px;
-}
-
-.card-deal {
-  height: 25px;
-  padding: 0 9px;
-  font-size: 14px;
-  font-weight: 700;
-}
-
-.card-price {
-  font-size: 25px;
-  font-weight: 700;
-  letter-spacing: -0.9px;
-  color: #0f172a;
-}
-
-.card-spec {
-  line-height: 1.62;
-  margin-bottom: 14px;
-  color: #61707f;
-  font-weight:  500;
-}
-
-.card-agent-row {
-  gap: 9px;
-  padding-top: 13px;
-  border-top: 1px solid #edf2f7;
-}
-
-.card-agent-avatar {
-  box-shadow: 0 4px 10px rgba(15, 41, 66, 0.06);
-}
-
-.card-agent-text {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  min-width: 0;
-  flex: 1 1 auto;
-  white-space: nowrap;
-  overflow: hidden;
-  line-height: 1;
-}
-
-.card-agent-name {
-  display: inline-flex;
-  align-items: center;
-  font-size: 15px;
-  font-weight: 700;
-  color: #111827;
-  letter-spacing: -0.2px;
-  line-height: 1;
-  flex: 0 0 auto;
-}
-
-.card-agent-title {
-  display: inline-flex;
-  align-items: center;
-  font-size: 14px;
-  font-weight: 700;
-  color: #6b7280;
-  letter-spacing: -0.12px;
-  line-height: 1;
-  flex: 0 0 auto;
-}
-
-.card-agent-title::after {
+.card-agent-title::after{
   content: "·";
   margin-left: 6px;
   color: #b0bac5;
   font-weight: 700;
 }
-
-.card-agent-office {
-  display: inline-flex;
-  align-items: center;
-  font-size: 14px;
-  font-weight: 800;
-  color: #4f5d6b;
-  letter-spacing: -0.12px;
-  line-height: 1;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  flex: 0 1 auto;
-}
-
-
-    
-    .map-side-tools {
+.map-side-tools{
       position: absolute;
       top: 182px;
       left: 18px;
@@ -2499,8 +1856,7 @@
       flex-direction: column;
       gap: 14px;
     }
-
-    .map-tool-group {
+.map-tool-group{
       display: flex;
       flex-direction: column;
       gap: 8px;
@@ -2511,8 +1867,7 @@
       box-shadow: none;
       backdrop-filter: none;
     }
-
-    .map-tool-btn {
+.map-tool-btn{
   width: 46px;
   height: 46px;
   border: 1px solid #cfd7e2;
@@ -2531,15 +1886,13 @@
   justify-content: center;
   text-align: center;
 }
-
-    .map-tool-btn.active {
+.map-tool-btn.active{
       background: #1f6fff;
       border-color: #1a5fe0;
       color: #fff;
       box-shadow: 0 8px 18px rgba(31,111,255,0.22);
     }
-
-    .map-unit-split {
+.map-unit-split{
   width: 46px;
   height: 46px;
   border: 1px solid #cfd7e2;
@@ -2551,8 +1904,7 @@
   flex-direction: column;
   margin-top: 46px;
 }
-
-    .map-unit-half-btn {
+.map-unit-half-btn{
   flex: 1 1 50%;
   border: 0;
   background: #ffffff;
@@ -2568,78 +1920,49 @@
   line-height: 1;
   padding: 0;
 }
-
-    .map-unit-half-btn + .map-unit-half-btn {
+.map-unit-half-btn + .map-unit-half-btn{
       border-top: 1px solid #dbe2eb;
     }
-
-    .map-unit-half-btn.active {
+.map-unit-half-btn.active{
       background: #1f6fff;
       color: #fff;
     }
-
-
-
-/* stronger premium font tuning */
 .card-title,
 .detail-title,
-.brand-title {
+.brand-title{
   font-weight: 700;
 }
-
 .card-price,
 .detail-summary-price,
-.detail-hero-price {
+.detail-hero-price{
   font-weight: 950;
   letter-spacing: -0.7px;
 }
-
 .card-spec,
 .card-address,
 .detail-summary-address,
-.detail-desc {
+.detail-desc{
   font-weight: 600;
 }
-
 .card-badge,
 .card-deal,
 .detail-summary-type-badge,
 .detail-summary-deal-badge,
 .map-tool-btn,
-.map-unit-half-btn {
+.map-unit-half-btn{
   font-weight: 800;
 }
-
-
-/* hide right-panel m2/py toggle button */
 #detailAreaToggleBtn,
 .detail-meta-item:first-child #detailAreaToggleBtn,
-.detail-area-wrap .area-toggle-btn {
+.detail-area-wrap .area-toggle-btn{
   display: none !important;
 }
-
-
-
-/* right-panel open performance tuning */
-.sidebar-detail-panel {
-  will-change: opacity;
-  transform: translateZ(0);
-  backface-visibility: hidden;
-}
-
-.detail-scroll {
-  will-change: scroll-position;
-  transform: translateZ(0);
-}
-
 .detail-hero,
 .detail-hero-slides,
-.detail-content {
+.detail-content{
   transform: translateZ(0);
 }
-
-
-    .map-empty-state {
+.map-empty-state{
       position: absolute;
       inset: 50% auto auto 50%;
       transform: translate(-50%, -50%);
@@ -2655,12 +1978,10 @@
       text-align: center;
       pointer-events: none;
     }
-
-    .map-empty-state.open {
+.map-empty-state.open{
       display: block;
     }
-
-    .map-empty-state-title {
+.map-empty-state-title{
       font-size: 15px;
       font-weight: 700;
       color: #17212b;
@@ -2668,8 +1989,7 @@
       margin-bottom: 8px;
       line-height: 1.35;
     }
-
-    .map-empty-state-desc {
+.map-empty-state-desc{
       font-size: 14px;
       font-weight: 700;
       color: #6b7785;
@@ -2677,29 +1997,14 @@
       line-height: 1.5;
       white-space: pre-line;
     }
-
-</style>
-<style>
-
-/* Stable patch overrides - Ver 1.464 */
-.map-empty-state {
-  text-align: left !important;
-}
-.map-empty-state-desc {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 2px !important;
-  text-align: left !important;
-  white-space: normal !important;
-}
-.empty-title {
+.empty-title{
   margin: 0 !important;
   font-size: 16px !important;
   font-weight: 900 !important;
   color: #17212b !important;
   line-height: 1.35 !important;
 }
-.empty-sub {
+.empty-sub{
   margin: 0 !important;
   font-size: 14px !important;
   font-weight: 500 !important;
@@ -2707,48 +2012,22 @@
   line-height: 1.4 !important;
 }
 .detail-hero-features,
-#detailHeroFeatures {
+#detailHeroFeatures{
   display: none !important;
 }
-
-.brand-card {
-  position: sticky !important;
-  top: 0 !important;
-  z-index: 20 !important;
-  background: #fff !important;
-}
-
 .detail-features,
-#detailFeatures {
+#detailFeatures{
   display: none !important;
 }
-
-.detail-summary-block {
-  margin-bottom: 18px !important;
-}
-
-.detail-summary-top {
-  display: flex !important;
-  align-items: center !important;
-  gap: 8px !important;
-  margin-bottom: 18px !important;
-}
-
-.detail-summary-type-badge {
-  background: #f3eefe !important;
-  color: #7c4dff !important;
-}
-
 .detail-summary-deal-badge[data-deal="매매"],
 .detail-summary-deal-badge[data-deal="전세"],
 .detail-summary-deal-badge[data-deal="월세"],
 .detail-summary-deal-badge[data-deal="년세"],
-.detail-summary-deal-badge:not([data-deal]) {
+.detail-summary-deal-badge:not([data-deal]){
   background: #eef5ff !important;
   color: #2563eb !important;
 }
-
-.detail-inline-roadview-btn {
+.detail-inline-roadview-btn{
   margin-left: auto !important;
   flex: 0 0 auto !important;
   display: inline-flex !important;
@@ -2765,70 +2044,19 @@
   white-space: nowrap !important;
   cursor: pointer !important;
 }
-
-.detail-inline-roadview-btn i {
+.detail-inline-roadview-btn i{
   font-size: 14px !important;
   line-height: 1 !important;
 }
-
 .detail-meta-value,
 #detailAreaValue,
 #detailTypeValue,
-#detailRegionValue {
+#detailRegionValue{
   align-items: center !important;
   min-height: 24px !important;
   line-height: 1 !important;
 }
-
-.detail-meta-item:first-child .detail-area-wrap {
-  align-items: center !important;
-  line-height: 1 !important;
-}
-
-.detail-meta-item {
-  padding-top: 10px !important;
-  padding-bottom: 10px !important;
-}
-
-.detail-meta-label {
-  margin-bottom: 4px !important;
-}
-
-.detail-meta-value,
-#detailAreaValue,
-#detailTypeValue,
-#detailRegionValue {
-  min-height: 20px !important;
-  line-height: 1 !important;
-}
-
-#detailAreaValue {
-  transform: none !important;
-}
-
-.detail-meta-item:first-child .detail-area-wrap {
-  gap: 6px !important;
-  min-height: 26px !important;
-}
-
-.detail-meta-value,
-#detailAreaValue,
-#detailTypeValue,
-#detailRegionValue {
-  min-height: 26px !important;
-  height: 26px !important;
-  display: flex !important;
-  align-items: center !important;
-}
-
-.detail-area-wrap {
-  min-height: 26px !important;
-  height: 26px !important;
-  display: inline-flex !important;
-  align-items: center !important;
-}
-
-.detail-meta-item:first-child #detailAreaTypeToggleBtn {
+.detail-meta-item:first-child #detailAreaTypeToggleBtn{
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -2836,27 +2064,10 @@
   flex: 0 0 auto;
   margin-left: 0;
 }
-
-</style>
-
-
-<style>
-/* Map filter premium patch Ver 1.464 */
-.map-filter-bar{
-  gap: 10px !important;
-  padding: 14px !important;
-  border-radius: 22px !important;
-  background: rgba(255,255,255,0.86) !important;
-  border: 1px solid rgba(15,41,66,0.07) !important;
-  box-shadow: 0 14px 30px rgba(15,41,66,0.14) !important;
-  backdrop-filter: blur(14px) !important;
-}
-
 .deal-buttons,
 .type-buttons{
   gap: 9px !important;
 }
-
 .deal-buttons button,
 .type-buttons button{
   min-height: 38px !important;
@@ -2870,170 +2081,51 @@
   box-shadow: inset 0 0 0 1px rgba(15,41,66,0.04) !important;
   transition: background .18s ease, color .18s ease, transform .18s ease, box-shadow .18s ease !important;
 }
-
 .deal-buttons button:hover,
 .type-buttons button:hover{
   background: #e9eef6 !important;
   color: #1f2937 !important;
   box-shadow: inset 0 0 0 1px rgba(15,41,66,0.06), 0 4px 10px rgba(15,41,66,0.05) !important;
 }
-
 .deal-buttons button.active,
 .type-buttons button.active{
   background: #111827 !important;
   color: #ffffff !important;
   box-shadow: 0 10px 22px rgba(17,24,39,0.22) !important;
 }
-
-@media (max-width: 980px){
-  .map-filter-bar{
-    left: 12px !important;
-    top: 12px !important;
-    max-width: calc(100% - 24px) !important;
-    border-radius: 20px !important;
-  }
-
-  .deal-buttons button,
+.deal-buttons button,
   .type-buttons button{
     min-height: 36px !important;
     padding: 0 12px !important;
   }
 }
-</style>
 
-
-<style>
-/* Recommend title weight fix Ver 1.464 */
 .map-recommend-title,
-.map-recommend-agent-title {
+.map-recommend-agent-title{
   font-weight: 900 !important;
   letter-spacing: -0.3px;
 }
-
 .map-recommend-sub,
-.map-recommend-agent-sub {
+.map-recommend-agent-sub{
   font-weight: 800 !important;
 }
-</style>
-
-
-<style>
-/* Agent card text size up Ver 1.464 */
-.map-recommend-agent-reg{
-  font-size: 12.5px !important;
-}
-
-.map-recommend-agent-address{
-  font-size: 13.5px !important;
-}
-
-.map-recommend-agent-desc{
-  font-size: 13.5px !important;
-}
-</style>
-
-
-<style>
-/* Sticky top filter patch Ver 1.464 */
-.map-filter-bar{
-  position:absolute !important;
-  top:0 !important;
-  left:0 !important;
-  right:0 !important;
-  width:100% !important;
-  max-width:none !important;
-  padding:12px 16px !important;
-  border-radius:0 0 22px 22px !important;
-  display:flex !important;
-  flex-direction:row !important;
-  align-items:center !important;
-  gap:12px !important;
-  background:rgba(255,255,255,0.92) !important;
-  border:0 !important;
-  border-bottom:1px solid rgba(15,41,66,0.08) !important;
-  box-shadow:0 10px 26px rgba(15,41,66,0.12) !important;
-  backdrop-filter:blur(14px) !important;
-}
-
-.deal-buttons,
-.type-buttons{
-  display:flex !important;
-  flex-wrap:nowrap !important;
-  gap:8px !important;
-  overflow-x:auto !important;
-  overflow-y:hidden !important;
-  scrollbar-width:none !important;
-  -ms-overflow-style:none !important;
-}
-
 .deal-buttons::-webkit-scrollbar,
 .type-buttons::-webkit-scrollbar{
   display:none !important;
 }
-
 .deal-buttons{
   flex:0 0 auto !important;
 }
-
 .type-buttons{
   flex:1 1 auto !important;
   min-width:0 !important;
 }
-
-.deal-buttons button,
-.type-buttons button{
-  flex:0 0 auto !important;
-  min-height:36px !important;
-  padding:0 14px !important;
-  border-radius:18px !important;
-  font-size:14px !important;
-  font-weight:800 !important;
-}
-
-.map-result-count{
-  top:84px !important;
-  left:16px !important;
-}
-
-.map-side-tools{
-  top:118px !important;
-}
-
-.map-recommend-agent-card{
-  top:86px !important;
-}
-
-@media (max-width: 980px){
-  .map-filter-bar{
-    flex-direction:column !important;
-    align-items:stretch !important;
-    gap:8px !important;
-    padding:12px !important;
-    border-radius:0 0 18px 18px !important;
-  }
-
-  .deal-buttons,
+.deal-buttons,
   .type-buttons{
     flex:unset !important;
   }
-
-  .map-result-count{
-    top:118px !important;
-  }
-
-  .map-side-tools{
-    top:160px !important;
-  }
-
-  .map-recommend-agent-card{
-    top:118px !important;
-  }
 }
-</style>
 
-
-<style>
-/* FIX 1: image nav + zoom icons visible */
 .detail-image-nav,
 .detail-image-zoom{
   display:flex !important;
@@ -3041,16 +2133,6 @@
   visibility:visible !important;
   z-index:10 !important;
 }
-
-/* FIX 2: top filter square style */
-.map-filter-bar{
-  border-radius:0 !important;
-}
-</style>
-
-
-<style>
-/* FIX X buttons visible Ver 1.464 */
 .map-recommend-close,
 .map-recommend-agent-close{
   display:flex !important;
@@ -3058,52 +2140,20 @@
   visibility:visible !important;
   z-index:20 !important;
 }
-
-/* ensure positioned above */
-.map-recommend-close,
-.map-recommend-agent-close{
-  position:absolute !important;
-  top:10px !important;
-  right:10px !important;
-}
-</style>
-
-
-<style>
-/* Fix hidden detail hero controls + recommend close buttons Ver 1.464 */
 .detail-hero-nav,
 .detail-hero-expand,
 .detail-close-btn,
 .map-recommend-close,
-.map-recommend-agent-close {
+.map-recommend-agent-close{
   display: flex !important;
   opacity: 1 !important;
   visibility: visible !important;
   z-index: 40 !important;
 }
-
 .detail-hero-nav,
-.detail-hero-expand {
+.detail-hero-expand{
   pointer-events: auto !important;
 }
-
-.map-recommend-close,
-.map-recommend-agent-close {
-  position: absolute !important;
-  top: 10px !important;
-  right: 10px !important;
-}
-</style>
-
-
-<style>
-/* Hero controls + topbar align patch Ver 1.464 */
-.detail-hero{
-  position: relative !important;
-  z-index: 5 !important;
-  overflow: hidden !important;
-}
-
 .detail-hero-nav,
 .detail-hero-expand,
 .detail-close-btn,
@@ -3115,18 +2165,10 @@
   visibility: visible !important;
   z-index: 60 !important;
 }
-
-.detail-hero-nav,
-.detail-hero-expand{
-  background: rgba(0,0,0,0.42) !important;
-  color: #fff !important;
-}
-
 .detail-close-btn{
   position: relative !important;
   color: #223244 !important;
 }
-
 .detail-hero-nav.prev::before{
   content: "\f053";
   font-family: "Font Awesome 6 Free";
@@ -3134,7 +2176,6 @@
   font-size: 16px;
   line-height: 1;
 }
-
 .detail-hero-nav.next::before{
   content: "\f054";
   font-family: "Font Awesome 6 Free";
@@ -3142,7 +2183,6 @@
   font-size: 16px;
   line-height: 1;
 }
-
 .detail-hero-expand::before{
   content: "\f065";
   font-family: "Font Awesome 6 Free";
@@ -3150,7 +2190,6 @@
   font-size: 15px;
   line-height: 1;
 }
-
 .detail-close-btn::before{
   content: "\f053";
   font-family: "Font Awesome 6 Free";
@@ -3158,7 +2197,6 @@
   font-size: 15px;
   line-height: 1;
 }
-
 .map-recommend-close::before{
   content: "\f00d";
   font-family: "Font Awesome 6 Free";
@@ -3166,34 +2204,11 @@
   font-size: 13px;
   line-height: 1;
 }
-
-.brand-card{
-  height: 60px !important;
-  min-height: 60px !important;
-  padding: 0 16px !important;
 }
 
-.map-filter-bar{
-  min-height: 60px !important;
-  box-sizing: border-box !important;
-}
-
-@media (max-width: 980px){
-  .brand-card{
-    height: 60px !important;
-    min-height: 60px !important;
-  }
-}
-</style>
-
-
-<style>
-/* Top area exact height align patch Ver 1.464 */
 :root{
   --topbar-height: 60px;
 }
-
-/* 1) 왼쪽 / 오른쪽 / 맵 상단 높이 완전 통일 */
 .brand-card,
 .detail-topbar,
 .map-filter-bar{
@@ -3202,53 +2217,11 @@
   max-height: var(--topbar-height) !important;
   box-sizing: border-box !important;
 }
-
-/* 2) 왼쪽 상단 */
-.brand-card{
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  padding: 0 16px !important;
-  border-bottom: 1px solid #e6ebf0 !important;
-}
-
-/* 3) 오른쪽 상세 상단 */
-.detail-topbar{
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  padding: 0 12px !important;
-  border-bottom: 1px solid #e6ebf0 !important;
-}
-
-/* 4) 맵 상단 필터 바 */
-.map-filter-bar{
-  position: absolute !important;
-  top: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  width: 100% !important;
-  max-width: none !important;
-  display: flex !important;
-  flex-direction: row !important;
-  align-items: center !important;
-  gap: 12px !important;
-  padding: 0 16px !important;
-  border-radius: 0 !important;
-  border: 0 !important;
-  border-bottom: 1px solid #e6ebf0 !important;
-  background: rgba(255,255,255,0.94) !important;
-  box-shadow: 0 8px 20px rgba(15,41,66,0.10) !important;
-  backdrop-filter: blur(14px) !important;
-}
-
-/* 5) 내부 줄맞춤 */
 .brand-card *,
 .detail-topbar *,
 .map-filter-bar *{
   box-sizing: border-box !important;
 }
-
 .brand-title,
 .detail-title-row,
 .deal-buttons,
@@ -3256,288 +2229,33 @@
   display: flex;
   align-items: center;
 }
-
-.deal-buttons,
-.type-buttons{
-  gap: 8px !important;
-  flex-wrap: nowrap !important;
-  overflow-x: auto !important;
-  overflow-y: hidden !important;
-  scrollbar-width: none !important;
-  -ms-overflow-style: none !important;
 }
 
-.deal-buttons::-webkit-scrollbar,
-.type-buttons::-webkit-scrollbar{
-  display: none !important;
-}
-
-.deal-buttons{
-  flex: 0 0 auto !important;
-}
-
-.type-buttons{
-  flex: 1 1 auto !important;
-  min-width: 0 !important;
-}
-
-.deal-buttons button,
-.type-buttons button{
-  height: 36px !important;
-  min-height: 36px !important;
-  padding: 0 14px !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  line-height: 1 !important;
-  white-space: nowrap !important;
-}
-
-/* 6) 상단 요소 아래 영역 위치도 같이 맞춤 */
-.map-result-count{
-  top: calc(var(--topbar-height) + 24px) !important;
-}
-
-.map-side-tools{
-  top: calc(var(--topbar-height) + 58px) !important;
-}
-
-.map-recommend-agent-card{
-  top: calc(var(--topbar-height) + 26px) !important;
-}
-
-/* 7) 모바일 예외 */
-@media (max-width: 980px){
-  .brand-card,
-  .detail-topbar{
-    height: var(--topbar-height) !important;
-    min-height: var(--topbar-height) !important;
-    max-height: var(--topbar-height) !important;
-  }
-
-  .map-filter-bar{
-    height: auto !important;
-    min-height: var(--topbar-height) !important;
-    max-height: none !important;
-    flex-direction: column !important;
-    align-items: stretch !important;
-    gap: 8px !important;
-    padding: 10px 12px !important;
-  }
-}
-</style>
-
-
-<style>
-/* Recommend agent order patch Ver 1.464 */
 .map-recommend-agent-content{
   display:flex !important;
   flex-direction:column !important;
   gap:4px !important;
 }
-
-.map-recommend-agent-name{ order:1 !important; }
-.map-recommend-agent-office{ order:2 !important; }
-.map-recommend-agent-address{ order:3 !important; }
-.map-recommend-agent-reg{ order:4 !important; }
-.map-recommend-agent-desc{ order:5 !important; margin-top:2px !important; }
-
-.map-recommend-agent-office{
-  font-size: 14px !important;
-  font-weight: 800 !important;
-  line-height: 1.35 !important;
-}
-
-.map-recommend-agent-address{
-  font-size: 13.5px !important;
-  font-weight: 800 !important;
-  color: #6b7785 !important;
-  line-height: 1.4 !important;
-}
-
-.map-recommend-agent-reg{
-  font-size: 12.5px !important;
-  font-weight: 700 !important;
-  color: #8b97a5 !important;
-  line-height: 1.35 !important;
-}
-
-.map-recommend-agent-desc{
-  font-size: 13.5px !important;
-  font-weight: 700 !important;
-  color: #6b7785 !important;
-  line-height: 1.42 !important;
-}
-</style>
-
-
-<style>
-:root{
-  --topbar-height: 68px;
-}
-
-/* 버튼 아래로 강제 */
-.map-recommend-agent-actions{
-  order: 999 !important;
-  margin-top: 10px !important;
-}
-
-/* 버튼 글자 키우기 */
-.map-recommend-agent-btn{
-  font-size: 14.5px !important;
-  font-weight: 800 !important;
-  min-height: 36px !important;
-  padding: 0 14px !important;
-}
-</style>
-
-
-<style>
-/* Recommend agent card spacing patch Ver 1.464 */
-.map-recommend-agent-content{
-  gap: 2px !important;
-}
-
-.map-recommend-agent-name{
-  line-height: 1.18 !important;
-  margin-bottom: 2px !important;
-}
-
-.map-recommend-agent-office{
-  line-height: 1.22 !important;
-  margin-bottom: 2px !important;
-}
-
-.map-recommend-agent-address{
-  line-height: 1.34 !important;
-  margin-top: 4px !important;
-  margin-bottom: 2px !important;
-}
-
-.map-recommend-agent-reg{
-  line-height: 1.32 !important;
-  margin-top: 2px !important;
-  margin-bottom: 2px !important;
-}
-
-.map-recommend-agent-desc{
-  line-height: 1.36 !important;
-  margin-top: 4px !important;
-  margin-bottom: 0 !important;
-}
-
-/* 버튼 영역은 본문 바로 아래 타이트하게 */
-.map-recommend-agent-actions{
-  order: 999 !important;
-  margin-top: 8px !important;
-  gap: 8px !important;
-  align-items: center !important;
-  justify-content: flex-start !important;
-  flex-wrap: nowrap !important;
-}
-
-.map-recommend-agent-btn{
-  flex: 0 0 auto !important;
-  min-width: 0 !important;
-  width: auto !important;
-  white-space: nowrap !important;
-  font-size: 16px !important;
-  font-weight: 800 !important;
-  min-height: 42px !important;
-  padding: 0 18px !important;
-  border-radius: 22px !important;
-  line-height: 1 !important;
-  box-shadow: 0 2px 8px rgba(15,41,66,0.08) !important;
-}
-
-.map-recommend-agent-btn.link{
-  background: #FEE500 !important;
-  color: #111 !important;
-}
-
-.map-recommend-agent-btn.phone{
-  background: #fff !important;
-  color: #111 !important;
-  border: 1px solid #d9e1ea !important;
-  padding: 0 20px !important;
-}
-</style>
-
-
-<style>
-/* Top category underline patch Ver 1.464 */
 .brand-card,
 .detail-topbar{
   border-bottom: 2px solid #cfd6de !important;
 }
-
-.map-filter-bar{
-  border-bottom: 2px solid #cfd6de !important;
-}
-</style>
-
-
-<style>
-/* refined subtle line Ver 1.464 */
-.brand-card,
-.detail-topbar,
-.map-filter-bar{
-  border-bottom: 1px solid rgba(0,0,0,0.06) !important;
-}
-</style>
-
-
-<style>
-/* Top unified background Ver 1.464 */
-.brand-card,
-.detail-topbar,
-.map-filter-bar{
-  background: #ffffff !important;
-}
-</style>
-
-
-<style>
-/* 1.435 UI clean patch */
-
-/* 상단 전체 배경 통일 */
-.brand-card,
-.detail-topbar,
-.map-filter-bar{
-  background:#ffffff !important;
-}
-
-/* 왼쪽-맵 사이 수직선 제거 */
 .left-panel,
 .sidebar,
 .left-area{
   border-right:none !important;
 }
-
 .map-container,
 .map-area{
   border-left:none !important;
 }
-
-/* 혹시 divider 있으면 제거 */
 .divider,
 .split-line{
   display:none !important;
 }
-</style>
-
-
-<style>
-/* Search move to map top-right Ver 1.464 */
 .left-search-panel{
   display:none !important;
 }
-
-.map-filter-bar{
-  justify-content:flex-start !important;
-  gap:10px !important;
-}
-
 .map-search-box{
   margin-left:auto !important;
   flex:0 0 290px !important;
@@ -3545,7 +2263,6 @@
   display:flex !important;
   align-items:center !important;
 }
-
 .map-search-box input{
   width:100% !important;
   height:38px !important;
@@ -3560,44 +2277,21 @@
   font-weight:700 !important;
   line-height:1 !important;
 }
-
 .map-search-box input::placeholder{
   color:#8a94a3 !important;
   font-weight:700 !important;
 }
-
 .map-search-box input:focus{
   background:#ffffff !important;
   border-color:#cfd6de !important;
 }
-
-@media (max-width: 980px){
-  .map-search-box{
-    margin-left:0 !important;
-    flex:1 1 auto !important;
-    max-width:none !important;
-    width:100% !important;
-  }
-
-  .map-search-box input{
-    width:100% !important;
-  }
 }
-</style>
 
-
-<style>
-/* Remove left search + feature tags Ver 1.464 */
 .left-search,
 .panel.search-box,
 #featureButtons{
   display:none !important;
 }
-</style>
-
-
-<style>
-/* List header height tweak Ver 1.464 */
 .list-header,
 .result-header,
 .total-count-bar{
@@ -3607,140 +2301,26 @@
   align-items:center !important;
   padding: 0 16px !important;
 }
-</style>
-
-
-<style>
-/* 1.441 filter group tone differentiation */
 .deal-buttons button.active{
   background: #111827 !important;
   color: #ffffff !important;
   font-weight: 800 !important;
   box-shadow: 0 4px 10px rgba(0,0,0,0.12) !important;
 }
-
 .type-buttons button.active{
   background: #374151 !important;
   color: #ffffff !important;
   font-weight: 800 !important;
   box-shadow: 0 4px 10px rgba(17,24,39,0.10) !important;
 }
-
 .deal-buttons button:hover{
   background: #f3f4f6 !important;
   color: #111827 !important;
 }
-
 .type-buttons button:hover{
   background: #eef2f7 !important;
   color: #111827 !important;
 }
-</style>
-
-
-<style>
-/* 1.441 square buttons + balanced divider */
-
-/* 버튼 네모 라운드 */
-.deal-buttons button,
-.type-buttons button{
-  border-radius: 8px !important;
-  padding: 0 14px !important;
-}
-
-/* 수직선 균형 */
-.type-buttons{
-  margin-left: 16px !important;
-  padding-left: 16px !important;
-  border-left: 1px solid rgba(0,0,0,0.08) !important;
-}
-
-/* deal 쪽도 오른쪽 여백 맞춤 */
-.deal-buttons{
-  padding-right: 16px !important;
-}
-</style>
-
-
-<style>
-/* 1.441 softer active button colors */
-.deal-buttons button.active{
-  background: #2f3a48 !important;
-  color: #ffffff !important;
-  box-shadow: 0 4px 10px rgba(47,58,72,0.16) !important;
-}
-
-.type-buttons button.active{
-  background: #4b5563 !important;
-  color: #ffffff !important;
-  box-shadow: 0 4px 10px rgba(75,85,99,0.14) !important;
-}
-</style>
-
-
-<style>
-/* 1.441 slate blue-gray + balanced divider */
-
-/* balanced divider spacing */
-.deal-buttons{
-  padding-right: 0 !important;
-  margin-right: 16px !important;
-}
-.type-buttons{
-  margin-left: 0 !important;
-  padding-left: 16px !important;
-  border-left: 1px solid rgba(0,0,0,0.08) !important;
-}
-
-/* active colors - slate blue gray */
-.deal-buttons button.active{
-  background: #425466 !important;
-  color: #ffffff !important;
-  box-shadow: 0 4px 10px rgba(66,84,102,0.16) !important;
-}
-
-.type-buttons button.active{
-  background: #5B6B7A !important;
-  color: #ffffff !important;
-  box-shadow: 0 4px 10px rgba(91,107,122,0.14) !important;
-}
-</style>
-
-
-<style>
-/* 1.442 search box resize + list header height */
-
-.map-search-box{
-  flex: 0 0 220px !important;
-  max-width: 220px !important;
-}
-
-.map-search-box input{
-  height: 36px !important;
-  font-size: 13.5px !important;
-  padding: 0 12px !important;
-}
-
-/* prevent overlap */
-.map-filter-bar{
-  gap: 8px !important;
-}
-
-/* list header height */
-.list-header,
-.result-header,
-.total-count-bar{
-  height: 56px !important;
-  min-height: 56px !important;
-  display:flex !important;
-  align-items:center !important;
-  padding: 0 16px !important;
-}
-</style>
-
-
-<style>
-/* 1.443 map type text size */
 .map-type-control button,
 .map-type-control span,
 .map-type,
@@ -3748,205 +2328,39 @@
   font-size: 15.5px !important;
   font-weight: 700 !important;
 }
-</style>
-
-
-<style>
-/* 1.444 map type text size increase */
-.map-type-control button,
-.map-type-control span,
-.map-type,
-.map-control-type{
-  font-size: 15px !important;
-  font-weight: 700 !important;
-}
-</style>
-
-
-<style>
-/* 1.464 top alignment + guide line */
-
-/* 모든 상단 높이 강제 통일 */
-.brand-card,
-.detail-topbar,
-.map-filter-bar{
-  height: 68px !important;
-  min-height: 68px !important;
-  display:flex !important;
-  align-items:center !important;
-}
-
-/* 하단 기준선 (확인용 + 디자인) */
-.brand-card,
-.detail-topbar,
-.map-filter-bar{
-  border-bottom: 1px solid rgba(0,0,0,0.12) !important;
-}
-
-/* 혹시 내부 padding 차이 제거 */
-.brand-card,
-.detail-topbar{
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
-}
-</style>
-
-
-<style>
-/* 1.464 map tool text size fix */
-.map-tool-btn{
-  font-size: 15px !important;
-  font-weight: 700 !important;
-}
-
-.map-unit-half-btn{
-  font-size: 15px !important;
-  font-weight: 700 !important;
-}
-</style>
-
-
-<style>
-/* 1.464 agent typography unify */
-
-/* 오른쪽 패널 중개사 영역 */
-.detail-agent-name{
-  line-height: 1.2 !important;
-  margin-bottom: 2px !important;
-}
-
-.detail-agent-office{
-  line-height: 1.25 !important;
-  margin-bottom: 2px !important;
-}
-
-.detail-agent-address{
-  line-height: 1.35 !important;
-  margin-bottom: 2px !important;
-}
-
 .detail-agent-reg{
   line-height: 1.3 !important;
   margin-bottom: 2px !important;
 }
-
 .detail-agent-phone{
   line-height: 1.35 !important;
   margin-top: 4px !important;
 }
-
-/* 맵 영역 추천 중개사 카드 동일하게 */
-.map-recommend-agent-name{
-  line-height: 1.2 !important;
-  margin-bottom: 2px !important;
-}
-
-.map-recommend-agent-office{
-  line-height: 1.25 !important;
-  margin-bottom: 2px !important;
-}
-
-.map-recommend-agent-address{
-  line-height: 1.35 !important;
-  margin-bottom: 2px !important;
-}
-
-.map-recommend-agent-reg{
-  line-height: 1.3 !important;
-  margin-bottom: 2px !important;
-}
-
 .map-recommend-agent-phone{
   line-height: 1.35 !important;
   margin-top: 4px !important;
 }
-</style>
-
-
-<!-- Noto Sans KR -->
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet">
-
-<style>
-/* 1.464 font apply */
-body{
-  font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, system-ui, sans-serif !important;
-  letter-spacing: -0.2px;
-}
-</style>
-
-
-<style>
-/* 1.464 right panel subtle divider */
 .sidebar-detail-panel,
 .detail-panel,
 .right-panel{
   border-left: 1px solid rgba(0,0,0,0.06) !important;
 }
-</style>
-
-
-<style>
-/* 1.464 right panel right-side divider fix */
 .sidebar-detail-panel,
 .detail-panel,
 .right-panel,
 .detail-panel-inner{
   border-right: 1px solid rgba(0,0,0,0.06) !important;
 }
-
-.sidebar-detail-panel{
-  border-left: 1px solid rgba(0,0,0,0.06) !important;
-}
-</style>
-
-
-<style>
-/* 1.464 right panel position fix (below top menu) */
-
-/* 상단 메뉴 높이 기준 (이미 68px 사용 중) */
 .right-panel,
 .detail-panel,
 .sidebar-detail-panel{
   top: 68px !important;
   height: calc(100% - 68px) !important;
 }
-
-/* 혹시 fixed일 경우 대비 */
 .right-panel{
   position: fixed !important;
   right: 0;
 }
-</style>
-
-
-<style>
-/* 1.464 right panel start below filter bar */
-
-/* 상단 전체 높이 = 브랜드(68px) + 필터바(68px) */
-.right-panel,
-.detail-panel,
-.sidebar-detail-panel{
-  top: 136px !important;
-  height: calc(100% - 136px) !important;
-}
-
-/* 고정 위치 유지 */
-.right-panel{
-  position: fixed !important;
-  right: 0;
-}
-</style>
-
-
-<style>
-/* 1.464 unified top bar patch */
-
-/* 공통 상단 높이 */
-:root{
-  --topbar-height: 68px;
-}
-
-/* 화면 전체를 가로지르는 하나의 상단 박스 */
 .app::before{
   content: "";
   position: fixed;
@@ -3959,227 +2373,18 @@ body{
   z-index: 3;
   pointer-events: none;
 }
-
-/* 각 상단 영역은 같은 박스 위에 얹히는 느낌으로 */
-.brand-card,
-.detail-topbar,
-.map-filter-bar{
-  background: transparent !important;
-  border-bottom: 0 !important;
-  box-shadow: none !important;
-  height: var(--topbar-height) !important;
-  min-height: var(--topbar-height) !important;
-  max-height: var(--topbar-height) !important;
-  position: relative !important;
-  z-index: 4 !important;
-}
-
-/* 상단끼리 떨어져 보이게 하는 라운드/선 제거 */
-.map-filter-bar{
-  border-radius: 0 !important;
-}
-
-/* 왼쪽 / 오른쪽 패널의 상단 정렬 통일 */
-.brand-card{
-  padding: 0 16px !important;
-  display: flex !important;
-  align-items: center !important;
-}
-
-.detail-topbar{
-  padding: 0 12px !important;
-  display: flex !important;
-  align-items: center !important;
-}
-
-/* 맵 상단 메뉴도 같은 높이/정렬 */
-.map-filter-bar{
-  display: flex !important;
-  align-items: center !important;
-  padding: 0 16px !important;
-}
-
-/* 상단 바로 아래부터 내용 시작 */
-.sidebar-list-panel{
-  padding-top: 0 !important;
-}
-
-.sidebar-detail-panel{
-  top: var(--topbar-height) !important;
-  height: calc(100% - var(--topbar-height)) !important;
-}
-
-.map-result-count{
-  top: calc(var(--topbar-height) + 16px) !important;
-}
-
-.map-side-tools{
-  top: calc(var(--topbar-height) + 50px) !important;
-}
-
-.map-recommend-agent-card{
-  top: calc(var(--topbar-height) + 18px) !important;
-}
-
-/* 상단 안의 버튼/텍스트 수직 정렬 */
-.brand-card *,
-.detail-topbar *,
-.map-filter-bar *{
-  box-sizing: border-box !important;
-}
-
-@media (max-width: 980px){
-  .app::before{
-    height: var(--topbar-height);
-  }
-}
-</style>
-
-
-<style>
-/* 1.464 right detail panel restore + push down without breaking layout */
-:root{
-  --topbar-height: 68px;
-}
-
-/* revert broken fixed-position experiments */
-.sidebar-detail-panel{
-  position: relative !important;
-  top: auto !important;
-  bottom: auto !important;
-  left: auto !important;
-  right: auto !important;
-  margin-top: var(--topbar-height) !important;
-  height: calc(100% - var(--topbar-height)) !important;
-  border-left: 1px solid #e6ebf0 !important;
-  background: #fff !important;
-  z-index: 2 !important;
-}
-
-.detail-panel-inner{
-  height: 100% !important;
-  min-height: 0 !important;
-}
-
-.detail-topbar{
-  position: relative !important;
-  top: auto !important;
-  z-index: 2 !important;
-  background: #ffffff !important;
-}
-
-/* keep the unified top bar look */
 .brand-card,
 .map-filter-bar{
   z-index: 4 !important;
 }
-</style>
-
-
-<style>
-/* 1.464 remove right panel border line */
-.sidebar-detail-panel{
-  border-left: none !important;
-  border-right: none !important;
-}
-</style>
-
-
-<style>
-/* 1.464 remove any right edge line */
-.sidebar-detail-panel,
-.detail-panel,
-.right-panel{
-  border-right: none !important;
-  box-shadow: none !important;
-}
-
-/* 혹시 outline 있는 경우 제거 */
-.sidebar-detail-panel{
-  outline: none !important;
-}
-</style>
-
-
-<style>
-/* 1.464 left top/title + list head non-scrolling */
-.brand-card{
-  position: sticky !important;
-  top: 0 !important;
-  z-index: 20 !important;
-}
-
-.list-head{
-  position: sticky !important;
-  top: 68px !important;
-  z-index: 19 !important;
-  background: #f7f8fa !important;
-}
-
-.sidebar-list-panel{
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
-}
-</style>
-
-
-<style>
-/* 1.464 remove right edge white gap completely */
-.sidebar-detail-panel{
-  margin-right: -2px !important;
-  padding-right: 2px !important;
-  background-clip: padding-box !important;
-}
-
-/* 혹시 맵 영역과 경계 생기는 경우 */
 .map-area{
   margin-left: 0 !important;
 }
-</style>
-
-
-<style>
-/* 1.464 list head vertical spacing */
-.list-head{
-  padding: 14px 16px !important;
-  min-height: 56px !important;
-  height: auto !important;
-  display: flex !important;
-  align-items: center !important;
-}
-</style>
-
-
-<style>
-/* 1.464 left header background fix + right detail gap removal */
-
-/* 총 매물 / 최신순 헤더 배경 끊김 제거 */
-.list-head{
-  margin: 0 !important;
-  padding: 14px 24px !important;
-  background: #f7f8fa !important;
-  width: 100% !important;
-  box-sizing: border-box !important;
-}
-
-/* 왼쪽 리스트 패널 배경 통일 */
 .sidebar,
 .sidebar-list-panel,
 .property-list{
   background: #f7f8fa !important;
 }
-
-/* 오른쪽 상세 패널 우측 여백/틈 제거 */
-.sidebar-detail-panel{
-  width: 100% !important;
-  max-width: 100% !important;
-  margin-right: 0 !important;
-  padding-right: 0 !important;
-  right: 0 !important;
-  background: #fff !important;
-  overflow-x: hidden !important;
-}
-
 .detail-panel-inner,
 .detail-scroll{
   margin-right: 0 !important;
@@ -4187,8 +2392,6 @@ body{
   overflow-x: hidden !important;
   background: #fff !important;
 }
-
-/* 혹시 생기는 흰 틈 덮기 */
 .sidebar-detail-panel::after{
   content: "";
   position: absolute;
@@ -4200,8 +2403,23 @@ body{
   pointer-events: none;
   z-index: 2;
 }
+.detail-agent-cta-btn,
+.map-recommend-agent-btn{
+  font-weight: 700 !important;
+  border-radius: 18px;
+}
+.detail-agent-cta-btn.kakao,
+.map-recommend-agent-btn.link{
+  background: #FEE500;
+  color: #111;
+}
+.detail-agent-cta-btn.phone,
+.map-recommend-agent-btn.phone{
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  color: #111;
+}
 </style>
-
 </head>
 <body>
   <div class="app">
@@ -4210,22 +2428,14 @@ body{
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.464</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.465</div>
             </div>
           </div>
 
           <div class="panel search-box" style="display:none !important;">
-            
+
             <input type="text" id="keyword" placeholder="지역명, 주소, 키워드 검색" />
-<div class="feature-buttons" id="featureButtons" style="display:none !important;">
-              <button type="button" data-value="all" class="all-active">전체</button>
-              <button type="button" data-value="신축">신축</button>
-              <button type="button" data-value="오션뷰">오션뷰</button>
-              <button type="button" data-value="생활권">생활권</button>
-              <button type="button" data-value="투자용">투자용</button>
-              <button type="button" data-value="급매">급매</button>
-            </div>
-          </div>
+</div>
 
           <div class="list-head">
             <strong id="listInfoText">총 0개 매물</strong>
@@ -4305,7 +2515,6 @@ body{
                   </div>
                   <div class="detail-type-badge" id="detailTypeBadge" style="display:none;"></div>
                 </div>
-
 
                 <div class="detail-meta-grid" id="detailMetaGrid">
                   <div class="detail-meta-item">
@@ -4413,7 +2622,6 @@ body{
 
       <div class="map-result-count" id="mapResultCount">총 0건</div>
 
-
       <div class="map-recommend-agent-card" id="mapRecommendAgentCard" style="display:none;" aria-hidden="true">
         <button type="button" class="map-recommend-close" id="mapRecommendAgentCloseBtn" aria-label="추천 공인중개사 닫기">
           </button>
@@ -4491,17 +2699,13 @@ body{
     </div>
   </div>
 
-  <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=b7db2d3c35122f3ec33c88ea6d3195fb&libraries=clusterer">
-
-
-
-
+  <script>
 
 </script>
 
   <script>
-    const UI_FONT_STACK = 'Pretendard, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.464';
+const UI_FONT_STACK = 'Pretendard, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
+    const APP_VERSION = '1.465';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -4644,7 +2848,6 @@ body{
 
     const detailScroll = document.querySelector(".detail-scroll");
 
-
     function updateGlobalAreaUnitButtons() {
       if (areaUnitPyBtn) areaUnitPyBtn.classList.toggle("active", globalAreaUnit === "py");
       if (areaUnitM2Btn) areaUnitM2Btn.classList.toggle("active", globalAreaUnit === "m2");
@@ -4763,8 +2966,6 @@ body{
       }
     }
 
-
-
     function getViewportFilteredItems(items) {
       if (!state.map || !window.kakao || !kakao.maps) return items || [];
       const bounds = state.map.getBounds();
@@ -4809,7 +3010,6 @@ body{
       const randomIndex = Math.floor(Math.random() * source.length);
       return source[randomIndex];
     }
-
 
     function getRecommendAgentInitial(agent) {
       const source = String(agent?.name || agent?.office || "부").trim();
@@ -4912,7 +3112,6 @@ body{
 
       renderRecommendAgentCard(state.recommendAgent);
     }
-
 
     function renderRecommendationCard(item) {
       if (!mapRecommendCard) return;
@@ -5103,16 +3302,7 @@ body{
       };
     }
 
-    function formatAreaTwoLines(areaText) {
-      if (!areaText) return "-";
-
-      const match = String(areaText).match(/공급\s*([\d.]+)㎡\s*\/\s*전용\s*([\d.]+)㎡/);
-      if (!match) return escapeHtml(areaText);
-
-      const supply = match[1];
-      const privateArea = match[2];
-
-      return `공급 ${escapeHtml(supply)}㎡<br>전용 ${escapeHtml(privateArea)}㎡`;
+    ㎡<br>전용 ${escapeHtml(privateArea)}㎡`;
     }
 
     function parseAreaNumbers(areaText) {
@@ -5500,7 +3690,7 @@ body{
         agentCache[agentPath] = data;
         return data;
       } catch (e) {
-        console.error("agent 로딩 실패", e);
+        
         return null;
       }
     }
@@ -5535,7 +3725,7 @@ body{
               }))
           : [];
       } catch (err) {
-        console.error("추천 데이터 불러오기 실패:", err);
+        
         recommendIds = [];
         recommendAgents = [];
       }
@@ -5579,7 +3769,7 @@ body{
         applyGlobalAreaUnit();
         updateMapTypeButtons();
       } catch (err) {
-        console.error("매물 데이터 불러오기 실패:", err);
+        
         propertyList.innerHTML = `
           <div class="card" style="padding:18px; cursor:default; border-bottom:0;">
             <div class="card-body" style="padding:0;">
@@ -5668,9 +3858,7 @@ body{
       return items.map(item => item.id).sort((a, b) => a - b).join(",");
     }
 
-    function getClusterBadgeSize() {
-      return 39;
-    }
+    
 
     function getBadgeWidthByText(text) {
       const len = String(text ?? "").length;
@@ -5756,7 +3944,7 @@ body{
           await document.exitFullscreen();
         }
       } catch (err) {
-        console.error("전체화면 해제 실패:", err);
+        
       }
 
       if (roadviewOverlay) {
@@ -5784,7 +3972,7 @@ body{
         cacheStore[path] = data;
         return data;
       } catch (err) {
-        console.error(`${errorLabel} 로딩 실패:`, err);
+        
         return {};
       }
     }
@@ -6130,10 +4318,6 @@ body{
     }
 
     
-function forceCloseDetailPanel() {
-  const panel = document.getElementById('detailPanel');
-  if (panel) panel.style.display = 'none';
-}
 
 function closeDetailPanel() {
       sidebar.classList.remove("expanded");
@@ -6341,7 +4525,7 @@ function closeDetailPanel() {
             await document.exitFullscreen();
           }
         } catch (err) {
-          console.error("전체화면 전환 실패:", err);
+          
         }
       });
 
@@ -6395,7 +4579,6 @@ function closeDetailPanel() {
       });
     }
 
-
     function recenterMapSoft(lat, lng) {
       if (!state.map || !window.kakao || !kakao.maps) return;
       const projection = state.map.getProjection();
@@ -6431,9 +4614,7 @@ function closeDetailPanel() {
       state.map.panTo(movedLatLng);
     }
 
-    function moveMapToProperty(item) {
-      return;
-    }
+    
 
     function renderMarkers(data, options = {}) {
       clearMapObjects();
@@ -6607,7 +4788,6 @@ function closeDetailPanel() {
         });
       });
     }
-
 
     function syncLeftAllButtonToMapFilters() {
       const leftAllBtn = document.querySelector('#featureButtons button[data-value="all"]');
@@ -6809,7 +4989,7 @@ function closeDetailPanel() {
               detailShareBtn.innerHTML = '';
             }, 1000);
           } catch (err) {
-            console.error(err);
+            
           }
         });
       }
@@ -6840,7 +5020,7 @@ function closeDetailPanel() {
               detailShareBtn.innerHTML = '';
             }, 1000);
           } catch (err) {
-            console.error(err);
+            
           }
         });
       }
@@ -6966,7 +5146,6 @@ function closeDetailPanel() {
       });
     }
 
-
     function getDetailShareUrl() {
       if (currentDetailItem && currentDetailItem.link && currentDetailItem.link !== "#") {
         try {
@@ -6991,7 +5170,7 @@ function closeDetailPanel() {
           return true;
         }
       } catch (err) {
-        console.error("clipboard api 실패:", err);
+        
       }
 
       try {
@@ -7010,7 +5189,7 @@ function closeDetailPanel() {
         document.body.removeChild(textarea);
         return !!ok;
       } catch (err) {
-        console.error("execCommand 복사 실패:", err);
+        
         return false;
       }
     }
@@ -7077,7 +5256,7 @@ function closeDetailPanel() {
           return;
         }
       } catch (err) {
-        console.error("공유 실패:", err);
+        
       }
 
       const ok = await copyTextWithFallback(getDetailShareUrl());
@@ -7094,7 +5273,6 @@ function closeDetailPanel() {
     if (detailShareMenu) {
       detailShareMenu.style.display = "none";
     }
-
 
     async function bootstrap() {
       if (!window.kakao || !window.kakao.maps) {
@@ -7113,29 +5291,7 @@ function closeDetailPanel() {
     }
 
     bootstrap();
-  
-
 </script>
 </body>
 </html>
-<style>
-/* CTA unify patch Ver 1.464 */
-.detail-agent-cta-btn,
-.map-recommend-agent-btn {
-  font-weight: 700 !important;
-  border-radius: 18px;
-}
 
-.detail-agent-cta-btn.kakao,
-.map-recommend-agent-btn.link {
-  background: #FEE500;
-  color: #111;
-}
-
-.detail-agent-cta-btn.phone,
-.map-recommend-agent-btn.phone {
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  color: #111;
-}
-</style>
