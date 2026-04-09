@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주도 부동산 지도 Ver 1.422</title>
-<meta property="og:title" content="제주도 부동산 지도 Ver 1.422" />
-  <meta property="og:description" content="제주도 부동산 지도 Ver 1.422" />
+  <title>제주도 부동산 지도 Ver 1.423</title>
+<meta property="og:title" content="제주도 부동산 지도 Ver 1.423" />
+  <meta property="og:description" content="제주도 부동산 지도 Ver 1.423" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
   <meta property="og:image" content="https://your-domain.example/og-image.jpg" />
@@ -2681,7 +2681,7 @@
 </style>
 <style>
 
-/* Stable patch overrides - Ver 1.422 */
+/* Stable patch overrides - Ver 1.423 */
 .map-empty-state {
   text-align: left !important;
 }
@@ -2841,7 +2841,7 @@
 
 
 <style>
-/* Map filter premium patch Ver 1.422 */
+/* Map filter premium patch Ver 1.423 */
 .map-filter-bar{
   gap: 10px !important;
   padding: 14px !important;
@@ -2903,7 +2903,7 @@
 
 
 <style>
-/* Recommend title weight fix Ver 1.422 */
+/* Recommend title weight fix Ver 1.423 */
 .map-recommend-title,
 .map-recommend-agent-title {
   font-weight: 900 !important;
@@ -2918,7 +2918,7 @@
 
 
 <style>
-/* Agent card text size up Ver 1.422 */
+/* Agent card text size up Ver 1.423 */
 .map-recommend-agent-reg{
   font-size: 12.5px !important;
 }
@@ -2934,7 +2934,7 @@
 
 
 <style>
-/* Sticky top filter patch Ver 1.422 */
+/* Sticky top filter patch Ver 1.423 */
 .map-filter-bar{
   position:absolute !important;
   top:0 !important;
@@ -3050,7 +3050,7 @@
 
 
 <style>
-/* FIX X buttons visible Ver 1.422 */
+/* FIX X buttons visible Ver 1.423 */
 .map-recommend-close,
 .map-recommend-agent-close{
   display:flex !important;
@@ -3070,7 +3070,7 @@
 
 
 <style>
-/* Fix hidden detail hero controls + recommend close buttons Ver 1.422 */
+/* Fix hidden detail hero controls + recommend close buttons Ver 1.423 */
 .detail-hero-nav,
 .detail-hero-expand,
 .detail-close-btn,
@@ -3095,6 +3095,97 @@
 }
 </style>
 
+
+<style>
+/* Hero controls + topbar align patch Ver 1.423 */
+.detail-hero{
+  position: relative !important;
+  z-index: 5 !important;
+  overflow: hidden !important;
+}
+
+.detail-hero-nav,
+.detail-hero-expand,
+.detail-close-btn,
+.map-recommend-close{
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  z-index: 60 !important;
+}
+
+.detail-hero-nav,
+.detail-hero-expand{
+  background: rgba(0,0,0,0.42) !important;
+  color: #fff !important;
+}
+
+.detail-close-btn{
+  position: relative !important;
+  color: #223244 !important;
+}
+
+.detail-hero-nav.prev::before{
+  content: "\f053";
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.detail-hero-nav.next::before{
+  content: "\f054";
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.detail-hero-expand::before{
+  content: "\f065";
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  font-size: 15px;
+  line-height: 1;
+}
+
+.detail-close-btn::before{
+  content: "\f053";
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  font-size: 17px;
+  line-height: 1;
+}
+
+.map-recommend-close::before{
+  content: "\f00d";
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  font-size: 13px;
+  line-height: 1;
+}
+
+.brand-card{
+  height: 60px !important;
+  min-height: 60px !important;
+  padding: 0 16px !important;
+}
+
+.map-filter-bar{
+  min-height: 60px !important;
+  box-sizing: border-box !important;
+}
+
+@media (max-width: 980px){
+  .brand-card{
+    height: 60px !important;
+    min-height: 60px !important;
+  }
+}
+</style>
+
 </head>
 <body>
   <div class="app">
@@ -3103,7 +3194,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.422</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.423</div>
             </div>
           </div>
 
@@ -3390,7 +3481,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.422';
+    const APP_VERSION = '1.423';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -6008,7 +6099,7 @@ function closeDetailPanel() {
 </body>
 </html>
 <style>
-/* CTA unify patch Ver 1.422 */
+/* CTA unify patch Ver 1.423 */
 .detail-agent-cta-btn,
 .map-recommend-agent-btn {
   font-weight: 700 !important;
