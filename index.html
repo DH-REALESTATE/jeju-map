@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>제주도 부동산 지도 Ver 1.424</title>
-<meta property="og:title" content="제주도 부동산 지도 Ver 1.424" />
-  <meta property="og:description" content="제주도 부동산 지도 Ver 1.424" />
+  <title>제주도 부동산 지도 Ver 1.426</title>
+<meta property="og:title" content="제주도 부동산 지도 Ver 1.426" />
+  <meta property="og:description" content="제주도 부동산 지도 Ver 1.426" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
   <meta property="og:image" content="https://your-domain.example/og-image.jpg" />
@@ -2681,7 +2681,7 @@
 </style>
 <style>
 
-/* Stable patch overrides - Ver 1.424 */
+/* Stable patch overrides - Ver 1.426 */
 .map-empty-state {
   text-align: left !important;
 }
@@ -2841,7 +2841,7 @@
 
 
 <style>
-/* Map filter premium patch Ver 1.424 */
+/* Map filter premium patch Ver 1.426 */
 .map-filter-bar{
   gap: 10px !important;
   padding: 14px !important;
@@ -2903,7 +2903,7 @@
 
 
 <style>
-/* Recommend title weight fix Ver 1.424 */
+/* Recommend title weight fix Ver 1.426 */
 .map-recommend-title,
 .map-recommend-agent-title {
   font-weight: 900 !important;
@@ -2918,7 +2918,7 @@
 
 
 <style>
-/* Agent card text size up Ver 1.424 */
+/* Agent card text size up Ver 1.426 */
 .map-recommend-agent-reg{
   font-size: 12.5px !important;
 }
@@ -2934,7 +2934,7 @@
 
 
 <style>
-/* Sticky top filter patch Ver 1.424 */
+/* Sticky top filter patch Ver 1.426 */
 .map-filter-bar{
   position:absolute !important;
   top:0 !important;
@@ -3050,7 +3050,7 @@
 
 
 <style>
-/* FIX X buttons visible Ver 1.424 */
+/* FIX X buttons visible Ver 1.426 */
 .map-recommend-close,
 .map-recommend-agent-close{
   display:flex !important;
@@ -3070,7 +3070,7 @@
 
 
 <style>
-/* Fix hidden detail hero controls + recommend close buttons Ver 1.424 */
+/* Fix hidden detail hero controls + recommend close buttons Ver 1.426 */
 .detail-hero-nav,
 .detail-hero-expand,
 .detail-close-btn,
@@ -3097,7 +3097,7 @@
 
 
 <style>
-/* Hero controls + topbar align patch Ver 1.424 */
+/* Hero controls + topbar align patch Ver 1.426 */
 .detail-hero{
   position: relative !important;
   z-index: 5 !important;
@@ -3186,6 +3186,190 @@
 }
 </style>
 
+
+<style>
+/* Top area exact height align patch Ver 1.426 */
+:root{
+  --topbar-height: 60px;
+}
+
+/* 1) 왼쪽 / 오른쪽 / 맵 상단 높이 완전 통일 */
+.brand-card,
+.detail-topbar,
+.map-filter-bar{
+  height: var(--topbar-height) !important;
+  min-height: var(--topbar-height) !important;
+  max-height: var(--topbar-height) !important;
+  box-sizing: border-box !important;
+}
+
+/* 2) 왼쪽 상단 */
+.brand-card{
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 0 16px !important;
+  border-bottom: 1px solid #e6ebf0 !important;
+}
+
+/* 3) 오른쪽 상세 상단 */
+.detail-topbar{
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 0 12px !important;
+  border-bottom: 1px solid #e6ebf0 !important;
+}
+
+/* 4) 맵 상단 필터 바 */
+.map-filter-bar{
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  max-width: none !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 0 16px !important;
+  border-radius: 0 !important;
+  border: 0 !important;
+  border-bottom: 1px solid #e6ebf0 !important;
+  background: rgba(255,255,255,0.94) !important;
+  box-shadow: 0 8px 20px rgba(15,41,66,0.10) !important;
+  backdrop-filter: blur(14px) !important;
+}
+
+/* 5) 내부 줄맞춤 */
+.brand-card *,
+.detail-topbar *,
+.map-filter-bar *{
+  box-sizing: border-box !important;
+}
+
+.brand-title,
+.detail-title-row,
+.deal-buttons,
+.type-buttons{
+  display: flex;
+  align-items: center;
+}
+
+.deal-buttons,
+.type-buttons{
+  gap: 8px !important;
+  flex-wrap: nowrap !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+.deal-buttons::-webkit-scrollbar,
+.type-buttons::-webkit-scrollbar{
+  display: none !important;
+}
+
+.deal-buttons{
+  flex: 0 0 auto !important;
+}
+
+.type-buttons{
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+}
+
+.deal-buttons button,
+.type-buttons button{
+  height: 36px !important;
+  min-height: 36px !important;
+  padding: 0 14px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+}
+
+/* 6) 상단 요소 아래 영역 위치도 같이 맞춤 */
+.map-result-count{
+  top: calc(var(--topbar-height) + 24px) !important;
+}
+
+.map-side-tools{
+  top: calc(var(--topbar-height) + 58px) !important;
+}
+
+.map-recommend-agent-card{
+  top: calc(var(--topbar-height) + 26px) !important;
+}
+
+/* 7) 모바일 예외 */
+@media (max-width: 980px){
+  .brand-card,
+  .detail-topbar{
+    height: var(--topbar-height) !important;
+    min-height: var(--topbar-height) !important;
+    max-height: var(--topbar-height) !important;
+  }
+
+  .map-filter-bar{
+    height: auto !important;
+    min-height: var(--topbar-height) !important;
+    max-height: none !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+    padding: 10px 12px !important;
+  }
+}
+</style>
+
+
+<style>
+/* Recommend agent order patch Ver 1.426 */
+.map-recommend-agent-content{
+  display:flex !important;
+  flex-direction:column !important;
+  gap:4px !important;
+}
+
+.map-recommend-agent-name{ order:1 !important; }
+.map-recommend-agent-office{ order:2 !important; }
+.map-recommend-agent-address{ order:3 !important; }
+.map-recommend-agent-reg{ order:4 !important; }
+.map-recommend-agent-desc{ order:5 !important; margin-top:2px !important; }
+
+.map-recommend-agent-office{
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  line-height: 1.35 !important;
+}
+
+.map-recommend-agent-address{
+  font-size: 13.5px !important;
+  font-weight: 800 !important;
+  color: #6b7785 !important;
+  line-height: 1.4 !important;
+}
+
+.map-recommend-agent-reg{
+  font-size: 12.5px !important;
+  font-weight: 700 !important;
+  color: #8b97a5 !important;
+  line-height: 1.35 !important;
+}
+
+.map-recommend-agent-desc{
+  font-size: 13.5px !important;
+  font-weight: 700 !important;
+  color: #6b7785 !important;
+  line-height: 1.42 !important;
+}
+</style>
+
 </head>
 <body>
   <div class="app">
@@ -3194,7 +3378,7 @@
         <div class="sidebar-list-panel">
           <div class="brand-card">
             <div class="brand-left">
-              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.424</div>
+              <div class="brand-title" id="appVersionText">제주도 부동산 지도 Ver 1.426</div>
             </div>
           </div>
 
@@ -3406,8 +3590,8 @@
           <div class="map-recommend-agent-content">
             <div class="map-recommend-agent-name" id="mapRecommendAgentName"></div>
             <div class="map-recommend-agent-office" id="mapRecommendAgentOffice"></div>
-            <div class="map-recommend-agent-reg" id="mapRecommendAgentReg"></div>
             <div class="map-recommend-agent-address" id="mapRecommendAgentAddress"></div>
+            <div class="map-recommend-agent-reg" id="mapRecommendAgentReg"></div>
             <div class="map-recommend-agent-desc" id="mapRecommendAgentDesc"></div>
             <div class="map-recommend-agent-actions">
               <a href="#" target="_blank" rel="noopener" class="map-recommend-agent-btn link" id="mapRecommendAgentLinkBtn">
@@ -3481,7 +3665,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.424';
+    const APP_VERSION = '1.426';
 
     document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
 
@@ -6099,7 +6283,7 @@ function closeDetailPanel() {
 </body>
 </html>
 <style>
-/* CTA unify patch Ver 1.424 */
+/* CTA unify patch Ver 1.426 */
 .detail-agent-cta-btn,
 .map-recommend-agent-btn {
   font-weight: 700 !important;
