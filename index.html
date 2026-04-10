@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>REALJEJU.APP Ver 1.550</title>
-<meta property="og:title" content="REALJEJU.APP Ver 1.550" />
-  <meta property="og:description" content="REALJEJU.APP Ver 1.550" />
+  <title>REALJEJU.APP Ver 1.551</title>
+<meta property="og:title" content="REALJEJU.APP Ver 1.551" />
+  <meta property="og:description" content="REALJEJU.APP Ver 1.551" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
   <meta property="og:image" content="https://your-domain.example/og-image.jpg" />
@@ -2874,7 +2874,7 @@
 </style>
 <style>
 
-/* Stable patch overrides - Ver 1.550 */
+/* Stable patch overrides - Ver 1.551 */
 .map-empty-state {
   text-align: left !important;
 }
@@ -3034,7 +3034,7 @@
   <header class="global-topbar">
     <div class="global-topbar-inner">
       <div class="global-topbar-left">
-        <div class="global-brand" id="appVersionText"><i class="fa-solid fa-earth-americas" aria-hidden="true"></i><span class="brand-name">REALJEJU.APP</span><span class="brand-version">Ver 1.550</span></div>
+        <div class="global-brand" id="appVersionText"><i class="fa-solid fa-earth-americas" aria-hidden="true"></i><span class="brand-name">REALJEJU.APP</span><span class="brand-version">Ver 1.551</span></div>
       </div>
 
       <div class="global-topbar-menu">
@@ -3310,7 +3310,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = "1.550";
+    const APP_VERSION = "1.551";
 
     document.title = `REALJEJU.APP Ver ${APP_VERSION}`;
 
@@ -5293,7 +5293,7 @@ function closeDetailPanel() {
     function syncFeatureButtons() {
       const isAll = state.selectedFeatures.size === 0;
 
-      featureButtons.forEach(btn => {
+      (featureButtons || []).forEach(btn => {
         const value = btn.dataset.value;
 
         if (value === "all") {
@@ -5370,7 +5370,7 @@ function closeDetailPanel() {
     }
 
     function initEvents() {
-      keywordInput.addEventListener("input", applyFilter);
+      if (keywordInput) keywordInput.addEventListener("input", applyFilter);
 
       if (detailAreaToggleBtn) {
         detailAreaToggleBtn.style.display = "none";
@@ -5597,7 +5597,7 @@ function closeDetailPanel() {
         });
       });
 
-      featureButtons.forEach(btn => {
+      (featureButtons || []).forEach(btn => {
         btn.addEventListener("click", () => {
           const value = btn.dataset.value;
 
