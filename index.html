@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>REALJEJU.APP Ver 1.554</title>
-<meta property="og:title" content="REALJEJU.APP Ver 1.554" />
-  <meta property="og:description" content="REALJEJU.APP Ver 1.554" />
+  <title>REALJEJU.APP Ver 1.555</title>
+<meta property="og:title" content="REALJEJU.APP Ver 1.555" />
+  <meta property="og:description" content="REALJEJU.APP Ver 1.555" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
   <meta property="og:image" content="https://your-domain.example/og-image.jpg" />
@@ -2874,7 +2874,7 @@
 </style>
 <style>
 
-/* Stable patch overrides - Ver 1.554 */
+/* Stable patch overrides - Ver 1.555 */
 .map-empty-state {
   text-align: left !important;
 }
@@ -3034,7 +3034,7 @@
   <header class="global-topbar">
     <div class="global-topbar-inner">
       <div class="global-topbar-left">
-        <div class="global-brand" id="appVersionText"><i class="fa-solid fa-earth-americas" aria-hidden="true"></i><span class="brand-name">REALJEJU.APP</span><span class="brand-version">Ver 1.554</span></div>
+        <div class="global-brand" id="appVersionText"><i class="fa-solid fa-earth-americas" aria-hidden="true"></i><span class="brand-name">REALJEJU.APP</span><span class="brand-version">Ver 1.555</span></div>
       </div>
 
       <div class="global-topbar-menu">
@@ -3310,7 +3310,7 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = "1.554";
+    const APP_VERSION = "1.555";
 
     document.title = `REALJEJU.APP Ver ${APP_VERSION}`;
 
@@ -4195,16 +4195,12 @@
         const res = await fetch(agentPath, { cache: "no-store" });
         if (!res.ok) throw new Error(`agent.json 불러오기 실패: ${res.status}`);
         const data = await res.json();
-
-        const remoteData = data.map((item) => ({
-          ...item,
-          image: toRemotePath(item.image),
-          desc_folder: toRemotePath(item.desc_folder),
-          image_folder: toRemotePath(item.image_folder),
-          agent_folder: toRemotePath(item.agent_folder)
-        }));
-        agentCache[agentPath] = data;
-        return data;
+        const remoteData = {
+          ...data,
+          agentImage: toRemotePath(data?.agentImage)
+        };
+        agentCache[agentPath] = remoteData;
+        return remoteData;
       } catch (e) {
         console.error("agent 로딩 실패", e);
         return null;
@@ -4236,6 +4232,13 @@
         if (!res.ok) throw new Error("properties.json 불러오기 실패");
 
         const data = await res.json();
+        const remoteData = (Array.isArray(data) ? data : []).map((item) => ({
+          ...item,
+          image: toRemotePath(item.image),
+          desc_folder: toRemotePath(item.desc_folder),
+          image_folder: toRemotePath(item.image_folder),
+          agent_folder: toRemotePath(item.agent_folder)
+        }));
 
         const normalized = remoteData
           .map(normalizeProperty)
