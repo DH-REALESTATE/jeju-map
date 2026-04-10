@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>REALJEJU.APP Ver 1.510</title>
-<meta property="og:title" content="REALJEJU.APP Ver 1.510" />
-  <meta property="og:description" content="REALJEJU.APP Ver 1.510" />
+  <title>REALJEJU.APP Ver 1.550</title>
+<meta property="og:title" content="REALJEJU.APP Ver 1.550" />
+  <meta property="og:description" content="REALJEJU.APP Ver 1.550" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
   <meta property="og:image" content="https://your-domain.example/og-image.jpg" />
@@ -17,7 +17,7 @@
 
   <style>
     :root {
-      --sidebar-list-width: 350px;
+      --sidebar-list-width: 360px;
       --detail-panel-width: 400px;
       --sidebar-current-width: var(--sidebar-list-width);
       --brand: #14b8a6;
@@ -27,7 +27,8 @@
       --shadow: 0 12px 30px rgba(15, 41, 66, 0.12);
       --font-ui: "Pretendard", "Noto Sans KR", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
       --font-display: "GmarketSans", "Pretendard", "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
-      --global-topbar-height: 74px;
+      --global-topbar-height: 60px;
+      --sub-topbar-height: 48px;
     }
 
     * {
@@ -48,22 +49,20 @@
 
     body {
       overflow: hidden;
-      transform: scale(0.95);
-      transform-origin: top left;
-      width: calc(100% / 0.95);
-      height: calc(100% / 0.95);
+      width: 100%;
+      height: 100%;
     }
 
     .app {
       position: relative;
       display: grid;
       grid-template-columns: var(--sidebar-current-width) 1fr;
-      height: calc(100vh - var(--global-topbar-height));
+      height: calc(100dvh - var(--global-topbar-height) - var(--sub-topbar-height));
       gap: 0;
     }
 
     .sidebar {
-      height: calc(100vh - var(--global-topbar-height));
+      height: calc(100dvh - var(--global-topbar-height) - var(--sub-topbar-height));
       overflow: hidden;
       background: #f7f8fa;
       color: #1f2a36;
@@ -1039,16 +1038,141 @@
       border-bottom: 1px solid #e6ebf0;
     }
 
+    .sub-topbar {
+      height: var(--sub-topbar-height);
+      background: #fff;
+      border-bottom: 1px solid #e6ebf0;
+      position: relative;
+    }
+
+    .sub-topbar-inner {
+      height: 100%;
+      display: block;
+      position: relative;
+    }
+
+    .sub-topbar-left {
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 360px;
+      height: 100%;
+      background: #f5f7fa;
+      border-right: 1px solid #e6ebf0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+    }
+
+    .sub-topbar-left strong {
+      font-size: 15px;
+      color: #1f6fff;
+      letter-spacing: -0.2px;
+      font-weight: 900;
+    }
+
+    .sub-topbar-left span {
+      font-size: 13px;
+      font-weight: 400;
+      color: #98a2b3;
+    }
+
+    .sub-topbar-right {
+      position: absolute;
+      left: 378px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      align-items: center;
+      min-width: 0;
+      background: #fff;
+      overflow: hidden;
+      padding: 0;
+    }
+
+    .sub-topbar .map-filter-bar {
+      position: static;
+      top: auto;
+      left: auto;
+      z-index: auto;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 16px;
+      max-width: none;
+      width: 100%;
+      padding: 0;
+      border-radius: 0;
+      background: transparent;
+      border: 0;
+      box-shadow: none;
+      backdrop-filter: none;
+      overflow: hidden;
+    }
+
+    
+    
+
+    .sub-topbar .deal-buttons .deal-all-btn.active {
+      background: #1f6fff;
+      border-color: #1a5fe0;
+      color: #fff;
+      box-shadow: 0 8px 18px rgba(31,111,255,0.22);
+    }
+
+.sub-topbar .deal-buttons {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: 0 !important;
+      padding-left: 0 !important;
+    }
+
+    .sub-topbar .deal-buttons::-webkit-scrollbar {
+      display: none;
+    }
+
+    .sub-topbar .deal-buttons button {
+      height: 38px;
+      padding: 0 14px;
+      border-radius: 12px;
+      background: transparent;
+      color: #6b7785;
+      border: 1px solid transparent;
+      box-shadow: none;
+      flex: 0 0 auto;
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: -0.1px;
+    }
+
+    .sub-topbar .deal-buttons button {
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: -0.1px;
+    }
+
+    .sub-topbar .deal-buttons button.active {
+      background: transparent;
+      color: #2563eb;
+      border-color: transparent;
+      box-shadow: none;
+    }
+
     .global-topbar-inner {
       height: 100%;
-      display: grid;
-      grid-template-columns: auto auto 1fr auto;
-      align-items: center;
-      gap: 18px;
-      padding: 0 20px;
+      display: block;
+      position: relative;
+      padding: 0 18px;
     }
 
     .global-topbar-left {
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
       display: inline-flex;
       align-items: center;
       gap: 12px;
@@ -1079,14 +1203,46 @@
       color: #1f2a36;
       letter-spacing: -0.45px;
       white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .global-brand i {
+      font-size: 17px;
+      line-height: 1;
+      flex: 0 0 auto;
+      margin-right: 6px;
+      color: #1f2a36;
+    }
+
+    .global-brand .brand-name {
+      line-height: 1;
+      font-size: 17px;
+      font-weight: 800;
+      color: #1f2a36;
+    }
+
+    .global-brand .brand-version {
+      line-height: 1;
+      font-size: 12px;
+      font-weight: 500;
+      color: #9aa3af;
+      margin-left: 4px;
     }
 
     .global-topbar-menu {
-      display: flex;
+      position: absolute;
+      left: 378px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex !important;
       align-items: center;
-      gap: 16px;
+      justify-content: flex-start;
       min-width: 0;
       overflow: hidden;
+      margin-left: 0 !important;
+      padding-left: 0 !important;
     }
 
     .global-nav-label {
@@ -1106,7 +1262,7 @@
       display: flex;
       flex-direction: row;
       align-items: center;
-      gap: 16px;
+      gap: 12px;
       max-width: none;
       width: 100%;
       padding: 0;
@@ -1121,13 +1277,10 @@
     .global-topbar .deal-buttons,
     .global-topbar .type-buttons {
       display: flex;
-      flex-wrap: nowrap;
       align-items: center;
-      gap: 8px;
-      min-width: 0;
-      overflow-x: auto;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
+      gap: 6px;
+      margin-left: 0 !important;
+      padding-left: 0 !important;
     }
 
     .global-topbar .deal-buttons::-webkit-scrollbar,
@@ -1138,7 +1291,7 @@
     .global-topbar .type-buttons button,
     .global-topbar .deal-buttons button {
       height: 38px;
-      padding: 0 14px;
+      padding: 0 12px;
       border-radius: 12px;
       background: transparent;
       color: #6b7785;
@@ -1147,11 +1300,17 @@
       flex: 0 0 auto;
     }
 
+    .global-topbar .type-buttons button {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.08px;
+    }
+
     .global-topbar .type-buttons button.active,
     .global-topbar .deal-buttons button.active {
-      background: #eef5ff;
+      background: transparent;
       color: #2563eb;
-      border-color: #d7e6ff;
+      border-color: transparent;
       box-shadow: none;
     }
 
@@ -1159,14 +1318,15 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
+      gap: 9px;
     }
 
     .global-topbar .type-buttons button i {
-      font-size: 14px;
+      font-size: 16px;
       line-height: 1;
       color: currentColor;
       flex: 0 0 auto;
+          margin-right: 2px;
     }
 
     .global-topbar .type-buttons button span {
@@ -1357,6 +1517,17 @@
       letter-spacing: -0.1px;
       color: #1f2a36;
       font-weight: 800;
+    }
+
+    
+
+    .brand-card,
+    .panel.search-box,
+    .search-box,
+    .feature-buttons,
+    .list-head,
+    .global-topbar-right {
+      display: none !important;
     }
 
     .property-list {
@@ -1701,14 +1872,14 @@
     .map-wrap {
       position: relative;
       min-width: 0;
-      height: calc(100vh - var(--global-topbar-height));
+      height: calc(100dvh - var(--global-topbar-height) - var(--sub-topbar-height));
       overflow: hidden;
       background: #dde7ef;
     }
 
     #map {
       width: 100%;
-      height: calc(100vh - var(--global-topbar-height));
+      height: calc(100dvh - var(--global-topbar-height) - var(--sub-topbar-height));
     }
 
     .map-filter-bar {
@@ -1913,7 +2084,7 @@
     .map-recommend-head {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 9px;
       padding: 14px 16px 10px;
       border-bottom: 1px solid #eef2f6;
     }
@@ -1950,7 +2121,7 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 9px;
 }
 
     .map-recommend-badges {
@@ -2183,7 +2354,7 @@
 .detail-summary-top {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 9px;
   flex-wrap: wrap;
   margin-bottom: 8px;
 }
@@ -2262,7 +2433,7 @@
 .detail-area-wrap.land-two-line {
   display: inline-flex !important;
   align-items: center !important;
-  gap: 6px;
+  gap: 9px;
   flex-wrap: nowrap !important;
   white-space: nowrap !important;
   width: auto !important;
@@ -2289,7 +2460,7 @@
 .detail-meta-item:first-child .detail-area-wrap {
   display: inline-flex !important;
   align-items: center !important;
-  gap: 6px;
+  gap: 9px;
   flex-wrap: nowrap !important;
   white-space: nowrap !important;
   width: auto !important;
@@ -2454,7 +2625,7 @@
 .card-agent-text {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 9px;
   min-width: 0;
   flex: 1 1 auto;
   white-space: nowrap;
@@ -2703,7 +2874,7 @@
 </style>
 <style>
 
-/* Stable patch overrides - Ver 1.510 */
+/* Stable patch overrides - Ver 1.550 */
 .map-empty-state {
   text-align: left !important;
 }
@@ -2863,66 +3034,50 @@
   <header class="global-topbar">
     <div class="global-topbar-inner">
       <div class="global-topbar-left">
-        
-        <div class="global-brand" id="appVersionText">REALJEJU.APP Ver 1.510</div>
+        <div class="global-brand" id="appVersionText"><i class="fa-solid fa-earth-americas" aria-hidden="true"></i><span class="brand-name">REALJEJU.APP</span><span class="brand-version">Ver 1.550</span></div>
       </div>
-
 
       <div class="global-topbar-menu">
         <div class="map-filter-bar">
           <div class="type-buttons" id="typeButtons">
-            <button type="button" data-value="all" class="active">전체</button>
-            <button type="button" data-value="아파트오피스텔"><i class="fa-regular fa-building" aria-hidden="true"></i><span>아파트ㆍ오피스텔</span></button>
-            <button type="button" data-value="빌라주택">빌라ㆍ주택</button>
-            <button type="button" data-value="원룸">원룸ㆍ투룸</button>
-            <button type="button" data-value="상가">상가ㆍ사무실</button>
-            <button type="button" data-value="토지">토지ㆍ임야</button>
-          </div>
-
-          <div class="deal-buttons" id="dealButtons">
-            <button type="button" data-value="all" class="active">전체</button>
-            <button type="button" data-value="매매">매매</button>
-            <button type="button" data-value="전세">전세</button>
-            <button type="button" data-value="월세">월세</button>
-            <button type="button" data-value="년세">년세</button>
+            <button type="button" data-value="아파트오피스텔"><i class="fa-solid fa-building" aria-hidden="true"></i><span>아파트ㆍ오피스텔</span></button>
+            <button type="button" data-value="빌라주택"><i class="fa-solid fa-house" aria-hidden="true"></i><span>빌라ㆍ주택</span></button>
+            <button type="button" data-value="원룸"><i class="fa-solid fa-hotel" aria-hidden="true"></i><span>원룸ㆍ투룸</span></button>
+            <button type="button" data-value="상가"><i class="fa-solid fa-shop" aria-hidden="true"></i><span>상가ㆍ사무실</span></button>
+            <button type="button" data-value="토지"><i class="fa-solid fa-draw-polygon" aria-hidden="true"></i><span>토지ㆍ임야</span></button>
           </div>
         </div>
       </div>
-
-      <div class="global-topbar-right">
-        <div class="global-sort-chip">최신순</div>
-      </div>
     </div>
   </header>
+
+  <div class="sub-topbar">
+    <div class="sub-topbar-inner">
+      <div class="sub-topbar-left">
+        <strong id="listInfoText">총 0개 매물</strong>
+        <span>최신순</span>
+      </div>
+
+      <div class="sub-topbar-right">
+        <div class="map-filter-bar">
+          <div class="deal-buttons" id="dealButtons">
+            <button type="button" data-value="전체" >전체</button>
+            <button type="button" data-value="매매">매매</button>
+            <button type="button" data-value="전세">전세</button>
+            <button type="button" data-value="년세">년세</button>
+            <button type="button" data-value="월세">월세</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+    </div>
+  </div>
 
   <div class="app">
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-inner">
         <div class="sidebar-list-panel">
-          <div class="brand-card">
-            <div class="brand-left">
-              <div class="brand-title">REALJEJU.APP Ver 1.510</div>
-            </div>
-          </div>
-
-          <div class="panel search-box">
-            
-            <input type="text" id="keyword" placeholder="지역명, 주소, 키워드 검색" />
-<div class="feature-buttons" id="featureButtons">
-              <button type="button" data-value="all" class="all-active">전체</button>
-              <button type="button" data-value="신축">신축</button>
-              <button type="button" data-value="오션뷰">오션뷰</button>
-              <button type="button" data-value="생활권">생활권</button>
-              <button type="button" data-value="투자용">투자용</button>
-              <button type="button" data-value="급매">급매</button>
-            </div>
-          </div>
-
-          <div class="list-head">
-            <strong id="listInfoText">총 0개 매물</strong>
-            <span>최신순</span>
-          </div>
-
           <div class="property-list" id="propertyList"></div>
         </div>
 
@@ -3155,9 +3310,9 @@
 
   <script>
     const UI_FONT_STACK = 'Pretendard, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = '1.510';
+    const APP_VERSION = "1.550";
 
-    document.title = `제주 프리미엄 부동산 지도 Ver ${APP_VERSION}`;
+    document.title = `REALJEJU.APP Ver ${APP_VERSION}`;
 
     const state = {
       map: null,
@@ -3220,7 +3375,7 @@
     const appVersionText = document.getElementById("appVersionText");
 
     if (appVersionText) {
-      appVersionText.textContent = `제주도 부동산 지도 Ver ${APP_VERSION}`;
+      appVersionText.innerHTML = `<i class="fa-solid fa-earth-americas" aria-hidden="true"></i><span class="brand-name">REALJEJU.APP</span><span class="brand-version">Ver ${APP_VERSION}</span>`;
     }
 
     const detailCloseBtn = document.getElementById("detailCloseBtn");
@@ -5622,5 +5777,38 @@ function closeDetailPanel() {
   
 
 </script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const activateGroup = (containerId) => {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    const buttons = Array.from(container.querySelectorAll('button'));
+    if (!buttons.length) return;
+
+    // preserve existing active if present, otherwise set first button active
+    if (!buttons.some(btn => btn.classList.contains('active'))) {
+      buttons[0].classList.add('active');
+    }
+
+    buttons.forEach((btn) => {
+      btn.addEventListener('click', function () {
+        buttons.forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+  };
+
+  activateGroup('typeButtons');
+  activateGroup('dealButtons');
+});
+</script>
+
 </body>
 </html>
+
+<style>
+.sub-topbar-left .sort {
+  margin-left: auto;
+}
+</style>
