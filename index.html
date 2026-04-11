@@ -3,18 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>REALJEJU.APP Ver 1.574</title>
-<meta property="og:title" id="ogTitleMeta" content="REALJEJU.APP Ver 1.574" />
-  <meta property="og:description" id="ogDescriptionMeta" content="REALJEJU.APP Ver 1.574" />
+  <title>REALJEJU.APP Ver 1.585</title>
+<meta property="og:title" id="ogTitleMeta" content="REALJEJU.APP Ver 1.585" />
+  <meta property="og:description" id="ogDescriptionMeta" content="REALJEJU.APP Ver 1.585" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
   <meta property="og:image" content="https://your-domain.example/og-image.jpg" />
-
+  
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"/>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
   <style>
@@ -29,7 +30,7 @@
       --shadow: 0 12px 30px rgba(15, 41, 66, 0.12);
       --font-ui: "Inter", "Pretendard", "Noto Sans KR", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
       --font-display: "Inter", "Pretendard", "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
-      --global-topbar-height: 60px;
+      --global-topbar-height: 64px;
       --sub-topbar-height: 48px;
       --map-control-font-size: 14px;
       --radius-main: 16px;
@@ -144,8 +145,8 @@
       height: 36px;
       min-width: 36px;
       padding: 0 10px;
-      font-weight: 900;
-      font-size: 18px;
+      font-weight: 100;
+      font-size: 24px;
     }
 
 
@@ -259,43 +260,66 @@
     }
 
     .detail-hero-expand,
-    .detail-hero-nav {
-      position: absolute;
-      width: 40px;
-      height: 40px;
-      border: 0;
-      border-radius: var(--radius-small);
-      background: rgba(0,0,0,0.42);
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      backdrop-filter: blur(6px);
-      z-index: 3;
-    }
+.detail-hero-nav {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+  cursor: pointer;
+  z-index: 3;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    background 0.15s ease;
+}
 
-    .detail-hero-expand {
-      top: 12px;
-      right: 12px;
-      font-size: 16px;
-      font-weight: 900;
-    }
+.detail-hero-expand {
+  top: 12px;
+  right: 12px;
+}
 
-    .detail-hero-nav {
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 16px;
-      font-weight: 900;
-    }
+.detail-hero-nav {
+  top: 50%;
+  transform: translateY(-50%);
+}
 
-    .detail-hero-nav.prev {
-      left: 12px;
-    }
+.detail-hero-nav.prev {
+  left: 12px;
+}
 
-    .detail-hero-nav.next {
-      right: 12px;
-    }
+.detail-hero-nav.next {
+  right: 12px;
+}
+
+.detail-hero-expand i,
+.detail-hero-nav i {
+  font-size: 14px;
+  color: #fff;
+  line-height: 1;
+}
+
+.detail-hero-expand:hover,
+.detail-hero-nav:hover {
+  background: rgba(0,0,0,0.72);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+}
+
+.detail-hero-expand:active {
+  transform: scale(0.94);
+}
+
+.detail-hero-nav:active {
+  transform: translateY(-50%) scale(0.94);
+}
 
     .detail-hero-dots {
       position: absolute;
@@ -465,8 +489,11 @@
     }
 
     .detail-summary-price {
-      font-size: 36px;
-      font-weight: 950;
+      font-family: "IBM Plex Sans", "Inter", sans-serif;
+      font-variant-numeric: tabular-nums;
+  
+      font-size: 38px;
+      font-weight: 1500;
       line-height: 1.05;
       letter-spacing: -1px;
       color: #111827;
@@ -601,6 +628,9 @@
     }
 
     .detail-desc {
+      font-family: "Inter", "Pretendard", sans-serif;
+      font-size: 14px;
+  
       margin-bottom: 16px;
       font-size: 14px;
       color: #334355;
@@ -667,7 +697,7 @@
       min-width: 90px;
       font-size: 14px;
       letter-spacing: -0.1px;
-      font-weight: 800;
+      font-weight: 400;
       color: #7a8794;
       text-align: left;
       line-height: 1.3;
@@ -677,7 +707,7 @@
     .detail-info-value {
       flex: 0 0 auto;
       font-size: 14px;
-      font-weight: 800;
+      font-weight: 600;
       color: #1f2a36;
       text-align: right;
       line-height: 1.35;
@@ -779,6 +809,9 @@
     }
 
     .detail-agent-phone-inline {
+      font-family: "IBM Plex Sans", "Inter", sans-serif;
+      font-variant-numeric: tabular-nums;
+  
       font-size: 14px;
       letter-spacing: -0.1px;
       font-weight: 800;
@@ -994,9 +1027,9 @@
       align-items: center;
       justify-content: center;
       gap: 4px;
-      font-size: 14px;
+      font-size: 13px;
       letter-spacing: -0.1px;
-      font-weight: 900;
+      font-weight: 700;
       cursor: pointer;
       text-decoration: none;
       box-shadow: 0 2px 6px rgba(15, 41, 66, 0.06);
@@ -1247,7 +1280,7 @@
 
     .global-brand .brand-name {
       line-height: 1;
-      font-size: 18px;
+      font-size: 22px;
       font-weight: 800;
       color: #1f2a36;
     }
@@ -1723,7 +1756,7 @@
 
     .card-price {
       font-size: 24px;
-      font-weight: 900;
+      font-weight: 600;
       color: #111827;
       letter-spacing: -0.8px;
       line-height: 1.02;
@@ -1909,6 +1942,100 @@
     #map {
       width: 100%;
       height: calc(100dvh - var(--global-topbar-height) - var(--sub-topbar-height));
+      transition: transform 0.32s ease, filter 0.28s ease;
+      transform-origin: center center;
+    }
+
+    .map-wrap.is-roadview-open #map {
+      transform: scale(0.985);
+      filter: brightness(0.82);
+    }
+
+    .roadview-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 120;
+      overflow: hidden;
+      pointer-events: none;
+      opacity: 0;
+      transform: translateX(24px) scale(1.02);
+      transition: opacity 0.28s ease, transform 0.32s ease;
+      background: #000;
+    }
+
+    .roadview-overlay.open {
+      pointer-events: auto;
+      opacity: 1;
+      transform: translateX(0) scale(1);
+    }
+
+    .roadview-inner {
+      width: 100%;
+      height: 100%;
+    }
+
+    .roadview-close-btn {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      z-index: 130;
+      width: 40px;
+      height: 40px;
+      border: 0;
+      border-radius: var(--radius-small);
+      background: rgba(17,24,39,0.72);
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      backdrop-filter: blur(6px);
+      opacity: 0;
+      transform: translateY(-6px);
+      transition: opacity 0.2s ease 0.08s, transform 0.24s ease 0.08s, background 0.18s ease;
+    }
+
+    .roadview-close-btn:hover {
+      background: rgba(17,24,39,0.84);
+    }
+
+    .roadview-close-btn i {
+      font-size: 17px;
+      line-height: 1;
+    }
+
+    .roadview-fullscreen-btn {
+      position: absolute;
+      top: 16px;
+      right: 64px;
+      z-index: 130;
+      height: 40px;
+      padding: 0 14px;
+      border: 0;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.92);
+      color: #111827;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      backdrop-filter: blur(6px);
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: -0.1px;
+      opacity: 0;
+      transform: translateY(-6px);
+      transition: opacity 0.2s ease 0.08s, transform 0.24s ease 0.08s, background 0.18s ease;
+    }
+
+    .roadview-fullscreen-btn:hover {
+      background: rgba(255,255,255,0.98);
+    }
+
+    .roadview-overlay.open .roadview-close-btn,
+    .roadview-overlay.open .roadview-fullscreen-btn {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     .map-filter-bar {
@@ -2025,16 +2152,22 @@
       width: 40px;
       height: 40px;
       min-width: 40px;
-      border: 0;
-      border-radius: var(--radius-small);
-      background: rgba(0,0,0,0.65);
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(0,0,0,0.55);
       color: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.25);
       z-index: 2;
+      transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease,
+        background 0.15s ease;
     }
 
     .detail-image-lightbox-nav {
@@ -2055,18 +2188,274 @@
       right: 18px;
     }
 
+    .detail-image-lightbox-nav:hover,
+    .detail-image-lightbox-close:hover {
+      background: rgba(0,0,0,0.72);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+    }
+
+    .detail-image-lightbox-nav:active {
+      transform: translateY(-50%) scale(0.94);
+    }
+
+    .detail-image-lightbox-close:active {
+      transform: scale(0.94);
+    }
+
     .detail-image-lightbox-nav i,
     .detail-image-lightbox-close i {
-      font-size: 18px;
-      font-weight: 900;
+      font-size: 16px;
+      color: #fff;
       line-height: 1;
     }
 
-    .detail-image-lightbox-close i {
-      font-size: 16px;
+    .map-agent-card {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      z-index: 33;
+      width: 486px;
+      border-radius: var(--radius-main);
+      background: rgba(255,255,255,0.98);
+      border: 1px solid rgba(15, 41, 66, 0.08);
+      box-shadow: 0 16px 36px rgba(15, 41, 66, 0.16);
+      backdrop-filter: blur(10px);
+      overflow: hidden;
+      display: none;
     }
 
+    .map-agent-close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 28px;
+      height: 28px;
+      border: 0;
+      border-radius: var(--radius-small);
+      background: rgba(15, 41, 66, 0.08);
+      color: #506070;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 2;
+    }
 
+    .map-agent-close:hover {
+      background: rgba(15, 41, 66, 0.08);
+      color: #506070;
+    }
+
+    .map-agent-close i {
+      font-size: 14px;
+      line-height: 1;
+    }
+
+    .map-agent-head {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 14px 16px 10px;
+      border-bottom: 1px solid #eef2f6;
+    }
+
+    .map-agent-head-title {
+      font-size: 18px;
+      font-weight: 900;
+      color: #2563eb;
+      letter-spacing: -0.3px;
+    }
+
+    .map-agent-head-sub {
+      font-size: 15px;
+      font-weight: 900;
+      color: #1f2a36;
+      letter-spacing: -0.2px;
+    }
+
+    .map-agent-body {
+      display: grid;
+      grid-template-columns: 124px 1fr;
+      gap: 12px;
+      padding: 12px 14px 14px;
+    }
+
+    .map-agent-photo {
+      height: 118px;
+      border-radius: var(--radius-small);
+      background: #eef3f7 center / cover no-repeat;
+      box-shadow: 0 8px 20px rgba(15, 41, 66, 0.10);
+      overflow: hidden;
+    }
+
+    .map-agent-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      background: #f4f7fb;
+    }
+
+    .map-agent-content {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .map-agent-name-row {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      min-width: 0;
+      flex-wrap: wrap;
+    }
+
+    .map-agent-name-role {
+      font-size: 15px;
+      font-weight: 900;
+      color: #111827;
+      line-height: 1.35;
+      letter-spacing: -0.2px;
+    }
+
+    .map-agent-badges {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      flex-wrap: wrap;
+      margin-bottom: 0;
+    }
+
+    .map-agent-badge {
+      display: inline-flex;
+      align-items: center;
+      height: 22px;
+      padding: 0 10px;
+      border-radius: var(--radius-pill);
+      background: #eef5ff;
+      color: #2563eb;
+      font-size: 11px;
+      font-weight: 800;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .map-agent-badge.secondary {
+      background: #f3eefe;
+      color: #7c4dff;
+    }
+
+    .map-agent-name {
+      font-size: 24px;
+      font-weight: 950;
+      color: #111827;
+      line-height: 1.08;
+      letter-spacing: -0.8px;
+      margin: 0;
+    }
+
+    .map-agent-office {
+      font-size: 18px;
+      font-weight: 900;
+      color: #1f6fff;
+      letter-spacing: -0.25px;
+      line-height: 1.35;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .map-agent-desc {
+      display: none !important;
+    }
+
+    .map-agent-badge.secondary {
+      display: none !important;
+    }
+
+    .map-agent-desc {
+      font-size: 13px;
+      font-weight: 800;
+      color: #7c4dff;
+      line-height: 1.4;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .map-agent-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 0px;
+      margin-top: 2px;
+    }
+
+    .map-agent-meta-row {
+      display: flex;
+      align-items: center;
+      gap: 0px;
+      min-width: 0;
+      min-height: 24px;
+    }
+
+    .map-agent-meta-label {
+      width: 72px;
+      flex: 0 0 72px;
+      display: flex;
+      align-items: center;
+      margin: 0;
+      padding: 0;
+      font-size: 13px;
+      font-weight: 700;
+      color: #9aa3af;
+      line-height: 1.35;
+      white-space: nowrap;
+      font-family: var(--font-ui);
+    }
+
+    .map-agent-meta-value {
+      flex: 1 1 auto;
+      display: flex;
+      align-items: center;
+      min-height: 24px;
+      margin: 0;
+      padding: 0;
+      font-family: var(--font-ui);
+      font-variant-numeric: normal;
+      font-size: 14px;
+      font-weight: 700;
+      color: #4b5563;
+      letter-spacing: -0.12px;
+      line-height: 1.35;
+      min-width: 0;
+      white-space: nowrap;
+      overflow: visible;
+      text-overflow: clip;
+      word-break: normal;
+    }
+
+    #mapAgentAddress {
+      white-space: normal;
+      line-height: 1.45;
+      word-break: keep-all;
+    }
+
+    #mapAgentRegNo {
+      line-height: 1.35;
+    }
+
+    #mapAgentPhone {
+      display: flex;
+      align-items: center;
+      font-size: 20px;
+      font-weight: 800;
+      color: #1f2a36;
+      letter-spacing: -0.18px;
+      line-height: 1.35;
+      font-family: var(--font-ui);
+      font-variant-numeric: normal;
+    }
     .map-recommend-close {
       position: absolute;
       top: 10px;
@@ -2180,13 +2569,16 @@
     }
 
     .map-recommend-price {
-  font-size: 24px;
-  font-weight: 950;
-  color: #111827;
-  line-height: 1.08;
-  letter-spacing: -0.8px;
-  margin: 0;
-}
+        font-family: "IBM Plex Sans", "Inter", sans-serif;
+        font-variant-numeric: tabular-nums;
+  
+        font-size: 24px;
+        font-weight: 950;
+        color: #111827;
+        line-height: 1.08;
+        letter-spacing: -0.8px;
+        margin: 0;
+    }
 
     .map-recommend-title-text {
       font-size: 15px;
@@ -2263,6 +2655,85 @@
       }
 
       .map-result-count { top: 124px; }
+
+      .map-agent-card {
+        top: 12px;
+        right: 12px;
+        left: 12px;
+        width: auto;
+        max-width: none;
+      }
+
+      .map-agent-head {
+        gap: 7px;
+        padding: 12px 14px 9px;
+      }
+
+      .map-agent-head-title {
+        font-size: 16px;
+      }
+
+      .map-agent-head-sub {
+        font-size: 13px;
+      }
+
+      .map-agent-body {
+        grid-template-columns: 96px 1fr;
+        gap: 10px;
+        padding: 11px 12px 12px;
+      }
+
+      .map-agent-photo {
+        height: 96px;
+      }
+
+      .map-agent-content {
+        gap: 6px;
+      }
+
+      .map-agent-name {
+        font-size: 20px;
+      }
+
+      .map-agent-office {
+        font-size: 14px;
+      }
+
+      .map-agent-desc {
+        font-size: 12px;
+      }
+
+     .map-agent-meta-row {
+        display:flex;
+        align-items:center;
+        gap:10px;
+        min-height:24px;
+      }
+
+     .map-agent-meta-label {
+        width:72px;
+        flex:0 0 72px;
+        font-size:13px;
+        font-weight:800;
+        color:#9aa3af;
+        line-height:1.35;
+        margin:0;
+        padding:0;
+        transform:none;
+        font-family:var(--font-ui);
+      }
+
+      .map-agent-meta-value {
+        flex:1 1 auto;
+        font-size:14px;
+        font-weight:700;
+        color:#4b5563;
+        font-family:var(--font-ui);
+        font-variant-numeric:normal;
+        line-height:1.35;
+        margin:0;
+        padding:0;
+      }
 
       .detail-image-lightbox-nav,
       .detail-image-lightbox-close {
@@ -2353,7 +2824,7 @@
 
 /* area layout fix */
 .card-spec {
-  font-size: 14px;
+  font-size: 12px;
       letter-spacing: -0.1px;
   color: #667382;
   line-height: 1.5;
@@ -2595,7 +3066,7 @@
 }
 
 .card-title {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 900;
   line-height: 1.44;
   margin-bottom: 7px;
@@ -2622,7 +3093,10 @@
 }
 
 .card-price {
-  font-size: 24px;
+  font-family: "IBM Plex Sans", "Inter", sans-serif;
+  font-variant-numeric: tabular-nums;
+  
+  font-size: 28px;
   font-weight: 600;
   letter-spacing: -0.3px;
   color: #111827;   /* 완전 블랙 대신 살짝 부드럽게 */
@@ -2811,7 +3285,7 @@
 .card-address,
 .detail-summary-address,
 .detail-desc {
-  font-weight: 600;
+  font-weight: 400;
 }
 
 .card-badge,
@@ -3075,7 +3549,7 @@
   <header class="global-topbar">
     <div class="global-topbar-inner">
       <div class="global-topbar-left">
-        <div class="global-brand" id="appVersionText"><i class="fa-solid fa-earth-americas" aria-hidden="true"></i><span class="brand-name">REALJEJU.APP</span><span class="brand-version">Ver 1.571</span></div>
+        <div class="global-brand" id="appVersionText"><i class="fa-solid fa-map-location-dot"" aria-hidden="true"></i><span class="brand-name">REALJEJU.APP</span><span class="brand-version">Ver 1.571</span></div>
       </div>
 
       <div class="global-topbar-menu">
@@ -3129,7 +3603,7 @@
                 <i class="fa-solid fa-arrow-left"></i>
               </button>
               <div class="detail-top-actions">
-                <button type="button" class="detail-icon-btn" id="detailShareBtn" onclick="toggleDetailShareMenu(event)"><i class="fa-solid fa-arrow-up-from-bracket"></i></button>
+                <button type="button" class="detail-icon-btn" id="detailShareBtn" onclick="toggleDetailShareMenu(event)"><i class="fa-solid  fa-share-nodes"></i></button>
                 <button type="button" class="detail-icon-btn"><i class="fa-regular fa-bookmark"></i></button>
                 <button type="button" class="detail-icon-btn"><i class="fa-solid fa-ellipsis-vertical"></i></button>
 
@@ -3287,6 +3761,45 @@
 
       <div class="map-result-count" id="mapResultCount">총 0건</div>
 
+
+
+      <div class="map-agent-card" id="mapAgentCard" style="display:none;">
+        <button type="button" class="map-agent-close" id="mapAgentCloseBtn" aria-label="추천 공인중개사 닫기">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div class="map-agent-head">
+          <div class="map-agent-head-title">추천 공인중개사</div>
+          <div class="map-agent-head-sub">믿을 수 있는 전문가</div>
+        </div>
+        <div class="map-agent-body">
+          <div class="map-agent-photo" id="mapAgentPhoto"></div>
+          <div class="map-agent-content">
+            <div class="map-agent-badges">
+              <span class="map-agent-badge">추천 중개사</span>
+              <span class="map-agent-badge secondary" id="mapAgentBadgeDesc" style="display:none;">전문 분야</span>
+            </div>
+            <div class="map-agent-name-row"><div class="map-agent-name" id="mapAgentName">추천 공인중개사</div><div class="map-agent-name-role" id="mapAgentNameRole">대표</div></div>
+            <div class="map-agent-office" id="mapAgentOffice">공인중개사사무소</div>
+            <div class="map-agent-desc" id="mapAgentDesc">믿을 수 있는 전문가</div>
+            <div class="map-agent-meta">
+              <div class="map-agent-meta-row">
+                <div class="map-agent-meta-label">주소</div>
+                <div class="map-agent-meta-value" id="mapAgentAddress">-</div>
+              </div>
+              <div class="map-agent-meta-row">
+                <div class="map-agent-meta-label">등록번호</div>
+                <div class="map-agent-meta-value" id="mapAgentRegNo">-</div>
+              </div>
+              <div class="map-agent-meta-row">
+                <div class="map-agent-meta-label">전화번호</div>
+                <div class="map-agent-meta-value" id="mapAgentPhone">-</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
       <div class="map-recommend-card" id="mapRecommendCard" style="display:none;">
         <button type="button" class="map-recommend-close" id="mapRecommendCloseBtn" aria-label="추천 매물 닫기">
           <i class="fa-solid fa-xmark"></i>
@@ -3352,7 +3865,7 @@
   <script>
     const UI_FONT_STACK = 'Inter, Pretendard, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
     const APP_NAME = "REALJEJU.APP";
-    const APP_VERSION = "1.574";
+    const APP_VERSION = "1.585";
 
     function applyAppVersion() {
       const fullVersionText = `${APP_NAME} Ver ${APP_VERSION}`;
@@ -3379,11 +3892,14 @@
       selectedClusterKey: null,
       lockedListIds: null,
       recommendItem: null,
+      recommendAgent: null,
       lastRecommendPoolKey: "",
-      isRecommendCardDismissed: false
+      isRecommendCardDismissed: false,
+      isRecommendAgentDismissed: false
     };
 
     let recommendIds = [];
+    let recommendAgents = [];
 
     const REMOTE_BASE = "https://jeju-map.vercel.app/";
 
@@ -3421,6 +3937,17 @@
     const mapTypeCadastralBtn = document.getElementById("mapTypeCadastralBtn");
     const areaUnitPyBtn = document.getElementById("areaUnitPyBtn");
     const areaUnitM2Btn = document.getElementById("areaUnitM2Btn");
+    const mapAgentCard = document.getElementById("mapAgentCard");
+    const mapAgentCloseBtn = document.getElementById("mapAgentCloseBtn");
+    const mapAgentPhoto = document.getElementById("mapAgentPhoto");
+    const mapAgentName = document.getElementById("mapAgentName");
+    const mapAgentNameRole = document.getElementById("mapAgentNameRole");
+    const mapAgentOffice = document.getElementById("mapAgentOffice");
+    const mapAgentDesc = document.getElementById("mapAgentDesc");
+    const mapAgentBadgeDesc = document.getElementById("mapAgentBadgeDesc");
+    const mapAgentAddress = document.getElementById("mapAgentAddress");
+    const mapAgentRegNo = document.getElementById("mapAgentRegNo");
+    const mapAgentPhone = document.getElementById("mapAgentPhone");
     const mapRecommendCard = document.getElementById("mapRecommendCard");
     const mapRecommendCloseBtn = document.getElementById("mapRecommendCloseBtn");
     const mapRecommendBody = document.getElementById("mapRecommendBody");
@@ -3440,7 +3967,7 @@
     let currentSort = "latest";
 
     if (appVersionText) {
-      appVersionText.innerHTML = `<i class="fa-solid fa-earth-americas" aria-hidden="true"></i><span class="brand-name">${APP_NAME}</span><span class="brand-version">Ver ${APP_VERSION}</span>`;
+      appVersionText.innerHTML = `<i class="fa-solid fa-brands fa-hashnode" aria-hidden="true"></i><span class="brand-name">${APP_NAME}</span><span class="brand-version">Ver ${APP_VERSION}</span>`;
     }
 
     syncSortLabelUI();
@@ -3672,6 +4199,95 @@
       return source[randomIndex];
     }
 
+
+    function normalizeRecommendAgent(agent) {
+      if (!agent || typeof agent !== "object") return null;
+      const normalizedPhone = String(agent.phone || "").trim();
+      return {
+        ...agent,
+        id: Number(agent.id),
+        image: toRemotePath(agent.image || ""),
+        phone: normalizedPhone,
+        office: agent.office || "",
+        name: agent.name || "",
+        desc: agent.desc || "",
+        address: agent.address || "",
+        regNo: agent.regNo || "",
+        link: agent.link || ""
+      };
+    }
+
+    function getRecommendationAgentCandidate() {
+      if (!Array.isArray(recommendAgents) || !recommendAgents.length) return null;
+      if (recommendAgents.length === 1) return recommendAgents[0];
+
+      const previousId = state.recommendAgent ? Number(state.recommendAgent.id) : null;
+      const candidates = recommendAgents.filter(agent => Number(agent.id) !== previousId);
+      const source = candidates.length ? candidates : recommendAgents;
+      const randomIndex = Math.floor(Math.random() * source.length);
+      return source[randomIndex];
+    }
+
+    function renderRecommendAgentCard(agent) {
+      if (!mapAgentCard) return;
+
+      if (!agent || state.isRecommendAgentDismissed) {
+        mapAgentCard.style.display = "none";
+        mapAgentCard.setAttribute("aria-hidden", "true");
+        return;
+      }
+
+      state.recommendAgent = agent;
+      mapAgentCard.style.display = "block";
+      mapAgentCard.setAttribute("aria-hidden", "false");
+
+      if (mapAgentPhoto) {
+        mapAgentPhoto.style.backgroundImage = agent.image ? `url('${escapeHtml(agent.image)}')` : "none";
+      }
+      if (mapAgentName) {
+        mapAgentName.textContent = agent.name || "추천 공인중개사";
+      }
+      if (mapAgentNameRole) {
+        mapAgentNameRole.textContent = "대표";
+      }
+      if (mapAgentOffice) {
+        mapAgentOffice.textContent = agent.office || "공인중개사사무소";
+      }
+      if (mapAgentDesc) {
+        mapAgentDesc.textContent = "";
+      }
+      if (mapAgentBadgeDesc) {
+        mapAgentBadgeDesc.textContent = "";
+        mapAgentBadgeDesc.style.display = "none";
+      }
+      if (mapAgentAddress) {
+        mapAgentAddress.textContent = agent.address || "-";
+      }
+      if (mapAgentRegNo) {
+        mapAgentRegNo.textContent = agent.regNo || "-";
+      }
+      if (mapAgentPhone) {
+        mapAgentPhone.textContent = agent.phone || "-";
+      }
+    }
+
+    function refreshRecommendAgentCard() {
+      if (!mapAgentCard) return;
+      if (state.isRecommendAgentDismissed) {
+        renderRecommendAgentCard(null);
+        return;
+      }
+
+      const hasCurrent = state.recommendAgent
+        && recommendAgents.some(agent => Number(agent.id) === Number(state.recommendAgent.id));
+
+      if (!hasCurrent) {
+        state.recommendAgent = getRecommendationAgentCandidate();
+      }
+
+      renderRecommendAgentCard(state.recommendAgent);
+    }
+
     function renderRecommendationCard(item) {
       if (!mapRecommendCard) return;
 
@@ -3753,6 +4369,7 @@
           renderList(sortedLockedItems);
           setResultInfo(`선택 매물 ${sortedLockedItems.length}건`);
           setListInfo(`총 ${sortedLockedItems.length}개 매물`);
+          refreshRecommendAgentCard();
           refreshRecommendationCard(state.filtered);
           return lockedItems;
         }
@@ -3771,6 +4388,7 @@
       renderList(viewportItems);
       setResultInfo(`총 ${viewportItems.length}건`);
       setListInfo(`총 ${viewportItems.length}개 매물`);
+      refreshRecommendAgentCard();
       refreshRecommendationCard(state.filtered);
       return viewportItems;
     }
@@ -4266,7 +4884,7 @@
       }
     }
 
-    async function loadRecommendIds() {
+    async function loadRecommendData() {
       try {
         const res = await fetch("https://jeju-map.vercel.app/recommend.json", { cache: "no-store" });
         if (!res.ok) throw new Error(`recommend.json 불러오기 실패: ${res.status}`);
@@ -4279,9 +4897,14 @@
         recommendIds = rawIds
           .map(value => Number(value))
           .filter(value => Number.isFinite(value));
+
+        recommendAgents = (Array.isArray(data?.agents) ? data.agents : [])
+          .map(normalizeRecommendAgent)
+          .filter(Boolean);
       } catch (err) {
-        console.error("추천 ID 불러오기 실패:", err);
+        console.error("추천 데이터 불러오기 실패:", err);
         recommendIds = [];
+        recommendAgents = [];
       }
     }
 
@@ -4522,6 +5145,49 @@ function getBadgeTextMetrics(text) {
       });
     }
 
+    function findClusterContainingItem(item) {
+      if (!item || !state.clusterer) return null;
+      const clusters = state.clusterer.getClusters ? state.clusterer.getClusters() : state.clusterer._clusters;
+      if (!clusters || !clusters.length) return null;
+
+      const targetId = Number(item.id);
+      for (const cluster of clusters) {
+        if (!cluster || typeof cluster.getMarkers !== "function") continue;
+        const clusterItems = cluster.getMarkers().map(marker => marker.__property).filter(Boolean);
+        if (!clusterItems.length) continue;
+        if (clusterItems.some(v => Number(v.id) === targetId)) {
+          return { cluster, clusterItems };
+        }
+      }
+      return null;
+    }
+    function findClusterByIds(targetIds) {
+      if (!Array.isArray(targetIds) || !targetIds.length || !state.clusterer) return null;
+      const clusters = state.clusterer.getClusters ? state.clusterer.getClusters() : state.clusterer._clusters;
+      if (!clusters || !clusters.length) return null;
+
+      const wanted = [...new Set(targetIds.map(Number).filter(Number.isFinite))]
+        .sort((a, b) => a - b)
+        .join(",");
+      if (!wanted) return null;
+
+      for (const cluster of clusters) {
+        if (!cluster || typeof cluster.getMarkers !== "function") continue;
+        const clusterItems = cluster.getMarkers().map(marker => marker.__property).filter(Boolean);
+        if (!clusterItems.length) continue;
+        const key = clusterItems
+          .map(v => Number(v.id))
+          .filter(Number.isFinite)
+          .sort((a, b) => a - b)
+          .join(",");
+        if (key === wanted) {
+          return { cluster, clusterItems };
+        }
+      }
+      return null;
+    }
+
+
     async function closeRoadviewPanel() {
       try {
         if (document.fullscreenElement === roadviewOverlay) {
@@ -4531,8 +5197,12 @@ function getBadgeTextMetrics(text) {
         console.error("전체화면 해제 실패:", err);
       }
 
+      const mapWrap = document.querySelector(".map-wrap");
       if (roadviewOverlay) {
-        roadviewOverlay.style.display = "none";
+        roadviewOverlay.classList.remove("open");
+      }
+      if (mapWrap) {
+        mapWrap.classList.remove("is-roadview-open");
       }
     }
 
@@ -5046,61 +5716,22 @@ function closeDetailPanel() {
 
       const roadviewContainer = document.createElement("div");
       roadviewContainer.id = "roadviewPanel";
-      roadviewContainer.style.cssText = `
-        position:absolute;
-        top:52px;
-        right:10px;
-        width:min(720px, calc(100% - 20px));
-        height:min(520px, calc(100vh - 80px));
-        z-index:50;
-        background:#fff;
-        border-radius:14px;
-        overflow:hidden;
-        box-shadow:0 18px 40px rgba(0,0,0,0.22);
-        display:none;
-      `;
+      roadviewContainer.className = "roadview-overlay";
 
       const closeBtn = document.createElement("button");
       closeBtn.type = "button";
-      closeBtn.textContent = "✕";
-      closeBtn.style.cssText = `
-        position:absolute;
-        top:8px;
-        right:8px;
-        z-index:2;
-        width:32px;
-        height:32px;
-        border:none;
-        border-radius:50%;
-        background:rgba(255,255,255,0.94);
-        cursor:pointer;
-        font-size:14px;
-        font-weight:900;
-        font-family:${UI_FONT_STACK};
-      `;
+      closeBtn.className = "roadview-close-btn";
+      closeBtn.setAttribute("aria-label", "로드뷰 닫기");
+      closeBtn.innerHTML = '<i class="fa-solid fa-xmark" aria-hidden="true"></i>';
 
       const fullscreenBtn = document.createElement("button");
       fullscreenBtn.type = "button";
+      fullscreenBtn.className = "roadview-fullscreen-btn";
       fullscreenBtn.textContent = "전체화면";
-      fullscreenBtn.style.cssText = `
-        position:absolute;
-        top:8px;
-        right:48px;
-        z-index:2;
-        height:32px;
-        padding:0 11px;
-        border:none;
-        border-radius:999px;
-        background:rgba(255,255,255,0.94);
-        cursor:pointer;
-        font-size:12px;
-        font-weight:900;
-        font-family:${UI_FONT_STACK};
-      `;
 
       const inner = document.createElement("div");
       inner.id = "roadviewInner";
-      inner.style.cssText = "width:100%; height:100%;";
+      inner.className = "roadview-inner";
 
       closeBtn.addEventListener("click", async () => {
         await closeRoadviewPanel();
@@ -5141,6 +5772,7 @@ function closeDetailPanel() {
       }
 
       const position = new kakao.maps.LatLng(lat, lng);
+      const mapWrap = document.querySelector(".map-wrap");
 
       roadviewClient.getNearestPanoId(position, 100, function (panoId) {
         if (!panoId) {
@@ -5148,10 +5780,19 @@ function closeDetailPanel() {
           return;
         }
 
-        roadviewOverlay.style.display = "block";
+        if (mapWrap) {
+          mapWrap.classList.add("is-roadview-open");
+        }
+        roadviewOverlay.classList.add("open");
         roadview.setPanoId(panoId, position);
+        setTimeout(() => {
+          if (roadview && typeof roadview.relayout === "function") {
+            roadview.relayout();
+          }
+        }, 30);
       });
     }
+
 
     function clearMapObjects() {
       if (state.clusterer) {
@@ -5276,10 +5917,29 @@ function closeDetailPanel() {
 
       await hideRoadview();
 
-      state.selectedClusterKey = null;
+      const lockedItems = getLockedListItems();
+      const lockedIds = Array.isArray(lockedItems)
+        ? lockedItems.map(v => Number(v.id)).filter(Number.isFinite)
+        : [];
+      const preserveGroupSelection = lockedIds.length > 1 && lockedIds.includes(Number(id));
+
+      if (preserveGroupSelection) {
+        const clusterMatch = findClusterByIds(lockedIds);
+        state.selectedClusterKey = clusterMatch
+          ? getClusterKeyFromItems(clusterMatch.clusterItems)
+          : null;
+        updateMarkerSelection(id, lockedIds);
+      } else {
+        const clusterMatch = findClusterContainingItem(item);
+        if (clusterMatch && Array.isArray(clusterMatch.clusterItems) && clusterMatch.clusterItems.length > 1) {
+          state.selectedClusterKey = getClusterKeyFromItems(clusterMatch.clusterItems);
+        } else {
+          state.selectedClusterKey = null;
+        }
+        updateMarkerSelection(id, [Number(id)]);
+      }
 
       highlightCard(id);
-      updateMarkerSelection(id);
 
       setTimeout(() => {
         refreshClusterBadges();
@@ -5375,7 +6035,6 @@ function closeDetailPanel() {
           if (detailScroll) detailScroll.scrollTop = 0;
           await openDetailPanel(item);
           if (detailScroll) detailScroll.scrollTop = 0;
-          updateMarkerSelection(item.id, [item.id]);
           await focusProperty(item.id);
         });
       });
@@ -5588,6 +6247,16 @@ function closeDetailPanel() {
 
       
       detailCloseBtn.addEventListener("click", closeDetailPanel);
+
+      if (mapAgentCloseBtn) {
+        mapAgentCloseBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          state.isRecommendAgentDismissed = true;
+          state.recommendAgent = null;
+          renderRecommendAgentCard(null);
+        });
+      }
 
       if (mapRecommendCloseBtn) {
         mapRecommendCloseBtn.addEventListener("click", (e) => {
@@ -5944,7 +6613,7 @@ function closeDetailPanel() {
       initEvents();
       selectedDeal = selectedDeal || "all";
       selectedType = selectedType || "all";
-      await loadRecommendIds();
+      await loadRecommendData();
       await loadProperties();
       syncFeatureButtons();
     }
