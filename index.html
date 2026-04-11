@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>REALJEJU.APP Ver 1.585</title>
-<meta property="og:title" id="ogTitleMeta" content="REALJEJU.APP Ver 1.585" />
-  <meta property="og:description" id="ogDescriptionMeta" content="REALJEJU.APP Ver 1.585" />
+  <title>REALJEJU.APP Ver 1.591</title>
+<meta property="og:title" id="ogTitleMeta" content="REALJEJU.APP Ver 1.591" />
+  <meta property="og:description" id="ogDescriptionMeta" content="REALJEJU.APP Ver 1.591" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
   <meta property="og:image" content="https://your-domain.example/og-image.jpg" />
@@ -3363,6 +3363,65 @@
       white-space: pre-line;
     }
 
+
+    /* ===== custom map zoom buttons ===== */
+    .map-zoom-stack {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 34;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+.map-zoom-btn{
+  width:44px;
+  height:44px;
+  border:1px solid rgba(15,41,66,0.12);
+  border-radius:16px;
+  background:rgba(255,255,255,0.96);
+  color:#1f2a36;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 12px 28px rgba(15,41,66,0.14);
+  cursor:pointer;
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+
+  transition:
+    transform 0.14s ease,
+    box-shadow 0.18s ease,
+    background 0.18s ease,
+    border-color 0.18s ease;
+}
+
+    .map-zoom-btn i {
+      font-size: 18px;
+      line-height: 1;
+      pointer-events: none;
+    }
+
+.map-zoom-btn:hover{
+  background:#fff;
+  box-shadow:0 14px 30px rgba(15,41,66,0.18);
+}
+
+.map-zoom-btn:active{
+  transform:scale(0.92);
+  box-shadow:0 8px 18px rgba(15,41,66,0.12);
+}
+
+
+    /* ===== hide Kakao original zoom control ===== */
+    .map-wrap .map_zoomcontrol,
+    .map-wrap .map_controls,
+    .map-wrap .map_typecontrol {
+      display: none !important;
+    }
+
 </style>
 <style>
 
@@ -3751,7 +3810,16 @@
     <main class="map-wrap">
       <div id="map"></div>
 
-      <div class="map-empty-state" id="mapEmptyState">
+      
+      <div class="map-zoom-stack" aria-label="지도 확대 축소">
+        <button type="button" class="map-zoom-btn" id="zoomInBtn" aria-label="지도 확대">
+          <i class="fa-solid fa-plus"></i>
+        </button>
+        <button type="button" class="map-zoom-btn" id="zoomOutBtn" aria-label="지도 축소">
+          <i class="fa-solid fa-minus"></i>
+        </button>
+      </div>
+<div class="map-empty-state" id="mapEmptyState">
         <div class="map-empty-state-desc">
           <div class="empty-title">조건에 맞는 매물이 없습니다.</div>
           <div class="empty-sub">지도를 이동 하거나 필터를 변경해 보세요.</div>
@@ -5619,8 +5687,6 @@ function closeDetailPanel() {
 
       state.map.setMapTypeId(kakao.maps.MapTypeId.ROADMAP);
 
-      const zoomControl = new kakao.maps.ZoomControl();
-      state.map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
 
       state.clusterer = new kakao.maps.MarkerClusterer({
         map: state.map,
@@ -6601,6 +6667,29 @@ function closeDetailPanel() {
     }
 
 
+
+    function initCustomZoomButtons() {
+      const zoomInBtn = document.getElementById("zoomInBtn");
+      const zoomOutBtn = document.getElementById("zoomOutBtn");
+      if (!zoomInBtn || !zoomOutBtn) return;
+
+      zoomInBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (!state.map) return;
+        const nextLevel = Math.max(1, state.map.getLevel() - 1);
+        state.map.setLevel(nextLevel, { animate: { duration: 300 } });
+      });
+
+      zoomOutBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (!state.map) return;
+        state.map.setLevel(state.map.getLevel() + 1, { animate: { duration: 300 } });
+      });
+    }
+
+
     async function bootstrap() {
       if (!window.kakao || !window.kakao.maps) {
         alert("카카오맵 SDK가 로드되지 않았습니다. appkey를 확인하세요.");
@@ -6609,6 +6698,7 @@ function closeDetailPanel() {
 
       updateSidebarWidth();
       initMap();
+      initCustomZoomButtons();
       initRoadview();
       initEvents();
       selectedDeal = selectedDeal || "all";
