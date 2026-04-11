@@ -3,16 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>REALJEJU.APP Ver 1.556</title>
-<meta property="og:title" content="REALJEJU.APP Ver 1.556" />
-  <meta property="og:description" content="REALJEJU.APP Ver 1.556" />
+  <title>REALJEJU.APP Ver 1.574</title>
+<meta property="og:title" id="ogTitleMeta" content="REALJEJU.APP Ver 1.574" />
+  <meta property="og:description" id="ogDescriptionMeta" content="REALJEJU.APP Ver 1.574" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
   <meta property="og:image" content="https://your-domain.example/og-image.jpg" />
 
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"/>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSans.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
   <style>
@@ -25,10 +27,15 @@
       --line: #e7edf3;
       --text: #17212b;
       --shadow: 0 12px 30px rgba(15, 41, 66, 0.12);
-      --font-ui: "Pretendard", "Noto Sans KR", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
-      --font-display: "GmarketSans", "Pretendard", "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      --font-ui: "Inter", "Pretendard", "Noto Sans KR", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      --font-display: "Inter", "Pretendard", "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
       --global-topbar-height: 60px;
       --sub-topbar-height: 48px;
+      --map-control-font-size: 14px;
+      --radius-main: 16px;
+      --radius-small: 10px;
+      --radius-pill: 20px;
+      --radius-round: 9999px;
     }
 
     * {
@@ -85,7 +92,7 @@
       height: 100%;
       overflow-y: auto;
       overflow-x: hidden;
-      background: #f7f8fa;
+      background: #ffffff;
       scrollbar-width: none;
       -ms-overflow-style: none;
     }
@@ -99,6 +106,7 @@
       opacity: 0;
       background: #fff;
       border-left: 1px solid #e6ebf0;
+      border-right: 1px solid #e6ebf0;
       transition: opacity 0.22s ease;
       scrollbar-width: none;
       -ms-overflow-style: none;
@@ -120,7 +128,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 10px 12px;
+      padding: 5.8px 12px;
       border-bottom: 1px solid #eef2f6;
       background: rgba(255,255,255,0.98);
       backdrop-filter: blur(8px);
@@ -132,7 +140,7 @@
       background: transparent;
       color: #223244;
       cursor: pointer;
-      border-radius: 10px;
+      border-radius: var(--radius-small);
       height: 36px;
       min-width: 36px;
       padding: 0 10px;
@@ -153,7 +161,7 @@
       right: 0;
       min-width: 168px;
       padding: 8px;
-      border-radius: 14px;
+      border-radius: var(--radius-main);
       background: rgba(255,255,255,0.98);
       border: 1px solid #e7edf3;
       box-shadow: 0 12px 28px rgba(15, 41, 66, 0.14);
@@ -173,7 +181,7 @@
       width: 100%;
       min-height: 30px;
       border: 0;
-      border-radius: 10px;
+      border-radius: var(--radius-small);
       background: #f7fafc;
       color: #223244;
       font-size: 14px;
@@ -256,7 +264,7 @@
       width: 40px;
       height: 40px;
       border: 0;
-      border-radius: 10px;
+      border-radius: var(--radius-small);
       background: rgba(0,0,0,0.42);
       color: #fff;
       display: flex;
@@ -304,7 +312,7 @@
       width: 8px;
       height: 8px;
       border: 0;
-      border-radius: 20px;
+      border-radius: var(--radius-pill);
       background: rgba(255,255,255,0.42);
       cursor: pointer;
       padding: 0;
@@ -368,7 +376,7 @@
     }
 
     .detail-content {
-      padding: 18px 18px 18px;
+      padding: 18px 18px 0px;
     }
 
 
@@ -386,7 +394,7 @@
       align-items: center;
       height: 24px;
       padding: 0 10px;
-      border-radius: 20px;
+      border-radius: var(--radius-pill);
       background: #f3eefe;
       color: #7c4dff;
       font-size: 14px;
@@ -415,7 +423,7 @@
       align-items: center;
       height: 24px;
       padding: 0 8px;
-      border-radius: 20px;
+      border-radius: var(--radius-pill);
       background: #eef5ff;
       color: #2563eb;
       font-size: 14px;
@@ -445,7 +453,7 @@
       align-items: center;
       height: 24px;
       padding: 0 10px;
-      border-radius: 20px;
+      border-radius: var(--radius-pill);
       background: #eef5ff;
       color: #2563eb;
       font-size: 14px;
@@ -522,7 +530,7 @@
       grid-template-columns: minmax(120px, 1.15fr) minmax(100px, 0.95fr) minmax(100px, 0.95fr);
       gap: 0;
       overflow: hidden;
-      border-radius: 14px;
+      border-radius: var(--radius-main);
       border: 1px solid #eceff3;
       margin-bottom: 16px;
       background: #fff;
@@ -600,7 +608,7 @@
       white-space: pre-line;
       background: linear-gradient(180deg, #ffffff, #fafcff);
       border: 1px solid #eceff3;
-      border-radius: 16px;
+      border-radius: var(--radius-main);
       padding: 16px 18px;
     }
 
@@ -619,7 +627,7 @@
     .detail-info-section {
       background: linear-gradient(180deg, #ffffff, #fbfdff);
       border: 1px solid #e8eef5;
-      border-radius: 18px;
+      border-radius: var(--radius-main);
       padding: 18px 18px 16px;
       box-shadow: 0 6px 18px rgba(15, 41, 66, 0.04);
     }
@@ -680,7 +688,7 @@
     }
 
     .detail-agent-card {
-      border-radius: 18px;
+      border-radius: var(--radius-main);
       border: 1px solid #e9eef4;
       background: linear-gradient(180deg, #ffffff, #fafcff);
       padding: 16px;
@@ -804,7 +812,7 @@
       align-items: center;
       min-height: 28px;
       padding: 0 10px;
-      border-radius: 20px;
+      border-radius: var(--radius-pill);
       background: rgba(3, 199, 90, 0.08);
       border: 1px solid rgba(3, 199, 90, 0.18);
       color: #03C75A;
@@ -822,7 +830,7 @@
       gap: 4px;
       height: 32px;
       padding: 0 11px;
-      border-radius: 20px;
+      border-radius: var(--radius-pill);
       border: 1px solid rgba(3, 199, 90, 0.28);
       background: rgba(3, 199, 90, 0.08);
       color: #03C75A;
@@ -871,7 +879,7 @@
       align-items: center;
       height: 28px;
       padding: 0 10px;
-      border-radius: 20px;
+      border-radius: var(--radius-pill);
       background: rgba(3, 199, 90, 0.08);
       border: 1px solid rgba(3, 199, 90, 0.18);
       color: #03C75A;
@@ -890,7 +898,7 @@
       gap: 4px;
       height: 28px;
       padding: 0 10px;
-      border-radius: 20px;
+      border-radius: var(--radius-pill);
       border: 1px solid rgba(3, 199, 90, 0.28);
       background: rgba(3, 199, 90, 0.08);
       color: #03C75A;
@@ -930,7 +938,7 @@
       min-height: 38px;
       padding: 0 12px;
       border: 0;
-      border-radius: 20px;
+      border-radius: var(--radius-pill);
       background: #eef3f7;
       color: #203040;
       font-size: 14px;
@@ -981,7 +989,7 @@
       min-width: 0;
       height: 30px;
       border: 0;
-      border-radius: 20px;
+      border-radius: var(--radius-pill);
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -1025,7 +1033,7 @@
     .detail-action-btn.kakao-btn {
       background: #FEE500;
       color: #111;
-      border-radius: 20px;
+      border-radius: var(--radius-pill);
       font-weight: 800;
     }
 
@@ -1074,14 +1082,35 @@
     }
 
     .sub-topbar-left span {
-      font-size: 13px;
+      font-size: 15px;
       font-weight: 400;
-      color: #98a2b3;
+      color: #000;
+    }
+
+    #sortLabel {
+      cursor: pointer;
+      user-select: none;
+      transition: color 0.18s ease, font-weight 0.18s ease;
+    }
+
+    #sortLabel.sort-latest {
+      color: #6b7280;
+      font-weight: 400;
+    }
+
+    #sortLabel.sort-price-desc {
+      color: #dc2626;
+      font-weight: 400;
+    }
+
+    #sortLabel.sort-price-asc {
+      color: #2563eb;
+      font-weight: 400;
     }
 
     .sub-topbar-right {
       position: absolute;
-      left: 378px;
+      left: 369px;
       top: 50%;
       transform: translateY(-50%);
       display: flex;
@@ -1125,7 +1154,7 @@
 .sub-topbar .deal-buttons {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 1px;
       margin-left: 0 !important;
       padding-left: 0 !important;
     }
@@ -1209,16 +1238,16 @@
     }
 
     .global-brand i {
-      font-size: 17px;
+      font-size: 15px;
       line-height: 1;
       flex: 0 0 auto;
-      margin-right: 6px;
+      margin-right: 1px;
       color: #1f2a36;
     }
 
     .global-brand .brand-name {
       line-height: 1;
-      font-size: 17px;
+      font-size: 18px;
       font-weight: 800;
       color: #1f2a36;
     }
@@ -1233,7 +1262,7 @@
 
     .global-topbar-menu {
       position: absolute;
-      left: 378px;
+      left: 369px;
       top: 50%;
       transform: translateY(-50%);
       display: flex !important;
@@ -1278,7 +1307,7 @@
     .global-topbar .type-buttons {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 10px;
       margin-left: 0 !important;
       padding-left: 0 !important;
     }
@@ -1345,7 +1374,7 @@
       display: inline-flex;
       align-items: center;
       height: 38px;
-      padding: 0 14px;
+      padding: 0 19px;
       border-radius: 12px;
       background: #f7f9fc;
       border: 1px solid #e6ebf0;
@@ -1383,7 +1412,7 @@
     .panel {
       margin: 12px 12px 10px;
       padding: 14px;
-      border-radius: 18px;
+      border-radius: var(--radius-main);
       background: #fff;
       border: 1px solid #e8eef5;
       box-shadow: 0 8px 22px rgba(15, 41, 66, 0.05);
@@ -1398,7 +1427,7 @@
       height: 60px;
       padding: 0 74px 0 22px;
       border: 2px solid rgba(3, 199, 90, 0.9);
-      border-radius: 14px;
+      border-radius: var(--radius-main);
       outline: none;
       font-size: 16px;
       font-weight: 700;
@@ -1422,7 +1451,7 @@
       right: 0;
       width: 62px;
       height: 60px;
-      border-radius: 0 14px 14px 0;
+      border-radius: 0 var(--radius-main) var(--radius-main) 0;
       background: rgba(3, 199, 90, 0.9);
       color: #fff;
       display: flex;
@@ -1457,7 +1486,7 @@
     .feature-buttons button,
     .reset-list-btn {
       border: 1px solid #dfe5eb;
-      border-radius: 20px;
+      border-radius: var(--radius-pill);
       padding: 7px 9px;
       font-size: 14px;
       letter-spacing: -0.1px;
@@ -1534,14 +1563,14 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
-      padding: 0 12px 18px;
-      background: #f7f8fa;
+      padding: 15px 15px 15px;
+      background: #ffffff;
     }
 
     .card {
   background: linear-gradient(180deg, #ffffff 0%, #fcfdff 100%);
   border: 1px solid #e9eef4;
-  border-radius: 18px;
+  border-radius: var(--radius-main);
   box-shadow: 0 8px 24px rgba(15, 41, 66, 0.05);
   cursor: pointer;
   padding: 0;
@@ -1566,7 +1595,7 @@
       width: 96px;
       min-width: 96px;
       height: 96px;
-      border-radius: 12px;
+      border-radius: var(--radius-small);
       background-size: cover;
       background-position: center;
       position: relative;
@@ -1603,7 +1632,7 @@
       align-items: center;
       height: 22px;
       padding: 0 10px;
-      border-radius: 20px;
+      border-radius: var(--radius-pill);
       background: #f3eefe;
       color: #7c4dff;
       font-size: 11px;
@@ -1682,7 +1711,7 @@
       align-items: center;
       height: 24px;
       padding: 0 8px;
-      border-radius: 20px;
+      border-radius: var(--radius-pill);
       background: #eef5ff;
       color: #1f6fff;
       font-size: 14px;
@@ -1929,24 +1958,23 @@
     }
 
     .map-result-count {
-      display: none !important;
-      position: absolute;
-      top: 120px;
-      left: 12px;
-      z-index: 30;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      min-height: 46px;
-      padding: 10px 15px;
-      border-radius: 16px;
-      background: rgba(15,41,66,0.92);
-      color: #fff;
-      font-size: 14px;
-      font-weight: 900;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
-      letter-spacing: -0.2px;
+        display: none !important;
+        position: absolute;
+        top: 120px;
+        left: 12px;
+        z-index: 30;
+        align-items: center;
+        gap: 8px;
+        min-height: 46px;
+        padding: 10px 15px;
+        border-radius: 16px;
+        background: rgba(15,41,66,0.92);
+        color: #fff;
+        font-size: 14px;
+        font-weight: 900;
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(10px);
+        letter-spacing: -0.2px;
     }
 
     .map-result-count::before {
@@ -1985,7 +2013,7 @@
       max-width: min(1400px, 94vw);
       max-height: 92vh;
       object-fit: contain;
-      border-radius: 14px;
+      border-radius: var(--radius-main);
       box-shadow: 0 20px 50px rgba(0,0,0,0.35);
       background: #111;
       display: block;
@@ -1998,7 +2026,7 @@
       height: 40px;
       min-width: 40px;
       border: 0;
-      border-radius: 10px;
+      border-radius: var(--radius-small);
       background: rgba(0,0,0,0.65);
       color: #fff;
       display: flex;
@@ -2046,7 +2074,7 @@
       width: 28px;
       height: 28px;
       border: 0;
-      border-radius: 10px;
+      border-radius: var(--radius-small);
       background: rgba(15, 41, 66, 0.08);
       color: #506070;
       display: inline-flex;
@@ -2072,7 +2100,7 @@
       bottom: 20px;
       z-index: 32;
       width: 320px;
-      border-radius: 18px;
+      border-radius: var(--radius-main);
       background: rgba(255,255,255,0.98);
       border: 1px solid rgba(15, 41, 66, 0.08);
       box-shadow: 0 16px 36px rgba(15, 41, 66, 0.16);
@@ -2112,7 +2140,7 @@
 
     .map-recommend-thumb {
       height: 118px;
-      border-radius: 12px;
+      border-radius: var(--radius-small);
       background: #eef3f7 center / cover no-repeat;
       box-shadow: 0 8px 20px rgba(15, 41, 66, 0.10);
     }
@@ -2137,7 +2165,7 @@
       align-items: center;
       height: 22px;
       padding: 0 10px;
-      border-radius: 20px;
+      border-radius: var(--radius-pill);
       background: #f3eefe;
       color: #7c4dff;
       font-size: 11px;
@@ -2475,12 +2503,7 @@
 }
 
 .detail-meta-item:first-child #detailAreaToggleBtn {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  vertical-align: middle !important;
-  flex: 0 0 auto !important;
-  margin-left: 0 !important;
+  display: none !important;
 }
 
 
@@ -2527,9 +2550,9 @@
 
 /* premium left card tuning */
 .card {
-  background: linear-gradient(180deg, #ffffff 0%, #fcfdff 100%);
+  background: #ffffff;
   border: 1px solid #e7edf4;
-  border-radius: 20px;
+  border-radius: var(--radius-main);
   box-shadow: 0 10px 26px rgba(15, 41, 66, 0.06);
 }
 
@@ -2546,7 +2569,7 @@
 }
 
 .thumb {
-  border-radius: 15px;
+  border-radius: var(--radius-small);
   box-shadow: 0 10px 22px rgba(15, 41, 66, 0.12);
 }
 
@@ -2599,10 +2622,11 @@
 }
 
 .card-price {
-  font-size: 25px;
-  font-weight: 900;
-  letter-spacing: -0.9px;
-  color: #0f172a;
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  color: #111827;   /* 완전 블랙 대신 살짝 부드럽게 */
+;
 }
 
 .card-spec {
@@ -2681,8 +2705,8 @@
     
     .map-side-tools {
       position: absolute;
-      top: 182px;
-      left: 18px;
+      top: 52px;
+      left: 22px;
       z-index: 31;
       display: flex;
       flex-direction: column;
@@ -2709,7 +2733,7 @@
   padding: 0;
   background: #ffffff;
   color: #223244;
-  font-size: 13px;
+  font-size: var(--map-control-font-size);
   font-weight: 900;
   letter-spacing: -0.2px;
   cursor: pointer;
@@ -2746,7 +2770,7 @@
   border: 0;
   background: #ffffff;
   color: #223244;
-  font-size: 12px;
+  font-size: var(--map-control-font-size);
   font-weight: 900;
   letter-spacing: -0.2px;
   cursor: pointer;
@@ -2800,12 +2824,6 @@
 }
 
 
-/* hide right-panel m2/py toggle button */
-#detailAreaToggleBtn,
-.detail-meta-item:first-child #detailAreaToggleBtn,
-.detail-area-wrap .area-toggle-btn {
-  display: none !important;
-}
 
 
 
@@ -3029,12 +3047,35 @@
 
 </style>
 
+
+<style>
+/* ===== Detail Panel Adjustable Height System ===== */
+:root {
+  --detail-panel-top: var(--global-topbar-height);
+  --detail-panel-height: calc(100dvh - var(--detail-panel-top));
+}
+
+.sidebar-detail-panel {
+  position: fixed !important;
+  top: var(--detail-panel-top) !important;
+  left: var(--sidebar-list-width);
+  width: var(--detail-panel-width);
+  height: var(--detail-panel-height) !important;
+  z-index: 200;
+  pointer-events: none;
+}
+
+.sidebar.expanded .sidebar-detail-panel {
+  pointer-events: auto;
+}
+</style>
+
 </head>
 <body>
   <header class="global-topbar">
     <div class="global-topbar-inner">
       <div class="global-topbar-left">
-        <div class="global-brand" id="appVersionText"><i class="fa-solid fa-earth-americas" aria-hidden="true"></i><span class="brand-name">REALJEJU.APP</span><span class="brand-version">Ver 1.556</span></div>
+        <div class="global-brand" id="appVersionText"><i class="fa-solid fa-earth-americas" aria-hidden="true"></i><span class="brand-name">REALJEJU.APP</span><span class="brand-version">Ver 1.571</span></div>
       </div>
 
       <div class="global-topbar-menu">
@@ -3055,7 +3096,7 @@
     <div class="sub-topbar-inner">
       <div class="sub-topbar-left">
         <strong id="listInfoText">총 0개 매물</strong>
-        <span>최신순</span>
+        <span id="sortLabel" class="sort sort-latest" title="최신 등록순">최신순</span>
       </div>
 
       <div class="sub-topbar-right">
@@ -3309,10 +3350,22 @@
 </script>
 
   <script>
-    const UI_FONT_STACK = 'Pretendard, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const APP_VERSION = "1.556";
+    const UI_FONT_STACK = 'Inter, Pretendard, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
+    const APP_NAME = "REALJEJU.APP";
+    const APP_VERSION = "1.574";
 
-    document.title = `REALJEJU.APP Ver ${APP_VERSION}`;
+    function applyAppVersion() {
+      const fullVersionText = `${APP_NAME} Ver ${APP_VERSION}`;
+      document.title = fullVersionText;
+
+      const ogTitleMeta = document.getElementById("ogTitleMeta");
+      if (ogTitleMeta) ogTitleMeta.setAttribute("content", fullVersionText);
+
+      const ogDescriptionMeta = document.getElementById("ogDescriptionMeta");
+      if (ogDescriptionMeta) ogDescriptionMeta.setAttribute("content", fullVersionText);
+    }
+
+    applyAppVersion();
 
     const state = {
       map: null,
@@ -3382,10 +3435,15 @@
     const featureButtons = document.querySelectorAll("#featureButtons button");
     const listInfoText = document.getElementById("listInfoText");
     const appVersionText = document.getElementById("appVersionText");
+    const sortLabel = document.getElementById("sortLabel");
+
+    let currentSort = "latest";
 
     if (appVersionText) {
-      appVersionText.innerHTML = `<i class="fa-solid fa-earth-americas" aria-hidden="true"></i><span class="brand-name">REALJEJU.APP</span><span class="brand-version">Ver ${APP_VERSION}</span>`;
+      appVersionText.innerHTML = `<i class="fa-solid fa-earth-americas" aria-hidden="true"></i><span class="brand-name">${APP_NAME}</span><span class="brand-version">Ver ${APP_VERSION}</span>`;
     }
+
+    syncSortLabelUI();
 
     const detailCloseBtn = document.getElementById("detailCloseBtn");
     const detailHero = document.getElementById("detailHero");
@@ -3691,9 +3749,10 @@
       const lockedItems = getLockedListItems();
       if (lockedItems) {
         if (isLockedSelectionStillVisible()) {
-          renderList(lockedItems);
-          setResultInfo(`선택 매물 ${lockedItems.length}건`);
-          setListInfo(`총 ${lockedItems.length}개 매물`);
+          const sortedLockedItems = sortItems(lockedItems);
+          renderList(sortedLockedItems);
+          setResultInfo(`선택 매물 ${sortedLockedItems.length}건`);
+          setListInfo(`총 ${sortedLockedItems.length}개 매물`);
           refreshRecommendationCard(state.filtered);
           return lockedItems;
         }
@@ -3708,7 +3767,7 @@
         }, 0);
       }
 
-      const viewportItems = getViewportFilteredItems(state.filtered);
+      const viewportItems = sortItems(getViewportFilteredItems(state.filtered));
       renderList(viewportItems);
       setResultInfo(`총 ${viewportItems.length}건`);
       setListInfo(`총 ${viewportItems.length}개 매물`);
@@ -4265,6 +4324,7 @@
         );
 
         state.all = enriched;
+        syncSortLabelUI();
         applyFilter();
         updateMapEmptyState();
         setGlobalAreaUnit("m2");
@@ -4292,16 +4352,34 @@
       return 39;
     }
 
-    function getBadgeTextMetrics(text) {
-      const value = String(text ?? "");
-      if (value === "1") {
-        return { xOffset: 0.9, strokeWidth: 0.46, letterSpacing: "0px", clusterTranslateX: "0.9px" };
-      }
-      if (value === "4") {
-        return { xOffset: -0.35, strokeWidth: 0.35, letterSpacing: "-0.1px", clusterTranslateX: "-0.35px" };
-      }
-      return { xOffset: 0, strokeWidth: 0.35, letterSpacing: "-0.15px", clusterTranslateX: "0px" };
-    }
+function getBadgeTextMetrics(text) {
+  const value = String(text ?? "");
+
+  if (value === "1") {
+    return {
+      xOffset: -0.72,
+      strokeWidth: 0.28,
+      letterSpacing: "0px",
+      clusterTranslateX: "-0.72px"
+    };
+  }
+
+  if (value === "11") {
+    return {
+      xOffset: -0.4,
+      strokeWidth: 0.28,
+      letterSpacing: "0px",
+      clusterTranslateX: "-0.4px"
+    };
+  }
+
+  return {
+    xOffset: 0,
+    strokeWidth: 0.3,
+    letterSpacing: "0px",
+    clusterTranslateX: "0px"
+  };
+}
 
     function createMarkerImage(item, isSelected = false, label = "1") {
       const text = String(label ?? "1");
@@ -4327,9 +4405,10 @@
             <text x="${width / 2 + textMetrics.xOffset}" y="${height / 2 + 1}"
                   dominant-baseline="middle"
                   text-anchor="middle"
-                  font-size="24"
+                  font-size="20"
                   font-weight="800"
                   font-family="${UI_FONT_STACK}"
+                  text-rendering="geometricPrecision"
                   fill="${textColor}"
                   stroke="${textColor}"
                   stroke-width="${textMetrics.strokeWidth}"
@@ -4396,10 +4475,11 @@
       el.style.justifyContent = "center";
       el.style.background = bg;
       el.style.color = color;
-      el.style.fontSize = "24px";
+      el.style.fontSize = "20px";
       el.style.fontWeight = "800";
       el.style.fontFamily = UI_FONT_STACK;
       el.style.lineHeight = "1";
+      el.style.textAlign = "center";
       el.style.letterSpacing = textMetrics.letterSpacing;
       el.style.fontVariantNumeric = "tabular-nums";
       el.style.fontFeatureSettings = "'tnum' 1, 'lnum' 1";
@@ -4411,7 +4491,7 @@
       el.style.cursor = "pointer";
       el.style.pointerEvents = "auto";
       el.style.userSelect = "none";
-      el.style.transform = `translateX(${textMetrics.clusterTranslateX})`;
+      el.style.transform = `translateX(0)`;
       el.textContent = label;
 
       el.addEventListener("click", async function (e) {
@@ -4497,16 +4577,16 @@
       ]);
 
       const imageList = Array.isArray(imageData.images)
-        ? imageData.images.map(v => String(v || "").trim()).filter(Boolean)
+        ? imageData.images.map(v => toRemotePath(String(v || "").trim())).filter(Boolean)
         : [];
 
-      const mainImage = String(imageData.image || "").trim()
+      const mainImage = toRemotePath(String(imageData.image || "").trim())
         || imageList[0]
-        || String(item.image || "").trim();
+        || toRemotePath(String(item.image || "").trim());
 
       const mergedImages = imageList.length
         ? imageList
-        : (mainImage ? [mainImage] : normalizeImageArray(item));
+        : (mainImage ? [mainImage] : normalizeImageArray(item).map(v => toRemotePath(String(v || "").trim())).filter(Boolean));
 
       return {
         ...item,
@@ -4852,9 +4932,10 @@ function closeDetailPanel() {
       recenterMapSoft(centerLat, centerLng);
 
       setTimeout(() => {
-        renderList(clusterItems);
-        setResultInfo(`선택 매물 ${clusterItems.length}건`);
-        setListInfo(`총 ${clusterItems.length}개 매물`);
+        const sortedClusterItems = sortItems(clusterItems);
+        renderList(sortedClusterItems);
+        setResultInfo(`선택 매물 ${sortedClusterItems.length}건`);
+        setListInfo(`총 ${sortedClusterItems.length}개 매물`);
         refreshClusterBadges();
         setClusterBadgeSelected(cluster, true);
       }, 0);
@@ -5389,8 +5470,81 @@ function closeDetailPanel() {
       }
     }
 
+    function getSortDateValue(item) {
+      const value = item?.date ? new Date(item.date).getTime() : NaN;
+      return Number.isFinite(value) ? value : 0;
+    }
+
+    function sortItems(items) {
+      const list = Array.isArray(items) ? [...items] : [];
+
+      if (currentSort === "price-desc") {
+        list.sort((a, b) => {
+          const priceDiff = (parsePriceTextToWon(b?.price || "") ?? -1) - (parsePriceTextToWon(a?.price || "") ?? -1);
+          if (priceDiff !== 0) return priceDiff;
+          return getSortDateValue(b) - getSortDateValue(a);
+        });
+        return list;
+      }
+
+      if (currentSort === "price-asc") {
+        list.sort((a, b) => {
+          const aPrice = parsePriceTextToWon(a?.price || "");
+          const bPrice = parsePriceTextToWon(b?.price || "");
+          if (aPrice == null && bPrice == null) return getSortDateValue(b) - getSortDateValue(a);
+          if (aPrice == null) return 1;
+          if (bPrice == null) return -1;
+          const priceDiff = aPrice - bPrice;
+          if (priceDiff !== 0) return priceDiff;
+          return getSortDateValue(b) - getSortDateValue(a);
+        });
+        return list;
+      }
+
+      list.sort((a, b) => getSortDateValue(b) - getSortDateValue(a));
+      return list;
+    }
+
+    function syncSortLabelUI() {
+      if (!sortLabel) return;
+
+      sortLabel.classList.remove("sort-latest", "sort-price-desc", "sort-price-asc");
+
+      if (currentSort === "latest") {
+        sortLabel.textContent = "최신순";
+        sortLabel.title = "최신 등록순";
+        sortLabel.classList.add("sort-latest");
+        return;
+      }
+
+      sortLabel.textContent = "가격순";
+
+      if (currentSort === "price-desc") {
+        sortLabel.title = "가격 높은 순";
+        sortLabel.classList.add("sort-price-desc");
+      } else {
+        sortLabel.title = "가격 낮은 순";
+        sortLabel.classList.add("sort-price-asc");
+      }
+    }
+
     function initEvents() {
       if (keywordInput) keywordInput.addEventListener("input", applyFilter);
+
+      if (sortLabel) {
+        sortLabel.addEventListener("click", () => {
+          if (currentSort === "latest") {
+            currentSort = "price-desc";
+          } else if (currentSort === "price-desc") {
+            currentSort = "price-asc";
+          } else {
+            currentSort = "latest";
+          }
+
+          syncSortLabelUI();
+          refreshViewportList();
+        });
+      }
 
       if (detailAreaToggleBtn) {
         detailAreaToggleBtn.style.display = "none";
