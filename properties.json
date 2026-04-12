@@ -1,6 +1,27 @@
 [  
   
   {
+    "id": 215,
+    "listingNo": "디-215",
+    "date": "2026-03-25",
+    "title": "남문사거리 인근 신축 10층 상가건물",
+    "desc": "남문사거리 인근 신축 10층 상가건물 / 시청·동문시장 접근 우수",
+    "image": "./dh_real/215/1.jpg",
+    "desc_folder": "./dh_real/215/info.json",
+    "image_folder": "./dh_real/215/image.json",
+    "type": "상가",
+    "dealFilter": "년세",
+    "region": "삼도이동",
+    "price": "1,300/1,300",
+    "area": "연면적 130.46㎡ / 대지면적 191.00㎡",
+    "address": "제주시 삼도이동",
+    "lat": 33.508857,
+    "lng": 126.522726,
+    "features": ["제주시", "삼도동", "상가"],
+    "agent_folder": "./dh_real/agent.json"
+  },
+  
+  {
     "id": 217,
     "listingNo": "디-217",
     "date": "2026-01-25",
@@ -12,7 +33,7 @@
     "type": "전",
     "dealFilter": "매매",
     "region": "무릉리",
-    "price": "2억 5,000",
+    "price": "6억",
     "area": "대지면적 1,432.00㎡",
     "address": "서귀포시 신효동",
     "lat": 33.263125,
