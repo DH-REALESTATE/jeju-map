@@ -1,11 +1,32 @@
 [  
   
   {
+    "id": 217,
+    "listingNo": "디-217",
+    "date": "2026-01-25",
+    "title": "신효동 토지",
+    "desc": "효돈초/중 인접 서귀포 신효동 토지 투자 포인트",
+    "image": "./dh_real/217/1.jpg",
+    "desc_folder": "./dh_real/217/info.json",
+    "image_folder": "./dh_real/217/image.json",
+    "type": "전",
+    "dealFilter": "매매",
+    "region": "무릉리",
+    "price": "2억 5,000",
+    "area": "대지면적 1,432.00㎡",
+    "address": "서귀포시 신효동",
+    "lat": 33.263125,
+    "lng": 126.611517,
+    "features": ["서귀포", "신효동", "투자용"],
+    "agent_folder": "./dh_real/agent.json"
+  },
+  
+  {
     "id": 209,
     "listingNo": "디-209",
     "date": "2026-01-25",
     "title": "대정읍 투자용 토지",
-    "desc": "전대지 3필지 일괄(총 860㎡) 대정읍 투자용 토지, 면적(전체) : 860㎡ / 면적(전) : 235㎡ / 면적(대) : 268㎡ / 면적(대) : 357㎡",
+    "desc": "전대지 3필지 일괄(총 860㎡) 대정읍 투자용 토지, 면적(전체) : 860㎡",
     "image": "./dh_real/209/1.jpg",
     "desc_folder": "./dh_real/209/info.json",
     "image_folder": "./dh_real/209/image.json",
