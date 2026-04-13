@@ -1,5 +1,32 @@
 [  
 
+  
+  {
+    "id": 82156471,
+    "listingNo": "82156471",
+    "date": "2026-04-13",
+    "title": "오피스텔형 투베이",
+    "desc": "오피스텔형 투베이(1.5룸)",
+    "image": "./syreal/82156471/1.JPG",
+    "desc_folder": "./syreal/82156471/info.json",
+    "image_folder": "./syreal/82156471/image.json",
+    "type": "오피스텔",
+    "dealFilter": "년세",
+    "region": "일도이동",
+    "price": "300/649",
+    "area": "공급면적 39.67㎡ / 전용면적 33.06㎡",
+    "address": "제주시 일도이동 409-9",
+    "lat": 33.504958,
+    "lng": 126.541623,
+    "features": ["제주시", "일도이동", "오피스텔"],
+    "agent_folder": "./syreal/agent.json"
+  },
+  
+
+
+
+
+  
   {
     "id": 212,
     "listingNo": "디-212",
