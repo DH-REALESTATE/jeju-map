@@ -1,0 +1,23 @@
+{
+  "propertyType": "hotel",
+  "sections": [
+    {
+      "title": "기본 정보",
+      "rows": [
+        { "label": "입주가능일", "value": "즉시입주 협의가능" },
+        { "label": "방향", "value": "남동향 (주된 출입구 방향 기준)" },
+        { "label": "지하층/지상층", "value": "-1/7" },
+        { "label": "방/욕실수", "value": "3/2개" }
+      ]
+    },
+    {
+      "title": "건물 정보",
+      "rows": [
+        { "label": "건물종류", "value": "콘도" },
+        { "label": "건축물용도", "value": "숙박시설" },
+        { "label": "사용승인일", "value": "2014-12-31" },
+        { "label": "옵션", "value": "총 주차대수: 364대" }
+      ]
+    }
+  ]
+}
