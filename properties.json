@@ -41,6 +41,27 @@
     "features": ["제주시", "삼도동", "상가"],
     "agent_folder": "./dh_real/agent.json"
   },
+
+  {
+    "id": 213,
+    "listingNo": "디-213",
+    "date": "2026-03-25",
+    "title": "한림 금능리 목장용지",
+    "desc": "한림 금능리 핵심입지 인접 투자 매물",
+    "image": "./dh_real/213/1.jpg",
+    "desc_folder": "./dh_real/213/info.json",
+    "image_folder": "./dh_real/213/image.json",
+    "type": "목장용지",
+    "dealFilter": "매매",
+    "region": "한림읍",
+    "price": "24억 5,000",
+    "area": "대지면적 7,356.00㎡",
+    "address": "한림읍 금능리",
+    "lat": 33.359202,
+    "lng": 126.248453,
+    "features": ["한림읍", "금능리", "목장용지"],
+    "agent_folder": "./dh_real/agent.json"
+  },
   
   {
     "id": 217,
