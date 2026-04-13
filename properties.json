@@ -1,4 +1,25 @@
 [  
+
+  {
+    "id": 212,
+    "listingNo": "디-212",
+    "date": "2026-04-01",
+    "title": "오션스타 콘도미니엄 큰 평수 급매",
+    "desc": "오션스타 콘도미니엄 큰 평수 급매, 아쿠아플라넷제주 인근",
+    "image": "./dh_real/212/1.jpg",
+    "desc_folder": "./dh_real/212/info.json",
+    "image_folder": "./dh_real/212/image.json",
+    "type": "콘도",
+    "dealFilter": "매매",
+    "region": "성산읍",
+    "price": "2억 5,000",
+    "area": "대지면적 37,829.00㎡ / 건축면적 129.50㎡ / 연면적 172.00㎡",
+    "address": "서귀포시 성산읍 고성리 105",
+    "lat": 33.427141,
+    "lng": 126.926748,
+    "features": ["성산읍", "콘도", "투자용"],
+    "agent_folder": "./dh_real/agent.json"
+  },
   
   {
     "id": 216,
