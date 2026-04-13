@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>REALJEJU.APP Ver 1.604</title>
-<meta property="og:title" id="ogTitleMeta" content="REALJEJU.APP Ver 1.604" />
-  <meta property="og:description" id="ogDescriptionMeta" content="REALJEJU.APP Ver 1.604" />
+  <title>REALJEJU.APP Ver 1.609</title>
+<meta property="og:title" id="ogTitleMeta" content="REALJEJU.APP Ver 1.609" />
+  <meta property="og:description" id="ogDescriptionMeta" content="REALJEJU.APP Ver 1.609" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
   <meta property="og:image" content="https://your-domain.example/og-image.jpg" />
@@ -3670,7 +3670,7 @@
   <header class="global-topbar">
     <div class="global-topbar-inner">
       <div class="global-topbar-left">
-        <div class="global-brand" id="appVersionText"><i class="fa-solid fa-map-location-dot"" aria-hidden="true"></i><span class="brand-name">REALJEJU.APP</span><span class="brand-version">Ver 1.604</span></div>
+        <div class="global-brand" id="appVersionText"><i class="fa-solid fa-map-location-dot"" aria-hidden="true"></i><span class="brand-name">REALJEJU.APP</span><span class="brand-version">Ver 1.601</span></div>
       </div>
 
       <div class="global-topbar-menu">
@@ -3995,7 +3995,7 @@
   <script>
     const UI_FONT_STACK = 'Inter, Pretendard, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
     const APP_NAME = "REALJEJU.APP";
-    const APP_VERSION = "1.604";
+    const APP_VERSION = "1.609";
 
     function applyAppVersion() {
       const fullVersionText = `${APP_NAME} Ver ${APP_VERSION}`;
@@ -4009,6 +4009,12 @@
     }
 
     applyAppVersion();
+
+
+    function normalizeItemId(value) {
+      if (value == null) return "";
+      return String(value).trim();
+    }
 
     const state = {
       map: null,
@@ -4219,7 +4225,7 @@
       if (mode === "satellite") {
         state.map.setMapTypeId(kakao.maps.MapTypeId.HYBRID);
       } else if (mode === "cadastral") {
-        state.map.setMapTypeId(kakao.maps.MapTypeId.HYBRID);
+        state.map.setMapTypeId(kakao.maps.MapTypeId.ROADMAP);
         state.map.addOverlayMapTypeId(kakao.maps.MapTypeId.USE_DISTRICT);
       } else {
         state.map.setMapTypeId(kakao.maps.MapTypeId.ROADMAP);
@@ -4239,8 +4245,8 @@
 
     function lockListToItems(items) {
       const ids = (items || [])
-        .map(item => Number(item?.id))
-        .filter(id => Number.isFinite(id));
+        .map(item => normalizeItemId(item?.id))
+        .filter(Boolean);
       state.lockedListIds = ids.length ? ids : null;
     }
 
@@ -4250,8 +4256,8 @@
 
     function getLockedListItems() {
       if (!Array.isArray(state.lockedListIds) || !state.lockedListIds.length) return null;
-      const idSet = new Set(state.lockedListIds.map(Number));
-      const lockedItems = (state.filtered || []).filter(item => idSet.has(Number(item.id)));
+      const idSet = new Set(state.lockedListIds.map(normalizeItemId));
+      const lockedItems = (state.filtered || []).filter(item => idSet.has(normalizeItemId(item.id)));
       return lockedItems.length ? lockedItems : null;
     }
 
@@ -4274,7 +4280,7 @@
       }
 
       if (state.selectedMarkerId != null) {
-        const targetId = Number(state.selectedMarkerId);
+        const targetId = normalizeItemId(state.selectedMarkerId);
         let isClustered = false;
 
         (clusters || []).forEach(cluster => {
@@ -4282,7 +4288,7 @@
             .map(marker => marker.__property)
             .filter(Boolean);
 
-          if (clusterItems.length > 1 && clusterItems.some(item => Number(item.id) === targetId)) {
+          if (clusterItems.length > 1 && clusterItems.some(item => normalizeItemId(item.id) === targetId)) {
             isClustered = true;
           }
         });
@@ -4338,8 +4344,8 @@
       const list = Array.isArray(items) ? items : [];
       if (!recommendIds.length) return [];
 
-      const idSet = new Set(recommendIds.map(Number));
-      return list.filter(item => item && idSet.has(Number(item.id)));
+      const idSet = new Set(recommendIds.map(normalizeItemId));
+      return list.filter(item => item && idSet.has(normalizeItemId(item.id)));
     }
 
     function getRecommendationCandidate(items) {
@@ -4347,14 +4353,14 @@
       if (!pool.length) return null;
 
       if (state.selectedMarkerId != null) {
-        const selected = pool.find(item => Number(item.id) === Number(state.selectedMarkerId));
+        const selected = pool.find(item => normalizeItemId(item.id) === normalizeItemId(state.selectedMarkerId));
         if (selected) return selected;
       }
 
       if (pool.length === 1) return pool[0];
 
-      const previousId = state.recommendItem ? Number(state.recommendItem.id) : null;
-      const candidates = pool.filter(item => Number(item.id) !== previousId);
+      const previousId = state.recommendItem ? normalizeItemId(state.recommendItem.id) : null;
+      const candidates = pool.filter(item => normalizeItemId(item.id) !== previousId);
       const source = candidates.length ? candidates : pool;
       const randomIndex = Math.floor(Math.random() * source.length);
       return source[randomIndex];
@@ -4366,7 +4372,7 @@
       const normalizedPhone = String(agent.phone || "").trim();
       return {
         ...agent,
-        id: Number(agent.id),
+        id: normalizeItemId(agent.id),
         image: toRemotePath(agent.image || ""),
         phone: normalizedPhone,
         office: agent.office || "",
@@ -4382,8 +4388,8 @@
       if (!Array.isArray(recommendAgents) || !recommendAgents.length) return null;
       if (recommendAgents.length === 1) return recommendAgents[0];
 
-      const previousId = state.recommendAgent ? Number(state.recommendAgent.id) : null;
-      const candidates = recommendAgents.filter(agent => Number(agent.id) !== previousId);
+      const previousId = state.recommendAgent ? normalizeItemId(state.recommendAgent.id) : null;
+      const candidates = recommendAgents.filter(agent => normalizeItemId(agent.id) !== previousId);
       const source = candidates.length ? candidates : recommendAgents;
       const randomIndex = Math.floor(Math.random() * source.length);
       return source[randomIndex];
@@ -4440,7 +4446,7 @@
       }
 
       const hasCurrent = state.recommendAgent
-        && recommendAgents.some(agent => Number(agent.id) === Number(state.recommendAgent.id));
+        && recommendAgents.some(agent => normalizeItemId(agent.id) === normalizeItemId(state.recommendAgent.id));
 
       if (!hasCurrent) {
         state.recommendAgent = getRecommendationAgentCandidate();
@@ -4501,7 +4507,7 @@
       }
 
       const pool = getRecommendationPool(items);
-      const poolKey = pool.map(item => item.id).sort((a, b) => Number(a) - Number(b)).join(",");
+      const poolKey = pool.map(item => normalizeItemId(item.id)).sort((a, b) => a.localeCompare(b)).join(",");
 
       if (!pool.length) {
         state.recommendItem = null;
@@ -4512,7 +4518,7 @@
 
       const keepCurrent = state.lastRecommendPoolKey === poolKey
         && state.recommendItem
-        && pool.some(item => Number(item.id) === Number(state.recommendItem.id));
+        && pool.some(item => normalizeItemId(item.id) === normalizeItemId(state.recommendItem.id));
 
       if (!keepCurrent) {
         state.recommendItem = getRecommendationCandidate(pool);
@@ -5290,16 +5296,16 @@ function getBadgeTextMetrics(text) {
 
     function updateMarkerSelection(selectedId, selectedIds = null) {
       state.selectedMarkerId = selectedId;
-      state.selectedMarkerIds = new Set(Array.isArray(selectedIds) ? selectedIds.map(Number) : (selectedId != null ? [Number(selectedId)] : []));
+      state.selectedMarkerIds = new Set(Array.isArray(selectedIds) ? selectedIds.map(normalizeItemId) : (selectedId != null ? [normalizeItemId(selectedId)] : []));
       state.markers.forEach(marker => {
         const item = marker.__property;
-        const isSelected = item && state.selectedMarkerIds.has(Number(item.id));
+        const isSelected = item && state.selectedMarkerIds.has(normalizeItemId(item.id));
         marker.setImage(createMarkerImage(item, isSelected, "1"));
       });
     }
 
     function getClusterKeyFromItems(items) {
-      return items.map(item => item.id).sort((a, b) => a - b).join(",");
+      return items.map(item => normalizeItemId(item.id)).sort((a, b) => a.localeCompare(b)).join(",");
     }
 
     function getClusterBadgeSize() {
@@ -5377,7 +5383,7 @@ function getBadgeTextMetrics(text) {
         if (!clusterItems.length) return;
 
         const key = getClusterKeyFromItems(clusterItems);
-        const ids = clusterItems.map(item => Number(item.id));
+        const ids = clusterItems.map(item => normalizeItemId(item.id));
         const isSelected =
           state.selectedClusterKey === key ||
           (ids.length > 0 && ids.every(id => state.selectedMarkerIds && state.selectedMarkerIds.has(id)));
@@ -5390,7 +5396,7 @@ function getBadgeTextMetrics(text) {
       const clusters = state.clusterer.getClusters ? state.clusterer.getClusters() : state.clusterer._clusters;
       if (!clusters || !clusters.length) return null;
 
-      const targetId = Number(item.id);
+      const targetId = normalizeItemId(item.id);
       for (const cluster of clusters) {
         if (!cluster || typeof cluster.getMarkers !== "function") continue;
         const clusterItems = cluster.getMarkers().map(marker => marker.__property).filter(Boolean);
@@ -5407,7 +5413,7 @@ function getBadgeTextMetrics(text) {
       if (!clusters || !clusters.length) return null;
 
       const wanted = [...new Set(targetIds.map(Number).filter(Number.isFinite))]
-        .sort((a, b) => a - b)
+        .sort((a, b) => String(a).localeCompare(String(b)))
         .join(",");
       if (!wanted) return null;
 
@@ -5418,7 +5424,7 @@ function getBadgeTextMetrics(text) {
         const key = clusterItems
           .map(v => Number(v.id))
           .filter(Number.isFinite)
-          .sort((a, b) => a - b)
+          .sort((a, b) => String(a).localeCompare(String(b)))
           .join(",");
         if (key === wanted) {
           return { cluster, clusterItems };
@@ -6046,7 +6052,7 @@ function closeDetailPanel() {
 
     function highlightCard(id) {
       document.querySelectorAll(".card").forEach(card => {
-        card.classList.toggle("active", Number(card.dataset.id) === id);
+        card.classList.toggle("active", normalizeItemId(card.dataset.id) === normalizeItemId(id));
       });
     }
 
@@ -6105,7 +6111,7 @@ function closeDetailPanel() {
 
         const marker = new kakao.maps.Marker({
           position,
-          image: createMarkerImage(item, state.selectedMarkerId === item.id, "1"),
+          image: createMarkerImage(item, normalizeItemId(state.selectedMarkerId) === normalizeItemId(item.id), "1"),
           clickable: true
         });
 
@@ -6162,7 +6168,7 @@ function closeDetailPanel() {
       const lockedIds = Array.isArray(lockedItems)
         ? lockedItems.map(v => Number(v.id)).filter(Number.isFinite)
         : [];
-      const preserveGroupSelection = lockedIds.length > 1 && lockedIds.includes(Number(id));
+      const preserveGroupSelection = lockedIds.length > 1 && lockedIds.includes(normalizeItemId(id));
 
       if (preserveGroupSelection) {
         const clusterMatch = findClusterByIds(lockedIds);
@@ -6177,7 +6183,7 @@ function closeDetailPanel() {
         } else {
           state.selectedClusterKey = null;
         }
-        updateMarkerSelection(id, [Number(id)]);
+        updateMarkerSelection(id, [normalizeItemId(id)]);
       }
 
       highlightCard(id);
@@ -6270,7 +6276,7 @@ function closeDetailPanel() {
         card.addEventListener("click", async function (e) {
           if (e.target.closest("a, button")) return;
 
-          const item = data.find(v => v.id === Number(card.dataset.id));
+          const item = data.find(v => normalizeItemId(v.id) === normalizeItemId(card.dataset.id));
           if (!item) return;
 
           if (detailScroll) detailScroll.scrollTop = 0;
