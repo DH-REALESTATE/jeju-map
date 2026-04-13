@@ -23,6 +23,17 @@
       "phone": "010-5550-5530",
       "image": "./agent_01/agent_01.jpg",
       "link": "https://open.kakao.com/o/sC94xQch"
+    },
+    {
+      "id": 3,
+      "name": "김승연",
+      "office": "승연공인중개사사무소",
+      "address": "제주특별자치도 제주시 과원로 41",
+      "regNo": "50110-2022-00168",
+      "desc": "친절상담",
+      "phone": "010-7281-7122",
+      "image": "./syreal/agent.jpg",
+      "link": "https://open.kakao.com/o/gI8aEcqi"
     }
   ]
 }
