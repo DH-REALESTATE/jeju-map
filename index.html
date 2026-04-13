@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>REALJEJU.APP Ver 1.596</title>
-<meta property="og:title" id="ogTitleMeta" content="REALJEJU.APP Ver 1.596" />
-  <meta property="og:description" id="ogDescriptionMeta" content="REALJEJU.APP Ver 1.596" />
+  <title>REALJEJU.APP Ver 1.599</title>
+<meta property="og:title" id="ogTitleMeta" content="REALJEJU.APP Ver 1.599" />
+  <meta property="og:description" id="ogDescriptionMeta" content="REALJEJU.APP Ver 1.599" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
   <meta property="og:image" content="https://your-domain.example/og-image.jpg" />
@@ -3670,7 +3670,7 @@
   <header class="global-topbar">
     <div class="global-topbar-inner">
       <div class="global-topbar-left">
-        <div class="global-brand" id="appVersionText"><i class="fa-solid fa-map-location-dot"" aria-hidden="true"></i><span class="brand-name">REALJEJU.APP</span><span class="brand-version">Ver 1.571</span></div>
+        <div class="global-brand" id="appVersionText"><i class="fa-solid fa-map-location-dot"" aria-hidden="true"></i><span class="brand-name">REALJEJU.APP</span><span class="brand-version">Ver 1.598</span></div>
       </div>
 
       <div class="global-topbar-menu">
@@ -3995,7 +3995,7 @@
   <script>
     const UI_FONT_STACK = 'Inter, Pretendard, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
     const APP_NAME = "REALJEJU.APP";
-    const APP_VERSION = "1.596";
+    const APP_VERSION = "1.599";
 
     function applyAppVersion() {
       const fullVersionText = `${APP_NAME} Ver ${APP_VERSION}`;
@@ -4493,25 +4493,23 @@
         return;
       }
 
-      const pool = getRecommendationPool(items);
-      const poolKey = pool.map(item => item.id).sort((a, b) => Number(a) - Number(b)).join(",");
+      if (state.recommendItem) {
+        renderRecommendationCard(state.recommendItem);
+        return;
+      }
+
+      const sourceItems = Array.isArray(items) && items.length
+        ? items
+        : (Array.isArray(state.filtered) && state.filtered.length ? state.filtered : state.all);
+      const pool = getRecommendationPool(sourceItems);
 
       if (!pool.length) {
-        state.recommendItem = null;
-        state.lastRecommendPoolKey = "";
         renderRecommendationCard(null);
         return;
       }
 
-      const keepCurrent = state.lastRecommendPoolKey === poolKey
-        && state.recommendItem
-        && pool.some(item => Number(item.id) === Number(state.recommendItem.id));
-
-      if (!keepCurrent) {
-        state.recommendItem = getRecommendationCandidate(pool);
-        state.lastRecommendPoolKey = poolKey;
-      }
-
+      state.recommendItem = getRecommendationCandidate(pool);
+      state.lastRecommendPoolKey = pool.map(item => item.id).sort((a, b) => Number(a) - Number(b)).join(",");
       renderRecommendationCard(state.recommendItem);
     }
 
@@ -4666,7 +4664,7 @@
 
     function isLandSubtypeType(typeText) {
       const text = String(typeText || "").trim();
-      return ["전", "대", "답", "과수원"].includes(text);
+      return ["전", "대", "답", "과수원", "목장용지"].includes(text);
     }
 
     function getCardTypeBadgeLabel(typeText) {
@@ -4677,7 +4675,7 @@
 
     function getDisplayTypeLabel(typeText) {
       const text = String(typeText || "").trim();
-      if (["전", "대", "답", "과수원", "임야", "토지", "토지ㆍ임야"].includes(text)) return getLandTypeDetailLabel(text);
+      if (["전", "대", "답", "과수원", "목장용지", "임야", "토지", "토지ㆍ임야"].includes(text)) return getLandTypeDetailLabel(text);
       if (["단독", "단독주택"].includes(text)) return "단독주택";
       return text || "-";
     }
@@ -4883,11 +4881,11 @@
         return `공급${supplyText}ㆍ전용${privateText}`;
       }
 
-      if (/토지|임야|과수원|대지|전|대|답/.test(typeText)) {
+      if (/토지|임야|과수원|목장용지|대지|전|대|답/.test(typeText)) {
         const value = formatAreaByUnit(areaText, unit, typeText);
         const landType = String(typeText || "").trim();
 
-        if (["전", "대", "답", "과수원", "임야"].includes(landType)) {
+        if (["전", "대", "답", "과수원", "목장용지", "임야"].includes(landType)) {
           return `${value}ㆍ${landType}`;
         }
 
@@ -4899,6 +4897,7 @@
     function getLandTypeDetailLabel(typeText) {
       const text = String(typeText || "").trim();
       if (text === "임야") return "임야";
+      if (text === "목장용지") return "토지(목장)";
       if (["전", "대", "답", "과수원"].includes(text)) return `토지(${text})`;
       if (["토지", "토지ㆍ임야"].includes(text)) return "토지";
       return text || "-";
@@ -6252,7 +6251,7 @@ function closeDetailPanel() {
           (typeValue === "빌라주택" && ["빌라", "단독", "단독주택", "다가구", "다세대", "다가구ㆍ다세대", "다세대주택"].includes(itemType)) ||
           (typeValue === "원룸" && ["원룸", "투룸", "원룸ㆍ투룸"].includes(itemType)) ||
           (typeValue === "상가" && ["상가", "상가건물", "사무실", "공장", "상가ㆍ사무실"].includes(itemType)) ||
-          (typeValue === "토지" && ["토지", "임야", "토지ㆍ임야", "전", "대", "답", "과수원"].includes(itemType));
+          (typeValue === "토지" && ["토지", "임야", "토지ㆍ임야", "전", "대", "답", "과수원", "목장용지"].includes(itemType));
 
         const okFeature =
           state.selectedFeatures.size === 0 ||
