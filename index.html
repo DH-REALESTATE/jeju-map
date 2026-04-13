@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>REALJEJU.APP Ver 1.599</title>
-<meta property="og:title" id="ogTitleMeta" content="REALJEJU.APP Ver 1.599" />
-  <meta property="og:description" id="ogDescriptionMeta" content="REALJEJU.APP Ver 1.599" />
+  <title>REALJEJU.APP Ver 1.602</title>
+<meta property="og:title" id="ogTitleMeta" content="REALJEJU.APP Ver 1.602" />
+  <meta property="og:description" id="ogDescriptionMeta" content="REALJEJU.APP Ver 1.602" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
   <meta property="og:image" content="https://your-domain.example/og-image.jpg" />
@@ -3670,7 +3670,7 @@
   <header class="global-topbar">
     <div class="global-topbar-inner">
       <div class="global-topbar-left">
-        <div class="global-brand" id="appVersionText"><i class="fa-solid fa-map-location-dot"" aria-hidden="true"></i><span class="brand-name">REALJEJU.APP</span><span class="brand-version">Ver 1.598</span></div>
+        <div class="global-brand" id="appVersionText"><i class="fa-solid fa-map-location-dot"" aria-hidden="true"></i><span class="brand-name">REALJEJU.APP</span><span class="brand-version">Ver 1.601</span></div>
       </div>
 
       <div class="global-topbar-menu">
@@ -3995,7 +3995,7 @@
   <script>
     const UI_FONT_STACK = 'Inter, Pretendard, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
     const APP_NAME = "REALJEJU.APP";
-    const APP_VERSION = "1.599";
+    const APP_VERSION = "1.602";
 
     function applyAppVersion() {
       const fullVersionText = `${APP_NAME} Ver ${APP_VERSION}`;
@@ -4098,6 +4098,12 @@
 
     if (appVersionText) {
       appVersionText.innerHTML = `<i class="fa-solid fa-brands fa-hashnode" aria-hidden="true"></i><span class="brand-name">${APP_NAME}</span><span class="brand-version">Ver ${APP_VERSION}</span>`;
+      appVersionText.style.cursor = "pointer";
+      appVersionText.setAttribute("role", "button");
+      appVersionText.setAttribute("aria-label", `${APP_NAME} 새로고침`);
+      appVersionText.addEventListener("click", () => {
+        window.location.reload();
+      });
     }
 
     syncSortLabelUI();
@@ -4493,23 +4499,25 @@
         return;
       }
 
-      if (state.recommendItem) {
-        renderRecommendationCard(state.recommendItem);
-        return;
-      }
-
-      const sourceItems = Array.isArray(items) && items.length
-        ? items
-        : (Array.isArray(state.filtered) && state.filtered.length ? state.filtered : state.all);
-      const pool = getRecommendationPool(sourceItems);
+      const pool = getRecommendationPool(items);
+      const poolKey = pool.map(item => item.id).sort((a, b) => Number(a) - Number(b)).join(",");
 
       if (!pool.length) {
+        state.recommendItem = null;
+        state.lastRecommendPoolKey = "";
         renderRecommendationCard(null);
         return;
       }
 
-      state.recommendItem = getRecommendationCandidate(pool);
-      state.lastRecommendPoolKey = pool.map(item => item.id).sort((a, b) => Number(a) - Number(b)).join(",");
+      const keepCurrent = state.lastRecommendPoolKey === poolKey
+        && state.recommendItem
+        && pool.some(item => Number(item.id) === Number(state.recommendItem.id));
+
+      if (!keepCurrent) {
+        state.recommendItem = getRecommendationCandidate(pool);
+        state.lastRecommendPoolKey = poolKey;
+      }
+
       renderRecommendationCard(state.recommendItem);
     }
 
@@ -4867,6 +4875,43 @@
         return formatAreaByUnit(areaText, unit, typeText);
       }
 
+      if (/콘도/.test(typeText)) {
+        const raw = String(areaText || "-").trim();
+
+        const buildMatch =
+          raw.match(/건축면적\s*([\d,.]+)㎡/) ||
+          raw.match(/건축면적\s*([\d,.]+)평/) ||
+          raw.match(/\(건축\)\s*([\d,.]+)㎡/) ||
+          raw.match(/\(건축\)\s*([\d,.]+)평/) ||
+          raw.match(/건축\s*([\d,.]+)㎡/) ||
+          raw.match(/건축\s*([\d,.]+)평/);
+
+        const totalMatch =
+          raw.match(/연면적\s*([\d,.]+)㎡/) ||
+          raw.match(/연면적\s*([\d,.]+)평/) ||
+          raw.match(/\(연\)\s*([\d,.]+)㎡/) ||
+          raw.match(/\(연\)\s*([\d,.]+)평/) ||
+          raw.match(/연\s*([\d,.]+)㎡/) ||
+          raw.match(/연\s*([\d,.]+)평/);
+
+        const buildValue = buildMatch ? Number(String(buildMatch[1]).replace(/,/g, "")) : null;
+        const totalValue = totalMatch ? Number(String(totalMatch[1]).replace(/,/g, "")) : null;
+
+        const buildText = Number.isFinite(buildValue) ? formatSingleAreaValue(buildValue, unit) : null;
+        const totalText = Number.isFinite(totalValue) ? formatSingleAreaValue(totalValue, unit) : null;
+
+        if (buildText && totalText) {
+          return `건축${buildText}ㆍ연${totalText}`;
+        }
+        if (buildText) {
+          return `건축${buildText}`;
+        }
+        if (totalText) {
+          return `연${totalText}`;
+        }
+        return formatAreaByUnit(areaText, unit, typeText);
+      }
+
       if (/오피스텔/.test(typeText)) {
         const parsed = parseApartmentAreas(areaText || "-");
         const privateText = Number.isFinite(parsed.private) ? formatSingleAreaValue(parsed.private, unit) : "-";
@@ -4946,6 +4991,39 @@
         const targetValue = detailAreaMode === "land" ? parsed.land : parsed.total;
 
         detailAreaLabel.textContent = detailAreaMode === "land" ? "면적(대지)" : "면적(연)";
+        setDetailAreaValueHTML(Number.isFinite(targetValue) ? formatSingleAreaValue(targetValue, unit) : "-");
+
+        if (detailAreaTypeToggleBtn) {
+          detailAreaTypeToggleBtn.style.display = "inline-flex";
+        }
+        return;
+      }
+
+      if (/콘도/.test(typeText)) {
+        const raw = String(detailItem.area || "-").trim();
+
+        const buildMatch =
+          raw.match(/건축면적\s*([\d,.]+)㎡/) ||
+          raw.match(/건축면적\s*([\d,.]+)평/) ||
+          raw.match(/\(건축\)\s*([\d,.]+)㎡/) ||
+          raw.match(/\(건축\)\s*([\d,.]+)평/) ||
+          raw.match(/건축\s*([\d,.]+)㎡/) ||
+          raw.match(/건축\s*([\d,.]+)평/);
+
+        const totalMatch =
+          raw.match(/연면적\s*([\d,.]+)㎡/) ||
+          raw.match(/연면적\s*([\d,.]+)평/) ||
+          raw.match(/\(연\)\s*([\d,.]+)㎡/) ||
+          raw.match(/\(연\)\s*([\d,.]+)평/) ||
+          raw.match(/연\s*([\d,.]+)㎡/) ||
+          raw.match(/연\s*([\d,.]+)평/);
+
+        const buildValue = buildMatch ? Number(String(buildMatch[1]).replace(/,/g, "")) : null;
+        const totalValue = totalMatch ? Number(String(totalMatch[1]).replace(/,/g, "")) : null;
+        const showBuild = detailAreaMode === "build";
+        const targetValue = showBuild ? buildValue : totalValue;
+
+        detailAreaLabel.textContent = showBuild ? "면적(건축)" : "면적(연)";
         setDetailAreaValueHTML(Number.isFinite(targetValue) ? formatSingleAreaValue(targetValue, unit) : "-");
 
         if (detailAreaTypeToggleBtn) {
@@ -5613,7 +5691,7 @@ function getBadgeTextMetrics(text) {
 
       detailHeroFeatures.innerHTML = "";
 
-      detailAreaMode = isApartmentType(detailItem.type || "") ? "private" : "total";
+      detailAreaMode = /콘도/.test(detailItem.type || "") ? "build" : (isApartmentType(detailItem.type || "") ? "private" : "total");
       detailAreaValue.dataset.areaRaw = detailItem.area || "-";
       detailAreaValue.dataset.areaUnit = globalAreaUnit;
       detailAreaValue.dataset.areaType = detailItem.type || "";
@@ -6388,6 +6466,12 @@ function closeDetailPanel() {
 
           if (isDetachedHouseType(typeText) || isCommercialType(typeText)) {
             detailAreaMode = detailAreaMode === "land" ? "total" : "land";
+            syncDetailAreaDisplay(currentDetailItem);
+            return;
+          }
+
+          if (/콘도/.test(typeText)) {
+            detailAreaMode = detailAreaMode === "build" ? "total" : "build";
             syncDetailAreaDisplay(currentDetailItem);
             return;
           }
