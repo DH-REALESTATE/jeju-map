@@ -21,6 +21,28 @@
     "features": ["제주시", "일도이동", "오피스텔"],
     "agent_folder": "./syreal/agent.json"
   },
+
+  {
+    "id": "So602",
+    "listingNo": "So602",
+    "date": "2026-04-13",
+    "title": "모던테라스 오피스텔",
+    "desc": "모던테라스 오피스텔 1동 / 노형이마트인근 풀옵션 원룸 임대",
+    "image": "./syreal/So602/1.jpg",
+    "desc_folder": "./syreal/So602/info.json",
+    "image_folder": "./syreal/So602/image.json",
+    "type": "오피스텔",
+    "dealFilter": "월세",
+    "region": "노형동",
+    "price": "200/42",
+    "area": "계약면적 34.51㎡ / 전용면적 22.24㎡",
+    "address": "제주시 노형동 920",
+    "lat": 33.483826,
+    "lng": 126.481157,
+    "features": ["제주시", "노형동", "오피스텔"],
+    "agent_folder": "./syreal/agent.json"
+  },
+  
   
 
 
