@@ -34,6 +34,17 @@
       "phone": "010-7281-7122",
       "image": "./syreal/agent.jpg",
       "link": "https://open.kakao.com/o/gI8aEcqi"
+    },
+    {
+      "id": 4,
+      "name": "백세흠",
+      "office": "믿음공인중개사사무소",
+      "address": "제주특별자치도 제주시 노형로 356, 5층",
+      "regNo": "50110-2025-00031",
+      "desc": "친절상담",
+      "phone": "010-3535-0049",
+      "image": "./trust/agent.jpg",
+      "link": ""
     }
   ]
 }
