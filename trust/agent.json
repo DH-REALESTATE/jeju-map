@@ -1,1 +1,11 @@
-1
+{
+  "agentName": "백세흠",
+  "agentImage": "./trust/agent.jpg",
+  "agentTitle": "대표",
+  "agentOffice": "믿음공인중개사사무소",
+  "agentAddress": "제주특별자치도 제주시 노형로 356, 5층",
+  "agentRegNo": "50110-2025-00031",
+  "phone1": "010-3535-0049",
+  "Link_crossroad" : "",
+  "Link_kakaotalk" : ""
+}
