@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>REALJEJU.APP Ver 1.622</title>
-<meta property="og:title" id="ogTitleMeta" content="REALJEJU.APP Ver 1.622" />
-  <meta property="og:description" id="ogDescriptionMeta" content="REALJEJU.APP Ver 1.622" />
+  <title>REALJEJU.APP Ver 1.621</title>
+<meta property="og:title" id="ogTitleMeta" content="REALJEJU.APP Ver 1.621" />
+  <meta property="og:description" id="ogDescriptionMeta" content="REALJEJU.APP Ver 1.621" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
   <meta property="og:image" content="https://your-domain.example/og-image.jpg" />
@@ -21,7 +21,7 @@
   <style>
     :root {
       --sidebar-list-width: 360px;
-      --detail-panel-width: 420px;
+      --detail-panel-width: 400px;
       --sidebar-current-width: var(--sidebar-list-width);
       --brand: #14b8a6;
       --bg: #f4f7fb;
@@ -694,7 +694,7 @@
     }
 
     .detail-info-label {
-      min-width: 90px;
+      min-width: 108px;
       font-size: 14px;
       letter-spacing: -0.1px;
       font-weight: 400;
@@ -711,9 +711,9 @@
       color: #1f2a36;
       text-align: right;
       line-height: 1.35;
-  white-space: normal;
-  word-break: break-word;     /* ← 이걸로 변경 */
-  overflow-wrap: anywhere;    /* ← 추가 (핵심) */
+      white-space: normal;
+      word-break: break-word;     /* ← 이걸로 변경 */
+      overflow-wrap: anywhere;    /* ← 추가 (핵심) */
       letter-spacing: -0.2px;
       min-width: 0;
     }
@@ -3431,51 +3431,52 @@
     .map-zoom-stack {
       position: absolute;
       right: 20px;
-      top: 54%;
-      transform: translateY(-50%);
+      top: 140px;
+      transform: none;
       z-index: 34;
       display: flex;
       flex-direction: column;
       gap: 3px;
     }
 
-    .map-zoom-btn{
-        width:44px;
-    height:44px;
-    border:1px solid rgba(15,41,66,0.12);
-    border-radius:16px;
-    background:rgba(255,255,255,0.96);
-    color:#1f2a36;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    box-shadow:0 12px 28px rgba(15,41,66,0.14);
-    cursor:pointer;
-    backdrop-filter:blur(8px);
-    -webkit-backdrop-filter:blur(8px);
+.map-zoom-btn{
+  width:44px;
+  height:44px;
+  border:1px solid rgba(15,41,66,0.12);
+  border-radius:16px;
+  background:rgba(255,255,255,0.96);
+  color:#1f2a36;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 12px 28px rgba(15,41,66,0.14);
+  cursor:pointer;
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
 
-    transition:
-        transform 0.14s ease,
-        box-shadow 0.18s ease,
-        background 0.18s ease,
-        border-color 0.18s ease;
-    }
+  transition:
+    transform 0.14s ease,
+    box-shadow 0.18s ease,
+    background 0.18s ease,
+    border-color 0.18s ease;
+}
 
     .map-zoom-btn i {
-        font-size: 18px;
-        line-height: 1;
-        pointer-events: none;
+      font-size: 18px;
+      line-height: 1;
+      pointer-events: none;
     }
 
-    .map-zoom-btn:hover{
-        background:#fff;
-        box-shadow:0 14px 30px rgba(15,41,66,0.18);
-    }   
+.map-zoom-btn:hover{
+  background:#fff;
+  box-shadow:0 14px 30px rgba(15,41,66,0.18);
+}
 
-    .map-zoom-btn:active{
-        transform:scale(0.92);
-        box-shadow:0 8px 18px rgba(15,41,66,0.12);
-    }
+.map-zoom-btn:active{
+  transform:scale(0.92);
+  box-shadow:0 8px 18px rgba(15,41,66,0.12);
+}
+
 
     /* ===== hide Kakao original zoom control ===== */
     .map-wrap .map_zoomcontrol,
@@ -3995,7 +3996,7 @@
   <script>
     const UI_FONT_STACK = 'Inter, Pretendard, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
     const APP_NAME = "REALJEJU.APP";
-    const APP_VERSION = "1.622";
+    const APP_VERSION = "1.621";
 
     function applyAppVersion() {
       const fullVersionText = `${APP_NAME} Ver ${APP_VERSION}`;
@@ -4095,25 +4096,47 @@
     const mapRecommendTitleText = document.getElementById("mapRecommendTitleText");
     const mapRecommendAddress = document.getElementById("mapRecommendAddress");
 
-    function resolveRelativeImagePath(item, value) {
-      if (!value || typeof value !== "string") return value || "";
-      if (/^(?:https?:)?\/\//.test(value) || value.startsWith("./") || value.startsWith("../") || value.startsWith("/")) {
-        return value;
-      }
-      const folder = String(item?.image_folder || "");
-      const basePath = folder.replace(/image\.json(?:\?.*)?$/i, "");
-      return basePath ? `${basePath}${value}` : value;
-    }
+    function positionMapZoomStack() {
+      if (!mapZoomStack || !mapWrap) return;
 
-    function resolveImageJsonPaths(item, payload) {
-      if (!payload || typeof payload !== "object") return payload;
-      return {
-        ...payload,
-        image: resolveRelativeImagePath(item, payload.image || ""),
-        images: Array.isArray(payload.images)
-          ? payload.images.map((img) => resolveRelativeImagePath(item, img))
-          : payload.images
-      };
+      const wrapRect = mapWrap.getBoundingClientRect();
+      const stackHeight = mapZoomStack.offsetHeight || 91;
+      const topMin = 110;
+      const bottomSafe = 20;
+
+      const agentVisible = mapAgentCard && mapAgentCard.style.display !== "none";
+      const recommendVisible = mapRecommendCard && mapRecommendCard.style.display !== "none";
+
+      if (agentVisible && recommendVisible) {
+        const agentRect = mapAgentCard.getBoundingClientRect();
+        const recommendRect = mapRecommendCard.getBoundingClientRect();
+
+        const gapTop = agentRect.bottom - wrapRect.top;
+        const gapBottom = recommendRect.top - wrapRect.top;
+        const gapCenter = (gapTop + gapBottom) / 2;
+        const centeredTop = gapCenter - (stackHeight / 2);
+        const maxTop = Math.max(topMin, wrapRect.height - stackHeight - bottomSafe);
+
+        mapZoomStack.style.top = `${Math.max(topMin, Math.min(centeredTop, maxTop))}px`;
+        return;
+      }
+
+      if (agentVisible) {
+        const agentRect = mapAgentCard.getBoundingClientRect();
+        mapZoomStack.style.top = `${Math.max(topMin, agentRect.bottom - wrapRect.top + 12)}px`;
+        return;
+      }
+
+      if (recommendVisible) {
+        const recommendRect = mapRecommendCard.getBoundingClientRect();
+        const top = Math.max(topMin, recommendRect.top - wrapRect.top - stackHeight - 12);
+        mapZoomStack.style.top = `${top}px`;
+        return;
+      }
+
+      const fallbackTop = Math.max(topMin, ((wrapRect.height - stackHeight) / 2));
+      const maxTop = Math.max(topMin, wrapRect.height - stackHeight - bottomSafe);
+      mapZoomStack.style.top = `${Math.min(fallbackTop, maxTop)}px`;
     }
 
         const dealButtons = document.querySelectorAll("#dealButtons button");
@@ -4423,12 +4446,14 @@
       if (!agent || state.isRecommendAgentDismissed) {
         mapAgentCard.style.display = "none";
         mapAgentCard.setAttribute("aria-hidden", "true");
+        positionMapZoomStack();
         return;
       }
 
       state.recommendAgent = agent;
       mapAgentCard.style.display = "block";
       mapAgentCard.setAttribute("aria-hidden", "false");
+      requestAnimationFrame(positionMapZoomStack);
 
       if (mapAgentPhoto) {
         mapAgentPhoto.style.backgroundImage = agent.image ? `url('${escapeHtml(agent.image)}')` : "none";
@@ -4484,12 +4509,14 @@
         mapRecommendCard.style.display = "none";
         mapRecommendCard.onclick = null;
         mapRecommendCard.setAttribute("aria-hidden", "true");
+        positionMapZoomStack();
         return;
       }
 
       state.recommendItem = item;
       mapRecommendCard.style.display = "block";
       mapRecommendCard.setAttribute("aria-hidden", "false");
+      requestAnimationFrame(positionMapZoomStack);
 
       if (mapRecommendThumb) {
         mapRecommendThumb.style.backgroundImage = `url('${escapeHtml(item.image || "")}')`;
@@ -4948,7 +4975,7 @@
         return `계약${supplyText}ㆍ전용${privateText}`;
       }
 
-      if (/원룸|투룸/.test(typeText)) {
+      if (/원룸/.test(typeText)) {
         const parsed = parseApartmentAreas(areaText || "-");
         const privateText = Number.isFinite(parsed.private) ? formatSingleAreaValue(parsed.private, unit) : "-";
         const supplyText = Number.isFinite(parsed.supply) ? formatSingleAreaValue(parsed.supply, unit) : "-";
@@ -5082,7 +5109,7 @@
         return;
       }
 
-      if (isApartmentType(typeText) || /원룸|투룸/.test(typeText)) {
+      if (isApartmentType(typeText) || /원룸/.test(typeText)) {
         const parsed = parseApartmentAreas(detailItem.area || "-");
         const showSupply = detailAreaMode === "supply";
         const targetValue = showSupply ? parsed.supply : parsed.private;
@@ -5141,8 +5168,7 @@
         try {
           const res = await fetch(normalizedAgentPath, { cache: "no-store" });
           if (!res.ok) throw new Error(`agent.json 불러오기 실패: ${res.status}`);
-          let data = await res.json();
-        data = resolveImageJsonPaths(item, data);
+          const data = await res.json();
           const remoteData = {
             ...data,
             agentImage: toRemotePath(data?.agentImage)
@@ -5235,7 +5261,7 @@
           })
         );
 
-        state.all = [...enriched].sort((a, b) => getSortDateValue(b) - getSortDateValue(a));
+        state.all = enriched;
         syncSortLabelUI();
         applyFilter();
         updateMapEmptyState();
@@ -5511,6 +5537,29 @@ function getBadgeTextMetrics(text) {
       return raw.length >= 2 ? raw.slice(-2) : raw;
     }
 
+    function resolveRelativeImagePath(item, value) {
+      if (!value || typeof value !== "string") return value || "";
+      const trimmed = String(value).trim();
+      if (!trimmed) return "";
+      if (/^(?:https?:)?\/\//.test(trimmed) || trimmed.startsWith("./") || trimmed.startsWith("../") || trimmed.startsWith("/")) {
+        return trimmed;
+      }
+      const folder = String(item?.image_folder || "");
+      const basePath = folder.replace(/image\.json(?:\?.*)?$/i, "");
+      return basePath ? `${basePath}${trimmed}` : trimmed;
+    }
+
+    function resolveImageJsonPaths(item, payload) {
+      if (!payload || typeof payload !== "object") return payload || {};
+      return {
+        ...payload,
+        image: resolveRelativeImagePath(item, payload.image || ""),
+        images: Array.isArray(payload.images)
+          ? payload.images.map((img) => resolveRelativeImagePath(item, img)).filter(Boolean)
+          : []
+      };
+    }
+
     async function loadJsonFile(path, cacheStore, errorLabel) {
       if (!path) return {};
       if (cacheStore[path]) return cacheStore[path];
@@ -5759,12 +5808,12 @@ function getBadgeTextMetrics(text) {
 
       detailAreaMode = /콘도/.test(detailItem.type || "")
         ? "build"
-        : ((isApartmentType(detailItem.type || "") || /원룸|투룸/.test(detailItem.type || "")) ? "private" : "total");
+        : ((isApartmentType(detailItem.type || "") || /원룸/.test(detailItem.type || "")) ? "private" : "total");
       detailAreaValue.dataset.areaRaw = detailItem.area || "-";
       detailAreaValue.dataset.areaUnit = globalAreaUnit;
       detailAreaValue.dataset.areaType = detailItem.type || "";
       if (detailAreaToggleBtn) {
-        detailAreaToggleBtn.style.display = (isApartmentType(detailItem.type || "") || /오피스텔|원룸|투룸/.test(detailItem.type || "")) ? "inline-flex" : "none";
+        detailAreaToggleBtn.style.display = (isApartmentType(detailItem.type || "") || /오피스텔|원룸/.test(detailItem.type || "")) ? "inline-flex" : "none";
       }
       syncDetailAreaDisplay(detailItem);
       detailTypeValue.textContent = getDisplayTypeLabel(detailItem.type);
@@ -6565,7 +6614,7 @@ function closeDetailPanel() {
             return;
           }
 
-          if (isApartmentType(typeText) || /오피스텔|원룸|투룸/.test(typeText)) {
+          if (isApartmentType(typeText) || /오피스텔|원룸/.test(typeText)) {
             detailAreaMode = detailAreaMode === "supply" ? "private" : "supply";
             syncDetailAreaDisplay(currentDetailItem);
           }
@@ -6799,6 +6848,7 @@ function closeDetailPanel() {
       window.addEventListener("resize", () => {
         if (!state.map) return;
         state.map.relayout();
+        positionMapZoomStack();
       });
     }
 
@@ -6971,6 +7021,7 @@ function closeDetailPanel() {
       selectedType = selectedType || "all";
       await loadRecommendData();
       await loadProperties();
+      requestAnimationFrame(positionMapZoomStack);
       syncFeatureButtons();
     }
 
