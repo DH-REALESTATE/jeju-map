@@ -1,5 +1,25 @@
 [  
-
+  
+  {
+    "id": 82272856,
+    "listingNo": "82272856",
+    "date": "2026-04-13",
+    "title": "오피스텔형 투룸",
+    "desc": "삼무공원 인근 깔끔한 2룸 임대",
+    "image": "./syreal/82272856/1.jpg",
+    "desc_folder": "./syreal/82272856/info.json",
+    "image_folder": "./syreal/82272856/image.json",
+    "type": "오피스텔",
+    "dealFilter": "월세",
+    "region": "연동",
+    "price": "300/70",
+    "area": "공급면적 46.28㎡ / 전용면적 33.06㎡",
+    "address": "제주도 제주시 연동 260-7",
+    "lat": 33.491241,
+    "lng": 126.489961,
+    "agent_folder": "./syreal/agent.json"
+  },
+  
   {
     "id": 82272930,
     "listingNo": "82272930",
