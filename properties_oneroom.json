@@ -1,0 +1,83 @@
+[  
+
+  {
+    "id": 82273065,
+    "listingNo": "82273065",
+    "date": "2026-04-13",
+    "title": "도청인근풀옵션 1.5룸",
+    "desc": "도청인근 풀옵션 1.5룸 월세(1세대1주차/SUV 가능) ",
+    "image": "./syreal/82273065/1.jpg",
+    "desc_folder": "./syreal/82273065/info.json",
+    "image_folder": "./syreal/82273065/image.json",
+    "type": "원룸",
+    "dealFilter": "월세",
+    "region": "연동",
+    "price": "300/52",
+    "area": "공급면적 33.06㎡ / 전용면적 26.45㎡",
+    "address": "제주도 제주시 연동 310-7",
+    "lat": 33.492816,
+    "lng": 126.497646,
+    "agent_folder": "./syreal/agent.json"
+  },
+  
+  {
+    "id": 82273306,
+    "listingNo": "82273306",
+    "date": "2026-04-13",
+    "title": "다세대형 투베이(1.5룸)",
+    "desc": "롯데마트 인근,가성비굿/풀옵션 1.5룸",
+    "image": "./syreal/82273306/1.jpg",
+    "desc_folder": "./syreal/82273306/info.json",
+    "image_folder": "./syreal/82273306/image.json",
+    "type": "원룸",
+    "dealFilter": "월세",
+    "region": "노형동",
+    "price": "200/45",
+    "area": "공급면적 36.36㎡ / 전용면적 29.75㎡",
+    "address": "제주도 제주시 노형동 936-9",
+    "lat": 33.482763,
+    "lng": 126.483538,
+    "agent_folder": "./syreal/agent.json"
+  },
+  
+  {
+    "id": 82156471,
+    "listingNo": "82156471",
+    "date": "2026-04-13",
+    "title": "오피스텔형 투베이",
+    "desc": "오피스텔형 투베이(1.5룸)",
+    "image": "./syreal/82156471/1.jpeg",
+    "desc_folder": "./syreal/82156471/info.json",
+    "image_folder": "./syreal/82156471/image.json",
+    "type": "오피스텔",
+    "dealFilter": "년세",
+    "region": "일도이동",
+    "price": "300/649",
+    "area": "공급면적 39.67㎡ / 전용면적 33.06㎡",
+    "address": "제주시 일도이동 409-9",
+    "lat": 33.504958,
+    "lng": 126.541623,
+    "agent_folder": "./syreal/agent.json"
+  },
+
+  {
+    "id": "So602",
+    "listingNo": "So602",
+    "date": "2026-04-13",
+    "title": "모던테라스 오피스텔",
+    "desc": "모던테라스 오피스텔 1동 / 노형이마트인근 풀옵션 원룸 임대",
+    "image": "./syreal/So602/1.jpg",
+    "desc_folder": "./syreal/So602/info.json",
+    "image_folder": "./syreal/So602/image.json",
+    "type": "오피스텔",
+    "dealFilter": "월세",
+    "region": "노형동",
+    "price": "200/42",
+    "area": "계약면적 34.51㎡ / 전용면적 22.24㎡",
+    "address": "제주시 노형동 920",
+    "lat": 33.483826,
+    "lng": 126.481157,
+    "agent_folder": "./syreal/agent.json"
+  }
+  
+]
