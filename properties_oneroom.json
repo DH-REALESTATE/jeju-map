@@ -1,5 +1,25 @@
 [  
   
+    
+  {
+    "id": 82220372,
+    "listingNo": "82220372",
+    "date": "2026-04-15",
+    "title": "대림e편한세상2차",
+    "desc": "대림e편한세상2차 202동",
+    "image": "./syreal/82220372/1.jpg",
+    "desc_folder": "./syreal/82220372/info.json",
+    "image_folder": "./syreal/82220372/image.json",
+    "type": "아파트",
+    "dealFilter": "매매",
+    "region": "연동",
+    "price": "14억 5,000",
+    "area": "공급면적 179.09㎡ / 전용면적 139.52㎡",
+    "address": "제주도 제주시 연동 1399-1",
+    "lat": 33.479504,
+    "lng": 126.488541,
+    "agent_folder": "./syreal/agent.json"
+  },
   
   {
     "id": 82272645,
