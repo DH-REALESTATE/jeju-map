@@ -681,7 +681,7 @@
 
     .detail-info-row {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: space-between;
       gap: 0px;
       padding: 10px 0;
@@ -705,14 +705,15 @@
     }
 
     .detail-info-value {
-      flex: 0 0 auto;
+      flex: 1;
       font-size: 14px;
       font-weight: 600;
       color: #1f2a36;
       text-align: right;
       line-height: 1.35;
-      white-space: normal;
-      word-break: keep-all;
+  white-space: normal;
+  word-break: break-word;     /* ← 이걸로 변경 */
+  overflow-wrap: anywhere;    /* ← 추가 (핵심) */
       letter-spacing: -0.2px;
       min-width: 0;
     }
