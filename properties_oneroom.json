@@ -1,6 +1,26 @@
 [  
 
   {
+    "id": 81174017,
+    "listingNo": "81174017",
+    "date": "2026-04-15",
+    "title": "연동 중심지 호텔 매매",
+    "desc": "연동 중심 연북로 인근 - 비지니스/ 골프호텔  운영중 ",
+    "image": "./syreal/81174017/1.jpg",
+    "desc_folder": "./syreal/81174017/info.json",
+    "image_folder": "./syreal/81174017/image.json",
+    "type": "상가건물",
+    "dealFilter": "매매",
+    "region": "연동",
+    "price": "33억",
+    "area": "연면적 1,685.95㎡ / 대지면적 257.85㎡",
+    "address": "제주시 연동",
+    "lat": 33.0,
+    "lng": 126.0,
+    "agent_folder": "./syreal/agent.json"
+  },
+  
+  {
     "id": 81174119,
     "listingNo": "81174119",
     "date": "2026-04-15",
