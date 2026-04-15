@@ -1,5 +1,24 @@
 [  
 
+  {
+    "id": 82273306,
+    "listingNo": "82273306",
+    "date": "2026-04-13",
+    "title": "다세대형 투베이(1.5룸)",
+    "desc": "롯데마트 인근,가성비굿/풀옵션 1.5룸",
+    "image": "./syreal/82273306/1.jpg",
+    "desc_folder": "./syreal/82273306/info.json",
+    "image_folder": "./syreal/82273306/image.json",
+    "type": "원룸",
+    "dealFilter": "월세",
+    "region": "노형동",
+    "price": "200/45",
+    "area": "공급면적 36.36㎡ / 전용면적 29.75㎡",
+    "address": "제주도 제주시 노형동 936-9",
+    "lat": 33.482763,
+    "lng": 126.483538,
+    "agent_folder": "./syreal/agent.json"
+  },
   
   {
     "id": 82156471,
@@ -18,7 +37,6 @@
     "address": "제주시 일도이동 409-9",
     "lat": 33.504958,
     "lng": 126.541623,
-    "features": ["제주시", "일도이동", "오피스텔"],
     "agent_folder": "./syreal/agent.json"
   },
 
@@ -39,7 +57,6 @@
     "address": "제주시 노형동 920",
     "lat": 33.483826,
     "lng": 126.481157,
-    "features": ["제주시", "노형동", "오피스텔"],
     "agent_folder": "./syreal/agent.json"
   },
   
@@ -66,7 +83,6 @@
     "address": "서귀포시 성산읍 고성리 105",
     "lat": 33.427141,
     "lng": 126.926748,
-    "features": ["성산읍", "콘도", "투자용"],
     "agent_folder": "./dh_real/agent.json"
   },
   
@@ -87,7 +103,6 @@
     "address": "제주시 우도면 연평리",
     "lat": 33.496455,
     "lng": 126.952129,
-    "features": ["제주시", "우도면", "투자용"],
     "agent_folder": "./dh_real/agent.json"
   },
   
@@ -108,7 +123,6 @@
     "address": "제주시 삼도이동",
     "lat": 33.508857,
     "lng": 126.522726,
-    "features": ["제주시", "삼도동", "상가"],
     "agent_folder": "./dh_real/agent.json"
   },
 
@@ -129,7 +143,6 @@
     "address": "한림읍 금능리",
     "lat": 33.359202,
     "lng": 126.248453,
-    "features": ["한림읍", "금능리", "목장용지"],
     "agent_folder": "./dh_real/agent.json"
   },
   
@@ -150,7 +163,6 @@
     "address": "서귀포시 신효동",
     "lat": 33.263125,
     "lng": 126.611517,
-    "features": ["서귀포", "신효동", "투자용"],
     "agent_folder": "./dh_real/agent.json"
   },
   
@@ -171,7 +183,6 @@
     "address": "서귀포시 대정읍 무릉리",
     "lat": 33.268617,
     "lng": 126.198247,
-    "features": ["대정읍", "무릉리", "투자용"],
     "agent_folder": "./dh_real/agent.json"
   },
   
@@ -192,7 +203,6 @@
     "address": "서귀포시 대정읍 무릉리",
     "lat": 33.275333,
     "lng": 126.235478,
-    "features": ["대정읍", "무릉리", "단독주택"],
     "agent_folder": "./dh_real/agent.json"
   },
   
@@ -213,7 +223,6 @@
     "address": "제주시 조천읍 신촌리",
     "lat": 33.522656,
     "lng": 126.619226,
-    "features": ["조천읍", "신촌리", "계획관리"],
     "agent_folder": "./dh_real/agent.json"
   },
 
@@ -234,7 +243,6 @@
     "address": "서귀포시 안덕면 창천리",
     "lat": 33.266684,
     "lng": 126.362468,
-    "features": ["안덕면", "창천리", "자연녹지"],
     "agent_folder": "./dh_real/agent.json"
   },
   
@@ -255,7 +263,6 @@
     "address": "서귀포시 성산읍 시흥리",
     "lat": 33.468736,
     "lng": 126.874824,
-    "features": ["제2공항", "임야", "자연녹지"],
     "agent_folder": "./dh_real/agent.json"
   },
   
@@ -276,7 +283,6 @@
     "address": "제주시 노형동",
     "lat": 33.482823,
     "lng": 126.486248,
-    "features": ["노형동", "상가건물", "무권리"],
     "agent_folder": "./dh_real/agent.json"
   },
   
@@ -297,7 +303,6 @@
     "address": "제주시 대정읍 안성리",
     "lat": 33.263587,
     "lng": 126.296436,
-    "features": ["과수원", "대정읍"],
     "agent_folder": "./dh_real/agent.json"
   },
   
@@ -318,7 +323,6 @@
     "address": "제주시 구좌읍 세화리",
     "lat": 33.483273,
     "lng": 126.837127,
-    "features": ["임야", "계획관리지역"],
     "agent_folder": "./dh_real/agent.json"
   },
   
@@ -339,7 +343,6 @@
     "address": "제주시 노형동 3781",
     "lat": 33.484622,
     "lng": 126.478789,
-    "features": ["노형동", "생활권", "인프라"],
     "agent_folder": "./dh_real/agent.json"
   },
   
@@ -360,7 +363,6 @@
     "address": "서귀포시 대정읍 구억리 1187",
     "lat": 33.278000,
     "lng": 126.301707,
-    "features": ["영어교육도시", "실거주"],
     "agent_folder": "./dh_real/agent.json"
   },
 
@@ -381,7 +383,6 @@
     "address": "제주시 노형동 3791-1",
     "lat": 33.4830,
     "lng": 126.4795,
-    "features": ["생활권", "실거주"],
     "agent_folder": "./dh_real/agent.json"
   },
   
@@ -402,7 +403,6 @@
     "address": "제주시 노형동 수덕로 44",
     "lat": 33.4871157588,
     "lng": 126.4732126839,
-    "features": ["전세", "생활형", "학군"],
     "agent_folder": "./dh_real/agent.json"
   },
   
@@ -423,7 +423,6 @@
     "address": "제주시 서귀포시 법환동",
     "lat": 33.2376,
     "lng": 126.5152,
-    "features": ["오션뷰", "수익상품"],
     "agent_folder": "./dh_real/agent.json"
   },
 
@@ -444,7 +443,6 @@
     "address": "제주시 구좌읍 세화리",
     "lat": 33.490442,
     "lng": 126.814880,
-    "features": ["자연림", "한달살이"],
     "agent_folder": "./dh_real/agent.json"
   },
 
@@ -465,7 +463,6 @@
     "address": "제주시 조천읍 북촌리",
     "lat": 33.5432,
     "lng": 126.6884,
-    "features": ["농어촌민박", "단독주택"],
     "agent_folder": "./dh_real/agent.json"
   },
 
@@ -486,7 +483,6 @@
     "address": "제주시 삼도일동",
     "lat": 33.5095,
     "lng": 126.5186,
-    "features": ["단독주택", "원도심"],
     "agent_folder": "./dh_real/agent.json"
   }  
 
