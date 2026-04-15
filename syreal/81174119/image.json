@@ -1,15 +1,15 @@
 {
-  "image": "./syreal/82273306/1.jpg",
+  "image": "1.jpg",
   "images": [
-    "./syreal/82273306/1.jpg",
-    "./syreal/82273306/2.jpg",
-    "./syreal/82273306/3.jpg",
-    "./syreal/82273306/4.jpg",
-    "./syreal/82273306/5.jpg",
-    "./syreal/82273306/6.jpg",
-    "./syreal/82273306/7.jpg",
-    "./syreal/82273306/8.jpg",
-    "./syreal/82273306/9.jpg",
-    "./syreal/82273306/10.jpg"
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg",
+    "6.jpg",
+    "7.jpg",
+    "8.jpg",
+    "9.jpg",
+    "10.jpg"
   ]
 }
