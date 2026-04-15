@@ -1,5 +1,24 @@
 [  
-  
+
+  {
+    "id": 81174119,
+    "listingNo": "81174119",
+    "date": "2026-04-15",
+    "title": "정원파인즈15차",
+    "desc": "노형동 신축급 정원파인즈 15차 고층 대형평수 매매",
+    "image": "./syreal/81174119/1.jpg",
+    "desc_folder": "./syreal/81174119/info.json",
+    "image_folder": "./syreal/81174119/image.json",
+    "type": "아파트",
+    "dealFilter": "매매",
+    "region": "노형동",
+    "price": "8억 8,000",
+    "area": "공급면적 126.00㎡ / 전용면적 102.52㎡",
+    "address": "제주시 노형동 1285-1",
+    "lat": 33.485639,
+    "lng": 126.476925,
+    "agent_folder": "./syreal/agent.json"
+  },
     
   {
     "id": 82220372,
@@ -15,7 +34,7 @@
     "region": "연동",
     "price": "14억 5,000",
     "area": "공급면적 179.09㎡ / 전용면적 139.52㎡",
-    "address": "제주도 제주시 연동 1399-1",
+    "address": "제주시 연동 1399-1",
     "lat": 33.479504,
     "lng": 126.488541,
     "agent_folder": "./syreal/agent.json"
@@ -35,7 +54,7 @@
     "region": "연동",
     "price": "7,800",
     "area": "계약면적 32.72㎡ / 전용면적 18.09㎡",
-    "address": "제주도 제주시 연동 282-8",
+    "address": "제주시 연동 282-8",
     "lat": 33.491269,
     "lng": 126.489954,
     "agent_folder": "./syreal/agent.json"
@@ -76,7 +95,7 @@
     "region": "이호일동",
     "price": "300/65",
     "area": "공급면적 66.12㎡ / 전용면적 52.89㎡",
-    "address": "제주도 제주시 이호일동 1864",
+    "address": "제주시 이호일동 1864",
     "lat": 33.494067,
     "lng": 126.448946,
     "agent_folder": "./syreal/agent.json"
@@ -96,7 +115,7 @@
     "region": "연동",
     "price": "300/70",
     "area": "공급면적 46.28㎡ / 전용면적 33.06㎡",
-    "address": "제주도 제주시 연동 260-7",
+    "address": "제주시 연동 260-7",
     "lat": 33.491241,
     "lng": 126.489961,
     "agent_folder": "./syreal/agent.json"
@@ -116,7 +135,7 @@
     "region": "노형동",
     "price": "300/45",
     "area": "계약면적 33.06㎡ / 전용면적 23.14㎡",
-    "address": "제주도 제주시 노형동 923-2",
+    "address": "제주시 노형동 923-2",
     "lat": 33.483895,
     "lng": 126.481889,
     "agent_folder": "./syreal/agent.json"
@@ -136,7 +155,7 @@
     "region": "연동",
     "price": "300/52",
     "area": "공급면적 33.06㎡ / 전용면적 26.45㎡",
-    "address": "제주도 제주시 연동 310-7",
+    "address": "제주시 연동 310-7",
     "lat": 33.492816,
     "lng": 126.497646,
     "agent_folder": "./syreal/agent.json"
@@ -156,7 +175,7 @@
     "region": "노형동",
     "price": "200/45",
     "area": "공급면적 36.36㎡ / 전용면적 29.75㎡",
-    "address": "제주도 제주시 노형동 936-9",
+    "address": "제주시 노형동 936-9",
     "lat": 33.482763,
     "lng": 126.483538,
     "agent_folder": "./syreal/agent.json"
