@@ -3430,7 +3430,7 @@
     .map-zoom-stack {
       position: absolute;
       right: 20px;
-      top: 50%;
+      top: 54%;
       transform: translateY(-50%);
       z-index: 34;
       display: flex;
@@ -3438,44 +3438,43 @@
       gap: 3px;
     }
 
-.map-zoom-btn{
-  width:44px;
-  height:44px;
-  border:1px solid rgba(15,41,66,0.12);
-  border-radius:16px;
-  background:rgba(255,255,255,0.96);
-  color:#1f2a36;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  box-shadow:0 12px 28px rgba(15,41,66,0.14);
-  cursor:pointer;
-  backdrop-filter:blur(8px);
-  -webkit-backdrop-filter:blur(8px);
+    .map-zoom-btn{
+        width:44px;
+    height:44px;
+    border:1px solid rgba(15,41,66,0.12);
+    border-radius:16px;
+    background:rgba(255,255,255,0.96);
+    color:#1f2a36;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 12px 28px rgba(15,41,66,0.14);
+    cursor:pointer;
+    backdrop-filter:blur(8px);
+    -webkit-backdrop-filter:blur(8px);
 
-  transition:
-    transform 0.14s ease,
-    box-shadow 0.18s ease,
-    background 0.18s ease,
-    border-color 0.18s ease;
-}
-
-    .map-zoom-btn i {
-      font-size: 18px;
-      line-height: 1;
-      pointer-events: none;
+    transition:
+        transform 0.14s ease,
+        box-shadow 0.18s ease,
+        background 0.18s ease,
+        border-color 0.18s ease;
     }
 
-.map-zoom-btn:hover{
-  background:#fff;
-  box-shadow:0 14px 30px rgba(15,41,66,0.18);
-}
+    .map-zoom-btn i {
+        font-size: 18px;
+        line-height: 1;
+        pointer-events: none;
+    }
 
-.map-zoom-btn:active{
-  transform:scale(0.92);
-  box-shadow:0 8px 18px rgba(15,41,66,0.12);
-}
+    .map-zoom-btn:hover{
+        background:#fff;
+        box-shadow:0 14px 30px rgba(15,41,66,0.18);
+    }   
 
+    .map-zoom-btn:active{
+        transform:scale(0.92);
+        box-shadow:0 8px 18px rgba(15,41,66,0.12);
+    }
 
     /* ===== hide Kakao original zoom control ===== */
     .map-wrap .map_zoomcontrol,
