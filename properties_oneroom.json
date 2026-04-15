@@ -1,9 +1,29 @@
 [  
-
+  
+  
+  {
+    "id": 82272645,
+    "listingNo": "82272645",
+    "date": "2026-04-15",
+    "title": "브리타니연동삼성홈타운 2차",
+    "desc": "교통/편의시설 생활권 좋은 위치 - 한라병원/ 시티호텔 인근",
+    "image": "./syreal/82272645/1.jpg",
+    "desc_folder": "./syreal/82272645/info.json",
+    "image_folder": "./syreal/82272645/image.json",
+    "type": "오피스텔",
+    "dealFilter": "매매",
+    "region": "연동",
+    "price": "7,800",
+    "area": "계약면적 32.72㎡ / 전용면적 18.09㎡",
+    "address": "제주도 제주시 연동 282-8",
+    "lat": 33.491269,
+    "lng": 126.489954,
+    "agent_folder": "./syreal/agent.json"
+  },
+  
   {
     "id": 82272723,
     "listingNo": "82272723",
-    "animal": "OK",
     "date": "2026-04-15",
     "title": "삼무공원인근 풀옵션 투룸",
     "desc": "교통/편의시설 생활권 좋은 위치 - 한라병원/ 시티호텔 인근",
