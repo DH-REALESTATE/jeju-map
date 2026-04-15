@@ -1,4 +1,25 @@
 [  
+
+  {
+    "id": 82272766,
+    "listingNo": "82272766",
+    "animal": "OK",
+    "date": "2026-04-15",
+    "title": "풀옵션 투룸 반려동물 OK",
+    "desc": "이호일동 일주서로인근 / 투룸 임대",
+    "image": "./syreal/82272766/1.jpg",
+    "desc_folder": "./syreal/82272766/info.json",
+    "image_folder": "./syreal/82272766/image.json",
+    "type": "투룸",
+    "dealFilter": "월세",
+    "region": "이호일동",
+    "price": "300/65",
+    "area": "공급면적 66.12㎡ / 전용면적 52.89㎡",
+    "address": "제주도 제주시 이호일동 1864",
+    "lat": 33.494067,
+    "lng": 126.448946,
+    "agent_folder": "./syreal/agent.json"
+  },
   
   {
     "id": 82272856,
