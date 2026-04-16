@@ -1,20 +1,12 @@
 import { createClient } from '@supabase/supabase-js';
 
+const supabase = createClient(
+  process.env.REALJEJU_PUBLIC_SUPABASE_URL,
+  process.env.REALJEJU_SUPABASE_SECRET_KEY
+);
+
 export default async function handler(req, res) {
   try {
-    if (!process.env.REALJEJU_PUBLIC_SUPABASE_URL) {
-      return res.status(500).json({ error: 'Missing REALJEJU_PUBLIC_SUPABASE_URL' });
-    }
-
-    if (!process.env.REALJEJU_SUPABASE_SECRET_KEY) {
-      return res.status(500).json({ error: 'Missing REALJEJU_SUPABASE_SECRET_KEY' });
-    }
-
-    const supabase = createClient(
-      process.env.REALJEJU_PUBLIC_SUPABASE_URL,
-      process.env.REALJEJU_SUPABASE_SECRET_KEY
-    );
-
     const ids = String(req.query.ids || '')
       .split(',')
       .map(v => v.trim())
@@ -30,7 +22,7 @@ export default async function handler(req, res) {
       .in('listing_no', ids);
 
     if (error) {
-      return res.status(500).json({ error: error.message });
+      return res.status(500).json({ error: 'Failed to load views' });
     }
 
     const items = {};
@@ -40,6 +32,6 @@ export default async function handler(req, res) {
 
     return res.status(200).json({ items });
   } catch (e) {
-    return res.status(500).json({ error: e?.message || 'Server error' });
+    return res.status(500).json({ error: 'Server error' });
   }
 }
