@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>REALJEJU.APP Ver 1.649</title>
-<meta property="og:title" id="ogTitleMeta" content="REALJEJU.APP Ver 1.649" />
-  <meta property="og:description" id="ogDescriptionMeta" content="REALJEJU.APP Ver 1.649" />
+  <title>REALJEJU.APP Ver 1.651</title>
+<meta property="og:title" id="ogTitleMeta" content="REALJEJU.APP Ver 1.651" />
+  <meta property="og:description" id="ogDescriptionMeta" content="REALJEJU.APP Ver 1.651" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
   <meta property="og:image" content="https://your-domain.example/og-image.jpg" />
@@ -1759,37 +1759,23 @@
       color:#334155;
     }
 
-    .card-meta-right {
-      display: inline-flex;
-      align-items: flex-end;
-      gap: 6px;
-      flex-direction: column;
-      white-space: nowrap;
-      margin-left: auto;
-    }
-
-    .card-view-count {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 20px;
-      padding: 0 8px;
-      border-radius: 999px;
-      background: #f7f9fc;
-      border: 1px solid #e5ebf1;
-      color: #5f6b78;
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: -0.1px;
-      line-height: 1;
-      white-space: nowrap;
-    }
-
     .card-date {
-  font-size: 11px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 34px;
+  height: 25px;
+  padding: 0 8px;
+  border-radius: 12px;
+  background: #eef3f7;
+  border: 1px solid transparent;
+  color: #6b7785;
+  font-size: 13px;
+  font-weight: 800;
   letter-spacing: -0.1px;
-  color: #95a2af;
   white-space: nowrap;
+  line-height: 1;
+  flex: 0 0 auto;
 }
 
     .card-title {
@@ -3142,16 +3128,18 @@
 }
 
 .card-badge {
-  height: 23px;
-  padding: 0 10px;
+  height: 25px;
+  padding: 0 7px;
   font-size: 11px;
   font-weight: 900;
   letter-spacing: -0.12px;
 }
 
 .card-date {
-  font-size: 14px;
-  color: #95a2af;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: -0.1px;
+  color: #6b7785;
 }
 
 .card-title {
@@ -4021,7 +4009,7 @@
   <script>
     const UI_FONT_STACK = 'Inter, Pretendard, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
     const APP_NAME = "REALJEJU.APP";
-    const APP_VERSION = "1.649";
+    const APP_VERSION = "1.651";
 
     function applyAppVersion() {
       const fullVersionText = `${APP_NAME} Ver ${APP_VERSION}`;
@@ -4042,8 +4030,74 @@
       return String(value).trim();
     }
 
+    let viewMap = {};
+
+    function getViewCountText(listingNo) {
+      const count = Number(viewMap[String(listingNo || "").trim()] || 0);
+      return `조회 ${Number.isFinite(count) ? count : 0}`;
+    }
+
+    function updateViewCountElements(listingNo, count) {
+      const key = String(listingNo || "").trim();
+      if (!key) return;
+      document.querySelectorAll(`.card-date[data-listing-no="${key}"]`).forEach(el => {
+        el.textContent = `조회 ${Number.isFinite(Number(count)) ? Number(count) : 0}`;
+      });
+    }
+
+    async function fetchViewCounts(items) {
+      const ids = [...new Set((items || []).map(item => String(item.listingNo || "").trim()).filter(Boolean))];
+      if (!ids.length) return {};
+      try {
+        const res = await fetch(`/api/views?ids=${encodeURIComponent(ids.join(","))}`);
+        if (!res.ok) return {};
+        const json = await res.json();
+        return json && typeof json.items === "object" ? (json.items || {}) : {};
+      } catch (err) {
+        console.error("조회 불러오기 실패:", err);
+        return {};
+      }
+    }
+
+    async function refreshCardViewCounts(items) {
+      const renderSeq = ++state.viewRenderSeq;
+      const fetched = await fetchViewCounts(items);
+      if (renderSeq !== state.viewRenderSeq) return;
+      viewMap = { ...viewMap, ...fetched };
+      Object.entries(fetched).forEach(([listingNo, count]) => {
+        updateViewCountElements(listingNo, count);
+      });
+    }
+
+    async function incrementViewCount(listingNo) {
+      const key = String(listingNo || "").trim();
+      if (!key) return null;
+      try {
+        const res = await fetch("/api/view", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ listingNo: key })
+        });
+        const json = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          console.error("조회 증가 실패:", json?.error || res.statusText);
+          return null;
+        }
+        const nextCount = Number(json?.views);
+        if (!Number.isFinite(nextCount)) return null;
+        viewMap[key] = nextCount;
+        updateViewCountElements(key, nextCount);
+        return nextCount;
+      } catch (err) {
+        console.error("조회 증가 실패:", err);
+        return null;
+      }
+    }
+
+
     const state = {
       map: null,
+      viewRenderSeq: 0,
       clusterer: null,
       markers: [],
       all: [],
@@ -4058,8 +4112,7 @@
       recommendAgent: null,
       lastRecommendPoolKey: "",
       isRecommendCardDismissed: false,
-      isRecommendAgentDismissed: false,
-      viewCounts: {}
+      isRecommendAgentDismissed: false
     };
 
     let recommendIds = [];
@@ -6340,68 +6393,6 @@ function closeDetailPanel() {
       }, 0);
     }
 
-
-    function normalizeListingNoKey(value) {
-      return String(value || "").trim();
-    }
-
-    function getItemListingNo(item) {
-      return normalizeListingNoKey(item?.listingNo || item?.id || "");
-    }
-
-    function updateVisibleCardViewCounts() {
-      document.querySelectorAll(".card-view-count[data-listing-no]").forEach(node => {
-        const listingNo = normalizeListingNoKey(node.dataset.listingNo);
-        const views = Number(state.viewCounts?.[listingNo] || 0);
-        node.textContent = `조회수 ${views}`;
-      });
-    }
-
-    async function fetchAndApplyViewCounts(items) {
-      const listingNos = [...new Set(
-        (items || []).map(getItemListingNo).filter(Boolean)
-      )];
-
-      if (!listingNos.length) return;
-
-      try {
-        const res = await fetch(`/api/views?ids=${encodeURIComponent(listingNos.join(","))}`);
-        if (!res.ok) return;
-
-        const json = await res.json();
-        const incoming = json?.items || {};
-
-        Object.entries(incoming).forEach(([listingNo, views]) => {
-          state.viewCounts[normalizeListingNoKey(listingNo)] = Number(views || 0);
-        });
-
-        updateVisibleCardViewCounts();
-      } catch (err) {
-        console.warn("조회수 로드 실패", err);
-      }
-    }
-
-    async function increaseViewCount(item) {
-      const listingNo = getItemListingNo(item);
-      if (!listingNo) return;
-
-      try {
-        const res = await fetch("/api/view", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ listingNo })
-        });
-        if (!res.ok) return;
-
-        const json = await res.json();
-        const nextViews = Number(json?.views ?? ((state.viewCounts[listingNo] || 0) + 1));
-        state.viewCounts[listingNo] = nextViews;
-        updateVisibleCardViewCounts();
-      } catch (err) {
-        console.warn("조회수 증가 실패", err);
-      }
-    }
-
     function renderList(data) {
       if (!data.length) {
         propertyList.innerHTML = `
@@ -6425,7 +6416,7 @@ function closeDetailPanel() {
         const rawTypeText = item.type || "-";
         const typeText = escapeHtml(getCardTypeBadgeLabel(rawTypeText));
         const titleText = escapeHtml(item.title || "매물명");
-        const dateText = item.dateLabel || (item.date ? getRelativeDate(item.date) : "");
+        const viewText = getViewCountText(item.listingNo);
 
         const agentName = escapeHtml(item.agentName || "담당자");
         const agentTitle = escapeHtml(item.agentTitle || "");
@@ -6438,7 +6429,7 @@ function closeDetailPanel() {
           : `<span class="area-display" data-area-raw="${escapeHtml(item.area || "-")}" data-area-unit="${globalAreaUnit}" data-area-type="${escapeHtml(rawTypeText || "")}">${formatCardAreaByUnit(item.area || "-", globalAreaUnit, rawTypeText || "")}</span>`;
 
         return `
-          <article class="card" data-id="${item.id}" data-listing-no="${escapeHtml(getItemListingNo(item))}">
+          <article class="card" data-id="${item.id}">
             <div class="card-inner-row">
               <div class="thumb" style="background-image:url('${thumb}')"></div>
 
@@ -6448,10 +6439,7 @@ function closeDetailPanel() {
                     <span class="card-badge" data-type="${typeText}">${typeText}</span>
                     <span class="card-badge deal" data-type="${dealLabel}">${dealLabel}</span>
                   </div>
-                  <div class="card-meta-right">
-                    <span class="card-date">${escapeHtml(dateText)}</span>
-                    <span class="card-view-count" data-listing-no="${escapeHtml(getItemListingNo(item))}">조회수 ${Number(state.viewCounts[getItemListingNo(item)] || 0)}</span>
-                  </div>
+                  <span class="card-date" data-listing-no="${escapeHtml(item.listingNo || "")}">${escapeHtml(viewText)}</span>
                 </div>
 
                 <div class="card-title">${titleText}</div>
@@ -6484,6 +6472,8 @@ function closeDetailPanel() {
         `;
       }).join("");
 
+      refreshCardViewCounts(data);
+
       document.querySelectorAll(".card").forEach(card => {
         card.addEventListener("click", async function (e) {
           if (e.target.closest("a, button")) return;
@@ -6491,16 +6481,17 @@ function closeDetailPanel() {
           const item = data.find(v => normalizeItemId(v.id) === normalizeItemId(card.dataset.id));
           if (!item) return;
 
-          increaseViewCount(item);
+          const wasExpanded = sidebar.classList.contains("expanded");
 
           if (detailScroll) detailScroll.scrollTop = 0;
           await openDetailPanel(item);
+          if (!wasExpanded && item.listingNo) {
+            await incrementViewCount(item.listingNo);
+          }
           if (detailScroll) detailScroll.scrollTop = 0;
           await focusProperty(item.id);
         });
       });
-
-      fetchAndApplyViewCounts(data);
     }
 
 
