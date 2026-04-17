@@ -1,6 +1,26 @@
 [  
 
   {
+    "id": 208,
+    "listingNo": "디-208",
+    "image": "./dh_real/208/1.jpg",
+    "desc_folder": "./dh_real/208/info.json",
+    "image_folder": "./dh_real/208/image.json",    
+    "date": "2026-04-01",
+    "title": "상창교차로 인근",
+    "desc": "정방형 네모진 모양의 활용도 좋은 토지 인근 대형 골프장, 리조트",
+    "type": "임야",
+    "dealFilter": "매매",
+    "region": "안덕면",
+    "price": "10억",
+    "area": "대지면적 3,878.00㎡",
+    "address": "서귀포시 안덕면 상창리",
+    "lat": 33.279219,
+    "lng": 126.365364,
+    "agent_folder": "./dh_real/agent.json"
+  },
+  
+  {
     "id": 211,
     "listingNo": "디-211",
     "date": "2026-04-01",
