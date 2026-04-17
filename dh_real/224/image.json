@@ -1,7 +1,7 @@
 {
-  "image": "./dh_real/224/image1.jpg",
+  "image": "1.jpg",
   "images": [
-    "./dh_real/224/image1.jpg",
-    "./dh_real/224/image2.jpg"
+    "1.jpg",
+    "2.jpg"
   ]
 }
