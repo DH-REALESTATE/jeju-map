@@ -1,6 +1,26 @@
 [  
 
   {
+    "id": "승-304",
+    "listingNo": "승-304",
+    "date": "2026-04-15",
+    "title": "애월 해안도로 바다 조망",
+    "desc": "애월 해안도로 바다 조망 / 40세대 연립주택",
+    "image": "./syreal/304/1.jpg",
+    "desc_folder": "./syreal/304/info.json",
+    "image_folder": "./syreal/304/image.json",
+    "type": "연립",
+    "dealFilter": "매매",
+    "region": "애월읍",
+    "price": "3억 3,000",
+    "area": "공급면적 98.90㎡ / 전용면적 82.04㎡",
+    "address": "제주시 애월읍 구글맵",
+    "lat": 33.477920,
+    "lng": 126.359242,
+    "agent_folder": "./syreal/agent.json"
+  },
+
+  {
     "id": 81174337,
     "listingNo": "81174337",
     "date": "2026-04-15",
