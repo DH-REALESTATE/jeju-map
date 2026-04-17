@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>REALJEJU.APP Ver 1.651</title>
-<meta property="og:title" id="ogTitleMeta" content="REALJEJU.APP Ver 1.651" />
-  <meta property="og:description" id="ogDescriptionMeta" content="REALJEJU.APP Ver 1.651" />
+  <title>REALJEJU.APP Ver 1.667</title>
+<meta property="og:title" id="ogTitleMeta" content="REALJEJU.APP Ver 1.667" />
+  <meta property="og:description" id="ogDescriptionMeta" content="REALJEJU.APP Ver 1.667" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
   <meta property="og:image" content="https://your-domain.example/og-image.jpg" />
@@ -1002,8 +1002,6 @@
       box-shadow: 0 6px 14px rgba(0,0,0,0.12);
     }
 
-
-    
     .detail-agent-cta-row {
       display: flex;
       gap: 8px;
@@ -1016,7 +1014,6 @@
       min-width: 96px;
       max-width: 140px;
     }
-
 
     .detail-agent-cta-btn {
       flex: 0 0 auto;
@@ -1112,7 +1109,7 @@
       font-size: 15px;
       color: #1f6fff;
       letter-spacing: -0.2px;
-      font-weight: 900;
+      font-weight: 750;
     }
 
     .sub-topbar-left span {
@@ -1175,9 +1172,6 @@
       overflow: hidden;
     }
 
-    
-    
-
     .sub-topbar .deal-buttons .deal-all-btn.active {
       background: #1f6fff;
       border-color: #1a5fe0;
@@ -1185,7 +1179,7 @@
       box-shadow: 0 8px 18px rgba(31,111,255,0.22);
     }
 
-.sub-topbar .deal-buttons {
+    .sub-topbar .deal-buttons {
       display: flex;
       align-items: center;
       gap: 1px;
@@ -1281,22 +1275,24 @@
 
     .global-brand .brand-name {
       line-height: 1;
-      font-size: 22px;
+      font-size: 20px;
       font-weight: 800;
       color: #1f2a36;
     }
 
     .global-brand .brand-version {
       line-height: 1;
-      font-size: 12px;
-      font-weight: 500;
+      font-size: 13px;
+      font-weight: 555;
       color: #9aa3af;
+      margin-top: 4px;
       margin-left: 4px;
     }
 
     .global-topbar-menu {
       position: absolute;
       left: 369px;
+      right: 6px;
       top: 50%;
       transform: translateY(-50%);
       display: flex !important;
@@ -1328,6 +1324,7 @@
       gap: 12px;
       max-width: none;
       width: 100%;
+      min-width: 0;
       padding: 0;
       border-radius: 0;
       background: transparent;
@@ -1341,6 +1338,7 @@
     .global-topbar .type-buttons {
       display: flex;
       align-items: center;
+      flex: 0 0 auto;  
       gap: 10px;
       margin-left: 0 !important;
       padding-left: 0 !important;
@@ -1364,7 +1362,7 @@
     }
 
     .global-topbar .type-buttons button {
-      font-size: 17px;
+      font-size: 17.5px;
       font-weight: 700;
       letter-spacing: -0.08px;
     }
@@ -1582,8 +1580,6 @@
       font-weight: 800;
     }
 
-    
-
     .brand-card,
     .panel.search-box,
     .search-box,
@@ -1602,22 +1598,22 @@
     }
 
     .card {
-  background: linear-gradient(180deg, #ffffff 0%, #fcfdff 100%);
-  border: 1px solid #e9eef4;
-  border-radius: var(--radius-main);
-  box-shadow: 0 8px 24px rgba(15, 41, 66, 0.05);
-  cursor: pointer;
-  padding: 0;
-  overflow: hidden;
-}
+        background: linear-gradient(180deg, #ffffff 0%, #fcfdff 100%);
+        border: 1px solid #e9eef4;
+        border-radius: var(--radius-main);
+        box-shadow: 0 8px 24px rgba(15, 41, 66, 0.05);
+        cursor: pointer;
+        padding: 0;
+        overflow: hidden;
+    }
 
     .card:hover,
-.card.active {
-  background: linear-gradient(180deg, #fafdff 0%, #f5f9ff 100%);
-  transform: none;
-  box-shadow: 0 8px 24px rgba(15, 41, 66, 0.05);
-  border-color: #e9eef4;
-}
+    .card.active {
+        background: linear-gradient(180deg, #fafdff 0%, #f5f9ff 100%);
+        transform: none;
+        box-shadow: 0 8px 24px rgba(15, 41, 66, 0.05);
+        border-color: #e9eef4;
+    }
 
     .card-inner-row {
       display: flex;
@@ -2283,7 +2279,7 @@
 
     .map-agent-card {
       position: absolute;
-      top: 20px;
+      top: 24px;
       right: 20px;
       z-index: 33;
       width: 460px;
@@ -3342,84 +3338,77 @@
       color: #fff;
     }
 
+    /* stronger premium font tuning */
+    .card-title,
+    .detail-title,
+    .brand-title {
+        font-weight: 900;
+    }   
 
+    .card-price,
+    .detail-summary-price,
+    .detail-hero-price {
+        font-weight: 950;
+        letter-spacing: -0.7px;
+    }
 
-/* stronger premium font tuning */
-.card-title,
-.detail-title,
-.brand-title {
-  font-weight: 900;
-}
+    .card-spec,
+    .card-address,
+    .detail-summary-address,
+    .detail-desc {
+        font-weight: 400;
+    }
 
-.card-price,
-.detail-summary-price,
-.detail-hero-price {
-  font-weight: 950;
-  letter-spacing: -0.7px;
-}
+    .card-badge,
+    .card-deal,
+    .detail-summary-type-badge,
+    .detail-summary-deal-badge,
+    .map-tool-btn,
+    .map-unit-half-btn {
+        font-weight: 800;
+    }
 
-.card-spec,
-.card-address,
-.detail-summary-address,
-.detail-desc {
-  font-weight: 400;
-}
+    /* right-panel open performance tuning */
+    .sidebar-detail-panel {
+        will-change: opacity;
+        transform: translateZ(0);
+        backface-visibility: hidden;
+    }
 
-.card-badge,
-.card-deal,
-.detail-summary-type-badge,
-.detail-summary-deal-badge,
-.map-tool-btn,
-.map-unit-half-btn {
-  font-weight: 800;
-}
+    .detail-scroll {
+        will-change: scroll-position;
+        transform: translateZ(0);
+    }
 
-
-
-
-
-/* right-panel open performance tuning */
-.sidebar-detail-panel {
-  will-change: opacity;
-  transform: translateZ(0);
-  backface-visibility: hidden;
-}
-
-.detail-scroll {
-  will-change: scroll-position;
-  transform: translateZ(0);
-}
-
-.detail-hero,
-.detail-hero-slides,
-.detail-content {
-  transform: translateZ(0);
-}
-
+    .detail-hero,
+    .detail-hero-slides,
+    .detail-content {
+        transform: translateZ(0);
+    }
 
     .map-wrap > .map-filter-bar {
-  display: none !important;
-}
+        display: none !important;
+    }
 
-.map-empty-state {
-      position: absolute;
-      inset: 50% auto auto 50%;
-      transform: translate(-50%, -50%);
-      z-index: 29;
-      display: none;
-      width: min(420px, calc(100% - 48px));
-      padding: 18px 20px;
-      border-radius: 18px;
-      background: rgba(255,255,255,0.96);
-      border: 1px solid rgba(15, 41, 66, 0.08);
-      box-shadow: 0 16px 36px rgba(15, 41, 66, 0.14);
-      backdrop-filter: blur(10px);
-      text-align: center;
-      pointer-events: none;
+    .map-empty-state {
+        position: absolute;
+        inset: 50% auto auto 50%;
+        transform: translate(-50%, -50%);
+        z-index: 29;
+        display: none;
+        width: min(420px, calc(100% - 48px));
+        padding: 18px 20px;
+        border-radius: 18px;
+        background: rgba(255,255,255,0.96);
+        border: 1px solid rgba(15, 41, 66, 0.08);
+        box-shadow: 0 16px 36px rgba(15, 41, 66, 0.14);
+        backdrop-filter: blur(10px);
+        text-align: center;
+        pointer-events: none;
     }
 
     .map-empty-state.open {
-      display: block;
+        display: block;
     }
 
     .map-empty-state-title {
@@ -3439,7 +3428,6 @@
       line-height: 1.5;
       white-space: pre-line;
     }
-
 
     /* ===== custom map zoom buttons ===== */
     .map-zoom-stack {
@@ -3498,54 +3486,93 @@
       display: none !important;
     }
 
+    .pet-badge {
+        margin-left: auto !important;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        height: 38px;
+        padding: 0 12px;
+        border-radius: 12px;
+        background: transparent;
+        border: 1px solid transparent;
+        color: #6b7785;
+        font-size: 17.5px;
+        font-weight: 700;
+        letter-spacing: -0.08px;
+        white-space: nowrap;
+        flex: 0 0 auto;
+        cursor: pointer;
+    }
+
+    .pet-badge i {
+        font-size: 16px;
+        line-height: 1;
+        color: currentColor;
+        margin-right: 2px;
+    }
+
+    .pet-badge span {
+      display: inline-block;
+      line-height: 1;
+    }
+
+    .pet-badge.active {
+      background: transparent;
+      color: #2563eb;
+      border-color: transparent;
+      box-shadow: none;
+    }
+
 </style>
 <style>
 
-/* Stable patch overrides - Ver 1.556 */
-.map-empty-state {
-  text-align: left !important;
-}
-.map-empty-state-desc {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 2px !important;
-  text-align: left !important;
-  white-space: normal !important;
-}
-.empty-title {
-  margin: 0 !important;
-  font-size: 16px !important;
-  font-weight: 900 !important;
-  color: #17212b !important;
-  line-height: 1.35 !important;
-}
-.empty-sub {
-  margin: 0 !important;
-  font-size: 14px !important;
-  font-weight: 500 !important;
-  color: #6b7785 !important;
-  line-height: 1.4 !important;
-}
-.detail-hero-features,
-#detailHeroFeatures {
-  display: none !important;
-}
+    /* Stable patch overrides - Ver 1.556 */
+    .map-empty-state {
+        text-align: left !important;
+    }
+    .map-empty-state-desc {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 2px !important;
+        text-align: left !important;
+        white-space: normal !important;
+    }
+    .empty-title {
+        margin: 0 !important;
+        font-size: 16px !important;
+        font-weight: 900 !important;
+        color: #17212b !important;
+        line-height: 1.35 !important;
+    }
+    .empty-sub {
+        margin: 0 !important;
+        font-size: 14px !important;
+        font-weight: 500 !important;
+        color: #6b7785 !important;
+        line-height: 1.4 !important;
+    }
+    .detail-hero-features,
+    #detailHeroFeatures {
+        display: none !important;
+    }
 
-.brand-card {
-  display: none !important;
-}
+    .brand-card {
+        display: none !important;
+    }
 
-.detail-features,
-#detailFeatures {
-  display: none !important;
-}
+    .detail-features,
+        #detailFeatures {
+        display: none !important;
+    }
 
-.detail-summary-block {
-  margin-bottom: 18px !important;
-}
+    .detail-summary-block {
+        margin-bottom: 18px !important;
+    }
 
-.detail-summary-top {
-  display: flex !important;
+    .detail-summary-top {
+    display: flex !important;
   align-items: center !important;
   gap: 8px !important;
   margin-bottom: 18px !important;
@@ -3684,7 +3711,7 @@
   <header class="global-topbar">
     <div class="global-topbar-inner">
       <div class="global-topbar-left">
-        <div class="global-brand" id="appVersionText"><i class="fa-solid fa-map-location-dot"" aria-hidden="true"></i><span class="brand-name">REALJEJU.APP</span><span class="brand-version">Ver 1.601</span></div>
+        <div class="global-brand" id="appVersionText"><i class="fa-solid fa-map-location-dot"" aria-hidden="true"></i><span class="brand-name">REALJEJU.APP</span><span class="brand-version">Ver 1.655</span></div>
       </div>
 
       <div class="global-topbar-menu">
@@ -3696,6 +3723,9 @@
             <button type="button" data-value="상가"><i class="fa-solid fa-shop" aria-hidden="true"></i><span>상가ㆍ사무실</span></button>
             <button type="button" data-value="토지"><i class="fa-solid fa-draw-polygon" aria-hidden="true"></i><span>토지ㆍ임야</span></button>
           </div>
+          <button type="button" id="petFilterBtn" class="pet-badge" aria-pressed="false">
+            <i class="fa-solid fa-dog" aria-hidden="true"></i><span>반려동물 가능</span>
+          </button>
         </div>
       </div>
     </div>
@@ -3711,7 +3741,7 @@
       <div class="sub-topbar-right">
         <div class="map-filter-bar">
           <div class="deal-buttons" id="dealButtons">
-            <button type="button" data-value="전체" >전체</button>
+            <button type="button" data-value="전체">전체</button>
             <button type="button" data-value="매매">매매</button>
             <button type="button" data-value="전세">전세</button>
             <button type="button" data-value="년세">년세</button>
@@ -4009,7 +4039,7 @@
   <script>
     const UI_FONT_STACK = 'Inter, Pretendard, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
     const APP_NAME = "REALJEJU.APP";
-    const APP_VERSION = "1.651";
+    const APP_VERSION = "1.667";
 
     function applyAppVersion() {
       const fullVersionText = `${APP_NAME} Ver ${APP_VERSION}`;
@@ -4034,14 +4064,14 @@
 
     function getViewCountText(listingNo) {
       const count = Number(viewMap[String(listingNo || "").trim()] || 0);
-      return `조회 ${Number.isFinite(count) ? count : 0}`;
+      return `${Number.isFinite(count) ? count : 0}`;
     }
 
     function updateViewCountElements(listingNo, count) {
       const key = String(listingNo || "").trim();
       if (!key) return;
       document.querySelectorAll(`.card-date[data-listing-no="${key}"]`).forEach(el => {
-        el.textContent = `조회 ${Number.isFinite(Number(count)) ? Number(count) : 0}`;
+        el.textContent = `${Number.isFinite(Number(count)) ? Number(count) : 0}`;
       });
     }
 
@@ -4133,6 +4163,7 @@
     let roadviewFullscreenBtn = null;
     let selectedDeal = "all";
     let selectedType = "all";
+    let selectedPetOnly = false;
     let currentDetailItem = null;
     let agentCache = {};
     let agentPromiseCache = {};
@@ -4722,6 +4753,10 @@
         dealType: item.dealFilter ?? item.dealType ?? "매매",
         type: item.typeFilter ?? item.type ?? "",
         features: Array.isArray(item.features) ? item.features : [],
+        animal: item.animal ?? "",
+        pet: item.pet ?? "",
+        petAllowed: item.petAllowed ?? "",
+        pet_allow: item.pet_allow ?? "",
         price: item.price ?? "-",
         markerPrice: item.markerPrice ?? "",
         area: item.area ?? "-",
@@ -6567,7 +6602,29 @@ function closeDetailPanel() {
             Array.isArray(item.features) && item.features.includes(feature)
           );
 
-        return okKeyword && okDeal && okType && okFeature;
+        const animalRaw = String(item.animal ?? "").trim().toLowerCase();
+
+        const hasPetAllow = (
+          animalRaw === "ok" ||
+          animalRaw === "y" ||
+          animalRaw === "yes" ||
+          animalRaw === "true" ||
+          animalRaw === "1" ||
+          animalRaw.includes("가능") ||
+          animalRaw.includes("허용") ||
+          animalRaw.includes("반려동물") ||
+          animalRaw.includes("pet")
+        ) && !(
+          animalRaw.includes("불가") ||
+          animalRaw.includes("금지") ||
+          animalRaw.includes("불허") ||
+          /\bfalse\b/.test(animalRaw) ||
+          /\bno\b/.test(animalRaw)
+        );
+
+        const okPet = !selectedPetOnly || hasPetAllow;
+
+        return okKeyword && okDeal && okType && okFeature && okPet;
       });
 
       state.selectedMarkerId = null;
@@ -6904,6 +6961,12 @@ function closeDetailPanel() {
           btn.classList.add("active");
           selectedType = (btn.dataset.value === "전체" ? "all" : (btn.dataset.value || "all"));
 
+          selectedPetOnly = false;
+          if (typeof petFilterBtn !== "undefined" && petFilterBtn) {
+            petFilterBtn.classList.remove("active");
+            petFilterBtn.setAttribute("aria-pressed", "false");
+          }
+
           closeDetailPanel();
           currentDetailItem = null;
           state.selectedMarkerId = null;
@@ -6914,6 +6977,35 @@ function closeDetailPanel() {
           syncLeftAllButtonToMapFilters();
         });
       });
+
+      const petFilterBtn = document.getElementById("petFilterBtn");
+      if (petFilterBtn) {
+        const petIcons = ["fa-paw", "fa-paw"];
+        const randomIcon = petIcons[Math.floor(Math.random() * petIcons.length)];
+        const iconEl = petFilterBtn.querySelector("i");
+        if (iconEl) iconEl.className = `fa-solid ${randomIcon}`;
+
+        petFilterBtn.addEventListener("click", () => {
+          selectedPetOnly = !selectedPetOnly;
+          petFilterBtn.classList.toggle("active", selectedPetOnly);
+          petFilterBtn.setAttribute("aria-pressed", selectedPetOnly ? "true" : "false");
+
+          const typeButtonsSafe = document.querySelectorAll(".type-buttons button");
+          if (typeButtonsSafe && typeButtonsSafe.length) {
+            typeButtonsSafe.forEach(btn => btn.classList.remove("active"));
+          }
+          selectedType = "all";
+
+          closeDetailPanel();
+          currentDetailItem = null;
+          state.selectedMarkerId = null;
+          state.selectedClusterKey = null;
+          state.selectionMode = null;
+
+          applyFilter();
+          syncLeftAllButtonToMapFilters();
+        });
+      }
 
       (featureButtons || []).forEach(btn => {
         btn.addEventListener("click", () => {
