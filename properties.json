@@ -1,6 +1,26 @@
 [  
 
   {
+    "id": 211,
+    "listingNo": "디-211",
+    "date": "2026-04-01",
+    "title": "용당교차로 인근 투자용",
+    "desc": "주동로 인접, 용당교차로 인접, 제주올레길 7-1코스",
+    "image": "./dh_real/211/1.jpg",
+    "desc_folder": "./dh_real/211/info.json",
+    "image_folder": "./dh_real/211/image.json",
+    "type": "과수원",
+    "dealFilter": "매매",
+    "region": "호근동",
+    "price": "20억",
+    "area": "대지면적 3,878.00㎡",
+    "address": "서귀포시 호근동",
+    "lat": 33.253773,
+    "lng": 126.538223,
+    "agent_folder": "./dh_real/agent.json"
+  },
+  
+  {
     "id": 212,
     "listingNo": "디-212",
     "date": "2026-04-01",
