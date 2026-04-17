@@ -1,12 +1,12 @@
 {
-  "image": "./dh_real/177/1.JPG",
+  "image": "1.jpg",
   "images": [
-    "./dh_real/177/1.JPG",
-    "./dh_real/177/2.JPG",
-    "./dh_real/177/3.JPG",
-    "./dh_real/177/4.JPG",
-    "./dh_real/177/5.JPG",
-    "./dh_real/177/6.jpg",
-    "./dh_real/177/7.jpg"
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg",
+    "6.jpg",
+    "7.jpg"
   ]
 }
