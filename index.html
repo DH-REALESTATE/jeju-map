@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>REALJEJU.APP Ver 1.667</title>
-<meta property="og:title" id="ogTitleMeta" content="REALJEJU.APP Ver 1.667" />
-  <meta property="og:description" id="ogDescriptionMeta" content="REALJEJU.APP Ver 1.667" />
+  <title>REALJEJU.APP Ver 1.669</title>
+<meta property="og:title" id="ogTitleMeta" content="REALJEJU.APP Ver 1.669" />
+  <meta property="og:description" id="ogDescriptionMeta" content="REALJEJU.APP Ver 1.669" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
   <meta property="og:image" content="https://your-domain.example/og-image.jpg" />
@@ -4039,7 +4039,7 @@
   <script>
     const UI_FONT_STACK = 'Inter, Pretendard, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
     const APP_NAME = "REALJEJU.APP";
-    const APP_VERSION = "1.667";
+    const APP_VERSION = "1.669";
 
     function applyAppVersion() {
       const fullVersionText = `${APP_NAME} Ver ${APP_VERSION}`;
@@ -4064,14 +4064,14 @@
 
     function getViewCountText(listingNo) {
       const count = Number(viewMap[String(listingNo || "").trim()] || 0);
-      return `${Number.isFinite(count) ? count : 0}`;
+      return `조회 ${Number.isFinite(count) ? count : 0}`;
     }
 
     function updateViewCountElements(listingNo, count) {
       const key = String(listingNo || "").trim();
       if (!key) return;
       document.querySelectorAll(`.card-date[data-listing-no="${key}"]`).forEach(el => {
-        el.textContent = `${Number.isFinite(Number(count)) ? Number(count) : 0}`;
+        el.textContent = `조회 ${Number.isFinite(Number(count)) ? Number(count) : 0}`;
       });
     }
 
@@ -4138,6 +4138,7 @@
       selectedClusterKey: null,
       selectionMode: null,
       lockedListIds: null,
+      lastViewportListIds: [],
       recommendItem: null,
       recommendAgent: null,
       lastRecommendPoolKey: "",
@@ -4665,14 +4666,15 @@
     function refreshViewportList() {
       const lockedItems = getLockedListItems();
       if (lockedItems) {
-        if (isLockedSelectionStillVisible()) {
+        const shouldKeepLockedItems = sidebar.classList.contains("expanded") || isLockedSelectionStillVisible();
+        if (shouldKeepLockedItems) {
           const sortedLockedItems = sortItems(lockedItems);
           renderList(sortedLockedItems);
           setResultInfo(`선택 매물 ${sortedLockedItems.length}건`);
           setListInfo(`총 ${sortedLockedItems.length}개 매물`);
           refreshRecommendAgentCard();
           refreshRecommendationCard(state.filtered);
-          return lockedItems;
+          return sortedLockedItems;
         }
 
         clearListLock();
@@ -4687,9 +4689,32 @@
       }
 
       const viewportItems = sortItems(getViewportFilteredItems(state.filtered));
+      const shouldPreserveList = sidebar.classList.contains("expanded")
+        && state.selectionMode === "single"
+        && state.selectedMarkerId != null
+        && viewportItems.length === 0
+        && Array.isArray(state.lastViewportListIds)
+        && state.lastViewportListIds.length > 0;
+
+      if (shouldPreserveList) {
+        const preservedIdSet = new Set(state.lastViewportListIds.map(normalizeItemId));
+        const preservedItems = sortItems((state.filtered || []).filter(item => preservedIdSet.has(normalizeItemId(item.id))));
+        if (preservedItems.length) {
+          renderList(preservedItems);
+          setResultInfo(`총 ${preservedItems.length}건`);
+          setListInfo(`총 ${preservedItems.length}개 매물`);
+          refreshRecommendAgentCard();
+          refreshRecommendationCard(state.filtered);
+          return preservedItems;
+        }
+      }
+
       renderList(viewportItems);
       setResultInfo(`총 ${viewportItems.length}건`);
       setListInfo(`총 ${viewportItems.length}개 매물`);
+      if (viewportItems.length) {
+        state.lastViewportListIds = viewportItems.map(item => normalizeItemId(item.id));
+      }
       refreshRecommendAgentCard();
       refreshRecommendationCard(state.filtered);
       return viewportItems;
@@ -6517,14 +6542,31 @@ function closeDetailPanel() {
           if (!item) return;
 
           const wasExpanded = sidebar.classList.contains("expanded");
+          const normalizedId = normalizeItemId(item.id);
+
+          await hideRoadview();
+          state.selectionMode = "single";
+          state.selectedClusterKey = null;
+          state.selectedMarkerId = normalizedId;
+          clearListLock();
+          highlightCard(normalizedId);
+          updateMarkerSelection(normalizedId, [normalizedId]);
 
           if (detailScroll) detailScroll.scrollTop = 0;
           await openDetailPanel(item);
+          recenterMapSoft(item.lat, item.lng);
+
           if (!wasExpanded && item.listingNo) {
             await incrementViewCount(item.listingNo);
           }
+
           if (detailScroll) detailScroll.scrollTop = 0;
           await focusProperty(item.id);
+
+          setTimeout(() => {
+            highlightCard(normalizedId);
+            refreshClusterBadges();
+          }, 0);
         });
       });
     }
