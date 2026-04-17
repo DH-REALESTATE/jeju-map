@@ -1,9 +1,10 @@
 {
-  "image": "./dh_real/229/2.jpg",
+  "image": "1.jpg",
   "images": [
-    "./dh_real/229/2.jpg",
-    "./dh_real/229/3.jpg",
-    "./dh_real/229/4.jpg",
-    "./dh_real/229/5.jpg"
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+    "4.jpg",
+    "5.jpg"
   ]
 }
