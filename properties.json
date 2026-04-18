@@ -1,6 +1,26 @@
 [  
 
   {
+    "id": 121,
+    "listingNo": "디-121",
+    "image": "./dh_real/121/1.jpg",
+    "desc_folder": "./dh_real/121/info.json",
+    "image_folder": "./dh_real/121/image.json",    
+    "date": "2026-04-01",
+    "title": "서귀포여고 인근 시설작물용 토지",
+    "desc": "지상에 건물 1채(철거가능) - 거주용 건물 해당 X",
+    "type": "전",
+    "dealFilter": "매매",
+    "region": "호근동",
+    "price": "8억 5,000",
+    "area": "대지면적 2,827.00㎡",
+    "address": "서귀포시 호근동",
+    "lat": 33.245210,
+    "lng": 126.531675,
+    "agent_folder": "./dh_real/agent.json"
+  },
+  
+  {
     "id": 208,
     "listingNo": "디-208",
     "image": "./dh_real/208/1.jpg",
