@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>REALJEJU.APP Ver 1.669</title>
-<meta property="og:title" id="ogTitleMeta" content="REALJEJU.APP Ver 1.669" />
-  <meta property="og:description" id="ogDescriptionMeta" content="REALJEJU.APP Ver 1.669" />
+  <title>REALJEJU.APP Ver 1.714</title>
+<meta property="og:title" id="ogTitleMeta" content="REALJEJU.APP Ver 1.714" />
+  <meta property="og:description" id="ogDescriptionMeta" content="REALJEJU.APP Ver 1.714" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
   <meta property="og:image" content="https://your-domain.example/og-image.jpg" />
@@ -30,8 +30,9 @@
       --shadow: 0 12px 30px rgba(15, 41, 66, 0.12);
       --font-ui: "Inter", "Pretendard", "Noto Sans KR", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
       --font-display: "Inter", "Pretendard", "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
-      --global-topbar-height: 64px;
-      --sub-topbar-height: 48px;
+      --topbar-row-height: 56px;
+      --global-topbar-height: var(--topbar-row-height);
+      --sub-topbar-height: var(--topbar-row-height);
       --map-control-font-size: 14px;
       --radius-main: 16px;
       --radius-small: 10px;
@@ -86,7 +87,7 @@
     }
 
     .sidebar.expanded .sidebar-inner {
-      grid-template-columns: var(--sidebar-list-width) var(--detail-panel-width);
+      grid-template-columns: var(--sidebar-list-width) 0px;
     }
 
     .sidebar-list-panel {
@@ -148,7 +149,6 @@
       font-weight: 100;
       font-size: 24px;
     }
-
 
     .detail-top-actions {
       position: relative;
@@ -224,7 +224,7 @@
     .detail-scroll::-webkit-scrollbar { display: none; }
 
     .detail-hero {
-      height: 272px;
+      height: 300px !important;
       background: #dbe6ef center / cover no-repeat;
       position: relative;
       overflow: hidden;
@@ -427,6 +427,9 @@
       line-height: 1;
       letter-spacing: -0.15px;
       white-space: nowrap;
+      max-width: 520px;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .detail-summary-price-row {
@@ -1082,12 +1085,16 @@
       background: #fff;
       border-bottom: 1px solid #e6ebf0;
       position: relative;
+      z-index: 140;
+      overflow: visible;
     }
 
     .sub-topbar-inner {
       height: 100%;
       display: block;
       position: relative;
+      overflow: visible;
+      z-index: 2;
     }
 
     .sub-topbar-left {
@@ -1148,7 +1155,7 @@
       align-items: center;
       min-width: 0;
       background: #fff;
-      overflow: hidden;
+      overflow: visible;
       padding: 0;
     }
 
@@ -1169,7 +1176,7 @@
       border: 0;
       box-shadow: none;
       backdrop-filter: none;
-      overflow: hidden;
+      overflow: visible;
     }
 
     .sub-topbar .deal-buttons .deal-all-btn.active {
@@ -1216,6 +1223,180 @@
       color: #2563eb;
       border-color: transparent;
       box-shadow: none;
+    }
+
+    .pet-rental-filter {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-left: 12px;
+      padding: 0;
+      height: auto;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      color: #475569;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: -0.1px;
+      white-space: nowrap;
+      cursor: default;
+      user-select: none;
+    }
+
+    .pet-rental-filter input {
+      width: 16px;
+      height: 16px;
+      margin: 0;
+      accent-color: #2563eb;
+      cursor: pointer;
+      flex: 0 0 auto;
+    }
+
+    .pet-rental-filter span {
+      line-height: 1;
+    }
+
+    .pet-rental-filter.active {
+      color: #2563eb;
+    }
+
+    .extra-filter-dropdown {
+      position: relative;
+      flex: 0 0 auto;
+      margin-left: 12px;
+      z-index: 80;
+    }
+
+    .extra-filter-trigger {
+      height: 34px;
+      padding: 0 14px;
+      border-radius: 999px;
+      border: 1px solid #dbe4ee;
+      background: #fff;
+      color: #6b7785;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: -0.1px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      box-shadow: none;
+      white-space: nowrap;
+      transition: 0.2s ease;
+    }
+
+    .extra-filter-trigger i {
+      font-size: 12px;
+      line-height: 1;
+      transition: transform 0.18s ease;
+    }
+
+    .extra-filter-dropdown.open .extra-filter-trigger {
+      color: #2563eb;
+      border-color: #bfdbfe;
+      background: #f8fbff;
+      box-shadow: none;
+    }
+
+    .extra-filter-dropdown.open .extra-filter-trigger i {
+      transform: rotate(180deg);
+    }
+
+    .extra-filter-dropdown.has-active .extra-filter-trigger {
+      color: #2563eb;
+      border-color: #bfdbfe;
+      background: #eff6ff;
+      box-shadow: none;
+    }
+
+    .extra-filter-menu {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      right: auto;
+      min-width: 240px;
+      padding: 8px;
+      border-radius: 16px;
+      border: 1px solid #e2e8f0;
+      background: rgba(255,255,255,0.98);
+      box-shadow: 0 18px 34px rgba(15, 41, 66, 0.14);
+      backdrop-filter: blur(10px);
+      display: none;
+      flex-direction: column;
+      gap: 2px;
+      z-index: 9999;
+    }
+
+    .extra-filter-dropdown.open .extra-filter-menu {
+      display: flex;
+    }
+
+    .extra-filter-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 36px;
+      padding: 0 10px;
+      border-radius: 10px;
+      color: #334155;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: -0.1px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .extra-filter-option:hover {
+      background: #f8fafc;
+    }
+
+    .extra-filter-option input {
+      width: 16px;
+      height: 16px;
+      margin: 0;
+      accent-color: #2563eb;
+      cursor: pointer;
+      flex: 0 0 auto;
+    }
+
+    .extra-filter-option span {
+      line-height: 1.2;
+    }
+
+    .extra-filter-reset-row {
+      margin-top: 6px;
+      padding-top: 8px;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    .extra-filter-reset-btn {
+      width: 100%;
+      min-height: 36px;
+      border: 0;
+      border-radius: 999px;
+      background: #f8fafc;
+      color: #475569;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: -0.1px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: background 0.18s ease, color 0.18s ease;
+    }
+
+    .extra-filter-reset-btn:hover {
+      background: #eef2f7;
+      color: #1f2937;
+    }
+
+    .extra-filter-reset-btn i {
+      font-size: 13px;
+      line-height: 1;
     }
 
     .global-topbar-inner {
@@ -1331,7 +1512,7 @@
       border: 0;
       box-shadow: none;
       backdrop-filter: none;
-      overflow: hidden;
+      overflow: visible;
     }
 
     .global-topbar .deal-buttons,
@@ -3250,6 +3431,38 @@
 
 
     
+    .map-recommend-footer,
+    .map-agent-footer {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 6px;
+      padding: 10px 16px 14px;
+      border-top: 1px solid #eef2f6;
+      background: rgba(255,255,255,0.98);
+    }
+
+    .map-hide-today-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #64748b;
+      letter-spacing: -0.1px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .map-hide-today-label input {
+      width: 14px;
+      height: 14px;
+      margin: 0;
+      accent-color: #2563eb;
+      cursor: pointer;
+      flex: 0 0 auto;
+    }
+
     .map-side-tools {
       position: absolute;
       top: 52px;
@@ -3486,8 +3699,8 @@
       display: none !important;
     }
 
-    .pet-badge {
-        margin-left: auto !important;
+    .top-topbar {
+        margin-left: 14px !important;
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -3506,19 +3719,19 @@
         cursor: pointer;
     }
 
-    .pet-badge i {
+    .top-topbar i {
         font-size: 16px;
         line-height: 1;
         color: currentColor;
         margin-right: 2px;
     }
 
-    .pet-badge span {
+    .top-topbar span {
       display: inline-block;
       line-height: 1;
     }
 
-    .pet-badge.active {
+    .top-topbar.active {
       background: transparent;
       color: #2563eb;
       border-color: transparent;
@@ -3706,26 +3919,586 @@
 }
 </style>
 
+<style>
+
+.sidebar {
+  position: relative;
+  overflow: visible;
+}
+
+.sidebar-detail-panel {
+  position: fixed !important;
+  top: var(--detail-panel-top) !important;
+  left: var(--sidebar-list-width) !important;
+  width: var(--detail-panel-width) !important;
+  height: var(--detail-panel-height) !important;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.22s ease;
+}
+
+.sidebar.expanded .sidebar-detail-panel {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+</style>
+
+<style id="carrot-fresh-style-1-670">
+  :root{
+    --bg:#f8fafc;
+    --line:#edf1f5;
+    --text:#111827;
+    --sidebar-list-width:372px;
+    --brand:#2563eb;
+    --radius-main:22px;
+    --radius-small:16px;
+    --radius-pill:999px;
+    --shadow:0 10px 28px rgba(15,23,42,0.06);
+  }
+
+  body{
+    background:#f8fafc;
+    color:#111827;
+  }
+
+  .global-topbar,
+  .sub-topbar{
+    background:rgba(255,255,255,0.92);
+    backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
+  }
+
+  .global-topbar{
+    border-bottom:1px solid #edf1f5;
+    box-shadow:0 1px 0 rgba(255,255,255,0.8);
+  }
+
+  .sub-topbar{
+    border-bottom:1px solid #eef2f6;
+  }
+
+  .global-topbar-inner,
+  .sub-topbar-inner{
+    background:transparent;
+  }
+
+  .global-brand{
+    gap:10px;
+  }
+
+  .global-brand .brand-name{
+    font-size:19px;
+    font-weight:900;
+    letter-spacing:-0.45px;
+  }
+
+  .global-brand .brand-version{
+    font-size:12px;
+    font-weight:700;
+    color:#9ca3af;
+    margin-top:2px;
+    margin-left:2px;
+  }
+
+  .global-topbar .type-buttons,
+  .global-topbar .deal-buttons{
+    gap:6px;
+  }
+
+  .global-topbar .type-buttons button,
+  .global-topbar .deal-buttons button,
+  .top-topbar,
+  .sub-topbar .deal-buttons button{
+    height:calc(var(--topbar-row-height) - 16px);
+    border-radius:999px;
+    padding:0 14px;
+    border:1px solid transparent;
+    color:#6b7280;
+    background:transparent;
+    font-weight:700;
+    letter-spacing:-0.3px;
+    transition:background .18s ease, color .18s ease, border-color .18s ease;
+    box-shadow:none;
+  }
+
+  .sub-topbar .deal-buttons button {
+      font-size: 15px;     /* 👈 글자 크기 */
+      font-weight: 550;    /* 👈 두께 */
+    }
+
+  .global-topbar .type-buttons button{
+    font-size:15.5px;
+  }
+
+  .global-topbar .type-buttons button.active,
+  .global-topbar .deal-buttons button.active,
+  .sub-topbar .deal-buttons button.active,
+  .top-topbar.active{
+    background:#eff6ff;
+    color:#2563eb;
+    border-color:#dbeafe;
+    box-shadow:none;
+  }
+
+  .global-topbar .type-buttons button:hover,
+  .global-topbar .deal-buttons button:hover,
+  .sub-topbar .deal-buttons button:hover,
+  .top-topbar:hover{
+    background:#f8fafc;
+    color:#374151;
+  }
+
+  .sub-topbar-left{
+    width:372px;
+    padding:0 18px;
+    background:#ffffff;
+    border-right:1px solid #eef2f6;
+  }
+
+  .sub-topbar-left strong{
+    color:#2563eb;
+    font-size:15px;
+    font-weight:900;
+  }
+
+  .sub-topbar-left span{
+    color:#6b7280;
+    font-weight:800;
+  }
+
+  .sub-topbar-right,
+  .global-topbar-menu{
+    left:381px;
+  }
+
+  .sidebar{
+    background:#fbfcfd;
+    border-right:1px solid #edf1f5;
+  }
+
+  .sidebar-list-panel{
+    background:#fbfcfd;
+  }
+
+  .property-list{
+    gap:14px;
+    padding:18px 16px 20px;
+    background:#fbfcfd;
+  }
+
+  .card{
+    background:#fff;
+    border:1px solid #edf1f5;
+    border-radius:24px;
+    box-shadow:0 6px 22px rgba(15,23,42,0.04);
+    overflow:hidden;
+  }
+
+  .card:hover,
+  .card.active{
+    background:#fff;
+    border-color:#dbeafe;
+    box-shadow:0 12px 30px rgba(37,99,235,0.10);
+  }
+
+  .card-inner-row{
+    gap:16px;
+    padding:18px;
+  }
+
+  .thumb{
+    width:108px;
+    min-width:108px;
+    height:108px;
+    border-radius:18px;
+    box-shadow:none;
+  }
+
+  .card-body{
+    display:flex;
+    flex-direction:column;
+    min-height:108px;
+  }
+
+  .card-top-line{
+    margin-bottom:10px;
+  }
+
+  .card-badge-row{
+    gap:6px;
+  }
+
+  .card-badge,
+  .card-badge.deal[data-type],
+  .card-badge[data-type]{
+    height:24px;
+    padding:0 10px;
+    border-radius:999px;
+    background:#f3f4f6;
+    color:#4b5563;
+    box-shadow:none;
+    font-size:12px;
+    font-weight:800;
+  }
+
+  .card-badge.deal[data-type="매매"],
+  .card-badge.deal[data-type="전세"],
+  .card-badge.deal[data-type="월세"],
+  .card-badge.deal[data-type="년세"]{
+    background:#eef6ff;
+    color:#2563eb;
+  }
+
+  .card-date{
+    min-width:auto;
+    height:24px;
+    padding:0 10px;
+    border-radius:999px;
+    background:#f9fafb;
+    border:1px solid #eef2f7;
+    color:#9ca3af;
+    font-size:12px;
+    font-weight:800;
+  }
+
+  .card-price-line{
+    order:2;
+    margin-bottom:6px;
+    line-height:1.45;
+  }
+
+  .card-price{
+    font-size:22px;
+    font-weight:900;
+    letter-spacing:-0.8px;
+    color:#111827;
+    line-height:1.45;
+  }
+
+  .card-title{
+    order:3;
+    margin-bottom:6px;
+    font-size:15px;
+    line-height:1.45;
+    color:#111827;
+    letter-spacing:-0.28px;
+  }
+
+  .card-address{
+    order:4;
+    margin-bottom:6px;
+    font-size:13px;
+    color:#6b7280;
+    line-height:1.45;
+  }
+
+  .card-spec{
+    order:5;
+    margin-bottom:6px;
+    font-size:13px;
+    color:#9ca3af;
+    line-height:1.45;
+  }
+
+  .card-agent-row{
+    order:6;
+    margin-left:0;
+    width:100%;
+    margin-top:auto;
+    padding-top:12px;
+    border-top:1px solid #f3f4f6;
+  }
+
+  .card-agent-avatar{
+    width:28px;
+    height:28px;
+    box-shadow:none;
+    border:1px solid #eef2f6;
+  }
+
+  .card-agent-name{
+    font-size:13px;
+    color:#374151;
+  }
+
+  .card-agent-title,
+  .card-agent-office{
+    font-size:13px;
+    color:#9ca3af;
+  }
+
+  .detail-topbar{
+    padding:5.6px 14px;
+    border-bottom:1px solid #eef2f6;
+    background:rgba(255,255,255,0.94);
+  }
+
+  .detail-close-btn,
+  .detail-icon-btn{
+    height:38px;
+    min-width:38px;
+    border-radius:999px;
+    color:#374151;
+  }
+
+  .detail-close-btn:hover,
+  .detail-icon-btn:hover{
+    background:#f8fafc;
+  }
+
+  .detail-hero{
+    height:248px;
+  }
+
+  .detail-content{
+    padding:18px 18px 6px;
+  }
+
+  .detail-summary-type-badge,
+  .detail-summary-type-badge[data-type]{
+    background:#f3f4f6;
+    color:#4b5563;
+  }
+
+  .detail-summary-deal-badge{
+    background:#eef6ff;
+    color:#2563eb;
+  }
+
+  .detail-summary-price{
+    font-size:36px;
+    letter-spacing:-1.1px;
+  }
+
+  .detail-title{
+    font-size:17px;
+  }
+
+  .detail-meta-grid{
+    border:1px solid #edf1f5;
+    box-shadow:none;
+  }
+
+  .detail-meta-item{
+    padding:12px 14px;
+    background:#fff;
+  }
+
+  .detail-meta-label{
+    color:#9ca3af;
+    font-size:13px;
+  }
+
+  .detail-meta-value{
+    color:#111827;
+    font-size:17px;
+  }
+
+  .detail-desc,
+  .detail-agent-card,
+  .detail-info-section{
+    background:#fff;
+    border:1px solid #edf1f5;
+    box-shadow:none;
+  }
+
+  .detail-desc{
+    color:#4b5563;
+    line-height:1.68;
+  }
+
+  .detail-info-sections{
+    gap:12px;
+  }
+
+  .detail-info-section{
+    padding:18px;
+  }
+
+  .detail-info-section-title{
+    font-size:15px;
+    margin-bottom:12px;
+  }
+
+  .detail-info-row{
+    gap:20px;
+    padding:12px 0;
+    border-bottom:1px solid #f3f4f6;
+  }
+
+  .detail-info-label{
+    color:#9ca3af;
+    font-size:13px;
+    font-weight:700;
+  }
+
+  .detail-info-value{
+    color:#374151;
+    font-size:13px;
+    font-weight:700;
+  }
+
+  .map-side-tools{
+    top:18px;
+    left:18px;
+    gap:12px;
+  }
+
+  .map-tool-btn,
+  .map-unit-split{
+    width:48px;
+    border-radius:16px;
+    border:1px solid rgba(229,231,235,0.95);
+    box-shadow:0 8px 22px rgba(15,23,42,0.08);
+    overflow:hidden;
+  }
+
+  .map-tool-btn{
+    height:48px;
+    background:rgba(255,255,255,0.95);
+    color:#4b5563;
+    font-size:13px;
+    font-weight:900;
+  }
+
+  .map-tool-btn.active{
+    background:#eff6ff;
+    border-color:#dbeafe;
+    color:#2563eb;
+    box-shadow:0 8px 22px rgba(37,99,235,0.10);
+  }
+
+  .map-unit-split{
+    height:48px;
+    margin-top:42px;
+  }
+
+  .map-unit-half-btn{
+    background:#fff;
+    color:#4b5563;
+    font-size:13px;
+  }
+
+  .map-unit-half-btn.active{
+    background:#eff6ff;
+    color:#2563eb;
+  }
+
+  .map-unit-half-btn + .map-unit-half-btn{
+    border-top:1px solid #eef2f6;
+  }
+
+  .sidebar-detail-panel{
+    background:#fcfcfd;
+    border-left:1px solid #edf1f5;
+  }
+</style>
+
+
+<style id="double-topbar-layout-1-680">
+  :root{
+    --topbar-row-height: 62px;
+  }
+
+  .global-topbar{
+    z-index: 130;
+  }
+
+  .global-topbar-inner,
+  .sub-topbar-inner{
+    max-width: none;
+  }
+
+  .global-topbar-left{
+    left: 22px;
+    z-index: 3;
+  }
+
+  .global-topbar-menu{
+    position: absolute;
+    left: 50%;
+    right: auto;
+    transform: translate(-50%, -50%);
+    width: max-content;
+    max-width: calc(100vw - 520px);
+    justify-content: center;
+    overflow: visible;
+    z-index: 2;
+  }
+
+  .global-topbar .map-filter-bar,
+  .sub-topbar .map-filter-bar{
+    justify-content: center;
+  }
+
+  .global-topbar .type-buttons{
+    justify-content: center;
+    flex-wrap: nowrap;
+  }
+
+  .sub-topbar-inner{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 24px;
+  }
+
+  .sub-topbar-left{
+    display: none !important;
+  }
+
+  .sub-topbar-right{
+    position: static;
+    left: auto;
+    top: auto;
+    transform: none;
+    width: 100%;
+    justify-content: center;
+    background: transparent;
+    overflow: visible;
+  }
+
+  .sub-topbar .deal-buttons{
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .sub-topbar .deal-buttons button{
+    height: 42px;
+    padding: 0 18px;
+    border-radius: 999px;
+  }
+
+  @media (max-width: 1440px){
+    .global-topbar-menu{
+      max-width: calc(100vw - 420px);
+    }
+    .global-topbar .type-buttons button{
+      padding: 0 11px;
+      font-size: 14px;
+    }
+  }
+</style>
+
 </head>
 <body>
   <header class="global-topbar">
     <div class="global-topbar-inner">
       <div class="global-topbar-left">
-        <div class="global-brand" id="appVersionText"><i class="fa-solid fa-map-location-dot"" aria-hidden="true"></i><span class="brand-name">REALJEJU.APP</span><span class="brand-version">Ver 1.655</span></div>
+        <div class="global-brand" id="appVersionText"><i class="fa-solid fa-map-location-dot"" aria-hidden="true"></i><span class="brand-name">REALJEJU.APP</span><span class="brand-version">Ver 1.709</span></div>
       </div>
 
       <div class="global-topbar-menu">
         <div class="map-filter-bar">
           <div class="type-buttons" id="typeButtons">
+            <button type="button" data-value="all" class="active"><span>전체</span></button>
             <button type="button" data-value="아파트오피스텔"><i class="fa-solid fa-building" aria-hidden="true"></i><span>아파트ㆍ오피스텔</span></button>
             <button type="button" data-value="빌라주택"><i class="fa-solid fa-house" aria-hidden="true"></i><span>빌라ㆍ주택</span></button>
             <button type="button" data-value="원룸"><i class="fa-solid fa-hotel" aria-hidden="true"></i><span>원룸ㆍ투룸</span></button>
             <button type="button" data-value="상가"><i class="fa-solid fa-shop" aria-hidden="true"></i><span>상가ㆍ사무실</span></button>
             <button type="button" data-value="토지"><i class="fa-solid fa-draw-polygon" aria-hidden="true"></i><span>토지ㆍ임야</span></button>
           </div>
-          <button type="button" id="petFilterBtn" class="pet-badge" aria-pressed="false">
-            <i class="fa-solid fa-dog" aria-hidden="true"></i><span>반려동물 가능</span>
-          </button>
         </div>
       </div>
     </div>
@@ -3746,6 +4519,29 @@
             <button type="button" data-value="전세">전세</button>
             <button type="button" data-value="년세">년세</button>
             <button type="button" data-value="월세">월세</button>
+          </div>
+          <div class="extra-filter-dropdown" id="extraFilterDropdown">
+            <button type="button" class="extra-filter-trigger" id="extraFilterTrigger" aria-expanded="false">
+              <span id="extraFilterLabel">기타 조건</span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </button>
+            <div class="extra-filter-menu" id="extraFilterMenu">
+              <label class="extra-filter-option"><input type="checkbox" id="extraImmediateMoveInChk" /><span>즉시입주</span></label>
+              <label class="extra-filter-option"><input type="checkbox" id="extraParkingChk" /><span>주차 가능</span></label>
+              <label class="extra-filter-option"><input type="checkbox" id="extraPetChk" /><span>반려동물</span></label>
+              <label class="extra-filter-option"><input type="checkbox" id="extraCityGasChk" /><span>도시가스</span></label>
+              <label class="extra-filter-option"><input type="checkbox" id="extraDuplexChk" /><span>복층형</span></label>
+              <label class="extra-filter-option"><input type="checkbox" id="extraVerandaChk" /><span>베란다</span></label>
+              <label class="extra-filter-option"><input type="checkbox" id="extraElevatorChk" /><span>엘리베이터</span></label>
+              <label class="extra-filter-option"><input type="checkbox" id="extraFullOptionChk" /><span>풀옵션</span></label>
+              <label class="extra-filter-option"><input type="checkbox" id="extraOceanViewChk" /><span>오션뷰</span></label>
+              <div class="extra-filter-reset-row">
+                <button type="button" class="extra-filter-reset-btn" id="extraFilterResetBtn">
+                  <i class="fa-solid fa-rotate-right" aria-hidden="true"></i>
+                  <span>초기화</span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -3971,6 +4767,12 @@
             </div>
           </div>
         </div>
+        <div class="map-agent-footer">
+          <label class="map-hide-today-label" for="mapAgentHideTodayCheck">
+            <input type="checkbox" id="mapAgentHideTodayCheck">
+            <span>오늘은 그만 보기</span>
+          </label>
+        </div>
       </div>
 
 
@@ -3993,6 +4795,12 @@
             <div class="map-recommend-title-text" id="mapRecommendTitleText"></div>
             <div class="map-recommend-address" id="mapRecommendAddress"></div>
           </div>
+        </div>
+        <div class="map-recommend-footer">
+          <label class="map-hide-today-label" for="mapRecommendHideTodayCheck">
+            <input type="checkbox" id="mapRecommendHideTodayCheck">
+            <span>오늘은 그만 보기</span>
+          </label>
         </div>
       </div>
 
@@ -4039,7 +4847,7 @@
   <script>
     const UI_FONT_STACK = 'Inter, Pretendard, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
     const APP_NAME = "REALJEJU.APP";
-    const APP_VERSION = "1.669";
+    const APP_VERSION = "1.709";
 
     function applyAppVersion() {
       const fullVersionText = `${APP_NAME} Ver ${APP_VERSION}`;
@@ -4149,6 +4957,7 @@
     let recommendIds = [];
     let recommendAgents = [];
 
+
     const REMOTE_BASE = "https://jeju-map.vercel.app/";
 
     function toRemotePath(path) {
@@ -4165,6 +4974,14 @@
     let selectedDeal = "all";
     let selectedType = "all";
     let selectedPetOnly = false;
+    let selectedParkingOnly = false;
+    let selectedCityGasOnly = false;
+    let selectedDuplexOnly = false;
+    let selectedVerandaOnly = false;
+    let selectedElevatorOnly = false;
+    let selectedFullOptionOnly = false;
+    let selectedImmediateMoveInOnly = false;
+    let selectedOceanViewOnly = false;
     let currentDetailItem = null;
     let agentCache = {};
     let agentPromiseCache = {};
@@ -4189,6 +5006,7 @@
     const areaUnitM2Btn = document.getElementById("areaUnitM2Btn");
     const mapAgentCard = document.getElementById("mapAgentCard");
     const mapAgentCloseBtn = document.getElementById("mapAgentCloseBtn");
+    const mapAgentHideTodayCheck = document.getElementById("mapAgentHideTodayCheck");
     const mapAgentPhoto = document.getElementById("mapAgentPhoto");
     const mapAgentName = document.getElementById("mapAgentName");
     const mapAgentNameRole = document.getElementById("mapAgentNameRole");
@@ -4200,6 +5018,7 @@
     const mapAgentPhone = document.getElementById("mapAgentPhone");
     const mapRecommendCard = document.getElementById("mapRecommendCard");
     const mapRecommendCloseBtn = document.getElementById("mapRecommendCloseBtn");
+    const mapRecommendHideTodayCheck = document.getElementById("mapRecommendHideTodayCheck");
     const mapRecommendBody = document.getElementById("mapRecommendBody");
     const mapRecommendThumb = document.getElementById("mapRecommendThumb");
     const mapRecommendType = document.getElementById("mapRecommendType");
@@ -4207,6 +5026,26 @@
     const mapRecommendPrice = document.getElementById("mapRecommendPrice");
     const mapRecommendTitleText = document.getElementById("mapRecommendTitleText");
     const mapRecommendAddress = document.getElementById("mapRecommendAddress");
+
+    const RECOMMEND_AGENT_HIDE_KEY = "realjeju_hide_recommend_agent_until";
+    const RECOMMEND_ITEM_HIDE_KEY = "realjeju_hide_recommend_item_until";
+
+    function getHideUntilEndOfToday() {
+      const end = new Date();
+      end.setHours(24, 0, 0, 0);
+      return end.getTime();
+    }
+
+    function isHideUntilActive(key) {
+      const saved = Number(localStorage.getItem(key) || 0);
+      return Number.isFinite(saved) && saved > Date.now();
+    }
+
+    state.isRecommendAgentDismissed = isHideUntilActive(RECOMMEND_AGENT_HIDE_KEY);
+    state.isRecommendCardDismissed = isHideUntilActive(RECOMMEND_ITEM_HIDE_KEY);
+
+    if (mapAgentHideTodayCheck) mapAgentHideTodayCheck.checked = state.isRecommendAgentDismissed;
+    if (mapRecommendHideTodayCheck) mapRecommendHideTodayCheck.checked = state.isRecommendCardDismissed;
         const dealButtons = document.querySelectorAll("#dealButtons button");
     const typeButtons = document.querySelectorAll("#typeButtons button");
     const featureButtons = document.querySelectorAll("#featureButtons button");
@@ -4625,6 +5464,8 @@
 
       mapRecommendCard.onclick = async (e) => {
         if (e.target.closest(".map-recommend-close")) return;
+        if (e.target.closest(".map-recommend-footer")) return;
+        if (e.target.closest("label, input")) return;
         if (e.target.closest("a, button")) return;
         if (detailScroll) detailScroll.scrollTop = 0;
         await openDetailPanel(item);
@@ -4722,18 +5563,11 @@
 
     function updateSidebarWidth() {
       const listWidth = getComputedStyle(document.documentElement).getPropertyValue("--sidebar-list-width").trim() || "360px";
-      const detailWidth = getComputedStyle(document.documentElement).getPropertyValue("--detail-panel-width").trim() || "420px";
-      const totalWidth = sidebar.classList.contains("expanded")
-        ? `calc(${listWidth} + ${detailWidth})`
-        : listWidth;
-      document.documentElement.style.setProperty("--sidebar-current-width", totalWidth);
+      document.documentElement.style.setProperty("--sidebar-current-width", listWidth);
     }
 
     function refreshMapLayout() {
-      if (!state.map) return;
-      setTimeout(() => {
-        state.map.relayout();
-      }, 320);
+      return;
     }
 
     function escapeHtml(str) {
@@ -4770,7 +5604,59 @@
       return [];
     }
 
+    const FEATURE_ALIAS_MAP = {
+      "주차 가능": ["주차 가능", "주차가능", "주차", "parking"],
+      "반려동물": ["반려동물", "반려동물 가능", "애완동물 가능"],
+      "도시가스": ["도시가스", "lng"],
+      "복층형": ["복층형", "복층", "duplex"],
+      "베란다": ["베란다", "발코니", "balcony", "테라스", "veranda"],
+      "엘리베이터": ["엘리베이터", "승강기", "elevator", "lift"],
+      "풀옵션": ["풀옵션", "풀 옵션", "full option", "옵션 완비", "가전 가구 완비"],
+      "즉시입주": ["즉시입주", "즉시 입주", "바로 입주", "즉시 가능"],
+      "오션뷰": ["오션뷰", "오션 뷰", "바다뷰", "바다전망", "바다조망", "ocean view", "sea view"]
+    };
+
+    function normalizeFeatureToken(value) {
+      return String(value || "")
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g, " ");
+    }
+
+    function normalizeFeatureList(features) {
+      const rawList = Array.isArray(features) ? features : [];
+      const normalized = new Set();
+      rawList.forEach(feature => {
+        const token = normalizeFeatureToken(feature);
+        if (!token) return;
+        normalized.add(token);
+      });
+
+      Object.entries(FEATURE_ALIAS_MAP).forEach(([label, aliases]) => {
+        const aliasTokens = [label, ...(aliases || [])].map(normalizeFeatureToken).filter(Boolean);
+        if (aliasTokens.some(token => normalized.has(token))) {
+          aliasTokens.forEach(token => normalized.add(token));
+          normalized.add(normalizeFeatureToken(label));
+        }
+      });
+
+      return [...normalized];
+    }
+
+    function hasFeatureLabel(item, label) {
+      const aliasTokens = [label, ...((FEATURE_ALIAS_MAP[label] || []))]
+        .map(normalizeFeatureToken)
+        .filter(Boolean);
+      const featureTokens = Array.isArray(item?.featuresNormalized)
+        ? item.featuresNormalized
+        : normalizeFeatureList(item?.features);
+      const tokenSet = new Set(featureTokens);
+
+      return aliasTokens.some(token => tokenSet.has(token));
+    }
+
     function normalizeProperty(item, index) {
+      const normalizedFeatures = normalizeFeatureList(item.features);
       return {
         id: item.id ?? index + 1,
         title: item.title ?? "제목 없음",
@@ -4778,10 +5664,7 @@
         dealType: item.dealFilter ?? item.dealType ?? "매매",
         type: item.typeFilter ?? item.type ?? "",
         features: Array.isArray(item.features) ? item.features : [],
-        animal: item.animal ?? "",
-        pet: item.pet ?? "",
-        petAllowed: item.petAllowed ?? "",
-        pet_allow: item.pet_allow ?? "",
+        featuresNormalized: normalizedFeatures,
         price: item.price ?? "-",
         markerPrice: item.markerPrice ?? "",
         area: item.area ?? "-",
@@ -4833,7 +5716,7 @@
 
     function isApartmentType(typeText) {
       const text = String(typeText || "").trim();
-      return /아파트|빌라|투룸/.test(text);
+      return /아파트|빌라|연립|투룸/.test(text);
     }
 
     function isDetachedHouseType(typeText) {
@@ -5530,7 +6413,18 @@ function getBadgeTextMetrics(text) {
       const color = isSelected ? "#ffffff" : "#1f6fff";
       const textMetrics = getBadgeTextMetrics(label);
 
-      const el = document.createElement("div");
+      const wrap = document.createElement("div");
+      wrap.style.width = `${width}px`;
+      wrap.style.height = `39px`;
+      wrap.style.minWidth = `${width}px`;
+      wrap.style.display = "flex";
+      wrap.style.alignItems = "center";
+      wrap.style.justifyContent = "center";
+      wrap.style.pointerEvents = "none";
+      wrap.style.transform = `translateX(0)`;
+
+      const el = document.createElement("button");
+      el.type = "button";
       el.style.width = `${width}px`;
       el.style.height = `39px`;
       el.style.minWidth = `${width}px`;
@@ -5557,16 +6451,36 @@ function getBadgeTextMetrics(text) {
       el.style.cursor = "pointer";
       el.style.pointerEvents = "auto";
       el.style.userSelect = "none";
-      el.style.transform = `translateX(0)`;
+      el.style.touchAction = "none";
       el.textContent = label;
 
-      el.addEventListener("click", async function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        await handleClusterSelection(cluster);
-      });
+      const suppressClusterBadgeMapEvent = function (e) {
+        if (e) {
+          if (typeof e.preventDefault === "function") e.preventDefault();
+          if (typeof e.stopPropagation === "function") e.stopPropagation();
+          if (typeof e.stopImmediatePropagation === "function") e.stopImmediatePropagation();
+        }
+        if (window.kakao && kakao.maps && kakao.maps.event && typeof kakao.maps.event.preventMap === "function") {
+          kakao.maps.event.preventMap();
+        }
+      };
 
-      clusterMarker.setContent(el);
+      const triggerClusterListOnly = async function (e) {
+        suppressClusterBadgeMapEvent(e);
+        await handleClusterBadgeInteraction(cluster);
+        return false;
+      };
+
+      el.addEventListener("pointerdown", suppressClusterBadgeMapEvent);
+      el.addEventListener("pointerup", suppressClusterBadgeMapEvent);
+      el.addEventListener("mousedown", suppressClusterBadgeMapEvent);
+      el.addEventListener("mouseup", suppressClusterBadgeMapEvent);
+      el.addEventListener("touchstart", suppressClusterBadgeMapEvent, { passive: false });
+      el.addEventListener("touchend", suppressClusterBadgeMapEvent, { passive: false });
+      el.addEventListener("click", triggerClusterListOnly, { passive: false });
+
+      wrap.appendChild(el);
+      clusterMarker.setContent(wrap);
     }
 
     function refreshClusterBadges() {
@@ -6084,6 +6998,37 @@ function closeDetailPanel() {
       }
     }
 
+    async function handleClusterBadgeInteraction(cluster) {
+      if (!cluster || !state.map) {
+        await handleClusterSelection(cluster);
+        return;
+      }
+
+      const lockedCenter = state.map.getCenter();
+      const lockedLevel = state.map.getLevel();
+      state.suppressClusterMapMove = true;
+
+      const restoreMapViewport = () => {
+        if (!state.map || !lockedCenter || lockedLevel == null) return;
+        state.map.setLevel(lockedLevel, { animate: false, __allowClusterRestore: true });
+        state.map.setCenter(lockedCenter, { __allowClusterRestore: true });
+      };
+
+      try {
+        await handleClusterSelection(cluster);
+        restoreMapViewport();
+        setTimeout(restoreMapViewport, 0);
+        setTimeout(restoreMapViewport, 60);
+        setTimeout(restoreMapViewport, 120);
+        setTimeout(restoreMapViewport, 240);
+        setTimeout(restoreMapViewport, 420);
+      } finally {
+        setTimeout(() => {
+          state.suppressClusterMapMove = false;
+        }, 480);
+      }
+    }
+
     async function handleClusterSelection(cluster) {
       await hideRoadview();
 
@@ -6094,12 +7039,10 @@ function closeDetailPanel() {
         const item = clusterItems[0];
         state.selectedClusterKey = null;
         state.selectionMode = "single";
-        closeDetailPanel();
         lockListToItems([item]);
 
         highlightCard(item.id);
         updateMarkerSelection(item.id, [normalizeItemId(item.id)]);
-        recenterMapSoft(item.lat, item.lng);
 
         setTimeout(() => {
           renderList([item]);
@@ -6116,11 +7059,11 @@ function closeDetailPanel() {
       lockListToItems(clusterItems);
 
       updateMarkerSelection(null, clusterItems.map(v => v.id));
-      closeDetailPanel();
 
       const centerLat = clusterItems.reduce((sum, v) => sum + Number(v.lat || 0), 0) / clusterItems.length;
       const centerLng = clusterItems.reduce((sum, v) => sum + Number(v.lng || 0), 0) / clusterItems.length;
-      recenterMapSoft(centerLat, centerLng);
+      void centerLat;
+      void centerLng;
 
       setTimeout(() => {
         const sortedClusterItems = sortItems(clusterItems);
@@ -6138,6 +7081,31 @@ function closeDetailPanel() {
         level: 9
       });
 
+      state.suppressClusterMapMove = false;
+
+      const __originalMapSetCenter = state.map.setCenter.bind(state.map);
+      state.map.setCenter = function(latlng, opts) {
+        if (state.suppressClusterMapMove && !(opts && opts.__allowClusterRestore)) return;
+        return __originalMapSetCenter(latlng);
+      };
+
+      const __originalMapPanTo = state.map.panTo.bind(state.map);
+      state.map.panTo = function(latlng, padding, opts) {
+        if (state.suppressClusterMapMove) return;
+        return __originalMapPanTo(latlng, padding, opts);
+      };
+
+      const __originalMapSetLevel = state.map.setLevel.bind(state.map);
+      state.map.setLevel = function(level, opts) {
+        if (state.suppressClusterMapMove && !(opts && opts.__allowClusterRestore)) return;
+        if (opts && opts.__allowClusterRestore) {
+          const nextOpts = Object.assign({}, opts);
+          delete nextOpts.__allowClusterRestore;
+          return __originalMapSetLevel(level, nextOpts);
+        }
+        return __originalMapSetLevel(level, opts);
+      };
+
       state.map.setMapTypeId(kakao.maps.MapTypeId.ROADMAP);
 
 
@@ -6146,6 +7114,7 @@ function closeDetailPanel() {
         averageCenter: true,
         minLevel: 3,
         disableClickZoom: true,
+        clickable: false,
         calculator: [5, 10, 20, 50],
         styles: [
           {
@@ -6203,9 +7172,7 @@ function closeDetailPanel() {
         ]
       });
 
-      kakao.maps.event.addListener(state.clusterer, "clusterclick", async function (cluster) {
-        await handleClusterSelection(cluster);
-      });
+      // cluster 기본 클릭 동작 비활성화: 숫자 뱃지는 custom DOM click만 사용
 
       kakao.maps.event.addListener(state.map, "click", async function () {
         await hideRoadview();
@@ -6335,38 +7302,7 @@ function closeDetailPanel() {
 
 
     function recenterMapSoft(lat, lng) {
-      if (!state.map || !window.kakao || !kakao.maps) return;
-      const projection = state.map.getProjection();
-      const mapEl = document.getElementById("map");
-      if (!projection || !mapEl) return;
-
-      const target = new kakao.maps.LatLng(lat, lng);
-      const point = projection.containerPointFromCoords(target);
-      const centerX = Math.round(mapEl.clientWidth / 2);
-      const centerY = Math.round(mapEl.clientHeight / 2);
-      const safeZoneX = 120;
-      const safeZoneY = 90;
-      let dx = 0;
-      let dy = 0;
-
-      if (point.x < centerX - safeZoneX) {
-        dx = point.x - (centerX - safeZoneX);
-      } else if (point.x > centerX + safeZoneX) {
-        dx = point.x - (centerX + safeZoneX);
-      }
-      if (point.y < centerY - safeZoneY) {
-        dy = point.y - (centerY - safeZoneY);
-      } else if (point.y > centerY + safeZoneY) {
-        dy = point.y - (centerY + safeZoneY);
-      }
-
-      dx = Math.max(-140, Math.min(140, dx));
-      dy = Math.max(-90, Math.min(90, dy));
-      if (dx === 0 && dy === 0) return;
-
-      const movedPoint = new kakao.maps.Point(point.x - dx, point.y - dy);
-      const movedLatLng = projection.coordsFromContainerPoint(movedPoint);
-      state.map.panTo(movedLatLng);
+      return;
     }
 
     function moveMapToProperty(item) {
@@ -6399,12 +7335,10 @@ function closeDetailPanel() {
 
           state.selectedClusterKey = null;
           state.selectionMode = "single";
-          closeDetailPanel();
           lockListToItems([item]);
 
           highlightCard(item.id);
           updateMarkerSelection(item.id, [item.id]);
-          recenterMapSoft(item.lat, item.lng);
 
           setTimeout(() => {
             renderList([item]);
@@ -6425,15 +7359,7 @@ function closeDetailPanel() {
         refreshClusterBadges();
       }, 0);
 
-      if (preserveViewport || preventMapViewportChange) {
-        return;
-      }
-
-      if (markerItems.length === 1) {
-        state.map.setCenter(new kakao.maps.LatLng(markerItems[0].lat, markerItems[0].lng));
-      } else {
-        state.map.setBounds(bounds);
-      }
+      return;
     }
 
     async function focusProperty(id) {
@@ -6554,7 +7480,6 @@ function closeDetailPanel() {
 
           if (detailScroll) detailScroll.scrollTop = 0;
           await openDetailPanel(item);
-          recenterMapSoft(item.lat, item.lng);
 
           if (!wasExpanded && item.listingNo) {
             await incrementViewCount(item.listingNo);
@@ -6616,8 +7541,10 @@ function closeDetailPanel() {
           item.dateLabel ?? "",
           ...(item.features ?? [])
         ].join(" ").toLowerCase();
+        const rawItemText = JSON.stringify(item ?? {}).toLowerCase();
+        const searchableText = `${text} ${rawItemText}`.replace(/\s+/g, " ");
 
-        const okKeyword = !keyword || text.includes(keyword);
+        const okKeyword = !keyword || searchableText.includes(keyword);
         const okDeal = dealValue === "all" || item.dealType === dealValue;
 
         const itemType = (item.type ?? "").trim();
@@ -6638,35 +7565,34 @@ function closeDetailPanel() {
           (typeValue === "상가" && ["상가", "상가건물", "사무실", "공장", "상가ㆍ사무실"].includes(itemType)) ||
           (typeValue === "토지" && ["토지", "임야", "토지ㆍ임야", "전", "대", "답", "과수원", "목장용지"].includes(itemType));
 
+        const normalizedText = searchableText;
+
         const okFeature =
           state.selectedFeatures.size === 0 ||
-          [...state.selectedFeatures].every(feature =>
-            Array.isArray(item.features) && item.features.includes(feature)
-          );
+          [...state.selectedFeatures].every(feature => hasFeatureLabel(item, feature));
 
-        const animalRaw = String(item.animal ?? "").trim().toLowerCase();
-
-        const hasPetAllow = (
-          animalRaw === "ok" ||
-          animalRaw === "y" ||
-          animalRaw === "yes" ||
-          animalRaw === "true" ||
-          animalRaw === "1" ||
-          animalRaw.includes("가능") ||
-          animalRaw.includes("허용") ||
-          animalRaw.includes("반려동물") ||
-          animalRaw.includes("pet")
-        ) && !(
-          animalRaw.includes("불가") ||
-          animalRaw.includes("금지") ||
-          animalRaw.includes("불허") ||
-          /\bfalse\b/.test(animalRaw) ||
-          /\bno\b/.test(animalRaw)
-        );
+        const hasPetAllow = hasFeatureLabel(item, "반려동물");
+        const hasParking = hasFeatureLabel(item, "주차 가능");
+        const hasCityGas = hasFeatureLabel(item, "도시가스");
+        const hasDuplex = hasFeatureLabel(item, "복층형");
+        const hasVeranda = hasFeatureLabel(item, "베란다");
+        const hasElevator = hasFeatureLabel(item, "엘리베이터");
+        const hasFullOption = hasFeatureLabel(item, "풀옵션");
+        const hasImmediateMoveIn = Array.isArray(item?.featuresNormalized)
+          ? item.featuresNormalized.includes(normalizeFeatureToken("즉시입주"))
+          : normalizeFeatureList(item?.features).includes(normalizeFeatureToken("즉시입주"));
+        const hasOceanView = hasFeatureLabel(item, "오션뷰");
 
         const okPet = !selectedPetOnly || hasPetAllow;
-
-        return okKeyword && okDeal && okType && okFeature && okPet;
+        const okParking = !selectedParkingOnly || hasParking;
+        const okCityGas = !selectedCityGasOnly || hasCityGas;
+        const okDuplex = !selectedDuplexOnly || hasDuplex;
+        const okVeranda = !selectedVerandaOnly || hasVeranda;
+        const okElevator = !selectedElevatorOnly || hasElevator;
+        const okFullOption = !selectedFullOptionOnly || hasFullOption;
+        const okImmediateMoveIn = !selectedImmediateMoveInOnly || hasImmediateMoveIn;
+        const okOceanView = !selectedOceanViewOnly || hasOceanView;
+        return okKeyword && okDeal && okType && okFeature && okPet && okParking && okCityGas && okDuplex && okVeranda && okElevator && okFullOption && okImmediateMoveIn && okOceanView;
       });
 
       state.selectedMarkerId = null;
@@ -6824,7 +7750,13 @@ function closeDetailPanel() {
         mapAgentCloseBtn.addEventListener("click", (e) => {
           e.preventDefault();
           e.stopPropagation();
+          const hideToday = !!(mapAgentHideTodayCheck && mapAgentHideTodayCheck.checked);
           state.isRecommendAgentDismissed = true;
+          if (hideToday) {
+            localStorage.setItem(RECOMMEND_AGENT_HIDE_KEY, String(getHideUntilEndOfToday()));
+          } else {
+            localStorage.removeItem(RECOMMEND_AGENT_HIDE_KEY);
+          }
           state.recommendAgent = null;
           renderRecommendAgentCard(null);
         });
@@ -6834,10 +7766,28 @@ function closeDetailPanel() {
         mapRecommendCloseBtn.addEventListener("click", (e) => {
           e.preventDefault();
           e.stopPropagation();
+          const hideToday = !!(mapRecommendHideTodayCheck && mapRecommendHideTodayCheck.checked);
           state.isRecommendCardDismissed = true;
+          if (hideToday) {
+            localStorage.setItem(RECOMMEND_ITEM_HIDE_KEY, String(getHideUntilEndOfToday()));
+          } else {
+            localStorage.removeItem(RECOMMEND_ITEM_HIDE_KEY);
+          }
           state.recommendItem = null;
           state.lastRecommendPoolKey = "";
           renderRecommendationCard(null);
+        });
+      }
+
+      if (mapAgentHideTodayCheck) {
+        mapAgentHideTodayCheck.addEventListener("click", (e) => {
+          e.stopPropagation();
+        });
+      }
+
+      if (mapRecommendHideTodayCheck) {
+        mapRecommendHideTodayCheck.addEventListener("click", (e) => {
+          e.stopPropagation();
         });
       }
 
@@ -6980,6 +7930,132 @@ function closeDetailPanel() {
         }
       });
 
+      const extraFilterDropdown = document.getElementById("extraFilterDropdown");
+      const extraFilterTrigger = document.getElementById("extraFilterTrigger");
+      const extraFilterMenu = document.getElementById("extraFilterMenu");
+      const extraFilterLabel = document.getElementById("extraFilterLabel");
+      const extraParkingChk = document.getElementById("extraParkingChk");
+      const extraPetChk = document.getElementById("extraPetChk");
+      const extraCityGasChk = document.getElementById("extraCityGasChk");
+      const extraDuplexChk = document.getElementById("extraDuplexChk");
+      const extraVerandaChk = document.getElementById("extraVerandaChk");
+      const extraElevatorChk = document.getElementById("extraElevatorChk");
+      const extraFullOptionChk = document.getElementById("extraFullOptionChk");
+      const extraImmediateMoveInChk = document.getElementById("extraImmediateMoveInChk");
+      const extraOceanViewChk = document.getElementById("extraOceanViewChk");
+      const extraFilterResetBtn = document.getElementById("extraFilterResetBtn");
+
+      function closeExtraFilterMenu() {
+        if (!extraFilterDropdown || !extraFilterTrigger) return;
+        extraFilterDropdown.classList.remove("open");
+        extraFilterTrigger.setAttribute("aria-expanded", "false");
+      }
+
+      function syncExtraFilterUI() {
+        if (!extraFilterDropdown) return;
+
+        const activeLabels = [];
+        if (selectedImmediateMoveInOnly) activeLabels.push("즉시입주");
+        if (selectedParkingOnly) activeLabels.push("주차 가능");
+        if (selectedPetOnly) activeLabels.push("반려동물");
+        if (selectedCityGasOnly) activeLabels.push("도시가스");
+        if (selectedDuplexOnly) activeLabels.push("복층형");
+        if (selectedVerandaOnly) activeLabels.push("베란다");
+        if (selectedElevatorOnly) activeLabels.push("엘리베이터");
+        if (selectedFullOptionOnly) activeLabels.push("풀옵션");
+        if (selectedOceanViewOnly) activeLabels.push("오션뷰");
+
+        const hasActive = activeLabels.length > 0;
+        extraFilterDropdown.classList.toggle("has-active", hasActive);
+
+        if (extraParkingChk) extraParkingChk.checked = !!selectedParkingOnly;
+        if (extraPetChk) extraPetChk.checked = !!selectedPetOnly;
+        if (extraCityGasChk) extraCityGasChk.checked = !!selectedCityGasOnly;
+        if (extraDuplexChk) extraDuplexChk.checked = !!selectedDuplexOnly;
+        if (extraVerandaChk) extraVerandaChk.checked = !!selectedVerandaOnly;
+        if (extraElevatorChk) extraElevatorChk.checked = !!selectedElevatorOnly;
+        if (extraFullOptionChk) extraFullOptionChk.checked = !!selectedFullOptionOnly;
+        if (extraImmediateMoveInChk) extraImmediateMoveInChk.checked = !!selectedImmediateMoveInOnly;
+        if (extraOceanViewChk) extraOceanViewChk.checked = !!selectedOceanViewOnly;
+        if (extraFilterLabel) extraFilterLabel.textContent = hasActive ? activeLabels.join(", ") : "기타 조건";
+      }
+
+      function handleExtraConditionChange() {
+        selectedParkingOnly = !!extraParkingChk?.checked;
+        selectedPetOnly = !!extraPetChk?.checked;
+        selectedCityGasOnly = !!extraCityGasChk?.checked;
+        selectedDuplexOnly = !!extraDuplexChk?.checked;
+        selectedVerandaOnly = !!extraVerandaChk?.checked;
+        selectedElevatorOnly = !!extraElevatorChk?.checked;
+        selectedFullOptionOnly = !!extraFullOptionChk?.checked;
+        selectedImmediateMoveInOnly = !!extraImmediateMoveInChk?.checked;
+        selectedOceanViewOnly = !!extraOceanViewChk?.checked;
+        syncExtraFilterUI();
+
+        closeDetailPanel();
+        currentDetailItem = null;
+        state.selectedMarkerId = null;
+        state.selectedClusterKey = null;
+        state.selectionMode = null;
+
+        applyFilter();
+        syncLeftAllButtonToMapFilters();
+      }
+
+      if (extraFilterTrigger) {
+        extraFilterTrigger.addEventListener("click", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const willOpen = !extraFilterDropdown.classList.contains("open");
+          extraFilterDropdown.classList.toggle("open", willOpen);
+          extraFilterTrigger.setAttribute("aria-expanded", willOpen ? "true" : "false");
+        });
+      }
+
+      if (extraFilterMenu) {
+        extraFilterMenu.addEventListener("click", (e) => e.stopPropagation());
+      }
+
+      [
+        extraParkingChk,
+        extraPetChk,
+        extraCityGasChk,
+        extraDuplexChk,
+        extraVerandaChk,
+        extraElevatorChk,
+        extraFullOptionChk,
+        extraImmediateMoveInChk,
+        extraOceanViewChk
+      ].forEach(input => {
+        if (!input) return;
+        input.addEventListener("change", handleExtraConditionChange);
+      });
+
+      if (extraFilterResetBtn) {
+        extraFilterResetBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+
+          if (extraParkingChk) extraParkingChk.checked = false;
+          if (extraPetChk) extraPetChk.checked = false;
+          if (extraCityGasChk) extraCityGasChk.checked = false;
+          if (extraDuplexChk) extraDuplexChk.checked = false;
+          if (extraVerandaChk) extraVerandaChk.checked = false;
+          if (extraElevatorChk) extraElevatorChk.checked = false;
+          if (extraFullOptionChk) extraFullOptionChk.checked = false;
+          if (extraImmediateMoveInChk) extraImmediateMoveInChk.checked = false;
+          if (extraOceanViewChk) extraOceanViewChk.checked = false;
+
+          handleExtraConditionChange();
+        });
+      }
+
+      document.addEventListener("click", (e) => {
+        if (extraFilterDropdown && !extraFilterDropdown.contains(e.target)) {
+          closeExtraFilterMenu();
+        }
+      });
+
       dealButtons.forEach(btn => {
         btn.addEventListener("click", () => {
           dealButtons.forEach(b => b.classList.remove("active"));
@@ -7003,12 +8079,6 @@ function closeDetailPanel() {
           btn.classList.add("active");
           selectedType = (btn.dataset.value === "전체" ? "all" : (btn.dataset.value || "all"));
 
-          selectedPetOnly = false;
-          if (typeof petFilterBtn !== "undefined" && petFilterBtn) {
-            petFilterBtn.classList.remove("active");
-            petFilterBtn.setAttribute("aria-pressed", "false");
-          }
-
           closeDetailPanel();
           currentDetailItem = null;
           state.selectedMarkerId = null;
@@ -7020,34 +8090,7 @@ function closeDetailPanel() {
         });
       });
 
-      const petFilterBtn = document.getElementById("petFilterBtn");
-      if (petFilterBtn) {
-        const petIcons = ["fa-paw", "fa-paw"];
-        const randomIcon = petIcons[Math.floor(Math.random() * petIcons.length)];
-        const iconEl = petFilterBtn.querySelector("i");
-        if (iconEl) iconEl.className = `fa-solid ${randomIcon}`;
-
-        petFilterBtn.addEventListener("click", () => {
-          selectedPetOnly = !selectedPetOnly;
-          petFilterBtn.classList.toggle("active", selectedPetOnly);
-          petFilterBtn.setAttribute("aria-pressed", selectedPetOnly ? "true" : "false");
-
-          const typeButtonsSafe = document.querySelectorAll(".type-buttons button");
-          if (typeButtonsSafe && typeButtonsSafe.length) {
-            typeButtonsSafe.forEach(btn => btn.classList.remove("active"));
-          }
-          selectedType = "all";
-
-          closeDetailPanel();
-          currentDetailItem = null;
-          state.selectedMarkerId = null;
-          state.selectedClusterKey = null;
-          state.selectionMode = null;
-
-          applyFilter();
-          syncLeftAllButtonToMapFilters();
-        });
-      }
+      syncExtraFilterUI();
 
       (featureButtons || []).forEach(btn => {
         btn.addEventListener("click", () => {
@@ -7060,6 +8103,16 @@ function closeDetailPanel() {
             typeButtons.forEach(b => b.classList.toggle("active", b.dataset.value === "all"));
             selectedDeal = "all";
             selectedType = "all";
+            selectedPetOnly = false;
+            selectedParkingOnly = false;
+            selectedCityGasOnly = false;
+            selectedDuplexOnly = false;
+            selectedVerandaOnly = false;
+            selectedElevatorOnly = false;
+            selectedFullOptionOnly = false;
+            selectedImmediateMoveInOnly = false;
+            selectedOceanViewOnly = false;
+            syncExtraFilterUI();
           } else {
             state.selectedFeatures.add(value);
           }
@@ -7290,5 +8343,49 @@ document.addEventListener('DOMContentLoaded', function () {
 <style>
 .sub-topbar-left .sort {
   margin-left: auto;
+}
+</style>
+
+<style id="topbar-height-vars-1-682">
+:root{
+  --topbar-main-height: 65px;
+  --topbar-sub-height: 50px;
+  --global-topbar-height: var(--topbar-main-height);
+  --sub-topbar-height: var(--topbar-sub-height);
+}
+
+.app,
+.sidebar,
+.map-wrap,
+#map{
+  height: calc(100dvh - var(--topbar-main-height) - var(--topbar-sub-height));
+}
+
+.global-topbar{
+  height: var(--topbar-main-height);
+}
+
+.sub-topbar{
+  height: var(--topbar-sub-height);
+}
+
+.global-topbar-inner{
+  height: var(--topbar-main-height);
+}
+
+.sub-topbar-inner{
+  height: var(--topbar-sub-height);
+}
+
+.global-topbar .type-buttons button,
+.global-topbar .deal-buttons button,
+.top-topbar{
+    padding: 0 18px;
+    height: calc(var(--topbar-main-height) - 28px);
+}
+
+.sub-topbar .deal-buttons button{
+    padding: 0 12px;
+    height: calc(var(--topbar-sub-height) - 17px);
 }
 </style>
