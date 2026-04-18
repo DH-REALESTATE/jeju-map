@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>REALJEJU.APP Ver 1.715</title>
-<meta property="og:title" id="ogTitleMeta" content="REALJEJU.APP Ver 1.715" />
-  <meta property="og:description" id="ogDescriptionMeta" content="REALJEJU.APP Ver 1.715" />
+  <title>REALJEJU.APP Ver 1.718</title>
+<meta property="og:title" id="ogTitleMeta" content="REALJEJU.APP Ver 1.718" />
+  <meta property="og:description" id="ogDescriptionMeta" content="REALJEJU.APP Ver 1.718" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
   <meta property="og:image" content="https://your-domain.example/og-image.jpg" />
@@ -4486,7 +4486,7 @@
   <header class="global-topbar">
     <div class="global-topbar-inner">
       <div class="global-topbar-left">
-        <div class="global-brand" id="appVersionText"><i class="fa-solid fa-map-location-dot"" aria-hidden="true"></i><span class="brand-name">REALJEJU.APP</span><span class="brand-version">Ver 1.715</span></div>
+        <div class="global-brand" id="appVersionText"><i class="fa-solid fa-map-location-dot"" aria-hidden="true"></i><span class="brand-name">REALJEJU.APP</span><span class="brand-version">Ver 1.718</span></div>
       </div>
 
       <div class="global-topbar-menu">
@@ -4847,7 +4847,7 @@
   <script>
     const UI_FONT_STACK = 'Inter, Pretendard, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
     const APP_NAME = "REALJEJU.APP";
-    const APP_VERSION = "1.715";
+    const APP_VERSION = "1.718";
 
     function applyAppVersion() {
       const fullVersionText = `${APP_NAME} Ver ${APP_VERSION}`;
@@ -4996,6 +4996,7 @@
 
     const sidebar = document.getElementById("sidebar");
     const propertyList = document.getElementById("propertyList");
+    const sidebarListPanel = document.querySelector(".sidebar-list-panel");
     const keywordInput = document.getElementById("keyword");
     const mapResultCount = document.getElementById("mapResultCount");
     const mapEmptyState = document.getElementById("mapEmptyState");
@@ -7106,7 +7107,7 @@ function closeDetailPanel() {
         return __originalMapSetLevel(level, opts);
       };
 
-      state.map.setMapTypeId(kakao.maps.MapTypeId.ROADMAP);
+      state.map.setMapTypeId(kakao.maps.MapTypeId.HYBRID);
 
 
       state.clusterer = new kakao.maps.MarkerClusterer({
@@ -7522,6 +7523,19 @@ function closeDetailPanel() {
       });
     }
 
+    function scrollListToTop() {
+      if (sidebarListPanel) sidebarListPanel.scrollTop = 0;
+      if (propertyList) propertyList.scrollTop = 0;
+      requestAnimationFrame(() => {
+        if (sidebarListPanel) sidebarListPanel.scrollTop = 0;
+        if (propertyList) propertyList.scrollTop = 0;
+      });
+      setTimeout(() => {
+        if (sidebarListPanel) sidebarListPanel.scrollTop = 0;
+        if (propertyList) propertyList.scrollTop = 0;
+      }, 0);
+    }
+
     function applyFilter() {
       const keyword = String(keywordInput?.value || "").trim().toLowerCase();
       const dealValue = selectedDeal || "all";
@@ -7601,7 +7615,9 @@ function closeDetailPanel() {
       clearListLock();
 
       const viewportItems = getViewportFilteredItems(state.filtered);
+      scrollListToTop();
       renderList(viewportItems);
+      scrollListToTop();
       preventMapViewportChange = true;
       renderMarkers(state.filtered, { preserveViewport: true });
       preventMapViewportChange = false;
@@ -8068,6 +8084,7 @@ function closeDetailPanel() {
           state.selectedClusterKey = null;
           state.selectionMode = null;
 
+          scrollListToTop();
           applyFilter();
           syncLeftAllButtonToMapFilters();
         });
@@ -8085,6 +8102,7 @@ function closeDetailPanel() {
           state.selectedClusterKey = null;
           state.selectionMode = null;
 
+          scrollListToTop();
           applyFilter();
           syncLeftAllButtonToMapFilters();
         });
@@ -8295,7 +8313,7 @@ function closeDetailPanel() {
 
       updateSidebarWidth();
       initMap();
-      setMapTypeMode("roadmap");
+      setMapTypeMode("satellite");
       initCustomZoomButtons();
       initRoadview();
       initEvents();
