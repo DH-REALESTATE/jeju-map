@@ -1,5 +1,24 @@
 [  
-
+  {
+    "id": 206,
+    "listingNo": "디-206",
+    "image": "./dh_real/206/1.jpg",
+    "desc_folder": "./dh_real/206/info.json",
+    "image_folder": "./dh_real/206/image.json",    
+    "date": "2026-04-18",
+    "title": "금등풍차해안길, 판포포구",
+    "desc": "금등풍차해안길, 판포포구 인근 토지(전) 매물",
+    "type": "전",
+    "dealFilter": "매매",
+    "region": "한경면",
+    "price": "3억 8,000",
+    "area": "대지면적 489.00㎡",
+    "address": "제주시 한경면 금등리",
+    "lat": 33.362350,
+    "lng": 126.194375,
+    "agent_folder": "./dh_real/agent.json"
+  },
+  
   {
     "id": 121,
     "listingNo": "디-121",
