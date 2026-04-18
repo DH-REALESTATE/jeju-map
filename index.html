@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>REALJEJU.APP Ver 1.714</title>
-<meta property="og:title" id="ogTitleMeta" content="REALJEJU.APP Ver 1.714" />
-  <meta property="og:description" id="ogDescriptionMeta" content="REALJEJU.APP Ver 1.714" />
+  <title>REALJEJU.APP Ver 1.715</title>
+<meta property="og:title" id="ogTitleMeta" content="REALJEJU.APP Ver 1.715" />
+  <meta property="og:description" id="ogDescriptionMeta" content="REALJEJU.APP Ver 1.715" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
   <meta property="og:image" content="https://your-domain.example/og-image.jpg" />
@@ -1269,14 +1269,14 @@
     }
 
     .extra-filter-trigger {
-      height: 34px;
+      height: 38px;
       padding: 0 14px;
       border-radius: 999px;
       border: 1px solid #dbe4ee;
       background: #fff;
       color: #6b7785;
-      font-size: 14px;
-      font-weight: 700;
+      font-size: 15px;
+      font-weight: 800;
       letter-spacing: -0.1px;
       display: inline-flex;
       align-items: center;
@@ -4486,7 +4486,7 @@
   <header class="global-topbar">
     <div class="global-topbar-inner">
       <div class="global-topbar-left">
-        <div class="global-brand" id="appVersionText"><i class="fa-solid fa-map-location-dot"" aria-hidden="true"></i><span class="brand-name">REALJEJU.APP</span><span class="brand-version">Ver 1.709</span></div>
+        <div class="global-brand" id="appVersionText"><i class="fa-solid fa-map-location-dot"" aria-hidden="true"></i><span class="brand-name">REALJEJU.APP</span><span class="brand-version">Ver 1.715</span></div>
       </div>
 
       <div class="global-topbar-menu">
@@ -4847,7 +4847,7 @@
   <script>
     const UI_FONT_STACK = 'Inter, Pretendard, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
     const APP_NAME = "REALJEJU.APP";
-    const APP_VERSION = "1.709";
+    const APP_VERSION = "1.715";
 
     function applyAppVersion() {
       const fullVersionText = `${APP_NAME} Ver ${APP_VERSION}`;
@@ -4991,7 +4991,7 @@
     let currentHeroIndex = 0;
     let detailAreaMode = "total";
     let globalAreaUnit = "m2";
-    let currentMapTypeMode = "road";
+    let currentMapTypeMode = "satellite";
     let preventMapViewportChange = false;
 
     const sidebar = document.getElementById("sidebar");
@@ -7081,8 +7081,6 @@ function closeDetailPanel() {
         level: 9
       });
 
-      state.map.setMapTypeId(kakao.maps.MapTypeId.ROADMAP);
-
       state.suppressClusterMapMove = false;
 
       const __originalMapSetCenter = state.map.setCenter.bind(state.map);
@@ -7110,6 +7108,7 @@ function closeDetailPanel() {
 
       state.map.setMapTypeId(kakao.maps.MapTypeId.ROADMAP);
 
+
       state.clusterer = new kakao.maps.MarkerClusterer({
         map: state.map,
         averageCenter: true,
@@ -7119,8 +7118,8 @@ function closeDetailPanel() {
         calculator: [5, 10, 20, 50],
         styles: [
           {
-            width: "38px",
-            height: "38px",
+            width: "39px",
+            height: "39px",
             background: "rgba(255,255,255,0.90)",
             color: "#1f6fff",
             borderRadius: "12px",
@@ -7129,11 +7128,11 @@ function closeDetailPanel() {
             textAlign: "center",
             fontWeight: "900",
             fontSize: "20px",
-            lineHeight: "38px"
+            lineHeight: "39px"
           },
           {
-            width: "38px",
-            height: "38px",
+            width: "39px",
+            height: "39px",
             background: "rgba(255,255,255,0.90)",
             color: "#1f6fff",
             borderRadius: "12px",
@@ -7142,11 +7141,11 @@ function closeDetailPanel() {
             textAlign: "center",
             fontWeight: "900",
             fontSize: "20px",
-            lineHeight: "38px"
+            lineHeight: "39px"
           },
           {
-            width: "38px",
-            height: "38px",
+            width: "39px",
+            height: "39px",
             background: "rgba(255,255,255,0.90)",
             color: "#1f6fff",
             borderRadius: "12px",
@@ -7155,7 +7154,7 @@ function closeDetailPanel() {
             textAlign: "center",
             fontWeight: "900",
             fontSize: "20px",
-            lineHeight: "38px"
+            lineHeight: "39px"
           },
           {
             width: "39px",
