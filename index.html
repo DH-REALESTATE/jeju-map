@@ -4991,7 +4991,7 @@
     let currentHeroIndex = 0;
     let detailAreaMode = "total";
     let globalAreaUnit = "m2";
-    let currentMapTypeMode = "satellite";
+    let currentMapTypeMode = "road";
     let preventMapViewportChange = false;
 
     const sidebar = document.getElementById("sidebar");
@@ -7081,6 +7081,8 @@ function closeDetailPanel() {
         level: 9
       });
 
+      state.map.setMapTypeId(kakao.maps.MapTypeId.ROADMAP);
+
       state.suppressClusterMapMove = false;
 
       const __originalMapSetCenter = state.map.setCenter.bind(state.map);
@@ -7108,7 +7110,6 @@ function closeDetailPanel() {
 
       state.map.setMapTypeId(kakao.maps.MapTypeId.ROADMAP);
 
-
       state.clusterer = new kakao.maps.MarkerClusterer({
         map: state.map,
         averageCenter: true,
@@ -7118,8 +7119,8 @@ function closeDetailPanel() {
         calculator: [5, 10, 20, 50],
         styles: [
           {
-            width: "39px",
-            height: "39px",
+            width: "38px",
+            height: "38px",
             background: "rgba(255,255,255,0.90)",
             color: "#1f6fff",
             borderRadius: "12px",
@@ -7128,11 +7129,11 @@ function closeDetailPanel() {
             textAlign: "center",
             fontWeight: "900",
             fontSize: "20px",
-            lineHeight: "39px"
+            lineHeight: "38px"
           },
           {
-            width: "39px",
-            height: "39px",
+            width: "38px",
+            height: "38px",
             background: "rgba(255,255,255,0.90)",
             color: "#1f6fff",
             borderRadius: "12px",
@@ -7141,11 +7142,11 @@ function closeDetailPanel() {
             textAlign: "center",
             fontWeight: "900",
             fontSize: "20px",
-            lineHeight: "39px"
+            lineHeight: "38px"
           },
           {
-            width: "39px",
-            height: "39px",
+            width: "38px",
+            height: "38px",
             background: "rgba(255,255,255,0.90)",
             color: "#1f6fff",
             borderRadius: "12px",
@@ -7154,7 +7155,7 @@ function closeDetailPanel() {
             textAlign: "center",
             fontWeight: "900",
             fontSize: "20px",
-            lineHeight: "39px"
+            lineHeight: "38px"
           },
           {
             width: "39px",
@@ -8295,7 +8296,7 @@ function closeDetailPanel() {
 
       updateSidebarWidth();
       initMap();
-      setMapTypeMode("satellite");
+      setMapTypeMode("roadmap");
       initCustomZoomButtons();
       initRoadview();
       initEvents();
