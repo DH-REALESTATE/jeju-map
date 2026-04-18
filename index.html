@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>REALJEJU.APP Ver 1.718</title>
-<meta property="og:title" id="ogTitleMeta" content="REALJEJU.APP Ver 1.718" />
-  <meta property="og:description" id="ogDescriptionMeta" content="REALJEJU.APP Ver 1.718" />
+  <title>REALJEJU.APP Ver 1.727</title>
+<meta property="og:title" id="ogTitleMeta" content="REALJEJU.APP Ver 1.727" />
+  <meta property="og:description" id="ogDescriptionMeta" content="REALJEJU.APP Ver 1.727" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
   <meta property="og:image" content="https://your-domain.example/og-image.jpg" />
@@ -4486,7 +4486,7 @@
   <header class="global-topbar">
     <div class="global-topbar-inner">
       <div class="global-topbar-left">
-        <div class="global-brand" id="appVersionText"><i class="fa-solid fa-map-location-dot"" aria-hidden="true"></i><span class="brand-name">REALJEJU.APP</span><span class="brand-version">Ver 1.718</span></div>
+        <div class="global-brand" id="appVersionText"><i class="fa-solid fa-map-location-dot"" aria-hidden="true"></i><span class="brand-name">REALJEJU.APP</span><span class="brand-version">Ver 1.725</span></div>
       </div>
 
       <div class="global-topbar-menu">
@@ -4847,7 +4847,7 @@
   <script>
     const UI_FONT_STACK = 'Inter, Pretendard, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
     const APP_NAME = "REALJEJU.APP";
-    const APP_VERSION = "1.718";
+    const APP_VERSION = "1.727";
 
     function applyAppVersion() {
       const fullVersionText = `${APP_NAME} Ver ${APP_VERSION}`;
@@ -4993,6 +4993,8 @@
     let globalAreaUnit = "m2";
     let currentMapTypeMode = "satellite";
     let preventMapViewportChange = false;
+    let isClusterClicking = false;
+    let allowDetailOpenFromListClick = false;
 
     const sidebar = document.getElementById("sidebar");
     const propertyList = document.getElementById("propertyList");
@@ -5468,8 +5470,8 @@
         if (e.target.closest(".map-recommend-footer")) return;
         if (e.target.closest("label, input")) return;
         if (e.target.closest("a, button")) return;
-        if (detailScroll) detailScroll.scrollTop = 0;
-        await openDetailPanel(item);
+        closeDetailPanel();
+        currentDetailItem = null;
         if (detailScroll) detailScroll.scrollTop = 0;
         updateMarkerSelection(item.id, [item.id]);
         await focusProperty(item.id);
@@ -6824,7 +6826,15 @@ function getBadgeTextMetrics(text) {
     }
 
     async function openDetailPanel(item) {
+      if (!allowDetailOpenFromListClick) return;
       if (detailScroll) detailScroll.scrollTop = 0;
+      const sidebarDetailPanelEl = document.getElementById("sidebarDetailPanel");
+      if (sidebarDetailPanelEl) {
+        sidebarDetailPanelEl.style.display = "block";
+        sidebarDetailPanelEl.style.opacity = "";
+        sidebarDetailPanelEl.style.pointerEvents = "";
+        sidebarDetailPanelEl.style.visibility = "";
+      }
       sidebar.classList.add("expanded");
       updateSidebarWidth();
       refreshMapLayout();
@@ -6969,39 +6979,46 @@ function getBadgeTextMetrics(text) {
     }
 
     
+function hardCloseDetailPanel() {
+  const panel = document.getElementById('sidebarDetailPanel');
+  if (panel) {
+    panel.style.display = 'none';
+    panel.style.opacity = '0';
+    panel.style.pointerEvents = 'none';
+    panel.style.visibility = 'hidden';
+  }
+  sidebar.classList.remove("expanded");
+}
+
 function forceCloseDetailPanel() {
-  const panel = document.getElementById('detailPanel');
-  if (panel) panel.style.display = 'none';
+  hardCloseDetailPanel();
 }
 
 function closeDetailPanel() {
-      const preservedSelectedId = state.selectedMarkerId;
-      const preservedSelectedIds = state.selectedMarkerIds instanceof Set
-        ? [...state.selectedMarkerIds]
-        : (Array.isArray(state.selectedMarkerIds) ? [...state.selectedMarkerIds] : []);
+      const panel = document.getElementById('sidebarDetailPanel');
+      if (panel) {
+        panel.style.display = 'none';
+        panel.style.opacity = '0';
+        panel.style.pointerEvents = 'none';
+        panel.style.visibility = 'hidden';
+      }
 
       sidebar.classList.remove("expanded");
       currentDetailItem = null;
       updateSidebarWidth();
       refreshMapLayout();
-
-      if (preservedSelectedId != null || preservedSelectedIds.length) {
-        if (preservedSelectedId != null) {
-          highlightCard(preservedSelectedId);
-        }
-        updateMarkerSelection(preservedSelectedId, preservedSelectedIds);
-        setTimeout(() => {
-          if (preservedSelectedId != null) {
-            highlightCard(preservedSelectedId);
-          }
-          refreshClusterBadges();
-        }, 0);
-      }
     }
 
     async function handleClusterBadgeInteraction(cluster) {
+      isClusterClicking = true;
+      allowDetailOpenFromListClick = false;
+      hardCloseDetailPanel();
+
       if (!cluster || !state.map) {
         await handleClusterSelection(cluster);
+        setTimeout(() => {
+          isClusterClicking = false;
+        }, 120);
         return;
       }
 
@@ -7026,53 +7043,46 @@ function closeDetailPanel() {
       } finally {
         setTimeout(() => {
           state.suppressClusterMapMove = false;
+          isClusterClicking = false;
         }, 480);
       }
     }
 
     async function handleClusterSelection(cluster) {
       await hideRoadview();
+      hardCloseDetailPanel();
+      currentDetailItem = null;
+      state.selectedMarkerId = null;
+      state.selectedMarkerIds = new Set();
+      state.selectedClusterKey = null;
+      state.selectionMode = null;
 
-      const clusterItems = cluster.getMarkers().map(marker => marker.__property).filter(Boolean);
+      const clusterItems = (cluster && cluster.getMarkers ? cluster.getMarkers() : [])
+        .map(marker => marker.__property)
+        .filter(Boolean);
       if (!clusterItems.length) return;
 
-      if (clusterItems.length === 1) {
-        const item = clusterItems[0];
-        state.selectedClusterKey = null;
-        state.selectionMode = "single";
-        lockListToItems([item]);
-
-        highlightCard(item.id);
-        updateMarkerSelection(item.id, [normalizeItemId(item.id)]);
-
-        setTimeout(() => {
-          renderList([item]);
-          setResultInfo("선택 매물 1건");
-          setListInfo("총 1개 매물");
-          refreshClusterBadges();
-        }, 0);
-        return;
-      }
-
-      state.selectedMarkerId = null;
-      state.selectedClusterKey = getClusterKeyFromItems(clusterItems);
-      state.selectionMode = "cluster";
-      lockListToItems(clusterItems);
-
-      updateMarkerSelection(null, clusterItems.map(v => v.id));
-
-      const centerLat = clusterItems.reduce((sum, v) => sum + Number(v.lat || 0), 0) / clusterItems.length;
-      const centerLng = clusterItems.reduce((sum, v) => sum + Number(v.lng || 0), 0) / clusterItems.length;
-      void centerLat;
-      void centerLng;
+      const sortedClusterItems = sortItems(clusterItems);
+      lockListToItems(sortedClusterItems);
 
       setTimeout(() => {
-        const sortedClusterItems = sortItems(clusterItems);
+        hardCloseDetailPanel();
         renderList(sortedClusterItems);
-        setResultInfo(`선택 매물 ${sortedClusterItems.length}건`);
-        setListInfo(`총 ${sortedClusterItems.length}개 매물`);
+
+        if (sortedClusterItems.length === 1) {
+          const item = sortedClusterItems[0];
+          highlightCard(item.id);
+          updateMarkerSelection(item.id, [normalizeItemId(item.id)]);
+          setResultInfo("선택 매물 1건");
+          setListInfo("총 1개 매물");
+        } else {
+          updateMarkerSelection(null, sortedClusterItems.map(v => v.id));
+          setResultInfo(`선택 매물 ${sortedClusterItems.length}건`);
+          setListInfo(`총 ${sortedClusterItems.length}개 매물`);
+          setClusterBadgeSelected(cluster, true);
+        }
+
         refreshClusterBadges();
-        setClusterBadgeSelected(cluster, true);
       }, 0);
     }
 
@@ -7333,15 +7343,21 @@ function closeDetailPanel() {
 
         kakao.maps.event.addListener(marker, "click", async function () {
           await hideRoadview();
+          allowDetailOpenFromListClick = false;
+          currentDetailItem = null;
+          hardCloseDetailPanel();
 
           state.selectedClusterKey = null;
-          state.selectionMode = "single";
+          state.selectedMarkerId = null;
+          state.selectedMarkerIds = new Set();
+          state.selectionMode = null;
           lockListToItems([item]);
 
           highlightCard(item.id);
           updateMarkerSelection(item.id, [item.id]);
 
           setTimeout(() => {
+            hardCloseDetailPanel();
             renderList([item]);
             setResultInfo("선택 매물 1건");
             setListInfo("총 1개 매물");
@@ -7480,7 +7496,12 @@ function closeDetailPanel() {
           updateMarkerSelection(normalizedId, [normalizedId]);
 
           if (detailScroll) detailScroll.scrollTop = 0;
-          await openDetailPanel(item);
+          allowDetailOpenFromListClick = true;
+          try {
+            await openDetailPanel(item);
+          } finally {
+            allowDetailOpenFromListClick = false;
+          }
 
           if (!wasExpanded && item.listingNo) {
             await incrementViewCount(item.listingNo);
