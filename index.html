@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>REALJEJU.APP Ver 1.763</title>
-<meta property="og:title" id="ogTitleMeta" content="REALJEJU.APP Ver 1.763" />
-  <meta property="og:description" id="ogDescriptionMeta" content="REALJEJU.APP Ver 1.763" />
+  <title>REALJEJU.APP Ver 1.768</title>
+<meta property="og:title" id="ogTitleMeta" content="REALJEJU.APP Ver 1.768" />
+  <meta property="og:description" id="ogDescriptionMeta" content="REALJEJU.APP Ver 1.768" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
   <meta property="og:image" content="https://your-domain.example/og-image.jpg" />
@@ -28,8 +28,8 @@
       --line: #e7edf3;
       --text: #17212b;
       --shadow: 0 12px 30px rgba(15, 41, 66, 0.12);
-      --font-ui: "Inter", "Pretendard", "Noto Sans KR", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
-      --font-display: "Inter", "Pretendard", "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      --font-ui: "Pretendard", "Inter", "Noto Sans KR", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      --font-display: "Pretendard", "Inter", "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
       --topbar-row-height: 56px;
       --global-topbar-height: var(--topbar-row-height);
       --sub-topbar-height: var(--topbar-row-height);
@@ -119,6 +119,20 @@
       position: relative;
       display: flex;
       gap: 4px;
+    }
+
+    .detail-topbar-id {
+      flex: 1 1 auto;
+      min-width: 0;
+      padding: 0 12px;
+      font-size: 18px;
+      font-weight: 800;
+      color: #6b7280;
+      line-height: 1.3;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align: center;
     }
 
     .detail-share-menu {
@@ -457,6 +471,32 @@
       color: #6f7c89;
     }
 
+    .detail-summary-block {
+      margin-bottom: 12px;
+    }
+
+    .detail-summary-price-row {
+      align-items: flex-start;
+      justify-content: flex-start;
+      text-align: left;
+      margin-bottom: 6px;
+    }
+
+    .detail-summary-price {
+      text-align: left;
+      margin-bottom: 0;
+    }
+
+    .detail-summary-address {
+      margin-top: 6px;
+      margin-bottom: 4px;
+    }
+
+    .detail-listing-no {
+      margin-bottom: 0;
+      color: #7a8794;
+    }
+
     .detail-title-row {
       display: flex;
       justify-content: space-between;
@@ -474,7 +514,7 @@
     }
 
     .detail-listing-no {
-      display: block;
+      display: none !important;
       font-size: 12.5px;
       font-weight: 800;
       letter-spacing: -0.2px;
@@ -3906,7 +3946,7 @@ body.sidebar-list-collapsed .map-side-tools{
   <header class="global-topbar">
     <div class="global-topbar-inner">
       <div class="global-topbar-left">
-        <div class="global-brand" id="appVersionText"><i class="fa-solid fa-map-location-dot"" aria-hidden="true"></i><span class="brand-name">REALJEJU.APP</span><span class="brand-version">Ver 1.763</span></div>
+        <div class="global-brand" id="appVersionText"><i class="fa-solid fa-map-location-dot"" aria-hidden="true"></i><span class="brand-name">REALJEJU.APP</span><span class="brand-version">Ver 1.768</span></div>
       </div>
 
       <div class="global-topbar-menu">
@@ -3984,10 +4024,9 @@ body.sidebar-list-collapsed .map-side-tools{
               <button type="button" class="detail-close-btn" id="detailCloseBtn">
                 <i class="fa-solid fa-arrow-left"></i>
               </button>
+              <div class="detail-topbar-id" id="detailTopbarId"></div>
               <div class="detail-top-actions">
                 <button type="button" class="detail-icon-btn" id="detailShareBtn" onclick="toggleDetailShareMenu(event)"><i class="fa-solid  fa-share-nodes"></i></button>
-                <button type="button" class="detail-icon-btn"><i class="fa-regular fa-bookmark"></i></button>
-                <button type="button" class="detail-icon-btn"><i class="fa-solid fa-ellipsis-vertical"></i></button>
 
                 <div class="detail-share-menu" id="detailShareMenu">
                   <button type="button" class="detail-share-option" id="detailShareKakaoBtn" onclick="shareDetailToKakao(event)">
@@ -4038,20 +4077,14 @@ body.sidebar-list-collapsed .map-side-tools{
                   <div class="detail-summary-price-row">
                     <div class="detail-summary-deal-badge" id="detailSummaryDealBadge"></div>
                     <div class="detail-summary-price" id="detailSummaryPrice"></div>
-                                      </div>
-                  <div class="detail-summary-address" id="detailSummaryAddress"></div>
-                </div>
-
-                <div class="detail-title-row">
-                  <div class="detail-title-wrap">
-                    <div class="detail-listing-no" id="detailListingNo"></div>
-                    <h2 class="detail-title" id="detailTitle">매물을 선택하세요</h2>
-                    <div class="detail-inline-price" id="detailPrice"></div>
-                    <div class="detail-inline-address" id="detailAddress"></div>
                   </div>
+                  <h2 class="detail-title" id="detailTitle">매물을 선택하세요</h2>
+                  <div class="detail-summary-address" id="detailSummaryAddress"></div>
+                  <div class="detail-listing-no" id="detailListingNo"></div>
+                  <div class="detail-inline-price" id="detailPrice"></div>
+                  <div class="detail-inline-address" id="detailAddress"></div>
                   <div class="detail-type-badge" id="detailTypeBadge" style="display:none;"></div>
                 </div>
-
 
                 <div class="detail-meta-grid" id="detailMetaGrid">
                   <div class="detail-meta-item">
@@ -4076,9 +4109,9 @@ body.sidebar-list-collapsed .map-side-tools{
                   </div>
                 </div>
 
-                <div class="detail-desc" id="detailDesc"></div>
-
                 <div id="detailInfoList"></div>
+
+                <div class="detail-desc" id="detailDesc"></div>
 
                 <div class="detail-agent-card">
                   <div class="detail-agent-top">
@@ -4271,7 +4304,7 @@ body.sidebar-list-collapsed .map-side-tools{
     const UI_FONT_STACK = 'Inter, Pretendard, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
     const BADGE_BASE_HEX = '#3B82F6'; // 제주코발트블루
     document.documentElement.style.setProperty('--brand', BADGE_BASE_HEX);
-    const BADGE_BASE_ALPHA = 1; // 0.8, 0.6, 0.3 등으로 사용자가 직접 조정
+    const BADGE_BASE_ALPHA = 0.8; // 0.8, 0.6, 0.3 등으로 사용자가 직접 조정
     function hexToRgba(hex, alpha = 1) {
       const value = String(hex || '').replace('#', '').trim();
       const normalized = value.length === 3 ? value.split('').map(ch => ch + ch).join('') : value;
@@ -4282,7 +4315,7 @@ body.sidebar-list-collapsed .map-side-tools{
       return `rgba(${r}, ${g}, ${b}, ${alpha})`;
     }
     const APP_NAME = "REALJEJU.APP";
-    const APP_VERSION = "1.763";
+    const APP_VERSION = "1.768";
 
     function applyAppVersion() {
       const fullVersionText = `${APP_NAME} Ver ${APP_VERSION}`;
@@ -4521,6 +4554,7 @@ body.sidebar-list-collapsed .map-side-tools{
     const detailHeroFeatures = document.getElementById("detailHeroFeatures");
     const detailTitle = document.getElementById("detailTitle");
     const detailListingNo = document.getElementById("detailListingNo");
+    const detailTopbarId = document.getElementById("detailTopbarId");
     const detailTypeBadge = document.getElementById("detailTypeBadge");
     const detailPrice = document.getElementById("detailPrice");
     const detailAddress = document.getElementById("detailAddress");
@@ -6331,7 +6365,11 @@ function getBadgeTextMetrics(text) {
       const heroImages = getHeroImages(detailItem);
       renderHeroSlider(heroImages);
 
-      detailListingNo.innerHTML = detailItem.listingNo ? `<span style="display:inline-flex; align-items:center; color:#7c4dff;"><i class="fa-solid fa-circle" style="font-size:6px; margin-right:6px;"></i> 매물번호 ${detailItem.listingNo.replace(/매물번호\s*/g, "")}</span>` : "";
+      if (detailTopbarId) {
+        const listingNoText = String(detailItem.listingNo || "").replace(/매물번호\s*/g, "").trim();
+        detailTopbarId.textContent = listingNoText ? `매물번호 : ${listingNoText}` : "";
+      }
+      detailListingNo.innerHTML = "";
       detailTitle.textContent = detailItem.title || "";
       detailPrice.textContent = `${detailItem.dealType || ""} ${detailItem.price || ""}`.trim();
       detailAddress.textContent = `${detailItem.address || ""}`.trim();
