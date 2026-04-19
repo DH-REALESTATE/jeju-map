@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>REALJEJU.APP Ver 1.749</title>
-<meta property="og:title" id="ogTitleMeta" content="REALJEJU.APP Ver 1.749" />
-  <meta property="og:description" id="ogDescriptionMeta" content="REALJEJU.APP Ver 1.749" />
+  <title>REALJEJU.APP Ver 1.752</title>
+<meta property="og:title" id="ogTitleMeta" content="REALJEJU.APP Ver 1.752" />
+  <meta property="og:description" id="ogDescriptionMeta" content="REALJEJU.APP Ver 1.752" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
   <meta property="og:image" content="https://your-domain.example/og-image.jpg" />
@@ -1518,7 +1518,8 @@
       box-shadow: inset 0 0 0 1px rgba(5, 150, 105, 0.08);
     }
 
-    .card-badge[data-type="사무실"]{
+    .card-badge[data-type="사무실"],
+    .card-badge[data-type="hotel"]{
       background:#f1f5f9;
       color:#334155;
       box-shadow: inset 0 0 0 1px rgba(51, 65, 85, 0.08);
@@ -1546,7 +1547,8 @@
       color:#059669;
     }
 
-    .detail-summary-type-badge[data-type="사무실"]{
+    .detail-summary-type-badge[data-type="사무실"],
+    .detail-summary-type-badge[data-type="hotel"]{
       background:#f1f5f9;
       color:#334155;
     }
@@ -3883,7 +3885,7 @@ body.sidebar-list-collapsed .map-side-tools{
   <header class="global-topbar">
     <div class="global-topbar-inner">
       <div class="global-topbar-left">
-        <div class="global-brand" id="appVersionText"><i class="fa-solid fa-map-location-dot"" aria-hidden="true"></i><span class="brand-name">REALJEJU.APP</span><span class="brand-version">Ver 1.725</span></div>
+        <div class="global-brand" id="appVersionText"><i class="fa-solid fa-map-location-dot"" aria-hidden="true"></i><span class="brand-name">REALJEJU.APP</span><span class="brand-version">Ver 1.752</span></div>
       </div>
 
       <div class="global-topbar-menu">
@@ -4244,7 +4246,7 @@ body.sidebar-list-collapsed .map-side-tools{
   <script>
     const UI_FONT_STACK = 'Inter, Pretendard, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
     const APP_NAME = "REALJEJU.APP";
-    const APP_VERSION = "1.749";
+    const APP_VERSION = "1.752";
 
     function applyAppVersion() {
       const fullVersionText = `${APP_NAME} Ver ${APP_VERSION}`;
@@ -4528,7 +4530,7 @@ body.sidebar-list-collapsed .map-side-tools{
       if (["단독주택", "단독", "빌라", "다가구", "다세대", "다가구ㆍ다세대", "다세대주택"].includes(t)) {
         return { bg: "#fff7ed", color: "#ea580c" };
       }
-      if (["상가", "상가건물", "사무실", "공장", "상가ㆍ사무실"].includes(t)) {
+      if (["상가", "상가건물", "사무실", "공장", "상가ㆍ사무실", "hotel", "호텔"].includes(t)) {
         return { bg: "#f3e8ff", color: "#7c3aed" };
       }
       if (["토지", "임야", "토지ㆍ임야", "전", "대", "답", "과수원"].includes(t)) {
@@ -5135,6 +5137,11 @@ body.sidebar-list-collapsed .map-side-tools{
       return /아파트|빌라|연립|투룸/.test(text);
     }
 
+    function isHotelType(typeText) {
+      const text = String(typeText || "").trim().toLowerCase();
+      return text === "hotel" || text === "호텔";
+    }
+
     function isDetachedHouseType(typeText) {
       const text = String(typeText || "").trim();
       return ["단독", "단독주택"].includes(text);
@@ -5155,6 +5162,7 @@ body.sidebar-list-collapsed .map-side-tools{
       const text = String(typeText || "").trim();
       if (["전", "대", "답", "과수원", "목장용지", "임야", "토지", "토지ㆍ임야"].includes(text)) return getLandTypeDetailLabel(text);
       if (["단독", "단독주택"].includes(text)) return "단독주택";
+      if (isHotelType(text)) return "상가ㆍ사무실";
       return text || "-";
     }
 
@@ -5181,7 +5189,7 @@ body.sidebar-list-collapsed .map-side-tools{
 
     function parseApartmentAreas(areaText) {
       const raw = String(areaText || "-").trim();
-      const supplyMatch = raw.match(/공급(?:면적)?\s*([\d,.]+)㎡/);
+      const supplyMatch = raw.match(/(?:공급|계약)(?:면적)?\s*([\d,.]+)㎡/);
       const privateMatch = raw.match(/전용(?:면적)?\s*([\d,.]+)㎡/);
 
       let supply = supplyMatch ? Number(String(supplyMatch[1]).replace(/,/g, "")) : null;
@@ -5252,7 +5260,7 @@ body.sidebar-list-collapsed .map-side-tools{
         return Number.isFinite(total) ? total : null;
       }
 
-      if (isApartmentType(typeText)) {
+      if (isApartmentType(typeText) || isHotelType(typeText)) {
         const { private: privateArea } = parseApartmentAreas(raw);
         return Number.isFinite(privateArea) ? privateArea : null;
       }
@@ -5306,6 +5314,13 @@ body.sidebar-list-collapsed .map-side-tools{
     function formatCardAreaByUnit(areaText, unit, typeText = "") {
       if (isDetachedHouseType(typeText)) {
         return formatDetachedHouseCardAreaDisplay(areaText, unit);
+      }
+
+      if (isHotelType(typeText)) {
+        const parsed = parseApartmentAreas(areaText || "-");
+        const privateText = Number.isFinite(parsed.private) ? formatSingleAreaValue(parsed.private, unit) : "-";
+        const supplyText = Number.isFinite(parsed.supply) ? formatSingleAreaValue(parsed.supply, unit) : "-";
+        return `계약${supplyText}ㆍ전용${privateText}`;
       }
 
       if (/상가|상가건물|사무실|공장/.test(typeText)) {
@@ -5455,6 +5470,20 @@ body.sidebar-list-collapsed .map-side-tools{
         const targetValue = detailAreaMode === "land" ? parsed.land : parsed.total;
 
         detailAreaLabel.textContent = detailAreaMode === "land" ? "면적(대지)" : "면적(연)";
+        setDetailAreaValueHTML(Number.isFinite(targetValue) ? formatSingleAreaValue(targetValue, unit) : "-");
+
+        if (detailAreaTypeToggleBtn) {
+          detailAreaTypeToggleBtn.style.display = "inline-flex";
+        }
+        return;
+      }
+
+      if (isHotelType(typeText)) {
+        const parsed = parseApartmentAreas(detailItem.area || "-");
+        const showSupply = detailAreaMode === "supply";
+        const targetValue = showSupply ? parsed.supply : parsed.private;
+
+        detailAreaLabel.textContent = showSupply ? "면적(계약)" : "면적(전용)";
         setDetailAreaValueHTML(Number.isFinite(targetValue) ? formatSingleAreaValue(targetValue, unit) : "-");
 
         if (detailAreaTypeToggleBtn) {
@@ -6276,12 +6305,12 @@ function getBadgeTextMetrics(text) {
 
       detailAreaMode = /콘도/.test(detailItem.type || "")
         ? "build"
-        : ((isApartmentType(detailItem.type || "") || /원룸|투룸/.test(detailItem.type || "")) ? "private" : "total");
+        : ((isApartmentType(detailItem.type || "") || /원룸|투룸/.test(detailItem.type || "") || isHotelType(detailItem.type || "")) ? "private" : "total");
       detailAreaValue.dataset.areaRaw = detailItem.area || "-";
       detailAreaValue.dataset.areaUnit = globalAreaUnit;
       detailAreaValue.dataset.areaType = detailItem.type || "";
       if (detailAreaToggleBtn) {
-        detailAreaToggleBtn.style.display = (isApartmentType(detailItem.type || "") || /오피스텔|원룸|투룸/.test(detailItem.type || "")) ? "inline-flex" : "none";
+        detailAreaToggleBtn.style.display = (isApartmentType(detailItem.type || "") || /오피스텔|원룸|투룸/.test(detailItem.type || "") || isHotelType(detailItem.type || "")) ? "inline-flex" : "none";
       }
       syncDetailAreaDisplay(detailItem);
       detailTypeValue.textContent = getDisplayTypeLabel(detailItem.type);
@@ -7014,7 +7043,7 @@ function closeDetailPanel() {
             ["원룸", "투룸", "원룸ㆍ투룸"].includes(itemType) ||
             (itemType === "오피스텔" && isRentalDeal)
           )) ||
-          (typeValue === "상가" && ["상가", "상가건물", "사무실", "공장", "상가ㆍ사무실"].includes(itemType)) ||
+          (typeValue === "상가" && (["상가", "상가건물", "사무실", "공장", "상가ㆍ사무실", "hotel", "호텔"].includes(itemType) || isHotelType(itemType))) ||
           (typeValue === "토지" && ["토지", "임야", "토지ㆍ임야", "전", "대", "답", "과수원", "목장용지"].includes(itemType));
 
         const normalizedText = searchableText;
@@ -7186,7 +7215,7 @@ function closeDetailPanel() {
             return;
           }
 
-          if (isApartmentType(typeText) || /오피스텔|원룸|투룸/.test(typeText)) {
+          if (isApartmentType(typeText) || /오피스텔|원룸|투룸/.test(typeText) || isHotelType(typeText)) {
             detailAreaMode = detailAreaMode === "supply" ? "private" : "supply";
             syncDetailAreaDisplay(currentDetailItem);
           }
