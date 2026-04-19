@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>REALJEJU.APP Ver 1.760</title>
-<meta property="og:title" id="ogTitleMeta" content="REALJEJU.APP Ver 1.760" />
-  <meta property="og:description" id="ogDescriptionMeta" content="REALJEJU.APP Ver 1.760" />
+  <title>REALJEJU.APP Ver 1.763</title>
+<meta property="og:title" id="ogTitleMeta" content="REALJEJU.APP Ver 1.763" />
+  <meta property="og:description" id="ogDescriptionMeta" content="REALJEJU.APP Ver 1.763" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
   <meta property="og:image" content="https://your-domain.example/og-image.jpg" />
@@ -23,7 +23,7 @@
       --sidebar-list-width: 360px;
       --detail-panel-width: 420px;
       --sidebar-current-width: var(--sidebar-list-width);
-      --brand: #4F46E5;
+      --brand: #3B82F6;
       --bg: #f4f7fb;
       --line: #e7edf3;
       --text: #17212b;
@@ -1496,62 +1496,62 @@
 
     /* 🔥 매물 유형별 색상 */
     .card-badge[data-type="아파트"]{
-      background:#eef5ff;
-      color:#2563eb;
-      box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.08);
+      background:rgba(59,130,246,0.08);
+      color:var(--brand);
+      box-shadow: inset 0 0 0 1px rgba(59,130,246,0.12);
     }
 
     .card-badge[data-type="단독주택"]{
-      background:#fff7ed;
-      color:#ea580c;
-      box-shadow: inset 0 0 0 1px rgba(234, 88, 12, 0.08);
+      background:rgba(59,130,246,0.06);
+      color:#1E3A8A;
+      box-shadow: inset 0 0 0 1px rgba(30,58,138,0.08);
     }
 
     .card-badge[data-type="상가"]{
-      background:#f3e8ff;
-      color:#7c3aed;
-      box-shadow: inset 0 0 0 1px rgba(124, 58, 237, 0.08);
+      background:rgba(59,130,246,0.10);
+      color:#3730A3;
+      box-shadow: inset 0 0 0 1px rgba(55,48,163,0.10);
     }
 
     .card-badge[data-type="토지"]{
-      background:#ecfdf5;
-      color:#059669;
-      box-shadow: inset 0 0 0 1px rgba(5, 150, 105, 0.08);
+      background:rgba(16,185,129,0.08);
+      color:#047857;
+      box-shadow: inset 0 0 0 1px rgba(4,120,87,0.10);
     }
 
     .card-badge[data-type="사무실"],
     .card-badge[data-type="hotel"]{
-      background:#f1f5f9;
-      color:#334155;
-      box-shadow: inset 0 0 0 1px rgba(51, 65, 85, 0.08);
+      background:rgba(59,130,246,0.10);
+      color:#3730A3;
+      box-shadow: inset 0 0 0 1px rgba(55,48,163,0.10);
     }
 
 
     /* 🔥 오른쪽 상세 패널 유형 색상 */
     .detail-summary-type-badge[data-type="아파트"]{
-      background:#eef5ff;
-      color:#2563eb;
+      background:rgba(59,130,246,0.08);
+      color:var(--brand);
     }
 
     .detail-summary-type-badge[data-type="단독주택"]{
-      background:#fff7ed;
-      color:#ea580c;
+      background:rgba(59,130,246,0.06);
+      color:#1E3A8A;
     }
 
     .detail-summary-type-badge[data-type="상가"]{
-      background:#f3e8ff;
-      color:#7c3aed;
+      background:rgba(59,130,246,0.10);
+      color:#3730A3;
     }
 
     .detail-summary-type-badge[data-type="토지"]{
-      background:#ecfdf5;
-      color:#059669;
+      background:rgba(16,185,129,0.08);
+      color:#047857;
     }
 
     .detail-summary-type-badge[data-type="사무실"],
     .detail-summary-type-badge[data-type="hotel"]{
-      background:#f1f5f9;
-      color:#334155;
+      background:rgba(59,130,246,0.10);
+      color:#3730A3;
     }
 
     .card-date {
@@ -1905,7 +1905,7 @@
       background: rgba(255,255,255,0.94);
       border: 1px solid rgba(0,0,0,0.05);
       box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);  
     }
 
     .deal-buttons,
@@ -3231,82 +3231,87 @@
       z-index: 34;
       display: flex;
       flex-direction: column;
-      gap: 3px;
+      align-items: center;
+      gap: 10px;
     }
 
-    .map-zoom-btn{
-        width:44px;
-    height:44px;
-    border:1px solid rgba(15,41,66,0.12);
-    border-radius:16px;
-    background:rgba(255,255,255,0.96);
-    color:#1f2a36;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    box-shadow:0 12px 28px rgba(15,41,66,0.14);
-    cursor:pointer;
-    backdrop-filter:blur(8px);
-    -webkit-backdrop-filter:blur(8px);
+    .map-zoom-group {
+      display: flex;
+      flex-direction: column;
+      width: 44px;
+      overflow: hidden;
+      border-radius: 14px;
+      box-shadow: 0 12px 28px rgba(15,41,66,0.14);
+    }
 
-    transition:
+    .map-zoom-btn,
+    .map-current-btn{
+      width:44px;
+      height:44px;
+      border:1px solid rgba(15,41,66,0.12);
+      background:rgba(255,255,255,0.96);
+      color:var(--brand, #3B82F6);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      backdrop-filter:blur(8px);
+      -webkit-backdrop-filter:blur(8px);
+      transition:
         transform 0.14s ease,
         box-shadow 0.18s ease,
         background 0.18s ease,
-        border-color 0.18s ease;
+        border-color 0.18s ease,
+        color 0.18s ease;
+    }
+
+    .map-zoom-btn {
+      border-radius: 0;
+      box-shadow: none;
+    }
+
+    .map-zoom-btn + .map-zoom-btn {
+      border-top: 0;
+    }
+
+    .map-zoom-btn:first-child {
+      border-top-left-radius: 14px;
+      border-top-right-radius: 14px;
+    }
+
+    .map-zoom-btn:last-child {
+      border-bottom-left-radius: 14px;
+      border-bottom-right-radius: 14px;
+    }
+
+    .map-current-btn {
+      border-radius:14px;
+      box-shadow:0 12px 28px rgba(15,41,66,0.14);
     }
 
     .map-zoom-btn i {
-        font-size: 18px;
-        line-height: 1;
-        pointer-events: none;
-    }
-
-    .map-current-btn{
-        width:44px;
-        height:44px;
-        border:1px solid rgba(15,41,66,0.12);
-        border-radius:16px;
-        background:rgba(255,255,255,0.96);
-        color:#1f2a36;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        box-shadow:0 12px 28px rgba(15,41,66,0.14);
-        cursor:pointer;
-        backdrop-filter:blur(8px);
-        -webkit-backdrop-filter:blur(8px);
-        transition:
-            transform 0.14s ease,
-            box-shadow 0.18s ease,
-            background 0.18s ease,
-            border-color 0.18s ease;
+      font-size: 18px;
+      line-height: 1;
+      pointer-events: none;
     }
 
     .map-current-btn i {
-        font-size: 17px;
-        line-height: 1;
-        pointer-events: none;
+      font-size: 17px;
+      line-height: 1;
+      pointer-events: none;
     }
 
-    .map-current-btn:hover{
-        background:#fff;
-        box-shadow:0 14px 30px rgba(15,41,66,0.18);
-    }
-
-    .map-current-btn:active{
-        transform:scale(0.92);
-        box-shadow:0 8px 18px rgba(15,41,66,0.12);
-    }
-
+    .map-current-btn:hover,
     .map-zoom-btn:hover{
-        background:#fff;
-        box-shadow:0 14px 30px rgba(15,41,66,0.18);
-    }   
+      background:#fff;
+      border-color: rgba(59,130,246,0.24);
+      box-shadow:0 14px 30px rgba(15,41,66,0.18);
+    }
 
+    .map-current-btn:active,
     .map-zoom-btn:active{
-        transform:scale(0.92);
-        box-shadow:0 8px 18px rgba(15,41,66,0.12);
+      transform:scale(0.94);
+      box-shadow:0 8px 18px rgba(15,41,66,0.12);
     }
 
     /* ===== hide Kakao original zoom control ===== */
@@ -3368,8 +3373,8 @@
   --radius-small:16px;
   --radius-pill:999px;
   --shadow:0 10px 28px rgba(15,23,42,0.06);
-  --topbar-main-height:65px;
-  --topbar-sub-height:50px;
+  --topbar-main-height:63px;
+  --topbar-sub-height:55px;
   --global-topbar-height:var(--topbar-main-height);
   --sub-topbar-height:var(--topbar-sub-height);
   --detail-panel-top:0px;
@@ -3475,41 +3480,51 @@ body.sidebar-list-collapsed .sidebar{
   box-shadow:none;
 }
 
-body.sidebar-list-collapsed .sidebar-list-panel{
-  opacity:1;
-}
+    body.sidebar-list-collapsed .sidebar-list-panel{
+        opacity:1;
+    }
 
-.global-topbar,
-.sub-topbar{
-  background:rgba(255,255,255,.92);
-  backdrop-filter:blur(10px);
-  -webkit-backdrop-filter:blur(10px);
-}
+    .global-topbar,
+    .sub-topbar{
+        background:rgba(255,255,255,.92);
+        backdrop-filter:blur(10px);
+        -webkit-backdrop-filter:blur(10px);
+    }
 
-.global-topbar{
-  position:sticky;
-  top:0;
-  z-index:130;
-  height:var(--topbar-main-height);
-  border-bottom:1px solid var(--line);
-  box-shadow:0 1px 0 rgba(255,255,255,.8);
-}
+    .global-topbar {
+        position:sticky;
+        top:0;
+        z-index:130;
+        height:var(--topbar-main-height);
+        border-bottom:1px solid var(--line);
+        box-shadow:0 1px 0 rgba(255,255,255,.8);
+        
+        z-index: 150;
+        box-shadow:
+        0 0.2px 0 rgba(0,0,0,0.04),
+        0 0.2px 1px rgba(0,0,0,0.06) !important;
+    }
 
-.sub-topbar{
-  position:relative;
-  z-index:140;
-  height:var(--topbar-sub-height);
-  border-bottom:1px solid #eef2f6;
-  overflow:visible;
-}
+    .sub-topbar {
+        position:relative;
+        z-index:140;
+        height:var(--topbar-sub-height);
+        border-bottom:1px solid #eef2f6;
+        overflow:visible;
+  
+        /* 그림자 효과 */
+        box-shadow:
+        0 1.1px 0 rgba(0,0,0,0.04),
+        0 1.1px 4px rgba(0,0,0,0.06) !important;
+    }
 
-.global-topbar-inner{
-  height:var(--topbar-main-height);
-  max-width:none;
-  position:relative;
-  padding:0 18px;
-  background:transparent;
-}
+    .global-topbar-inner{
+        height:var(--topbar-main-height);
+        max-width:none;
+        position:relative;
+        padding:0 18px;
+        background:transparent;
+    }
 
 .sub-topbar-inner{
   height:var(--topbar-sub-height);
@@ -3592,7 +3607,7 @@ body.sidebar-list-collapsed .sidebar-list-panel{
   box-shadow:none;
   backdrop-filter:none;
   overflow:visible;
-}
+  }
 
 .global-topbar .type-buttons,
 .global-topbar .deal-buttons{
@@ -3891,7 +3906,7 @@ body.sidebar-list-collapsed .map-side-tools{
   <header class="global-topbar">
     <div class="global-topbar-inner">
       <div class="global-topbar-left">
-        <div class="global-brand" id="appVersionText"><i class="fa-solid fa-map-location-dot"" aria-hidden="true"></i><span class="brand-name">REALJEJU.APP</span><span class="brand-version">Ver 1.760</span></div>
+        <div class="global-brand" id="appVersionText"><i class="fa-solid fa-map-location-dot"" aria-hidden="true"></i><span class="brand-name">REALJEJU.APP</span><span class="brand-version">Ver 1.763</span></div>
       </div>
 
       <div class="global-topbar-menu">
@@ -3902,6 +3917,7 @@ body.sidebar-list-collapsed .map-side-tools{
             <button type="button" data-value="빌라주택"><span>빌라ㆍ주택</span></button>
             <button type="button" data-value="원룸"><span>원룸ㆍ투룸</span></button>
             <button type="button" data-value="상가"><span>상가ㆍ사무실</span></button>
+            <button type="button" data-value="호텔펜션"><span>호텔ㆍ펜션</span></button>
             <button type="button" data-value="토지"><span>토지ㆍ임야</span></button>
           </div>
         </div>
@@ -4115,13 +4131,15 @@ body.sidebar-list-collapsed .map-side-tools{
       <div id="map"></div>
 
       
-      <div class="map-zoom-stack" aria-label="지도 확대 축소">
-        <button type="button" class="map-zoom-btn" id="zoomInBtn" aria-label="지도 확대">
-          <i class="fa-solid fa-plus"></i>
-        </button>
-        <button type="button" class="map-zoom-btn" id="zoomOutBtn" aria-label="지도 축소">
-          <i class="fa-solid fa-minus"></i>
-        </button>
+      <div class="map-zoom-stack" aria-label="지도 확대 축소 및 현위치">
+        <div class="map-zoom-group" aria-label="지도 확대 축소">
+          <button type="button" class="map-zoom-btn" id="zoomInBtn" aria-label="지도 확대">
+            <i class="fa-solid fa-plus"></i>
+          </button>
+          <button type="button" class="map-zoom-btn" id="zoomOutBtn" aria-label="지도 축소">
+            <i class="fa-solid fa-minus"></i>
+          </button>
+        </div>
         <button type="button" class="map-current-btn" id="currentLocationBtn" aria-label="현위치로 이동" title="현위치로 이동">
           <i class="fa-solid fa-location-crosshairs"></i>
         </button>
@@ -4251,7 +4269,7 @@ body.sidebar-list-collapsed .map-side-tools{
 
   <script>
     const UI_FONT_STACK = 'Inter, Pretendard, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const BADGE_BASE_HEX = '#3B82F6';
+    const BADGE_BASE_HEX = '#3B82F6'; // 제주코발트블루
     document.documentElement.style.setProperty('--brand', BADGE_BASE_HEX);
     const BADGE_BASE_ALPHA = 1; // 0.8, 0.6, 0.3 등으로 사용자가 직접 조정
     function hexToRgba(hex, alpha = 1) {
@@ -4264,7 +4282,7 @@ body.sidebar-list-collapsed .map-side-tools{
       return `rgba(${r}, ${g}, ${b}, ${alpha})`;
     }
     const APP_NAME = "REALJEJU.APP";
-    const APP_VERSION = "1.760";
+    const APP_VERSION = "1.763";
 
     function applyAppVersion() {
       const fullVersionText = `${APP_NAME} Ver ${APP_VERSION}`;
@@ -4544,17 +4562,20 @@ body.sidebar-list-collapsed .map-side-tools{
 
     function getTypeBadgeTheme(typeText) {
       const t = String(typeText || "").trim();
-      if (t === "아파트") return { bg: "#eef5ff", color: "#2563eb" };
+      if (t === "아파트") return { bg: "rgba(59,130,246,0.08)", color: BADGE_BASE_HEX };
       if (["단독주택", "단독", "빌라", "다가구", "다세대", "다가구ㆍ다세대", "다세대주택"].includes(t)) {
-        return { bg: "#fff7ed", color: "#ea580c" };
+        return { bg: "rgba(59,130,246,0.06)", color: "#1E3A8A" };
       }
-      if (["상가", "상가건물", "사무실", "공장", "상가ㆍ사무실", "hotel", "호텔"].includes(t)) {
-        return { bg: "#f3e8ff", color: "#7c3aed" };
+      if (["상가", "상가건물", "사무실", "공장", "상가ㆍ사무실"].includes(t)) {
+        return { bg: "rgba(59,130,246,0.10)", color: "#3730A3" };
+      }
+      if (["hotel", "호텔", "pension", "펜션"].includes(t)) {
+        return { bg: "rgba(59,130,246,0.10)", color: BADGE_BASE_HEX };
       }
       if (["토지", "임야", "토지ㆍ임야", "전", "대", "답", "과수원"].includes(t)) {
-        return { bg: "#ecfdf5", color: "#059669" };
+        return { bg: "rgba(16,185,129,0.08)", color: "#047857" };
       }
-      return { bg: "#f1f5f9", color: "#334155" };
+      return { bg: "#f3f4f6", color: "#374151" };
     }
 
     function applyTypeBadgeTheme(el, typeText) {
@@ -5160,6 +5181,15 @@ body.sidebar-list-collapsed .map-side-tools{
       return text === "hotel" || text === "호텔";
     }
 
+    function isPensionType(typeText) {
+      const text = String(typeText || "").trim().toLowerCase();
+      return text === "pension" || text === "펜션";
+    }
+
+    function isHotelPensionType(typeText) {
+      return isHotelType(typeText) || isPensionType(typeText);
+    }
+
     function isDetachedHouseType(typeText) {
       const text = String(typeText || "").trim();
       return ["단독", "단독주택"].includes(text);
@@ -5180,7 +5210,7 @@ body.sidebar-list-collapsed .map-side-tools{
       const text = String(typeText || "").trim();
       if (["전", "대", "답", "과수원", "목장용지", "임야", "토지", "토지ㆍ임야"].includes(text)) return getLandTypeDetailLabel(text);
       if (["단독", "단독주택"].includes(text)) return "단독주택";
-      if (isHotelType(text)) return "상가ㆍ사무실";
+      if (isHotelPensionType(text)) return "호텔ㆍ펜션";
       return text || "-";
     }
 
@@ -5278,7 +5308,7 @@ body.sidebar-list-collapsed .map-side-tools{
         return Number.isFinite(total) ? total : null;
       }
 
-      if (isApartmentType(typeText) || isHotelType(typeText)) {
+      if (isApartmentType(typeText) || isHotelPensionType(typeText)) {
         const { private: privateArea } = parseApartmentAreas(raw);
         return Number.isFinite(privateArea) ? privateArea : null;
       }
@@ -5334,7 +5364,7 @@ body.sidebar-list-collapsed .map-side-tools{
         return formatDetachedHouseCardAreaDisplay(areaText, unit);
       }
 
-      if (isHotelType(typeText)) {
+      if (isHotelPensionType(typeText)) {
         const parsed = parseApartmentAreas(areaText || "-");
         const privateText = Number.isFinite(parsed.private) ? formatSingleAreaValue(parsed.private, unit) : "-";
         const supplyText = Number.isFinite(parsed.supply) ? formatSingleAreaValue(parsed.supply, unit) : "-";
@@ -5496,7 +5526,7 @@ body.sidebar-list-collapsed .map-side-tools{
         return;
       }
 
-      if (isHotelType(typeText)) {
+      if (isHotelPensionType(typeText)) {
         const parsed = parseApartmentAreas(detailItem.area || "-");
         const showSupply = detailAreaMode === "supply";
         const targetValue = showSupply ? parsed.supply : parsed.private;
@@ -6318,12 +6348,12 @@ function getBadgeTextMetrics(text) {
 
       detailAreaMode = /콘도/.test(detailItem.type || "")
         ? "build"
-        : ((isApartmentType(detailItem.type || "") || /원룸|투룸/.test(detailItem.type || "") || isHotelType(detailItem.type || "")) ? "private" : "total");
+        : ((isApartmentType(detailItem.type || "") || /원룸|투룸/.test(detailItem.type || "") || isHotelPensionType(detailItem.type || "")) ? "private" : "total");
       detailAreaValue.dataset.areaRaw = detailItem.area || "-";
       detailAreaValue.dataset.areaUnit = globalAreaUnit;
       detailAreaValue.dataset.areaType = detailItem.type || "";
       if (detailAreaToggleBtn) {
-        detailAreaToggleBtn.style.display = (isApartmentType(detailItem.type || "") || /오피스텔|원룸|투룸/.test(detailItem.type || "") || isHotelType(detailItem.type || "")) ? "inline-flex" : "none";
+        detailAreaToggleBtn.style.display = (isApartmentType(detailItem.type || "") || /오피스텔|원룸|투룸/.test(detailItem.type || "") || isHotelPensionType(detailItem.type || "")) ? "inline-flex" : "none";
       }
       syncDetailAreaDisplay(detailItem);
       detailTypeValue.textContent = getDisplayTypeLabel(detailItem.type);
@@ -7056,7 +7086,8 @@ function closeDetailPanel() {
             ["원룸", "투룸", "원룸ㆍ투룸"].includes(itemType) ||
             (itemType === "오피스텔" && isRentalDeal)
           )) ||
-          (typeValue === "상가" && (["상가", "상가건물", "사무실", "공장", "상가ㆍ사무실", "hotel", "호텔"].includes(itemType) || isHotelType(itemType))) ||
+          (typeValue === "상가" && ["상가", "상가건물", "사무실", "공장", "상가ㆍ사무실"].includes(itemType)) ||
+          (typeValue === "호텔펜션" && (["hotel", "호텔", "pension", "펜션"].includes(itemType) || isHotelPensionType(itemType))) ||
           (typeValue === "토지" && ["토지", "임야", "토지ㆍ임야", "전", "대", "답", "과수원", "목장용지"].includes(itemType));
 
         const normalizedText = searchableText;
@@ -7228,7 +7259,7 @@ function closeDetailPanel() {
             return;
           }
 
-          if (isApartmentType(typeText) || /오피스텔|원룸|투룸/.test(typeText) || isHotelType(typeText)) {
+          if (isApartmentType(typeText) || /오피스텔|원룸|투룸/.test(typeText) || isHotelPensionType(typeText)) {
             detailAreaMode = detailAreaMode === "supply" ? "private" : "supply";
             syncDetailAreaDisplay(currentDetailItem);
           }
