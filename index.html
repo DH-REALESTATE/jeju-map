@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>REALJEJU.APP Ver 1.776</title>
-<meta property="og:title" id="ogTitleMeta" content="REALJEJU.APP Ver 1.776" />
-  <meta property="og:description" id="ogDescriptionMeta" content="REALJEJU.APP Ver 1.776" />
+  <title>REALJEJU.APP Ver 1.777</title>
+<meta property="og:title" id="ogTitleMeta" content="REALJEJU.APP Ver 1.777" />
+  <meta property="og:description" id="ogDescriptionMeta" content="REALJEJU.APP Ver 1.777" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
   <meta property="og:image" content="https://your-domain.example/og-image.jpg" />
@@ -3949,7 +3949,7 @@ body.sidebar-list-collapsed .map-side-tools{
   <header class="global-topbar">
     <div class="global-topbar-inner">
       <div class="global-topbar-left">
-        <div class="global-brand" id="appVersionText"><i class="fa-solid fa-map-location-dot"" aria-hidden="true"></i><span class="brand-name">REALJEJU.APP</span><span class="brand-version">Ver 1.776</span></div>
+        <div class="global-brand" id="appVersionText"><i class="fa-solid fa-map-location-dot"" aria-hidden="true"></i><span class="brand-name">REALJEJU.APP</span><span class="brand-version">Ver 1.777</span></div>
       </div>
 
       <div class="global-topbar-menu">
@@ -4318,7 +4318,7 @@ body.sidebar-list-collapsed .map-side-tools{
       return `rgba(${r}, ${g}, ${b}, ${alpha})`;
     }
     const APP_NAME = "REALJEJU.APP";
-    const APP_VERSION = "1.776";
+    const APP_VERSION = "1.777";
 
     function applyAppVersion() {
       const fullVersionText = `${APP_NAME} Ver ${APP_VERSION}`;
@@ -5247,7 +5247,8 @@ body.sidebar-list-collapsed .map-side-tools{
       const text = String(typeText || "").trim();
       if (["전", "대", "답", "과수원", "목장용지", "임야", "토지", "토지ㆍ임야"].includes(text)) return getLandTypeDetailLabel(text);
       if (["단독", "단독주택"].includes(text)) return "단독주택";
-      if (isHotelPensionType(text)) return "호텔ㆍ펜션";
+      if (isHotelType(text)) return "호텔";
+      if (isPensionType(text)) return "펜션";
       return text || "-";
     }
 
