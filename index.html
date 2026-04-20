@@ -4308,7 +4308,7 @@ body.sidebar-list-collapsed .map-side-tools{
     //const BADGE_BASE_HEX = '#3B82F6'; // 제주코발트블루
     const BADGE_BASE_HEX = '#3B82F6'; 
     document.documentElement.style.setProperty('--brand', BADGE_BASE_HEX);
-    const BADGE_BASE_ALPHA = 0.9; // 0.8, 0.6, 0.3 등으로 사용자가 직접 조정
+    const BADGE_BASE_ALPHA = 0.96; // 0.8, 0.6, 0.3 등으로 사용자가 직접 조정
     function hexToRgba(hex, alpha = 1) {
       const value = String(hex || '').replace('#', '').trim();
       const normalized = value.length === 3 ? value.split('').map(ch => ch + ch).join('') : value;
