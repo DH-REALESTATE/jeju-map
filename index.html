@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>REALJEJU.APP Ver 1.784</title>
-<meta property="og:title" id="ogTitleMeta" content="REALJEJU.APP Ver 1.784" />
-  <meta property="og:description" id="ogDescriptionMeta" content="REALJEJU.APP Ver 1.784" />
+  <title>REALJEJU.APP Ver 1.787</title>
+<meta property="og:title" id="ogTitleMeta" content="REALJEJU.APP Ver 1.787" />
+  <meta property="og:description" id="ogDescriptionMeta" content="REALJEJU.APP Ver 1.787" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
   <meta property="og:image" content="https://your-domain.example/og-image.jpg" />
@@ -139,26 +139,28 @@
     }
 
     .detail-share-menu {
-      position: absolute;
-      top: calc(100% + 8px);
-      right: 0;
+      position: fixed;
+      top: 96px;
       left: auto;
-      min-width: 240px;
+      right: 24px;
+      min-width: 220px;
+      max-width: calc(100vw - 24px);
       padding: 8px;
       border-radius: 16px;
       border: 1px solid #e2e8f0;
       background: rgba(255,255,255,0.98);
       box-shadow: 0 18px 34px rgba(15, 41, 66, 0.14);
       backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       display: none;
       flex-direction: column;
       gap: 2px;
-      z-index: 9999;
+      z-index: 100000;
       pointer-events: auto;
     }
 
     .detail-share-menu.open {
-      display: flex;
+      display: flex !important;
     }
 
     .detail-share-option {
@@ -4032,7 +4034,7 @@ body.sidebar-list-collapsed .map-side-tools{
               </button>
               <div class="detail-topbar-id" id="detailTopbarId"></div>
               <div class="detail-top-actions">
-                <button type="button" class="detail-icon-btn" id="detailShareBtn" onclick="toggleDetailShareMenu(event)"><i class="fa-solid fa-share-nodes"></i></button>
+                <button type="button" class="detail-icon-btn" id="detailShareBtn"><i class="fa-solid fa-share-nodes"></i></button>
 
                 <div class="detail-share-menu" id="detailShareMenu">
                   <button type="button" class="detail-share-option" id="detailNativeShareBtn" onclick="shareDetailNative(event)">
@@ -4326,7 +4328,7 @@ body.sidebar-list-collapsed .map-side-tools{
       return `rgba(${r}, ${g}, ${b}, ${alpha})`;
     }
     const APP_NAME = "REALJEJU.APP";
-    const APP_VERSION = "1.784";
+    const APP_VERSION = "1.787";
 
     function applyAppVersion() {
       const fullVersionText = `${APP_NAME} Ver ${APP_VERSION}`;
@@ -4340,6 +4342,32 @@ body.sidebar-list-collapsed .map-side-tools{
     }
 
     applyAppVersion();
+
+    const DETAIL_QUERY_KEY = "id";
+
+    function getDetailUrlById(id) {
+      const normalizedId = normalizeItemId(id);
+      const url = new URL(window.location.href);
+      if (normalizedId) {
+        url.searchParams.set(DETAIL_QUERY_KEY, normalizedId);
+      } else {
+        url.searchParams.delete(DETAIL_QUERY_KEY);
+      }
+      return url;
+    }
+
+    function syncDetailUrl(id, { replace = false } = {}) {
+      const url = getDetailUrlById(id);
+      const nextUrl = `${url.pathname}${url.search}${url.hash}`;
+      const currentUrl = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+      if (nextUrl === currentUrl) return;
+      const method = replace ? "replaceState" : "pushState";
+      window.history[method]({}, "", nextUrl);
+    }
+
+    function clearDetailUrl(options = {}) {
+      syncDetailUrl("", options);
+    }
 
 
     function normalizeItemId(value) {
@@ -4933,10 +4961,12 @@ body.sidebar-list-collapsed .map-side-tools{
         if (detailScroll) detailScroll.scrollTop = 0;
         allowDetailOpenFromListClick = true;
         try {
-          await openDetailPanel(item);
+          await openDetailPanel(item, { syncUrl: false });
         } finally {
           allowDetailOpenFromListClick = false;
         }
+
+        syncDetailUrl(item.id);
 
         if (detailScroll) detailScroll.scrollTop = 0;
         await focusProperty(item.id);
@@ -5822,9 +5852,9 @@ body.sidebar-list-collapsed .map-side-tools{
 
     function getBadgeConfig(text) {
       const len = String(text ?? "").length;
-      if (len === 1) return { size: 44, fontSize: 18 };
-      if (len === 2) return { size: 54, fontSize: 18 };
-      return { size: 64, fontSize: 18 };
+      if (len === 1) return { size: 39, fontSize: 18 };
+      if (len === 2) return { size: 46, fontSize: 18 };
+      return { size: 54, fontSize: 18 };
     }
 
     function getBadgeWidthByText(text) {
@@ -6356,7 +6386,11 @@ function getBadgeTextMetrics(text) {
       updateLightboxImage();
     }
 
-    async function openDetailPanel(item) {
+    async function openDetailPanel(item, options = {}) {
+      const { syncUrl = true, replaceUrl = false } = options || {};
+      if (syncUrl && item && item.id != null) {
+        syncDetailUrl(item.id, { replace: replaceUrl });
+      }
       if (!allowDetailOpenFromListClick) return;
       openSidebarList();
       if (detailScroll) detailScroll.scrollTop = 0;
@@ -6541,6 +6575,7 @@ function closeDetailPanel() {
 
       sidebar.classList.remove("expanded");
       currentDetailItem = null;
+      clearDetailUrl({ replace: true });
       updateSidebarWidth();
       refreshMapLayout();
     }
@@ -6918,6 +6953,47 @@ function closeDetailPanel() {
       return;
     }
 
+    async function openDetailFromUrl({ replaceHistory = true } = {}) {
+      const params = new URLSearchParams(window.location.search);
+      const targetId = normalizeItemId(params.get(DETAIL_QUERY_KEY));
+
+      if (!targetId) return false;
+
+      const item = (state.all || []).find(v => normalizeItemId(v.id) === targetId);
+      if (!item) return false;
+
+      await hideRoadview();
+      state.selectionMode = "single";
+      state.selectedClusterKey = null;
+      state.selectedMarkerId = targetId;
+      clearListLock();
+      highlightCard(targetId);
+      updateMarkerSelection(targetId, [targetId]);
+
+      if (detailScroll) detailScroll.scrollTop = 0;
+      const previousAllow = allowDetailOpenFromListClick;
+      allowDetailOpenFromListClick = true;
+      try {
+        await openDetailPanel(item, { syncUrl: false });
+      } finally {
+        allowDetailOpenFromListClick = previousAllow;
+      }
+
+      if (replaceHistory) {
+        syncDetailUrl(item.id, { replace: true });
+      }
+
+      if (detailScroll) detailScroll.scrollTop = 0;
+      await focusProperty(item.id);
+
+      setTimeout(() => {
+        highlightCard(targetId);
+        refreshClusterBadges();
+      }, 0);
+
+      return true;
+    }
+
     async function focusProperty(id) {
       const item = state.filtered.find(v => v.id === id) || state.all.find(v => v.id === id);
       if (!item || !state.map) return;
@@ -7037,7 +7113,7 @@ function closeDetailPanel() {
           if (detailScroll) detailScroll.scrollTop = 0;
           allowDetailOpenFromListClick = true;
           try {
-            await openDetailPanel(item);
+            await openDetailPanel(item, { syncUrl: false });
           } finally {
             allowDetailOpenFromListClick = false;
           }
@@ -7045,6 +7121,8 @@ function closeDetailPanel() {
           if (!wasExpanded && item.listingNo) {
             await incrementViewCount(item.listingNo);
           }
+
+          syncDetailUrl(item.id);
 
           if (detailScroll) detailScroll.scrollTop = 0;
           await focusProperty(item.id);
@@ -7372,15 +7450,29 @@ function closeDetailPanel() {
       }
 
       function openShareMenu() {
-        if (!detailShareMenu) return;
+        if (!detailShareMenu || !detailShareBtn) return;
+
+        detailShareMenu.style.visibility = "hidden";
         detailShareMenu.style.display = "flex";
         detailShareMenu.classList.add("open");
+
+        const btnRect = detailShareBtn.getBoundingClientRect();
+        const menuRect = detailShareMenu.getBoundingClientRect();
+        const margin = 12;
+        const top = Math.min(btnRect.bottom + 8, window.innerHeight - menuRect.height - margin);
+        const left = Math.max(margin, Math.min(btnRect.right - menuRect.width, window.innerWidth - menuRect.width - margin));
+
+        detailShareMenu.style.top = `${Math.max(margin, top)}px`;
+        detailShareMenu.style.left = `${left}px`;
+        detailShareMenu.style.right = "auto";
+        detailShareMenu.style.visibility = "visible";
       }
 
       function closeShareMenu() {
         if (!detailShareMenu) return;
         detailShareMenu.classList.remove("open");
         detailShareMenu.style.display = "none";
+        detailShareMenu.style.visibility = "hidden";
       }
 
       function toggleShareMenu() {
@@ -7457,6 +7549,9 @@ function closeDetailPanel() {
         if (e.target.closest("#detailShareBtn") || e.target.closest("#detailShareMenu")) return;
         closeShareMenu();
       });
+
+      window.addEventListener("resize", closeShareMenu);
+      window.addEventListener("scroll", closeShareMenu, true);
 
       detailHeroPrevBtn.addEventListener("click", (e) => {
         e.stopPropagation();
@@ -7809,6 +7904,7 @@ function closeDetailPanel() {
       }
     }
 
+
     function showShareCopiedFeedback(success) {
       if (!detailShareBtn) return;
       detailShareBtn.innerHTML = success ? "복사됨" : "실패";
@@ -7817,43 +7913,14 @@ function closeDetailPanel() {
       }, 1200);
     }
 
-    function openShareMenu() {
-      if (!detailShareMenu) return;
-      detailShareMenu.classList.add("open");
-    }
-
-    function closeShareMenu() {
-      if (!detailShareMenu) return;
-      detailShareMenu.classList.remove("open");
-    }
-
-    window.toggleDetailShareMenu = function (event) {
-      if (event) {
-        event.preventDefault();
-        event.stopPropagation();
-      }
-      if (!detailShareMenu) return;
-      const isOpen = detailShareMenu.classList.contains("open");
-      if (isOpen) {
-        closeShareMenu();
-      } else {
-        openShareMenu();
-      }
-    };
-
-    if (detailShareBtn) {
-      detailShareBtn.onclick = window.toggleDetailShareMenu;
-    }
-
     window.shareDetailCopy = async function (event) {
       if (event) {
         event.preventDefault();
         event.stopPropagation();
       }
-
-      const ok = await copyTextWithFallback(getDetailShareUrl());
+      const ok = await copyTextWithFallback(getDetailShareText());
       showShareCopiedFeedback(ok);
-      closeShareMenu();
+      if (typeof closeShareMenu === "function") closeShareMenu();
     };
 
     window.shareDetailNative = async function (event) {
@@ -7861,7 +7928,6 @@ function closeDetailPanel() {
         event.preventDefault();
         event.stopPropagation();
       }
-
       try {
         if (navigator.share) {
           await navigator.share({
@@ -7869,16 +7935,15 @@ function closeDetailPanel() {
             text: getDetailShareText(),
             url: getDetailShareUrl()
           });
-          closeShareMenu();
+          if (typeof closeShareMenu === "function") closeShareMenu();
           return;
         }
       } catch (err) {
         console.error("공유 실패:", err);
       }
-
       const ok = await copyTextWithFallback(getDetailShareText());
       showShareCopiedFeedback(ok);
-      closeShareMenu();
+      if (typeof closeShareMenu === "function") closeShareMenu();
     };
 
     window.shareDetailSms = function (event) {
@@ -7886,18 +7951,11 @@ function closeDetailPanel() {
         event.preventDefault();
         event.stopPropagation();
       }
-
       const body = encodeURIComponent(getDetailShareText());
       const smsUrl = /iPhone|iPad|iPod/.test(navigator.userAgent) ? `sms:&body=${body}` : `sms:?body=${body}`;
-      closeShareMenu();
+      if (typeof closeShareMenu === "function") closeShareMenu();
       location.href = smsUrl;
     };
-
-    document.addEventListener("click", function (e) {
-      if (!detailShareMenu) return;
-      if (e.target.closest("#detailShareBtn") || e.target.closest("#detailShareMenu")) return;
-      closeShareMenu();
-    });
 
 
 
@@ -7982,6 +8040,14 @@ function closeDetailPanel() {
       await loadRecommendData();
       await loadProperties();
       syncFeatureButtons();
+      await openDetailFromUrl({ replaceHistory: true });
+
+      window.addEventListener("popstate", async () => {
+        const opened = await openDetailFromUrl({ replaceHistory: false });
+        if (!opened) {
+          closeDetailPanel();
+        }
+      });
     }
 
     bootstrap();
