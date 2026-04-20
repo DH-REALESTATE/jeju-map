@@ -1,6 +1,5 @@
 [  
 
-  
   {
     "features": [ "주차 가능", "즉시입주", "반려동물", "엘리베이터", "오션뷰" ],
     "id": "승-304",
@@ -8,9 +7,9 @@
     "date": "2026-04-15",
     "title": "애월 해안도로 바다 조망",
     "desc": "애월 해안도로 바다 조망 / 40세대 연립주택",
-    "image": "./syreal/304/1.jpg",
-    "desc_folder": "./syreal/304/info.json",
-    "image_folder": "./syreal/304/image.json",
+    "image": "./50110-2022-00168/304/1.jpg",
+    "desc_folder": "./50110-2022-00168/304/info.json",
+    "image_folder": "./50110-2022-00168/304/image.json",
     "type": "연립",
     "dealFilter": "매매",
     "region": "애월읍",
@@ -19,18 +18,18 @@
     "address": "제주시 애월읍 신엄리 2774-8",
     "lat": 33.477920,
     "lng": 126.359242,
-    "agent_folder": "./syreal/agent.json"
+    "agent_folder": "./50110-2022-00168/agent.json"
   },
 
   {
-    "id": 81174337,
-    "listingNo": "81174337",
+    "id": "K-007",
+    "listingNo": "K-007",
     "date": "2026-04-15",
     "title": "연동 연삼로접 상가주택",
     "desc": "★연동★ 연삼로접 상가주택 매매",
-    "image": "./syreal/81174337/1.jpg",
-    "desc_folder": "./syreal/81174337/info.json",
-    "image_folder": "./syreal/81174337/image.json",
+    "image": "./50110-2022-00168/K-007/1.jpg",
+    "desc_folder": "./50110-2022-00168/K-007/info.json",
+    "image_folder": "./50110-2022-00168/K-007/image.json",
     "type": "상가건물",
     "dealFilter": "매매",
     "region": "연동",
@@ -39,18 +38,18 @@
     "address": "제주시 연동",
     "lat": 33.476399,
     "lng": 126.487800,
-    "agent_folder": "./syreal/agent.json"
+    "agent_folder": "./50110-2022-00168/agent.json"
   },
   
   {
-    "id": 81174017,
-    "listingNo": "81174017",
+    "id": "K-008",
+    "listingNo": "K-008",
     "date": "2026-04-15",
     "title": "연동 중심지 호텔 매매",
     "desc": "연동 중심 연북로 인근 - 비지니스/ 골프호텔  운영중",
-    "image": "./syreal/81174017/1.jpg",
-    "desc_folder": "./syreal/81174017/info.json",
-    "image_folder": "./syreal/81174017/image.json",
+    "image": "./50110-2022-00168/K-008/1.jpg",
+    "desc_folder": "./50110-2022-00168/K-008/info.json",
+    "image_folder": "./50110-2022-00168/K-008/image.json",
     "type": "호텔",
     "dealFilter": "매매",
     "region": "연동",
@@ -59,18 +58,18 @@
     "address": "제주시 연동",
     "lat": 33.476399,
     "lng": 126.487800,
-    "agent_folder": "./syreal/agent.json"
+    "agent_folder": "./50110-2022-00168/agent.json"
   },
   
   {
-    "id": 81174119,
-    "listingNo": "81174119",
+    "id": "K-005",
+    "listingNo": "K-005",
     "date": "2026-04-15",
     "title": "정원파인즈15차",
     "desc": "노형동 신축급 정원파인즈 15차 고층 대형평수 매매",
-    "image": "./syreal/81174119/1.jpg",
-    "desc_folder": "./syreal/81174119/info.json",
-    "image_folder": "./syreal/81174119/image.json",
+    "image": "./50110-2022-00168/K-005/1.jpg",
+    "desc_folder": "./50110-2022-00168/K-005/info.json",
+    "image_folder": "./50110-2022-00168/K-005/image.json",
     "type": "아파트",
     "dealFilter": "매매",
     "region": "노형동",
@@ -79,18 +78,18 @@
     "address": "제주시 노형동 1285-1",
     "lat": 33.485639,
     "lng": 126.476925,
-    "agent_folder": "./syreal/agent.json"
+    "agent_folder": "./50110-2022-00168/agent.json"
   },
     
   {
-    "id": 82220372,
-    "listingNo": "82220372",
+    "id": "K-203",
+    "listingNo": "K-203",
     "date": "2026-04-15",
     "title": "대림e편한세상2차",
     "desc": "대림e편한세상2차 202동",
-    "image": "./syreal/82220372/1.jpg",
-    "desc_folder": "./syreal/82220372/info.json",
-    "image_folder": "./syreal/82220372/image.json",
+    "image": "./50110-2022-00168/K-203/1.jpg",
+    "desc_folder": "./50110-2022-00168/K-203/info.json",
+    "image_folder": "./50110-2022-00168/K-203/image.json",
     "type": "아파트",
     "dealFilter": "매매",
     "region": "연동",
@@ -99,18 +98,18 @@
     "address": "제주시 연동 1399-1",
     "lat": 33.479504,
     "lng": 126.488541,
-    "agent_folder": "./syreal/agent.json"
+    "agent_folder": "./50110-2022-00168/agent.json"
   },
   
   {
-    "id": 82272645,
-    "listingNo": "82272645",
+    "id": "K-006",
+    "listingNo": "K-006",
     "date": "2026-04-15",
     "title": "브리타니연동삼성홈타운 2차",
     "desc": "교통/편의시설 생활권 좋은 위치 - 한라병원/ 시티호텔 인근",
-    "image": "./syreal/82272645/1.jpg",
-    "desc_folder": "./syreal/82272645/info.json",
-    "image_folder": "./syreal/82272645/image.json",
+    "image": "./50110-2022-00168/K-006/1.jpg",
+    "desc_folder": "./50110-2022-00168/K-006/info.json",
+    "image_folder": "./50110-2022-00168/K-006/image.json",
     "type": "오피스텔",
     "dealFilter": "매매",
     "region": "연동",
@@ -119,40 +118,19 @@
     "address": "제주시 연동 282-8",
     "lat": 33.489288,
     "lng": 126.493181,
-    "agent_folder": "./syreal/agent.json"
+    "agent_folder": "./50110-2022-00168/agent.json"
   },
-  
-  {
-    "features": [ "주차 가능", "즉시입주", "풀옵션", "도시가스", "엘리베이터", "베란다" ],
-    "id": 82272723,
-    "listingNo": "82272723",
-    "date": "2026-04-15",
-    "title": "삼무공원인근 풀옵션 투룸",
-    "desc": "교통/편의시설 생활권 좋은 위치 - 한라병원/ 시티호텔 인근",
-    "image": "./syreal/82272723/1.jpg",
-    "desc_folder": "./syreal/82272723/info.json",
-    "image_folder": "./syreal/82272723/image.json",
-    "type": "투룸",
-    "dealFilter": "월세",
-    "region": "연동",
-    "price": "300/70",
-    "area": "공급면적 42.98㎡ / 전용면적 33.06㎡",
-    "address": "제주도 제주시 연동 260-7",
-    "lat": 33.491243,
-    "lng": 126.489957,
-    "agent_folder": "./syreal/agent.json"
-  },
-  
+
   {
     "features": [ "주차 가능", "즉시입주", "반려동물", "엘리베이터", "베란다" ],
-    "id": 82272766,
-    "listingNo": "82272766",
+    "id": "K-001",
+    "listingNo": "K-001",
     "date": "2026-04-15",
     "title": "풀옵션 투룸 반려동물 OK",
     "desc": "이호일동 일주서로인근 / 투룸 임대",
-    "image": "./syreal/82272766/1.jpg",
-    "desc_folder": "./syreal/82272766/info.json",
-    "image_folder": "./syreal/82272766/image.json",
+    "image": "./50110-2022-00168/K-001/1.jpg",
+    "desc_folder": "./50110-2022-00168/K-001/info.json",
+    "image_folder": "./50110-2022-00168/K-001/image.json",
     "type": "투룸",
     "dealFilter": "월세",
     "region": "이호일동",
@@ -161,40 +139,40 @@
     "address": "제주시 이호일동 1864",
     "lat": 33.494067,
     "lng": 126.448946,
-    "agent_folder": "./syreal/agent.json"
+    "agent_folder": "./50110-2022-00168/agent.json"
   },
   
   {
     "features": [ "주차 가능", "즉시입주", "풀옵션", "도시가스", "엘리베이터", "베란다" ],
-    "id": 82272856,
-    "listingNo": "82272856",
-    "date": "2026-04-13",
-    "title": "오피스텔형 투룸",
-    "desc": "삼무공원 인근 깔끔한 2룸 임대",
-    "image": "./syreal/82272856/1.jpg",
-    "desc_folder": "./syreal/82272856/info.json",
-    "image_folder": "./syreal/82272856/image.json",
-    "type": "오피스텔",
+    "id": "K-032",
+    "listingNo": "K-032",
+    "date": "2026-04-15",
+    "title": "삼무공원인근 풀옵션 투룸",
+    "desc": "교통/편의시설 생활권 좋은 위치 - 한라병원/ 시티호텔 인근",
+    "image": "./50110-2022-00168/K-032/1.jpg",
+    "desc_folder": "./50110-2022-00168/K-032/info.json",
+    "image_folder": "./50110-2022-00168/K-032/image.json",
+    "type": "투룸",
     "dealFilter": "월세",
     "region": "연동",
     "price": "300/70",
-    "area": "공급면적 46.28㎡ / 전용면적 33.06㎡",
-    "address": "제주시 연동 260-7",
-    "lat": 33.491241,
-    "lng": 126.489961,
-    "agent_folder": "./syreal/agent.json"
+    "area": "공급면적 42.98㎡ / 전용면적 33.06㎡",
+    "address": "제주도 제주시 연동 260-7",
+    "lat": 33.491243,
+    "lng": 126.489957,
+    "agent_folder": "./50110-2022-00168/agent.json"
   },
   
   {
     "features": [ "주차 가능", "즉시입주", "풀옵션", "도시가스", "엘리베이터", "베란다" ],
-    "id": 82272930,
-    "listingNo": "82272930",
+    "id": "K-002",
+    "listingNo": "K-002",
     "date": "2026-04-13",
     "title": "에코지엘 오피스텔",
     "desc": "롯데마트인근 풀옵션 원룸(단기 가능)",
-    "image": "./syreal/82272930/1.jpg",
-    "desc_folder": "./syreal/82272930/info.json",
-    "image_folder": "./syreal/82272930/image.json",
+    "image": "./50110-2022-00168/K-002/1.jpg",
+    "desc_folder": "./50110-2022-00168/K-002/info.json",
+    "image_folder": "./50110-2022-00168/K-002/image.json",
     "type": "오피스텔",
     "dealFilter": "월세",
     "region": "노형동",
@@ -203,19 +181,19 @@
     "address": "제주시 노형동 923-2",
     "lat": 33.483895,
     "lng": 126.481889,
-    "agent_folder": "./syreal/agent.json"
+    "agent_folder": "./50110-2022-00168/agent.json"
   },
   
   {
     "features": [ "주차 가능", "즉시입주", "풀옵션", "엘리베이터" ],
-    "id": 82273065,
-    "listingNo": "82273065",
+    "id": "K-003",
+    "listingNo": "K-003",
     "date": "2026-04-13",
     "title": "도청인근풀옵션 1.5룸",
     "desc": "도청인근 풀옵션 1.5룸 월세(1세대1주차/SUV 가능)",
-    "image": "./syreal/82273065/1.jpg",
-    "desc_folder": "./syreal/82273065/info.json",
-    "image_folder": "./syreal/82273065/image.json",
+    "image": "./50110-2022-00168/K-003/1.jpg",
+    "desc_folder": "./50110-2022-00168/K-003/info.json",
+    "image_folder": "./50110-2022-00168/K-003/image.json",
     "type": "원룸",
     "dealFilter": "월세",
     "region": "연동",
@@ -224,19 +202,19 @@
     "address": "제주시 연동 310-7",
     "lat": 33.492816,
     "lng": 126.497646,
-    "agent_folder": "./syreal/agent.json"
+    "agent_folder": "./50110-2022-00168/agent.json"
   },
   
   {
     "features": [ "주차 가능", "즉시입주", "풀옵션", "베란다" ],
-    "id": 82273306,
-    "listingNo": "82273306",
+    "id": "K-168",
+    "listingNo": "K-168",
     "date": "2026-04-13",
     "title": "다세대형 투베이(1.5룸)",
     "desc": "롯데마트 인근,가성비굿/풀옵션 1.5룸",
-    "image": "./syreal/82273306/1.jpg",
-    "desc_folder": "./syreal/82273306/info.json",
-    "image_folder": "./syreal/82273306/image.json",
+    "image": "./50110-2022-00168/K-168/1.jpg",
+    "desc_folder": "./50110-2022-00168/K-168/info.json",
+    "image_folder": "./50110-2022-00168/K-168/image.json",
     "type": "원룸",
     "dealFilter": "월세",
     "region": "노형동",
@@ -245,40 +223,19 @@
     "address": "제주시 노형동 936-9",
     "lat": 33.482763,
     "lng": 126.483538,
-    "agent_folder": "./syreal/agent.json"
+    "agent_folder": "./50110-2022-00168/agent.json"
   },
   
   {
-    "features": [ "즉시입주" ], 
-    "id": 82156471,
-    "listingNo": "82156471",
-    "date": "2026-04-13",
-    "title": "오피스텔형 투베이",
-    "desc": "오피스텔형 투베이(1.5룸)",
-    "image": "./syreal/82156471/1.jpeg",
-    "desc_folder": "./syreal/82156471/info.json",
-    "image_folder": "./syreal/82156471/image.json",
-    "type": "오피스텔",
-    "dealFilter": "년세",
-    "region": "일도이동",
-    "price": "300/649",
-    "area": "공급면적 39.67㎡ / 전용면적 33.06㎡",
-    "address": "제주시 일도이동 409-9",
-    "lat": 33.504958,
-    "lng": 126.541623,
-    "agent_folder": "./syreal/agent.json"
-  },
-
-  {
     "features": [ "주차 가능", "즉시입주", "풀옵션", "엘리베이터", "베란다" ],
-    "id": "82222902",
-    "listingNo": "82222902",
+    "id": "K-004",
+    "listingNo": "K-004",
     "date": "2026-04-13",
     "title": "모던테라스 오피스텔",
     "desc": "모던테라스 오피스텔 1동 / 노형이마트인근 풀옵션 원룸 임대",
-    "image": "./syreal/82222902/1.jpg",
-    "desc_folder": "./syreal/82222902/info.json",
-    "image_folder": "./syreal/82222902/image.json",
+    "image": "./50110-2022-00168/K-004/1.jpg",
+    "desc_folder": "./50110-2022-00168/K-004/info.json",
+    "image_folder": "./50110-2022-00168/K-004/image.json",
     "type": "오피스텔",
     "dealFilter": "월세",
     "region": "노형동",
@@ -287,7 +244,7 @@
     "address": "제주시 노형동 920",
     "lat": 33.483826,
     "lng": 126.481157,
-    "agent_folder": "./syreal/agent.json"
+    "agent_folder": "./50110-2022-00168/agent.json"
   },
 
 
