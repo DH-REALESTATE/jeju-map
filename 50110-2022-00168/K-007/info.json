@@ -1,0 +1,35 @@
+{
+  "propertyType": "commercial",
+  "sections": [
+    {
+      "title": "기본 정보",
+      "rows": [
+        { "label": "입주가능일", "value": "2026-05-08" },
+        { "label": "방향", "value": "북향 (주된 출입구 방향 기준)" },
+        { "label": "지하층/지상층", "value": "-/2" },
+        { "label": "현업종", "value": "편의점/식육점" },
+        { "label": "추천업종", "value": "다용도/빈점포" },
+        { "label": "건축물용도", "value": "제2종 근린생활시설" }
+      ]
+    },
+    {
+      "title": "관리비 정보",
+      "rows": [
+        { "label": "관리비", "value": "관리비없음" }
+      ]
+    },
+    {
+      "title": "건물 정보",
+      "rows": [
+        { "label": "총 주차대수", "value": "2대 (점포당 1대)" },
+        { "label": "총점포수", "value": "2개" },
+        { "label": "사용승인일", "value": "1980-09-05" },
+        { "label": "난방시설", "value": "개별난방 / LPG" },
+        { "label": "냉방시설", "value": "스탠드에어컨" },
+        { "label": "건물보안", "value": "인터폰" },
+        { "label": "기타시설", "value": "세탁실, 베란다" },
+        { "label": "화장실", "value": "있음" }
+      ]
+    }
+  ]
+}
