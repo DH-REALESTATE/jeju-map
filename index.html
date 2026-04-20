@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>REALJEJU.APP Ver 1.777</title>
-<meta property="og:title" id="ogTitleMeta" content="REALJEJU.APP Ver 1.777" />
-  <meta property="og:description" id="ogDescriptionMeta" content="REALJEJU.APP Ver 1.777" />
+  <title>REALJEJU.APP Ver 1.778</title>
+<meta property="og:title" id="ogTitleMeta" content="REALJEJU.APP Ver 1.778" />
+  <meta property="og:description" id="ogDescriptionMeta" content="REALJEJU.APP Ver 1.778" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
   <meta property="og:image" content="https://your-domain.example/og-image.jpg" />
@@ -3659,7 +3659,7 @@ body.sidebar-list-collapsed .sidebar{
   justify-content:center;
   flex-wrap:nowrap;
   flex:0 0 auto;
-  gap:6px;
+  gap:2px;
   margin-left:0 !important;
   padding-left:0 !important;
 }
@@ -3668,7 +3668,7 @@ body.sidebar-list-collapsed .sidebar{
   display:flex;
   align-items:center;
   justify-content:center;
-  gap:8px;
+  gap:6px;
   margin-left:0 !important;
   padding-left:0 !important;
 }
@@ -3949,7 +3949,7 @@ body.sidebar-list-collapsed .map-side-tools{
   <header class="global-topbar">
     <div class="global-topbar-inner">
       <div class="global-topbar-left">
-        <div class="global-brand" id="appVersionText"><i class="fa-solid fa-map-location-dot"" aria-hidden="true"></i><span class="brand-name">REALJEJU.APP</span><span class="brand-version">Ver 1.777</span></div>
+        <div class="global-brand" id="appVersionText"><i class="fa-solid fa-map-location-dot"" aria-hidden="true"></i><span class="brand-name">REALJEJU.APP</span><span class="brand-version">Ver 1.778</span></div>
       </div>
 
       <div class="global-topbar-menu">
@@ -4305,9 +4305,10 @@ body.sidebar-list-collapsed .map-side-tools{
 
   <script>
     const UI_FONT_STACK = 'Inter, Pretendard, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
-    const BADGE_BASE_HEX = '#3B82F6'; // 제주코발트블루
+    //const BADGE_BASE_HEX = '#3B82F6'; // 제주코발트블루
+    const BADGE_BASE_HEX = '#3B82F6'; 
     document.documentElement.style.setProperty('--brand', BADGE_BASE_HEX);
-    const BADGE_BASE_ALPHA = 0.8; // 0.8, 0.6, 0.3 등으로 사용자가 직접 조정
+    const BADGE_BASE_ALPHA = 0.9; // 0.8, 0.6, 0.3 등으로 사용자가 직접 조정
     function hexToRgba(hex, alpha = 1) {
       const value = String(hex || '').replace('#', '').trim();
       const normalized = value.length === 3 ? value.split('').map(ch => ch + ch).join('') : value;
@@ -4318,7 +4319,7 @@ body.sidebar-list-collapsed .map-side-tools{
       return `rgba(${r}, ${g}, ${b}, ${alpha})`;
     }
     const APP_NAME = "REALJEJU.APP";
-    const APP_VERSION = "1.777";
+    const APP_VERSION = "1.778";
 
     function applyAppVersion() {
       const fullVersionText = `${APP_NAME} Ver ${APP_VERSION}`;
@@ -4443,8 +4444,8 @@ body.sidebar-list-collapsed .map-side-tools{
     let roadviewClient = null;
     let roadviewOverlay = null;
     let roadviewFullscreenBtn = null;
-    let selectedDeal = "all";
-    let selectedType = "all";
+    let selectedDeal = new Set();
+    let selectedType = new Set();
     let selectedPetOnly = false;
     let selectedParkingOnly = false;
     let selectedCityGasOnly = false;
@@ -7090,8 +7091,10 @@ function closeDetailPanel() {
 
     function applyFilter() {
       const keyword = String(keywordInput?.value || "").trim().toLowerCase();
-      const dealValue = selectedDeal || "all";
-      const typeValue = selectedType || "all";
+      const dealValues = selectedDeal instanceof Set ? selectedDeal : new Set();
+      const typeValues = selectedType instanceof Set ? selectedType : new Set();
+      const isDealAll = dealValues.size === 0;
+      const isTypeAll = typeValues.size === 0;
 
       state.filtered = state.all.filter(item => {
         const text = [
@@ -7111,14 +7114,13 @@ function closeDetailPanel() {
         const searchableText = `${text} ${rawItemText}`.replace(/\s+/g, " ");
 
         const okKeyword = !keyword || searchableText.includes(keyword);
-        const okDeal = dealValue === "all" || item.dealType === dealValue;
+        const okDeal = isDealAll || dealValues.has(item.dealType);
 
         const itemType = (item.type ?? "").trim();
         const isSaleDeal = item.dealType === "매매";
         const isRentalDeal = ["전세", "년세", "월세"].includes(item.dealType);
 
-        const okType =
-          typeValue === "all" ||
+        const matchesTypeValue = (typeValue) =>
           (typeValue === "아파트오피스텔" && (
             ["아파트", "아파트ㆍ빌라"].includes(itemType) ||
             (itemType === "오피스텔" && isSaleDeal)
@@ -7131,6 +7133,8 @@ function closeDetailPanel() {
           (typeValue === "상가" && ["상가", "상가건물", "사무실", "공장", "상가ㆍ사무실"].includes(itemType)) ||
           (typeValue === "호텔펜션" && (["hotel", "호텔", "pension", "펜션"].includes(itemType) || isHotelPensionType(itemType))) ||
           (typeValue === "토지" && ["토지", "임야", "토지ㆍ임야", "전", "대", "답", "과수원", "목장용지"].includes(itemType));
+
+        const okType = isTypeAll || [...typeValues].some(matchesTypeValue);
 
         const normalizedText = searchableText;
 
@@ -7624,18 +7628,39 @@ function closeDetailPanel() {
         }
       });
 
+      function syncMultiFilterButtons(buttons, selectedSet, allTokens = ["all", "전체"]) {
+        const isAll = !(selectedSet instanceof Set) || selectedSet.size === 0;
+        buttons.forEach(button => {
+          const value = button.dataset.value || "";
+          const isAllButton = allTokens.includes(value);
+          button.classList.toggle("active", isAllButton ? isAll : (!isAll && selectedSet.has(value)));
+        });
+      }
+
+      function resetFilterSelectionState() {
+        closeDetailPanel();
+        currentDetailItem = null;
+        state.selectedMarkerId = null;
+        state.selectedClusterKey = null;
+        state.selectionMode = null;
+      }
+
       dealButtons.forEach(btn => {
         btn.addEventListener("click", () => {
-          dealButtons.forEach(b => b.classList.remove("active"));
-          btn.classList.add("active");
-          selectedDeal = (btn.dataset.value === "전체" ? "all" : (btn.dataset.value || "all"));
+          const value = btn.dataset.value || "";
 
-          closeDetailPanel();
-          currentDetailItem = null;
-          state.selectedMarkerId = null;
-          state.selectedClusterKey = null;
-          state.selectionMode = null;
+          if (value === "전체" || value === "all") {
+            selectedDeal.clear();
+          } else {
+            if (selectedDeal.has(value)) {
+              selectedDeal.delete(value);
+            } else {
+              selectedDeal.add(value);
+            }
+          }
 
+          syncMultiFilterButtons(dealButtons, selectedDeal, ["all", "전체"]);
+          resetFilterSelectionState();
           scrollListToTop();
           applyFilter();
           syncLeftAllButtonToMapFilters();
@@ -7644,16 +7669,20 @@ function closeDetailPanel() {
 
       typeButtons.forEach(btn => {
         btn.addEventListener("click", () => {
-          typeButtons.forEach(b => b.classList.remove("active"));
-          btn.classList.add("active");
-          selectedType = (btn.dataset.value === "전체" ? "all" : (btn.dataset.value || "all"));
+          const value = btn.dataset.value || "";
 
-          closeDetailPanel();
-          currentDetailItem = null;
-          state.selectedMarkerId = null;
-          state.selectedClusterKey = null;
-          state.selectionMode = null;
+          if (value === "전체" || value === "all") {
+            selectedType.clear();
+          } else {
+            if (selectedType.has(value)) {
+              selectedType.delete(value);
+            } else {
+              selectedType.add(value);
+            }
+          }
 
+          syncMultiFilterButtons(typeButtons, selectedType, ["all", "전체"]);
+          resetFilterSelectionState();
           scrollListToTop();
           applyFilter();
           syncLeftAllButtonToMapFilters();
@@ -7669,10 +7698,10 @@ function closeDetailPanel() {
           state.selectedFeatures.clear();
 
           if (value === "all") {
-            dealButtons.forEach(b => b.classList.toggle("active", b.dataset.value === "all"));
-            typeButtons.forEach(b => b.classList.toggle("active", b.dataset.value === "all"));
-            selectedDeal = "all";
-            selectedType = "all";
+            selectedDeal.clear();
+            selectedType.clear();
+            syncMultiFilterButtons(dealButtons, selectedDeal, ["all", "전체"]);
+            syncMultiFilterButtons(typeButtons, selectedType, ["all", "전체"]);
             selectedPetOnly = false;
             selectedParkingOnly = false;
             selectedCityGasOnly = false;
@@ -7911,8 +7940,8 @@ function closeDetailPanel() {
       initCustomZoomButtons();
       initRoadview();
       initEvents();
-      selectedDeal = selectedDeal || "all";
-      selectedType = selectedType || "all";
+      selectedDeal = selectedDeal instanceof Set ? selectedDeal : new Set();
+      selectedType = selectedType instanceof Set ? selectedType : new Set();
       await loadRecommendData();
       await loadProperties();
       syncFeatureButtons();
@@ -7923,31 +7952,6 @@ function closeDetailPanel() {
 
 </script>
 
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-  const activateGroup = (containerId) => {
-    const container = document.getElementById(containerId);
-    if (!container) return;
-    const buttons = Array.from(container.querySelectorAll('button'));
-    if (!buttons.length) return;
-
-    // preserve existing active if present, otherwise set first button active
-    if (!buttons.some(btn => btn.classList.contains('active'))) {
-      buttons[0].classList.add('active');
-    }
-
-    buttons.forEach((btn) => {
-      btn.addEventListener('click', function () {
-        buttons.forEach(b => b.classList.remove('active'));
-        this.classList.add('active');
-      });
-    });
-  };
-
-  activateGroup('typeButtons');
-  activateGroup('dealButtons');
-});
-</script>
 
 
 
