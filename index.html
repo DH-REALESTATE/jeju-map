@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>REALJEJU.APP Ver 1.787</title>
-<meta property="og:title" id="ogTitleMeta" content="REALJEJU.APP Ver 1.787" />
-  <meta property="og:description" id="ogDescriptionMeta" content="REALJEJU.APP Ver 1.787" />
+  <title>REALJEJU.APP Ver 1.788</title>
+<meta property="og:title" id="ogTitleMeta" content="REALJEJU.APP Ver 1.788" />
+  <meta property="og:description" id="ogDescriptionMeta" content="REALJEJU.APP Ver 1.788" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
   <meta property="og:image" content="https://your-domain.example/og-image.jpg" />
@@ -3532,6 +3532,25 @@ body.sidebar-list-collapsed .sidebar{
         opacity:1;
     }
 
+    body.shared-detail-mode .sidebar-list-panel{
+      display:none;
+    }
+
+    body.shared-detail-mode .sidebar-detail-panel{
+      left:0;
+      width:var(--sidebar-list-width);
+      display:block !important;
+      opacity:1 !important;
+      pointer-events:auto !important;
+      visibility:visible !important;
+      border-left:0;
+    }
+
+    body.shared-detail-mode .sidebar:not(.expanded) .sidebar-detail-panel{
+      opacity:1 !important;
+      pointer-events:auto !important;
+    }
+
     .global-topbar,
     .sub-topbar{
         background:rgba(255,255,255,.92);
@@ -4328,7 +4347,7 @@ body.sidebar-list-collapsed .map-side-tools{
       return `rgba(${r}, ${g}, ${b}, ${alpha})`;
     }
     const APP_NAME = "REALJEJU.APP";
-    const APP_VERSION = "1.787";
+    const APP_VERSION = "1.788";
 
     function applyAppVersion() {
       const fullVersionText = `${APP_NAME} Ver ${APP_VERSION}`;
@@ -4367,6 +4386,27 @@ body.sidebar-list-collapsed .map-side-tools{
 
     function clearDetailUrl(options = {}) {
       syncDetailUrl("", options);
+    }
+
+    function setSharedDetailMode(enabled) {
+      document.body.classList.toggle("shared-detail-mode", !!enabled);
+      if (enabled) {
+        sidebar.classList.add("expanded");
+        const panel = document.getElementById('sidebarDetailPanel');
+        if (panel) {
+          panel.style.display = 'block';
+          panel.style.opacity = '';
+          panel.style.pointerEvents = '';
+          panel.style.visibility = '';
+        }
+      }
+      updateSidebarWidth();
+      refreshMapLayout();
+    }
+
+    function shouldUseSharedDetailMode() {
+      const params = new URLSearchParams(window.location.search);
+      return !!normalizeItemId(params.get(DETAIL_QUERY_KEY));
     }
 
 
@@ -6392,7 +6432,12 @@ function getBadgeTextMetrics(text) {
         syncDetailUrl(item.id, { replace: replaceUrl });
       }
       if (!allowDetailOpenFromListClick) return;
-      openSidebarList();
+      if (shouldUseSharedDetailMode()) {
+        setSharedDetailMode(true);
+      } else {
+        setSharedDetailMode(false);
+        openSidebarList();
+      }
       if (detailScroll) detailScroll.scrollTop = 0;
       const sidebarDetailPanelEl = document.getElementById("sidebarDetailPanel");
       if (sidebarDetailPanelEl) {
@@ -6576,8 +6621,7 @@ function closeDetailPanel() {
       sidebar.classList.remove("expanded");
       currentDetailItem = null;
       clearDetailUrl({ replace: true });
-      updateSidebarWidth();
-      refreshMapLayout();
+      setSharedDetailMode(false);
     }
 
     async function handleClusterBadgeInteraction(cluster) {
@@ -6957,10 +7001,18 @@ function closeDetailPanel() {
       const params = new URLSearchParams(window.location.search);
       const targetId = normalizeItemId(params.get(DETAIL_QUERY_KEY));
 
-      if (!targetId) return false;
+      if (!targetId) {
+        setSharedDetailMode(false);
+        return false;
+      }
+
+      setSharedDetailMode(true);
 
       const item = (state.all || []).find(v => normalizeItemId(v.id) === targetId);
-      if (!item) return false;
+      if (!item) {
+        setSharedDetailMode(false);
+        return false;
+      }
 
       await hideRoadview();
       state.selectionMode = "single";
