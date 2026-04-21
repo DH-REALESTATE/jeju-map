@@ -4016,7 +4016,7 @@ body.sidebar-list-collapsed .map-side-tools{
       </div>
 
       <div class="sub-topbar-right">
-        <span class="sub-topbar-inline-version">Ver 1.799</span>
+        <span class="sub-topbar-inline-version">Ver 1.800</span>
         <div class="map-filter-bar">
           <div class="deal-buttons" id="dealButtons">
             <button type="button" data-value="전체">전체</button>
@@ -4364,17 +4364,17 @@ body.sidebar-list-collapsed .map-side-tools{
       return `rgba(${r}, ${g}, ${b}, ${alpha})`;
     }
     const APP_NAME = "REALJEJU.APP";
-    const APP_VERSION = "1.799";
+    const APP_VERSION = "1.800";
 
     function applyAppVersion() {
       const fullVersionText = `${APP_NAME} Ver ${APP_VERSION}`;
-      document.title = APP_NAME;
+      document.title = fullVersionText;
 
       const ogTitleMeta = document.getElementById("ogTitleMeta");
-      if (ogTitleMeta) ogTitleMeta.setAttribute("content", APP_NAME);
+      if (ogTitleMeta) ogTitleMeta.setAttribute("content", fullVersionText);
 
       const ogDescriptionMeta = document.getElementById("ogDescriptionMeta");
-      if (ogDescriptionMeta) ogDescriptionMeta.setAttribute("content", APP_NAME);
+      if (ogDescriptionMeta) ogDescriptionMeta.setAttribute("content", fullVersionText);
     }
 
     applyAppVersion();
@@ -7014,10 +7014,12 @@ function closeDetailPanel() {
     }
 
     async function openDetailFromUrl({ replaceHistory = true } = {}) {
-      const params = new URLSearchParams(window.location.search);
-      const targetId = normalizeItemId(params.get(DETAIL_QUERY_KEY));
+      const rawSearch = String(window.location.search || "");
+      const hasExplicitDetailQuery = /(?:^\?|&)id=/.test(rawSearch);
+      const params = new URLSearchParams(rawSearch);
+      const targetId = hasExplicitDetailQuery ? normalizeItemId(params.get(DETAIL_QUERY_KEY)) : "";
 
-      if (!targetId) {
+      if (!hasExplicitDetailQuery || !targetId) {
         setSharedDetailMode(false);
         return false;
       }
