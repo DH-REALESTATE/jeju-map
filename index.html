@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>REALJEJU.APP Ver 1.791</title>
-<meta property="og:title" id="ogTitleMeta" content="REALJEJU.APP Ver 1.791" />
-  <meta property="og:description" id="ogDescriptionMeta" content="REALJEJU.APP Ver 1.791" />
+  <title>REALJEJU.APP Ver 1.790</title>
+<meta property="og:title" id="ogTitleMeta" content="REALJEJU.APP Ver 1.790" />
+  <meta property="og:description" id="ogDescriptionMeta" content="REALJEJU.APP Ver 1.790" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
   <meta property="og:image" content="https://your-domain.example/og-image.jpg" />
@@ -4430,7 +4430,7 @@ body.sidebar-list-collapsed .map-side-tools{
     }
 
     async function fetchViewCounts(items) {
-      const ids = [...new Set((items || []).map(item => String(item.id || item.listingNo || "").trim()).filter(Boolean))];
+      const ids = [...new Set((items || []).map(item => String(item.listingNo || "").trim()).filter(Boolean))];
       if (!ids.length) return {};
       try {
         const res = await fetch(`/api/views?ids=${encodeURIComponent(ids.join(","))}`);
@@ -4764,10 +4764,8 @@ body.sidebar-list-collapsed .map-side-tools{
     function getLockedListItems() {
       if (!Array.isArray(state.lockedListIds) || !state.lockedListIds.length) return null;
       const idSet = new Set(state.lockedListIds.map(normalizeItemId));
-      const fromFiltered = (state.filtered || []).filter(item => idSet.has(normalizeItemId(item.id)));
-      if (fromFiltered.length) return fromFiltered;
-      const fromAll = (state.all || []).filter(item => idSet.has(normalizeItemId(item.id)));
-      return fromAll.length ? fromAll : null;
+      const lockedItems = (state.filtered || []).filter(item => idSet.has(normalizeItemId(item.id)));
+      return lockedItems.length ? lockedItems : null;
     }
 
     function isLockedSelectionStillVisible() {
@@ -5233,7 +5231,7 @@ body.sidebar-list-collapsed .map-side-tools{
       return {
         id: item.id ?? index + 1,
         title: item.title ?? "제목 없음",
-        listingNo: item.listingNo ?? String(item.id ?? ""),
+        listingNo: item.listingNo ?? "",
         dealType: item.dealFilter ?? item.dealType ?? "매매",
         type: item.typeFilter ?? item.type ?? "",
         features: Array.isArray(item.features) ? item.features : [],
@@ -6458,8 +6456,8 @@ function getBadgeTextMetrics(text) {
       renderHeroSlider(heroImages);
 
       if (detailTopbarId) {
-        const itemIdText = normalizeItemId(detailItem.id || detailItem.listingNo || "");
-        detailTopbarId.textContent = itemIdText ? `매물번호 : ${itemIdText}` : "";
+        const listingNoText = String(detailItem.listingNo || "").replace(/매물번호\s*/g, "").trim();
+        detailTopbarId.textContent = listingNoText ? `매물번호 : ${listingNoText}` : "";
       }
       detailListingNo.innerHTML = "";
       detailTitle.textContent = detailItem.title || "";
@@ -7019,10 +7017,7 @@ function closeDetailPanel() {
       state.selectionMode = "single";
       state.selectedClusterKey = null;
       state.selectedMarkerId = targetId;
-      lockListToItems([item]);
-      renderList([item]);
-      setResultInfo("선택 매물 1건");
-      setListInfo("총 1개 매물");
+      clearListLock();
       highlightCard(targetId);
       updateMarkerSelection(targetId, [targetId]);
 
@@ -7090,7 +7085,7 @@ function closeDetailPanel() {
         const rawTypeText = item.type || "-";
         const typeText = escapeHtml(getCardTypeBadgeLabel(rawTypeText));
         const titleText = escapeHtml(item.title || "매물명");
-        const viewText = getViewCountText(item.id || item.listingNo);
+        const viewText = getViewCountText(item.listingNo);
 
         const agentName = escapeHtml(item.agentName || "담당자");
         const agentTitle = escapeHtml(item.agentTitle || "");
@@ -7113,7 +7108,7 @@ function closeDetailPanel() {
                     <span class="card-badge" data-type="${typeText}">${typeText}</span>
                     <span class="card-badge deal" data-type="${dealLabel}">${dealLabel}</span>
                   </div>
-                  <span class="card-date" data-listing-no="${escapeHtml(item.id || item.listingNo || "")}">${escapeHtml(viewText)}</span>
+                  <span class="card-date" data-listing-no="${escapeHtml(item.listingNo || "")}">${escapeHtml(viewText)}</span>
                 </div>
 
                 <div class="card-price-line">
@@ -7174,8 +7169,8 @@ function closeDetailPanel() {
             allowDetailOpenFromListClick = false;
           }
 
-          if (!wasExpanded && (item.id || item.listingNo)) {
-            await incrementViewCount(item.id || item.listingNo);
+          if (!wasExpanded && item.listingNo) {
+            await incrementViewCount(item.listingNo);
           }
 
           syncDetailUrl(item.id);
@@ -7240,7 +7235,6 @@ function closeDetailPanel() {
       state.filtered = state.all.filter(item => {
         const text = [
           item.title ?? "",
-          item.id ?? "",
           item.listingNo ?? "",
           item.region ?? "",
           item.address ?? "",
