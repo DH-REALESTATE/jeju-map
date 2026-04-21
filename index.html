@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>REALJEJU.APP Ver 1.790</title>
-<meta property="og:title" id="ogTitleMeta" content="REALJEJU.APP Ver 1.790" />
-  <meta property="og:description" id="ogDescriptionMeta" content="REALJEJU.APP Ver 1.790" />
+  <title>REALJEJU.APP</title>
+  <meta property="og:title" id="ogTitleMeta" content="REALJEJU.APP" />
+  <meta property="og:description" id="ogDescriptionMeta" content="REALJEJU.APP" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
   <meta property="og:image" content="https://your-domain.example/og-image.jpg" />
@@ -3594,6 +3594,7 @@ body.sidebar-list-collapsed .sidebar{
         background:transparent;
     }
 
+
 .sub-topbar-inner{
   height:var(--topbar-sub-height);
   max-width:none;
@@ -3604,6 +3605,20 @@ body.sidebar-list-collapsed .sidebar{
   position:relative;
   overflow:visible;
   background:transparent;
+}
+
+.sub-topbar-inline-version{
+  flex:0 0 auto;
+  display:inline-flex;
+  align-items:center;
+  justify-content:flex-start;
+  height:100%;
+  font-size:12px;
+  color:#9aa3af;
+  font-weight:600;
+  line-height:1;
+  white-space:nowrap;
+  margin-right:4px;
 }
 
 .global-topbar-left{
@@ -3974,7 +3989,7 @@ body.sidebar-list-collapsed .map-side-tools{
   <header class="global-topbar">
     <div class="global-topbar-inner">
       <div class="global-topbar-left">
-        <div class="global-brand" id="appVersionText"><i class="fa-solid fa-location-dot" aria-hidden="true"></i><span class="brand-name">REALJEJU.APP</span><span class="brand-version">Ver 1.790</span></div>
+        <div class="global-brand" id="appVersionText"><i class="fa-solid fa-location-dot" aria-hidden="true"></i><span class="brand-name">REALJEJU.APP</span></div>
       </div>
 
       <div class="global-topbar-menu">
@@ -4001,6 +4016,7 @@ body.sidebar-list-collapsed .map-side-tools{
       </div>
 
       <div class="sub-topbar-right">
+        <span class="sub-topbar-inline-version">Ver 1.799</span>
         <div class="map-filter-bar">
           <div class="deal-buttons" id="dealButtons">
             <button type="button" data-value="전체">전체</button>
@@ -4348,17 +4364,17 @@ body.sidebar-list-collapsed .map-side-tools{
       return `rgba(${r}, ${g}, ${b}, ${alpha})`;
     }
     const APP_NAME = "REALJEJU.APP";
-    const APP_VERSION = "1.790";
+    const APP_VERSION = "1.799";
 
     function applyAppVersion() {
       const fullVersionText = `${APP_NAME} Ver ${APP_VERSION}`;
-      document.title = fullVersionText;
+      document.title = APP_NAME;
 
       const ogTitleMeta = document.getElementById("ogTitleMeta");
-      if (ogTitleMeta) ogTitleMeta.setAttribute("content", fullVersionText);
+      if (ogTitleMeta) ogTitleMeta.setAttribute("content", APP_NAME);
 
       const ogDescriptionMeta = document.getElementById("ogDescriptionMeta");
-      if (ogDescriptionMeta) ogDescriptionMeta.setAttribute("content", fullVersionText);
+      if (ogDescriptionMeta) ogDescriptionMeta.setAttribute("content", APP_NAME);
     }
 
     applyAppVersion();
@@ -4609,7 +4625,7 @@ body.sidebar-list-collapsed .map-side-tools{
     let currentSort = "latest";
 
     if (appVersionText) {
-      appVersionText.innerHTML = `<i class="fa-solid fa-location-dot" aria-hidden="true"></i><span class="brand-name">${APP_NAME}</span><span class="brand-version">Ver ${APP_VERSION}</span>`;
+      appVersionText.innerHTML = `<i class="fa-solid fa-location-dot" aria-hidden="true"></i><span class="brand-name">${APP_NAME}</span>`;
       appVersionText.style.cursor = "pointer";
       appVersionText.setAttribute("role", "button");
       appVersionText.setAttribute("aria-label", `${APP_NAME} 새로고침`);
