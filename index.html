@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>REALJEJU.APP Ver 1.788</title>
-<meta property="og:title" id="ogTitleMeta" content="REALJEJU.APP Ver 1.788" />
-  <meta property="og:description" id="ogDescriptionMeta" content="REALJEJU.APP Ver 1.788" />
+  <title>REALJEJU.APP Ver 1.790</title>
+<meta property="og:title" id="ogTitleMeta" content="REALJEJU.APP Ver 1.790" />
+  <meta property="og:description" id="ogDescriptionMeta" content="REALJEJU.APP Ver 1.790" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://your-domain.example/" />
   <meta property="og:image" content="https://your-domain.example/og-image.jpg" />
@@ -23,7 +23,7 @@
       --sidebar-list-width: 360px;
       --detail-panel-width: 420px;
       --sidebar-current-width: 0px;
-      --brand: #3B82F6;
+      --brand: #2F855A;
       --bg: #f4f7fb;
       --line: #e7edf3;
       --text: #17212b;
@@ -3581,8 +3581,8 @@ body.sidebar-list-collapsed .sidebar{
   
         /* 그림자 효과 */
         box-shadow:
-        0 1.1px 0 rgba(0,0,0,0.04),
-        0 1.1px 4px rgba(0,0,0,0.06) !important;
+        0 0.8px 0 rgba(0,0,0,0.04),
+        0 0.8px 0px rgba(0,0,0,0.06) !important;
     }
 
     .global-topbar-inner{
@@ -3715,7 +3715,7 @@ body.sidebar-list-collapsed .sidebar{
 .top-topbar{
   height:calc(var(--topbar-main-height) - 28px);
   padding:0 18px;
-  font-weight:700;
+  font-weight:800;
   letter-spacing:-0.3px;
 }
 
@@ -3738,7 +3738,7 @@ body.sidebar-list-collapsed .sidebar{
   height:calc(var(--topbar-sub-height) - 17px);
   padding:0 12px;
   font-size:15px;
-  font-weight:550;
+  font-weight:666;
   letter-spacing:-0.1px;
 }
 
@@ -3973,7 +3973,7 @@ body.sidebar-list-collapsed .map-side-tools{
   <header class="global-topbar">
     <div class="global-topbar-inner">
       <div class="global-topbar-left">
-        <div class="global-brand" id="appVersionText"><i class="fa-solid fa-map-location-dot"" aria-hidden="true"></i><span class="brand-name">REALJEJU.APP</span><span class="brand-version">Ver 1.778</span></div>
+        <div class="global-brand" id="appVersionText"><i class="fa-solid fa-location-dot" aria-hidden="true"></i><span class="brand-name">REALJEJU.APP</span><span class="brand-version">Ver 1.790</span></div>
       </div>
 
       <div class="global-topbar-menu">
@@ -4347,7 +4347,7 @@ body.sidebar-list-collapsed .map-side-tools{
       return `rgba(${r}, ${g}, ${b}, ${alpha})`;
     }
     const APP_NAME = "REALJEJU.APP";
-    const APP_VERSION = "1.788";
+    const APP_VERSION = "1.790";
 
     function applyAppVersion() {
       const fullVersionText = `${APP_NAME} Ver ${APP_VERSION}`;
@@ -4405,8 +4405,7 @@ body.sidebar-list-collapsed .map-side-tools{
     }
 
     function shouldUseSharedDetailMode() {
-      const params = new URLSearchParams(window.location.search);
-      return !!normalizeItemId(params.get(DETAIL_QUERY_KEY));
+      return false;
     }
 
 
@@ -4609,7 +4608,7 @@ body.sidebar-list-collapsed .map-side-tools{
     let currentSort = "latest";
 
     if (appVersionText) {
-      appVersionText.innerHTML = `<i class="fa-solid fa-brands fa-hashnode" aria-hidden="true"></i><span class="brand-name">${APP_NAME}</span><span class="brand-version">Ver ${APP_VERSION}</span>`;
+      appVersionText.innerHTML = `<i class="fa-solid fa-location-dot" aria-hidden="true"></i><span class="brand-name">${APP_NAME}</span><span class="brand-version">Ver ${APP_VERSION}</span>`;
       appVersionText.style.cursor = "pointer";
       appVersionText.setAttribute("role", "button");
       appVersionText.setAttribute("aria-label", `${APP_NAME} 새로고침`);
@@ -5892,9 +5891,9 @@ body.sidebar-list-collapsed .map-side-tools{
 
     function getBadgeConfig(text) {
       const len = String(text ?? "").length;
-      if (len === 1) return { size: 39, fontSize: 18 };
-      if (len === 2) return { size: 46, fontSize: 18 };
-      return { size: 54, fontSize: 18 };
+      if (len === 1) return { size: 46, fontSize: 18.8 };
+      if (len === 2) return { size: 56, fontSize: 18.8 };
+      return { size: 66, fontSize: 18.8 };
     }
 
     function getBadgeWidthByText(text) {
@@ -7006,7 +7005,7 @@ function closeDetailPanel() {
         return false;
       }
 
-      setSharedDetailMode(true);
+      setSharedDetailMode(false);
 
       const item = (state.all || []).find(v => normalizeItemId(v.id) === targetId);
       if (!item) {
