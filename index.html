@@ -24,7 +24,7 @@
       --sidebar-list-width: 360px;
       --detail-panel-width: 420px;
       --sidebar-current-width: 0px;
-      --brand: #2F855A;
+      --brand: #3B82F6;
       --bg: #f4f7fb;
       --line: #e7edf3;
       --text: #17212b;
@@ -35,9 +35,9 @@
       --global-topbar-height: var(--topbar-row-height);
       --sub-topbar-height: var(--topbar-row-height);
       --map-control-font-size: 14px;
-      --radius-main: 10px;
-      --radius-small: 8px;
-      --radius-pill: 20px;
+      --radius-main: 0px;
+      --radius-small: 0px;
+      --radius-pill: 0px;
       --radius-round: 9999px;
     }
 
@@ -112,7 +112,7 @@
       background: transparent;
       color: #223244;
       cursor: pointer;
-      border-radius: var(--radius-small);
+      border-radius: 0;
       height: 36px;
       min-width: 36px;
       padding: 0 10px;
@@ -148,7 +148,7 @@
       min-width: 220px;
       max-width: min(260px, calc(100vw - 24px));
       padding: 8px;
-      border-radius: 14px;
+      border-radius: 0;
       border: 1px solid #e2e8f0;
       background: rgba(255,255,255,0.98);
       box-shadow: 0 18px 34px rgba(15, 41, 66, 0.14);
@@ -170,7 +170,7 @@
       width: 100%;
       min-height: 36px;
       border: 0;
-      border-radius: 10px;
+      border-radius: 0;
       background: transparent;
       color: #334155;
       font-size: 14px;
@@ -247,7 +247,7 @@
   position: absolute;
   width: 40px;
   height: 40px;
-  border-radius: 999px;
+  border-radius: 0;
   background: rgba(255,255,255,0.96);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
@@ -308,7 +308,7 @@
       width: 8px;
       height: 8px;
       border: 0;
-      border-radius: var(--radius-pill);
+      border-radius: 0;
       background: rgba(255,255,255,0.42);
       cursor: pointer;
       padding: 0;
@@ -390,7 +390,7 @@
       align-items: center;
       height: 24px;
       padding: 0 10px;
-      border-radius: var(--radius-pill);
+      border-radius: 0;
       background: #f3eefe;
       color: #7c4dff;
       font-size: 14px;
@@ -422,7 +422,7 @@
       align-items: center;
       height: 24px;
       padding: 0 8px;
-      border-radius: var(--radius-pill);
+      border-radius: 0;
       background: #eef5ff;
       color: #2563eb;
       font-size: 14px;
@@ -452,7 +452,7 @@
       align-items: center;
       height: 24px;
       padding: 0 10px;
-      border-radius: var(--radius-pill);
+      border-radius: 0;
       background: #eef5ff;
       color: #2563eb;
       font-size: 14px;
@@ -504,7 +504,7 @@
     }
 
     .detail-listing-no {
-  display: block;
+  display: none;
   font-size: 12.5px;
   font-weight: 800;
   letter-spacing: -0.2px;
@@ -530,7 +530,7 @@
     }
 
     .detail-listing-no {
-  display: block;
+  display: none;
   font-size: 12.5px;
   font-weight: 800;
   letter-spacing: -0.2px;
@@ -559,7 +559,7 @@
       grid-template-columns: minmax(120px, 1.15fr) minmax(100px, 0.95fr) minmax(100px, 0.95fr);
       gap: 0;
       overflow: hidden;
-      border-radius: var(--radius-main);
+      border-radius: 0;
       border: 1px solid #eceff3;
       margin-bottom: 16px;
       background: #fff;
@@ -640,7 +640,7 @@
       white-space: pre-line;
       background: linear-gradient(180deg, #ffffff, #fafcff);
       border: 1px solid #eceff3;
-      border-radius: var(--radius-main);
+      border-radius: 0;
       padding: 16px 18px;
     }
 
@@ -659,7 +659,7 @@
     .detail-info-section {
       background: linear-gradient(180deg, #ffffff, #fbfdff);
       border: 1px solid #e8eef5;
-      border-radius: var(--radius-main);
+      border-radius: 0;
       padding: 18px 18px 16px;
       box-shadow: 0 6px 18px rgba(15, 41, 66, 0.04);
     }
@@ -721,7 +721,7 @@
     }
 
     .detail-agent-card {
-      border-radius: var(--radius-main);
+      border-radius: 0;
       border: 1px solid #e9eef4;
       background: linear-gradient(180deg, #ffffff, #fafcff);
       padding: 16px;
@@ -753,6 +753,7 @@
     }
 
     .detail-agent-avatar img {
+      border-radius: 50%;
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -852,7 +853,7 @@
       min-height: 38px;
       padding: 0 12px;
       border: 0;
-      border-radius: var(--radius-pill);
+      border-radius: 0;
       background: #eef3f7;
       color: #203040;
       font-size: 14px;
@@ -900,7 +901,7 @@
       min-width: 0;
       height: 30px;
       border: 0;
-      border-radius: var(--radius-pill);
+      border-radius: 0;
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -944,7 +945,7 @@
     .detail-action-btn.kakao-btn {
       background: #FEE500;
       color: #111;
-      border-radius: var(--radius-pill);
+      border-radius: 0;
       font-weight: 800;
     }
 
@@ -1044,7 +1045,7 @@
     .extra-filter-trigger {
       height: 38px;
       padding: 0 14px;
-      border-radius: 999px;
+      border-radius: 0;
       border: 1px solid #dbe4ee;
       background: #fff;
       color: #6b7785;
@@ -1091,7 +1092,7 @@
       right: auto;
       min-width: 240px;
       padding: 8px;
-      border-radius: 16px;
+      border-radius: 0;
       border: 1px solid #e2e8f0;
       background: rgba(255,255,255,0.98);
       box-shadow: 0 18px 34px rgba(15, 41, 66, 0.14);
@@ -1112,7 +1113,7 @@
       gap: 8px;
       min-height: 36px;
       padding: 0 10px;
-      border-radius: 10px;
+      border-radius: 0;
       color: #334155;
       font-size: 14px;
       font-weight: 600;
@@ -1148,7 +1149,7 @@
       width: 100%;
       min-height: 36px;
       border: 0;
-      border-radius: 999px;
+      border-radius: 0;
       background: #f8fafc;
       color: #475569;
       font-size: 13px;
@@ -1178,7 +1179,7 @@
       height: 38px;
       min-width: 38px;
       border: 0;
-      border-radius: 12px;
+      border-radius: 0;
       background: transparent;
       color: #1f2a36;
       display: inline-flex;
@@ -1256,7 +1257,7 @@
       align-items: center;
       height: 38px;
       padding: 0 19px;
-      border-radius: 12px;
+      border-radius: 0;
       background: #f7f9fc;
       border: 1px solid #e6ebf0;
       color: #1f2a36;
@@ -1293,7 +1294,7 @@
     .panel {
       margin: 12px 12px 10px;
       padding: 14px;
-      border-radius: var(--radius-main);
+      border-radius: 0;
       background: #fff;
       border: 1px solid #e8eef5;
       box-shadow: 0 8px 22px rgba(15, 41, 66, 0.05);
@@ -1308,7 +1309,7 @@
       height: 60px;
       padding: 0 74px 0 22px;
       border: 2px solid rgba(3, 199, 90, 0.9);
-      border-radius: var(--radius-main);
+      border-radius: 0;
       outline: none;
       font-size: 16px;
       font-weight: 700;
@@ -1332,7 +1333,7 @@
       right: 0;
       width: 62px;
       height: 60px;
-      border-radius: 0 var(--radius-main) var(--radius-main) 0;
+      border-radius: 0;
       background: rgba(3, 199, 90, 0.9);
       color: #fff;
       display: flex;
@@ -1367,7 +1368,7 @@
     .feature-buttons button,
     .reset-list-btn {
       border: 1px solid #dfe5eb;
-      border-radius: var(--radius-pill);
+      border-radius: 0;
       padding: 7px 9px;
       font-size: 14px;
       letter-spacing: -0.1px;
@@ -1396,7 +1397,7 @@
       width: 100%;
       margin-top: 0;
       margin-bottom: 10px;
-      border-radius: 12px;
+      border-radius: 0;
       background: #f1f4f8;
     }
 
@@ -1441,48 +1442,53 @@
     .property-list {
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      padding: 12px 12px 12px;
+      gap: 0;
+      padding: 0;
       background: #ffffff;
     }
 
     .card {
-        background: linear-gradient(180deg, #ffffff 0%, #fcfdff 100%);
-        border: 1px solid #e9eef4;
-        border-radius: 10px;
-        box-shadow: 0 4px 12px rgba(15, 41, 66, 0.04);
+        background: none;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
         cursor: pointer;
-        padding: 0;
+        padding: 18px 18px;
         overflow: hidden;
+        border-bottom: 0.5px solid #f3f4f6;
     }
 
     .card:hover,
-    .card.active {
-        background: linear-gradient(180deg, #fafdff 0%, #f5f9ff 100%);
-        transform: none;
-        box-shadow: 0 4px 12px rgba(15, 41, 66, 0.04);
-        border-color: #e9eef4;
-    }
+.card.active {
+    background: #f9fafb;
+    transform: none;
+    box-shadow: none;
+    border-color: #e5e7eb;
+}
 
     .card-inner-row {
       display: flex;
       gap: 14px;
-      padding: 17px 17px 16px;
+      padding: 0;
     }
 
     .thumb {
       width: 96px;
       min-width: 96px;
       height: 96px;
-      border-radius: 8px;
+      border-radius: 0;
       background-size: cover;
       background-position: center;
       position: relative;
       overflow: hidden;
-      box-shadow: 0 4px 10px rgba(15, 41, 66, 0.08);
+      box-shadow: none;
     }
 
     .thumb::after { display: none; }
+
+    .card:last-child {
+      //border-bottom: none;
+    }
 
     .card-body {
       flex: 1 1 auto;
@@ -1511,7 +1517,7 @@
       align-items: center;
       height: 22px;
       padding: 0 10px;
-      border-radius: var(--radius-pill);
+      border-radius: 0;
       background: #f3eefe;
       color: #7c4dff;
       font-size: 11px;
@@ -1613,7 +1619,7 @@
   min-width: 34px;
   height: 25px;
   padding: 0 8px;
-  border-radius: 12px;
+  border-radius: 0;
   background: #eef3f7;
   border: 1px solid transparent;
   color: #6b7785;
@@ -1663,7 +1669,7 @@
       align-items: center;
       height: 24px;
       padding: 0 8px;
-      border-radius: var(--radius-pill);
+      border-radius: 0;
       background: #eef5ff;
       color: #1f6fff;
       font-size: 14px;
@@ -1703,7 +1709,7 @@
       min-width: 26px;
       padding: 0;
       border: 1px solid #d1d9e0;
-      border-radius: 6px;
+      border-radius: 0;
       background: #fff;
       color: #51606f;
       font-size: 11px;
@@ -1730,7 +1736,7 @@
       min-width: 26px;
       padding: 0;
       border: 1px solid #d7dee6;
-      border-radius: 6px;
+      border-radius: 0;
       background: #fff;
       color: #51606f;
       cursor: pointer;
@@ -1776,7 +1782,7 @@
       margin-top: 2px;
       margin-left: -110px;
       width: calc(100% + 110px);
-      border-top: 1px solid #edf2f7;
+      border-top: none;
       flex-wrap: nowrap;
       white-space: nowrap;
       overflow: hidden;
@@ -1887,7 +1893,7 @@
       width: 40px;
       height: 40px;
       border: 0;
-      border-radius: var(--radius-small);
+      border-radius: 0;
       background: rgba(17,24,39,0.72);
       color: #fff;
       display: inline-flex;
@@ -1917,7 +1923,7 @@
       height: 40px;
       padding: 0 14px;
       border: 0;
-      border-radius: 999px;
+      border-radius: 0;
       background: rgba(255,255,255,0.92);
       color: #111827;
       display: inline-flex;
@@ -1953,7 +1959,7 @@
       gap: 8px;
       max-width: calc(100% - 24px);
       padding: 12px;
-      border-radius: 18px;
+      border-radius: 0;
       background: rgba(255,255,255,0.94);
       border: 1px solid rgba(0,0,0,0.05);
       box-shadow: var(--shadow);
@@ -1964,13 +1970,13 @@
     .type-buttons {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 10px;
     }
 
     .deal-buttons button,
     .type-buttons button {
       border: 0;
-      border-radius: 20px;
+      border-radius: 0;
       padding: 8px 12px;
       font-size: 14px;
       letter-spacing: -0.1px;
@@ -1999,7 +2005,7 @@
         gap: 8px;
         min-height: 46px;
         padding: 10px 15px;
-        border-radius: 16px;
+        border-radius: 0;
         background: rgba(15,41,66,0.92);
         color: #fff;
         font-size: 14px;
@@ -2045,7 +2051,7 @@
       max-width: min(1400px, 94vw);
       max-height: 92vh;
       object-fit: contain;
-      border-radius: var(--radius-main);
+      border-radius: 0;
       box-shadow: 0 20px 50px rgba(0,0,0,0.35);
       background: #111;
       display: block;
@@ -2057,7 +2063,7 @@
       width: 40px;
       height: 40px;
       min-width: 40px;
-      border-radius: 999px;
+      border-radius: 0;
       border: 1px solid rgba(255,255,255,0.12);
       background: rgba(0,0,0,0.55);
       color: #fff;
@@ -2120,7 +2126,7 @@
       right: 20px;
       z-index: 33;
       width: 460px;
-      border-radius: var(--radius-main);
+      border-radius: 0;
       background: rgba(255,255,255,0.98);
       border: 1px solid rgba(15, 41, 66, 0.08);
       box-shadow: 0 16px 36px rgba(15, 41, 66, 0.16);
@@ -2136,7 +2142,7 @@
       width: 28px;
       height: 28px;
       border: 0;
-      border-radius: var(--radius-small);
+      border-radius: 0;
       background: rgba(15, 41, 66, 0.08);
       color: #506070;
       display: inline-flex;
@@ -2190,7 +2196,7 @@
 
     .map-agent-photo {
       height: 118px;
-      border-radius: var(--radius-small);
+      border-radius: 0;
       background: #eef3f7 center / cover no-repeat;
       box-shadow: 0 8px 20px rgba(15, 41, 66, 0.10);
       overflow: hidden;
@@ -2240,7 +2246,7 @@
       align-items: center;
       height: 26px;
       padding: 0 10px;
-      border-radius: var(--radius-pill);
+      border-radius: 0;
       background: #eef5ff;
       color: #2563eb;
       font-size: 12px;
@@ -2371,7 +2377,7 @@
       width: 28px;
       height: 28px;
       border: 0;
-      border-radius: var(--radius-small);
+      border-radius: 0;
       background: rgba(15, 41, 66, 0.08);
       color: #506070;
       display: inline-flex;
@@ -2398,7 +2404,7 @@
       bottom: 20px;
       z-index: 32;
       width: 320px;
-      border-radius: var(--radius-main);
+      border-radius: 0;
       background: rgba(255,255,255,0.98);
       border: 1px solid rgba(15, 41, 66, 0.08);
       box-shadow: 0 16px 36px rgba(15, 41, 66, 0.16);
@@ -2438,7 +2444,7 @@
 
     .map-recommend-thumb {
       height: 118px;
-      border-radius: var(--radius-small);
+      border-radius: 0;
       background: #eef3f7 center / cover no-repeat;
       box-shadow: 0 8px 20px rgba(15, 41, 66, 0.10);
     }
@@ -2463,7 +2469,7 @@
       align-items: center;
       height: 22px;
       padding: 0 10px;
-      border-radius: var(--radius-pill);
+      border-radius: 0;
       background: #f3eefe;
       color: #7c4dff;
       font-size: 11px;
@@ -2662,7 +2668,7 @@
 
 .search-box input {
   height: 44px;
-  border-radius: 14px;
+  border-radius: 0;
 }
 
 .filter-title {
@@ -2690,7 +2696,15 @@
 }
 
 .thumb {
-  border-radius: 14px;
+  width: 96px;
+  min-width: 96px;
+  height: 96px;
+  border-radius: 0;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: none;
 }
 
 .card-address {
@@ -2745,7 +2759,7 @@
   justify-content: center;
   height: 30px;
   padding: 0 10px;
-  border-radius: 14px;
+  border-radius: 0;
   font-size: 13px;
   font-weight: 900;
   line-height: 1;
@@ -2901,17 +2915,22 @@
 
 /* premium left card tuning */
 .card {
-  background: #ffffff;
-  border: 1px solid #e8edf4;
-  border-radius: 18px;
-  box-shadow: 0 4px 14px rgba(15, 41, 66, 0.04);
-}
+        background: #ffffff;
+        border: 0.5px solid #e5e7eb;
+        border-radius: 0;
+        box-shadow: none;
+        cursor: pointer;
+        padding: 0;
+        overflow: hidden;
+        border-bottom: 1px solid #e5e7eb;
+    }
 
 .card:hover,
 .card.active {
-  background: #ffffff;
-  box-shadow: 0 8px 20px rgba(15, 41, 66, 0.07);
-  border-color: rgba(59,130,246,0.32);
+    background: #ffffff;
+    transform: none;
+    box-shadow: none;
+    border-color: #e5e7eb;
 }
 
 .card-inner-row {
@@ -2921,7 +2940,14 @@
 }
 
 .thumb {
-  border-radius: 12px;
+  width: 108px;
+  min-width: 108px;
+  height: 108px;
+  border-radius: 10;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  overflow: hidden;
   box-shadow: none;
 }
 
@@ -2937,7 +2963,7 @@
 .card-badge {
   height: 23px;
   padding: 0 8px;
-  border-radius: 999px;
+  border-radius: 0;
   font-size: 11px;
   font-weight: 800;
   letter-spacing: -0.1px;
@@ -3004,16 +3030,27 @@
 
 .card-agent-row {
   gap: 8px;
-  padding-top: 10px;
+  padding-top: 12px;
   border-top: 1px solid #f1f5f9;
 }
 
 .card-agent-avatar {
-  width: 24px;
-  height: 24px;
-  font-size: 11px;
-  box-shadow: none;
-}
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: #eef3f7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      letter-spacing: -0.1px;
+      font-weight: 800;
+      color: #506070;
+      overflow: hidden;
+      flex-shrink: 0;
+      border: 1px solid #e5ebf1;
+      box-shadow: 0 3px 8px rgba(15, 41, 66, 0.06);
+    }
 
 .card-agent-text {
   display: flex;
@@ -3130,7 +3167,7 @@
   width: 46px;
   height: 46px;
   border: 1px solid #cfd7e2;
-  border-radius: 10px;
+  border-radius: 0;
   padding: 0;
   background: #ffffff;
   color: #223244;
@@ -3157,7 +3194,7 @@
   width: 46px;
   height: 46px;
   border: 1px solid #cfd7e2;
-  border-radius: 10px;
+  border-radius: 0;
   background: #ffffff;
   overflow: hidden;
   box-shadow: 0 6px 14px rgba(15, 41, 66, 0.12);
@@ -3243,7 +3280,7 @@
         display: none;
         width: min(420px, calc(100% - 48px));
         padding: 18px 20px;
-        border-radius: 18px;
+        border-radius: 0;
         background: rgba(255,255,255,0.96);
         border: 1px solid rgba(15, 41, 66, 0.08);
         box-shadow: 0 16px 36px rgba(15, 41, 66, 0.14);
@@ -3292,7 +3329,7 @@
       flex-direction: column;
       width: 44px;
       overflow: hidden;
-      border-radius: 14px;
+      border-radius: 0;
       box-shadow: 0 12px 28px rgba(15,41,66,0.14);
     }
 
@@ -3337,7 +3374,7 @@
     }
 
     .map-current-btn {
-      border-radius:14px;
+      border-radius: 0;
       box-shadow:0 12px 28px rgba(15,41,66,0.14);
     }
 
@@ -3381,7 +3418,7 @@
         gap: 6px;
         height: 38px;
         padding: 0 12px;
-        border-radius: 12px;
+        border-radius: 0;
         background: transparent;
         border: 1px solid transparent;
         color: #6b7785;
@@ -3421,9 +3458,9 @@
   --sidebar-list-width:372px;
   --detail-panel-width:420px;
   --sidebar-current-width:var(--sidebar-list-width);
-  --radius-main:22px;
-  --radius-small:16px;
-  --radius-pill:999px;
+  --radius-main: 0px;
+  --radius-small: 0px;
+  --radius-pill: 0px;
   --shadow:0 10px 28px rgba(15,23,42,0.06);
   --topbar-main-height:63px;
   --topbar-sub-height:55px;
@@ -3687,7 +3724,7 @@ body.sidebar-list-collapsed .sidebar{
   width:100%;
   min-width:0;
   padding:0;
-  border-radius:0;
+  border-radius: 0;
   background:transparent;
   border:0;
   box-shadow:none;
@@ -3702,7 +3739,7 @@ body.sidebar-list-collapsed .sidebar{
   justify-content:center;
   flex-wrap:nowrap;
   flex:0 0 auto;
-  gap:2px;
+  gap:8px;
   margin-left:0 !important;
   padding-left:0 !important;
 }
@@ -3711,7 +3748,7 @@ body.sidebar-list-collapsed .sidebar{
   display:flex;
   align-items:center;
   justify-content:center;
-  gap:6px;
+  gap:8px;
   margin-left:0 !important;
   padding-left:0 !important;
 }
@@ -3722,7 +3759,7 @@ body.sidebar-list-collapsed .sidebar{
 .sub-topbar .deal-buttons button{
   background:transparent;
   border:1px solid transparent;
-  border-radius:999px;
+  border-radius: 0;
   box-shadow:none;
   color:#6b7280;
   cursor:pointer;
@@ -3732,7 +3769,7 @@ body.sidebar-list-collapsed .sidebar{
 .global-topbar .type-buttons button,
 .global-topbar .deal-buttons button,
 .top-topbar{
-  height:calc(var(--topbar-main-height) - 28px);
+  height:calc(var(--topbar-main-height) - 24px);
   padding:0 18px;
   font-weight:800;
   letter-spacing:-0.3px;
@@ -3871,7 +3908,7 @@ body.sidebar-list-collapsed .map-side-tools{
   height:28px;
   min-height:28px;
   padding:0 10px;
-  border-radius:var(--radius-pill);
+  border-radius: 0;
   background:rgba(3,199,90,.08);
   border:1px solid rgba(3,199,90,.18);
   color:#03C75A;
@@ -3889,7 +3926,7 @@ body.sidebar-list-collapsed .map-side-tools{
   gap:4px;
   height:28px;
   padding:0 10px;
-  border-radius:var(--radius-pill);
+  border-radius: 0;
   border:1px solid rgba(3,199,90,.28);
   background:rgba(3,199,90,.08);
   color:#03C75A;
@@ -3914,7 +3951,7 @@ body.sidebar-list-collapsed .map-side-tools{
   gap:4px !important;
   height:30px !important;
   padding:0 12px !important;
-  border-radius:20px !important;
+  border-radius: 0;
   border:0 !important;
   background:#f3eefe !important;
   color:#7c4dff !important;
@@ -3986,6 +4023,50 @@ body.sidebar-list-collapsed .map-side-tools{
     font-size:14px;
   }
 }
+
+
+    /* v1.821: list stays square, top controls softly rounded */
+    .deal-buttons button,
+    .type-buttons button {
+      border-radius: 10px !important;
+      padding: 8px 14px !important;
+    }
+
+    .deal-buttons button.active,
+    .type-buttons button.active {
+      border-radius: 12px !important;
+      box-shadow: 0 8px 18px rgba(3, 199, 90, 0.18) !important;
+    }
+
+    .extra-filter-trigger,
+    .extra-filter-reset-btn {
+      border-radius: 100px !important;
+    }
+
+
+
+    /* v1.821: top filter buttons - pill shape, no shadow */
+    .deal-buttons button,
+    .type-buttons button {
+      border-radius: 999px !important;
+      box-shadow: none !important;
+    }
+
+    .deal-buttons button.active,
+    .type-buttons button.active {
+      border-radius: 999px !important;
+      box-shadow: none !important;
+    }
+
+
+/* ===== FORCE BRAND COLOR ===== */
+.global-brand,
+.global-brand i,
+.global-brand .brand-name,
+.global-brand .brand-version {
+  color: var(--brand) !important;
+}
+
 </style>
 </head>
 <body class="sidebar-list-collapsed">
@@ -4019,7 +4100,7 @@ body.sidebar-list-collapsed .map-side-tools{
       </div>
 
       <div class="sub-topbar-right">
-        <span class="sub-topbar-inline-version">Ver 1.809</span>
+        <span class="sub-topbar-inline-version">Ver 1.821</span>
         <div class="map-filter-bar">
           <div class="deal-buttons" id="dealButtons">
             <button type="button" data-value="전체">전체</button>
@@ -4375,7 +4456,7 @@ body.sidebar-list-collapsed .map-side-tools{
       return `rgba(${r}, ${g}, ${b}, ${alpha})`;
     }
     const APP_NAME = "REALJEJU.APP";
-    const APP_VERSION = "1.809";
+    const APP_VERSION = "1.821";
 
     function applyAppVersion() {
       const fullVersionText = `${APP_NAME} Ver ${APP_VERSION}`;
@@ -4444,21 +4525,30 @@ body.sidebar-list-collapsed .map-side-tools{
 
     let viewMap = {};
 
-    function getViewCountText(listingNo) {
-      const count = Number(viewMap[String(listingNo || "").trim()] || 0);
+    function getViewCountKey(value) {
+      return String(value || "").trim();
+    }
+
+    function getItemViewKey(item) {
+      if (!item || typeof item !== "object") return "";
+      return getViewCountKey(item.id || item.listingNo || "");
+    }
+
+    function getViewCountText(viewKey) {
+      const count = Number(viewMap[getViewCountKey(viewKey)] || 0);
       return `조회 ${Number.isFinite(count) ? count : 0}`;
     }
 
-    function updateViewCountElements(listingNo, count) {
-      const key = String(listingNo || "").trim();
+    function updateViewCountElements(viewKey, count) {
+      const key = getViewCountKey(viewKey);
       if (!key) return;
-      document.querySelectorAll(`.card-date[data-listing-no="${key}"]`).forEach(el => {
+      document.querySelectorAll(`.card-date[data-view-key="${key}"]`).forEach(el => {
         el.textContent = `조회 ${Number.isFinite(Number(count)) ? Number(count) : 0}`;
       });
     }
 
     async function fetchViewCounts(items) {
-      const ids = [...new Set((items || []).map(item => String(item.listingNo || "").trim()).filter(Boolean))];
+      const ids = [...new Set((items || []).map(item => getItemViewKey(item)).filter(Boolean))];
       if (!ids.length) return {};
       try {
         const res = await fetch(`/api/views?ids=${encodeURIComponent(ids.join(","))}`);
@@ -4476,13 +4566,13 @@ body.sidebar-list-collapsed .map-side-tools{
       const fetched = await fetchViewCounts(items);
       if (renderSeq !== state.viewRenderSeq) return;
       viewMap = { ...viewMap, ...fetched };
-      Object.entries(fetched).forEach(([listingNo, count]) => {
-        updateViewCountElements(listingNo, count);
+      Object.entries(fetched).forEach(([viewKey, count]) => {
+        updateViewCountElements(viewKey, count);
       });
     }
 
-    async function incrementViewCount(listingNo) {
-      const key = String(listingNo || "").trim();
+    async function incrementViewCount(viewKey) {
+      const key = getViewCountKey(viewKey);
       if (!key) return null;
       try {
         const res = await fetch("/api/view", {
@@ -4703,7 +4793,7 @@ body.sidebar-list-collapsed .map-side-tools{
     function getTypeBadgeTheme(typeText) {
       const t = String(typeText || "").trim();
       if (t === "아파트") return { bg: "rgba(59,130,246,0.08)", color: BADGE_BASE_HEX };
-      if (["단독주택", "단독", "빌라", "다가구", "다세대", "다가구ㆍ다세대", "다세대주택"].includes(t)) {
+      if (["단독주택", "단독", "빌라", "연립", "다가구", "다세대", "다가구ㆍ다세대", "다세대주택"].includes(t)) {
         return { bg: "rgba(59,130,246,0.06)", color: "#1E3A8A" };
       }
       if (["상가", "상가건물", "사무실", "공장", "상가ㆍ사무실"].includes(t)) {
@@ -5352,6 +5442,7 @@ body.sidebar-list-collapsed .map-side-tools{
       const text = String(typeText || "").trim();
       if (["전", "대", "답", "과수원", "목장용지", "임야", "토지", "토지ㆍ임야"].includes(text)) return getLandTypeDetailLabel(text);
       if (["단독", "단독주택"].includes(text)) return "단독주택";
+      if (text === "연립") return "빌라";
       if (isHotelType(text)) return "호텔";
       if (isPensionType(text)) return "펜션";
       return text || "-";
@@ -5919,9 +6010,9 @@ body.sidebar-list-collapsed .map-side-tools{
 
     function getBadgeConfig(text) {
       const len = String(text ?? "").length;
-      if (len === 1) return { size: 44, fontSize: 18.8 };
-      if (len === 2) return { size: 54, fontSize: 18.8 };
-      return { size: 64, fontSize: 18.8 };
+      if (len === 1) return { size: 42, fontSize: 18.8 };
+      if (len === 2) return { size: 52, fontSize: 18.8 };
+      return { size: 62, fontSize: 18.8 };
     }
 
     function getBadgeWidthByText(text) {
@@ -7117,7 +7208,8 @@ function closeDetailPanel() {
         const rawTypeText = item.type || "-";
         const typeText = escapeHtml(getCardTypeBadgeLabel(rawTypeText));
         const titleText = escapeHtml(item.title || "매물명");
-        const viewText = getViewCountText(item.listingNo);
+        const viewKey = getItemViewKey(item);
+        const viewText = getViewCountText(viewKey);
 
         const agentName = escapeHtml(item.agentName || "담당자");
         const agentTitle = escapeHtml(item.agentTitle || "");
@@ -7140,7 +7232,7 @@ function closeDetailPanel() {
                     <span class="card-badge" data-type="${typeText}">${typeText}</span>
                     <span class="card-badge deal" data-type="${dealLabel}">${dealLabel}</span>
                   </div>
-                  <span class="card-date" data-listing-no="${escapeHtml(item.listingNo || "")}">${escapeHtml(viewText)}</span>
+                  <span class="card-date" data-view-key="${escapeHtml(viewKey)}">${escapeHtml(viewText)}</span>
                 </div>
 
                 <div class="card-price-line">
@@ -7201,8 +7293,8 @@ function closeDetailPanel() {
             allowDetailOpenFromListClick = false;
           }
 
-          if (!wasExpanded && item.listingNo) {
-            await incrementViewCount(item.listingNo);
+          if (!wasExpanded) {
+            await incrementViewCount(getItemViewKey(item));
           }
 
           syncDetailUrl(item.id);
@@ -7293,7 +7385,7 @@ function closeDetailPanel() {
             ["아파트", "아파트ㆍ빌라"].includes(itemType) ||
             (itemType === "오피스텔" && isSaleDeal)
           )) ||
-          (typeValue === "빌라주택" && ["빌라", "단독", "단독주택", "다가구", "다세대", "다가구ㆍ다세대", "다세대주택"].includes(itemType)) ||
+          (typeValue === "빌라주택" && ["빌라", "연립", "단독", "단독주택", "다가구", "다세대", "다가구ㆍ다세대", "다세대주택"].includes(itemType)) ||
           (typeValue === "원룸" && (
             ["원룸", "투룸", "원룸ㆍ투룸"].includes(itemType) ||
             (itemType === "오피스텔" && isRentalDeal)
