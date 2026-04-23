@@ -1,6 +1,25 @@
 [  
 
   {
+    "id": "디-236",
+    "image": "./dh_real/236/1.jpg",
+    "desc_folder": "./dh_real/236/info.json",
+    "image_folder": "./dh_real/236/image.json",    
+    "date": "2026-04-23",
+    "title": "신산공원 인근 중심 상권",
+    "desc": "신산공원 인근 중심 상권 / 안정적 임대수익 기대",
+    "type": "상가",
+    "dealFilter": "매매",
+    "region": "일도이동",
+    "price": "2억 9,000",
+    "area": "계약면적 51.96㎡ / 전용면적 51.96㎡",
+    "address": "제주시 일도이동",
+    "lat": 33.507285,
+    "lng": 126.531115,
+    "agent_folder": "./dh_real/agent.json"
+  },
+  
+  {
     "id": "디-204",
     "image": "./dh_real/204/1.jpg",
     "desc_folder": "./dh_real/204/info.json",
