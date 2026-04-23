@@ -4024,7 +4024,7 @@ body.sidebar-list-collapsed .map-side-tools{
 }
 
 
-    /* v1.822: list stays square, top controls softly rounded */
+    /* v1.823: list stays square, top controls softly rounded */
     .deal-buttons button,
     .type-buttons button {
       border-radius: 10px !important;
@@ -4044,7 +4044,7 @@ body.sidebar-list-collapsed .map-side-tools{
 
 
 
-    /* v1.822: top filter buttons - pill shape, no shadow */
+    /* v1.823: top filter buttons - pill shape, no shadow */
     .deal-buttons button,
     .type-buttons button {
       border-radius: 999px !important;
@@ -4099,7 +4099,7 @@ body.sidebar-list-collapsed .map-side-tools{
       </div>
 
       <div class="sub-topbar-right">
-        <span class="sub-topbar-inline-version">Ver 1.822</span>
+        <span class="sub-topbar-inline-version">Ver 1.823</span>
         <div class="map-filter-bar">
           <div class="deal-buttons" id="dealButtons">
             <button type="button" data-value="전체">전체</button>
@@ -4455,7 +4455,7 @@ body.sidebar-list-collapsed .map-side-tools{
       return `rgba(${r}, ${g}, ${b}, ${alpha})`;
     }
     const APP_NAME = "REALJEJU.APP";
-    const APP_VERSION = "1.822";
+    const APP_VERSION = "1.823";
 
     function applyAppVersion() {
       const fullVersionText = `${APP_NAME} Ver ${APP_VERSION}`;
@@ -7335,9 +7335,7 @@ function closeDetailPanel() {
             allowDetailOpenFromListClick = false;
           }
 
-          if (!wasExpanded) {
-            await incrementViewCount(getItemViewKey(item));
-          }
+          await incrementViewCount(getItemViewKey(item));
 
           syncDetailUrl(item.id);
 
