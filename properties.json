@@ -1,6 +1,27 @@
 [  
 
   {
+    "id": "디-237",
+    "image": "./dh_real/237/1.jpg",
+    "desc_folder": "./dh_real/237/info.json",
+    "image_folder": "./dh_real/237/image.json",    
+    "date": "2026-04-23",
+    "title": "표선면 세화리 투자용 토지",
+    "desc": "제주 동남부권 특유의 한적하고 여유로운 분위기를 느낄 수 있는 지역으로,
+조용한 입지에서 자연과 함께하는 생활을 원하는
+분들께 적합한 곳입니다.",
+    "type": "전",
+    "dealFilter": "매매",
+    "region": "세화리",
+    "price": "5억 7,000",
+    "area": "대지면적 8,511.00㎡",
+    "address": "서귀포시 표선면 세화리",
+    "lat": 33.337642,
+    "lng": 126.789028,
+    "agent_folder": "./dh_real/agent.json"
+  },
+  
+  {
     "id": "디-236",
     "image": "./dh_real/236/1.jpg",
     "desc_folder": "./dh_real/236/info.json",
