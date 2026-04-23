@@ -1,0 +1,32 @@
+{
+  "propertyType": "commercial",
+  "sections": [
+    {
+      "title": "기본 정보",
+      "rows": [
+        { "label": "입주가능일", "value": "즉시입주 협의가능" },
+        { "label": "방향", "value": "북동향 (주된 출입구 방향 기준)" },
+        { "label": "해당층/총층", "value": "1/1" },
+        { "label": "현업종", "value": "음식점/식당" },
+        { "label": "추천업종", "value": "음식점/식당" },
+        { "label": "건축물용도", "value": "제2종 근린생활시설" }
+      ]
+    },
+    {
+      "title": "관리비 정보",
+      "rows": [
+        { "label": "관리비", "value": "관리비없음" }
+      ]
+    },
+    {
+      "title": "건물 정보",
+      "rows": [
+        { "label": "주차가능여부", "value": "주차불가능" },
+        { "label": "건물종류", "value": "일반상가" },
+        { "label": "총점포수", "value": "1개" },
+        { "label": "사용승인일", "value": "1973-04-10" },
+        { "label": "화장실", "value": "있음" }
+      ]
+    }
+  ]
+}
