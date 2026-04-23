@@ -4024,7 +4024,7 @@ body.sidebar-list-collapsed .map-side-tools{
 }
 
 
-    /* v1.821: list stays square, top controls softly rounded */
+    /* v1.822: list stays square, top controls softly rounded */
     .deal-buttons button,
     .type-buttons button {
       border-radius: 10px !important;
@@ -4044,7 +4044,7 @@ body.sidebar-list-collapsed .map-side-tools{
 
 
 
-    /* v1.821: top filter buttons - pill shape, no shadow */
+    /* v1.822: top filter buttons - pill shape, no shadow */
     .deal-buttons button,
     .type-buttons button {
       border-radius: 999px !important;
@@ -4099,7 +4099,7 @@ body.sidebar-list-collapsed .map-side-tools{
       </div>
 
       <div class="sub-topbar-right">
-        <span class="sub-topbar-inline-version">Ver 1.821</span>
+        <span class="sub-topbar-inline-version">Ver 1.822</span>
         <div class="map-filter-bar">
           <div class="deal-buttons" id="dealButtons">
             <button type="button" data-value="전체">전체</button>
@@ -4455,7 +4455,7 @@ body.sidebar-list-collapsed .map-side-tools{
       return `rgba(${r}, ${g}, ${b}, ${alpha})`;
     }
     const APP_NAME = "REALJEJU.APP";
-    const APP_VERSION = "1.821";
+    const APP_VERSION = "1.822";
 
     function applyAppVersion() {
       const fullVersionText = `${APP_NAME} Ver ${APP_VERSION}`;
@@ -4615,7 +4615,7 @@ body.sidebar-list-collapsed .map-side-tools{
       lastRecommendPoolKey: "",
       isRecommendCardDismissed: false,
       isRecommendAgentDismissed: false,
-      isListOpen: false
+      isListOpen: true
     };
 
     let recommendIds = [];
@@ -5189,6 +5189,17 @@ body.sidebar-list-collapsed .map-side-tools{
       }
 
       const viewportItems = sortItems(getViewportFilteredItems(state.filtered));
+
+      if (state.initialRandomListActive !== false && isInitialAllListMode() && !sidebar.classList.contains("expanded") && !state.selectionMode) {
+        const initialItems = getInitialRandomListItems(state.filtered, 30);
+        renderList(initialItems);
+        setResultInfo(`총 ${initialItems.length}건`);
+        setListInfo(`총 ${initialItems.length}개 매물`);
+        refreshRecommendAgentCard();
+        refreshRecommendationCard(state.filtered);
+        return initialItems;
+      }
+
       const shouldPreserveList = sidebar.classList.contains("expanded")
         && state.selectionMode === "single"
         && state.selectedMarkerId != null
@@ -5607,6 +5618,13 @@ body.sidebar-list-collapsed .map-side-tools{
       if (/상가|상가건물|사무실|공장/.test(typeText)) {
         const raw = String(areaText || "-").trim();
 
+        if (/계약|전용/.test(raw)) {
+          const parsed = parseApartmentAreas(raw);
+          const privateText = Number.isFinite(parsed.private) ? formatSingleAreaValue(parsed.private, unit) : "-";
+          const supplyText = Number.isFinite(parsed.supply) ? formatSingleAreaValue(parsed.supply, unit) : "-";
+          return `계약${supplyText}ㆍ전용${privateText}`;
+        }
+
         const totalMatch =
           raw.match(/연면적\s*([\d,.]+)㎡/) ||
           raw.match(/연면적\s*([\d,.]+)평/) ||
@@ -5774,7 +5792,23 @@ body.sidebar-list-collapsed .map-side-tools{
       }
 
       if (isCommercialType(typeText)) {
-        const parsed = parseDetachedHouseAreas(detailItem.area || "-");
+        const raw = String(detailItem.area || "-").trim();
+
+        if (/계약|전용/.test(raw)) {
+          const parsed = parseApartmentAreas(raw);
+          const showSupply = detailAreaMode === "supply";
+          const targetValue = showSupply ? parsed.supply : parsed.private;
+
+          detailAreaLabel.textContent = showSupply ? "면적(계약)" : "면적(전용)";
+          setDetailAreaValueHTML(Number.isFinite(targetValue) ? formatSingleAreaValue(targetValue, unit) : "-");
+
+          if (detailAreaTypeToggleBtn) {
+            detailAreaTypeToggleBtn.style.display = "inline-flex";
+          }
+          return;
+        }
+
+        const parsed = parseDetachedHouseAreas(raw);
         const targetValue = detailAreaMode === "land" ? parsed.land : parsed.total;
 
         detailAreaLabel.textContent = detailAreaMode === "land" ? "면적(대지)" : "면적(연)";
@@ -6920,7 +6954,16 @@ function closeDetailPanel() {
 
       // cluster 기본 클릭 동작 비활성화: 숫자 뱃지는 custom DOM click만 사용
 
+      kakao.maps.event.addListener(state.map, "dragstart", () => {
+        state.initialRandomListActive = false;
+      });
+
+      kakao.maps.event.addListener(state.map, "zoom_changed", () => {
+        state.initialRandomListActive = false;
+      });
+
       kakao.maps.event.addListener(state.map, "click", async function () {
+        state.initialRandomListActive = false;
         await hideRoadview();
 
         state.selectedClusterKey = null;
@@ -7348,6 +7391,56 @@ function closeDetailPanel() {
       }, 0);
     }
 
+    function isInitialAllListMode() {
+      const keyword = String(keywordInput?.value || "").trim();
+      return !keyword
+        && (!selectedDeal || selectedDeal.size === 0)
+        && (!selectedType || selectedType.size === 0)
+        && state.selectedFeatures.size === 0
+        && !selectedPetOnly
+        && !selectedParkingOnly
+        && !selectedCityGasOnly
+        && !selectedDuplexOnly
+        && !selectedVerandaOnly
+        && !selectedElevatorOnly
+        && !selectedFullOptionOnly
+        && !selectedImmediateMoveInOnly
+        && !selectedOceanViewOnly;
+    }
+
+    function shuffleItems(items) {
+      const list = Array.isArray(items) ? [...items] : [];
+      for (let i = list.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [list[i], list[j]] = [list[j], list[i]];
+      }
+      return list;
+    }
+
+    function getInitialRandomListItems(items, limit = 30) {
+      const source = Array.isArray(items) ? items : [];
+      if (!source.length) return [];
+
+      const normalizedSourceIds = new Set(source.map(item => normalizeItemId(item.id)));
+      const cachedIds = Array.isArray(state.initialRandomListIds)
+        ? state.initialRandomListIds.filter(id => normalizedSourceIds.has(id))
+        : [];
+
+      if (cachedIds.length >= Math.min(limit, source.length)) {
+        return cachedIds
+          .map(id => source.find(item => normalizeItemId(item.id) === id))
+          .filter(Boolean)
+          .slice(0, limit);
+      }
+
+      const picked = shuffleItems(source).slice(0, limit);
+      state.initialRandomListIds = picked.map(item => normalizeItemId(item.id));
+      return picked;
+    }
+
+    state.initialRandomListActive = true;
+    state.initialRandomListIds = [];
+
     function applyFilter() {
       const keyword = String(keywordInput?.value || "").trim().toLowerCase();
       const dealValues = selectedDeal instanceof Set ? selectedDeal : new Set();
@@ -7431,19 +7524,22 @@ function closeDetailPanel() {
       clearListLock();
 
       const viewportItems = getViewportFilteredItems(state.filtered);
+      const listItems = (state.initialRandomListActive !== false && isInitialAllListMode())
+        ? getInitialRandomListItems(state.filtered, 30)
+        : viewportItems;
       scrollListToTop();
-      renderList(viewportItems);
+      renderList(listItems);
       scrollListToTop();
       preventMapViewportChange = true;
       renderMarkers(state.filtered, { preserveViewport: true });
       preventMapViewportChange = false;
-      updateMapEmptyState(viewportItems);
+      updateMapEmptyState(listItems);
 
-      setResultInfo(`총 ${viewportItems.length}건`);
-      setListInfo(`총 ${viewportItems.length}개 매물`);
+      setResultInfo(`총 ${listItems.length}건`);
+      setListInfo(`총 ${listItems.length}개 매물`);
       syncLeftAllButtonToMapFilters();
 
-      if (!viewportItems.length) {
+      if (!listItems.length) {
         closeDetailPanel();
         return;
       }
@@ -7508,7 +7604,10 @@ function closeDetailPanel() {
     }
 
     function initEvents() {
-      if (keywordInput) keywordInput.addEventListener("input", applyFilter);
+      if (keywordInput) keywordInput.addEventListener("input", () => {
+        state.initialRandomListActive = false;
+        applyFilter();
+      });
 
       if (sortLabel) {
         sortLabel.addEventListener("click", () => {
@@ -7520,6 +7619,7 @@ function closeDetailPanel() {
             currentSort = "latest";
           }
 
+          state.initialRandomListActive = false;
           syncSortLabelUI();
           refreshViewportList();
         });
@@ -7927,6 +8027,7 @@ function closeDetailPanel() {
           }
 
           syncMultiFilterButtons(dealButtons, selectedDeal, ["all", "전체"]);
+          state.initialRandomListActive = false;
           resetFilterSelectionState();
           scrollListToTop();
           applyFilter();
@@ -7949,6 +8050,7 @@ function closeDetailPanel() {
           }
 
           syncMultiFilterButtons(typeButtons, selectedType, ["all", "전체"]);
+          state.initialRandomListActive = false;
           resetFilterSelectionState();
           scrollListToTop();
           applyFilter();
@@ -7985,6 +8087,7 @@ function closeDetailPanel() {
             state.selectedFeatures.add(value);
           }
 
+          state.initialRandomListActive = false;
           syncFeatureButtons();
           closeDetailPanel();
           currentDetailItem = null;
