@@ -35,6 +35,9 @@
       --global-topbar-height: var(--topbar-row-height);
       --sub-topbar-height: var(--topbar-row-height);
       --map-control-font-size: 14px;
+      --type-font-size: 17px;
+      --deal-font-size: 15.5px;
+      --auth-font-size: 17px;
       --radius-main: 0px;
       --radius-small: 0px;
       --radius-pill: 0px;
@@ -164,6 +167,209 @@
 
     .detail-share-menu.open {
       display: flex !important;
+    }
+
+    .detail-top-actions {
+      margin-left: auto;
+      min-width: max-content;
+    }
+
+    .detail-auth-trigger {
+      border: 0;
+      background: transparent;
+      color: #6b7280;
+      cursor: pointer;
+      height: 36px;
+      padding: 0 4px 0 10px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: -0.15px;
+      white-space: nowrap;
+    }
+
+    .detail-auth-trigger:hover {
+      color: #374151;
+    }
+
+    .detail-auth-trigger .auth-dot {
+      margin: 0 4px;
+      color: #9ca3af;
+    }
+
+    .detail-top-actions .detail-icon-btn {
+      display: none !important;
+    }
+
+    .auth-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 100000;
+      display: none;
+      align-items: stretch;
+      justify-content: flex-end;
+      background:
+        radial-gradient(circle at 78% 48%, rgba(183, 79, 24, 0.26), transparent 22%),
+        radial-gradient(circle at 12% 16%, rgba(26, 30, 37, 0.85), transparent 28%),
+        linear-gradient(135deg, rgba(17, 24, 39, 0.96) 0%, rgba(25, 34, 59, 0.92) 52%, rgba(73, 92, 119, 0.86) 100%);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    .auth-modal.open {
+      display: flex;
+    }
+
+    .auth-modal-dialog {
+      position: relative;
+      width: min(100%, 420px);
+      min-height: 100%;
+      padding: 28px 26px 34px;
+      color: #fff;
+      background: transparent;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .auth-modal-close {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      width: 44px;
+      height: 44px;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      color: #fff;
+      font-size: 34px;
+      font-weight: 300;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .auth-modal-title {
+      margin: 134px 0 12px;
+      font-size: 32px;
+      font-weight: 800;
+      line-height: 1.28;
+      letter-spacing: -0.9px;
+      white-space: pre-line;
+    }
+
+    .auth-modal-divider {
+      width: 44px;
+      height: 6px;
+      background: #fff;
+      margin-bottom: 42px;
+    }
+
+    .auth-modal-form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .auth-modal-field-label {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.25px;
+      color: #fff;
+    }
+
+    .auth-modal-input {
+      width: 100%;
+      height: 66px;
+      border: 2px solid rgba(255,255,255,0.88);
+      border-radius: 10px;
+      background: rgba(255,255,255,0.02);
+      color: #fff;
+      padding: 0 20px;
+      font-size: 17px;
+      font-weight: 600;
+      outline: none;
+      box-shadow: none;
+    }
+
+    .auth-modal-input::placeholder {
+      color: rgba(255,255,255,0.26);
+      font-weight: 700;
+    }
+
+    .auth-modal-input:focus {
+      border-color: #fff;
+      background: rgba(255,255,255,0.05);
+    }
+
+    .auth-modal-submit {
+      width: 100%;
+      height: 74px;
+      margin-top: 8px;
+      border: 0;
+      border-radius: 8px;
+      background: #ffffff;
+      color: #0f172a;
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      cursor: pointer;
+    }
+
+    .auth-modal-links {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      padding: 18px 10px 0;
+      font-size: 15px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.88);
+      letter-spacing: -0.2px;
+    }
+
+    .auth-modal-links button {
+      border: 0;
+      background: transparent;
+      color: inherit;
+      padding: 0;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .auth-modal-footer {
+      margin-top: auto;
+      padding: 28px 10px 6px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.28px;
+      color: rgba(255,255,255,0.96);
+    }
+
+    .auth-modal-signup {
+      border: 0;
+      background: transparent;
+      color: #facc15;
+      padding: 0;
+      font-size: 19px;
+      font-weight: 800;
+      letter-spacing: -0.25px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    @media (max-width: 480px) {
+      .auth-modal-dialog {
+        width: 100%;
+        padding: 24px 20px 28px;
+      }
+
+      .auth-modal-title {
+        margin-top: 120px;
+        font-size: 28px;
+      }
     }
 
     .detail-share-option {
@@ -725,7 +931,7 @@
       border: 1px solid #e9eef4;
       background: linear-gradient(180deg, #ffffff, #fafcff);
       padding: 16px;
-      margin-bottom: 18px;
+      margin-bottom: 16px;
       box-shadow: 0 6px 18px rgba(15, 41, 66, 0.04);
     }
 
@@ -1246,10 +1452,41 @@
 
 
     .global-topbar-right {
-      display: inline-flex;
+      position: absolute;
+      right: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: inline-flex !important;
       align-items: center;
       gap: 10px;
       justify-self: end;
+      z-index: 5;
+    }
+
+    .global-auth-trigger {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 38px;
+      border: 0;
+      background: transparent;
+      color: #111827;
+      padding: 0;
+      font-size: var(--auth-font-size);
+      font-weight: 700;
+      letter-spacing: -0.18px;
+      line-height: 1;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .global-auth-trigger:hover {
+      color: #111827;
+    }
+
+    .global-auth-trigger .auth-dot {
+      margin: 0 4px;
+      color: #6b7280;
     }
 
     .global-sort-chip {
@@ -1434,8 +1671,7 @@
     .panel.search-box,
     .search-box,
     .feature-buttons,
-    .list-head,
-    .global-topbar-right {
+    .list-head {
       display: none !important;
     }
 
@@ -1977,7 +2213,7 @@
       border: 0;
       border-radius: 0;
       padding: 8px 12px;
-      font-size: 14px;
+      font-size: var(--type-font-size);
       letter-spacing: -0.1px;
       font-weight: 900;
       background: #eef3f7;
@@ -1992,6 +2228,10 @@
       background: rgba(3, 199, 90, 0.9);
       color: #fff;
       box-shadow: 0 8px 18px rgba(3, 199, 90, 0.22);
+    }
+
+    .deal-buttons button {
+      font-size: var(--deal-font-size);
     }
 
     .map-result-count {
@@ -4023,8 +4263,7 @@ body.sidebar-list-collapsed .map-side-tools{
   }
 }
 
-
-    /* v1.823: list stays square, top controls softly rounded */
+    /* v1.834: list stays square, top controls softly rounded */
     .deal-buttons button,
     .type-buttons button {
       border-radius: 10px !important;
@@ -4042,9 +4281,7 @@ body.sidebar-list-collapsed .map-side-tools{
       border-radius: 100px !important;
     }
 
-
-
-    /* v1.823: top filter buttons - pill shape, no shadow */
+    /* v1.834: top filter buttons - pill shape, no shadow */
     .deal-buttons button,
     .type-buttons button {
       border-radius: 999px !important;
@@ -4057,13 +4294,181 @@ body.sidebar-list-collapsed .map-side-tools{
       box-shadow: none !important;
     }
 
-
 /* ===== FORCE BRAND COLOR ===== */
 .global-brand,
 .global-brand i,
 .global-brand .brand-name,
 .global-brand .brand-version {
   color: var(--brand) !important;
+}
+
+/* ===== TOPBAR/SUBTOPBAR EXACT RULES: 매물유형 + 거래유형 동일 이동 규칙 ===== */
+:root {
+  --topbar-logo-stop-x: 130px;      /* 로고 오른쪽 정지 지점 */
+  --topbar-type-width: 920px;       /* 매물유형 전체 폭 기준 */
+  --topbar-auth-gap: 90px;          /* 매물유형과 로그인 사이 간격 */
+  --subtopbar-deal-width: 590px;    /* 거래유형 전체 폭 기준 */
+}
+
+/* 로고는 기존 위치 고정 */
+.global-topbar-left {
+  left: 22px !important;
+  right: auto !important;
+}
+
+/* 매물유형: 가운데 정렬 → 창 축소 시 왼쪽 이동 → 로고 앞에서 정지 */
+.global-topbar-menu {
+  position: absolute !important;
+  top: 50% !important;
+  left: max(var(--topbar-logo-stop-x), calc(50vw - (var(--topbar-type-width) / 2))) !important;
+  right: auto !important;
+  transform: translateY(-50%) !important;
+  width: var(--topbar-type-width) !important;
+  max-width: none !important;
+  min-width: var(--topbar-type-width) !important;
+  overflow: visible !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 2 !important;
+}
+
+.global-topbar .map-filter-bar {
+  width: max-content !important;
+  min-width: max-content !important;
+  max-width: none !important;
+  overflow: visible !important;
+  flex: 0 0 auto !important;
+}
+
+.global-topbar .type-buttons {
+  width: max-content !important;
+  min-width: max-content !important;
+  flex: 0 0 auto !important;
+  flex-wrap: nowrap !important;
+  overflow: visible !important;
+}
+
+.global-topbar .type-buttons button,
+.global-topbar .type-buttons button span {
+  font-size: var(--type-font-size) !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+}
+
+/* 회원가입·로그인: 매물유형 오른쪽 + 50px, 창 축소 시 오른쪽에서 덮임 */
+.global-topbar-right {
+  position: absolute !important;
+  top: 50% !important;
+  left: calc(max(var(--topbar-logo-stop-x), calc(50vw - (var(--topbar-type-width) / 2))) + var(--topbar-type-width) + var(--topbar-auth-gap)) !important;
+  right: auto !important;
+  transform: translateY(-50%) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  white-space: nowrap !important;
+  z-index: 5 !important;
+}
+
+.global-auth-trigger {
+  font-size: var(--auth-font-size) !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+}
+
+/* 거래유형: 매물유형과 같은 방식으로 가운데 → 왼쪽 이동 → 로고 앞 정지 */
+.sub-topbar-right {
+  position: absolute !important;
+  top: 50% !important;
+  left: max(var(--topbar-logo-stop-x), calc(50vw - (var(--subtopbar-deal-width) / 2))) !important;
+  right: auto !important;
+  transform: translateY(-50%) !important;
+  width: var(--subtopbar-deal-width) !important;
+  max-width: none !important;
+  min-width: var(--subtopbar-deal-width) !important;
+  overflow: visible !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 2 !important;
+}
+
+.sub-topbar .map-filter-bar {
+  width: max-content !important;
+  min-width: max-content !important;
+  max-width: none !important;
+  overflow: visible !important;
+  flex: 0 0 auto !important;
+}
+
+.sub-topbar .deal-buttons {
+  width: max-content !important;
+  min-width: max-content !important;
+  flex: 0 0 auto !important;
+  flex-wrap: nowrap !important;
+  overflow: visible !important;
+}
+
+.sub-topbar .deal-buttons button,
+.sub-topbar .deal-buttons button span {
+  font-size: var(--deal-font-size) !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+}
+
+/* 로고 글자 크기 유지 */
+.global-brand,
+.global-brand .brand-name {
+  font-size: var(--topbar-logo-font-size, 20px) !important;
+}
+
+
+/* Ver 1.834 표시: 하단바 왼쪽 고정 */
+.sub-version-fixed {
+  position: absolute !important;
+  left: 22px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+  z-index: 10 !important;
+  font-size: 13px !important;
+  font-weight: 555 !important;
+  color: var(--brand) !important;
+  opacity: 0.72 !important;
+}
+
+
+/* Ver 표시 회색 고정 */
+.sub-version-fixed {
+  color: #6b7280 !important;
+  opacity: 1 !important;
+}
+
+/* 회원가입 로그인: 오른쪽 정렬, 매물유형 오른쪽 50px 경계 안쪽으로 침범 금지 */
+.global-topbar-right {
+  position: absolute !important;
+  top: 50% !important;
+  left: calc(max(var(--topbar-logo-stop-x), calc(50vw - (var(--topbar-type-width) / 2))) + var(--topbar-type-width) + 50px) !important;
+  right: 18px !important;
+  transform: translateY(-50%) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  text-align: right !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  min-width: 0 !important;
+  z-index: 5 !important;
+}
+
+.global-auth-trigger {
+  margin-left: auto !important;
+  white-space: nowrap !important;
+  flex: 0 0 auto !important;
+  text-align: right !important;
 }
 
 </style>
@@ -4088,18 +4493,24 @@ body.sidebar-list-collapsed .map-side-tools{
           </div>
         </div>
       </div>
+
+      <div class="global-topbar-right">
+        <button type="button" class="global-auth-trigger" id="detailAuthTrigger">
+          <span>회원가입</span><span class="auth-dot">·</span><span>로그인</span>
+        </button>
+      </div>
     </div>
   </header>
 
   <div class="sub-topbar">
     <div class="sub-topbar-inner">
+      <span class="sub-version-fixed">Ver 1.834</span>
       <div class="sub-topbar-left">
         <strong id="listInfoText">총 0개 매물</strong>
         <span id="sortLabel" class="sort sort-latest" title="최신 등록순">최신순</span>
       </div>
 
       <div class="sub-topbar-right">
-        <span class="sub-topbar-inline-version">Ver 1.823</span>
         <div class="map-filter-bar">
           <div class="deal-buttons" id="dealButtons">
             <button type="button" data-value="전체">전체</button>
@@ -4439,6 +4850,40 @@ body.sidebar-list-collapsed .map-side-tools{
 
 </script>
 
+
+    <div class="auth-modal" id="authModal" aria-hidden="true">
+      <div class="auth-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
+        <button type="button" class="auth-modal-close" id="authModalClose" aria-label="닫기">×</button>
+        <h2 class="auth-modal-title" id="authModalTitle">우리동네 부동산
+디스코</h2>
+        <div class="auth-modal-divider"></div>
+
+        <form class="auth-modal-form" id="authModalForm">
+          <div class="auth-modal-field">
+            <label class="auth-modal-field-label" for="authEmailInput">이메일</label>
+            <input type="email" class="auth-modal-input" id="authEmailInput" placeholder="이메일을 입력해주세요." />
+          </div>
+
+          <div class="auth-modal-field">
+            <label class="auth-modal-field-label" for="authPasswordInput">비밀번호</label>
+            <input type="password" class="auth-modal-input" id="authPasswordInput" placeholder="비밀번호를 입력해주세요." />
+          </div>
+
+          <button type="submit" class="auth-modal-submit">로그인</button>
+        </form>
+
+        <div class="auth-modal-links">
+          <button type="button">아이디 찾기</button>
+          <button type="button">비밀번호 찾기</button>
+        </div>
+
+        <div class="auth-modal-footer">
+          <span>* 아직 디스코에 계정이 없으신가요?</span>
+          <button type="button" class="auth-modal-signup">회원가입</button>
+        </div>
+      </div>
+    </div>
+
   <script>
     const UI_FONT_STACK = 'Inter, Pretendard, Noto Sans KR, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif';
     //const BADGE_BASE_HEX = '#3B82F6'; // 제주코발트블루
@@ -4455,17 +4900,17 @@ body.sidebar-list-collapsed .map-side-tools{
       return `rgba(${r}, ${g}, ${b}, ${alpha})`;
     }
     const APP_NAME = "REALJEJU.APP";
-    const APP_VERSION = "1.823";
+    const APP_VERSION = "1.834";
 
     function applyAppVersion() {
       const fullVersionText = `${APP_NAME} Ver ${APP_VERSION}`;
-      document.title = fullVersionText;
+      document.title = APP_NAME;
 
       const ogTitleMeta = document.getElementById("ogTitleMeta");
-      if (ogTitleMeta) ogTitleMeta.setAttribute("content", fullVersionText);
+      if (ogTitleMeta) ogTitleMeta.setAttribute("content", APP_NAME);
 
       const ogDescriptionMeta = document.getElementById("ogDescriptionMeta");
-      if (ogDescriptionMeta) ogDescriptionMeta.setAttribute("content", fullVersionText);
+      if (ogDescriptionMeta) ogDescriptionMeta.setAttribute("content", APP_NAME);
     }
 
     applyAppVersion();
@@ -4762,6 +5207,10 @@ body.sidebar-list-collapsed .map-side-tools{
     const detailCallBtn = document.getElementById("detailCallBtn");
     const detailShareBtn = document.getElementById("detailShareBtn");
     const detailShareMenu = document.getElementById("detailShareMenu");
+    const detailAuthTrigger = document.getElementById("detailAuthTrigger");
+    const authModal = document.getElementById("authModal");
+    const authModalClose = document.getElementById("authModalClose");
+    const authModalForm = document.getElementById("authModalForm");
     const detailShareKakaoBtn = document.getElementById("detailShareKakaoBtn");
     const detailCopyLinkBtn = document.getElementById("detailCopyLinkBtn");
     const detailAreaValue = document.getElementById("detailAreaValue");
@@ -4813,6 +5262,20 @@ body.sidebar-list-collapsed .map-side-tools{
       el.style.background = theme.bg;
       el.style.color = theme.color;
       el.style.boxShadow = "inset 0 0 0 1px rgba(15, 41, 66, 0.06)";
+    }
+
+    function openAuthModal() {
+      if (!authModal) return;
+      authModal.classList.add("open");
+      authModal.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeAuthModal() {
+      if (!authModal) return;
+      authModal.classList.remove("open");
+      authModal.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
     }
 
     function syncSummaryBadgeRow() {
@@ -7650,8 +8113,21 @@ function closeDetailPanel() {
 
           const typeText = currentDetailItem.type || "";
 
-          if (isDetachedHouseType(typeText) || isCommercialType(typeText)) {
+          if (isDetachedHouseType(typeText)) {
             detailAreaMode = detailAreaMode === "land" ? "total" : "land";
+            syncDetailAreaDisplay(currentDetailItem);
+            return;
+          }
+
+          if (isCommercialType(typeText)) {
+            const raw = String(currentDetailItem.area || "").trim();
+
+            if (/계약|전용/.test(raw)) {
+              detailAreaMode = detailAreaMode === "supply" ? "private" : "supply";
+            } else {
+              detailAreaMode = detailAreaMode === "land" ? "total" : "land";
+            }
+
             syncDetailAreaDisplay(currentDetailItem);
             return;
           }
@@ -8329,3 +8805,16 @@ function closeDetailPanel() {
 
 </body>
 </html>
+
+/* login visibility fix */
+
+.detail-auth-trigger {
+  position: absolute !important;
+  right: 16px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  color: #111 !important;
+  font-weight: 700 !important;
+  z-index: 9999 !important;
+  display: inline-flex !important;
+}
