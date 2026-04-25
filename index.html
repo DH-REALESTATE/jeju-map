@@ -4553,7 +4553,7 @@ body.sidebar-list-collapsed .map-side-tools{
 }
 
 
-    /* v1.839: list stays square, top controls softly rounded */
+    /* v1.840: list stays square, top controls softly rounded */
     .deal-buttons button,
     .type-buttons button {
       border-radius: 10px !important;
@@ -4573,7 +4573,7 @@ body.sidebar-list-collapsed .map-side-tools{
 
 
 
-    /* v1.839: top filter buttons - pill shape, no shadow */
+    /* v1.840: top filter buttons - pill shape, no shadow */
     .deal-buttons button,
     .type-buttons button {
       border-radius: 999px !important;
@@ -4724,7 +4724,7 @@ body.sidebar-list-collapsed .map-side-tools{
 }
 
 
-/* Ver 1.839 표시: 하단바 왼쪽 고정 */
+/* Ver 1.840 표시: 하단바 왼쪽 고정 */
 .sub-version-fixed {
   position: absolute !important;
   left: 22px !important;
@@ -4805,7 +4805,7 @@ body.sidebar-list-collapsed .map-side-tools{
 
   <div class="sub-topbar">
     <div class="sub-topbar-inner">
-      <span class="sub-version-fixed">Ver 1.839</span>
+      <span class="sub-version-fixed">Ver 1.840</span>
       <div class="sub-topbar-left">
         <strong id="listInfoText">총 0개 매물</strong>
         <span id="sortLabel" class="sort sort-latest" title="최신 등록순">최신순</span>
@@ -5207,12 +5207,16 @@ body.sidebar-list-collapsed .map-side-tools{
               </button>
             </div>
 
-            <label class="auth-terms-item">
-              <input type="checkbox" class="auth-term-check" data-required="true" />
-              <span class="auth-terms-checkbox">✓</span>
-              <span class="auth-terms-text"><span class="auth-terms-highlight">위치기반 서비스 이용약관 동의</span> (필수)</span>
-              <span class="auth-terms-arrow">›</span>
-            </label>
+            <div class="auth-terms-item">
+              <label class="auth-terms-check-zone" aria-label="위치기반 서비스 이용약관 동의 체크">
+                <input type="checkbox" class="auth-term-check" data-required="true" data-term="location" />
+                <span class="auth-terms-checkbox">✓</span>
+              </label>
+              <button type="button" class="auth-terms-open-zone auth-terms-open" data-terms-key="location">
+                <span class="auth-terms-text"><span class="auth-terms-highlight">위치기반 서비스 이용약관 동의</span> (필수)</span>
+                <span class="auth-terms-arrow">›</span>
+              </button>
+            </div>
 
             <label class="auth-terms-item">
               <input type="checkbox" class="auth-term-check" data-required="true" />
@@ -5266,7 +5270,7 @@ body.sidebar-list-collapsed .map-side-tools{
       return `rgba(${r}, ${g}, ${b}, ${alpha})`;
     }
     const APP_NAME = "REALJEJU.APP";
-    const APP_VERSION = "1.839";
+    const APP_VERSION = "1.840";
 
     function applyAppVersion() {
       const fullVersionText = `${APP_NAME} Ver ${APP_VERSION}`;
@@ -5670,9 +5674,15 @@ body.sidebar-list-collapsed .map-side-tools{
 
 
     const TERMS_JSON_URLS = {
-      service: "https://realjeju.app/terms/terms_of_service.json"
+      service: "https://realjeju.app/terms/terms_of_service.json",
+      location: "https://realjeju.app/terms/terms_location_service.json"
     };
     let currentTermsKey = null;
+    const TERMS_HEADER_TITLES = {
+      service: "서비스 이용약관",
+      location: "위치기반 서비스 이용약관",
+      privacy: "개인정보처리방침"
+    };
 
     function escapeTermsHtml(value) {
       return String(value == null ? "" : value)
@@ -5731,8 +5741,9 @@ body.sidebar-list-collapsed .map-side-tools{
       termsFullPage.classList.add("open");
       termsFullPage.setAttribute("aria-hidden", "false");
       if (termsFullBody) termsFullBody.scrollTop = 0;
-      if (termsFullHeaderTitle) termsFullHeaderTitle.textContent = "서비스 이용약관";
-      if (termsFullMainTitle) termsFullMainTitle.textContent = "리얼제주 서비스 이용약관";
+      const fallbackHeaderTitle = TERMS_HEADER_TITLES[key] || "약관";
+      if (termsFullHeaderTitle) termsFullHeaderTitle.textContent = fallbackHeaderTitle;
+      if (termsFullMainTitle) termsFullMainTitle.textContent = fallbackHeaderTitle;
       termsFullContent.innerHTML = "<div class=\"terms-full-loading\">약관을 불러오는 중입니다.</div>";
       document.body.style.overflow = "hidden";
       try {
@@ -5740,8 +5751,8 @@ body.sidebar-list-collapsed .map-side-tools{
         if (!res.ok) throw new Error("HTTP " + res.status);
         const data = await res.json();
         const term = normalizeTermsData(data, key);
-        const title = (term && term.title) || "리얼제주 서비스 이용약관";
-        if (termsFullHeaderTitle) termsFullHeaderTitle.textContent = "서비스 이용약관";
+        const title = (term && term.title) || fallbackHeaderTitle;
+        if (termsFullHeaderTitle) termsFullHeaderTitle.textContent = fallbackHeaderTitle;
         if (termsFullMainTitle) termsFullMainTitle.textContent = title;
         termsFullContent.innerHTML = renderTermsFullHtml(term);
         if (termsFullBody) termsFullBody.scrollTop = 0;
