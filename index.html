@@ -4553,7 +4553,7 @@ body.sidebar-list-collapsed .map-side-tools{
 }
 
 
-    /* v1.840: list stays square, top controls softly rounded */
+    /* v1.841: list stays square, top controls softly rounded */
     .deal-buttons button,
     .type-buttons button {
       border-radius: 10px !important;
@@ -4573,7 +4573,7 @@ body.sidebar-list-collapsed .map-side-tools{
 
 
 
-    /* v1.840: top filter buttons - pill shape, no shadow */
+    /* v1.841: top filter buttons - pill shape, no shadow */
     .deal-buttons button,
     .type-buttons button {
       border-radius: 999px !important;
@@ -4724,7 +4724,7 @@ body.sidebar-list-collapsed .map-side-tools{
 }
 
 
-/* Ver 1.840 표시: 하단바 왼쪽 고정 */
+/* Ver 1.841 표시: 하단바 왼쪽 고정 */
 .sub-version-fixed {
   position: absolute !important;
   left: 22px !important;
@@ -4805,7 +4805,7 @@ body.sidebar-list-collapsed .map-side-tools{
 
   <div class="sub-topbar">
     <div class="sub-topbar-inner">
-      <span class="sub-version-fixed">Ver 1.840</span>
+      <span class="sub-version-fixed">Ver 1.841</span>
       <div class="sub-topbar-left">
         <strong id="listInfoText">총 0개 매물</strong>
         <span id="sortLabel" class="sort sort-latest" title="최신 등록순">최신순</span>
@@ -5218,12 +5218,16 @@ body.sidebar-list-collapsed .map-side-tools{
               </button>
             </div>
 
-            <label class="auth-terms-item">
-              <input type="checkbox" class="auth-term-check" data-required="true" />
-              <span class="auth-terms-checkbox">✓</span>
-              <span class="auth-terms-text"><span class="auth-terms-highlight">개인정보처리방침 동의</span> (필수)</span>
-              <span class="auth-terms-arrow">›</span>
-            </label>
+            <div class="auth-terms-item">
+              <label class="auth-terms-check-zone" aria-label="개인정보처리방침 동의 체크">
+                <input type="checkbox" class="auth-term-check" data-required="true" data-term="privacy" />
+                <span class="auth-terms-checkbox">✓</span>
+              </label>
+              <button type="button" class="auth-terms-open-zone auth-terms-open" data-terms-key="privacy">
+                <span class="auth-terms-text"><span class="auth-terms-highlight">개인정보처리방침 동의</span> (필수)</span>
+                <span class="auth-terms-arrow">›</span>
+              </button>
+            </div>
 
             <label class="auth-terms-item">
               <input type="checkbox" class="auth-term-check" data-required="true" />
@@ -5270,7 +5274,7 @@ body.sidebar-list-collapsed .map-side-tools{
       return `rgba(${r}, ${g}, ${b}, ${alpha})`;
     }
     const APP_NAME = "REALJEJU.APP";
-    const APP_VERSION = "1.840";
+    const APP_VERSION = "1.841";
 
     function applyAppVersion() {
       const fullVersionText = `${APP_NAME} Ver ${APP_VERSION}`;
@@ -5675,7 +5679,8 @@ body.sidebar-list-collapsed .map-side-tools{
 
     const TERMS_JSON_URLS = {
       service: "https://realjeju.app/terms/terms_of_service.json",
-      location: "https://realjeju.app/terms/terms_location_service.json"
+      location: "https://realjeju.app/terms/terms_location_service.json",
+      privacy: "https://realjeju.app/terms/privacy_policy.json"
     };
     let currentTermsKey = null;
     const TERMS_HEADER_TITLES = {
@@ -5712,14 +5717,14 @@ body.sidebar-list-collapsed .map-side-tools{
           if (Array.isArray(content)) {
             content.forEach((line) => { html += "<p>" + escapeTermsHtml(line) + "</p>"; });
           } else if (content != null) {
-            html += "<p>" + escapeTermsHtml(content) + "</p>";
+            html += "<p>" + escapeTermsHtml(content).replace(/\n/g, "<br>") + "</p>";
           }
         });
         if (!articles.length && section && section.content) {
           if (Array.isArray(section.content)) {
             section.content.forEach((line) => { html += "<p>" + escapeTermsHtml(line) + "</p>"; });
           } else {
-            html += "<p>" + escapeTermsHtml(section.content) + "</p>";
+            html += "<p>" + escapeTermsHtml(section.content).replace(/\n/g, "<br>") + "</p>";
           }
         }
       });
@@ -5727,7 +5732,7 @@ body.sidebar-list-collapsed .map-side-tools{
         if (Array.isArray(term.content)) {
           term.content.forEach((line) => { html += "<p>" + escapeTermsHtml(line) + "</p>"; });
         } else {
-          html = "<p>" + escapeTermsHtml(term.content) + "</p>";
+          html = "<p>" + escapeTermsHtml(term.content).replace(/\n/g, "<br>") + "</p>";
         }
       }
       return html || "<p>약관 내용을 불러오지 못했습니다.</p>";
