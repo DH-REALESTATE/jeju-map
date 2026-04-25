@@ -35,9 +35,9 @@
       --global-topbar-height: var(--topbar-row-height);
       --sub-topbar-height: var(--topbar-row-height);
       --map-control-font-size: 14px;
-      --type-font-size: 17px;
-      --deal-font-size: 15.5px;
-      --auth-font-size: 17px;
+      --type-font-size: 17.5px;
+      --deal-font-size: 16px;
+      --auth-font-size: 17.5px;
       --radius-main: 0px;
       --radius-small: 0px;
       --radius-pill: 0px;
@@ -205,12 +205,13 @@
       inset: 0;
       z-index: 100000;
       display: none;
-      align-items: stretch;
-      justify-content: flex-end;
+      align-items: center;
+      justify-content: center;
+      padding: 32px;
       background:
-        radial-gradient(circle at 78% 48%, rgba(183, 79, 24, 0.26), transparent 22%),
-        radial-gradient(circle at 12% 16%, rgba(26, 30, 37, 0.85), transparent 28%),
-        linear-gradient(135deg, rgba(17, 24, 39, 0.96) 0%, rgba(25, 34, 59, 0.92) 52%, rgba(73, 92, 119, 0.86) 100%);
+        radial-gradient(circle at 78% 48%, rgba(183, 79, 24, 0.22), transparent 22%),
+        radial-gradient(circle at 12% 16%, rgba(26, 30, 37, 0.82), transparent 28%),
+        linear-gradient(135deg, rgba(17, 24, 39, 0.92) 0%, rgba(25, 34, 59, 0.88) 52%, rgba(73, 92, 119, 0.82) 100%);
       backdrop-filter: blur(18px);
       -webkit-backdrop-filter: blur(18px);
     }
@@ -221,11 +222,17 @@
 
     .auth-modal-dialog {
       position: relative;
-      width: min(100%, 420px);
-      min-height: 100%;
-      padding: 28px 26px 34px;
+      width: 480px;
+      height: 690px;
+      display: flex;
+      flex-direction: column;
+      padding: 56px 52px 42px;
       color: #fff;
-      background: transparent;
+      background: rgba(15, 23, 42, 0.72);
+      border: 1px solid rgba(255,255,255,0.06);
+      box-shadow: 0 24px 70px rgba(0,0,0,0.34);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
       display: flex;
       flex-direction: column;
     }
@@ -247,7 +254,7 @@
     }
 
     .auth-modal-title {
-      margin: 134px 0 12px;
+      margin: 34px 0 12px;
       font-size: 32px;
       font-weight: 800;
       line-height: 1.28;
@@ -257,9 +264,10 @@
 
     .auth-modal-divider {
       width: 44px;
-      height: 6px;
+      height: 4px;
       background: #fff;
-      margin-bottom: 42px;
+      margin-top: 20px;
+      margin-bottom: 34px;
     }
 
     .auth-modal-form {
@@ -271,7 +279,7 @@
     .auth-modal-field-label {
       display: block;
       margin-bottom: 10px;
-      font-size: 17px;
+      font-size: 18px;
       font-weight: 700;
       letter-spacing: -0.25px;
       color: #fff;
@@ -285,7 +293,7 @@
       background: rgba(255,255,255,0.02);
       color: #fff;
       padding: 0 20px;
-      font-size: 17px;
+      font-size: 18px;
       font-weight: 600;
       outline: none;
       box-shadow: none;
@@ -303,24 +311,24 @@
 
     .auth-modal-submit {
       width: 100%;
-      height: 74px;
+      height: 58px;
       margin-top: 8px;
       border: 0;
-      border-radius: 8px;
+      border-radius: 4px;
       background: #ffffff;
       color: #0f172a;
-      font-size: 24px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: 4px;
       cursor: pointer;
     }
 
     .auth-modal-links {
       display: flex;
       align-items: center;
-      gap: 22px;
-      padding: 18px 10px 0;
-      font-size: 15px;
+      gap: 24px;
+      padding: 18px 0px 0;
+      font-size: 15.5px;
       font-weight: 700;
       color: rgba(255,255,255,0.88);
       letter-spacing: -0.2px;
@@ -336,14 +344,14 @@
     }
 
     .auth-modal-footer {
-      margin-top: auto;
-      padding: 28px 10px 6px;
+      margin-top: 38px;
+      padding: 0 0px 0;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 16px;
-      font-size: 17px;
-      font-weight: 700;
+      font-size: 19px;
+      font-weight: 800;
       letter-spacing: -0.28px;
       color: rgba(255,255,255,0.96);
     }
@@ -354,20 +362,301 @@
       color: #facc15;
       padding: 0;
       font-size: 19px;
-      font-weight: 800;
+      font-weight: 900;
       letter-spacing: -0.25px;
       cursor: pointer;
       white-space: nowrap;
     }
 
+    .auth-login-screen,
+    .auth-signup-terms-screen {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+
+    .auth-screen-hidden {
+      display: none !important;
+    }
+
+    .auth-terms-all-btn {
+      width: 100%;
+      min-height: 62px;
+      margin: 8px 0 34px;
+      border: 2px solid rgba(255,255,255,0.9);
+      border-radius: 6px;
+      background: rgba(255,255,255,0.03);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 22px;
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: -0.6px;
+      cursor: pointer;
+    }
+
+    .auth-terms-all-btn .auth-check-icon {
+      font-size: 32px;
+      line-height: 1;
+      font-weight: 400;
+    }
+
+    .auth-terms-list {
+      display: flex;
+      flex-direction: column;
+      gap: 17.5px;
+      margin-bottom: 38px;
+    }
+
+    .auth-terms-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      width: 100%;
+      min-height: 18px;
+      color: #fff;
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.6px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .auth-terms-check-zone {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+      cursor: pointer;
+    }
+
+    .auth-terms-open-zone {
+      flex: 1 1 auto;
+      min-width: 0;
+      border: 0;
+      background: transparent;
+      color: inherit;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .auth-terms-item input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .auth-terms-checkbox {
+      width: 24px;
+      height: 24px;
+      border: 2px solid rgba(255,255,255,0.92);
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+      color: transparent;
+      font-size: 22px;
+      line-height: 0.6;
+    }
+
+    .auth-terms-item input:checked + .auth-terms-checkbox {
+      color: #fff;
+    }
+
+    .auth-terms-text {
+      flex: 1 1 auto;
+      min-width: 0;
+      line-height: 1.25;
+    }
+
+    .auth-terms-highlight {
+      color: #facc15;
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .auth-terms-arrow {
+      margin-left: auto;
+      color: #fff;
+      font-size: 34px;
+      font-weight: 300;
+      line-height: 1;
+    }
+
+    .auth-terms-next {
+      width: 100%;
+      height: 58px;
+      border: 0;
+      border-radius: 6px;
+      background: #fff;
+      color: #9ca3af;
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      cursor: not-allowed;
+      opacity: 0.96;
+    }
+
+    .auth-terms-next.enabled {
+      color: #0f172a;
+      cursor: pointer;
+    }
+
+    .auth-signup-footer {
+      margin-top: 38px;
+      padding: 0 0px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      color: rgba(255,255,255,0.96);
+      font-size: 19px;
+      font-weight: 800;
+      letter-spacing: -0.6px;
+    }
+
+    .auth-login-switch {
+      border: 0;
+      background: transparent;
+      color: #facc15;
+      padding: 0;
+      font-size: 19px;
+      font-weight: 900;
+      letter-spacing: -0.4px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+
+
+    /* ===== Terms full page overlay ===== */
+    .terms-full-page {
+      position: fixed;
+      inset: 0;
+      z-index: 300000;
+      display: none;
+      background: #f7f7f7;
+      color: #111827;
+    }
+
+    .terms-full-page.open {
+      display: block;
+    }
+
+    .terms-full-header {
+      position: sticky;
+      top: 0;
+      height: 56px;
+      background: #ffffff;
+      border-bottom: 1px solid #eef2f6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+    }
+
+    .terms-full-title {
+      font-size: 18px;
+      font-weight: 900;
+      color: #111827;
+      letter-spacing: -0.35px;
+    }
+
+    .terms-full-close {
+      position: absolute;
+      right: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 44px;
+      height: 44px;
+      border: 0;
+      background: transparent;
+      color: #111827;
+      font-size: 38px;
+      font-weight: 300;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .terms-full-body {
+      height: calc(100vh - 56px);
+      overflow-y: auto;
+      padding: 42px 28px 90px;
+      font-size: 16px;
+      line-height: 1.8;
+      background: #f7f7f7;
+    }
+
+    .terms-full-main-title {
+      margin: 0 0 52px;
+      font-size: 26px;
+      font-weight: 900;
+      line-height: 1.35;
+      color: #111827;
+      letter-spacing: -0.45px;
+    }
+
+    .terms-full-body h2 {
+      margin: 54px 0 30px;
+      font-size: 24px;
+      font-weight: 900;
+      line-height: 1.35;
+      color: #111827;
+      letter-spacing: -0.4px;
+    }
+
+    .terms-full-body h3 {
+      margin: 38px 0 16px;
+      font-size: 18px;
+      font-weight: 900;
+      line-height: 1.45;
+      color: #111827;
+      letter-spacing: -0.25px;
+    }
+
+    .terms-full-body p {
+      margin: 0 0 12px;
+      color: #111827;
+      font-size: 16px;
+      line-height: 1.8;
+      letter-spacing: -0.2px;
+      white-space: pre-wrap;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+    }
+
+    .terms-full-loading,
+    .terms-full-error {
+      font-size: 16px;
+      font-weight: 800;
+      color: #374151;
+    }
+
+    .auth-terms-open {
+      cursor: pointer;
+    }
+
     @media (max-width: 480px) {
+      .auth-modal {
+        padding: 18px;
+      }
+
       .auth-modal-dialog {
         width: 100%;
-        padding: 24px 20px 28px;
+        padding: 44px 24px 34px;
       }
 
       .auth-modal-title {
-        margin-top: 120px;
+        margin-top: 28px;
         font-size: 28px;
       }
     }
@@ -1316,12 +1605,12 @@
     .extra-filter-option {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       min-height: 36px;
       padding: 0 10px;
       border-radius: 0;
       color: #334155;
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 600;
       letter-spacing: -0.1px;
       cursor: pointer;
@@ -1342,7 +1631,7 @@
     }
 
     .extra-filter-option span {
-      line-height: 1.2;
+      line-height: 0.8;
     }
 
     .extra-filter-reset-row {
@@ -3260,7 +3549,7 @@
 }
 
 .card-spec {
-  font-size: 13px;
+  font-size: 19px;
   line-height: 1.5;
   margin-bottom: 10px;
   color: #64748b;
@@ -4263,7 +4552,8 @@ body.sidebar-list-collapsed .map-side-tools{
   }
 }
 
-    /* v1.834: list stays square, top controls softly rounded */
+
+    /* v1.839: list stays square, top controls softly rounded */
     .deal-buttons button,
     .type-buttons button {
       border-radius: 10px !important;
@@ -4281,7 +4571,9 @@ body.sidebar-list-collapsed .map-side-tools{
       border-radius: 100px !important;
     }
 
-    /* v1.834: top filter buttons - pill shape, no shadow */
+
+
+    /* v1.839: top filter buttons - pill shape, no shadow */
     .deal-buttons button,
     .type-buttons button {
       border-radius: 999px !important;
@@ -4294,6 +4586,7 @@ body.sidebar-list-collapsed .map-side-tools{
       box-shadow: none !important;
     }
 
+
 /* ===== FORCE BRAND COLOR ===== */
 .global-brand,
 .global-brand i,
@@ -4302,12 +4595,20 @@ body.sidebar-list-collapsed .map-side-tools{
   color: var(--brand) !important;
 }
 
+
+
+
+
+
+
+
+
 /* ===== TOPBAR/SUBTOPBAR EXACT RULES: 매물유형 + 거래유형 동일 이동 규칙 ===== */
 :root {
-  --topbar-logo-stop-x: 130px;      /* 로고 오른쪽 정지 지점 */
-  --topbar-type-width: 920px;       /* 매물유형 전체 폭 기준 */
-  --topbar-auth-gap: 90px;          /* 매물유형과 로그인 사이 간격 */
-  --subtopbar-deal-width: 590px;    /* 거래유형 전체 폭 기준 */
+  --topbar-logo-stop-x: 210px;      /* 로고 오른쪽 정지 지점 */
+  --topbar-type-width: 780px;       /* 매물유형 전체 폭 기준 */
+  --topbar-auth-gap: 50px;          /* 매물유형과 로그인 사이 간격 */
+  --subtopbar-deal-width: 360px;    /* 거래유형 전체 폭 기준 */
 }
 
 /* 로고는 기존 위치 고정 */
@@ -4423,7 +4724,7 @@ body.sidebar-list-collapsed .map-side-tools{
 }
 
 
-/* Ver 1.834 표시: 하단바 왼쪽 고정 */
+/* Ver 1.839 표시: 하단바 왼쪽 고정 */
 .sub-version-fixed {
   position: absolute !important;
   left: 22px !important;
@@ -4504,7 +4805,7 @@ body.sidebar-list-collapsed .map-side-tools{
 
   <div class="sub-topbar">
     <div class="sub-topbar-inner">
-      <span class="sub-version-fixed">Ver 1.834</span>
+      <span class="sub-version-fixed">Ver 1.839</span>
       <div class="sub-topbar-left">
         <strong id="listInfoText">총 0개 매물</strong>
         <span id="sortLabel" class="sort sort-latest" title="최신 등록순">최신순</span>
@@ -4854,33 +5155,98 @@ body.sidebar-list-collapsed .map-side-tools{
     <div class="auth-modal" id="authModal" aria-hidden="true">
       <div class="auth-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
         <button type="button" class="auth-modal-close" id="authModalClose" aria-label="닫기">×</button>
-        <h2 class="auth-modal-title" id="authModalTitle">우리동네 부동산
-디스코</h2>
-        <div class="auth-modal-divider"></div>
 
-        <form class="auth-modal-form" id="authModalForm">
-          <div class="auth-modal-field">
-            <label class="auth-modal-field-label" for="authEmailInput">이메일</label>
-            <input type="email" class="auth-modal-input" id="authEmailInput" placeholder="이메일을 입력해주세요." />
+        <div class="auth-login-screen" id="authLoginScreen">
+          <h2 class="auth-modal-title" id="authModalTitle">진짜 살아있는 매물
+리얼제주</h2>
+          <div class="auth-modal-divider"></div>
+
+          <form class="auth-modal-form" id="authModalForm">
+            <div class="auth-modal-field">
+              <label class="auth-modal-field-label" for="authEmailInput">이메일</label>
+              <input type="email" class="auth-modal-input" id="authEmailInput" placeholder="이메일을 입력해주세요." />
+            </div>
+
+            <div class="auth-modal-field">
+              <label class="auth-modal-field-label" for="authPasswordInput">비밀번호</label>
+              <input type="password" class="auth-modal-input" id="authPasswordInput" placeholder="비밀번호를 입력해주세요." />
+            </div>
+
+            <button type="submit" class="auth-modal-submit">로그인</button>
+          </form>
+
+          <div class="auth-modal-links">
+            <button type="button">아이디 찾기</button>
+            <button type="button">비밀번호 찾기</button>
           </div>
 
-          <div class="auth-modal-field">
-            <label class="auth-modal-field-label" for="authPasswordInput">비밀번호</label>
-            <input type="password" class="auth-modal-input" id="authPasswordInput" placeholder="비밀번호를 입력해주세요." />
+          <div class="auth-modal-footer">
+            <span>✅&nbsp;&nbsp;아직 리얼제주에 계정이 없으신가요?</span>
+            <button type="button" class="auth-modal-signup" id="authSignupOpenBtn">회원가입</button>
+          </div>
+        </div>
+
+        <div class="auth-signup-terms-screen auth-screen-hidden" id="authSignupTermsScreen">
+          <h2 class="auth-modal-title">이용약관</h2>
+          <div class="auth-modal-divider"></div>
+
+          <button type="button" class="auth-terms-all-btn" id="authTermsAllBtn">
+            <span class="auth-check-icon">✓</span>
+            <span>모두 확인, 동의합니다.</span>
+          </button>
+
+          <div class="auth-terms-list">
+            <div class="auth-terms-item">
+              <label class="auth-terms-check-zone" aria-label="리얼제주 서비스 이용약관 동의 체크">
+                <input type="checkbox" class="auth-term-check" data-required="true" data-term="service" />
+                <span class="auth-terms-checkbox">✓</span>
+              </label>
+              <button type="button" class="auth-terms-open-zone auth-terms-open" data-terms-key="service">
+                <span class="auth-terms-text"><span class="auth-terms-highlight">리얼제주 서비스 이용약관 동의</span> (필수)</span>
+                <span class="auth-terms-arrow">›</span>
+              </button>
+            </div>
+
+            <label class="auth-terms-item">
+              <input type="checkbox" class="auth-term-check" data-required="true" />
+              <span class="auth-terms-checkbox">✓</span>
+              <span class="auth-terms-text"><span class="auth-terms-highlight">위치기반 서비스 이용약관 동의</span> (필수)</span>
+              <span class="auth-terms-arrow">›</span>
+            </label>
+
+            <label class="auth-terms-item">
+              <input type="checkbox" class="auth-term-check" data-required="true" />
+              <span class="auth-terms-checkbox">✓</span>
+              <span class="auth-terms-text"><span class="auth-terms-highlight">개인정보처리방침 동의</span> (필수)</span>
+              <span class="auth-terms-arrow">›</span>
+            </label>
+
+            <label class="auth-terms-item">
+              <input type="checkbox" class="auth-term-check" data-required="true" />
+              <span class="auth-terms-checkbox">✓</span>
+              <span class="auth-terms-text"><span class="auth-terms-highlight">만 14세 이상</span> (필수)</span>
+            </label>
           </div>
 
-          <button type="submit" class="auth-modal-submit">로그인</button>
-        </form>
+          <button type="button" class="auth-terms-next" id="authTermsNextBtn" disabled>다음</button>
 
-        <div class="auth-modal-links">
-          <button type="button">아이디 찾기</button>
-          <button type="button">비밀번호 찾기</button>
+          <div class="auth-signup-footer">
+            <span>✅&nbsp;&nbsp;이미 계정이 있으신가요?</span>
+            <button type="button" class="auth-login-switch" id="authLoginSwitchBtn">로그인</button>
+          </div>
         </div>
+      </div>
+    </div>
 
-        <div class="auth-modal-footer">
-          <span>* 아직 디스코에 계정이 없으신가요?</span>
-          <button type="button" class="auth-modal-signup">회원가입</button>
-        </div>
+
+    <div id="termsFullPage" class="terms-full-page" aria-hidden="true">
+      <div class="terms-full-header">
+        <div class="terms-full-title" id="termsFullHeaderTitle">서비스 이용약관</div>
+        <button type="button" class="terms-full-close" id="termsFullClose" aria-label="닫기">×</button>
+      </div>
+      <div class="terms-full-body" id="termsFullBody">
+        <h1 class="terms-full-main-title" id="termsFullMainTitle">리얼제주 서비스 이용약관</h1>
+        <div id="termsFullContent"></div>
       </div>
     </div>
 
@@ -4900,7 +5266,7 @@ body.sidebar-list-collapsed .map-side-tools{
       return `rgba(${r}, ${g}, ${b}, ${alpha})`;
     }
     const APP_NAME = "REALJEJU.APP";
-    const APP_VERSION = "1.834";
+    const APP_VERSION = "1.839";
 
     function applyAppVersion() {
       const fullVersionText = `${APP_NAME} Ver ${APP_VERSION}`;
@@ -5211,6 +5577,19 @@ body.sidebar-list-collapsed .map-side-tools{
     const authModal = document.getElementById("authModal");
     const authModalClose = document.getElementById("authModalClose");
     const authModalForm = document.getElementById("authModalForm");
+    const authLoginScreen = document.getElementById("authLoginScreen");
+    const authSignupTermsScreen = document.getElementById("authSignupTermsScreen");
+    const authSignupOpenBtn = document.getElementById("authSignupOpenBtn");
+    const authLoginSwitchBtn = document.getElementById("authLoginSwitchBtn");
+    const authTermsAllBtn = document.getElementById("authTermsAllBtn");
+    const authTermsNextBtn = document.getElementById("authTermsNextBtn");
+    const authTermChecks = Array.from(document.querySelectorAll(".auth-term-check"));
+    const termsFullPage = document.getElementById("termsFullPage");
+    const termsFullClose = document.getElementById("termsFullClose");
+    const termsFullHeaderTitle = document.getElementById("termsFullHeaderTitle");
+    const termsFullMainTitle = document.getElementById("termsFullMainTitle");
+    const termsFullContent = document.getElementById("termsFullContent");
+    const termsFullBody = document.getElementById("termsFullBody");
     const detailShareKakaoBtn = document.getElementById("detailShareKakaoBtn");
     const detailCopyLinkBtn = document.getElementById("detailCopyLinkBtn");
     const detailAreaValue = document.getElementById("detailAreaValue");
@@ -5266,6 +5645,7 @@ body.sidebar-list-collapsed .map-side-tools{
 
     function openAuthModal() {
       if (!authModal) return;
+      showAuthLoginScreen();
       authModal.classList.add("open");
       authModal.setAttribute("aria-hidden", "false");
       document.body.style.overflow = "hidden";
@@ -5276,6 +5656,122 @@ body.sidebar-list-collapsed .map-side-tools{
       authModal.classList.remove("open");
       authModal.setAttribute("aria-hidden", "true");
       document.body.style.overflow = "";
+    }
+
+    function showAuthLoginScreen() {
+      if (authLoginScreen) authLoginScreen.classList.remove("auth-screen-hidden");
+      if (authSignupTermsScreen) authSignupTermsScreen.classList.add("auth-screen-hidden");
+    }
+
+    function showAuthSignupTermsScreen() {
+      if (authLoginScreen) authLoginScreen.classList.add("auth-screen-hidden");
+      if (authSignupTermsScreen) authSignupTermsScreen.classList.remove("auth-screen-hidden");
+    }
+
+
+    const TERMS_JSON_URLS = {
+      service: "https://realjeju.app/terms/terms_of_service.json"
+    };
+    let currentTermsKey = null;
+
+    function escapeTermsHtml(value) {
+      return String(value == null ? "" : value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function normalizeTermsData(data, key) {
+      if (!data || typeof data !== "object") return { title: "서비스 이용약관", sections: [] };
+      if (data[key] && typeof data[key] === "object") return data[key];
+      if (data.service && typeof data.service === "object") return data.service;
+      return data;
+    }
+
+    function renderTermsFullHtml(term) {
+      const sections = Array.isArray(term && term.sections) ? term.sections : [];
+      let html = "";
+      sections.forEach((section) => {
+        if (section && section.title) html += "<h2>" + escapeTermsHtml(section.title) + "</h2>";
+        const articles = Array.isArray(section && section.articles) ? section.articles : [];
+        articles.forEach((article) => {
+          if (article && article.title) html += "<h3>" + escapeTermsHtml(article.title) + "</h3>";
+          const content = article ? article.content : null;
+          if (Array.isArray(content)) {
+            content.forEach((line) => { html += "<p>" + escapeTermsHtml(line) + "</p>"; });
+          } else if (content != null) {
+            html += "<p>" + escapeTermsHtml(content) + "</p>";
+          }
+        });
+        if (!articles.length && section && section.content) {
+          if (Array.isArray(section.content)) {
+            section.content.forEach((line) => { html += "<p>" + escapeTermsHtml(line) + "</p>"; });
+          } else {
+            html += "<p>" + escapeTermsHtml(section.content) + "</p>";
+          }
+        }
+      });
+      if (!html && term && term.content) {
+        if (Array.isArray(term.content)) {
+          term.content.forEach((line) => { html += "<p>" + escapeTermsHtml(line) + "</p>"; });
+        } else {
+          html = "<p>" + escapeTermsHtml(term.content) + "</p>";
+        }
+      }
+      return html || "<p>약관 내용을 불러오지 못했습니다.</p>";
+    }
+
+    async function openTermsFullPage(key = "service") {
+      if (!termsFullPage || !termsFullContent) return;
+      currentTermsKey = key;
+      const url = TERMS_JSON_URLS[key];
+      if (!url) return;
+      termsFullPage.classList.add("open");
+      termsFullPage.setAttribute("aria-hidden", "false");
+      if (termsFullBody) termsFullBody.scrollTop = 0;
+      if (termsFullHeaderTitle) termsFullHeaderTitle.textContent = "서비스 이용약관";
+      if (termsFullMainTitle) termsFullMainTitle.textContent = "리얼제주 서비스 이용약관";
+      termsFullContent.innerHTML = "<div class=\"terms-full-loading\">약관을 불러오는 중입니다.</div>";
+      document.body.style.overflow = "hidden";
+      try {
+        const res = await fetch(url, { cache: "no-store" });
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        const data = await res.json();
+        const term = normalizeTermsData(data, key);
+        const title = (term && term.title) || "리얼제주 서비스 이용약관";
+        if (termsFullHeaderTitle) termsFullHeaderTitle.textContent = "서비스 이용약관";
+        if (termsFullMainTitle) termsFullMainTitle.textContent = title;
+        termsFullContent.innerHTML = renderTermsFullHtml(term);
+        if (termsFullBody) termsFullBody.scrollTop = 0;
+      } catch (err) {
+        console.error("약관 불러오기 실패:", err);
+        termsFullContent.innerHTML = "<div class=\"terms-full-error\">약관을 불러오지 못했습니다.</div>";
+      }
+    }
+
+    function closeTermsFullPage() {
+      if (!termsFullPage) return;
+      if (currentTermsKey) {
+        const openedTermCheck = document.querySelector(`.auth-term-check[data-term="${currentTermsKey}"]`);
+        if (openedTermCheck && !openedTermCheck.checked) {
+          openedTermCheck.checked = true;
+          openedTermCheck.dispatchEvent(new Event("change", { bubbles: true }));
+        }
+      }
+      currentTermsKey = null;
+      termsFullPage.classList.remove("open");
+      termsFullPage.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = authModal && authModal.classList.contains("open") ? "hidden" : "";
+    }
+
+    function syncAuthTermsState() {
+      const allChecked = authTermChecks.length > 0 && authTermChecks.every((check) => check.checked);
+      if (authTermsNextBtn) {
+        authTermsNextBtn.disabled = !allChecked;
+        authTermsNextBtn.classList.toggle("enabled", allChecked);
+      }
     }
 
     function syncSummaryBadgeRow() {
@@ -8197,6 +8693,88 @@ function closeDetailPanel() {
         });
       }
 
+      if (detailAuthTrigger) {
+        detailAuthTrigger.addEventListener("click", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          openAuthModal();
+        });
+      }
+
+      if (authModalClose) {
+        authModalClose.addEventListener("click", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          closeAuthModal();
+        });
+      }
+
+      if (authModal) {
+        authModal.addEventListener("click", (e) => {
+          if (e.target === authModal) closeAuthModal();
+        });
+      }
+
+      if (authModalForm) {
+        authModalForm.addEventListener("submit", (e) => {
+          e.preventDefault();
+        });
+      }
+
+      if (authSignupOpenBtn) {
+        authSignupOpenBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          showAuthSignupTermsScreen();
+          syncAuthTermsState();
+        });
+      }
+
+      if (authLoginSwitchBtn) {
+        authLoginSwitchBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          showAuthLoginScreen();
+        });
+      }
+
+      if (authTermsAllBtn) {
+        authTermsAllBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+          const shouldCheck = authTermChecks.some((check) => !check.checked);
+          authTermChecks.forEach((check) => {
+            check.checked = shouldCheck;
+          });
+          syncAuthTermsState();
+        });
+      }
+
+      authTermChecks.forEach((check) => {
+        check.addEventListener("change", syncAuthTermsState);
+      });
+
+      document.querySelectorAll(".auth-terms-open[data-terms-key]").forEach((el) => {
+        el.addEventListener("click", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          openTermsFullPage(el.dataset.termsKey || "service");
+        });
+      });
+
+      if (termsFullClose) {
+        termsFullClose.addEventListener("click", (e) => {
+          e.preventDefault();
+          closeTermsFullPage();
+        });
+      }
+
+      if (authTermsNextBtn) {
+        authTermsNextBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+          if (authTermsNextBtn.disabled) return;
+        });
+      }
+
       function openShareMenu() {
         if (!detailShareMenu || !detailShareBtn) return;
         detailShareMenu.style.display = "flex";
@@ -8327,6 +8905,10 @@ function closeDetailPanel() {
 
       document.addEventListener("keydown", (e) => {
         if (e.key === "Escape") {
+          if (authModal && authModal.classList.contains("open")) {
+            closeAuthModal();
+            return;
+          }
           closeDetailImageLightbox();
           return;
         }
