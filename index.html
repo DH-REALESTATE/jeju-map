@@ -4553,7 +4553,7 @@ body.sidebar-list-collapsed .map-side-tools{
 }
 
 
-    /* v1.841: list stays square, top controls softly rounded */
+    /* v1.843: list stays square, top controls softly rounded */
     .deal-buttons button,
     .type-buttons button {
       border-radius: 10px !important;
@@ -4573,7 +4573,7 @@ body.sidebar-list-collapsed .map-side-tools{
 
 
 
-    /* v1.841: top filter buttons - pill shape, no shadow */
+    /* v1.843: top filter buttons - pill shape, no shadow */
     .deal-buttons button,
     .type-buttons button {
       border-radius: 999px !important;
@@ -4724,7 +4724,7 @@ body.sidebar-list-collapsed .map-side-tools{
 }
 
 
-/* Ver 1.841 표시: 하단바 왼쪽 고정 */
+/* Ver 1.843 표시: 하단바 왼쪽 고정 */
 .sub-version-fixed {
   position: absolute !important;
   left: 22px !important;
@@ -4805,7 +4805,7 @@ body.sidebar-list-collapsed .map-side-tools{
 
   <div class="sub-topbar">
     <div class="sub-topbar-inner">
-      <span class="sub-version-fixed">Ver 1.841</span>
+      <span class="sub-version-fixed">Ver 1.843</span>
       <div class="sub-topbar-left">
         <strong id="listInfoText">총 0개 매물</strong>
         <span id="sortLabel" class="sort sort-latest" title="최신 등록순">최신순</span>
@@ -5274,7 +5274,7 @@ body.sidebar-list-collapsed .map-side-tools{
       return `rgba(${r}, ${g}, ${b}, ${alpha})`;
     }
     const APP_NAME = "REALJEJU.APP";
-    const APP_VERSION = "1.841";
+    const APP_VERSION = "1.843";
 
     function applyAppVersion() {
       const fullVersionText = `${APP_NAME} Ver ${APP_VERSION}`;
@@ -5705,36 +5705,47 @@ body.sidebar-list-collapsed .map-side-tools{
       return data;
     }
 
-    function renderTermsFullHtml(term) {
-      const sections = Array.isArray(term && term.sections) ? term.sections : [];
+    function renderTermsContentHtml(content) {
       let html = "";
-      sections.forEach((section) => {
-        if (section && section.title) html += "<h2>" + escapeTermsHtml(section.title) + "</h2>";
-        const articles = Array.isArray(section && section.articles) ? section.articles : [];
-        articles.forEach((article) => {
-          if (article && article.title) html += "<h3>" + escapeTermsHtml(article.title) + "</h3>";
-          const content = article ? article.content : null;
-          if (Array.isArray(content)) {
-            content.forEach((line) => { html += "<p>" + escapeTermsHtml(line) + "</p>"; });
-          } else if (content != null) {
-            html += "<p>" + escapeTermsHtml(content).replace(/\n/g, "<br>") + "</p>";
+      if (Array.isArray(content)) {
+        content.forEach((line) => {
+          if (line && typeof line === "object") {
+            html += renderTermsArticleHtml(line);
+          } else {
+            html += "<p>" + escapeTermsHtml(line).replace(/\n/g, "<br>") + "</p>";
           }
         });
-        if (!articles.length && section && section.content) {
-          if (Array.isArray(section.content)) {
-            section.content.forEach((line) => { html += "<p>" + escapeTermsHtml(line) + "</p>"; });
-          } else {
-            html += "<p>" + escapeTermsHtml(section.content).replace(/\n/g, "<br>") + "</p>";
-          }
-        }
-      });
-      if (!html && term && term.content) {
-        if (Array.isArray(term.content)) {
-          term.content.forEach((line) => { html += "<p>" + escapeTermsHtml(line) + "</p>"; });
-        } else {
-          html = "<p>" + escapeTermsHtml(term.content).replace(/\n/g, "<br>") + "</p>";
-        }
+      } else if (content != null) {
+        html += "<p>" + escapeTermsHtml(content).replace(/\n/g, "<br>") + "</p>";
       }
+      return html;
+    }
+
+    function renderTermsArticleHtml(article) {
+      if (!article || typeof article !== "object") return "";
+      let html = "";
+      if (article.title) html += "<h3>" + escapeTermsHtml(article.title) + "</h3>";
+      html += renderTermsContentHtml(article.content);
+      const nestedArticles = Array.isArray(article.articles) ? article.articles : [];
+      nestedArticles.forEach((nestedArticle) => {
+        html += renderTermsArticleHtml(nestedArticle);
+      });
+      return html;
+    }
+
+    function renderTermsFullHtml(term) {
+      let html = "";
+      const sections = Array.isArray(term && term.sections) ? term.sections : [];
+      sections.forEach((section) => {
+        if (!section || typeof section !== "object") return;
+        if (section.title) html += "<h2>" + escapeTermsHtml(section.title) + "</h2>";
+        const articles = Array.isArray(section.articles) ? section.articles : [];
+        articles.forEach((article) => {
+          html += renderTermsArticleHtml(article);
+        });
+        if (!articles.length) html += renderTermsContentHtml(section.content);
+      });
+      if (!html && term) html += renderTermsContentHtml(term.content);
       return html || "<p>약관 내용을 불러오지 못했습니다.</p>";
     }
 
@@ -5752,9 +5763,16 @@ body.sidebar-list-collapsed .map-side-tools{
       termsFullContent.innerHTML = "<div class=\"terms-full-loading\">약관을 불러오는 중입니다.</div>";
       document.body.style.overflow = "hidden";
       try {
-        const res = await fetch(url, { cache: "no-store" });
+        const requestUrl = url + (url.includes("?") ? "&" : "?") + "v=" + Date.now();
+        const res = await fetch(requestUrl, {
+          cache: "no-store",
+          headers: { "Accept": "application/json, text/plain, */*" }
+        });
         if (!res.ok) throw new Error("HTTP " + res.status);
-        const data = await res.json();
+        const rawText = await res.text();
+        const cleanedText = rawText.replace(/^\uFEFF/, "").trim();
+        if (!cleanedText) throw new Error("EMPTY_TERMS_RESPONSE");
+        const data = JSON.parse(cleanedText);
         const term = normalizeTermsData(data, key);
         const title = (term && term.title) || fallbackHeaderTitle;
         if (termsFullHeaderTitle) termsFullHeaderTitle.textContent = fallbackHeaderTitle;
@@ -5763,7 +5781,7 @@ body.sidebar-list-collapsed .map-side-tools{
         if (termsFullBody) termsFullBody.scrollTop = 0;
       } catch (err) {
         console.error("약관 불러오기 실패:", err);
-        termsFullContent.innerHTML = "<div class=\"terms-full-error\">약관을 불러오지 못했습니다.</div>";
+        termsFullContent.innerHTML = "<div class=\"terms-full-error\">약관을 불러오지 못했습니다.<br>개발자도구 콘솔에서 오류 내용을 확인하세요.</div>";
       }
     }
 
