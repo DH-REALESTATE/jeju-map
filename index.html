@@ -4638,7 +4638,7 @@ body.sidebar-list-collapsed .map-side-tools
 
 }
 
-/* v1.862: list stays square, top controls softly rounded */ .deal-buttons button, .type-buttons button
+/* v1.868: list stays square, top controls softly rounded */ .deal-buttons button, .type-buttons button
 {
 	border-radius: 10px !important;
 	padding: 8px 14px !important;
@@ -4655,7 +4655,7 @@ body.sidebar-list-collapsed .map-side-tools
 	border-radius: 100px !important;
 }
 
-/* v1.862: top filter buttons - pill shape, no shadow */ .deal-buttons button, .type-buttons button
+/* v1.868: top filter buttons - pill shape, no shadow */ .deal-buttons button, .type-buttons button
 {
 	border-radius: 999px !important;
 	box-shadow: none !important;
@@ -4796,7 +4796,7 @@ body.sidebar-list-collapsed .map-side-tools
 	font-size: var(--topbar-logo-font-size, 20px) !important;
 }
 
-/* Ver 1.862 표시: 하단바 왼쪽 고정 */ .sub-version-fixed
+/* Ver 1.868 표시: 하단바 왼쪽 고정 */ .sub-version-fixed
 {
 	position: absolute !important;
 	left: 22px !important;
@@ -4844,7 +4844,7 @@ body.sidebar-list-collapsed .map-side-tools
 	text-align: right !important;
 }
 
-/* ===== AUTH MODAL OVERRIDE FROM 1.862 ONLY ===== */ .auth-modal
+/* ===== AUTH MODAL OVERRIDE FROM 1.868 ONLY ===== */ .auth-modal
 {
 	position: fixed;
 	inset: 0;
@@ -5021,6 +5021,71 @@ body.sidebar-list-collapsed .map-side-tools
 	letter-spacing: -0.25px;
 	cursor: pointer;
 	white-space: nowrap;
+}
+
+
+.auth-error-modal
+{
+	position: fixed;
+	inset: 0;
+	z-index: 100001;
+	display: none;
+	align-items: center;
+	justify-content: center;
+	padding: 24px;
+	background: rgba(15, 23, 42, 0.42);
+	backdrop-filter: blur(6px);
+	-webkit-backdrop-filter: blur(6px);
+}
+
+.auth-error-modal.open
+{
+	display: flex;
+}
+
+.auth-error-dialog
+{
+	width: 360px;
+	max-width: 90vw;
+	padding: 30px 28px 26px;
+	background: #ffffff;
+	color: #111827;
+	border-radius: 0;
+	box-shadow: 0 24px 70px rgba(0,0,0,0.28);
+	text-align: center;
+}
+
+.auth-error-title
+{
+	margin: 0 0 12px;
+	font-size: 22px;
+	font-weight: 900;
+	letter-spacing: -0.5px;
+	line-height: 1.3;
+}
+
+.auth-error-message
+{
+	margin: 0 0 24px;
+	font-size: 16px;
+	font-weight: 700;
+	color: #4b5563;
+	letter-spacing: -0.2px;
+	line-height: 1.5;
+}
+
+.auth-error-confirm
+{
+	width: 100%;
+	height: 46px;
+	border: 0;
+	border-radius: 0;
+	background: #3B82F6;
+	color: #ffffff;
+	font-size: 16px;
+	font-weight: 900;
+	letter-spacing: -0.2px;
+	cursor: pointer;
 }
 
 .auth-login-screen, .auth-signup-terms-screen, .auth-signup-form-screen
@@ -5397,7 +5462,7 @@ body.sidebar-list-collapsed .map-side-tools
 		<div class="sub-topbar">
 			<div class="sub-topbar-inner">
 				<span class="sub-version-fixed">
-					Ver 1.862
+					Ver 1.868
 				</span>
 				<div class="sub-topbar-left">
 					<strong id="listInfoText">
@@ -6080,6 +6145,20 @@ if (globalBrandLink) {
 		</div>
 	</div>
 </div>
+
+<div class="auth-error-modal" id="authErrorModal" aria-hidden="true">
+	<div class="auth-error-dialog" role="alertdialog" aria-modal="true" aria-labelledby="authErrorTitle" aria-describedby="authErrorMessage">
+		<h3 class="auth-error-title" id="authErrorTitle">
+			로그인 오류
+		</h3>
+		<p class="auth-error-message" id="authErrorMessage">
+			아이디와 비밀번호를 입력하세요.
+		</p>
+		<button type="button" class="auth-error-confirm" id="authErrorConfirmBtn">
+			확인
+		</button>
+	</div>
+</div>
 <div id="termsFullPage" class="terms-full-page" aria-hidden="true">
 	<div class="terms-full-header">
 		<div class="terms-full-title" id="termsFullHeaderTitle">
@@ -6115,7 +6194,7 @@ function hexToRgba(hex, alpha = 1)
 	return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 const APP_NAME = "REALJEJU.APP";
-const APP_VERSION = "1.862";
+const APP_VERSION = "1.868";
 
 function applyAppVersion()
 {
@@ -9555,9 +9634,12 @@ function initEvents()
 		});
 	}
 
+	/* v1.868: 모달 바깥 클릭/마우스 이동으로 닫히지 않도록 overlay close 제거 */
 	if (authModal) {
 		authModal.addEventListener("click", (e) => {
-			if (e.target === authModal) closeAuthModal();
+			if (e.target === authModal) {
+				e.preventDefault();
+			}
 		});
 	}
 
@@ -10180,9 +10262,10 @@ async function bootstrap()
 bootstrap();
 
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 
-/* ===== AUTH MODAL FUNCTION PATCH FROM 1.862 ONLY ===== */
+/* ===== AUTH MODAL FUNCTION PATCH FROM 1.868 ONLY ===== */
 (function () {
 	const authModal = document.getElementById("authModal");
 	const authModalClose = document.getElementById("authModalClose");
@@ -10193,6 +10276,15 @@ bootstrap();
 	const authSignupForm = document.getElementById("authSignupForm");
 	const authSignupFormLoginBtn = document.getElementById("authSignupFormLoginBtn");
 	const authSignupOpenBtn = document.getElementById("authSignupOpenBtn");
+	const authEmailInput = document.getElementById("authEmailInput");
+	const authPasswordInput = document.getElementById("authPasswordInput");
+	const authSignupEmailInput = document.getElementById("authSignupEmailInput");
+	const authSignupPasswordInput = document.getElementById("authSignupPasswordInput");
+	const authSignupPasswordConfirmInput = document.getElementById("authSignupPasswordConfirmInput");
+	const authErrorModal = document.getElementById("authErrorModal");
+	const authErrorTitle = document.getElementById("authErrorTitle");
+	const authErrorMessage = document.getElementById("authErrorMessage");
+	const authErrorConfirmBtn = document.getElementById("authErrorConfirmBtn");
 	const authLoginSwitchBtn = document.getElementById("authLoginSwitchBtn");
 	const authTermsAllBtn = document.getElementById("authTermsAllBtn");
 	const authTermsNextBtn = document.getElementById("authTermsNextBtn");
@@ -10204,6 +10296,29 @@ bootstrap();
 	const termsFullContent = document.getElementById("termsFullContent");
 	const termsFullBody = document.getElementById("termsFullBody");
 	let currentTermsKey = null;
+	let authErrorReturnFocusTarget = null;
+
+	/* v1.868: Supabase Auth public client only - SECRET_KEY 금지 */
+	const REALJEJU_SUPABASE_URL = window.REALJEJU_SUPABASE_URL || "https://jctovfrcvfosoowribej.supabase.co";
+	const REALJEJU_SUPABASE_PUBLIC_KEY = window.REALJEJU_SUPABASE_PUBLIC_KEY || "sb_publishable_IX_sRsjfEGdPin-kqtYGLw_FH0PPE2b";
+	let realjejuSupabaseClient = null;
+
+	function getRealjejuSupabaseClient()
+	{
+		if (realjejuSupabaseClient) return realjejuSupabaseClient;
+		const isUrlReady = REALJEJU_SUPABASE_URL && REALJEJU_SUPABASE_URL.startsWith("https://") && REALJEJU_SUPABASE_URL.includes(".supabase.co");
+		const isKeyReady = REALJEJU_SUPABASE_PUBLIC_KEY && REALJEJU_SUPABASE_PUBLIC_KEY.startsWith("sb_publishable_");
+		if (!isUrlReady || !isKeyReady) return null;
+		if (!window.supabase || typeof window.supabase.createClient !== "function") return null;
+		realjejuSupabaseClient = window.supabase.createClient(REALJEJU_SUPABASE_URL, REALJEJU_SUPABASE_PUBLIC_KEY, {
+			auth: {
+				persistSession: true,
+				autoRefreshToken: true,
+				detectSessionInUrl: true
+			}
+		});
+		return realjejuSupabaseClient;
+	}
 
 	const TERMS_JSON_URLS = {
 		service: "https://realjeju.app/terms/terms_of_service.json",
@@ -10253,6 +10368,33 @@ bootstrap();
 		authModal.classList.remove("open");
 		authModal.setAttribute("aria-hidden", "true");
 		document.body.style.overflow = "";
+	}
+
+	function openAuthErrorModal(message, title, returnFocusTarget)
+	{
+		if (!authErrorModal) return;
+		authErrorReturnFocusTarget = returnFocusTarget || authEmailInput || null;
+		if (authErrorTitle) authErrorTitle.textContent = title || "로그인 오류";
+		if (authErrorMessage) authErrorMessage.textContent = message || "아이디와 비밀번호를 입력하세요.";
+		authErrorModal.classList.add("open");
+		authErrorModal.setAttribute("aria-hidden", "false");
+		document.body.style.overflow = "hidden";
+		setTimeout(() => {
+			if (authErrorConfirmBtn) authErrorConfirmBtn.focus();
+		}, 0);
+	}
+
+	function closeAuthErrorModal()
+	{
+		if (!authErrorModal) return;
+		authErrorModal.classList.remove("open");
+		authErrorModal.setAttribute("aria-hidden", "true");
+		document.body.style.overflow = authModal && authModal.classList.contains("open") ? "hidden" : "";
+		const focusTarget = authErrorReturnFocusTarget;
+		authErrorReturnFocusTarget = null;
+		if (focusTarget && authModal && authModal.classList.contains("open")) {
+			setTimeout(() => focusTarget.focus(), 0);
+		}
 	}
 
 	function syncAuthTermsState()
@@ -10397,21 +10539,126 @@ bootstrap();
 		});
 	}
 
+	/* v1.868: 모달 바깥 클릭/마우스 이동으로 닫히지 않도록 overlay close 제거 */
 	if (authModal) {
 		authModal.addEventListener("click", (e) => {
-			if (e.target === authModal) closeAuthModal();
+			if (e.target === authModal) {
+				e.preventDefault();
+			}
 		});
 	}
 
 	if (authModalForm) {
-		authModalForm.addEventListener("submit", (e) => {
+		authModalForm.addEventListener("submit", async (e) => {
 			e.preventDefault();
+			const emailValue = String(authEmailInput?.value || "").trim();
+			const passwordValue = String(authPasswordInput?.value || "").trim();
+			if (!emailValue || !passwordValue) {
+				openAuthErrorModal("아이디와 비밀번호를 입력하세요.", "로그인 오류", !emailValue ? authEmailInput : authPasswordInput);
+				return;
+			}
+
+			const loginSubmitBtn = authModalForm.querySelector(".auth-modal-submit");
+			const supabaseForLogin = getRealjejuSupabaseClient();
+			if (!supabaseForLogin) {
+				openAuthErrorModal("Supabase URL과 PUBLIC KEY 설정이 필요합니다.", "로그인 오류", authEmailInput);
+				return;
+			}
+
+			try {
+				if (loginSubmitBtn) loginSubmitBtn.disabled = true;
+				const { data, error } = await supabaseForLogin.auth.signInWithPassword({
+					email: emailValue,
+					password: passwordValue
+				});
+				if (error) {
+					openAuthErrorModal("아이디 또는 비밀번호가 올바르지 않습니다.", "로그인 오류", authEmailInput);
+					return;
+				}
+				if (data && data.user) {
+					if (authPasswordInput) authPasswordInput.value = "";
+					closeAuthModal();
+					openAuthErrorModal("로그인되었습니다.", "로그인 완료", authEmailInput);
+				}
+			} catch (err) {
+				console.error("로그인 실패:", err);
+				openAuthErrorModal("로그인 처리 중 오류가 발생했습니다.", "로그인 오류", authEmailInput);
+			} finally {
+				if (loginSubmitBtn) loginSubmitBtn.disabled = false;
+			}
+		});
+	}
+
+	if (authErrorConfirmBtn) {
+		authErrorConfirmBtn.addEventListener("click", (e) => {
+			e.preventDefault();
+			closeAuthErrorModal();
+		});
+	}
+
+	if (authErrorModal) {
+		authErrorModal.addEventListener("click", (e) => {
+			if (e.target === authErrorModal) closeAuthErrorModal();
 		});
 	}
 
 	if (authSignupForm) {
-		authSignupForm.addEventListener("submit", (e) => {
+		authSignupForm.addEventListener("submit", async (e) => {
 			e.preventDefault();
+			const signupEmailValue = String(authSignupEmailInput?.value || "").trim();
+			const signupPasswordValue = String(authSignupPasswordInput?.value || "").trim();
+			const signupPasswordConfirmValue = String(authSignupPasswordConfirmInput?.value || "").trim();
+			if (!signupEmailValue || !signupPasswordValue || !signupPasswordConfirmValue) {
+				openAuthErrorModal("아이디와 비밀번호를 입력하세요.", "회원가입 오류", !signupEmailValue ? authSignupEmailInput : (!signupPasswordValue ? authSignupPasswordInput : authSignupPasswordConfirmInput));
+				return;
+			}
+
+			const signupPasswordRule = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;
+			if (!signupPasswordRule.test(signupPasswordValue)) {
+				openAuthErrorModal("비밀번호는 8자 이상, 영문과 숫자를 포함해야 합니다.", "회원가입 오류", authSignupPasswordInput);
+				return;
+			}
+
+			if (signupPasswordValue !== signupPasswordConfirmValue) {
+				openAuthErrorModal("비밀번호가 서로 다릅니다.", "회원가입 오류", authSignupPasswordConfirmInput);
+				return;
+			}
+
+			const signupSubmitBtn = authSignupForm.querySelector(".auth-modal-submit");
+			const supabaseForSignup = getRealjejuSupabaseClient();
+			if (!supabaseForSignup) {
+				openAuthErrorModal("Supabase URL과 PUBLIC KEY 설정이 필요합니다.", "회원가입 오류", authSignupEmailInput);
+				return;
+			}
+
+			try {
+				if (signupSubmitBtn) signupSubmitBtn.disabled = true;
+				const { data, error } = await supabaseForSignup.auth.signUp({
+					email: signupEmailValue,
+					password: signupPasswordValue
+				});
+				if (error) {
+					const errorMessage = String(error.message || "");
+					if (errorMessage.toLowerCase().includes("already") || errorMessage.includes("registered")) {
+						openAuthErrorModal("이미 가입된 아이디입니다.", "회원가입 오류", authSignupEmailInput);
+					} else {
+						openAuthErrorModal(errorMessage || "회원가입에 실패했습니다.", "회원가입 오류", authSignupEmailInput);
+					}
+					return;
+				}
+				if (data && data.user) {
+					if (authSignupPasswordInput) authSignupPasswordInput.value = "";
+					if (authSignupPasswordConfirmInput) authSignupPasswordConfirmInput.value = "";
+					showAuthLoginScreen();
+					if (authEmailInput) authEmailInput.value = signupEmailValue;
+					openAuthErrorModal("회원가입이 완료되었습니다.", "회원가입 완료", authEmailInput);
+				}
+			} catch (err) {
+				console.error("회원가입 실패:", err);
+				openAuthErrorModal("회원가입 처리 중 오류가 발생했습니다.", "회원가입 오류", authSignupEmailInput);
+			} finally {
+				if (signupSubmitBtn) signupSubmitBtn.disabled = false;
+			}
 		});
 	}
 
@@ -10476,12 +10723,33 @@ bootstrap();
 		});
 	}
 
+	window.addEventListener("keydown", (e) => {
+		if (!authErrorModal || !authErrorModal.classList.contains("open")) return;
+		if (e.key === "Enter" || e.key === "Escape") {
+			e.preventDefault();
+			closeAuthErrorModal();
+		}
+	});
+
 	window.openAuthModal = openAuthModal;
 	window.closeAuthModal = closeAuthModal;
+	window.openAuthErrorModal = openAuthErrorModal;
+	window.closeAuthErrorModal = closeAuthErrorModal;
 	window.openTermsFullPage = openTermsFullPage;
 	window.closeTermsFullPage = closeTermsFullPage;
 })();
 </script>
+<script>
+/* v1.868: auth modal dialog 내부 클릭은 overlay로 전파하지 않음 */
+document.addEventListener("DOMContentLoaded", function () {
+	document.querySelectorAll(".auth-modal-dialog").forEach(function (dialog) {
+		dialog.addEventListener("click", function (e) {
+			e.stopPropagation();
+		});
+	});
+});
+</script>
+
 </body>
 </html>
 /* login visibility fix */
