@@ -4638,7 +4638,7 @@ body.sidebar-list-collapsed .map-side-tools
 
 }
 
-/* v1.874: list stays square, top controls softly rounded */ .deal-buttons button, .type-buttons button
+/* v1.875: list stays square, top controls softly rounded */ .deal-buttons button, .type-buttons button
 {
 	border-radius: 10px !important;
 	padding: 8px 14px !important;
@@ -4655,7 +4655,7 @@ body.sidebar-list-collapsed .map-side-tools
 	border-radius: 100px !important;
 }
 
-/* v1.874: top filter buttons - pill shape, no shadow */ .deal-buttons button, .type-buttons button
+/* v1.875: top filter buttons - pill shape, no shadow */ .deal-buttons button, .type-buttons button
 {
 	border-radius: 999px !important;
 	box-shadow: none !important;
@@ -4796,7 +4796,7 @@ body.sidebar-list-collapsed .map-side-tools
 	font-size: var(--topbar-logo-font-size, 20px) !important;
 }
 
-/* Ver 1.874 표시: 하단바 왼쪽 고정 */ .sub-version-fixed
+/* Ver 1.875 표시: 하단바 왼쪽 고정 */ .sub-version-fixed
 {
 	position: absolute !important;
 	left: 22px !important;
@@ -4844,7 +4844,7 @@ body.sidebar-list-collapsed .map-side-tools
 	text-align: right !important;
 }
 
-/* ===== AUTH MODAL OVERRIDE FROM 1.874 ONLY ===== */ .auth-modal
+/* ===== AUTH MODAL OVERRIDE FROM 1.875 ONLY ===== */ .auth-modal
 {
 	position: fixed;
 	inset: 0;
@@ -5462,7 +5462,7 @@ body.sidebar-list-collapsed .map-side-tools
 		<div class="sub-topbar">
 			<div class="sub-topbar-inner">
 				<span class="sub-version-fixed">
-					Ver 1.874
+					Ver 1.875
 				</span>
 				<div class="sub-topbar-left">
 					<strong id="listInfoText">
@@ -6194,7 +6194,7 @@ function hexToRgba(hex, alpha = 1)
 	return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 const APP_NAME = "REALJEJU.APP";
-const APP_VERSION = "1.874";
+const APP_VERSION = "1.875";
 
 function applyAppVersion()
 {
@@ -9634,7 +9634,7 @@ function initEvents()
 		});
 	}
 
-	/* v1.874: 모달 바깥 클릭/마우스 이동으로 닫히지 않도록 overlay close 제거 */
+	/* v1.875: 모달 바깥 클릭/마우스 이동으로 닫히지 않도록 overlay close 제거 */
 	if (authModal) {
 		authModal.addEventListener("click", (e) => {
 			if (e.target === authModal) {
@@ -10265,7 +10265,7 @@ bootstrap();
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 
-/* ===== AUTH MODAL FUNCTION PATCH FROM 1.874 ONLY ===== */
+/* ===== AUTH MODAL FUNCTION PATCH FROM 1.875 ONLY ===== */
 (function () {
 	const authModal = document.getElementById("authModal");
 	const authModalClose = document.getElementById("authModalClose");
@@ -10298,7 +10298,7 @@ bootstrap();
 	let currentTermsKey = null;
 	let authErrorReturnFocusTarget = null;
 
-	/* v1.874: Supabase Auth public client only - SECRET_KEY 금지 */
+	/* v1.875: Supabase Auth public client only - SECRET_KEY 금지 */
 	const REALJEJU_SUPABASE_URL = window.REALJEJU_SUPABASE_URL || "https://jctovfrcvfosoowribej.supabase.co";
 	const REALJEJU_SUPABASE_PUBLIC_KEY = window.REALJEJU_SUPABASE_PUBLIC_KEY || "sb_publishable_IX_sRsjfEGdPin-kqtYGLw_FH0PPE2b";
 	let realjejuSupabaseClient = null;
@@ -10541,7 +10541,7 @@ bootstrap();
 		});
 	}
 
-	/* v1.874: 모달 바깥 클릭/마우스 이동으로 닫히지 않도록 overlay close 제거 */
+	/* v1.875: 모달 바깥 클릭/마우스 이동으로 닫히지 않도록 overlay close 제거 */
 	if (authModal) {
 		authModal.addEventListener("click", (e) => {
 			if (e.target === authModal) {
@@ -10638,7 +10638,7 @@ bootstrap();
 
 					if (authPasswordInput) authPasswordInput.value = "";
 					closeAuthModal();
-					openAuthErrorModal("로그인되었습니다.", "로그인 완료", authEmailInput);
+					
 				}
 			} catch (err) {
 				console.error("로그인 실패:", err);
@@ -10659,7 +10659,7 @@ bootstrap();
 		});
 	}
 
-	/* v1.874: 에러/안내창은 [확인] 버튼 외에는 닫히지 않음 */
+	/* v1.875: 에러/안내창은 [확인] 버튼 외에는 닫히지 않음 */
 	if (authErrorModal) {
 		authErrorModal.addEventListener("click", (e) => {
 			if (e.target === authErrorModal) {
@@ -10797,7 +10797,7 @@ bootstrap();
 		});
 	}
 
-	/* v1.874: 에러/안내창 열린 상태에서는 Enter/ESC로 닫히지 않음 */
+	/* v1.875: 에러/안내창 열린 상태에서는 Enter/ESC로 닫히지 않음 */
 	window.addEventListener("keydown", (e) => {
 		if (!authErrorModal || !authErrorModal.classList.contains("open")) return;
 		if (e.key === "Enter" || e.key === "Escape") {
@@ -10815,7 +10815,7 @@ bootstrap();
 })();
 </script>
 <script>
-/* v1.874: auth modal dialog 내부 클릭은 overlay로 전파하지 않음 */
+/* v1.875: auth modal dialog 내부 클릭은 overlay로 전파하지 않음 */
 document.addEventListener("DOMContentLoaded", function () {
 	document.querySelectorAll(".auth-modal-dialog").forEach(function (dialog) {
 		dialog.addEventListener("click", function (e) {
