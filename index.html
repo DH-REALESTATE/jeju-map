@@ -4641,7 +4641,7 @@ body.sidebar-list-collapsed .map-side-tools
 
 }
 
-/* v1.894: list stays square, top controls softly rounded */ .deal-buttons button, .type-buttons button
+/* v1.897: list stays square, top controls softly rounded */ .deal-buttons button, .type-buttons button
 {
 	border-radius: 10px !important;
 	padding: 8px 14px !important;
@@ -4658,7 +4658,7 @@ body.sidebar-list-collapsed .map-side-tools
 	border-radius: 100px !important;
 }
 
-/* v1.894: top filter buttons - pill shape, no shadow */ .deal-buttons button, .type-buttons button
+/* v1.897: top filter buttons - pill shape, no shadow */ .deal-buttons button, .type-buttons button
 {
 	border-radius: 999px !important;
 	box-shadow: none !important;
@@ -4799,7 +4799,7 @@ body.sidebar-list-collapsed .map-side-tools
 	font-size: var(--topbar-logo-font-size, 20px) !important;
 }
 
-/* Ver 1.894 표시: 하단바 왼쪽 고정 */ .sub-version-fixed
+/* Ver 1.897 표시: 하단바 왼쪽 고정 */ .sub-version-fixed
 {
 	position: absolute !important;
 	left: 22px !important;
@@ -4848,7 +4848,7 @@ body.sidebar-list-collapsed .map-side-tools
 }
 
 
-/* v1.894: 계정 드롭다운이 상단바 overflow/transform에 잘리지 않도록 보강 */
+/* v1.897: 계정 드롭다운이 상단바 overflow/transform에 잘리지 않도록 보강 */
 .global-topbar,
 .global-topbar-inner,
 .global-topbar-right
@@ -4856,7 +4856,7 @@ body.sidebar-list-collapsed .map-side-tools
 	overflow: visible !important;
 }
 
-/* ===== ACCOUNT DROPDOWN FROM 1.894 ONLY ===== */
+/* ===== ACCOUNT DROPDOWN FROM 1.897 ONLY ===== */
 .global-auth-trigger.logged-in
 {
 	max-width: 260px !important;
@@ -4881,7 +4881,7 @@ body.sidebar-list-collapsed .map-side-tools
 	right: 18px;
 	z-index: 10020;
 	width: 292px;
-	padding: 6px 6px 6px;
+	padding: 14px 0;
 	border: 1px solid #e5e7eb;
 	background: rgba(255,255,255,0.98);
 	box-shadow: 0 18px 42px rgba(15, 23, 42, 0.16);
@@ -4966,7 +4966,7 @@ body.sidebar-list-collapsed .map-side-tools
 	display: inline-block;
 }
 
-/* v1.894: 개인정보 설정은 팝업이 아니라 전체 페이지 형태로 표시 */
+/* v1.897: 개인정보 설정은 팝업이 아니라 전체 페이지 형태로 표시 */
 .auth-modal.profile-page-mode
 {
 	align-items: stretch;
@@ -5046,7 +5046,7 @@ body.sidebar-list-collapsed .map-side-tools
 	color: #111827;
 }
 
-/* ===== AUTH MODAL OVERRIDE FROM 1.894 ONLY ===== */ .auth-modal
+/* ===== AUTH MODAL OVERRIDE FROM 1.897 ONLY ===== */ .auth-modal
 {
 	position: fixed;
 	inset: 0;
@@ -5257,7 +5257,7 @@ body.sidebar-list-collapsed .map-side-tools
 {
 	position: fixed;
 	inset: 0;
-	z-index: 100001;
+	z-index: 200000;
 	display: none;
 	align-items: center;
 	justify-content: center;
@@ -5619,7 +5619,7 @@ body.sidebar-list-collapsed .map-side-tools
 {
 	cursor: pointer;
 }
-/* v1.894: 개인정보 설정 회원유형 드롭다운 복구 */
+/* v1.897: 개인정보 설정 회원유형 드롭다운 복구 */
 .auth-profile-select-wrap
 {
 	position: relative;
@@ -5661,7 +5661,7 @@ body.sidebar-list-collapsed .map-side-tools
 	line-height: 1;
 }
 
-/* ===== PROFILE SETUP MODAL PATCH FROM 1.894 ONLY ===== */
+/* ===== PROFILE SETUP MODAL PATCH FROM 1.897 ONLY ===== */
 .auth-profile-guide
 {
 	margin: -6px 0 4px;
@@ -5713,7 +5713,7 @@ body.sidebar-list-collapsed .map-side-tools
 }
 
 		
-/* ===== PATCH 1.894: profile role select visibility + account dropdown item lines ===== */
+/* ===== PATCH 1.897: profile role select visibility + account dropdown item lines ===== */
 .auth-modal.profile-page-mode .auth-profile-select-wrap
 {
 	display: block !important;
@@ -5756,7 +5756,7 @@ body.sidebar-list-collapsed .map-side-tools
 	align-items: center !important;
 	justify-content: flex-start !important;
 	gap: 6px !important;
-	height: 60px;
+	height: auto !important;
 	min-height: 0 !important;
 	padding: var(--account-dropdown-padding-y) var(--account-dropdown-padding-x) !important;
 	border-bottom: 0 !important;
@@ -5878,7 +5878,7 @@ body.sidebar-list-collapsed .map-side-tools
 		<div class="sub-topbar">
 			<div class="sub-topbar-inner">
 				<span class="sub-version-fixed">
-					Ver 1.894
+					Ver 1.897
 				</span>
 				<div class="sub-topbar-left">
 					<strong id="listInfoText">
@@ -6528,7 +6528,7 @@ if (globalBrandLink) {
 						<strong>[필수]</strong> 개인정보 수집 및 이용에 동의합니다.
 					</span>
 				</label>
-				<button type="submit" class="auth-modal-submit">
+				<button type="button" class="auth-modal-submit" id="authProfileSaveBtn">
 					저장
 				</button>
 			</form>
@@ -6711,7 +6711,7 @@ function hexToRgba(hex, alpha = 1)
 	return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 const APP_NAME = "REALJEJU.APP";
-const APP_VERSION = "1.894";
+const APP_VERSION = "1.897";
 
 function applyAppVersion()
 {
@@ -10160,7 +10160,7 @@ function initEvents()
 		});
 	}
 
-	/* v1.894: 모달 바깥 클릭/마우스 이동으로 닫히지 않도록 overlay close 제거 */
+	/* v1.897: 모달 바깥 클릭/마우스 이동으로 닫히지 않도록 overlay close 제거 */
 	if (authModal) {
 		authModal.addEventListener("click", (e) => {
 			if (e.target === authModal) {
@@ -10811,7 +10811,7 @@ bootstrap();
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 
-/* ===== AUTH MODAL FUNCTION PATCH FROM 1.894 ONLY ===== */
+/* ===== AUTH MODAL FUNCTION PATCH FROM 1.897 ONLY ===== */
 (function () {
 	const authModal = document.getElementById("authModal");
 	const authModalClose = document.getElementById("authModalClose");
@@ -10870,7 +10870,7 @@ bootstrap();
 	const globalAuthTrigger = document.getElementById("detailAuthTrigger");
 	const globalAccountDropdown = document.getElementById("globalAccountDropdown");
 	const globalAccountEmail = document.getElementById("globalAccountEmail");
-	/* v1.894: 드롭다운은 topbar 내부 overflow/transform 영향을 받지 않게 body 직속으로 이동 */
+	/* v1.897: 드롭다운은 topbar 내부 overflow/transform 영향을 받지 않게 body 직속으로 이동 */
 	if (globalAccountDropdown && globalAccountDropdown.parentElement !== document.body) {
 		document.body.appendChild(globalAccountDropdown);
 	}
@@ -11042,7 +11042,7 @@ bootstrap();
 		if (e.key === "Escape") closeGlobalAccountDropdown();
 	});
 
-	/* v1.894: account button direct fallback - 아이디 클릭 시 메뉴 강제 토글 */
+	/* v1.897: account button direct fallback - 아이디 클릭 시 메뉴 강제 토글 */
 	if (globalAuthTrigger) {
 		globalAuthTrigger.addEventListener("click", (e) => {
 			if (!(globalAuthTrigger.dataset && globalAuthTrigger.dataset.authState === "logged-in")) return;
@@ -11052,7 +11052,7 @@ bootstrap();
 		}, true);
 	}
 
-	/* v1.894: Supabase Auth public client only - SECRET_KEY 금지 */
+	/* v1.897: Supabase Auth public client only - SECRET_KEY 금지 */
 	const REALJEJU_SUPABASE_URL = window.REALJEJU_SUPABASE_URL || "https://jctovfrcvfosoowribej.supabase.co";
 	const REALJEJU_SUPABASE_PUBLIC_KEY = window.REALJEJU_SUPABASE_PUBLIC_KEY || "sb_publishable_IX_sRsjfEGdPin-kqtYGLw_FH0PPE2b";
 	const REALJEJU_AUTH_REDIRECT_URL = window.REALJEJU_AUTH_REDIRECT_URL || "https://realjeju.app";
@@ -11212,6 +11212,11 @@ bootstrap();
 	function openAuthErrorModal(message, title, returnFocusTarget, confirmAction)
 	{
 		if (!authErrorModal) return;
+		/* v1.897: 개인정보 설정 전체페이지 위에서도 에러창이 반드시 보이도록 body 직속 + 최상단 레이어 고정 */
+		if (authErrorModal.parentElement !== document.body) {
+			document.body.appendChild(authErrorModal);
+		}
+		authErrorModal.style.zIndex = "200000";
 		authErrorReturnFocusTarget = returnFocusTarget || authEmailInput || null;
 		authErrorConfirmAction = typeof confirmAction === "function" ? confirmAction : null;
 		if (authErrorTitle) authErrorTitle.textContent = title || "로그인 오류";
@@ -11233,7 +11238,7 @@ bootstrap();
 		authErrorReturnFocusTarget = null;
 		authErrorConfirmAction = null;
 
-		/* v1.894: aria-hidden 적용 전 에러창 내부 포커스를 먼저 해제 */
+		/* v1.897: aria-hidden 적용 전 에러창 내부 포커스를 먼저 해제 */
 		if (authErrorModal.contains(document.activeElement)) {
 			document.activeElement.blur();
 		}
@@ -11442,7 +11447,7 @@ bootstrap();
 		});
 	}
 
-	/* v1.894: 모달 바깥 클릭/마우스 이동으로 닫히지 않도록 overlay close 제거 */
+	/* v1.897: 모달 바깥 클릭/마우스 이동으로 닫히지 않도록 overlay close 제거 */
 	if (authModal) {
 		authModal.addEventListener("click", (e) => {
 			if (e.target === authModal) {
@@ -11576,17 +11581,18 @@ bootstrap();
 			try {
 				isRealjejuSavingProfile = true;
 				if (profileSubmitBtn) profileSubmitBtn.disabled = true;
+				const profileSavedAt = new Date().toISOString();
 				const { error } = await supabaseForProfile
 					.from("profiles")
-					.update({
+					.upsert({
+						id: user.id,
 						name: profileNameValue,
 						phone: profilePhoneValue,
 						role_request: profileRoleRequestValue,
 						profile_completed: true,
-						privacy_agreed_at: new Date().toISOString(),
-						updated_at: new Date().toISOString()
-					})
-					.eq("id", user.id);
+						privacy_agreed_at: profileSavedAt,
+						updated_at: profileSavedAt
+					}, { onConflict: "id" });
 
 				if (error) {
 					console.error("개인정보 저장 실패:", error);
@@ -11614,6 +11620,36 @@ bootstrap();
 			}
 		});
 	}
+
+	/* v1.897: 개인정보 설정 저장 버튼 클릭 시 submit 이벤트가 막혀도 필수 입력 안내가 뜨도록 보강 */
+	if (authProfileSetupForm) {
+		const authProfileSubmitBtn = authProfileSetupForm.querySelector(".auth-modal-submit");
+		if (authProfileSubmitBtn) {
+			authProfileSubmitBtn.addEventListener("click", (e) => {
+				if (!authProfileSetupScreen || authProfileSetupScreen.classList.contains("auth-screen-hidden")) return;
+				const profileNameValue = String(authProfileNameInput?.value || "").trim();
+				const profilePhoneValue = normalizeRealjejuPhone(authProfilePhoneInput?.value || "");
+				if (!profileNameValue) {
+					e.preventDefault();
+					e.stopImmediatePropagation();
+					openAuthErrorModal("이름을 입력하세요.", "개인정보 설정", authProfileNameInput);
+					return;
+				}
+				if (!profilePhoneValue || profilePhoneValue.length < 10) {
+					e.preventDefault();
+					e.stopImmediatePropagation();
+					openAuthErrorModal("휴대폰번호를 입력하세요.", "개인정보 설정", authProfilePhoneInput);
+					return;
+				}
+				if (!authProfilePrivacyAgreeCheck || !authProfilePrivacyAgreeCheck.checked) {
+					e.preventDefault();
+					e.stopImmediatePropagation();
+					openAuthErrorModal("개인정보 수집 및 이용에 동의해 주세요.", "개인정보 설정", authProfilePrivacyAgreeCheck);
+				}
+			}, true);
+		}
+	}
+
 	if (authProfileAgentRegisterBtn) {
 		authProfileAgentRegisterBtn.addEventListener("click", (e) => {
 			e.preventDefault();
@@ -11628,7 +11664,7 @@ bootstrap();
 		});
 	}
 
-	/* v1.894: 에러/안내창은 [확인] 버튼 외에는 닫히지 않음 */
+	/* v1.897: 에러/안내창은 [확인] 버튼 외에는 닫히지 않음 */
 	if (authErrorModal) {
 		authErrorModal.addEventListener("click", (e) => {
 			if (e.target === authErrorModal) {
@@ -11872,7 +11908,7 @@ bootstrap();
 		});
 	}
 
-	/* v1.894: 에러/안내창 열린 상태에서는 Enter/ESC로 닫히지 않음 */
+	/* v1.897: 에러/안내창 열린 상태에서는 Enter/ESC로 닫히지 않음 */
 	window.addEventListener("keydown", (e) => {
 		if (!authErrorModal || !authErrorModal.classList.contains("open")) return;
 		if (e.key === "Enter" || e.key === "Escape") {
@@ -11963,7 +11999,7 @@ bootstrap();
 })();
 </script>
 <script>
-/* v1.894: auth modal dialog 내부 클릭은 overlay로 전파하지 않음 */
+/* v1.897: auth modal dialog 내부 클릭은 overlay로 전파하지 않음 */
 document.addEventListener("DOMContentLoaded", function () {
 	document.querySelectorAll(".auth-modal-dialog").forEach(function (dialog) {
 		dialog.addEventListener("click", function (e) {
@@ -11971,6 +12007,90 @@ document.addEventListener("DOMContentLoaded", function () {
 		});
 	});
 });
+</script>
+
+<script>
+/* v1.897: 개인정보 설정 저장 버튼 강제 연결 - submit 이벤트 미동작 대비 */
+(function () {
+	const SUPABASE_URL = window.REALJEJU_SUPABASE_URL || "https://jctovfrcvfosoowribej.supabase.co";
+	const SUPABASE_PUBLIC_KEY = window.REALJEJU_SUPABASE_PUBLIC_KEY || "sb_publishable_IX_sRsjfEGdPin-kqtYGLw_FH0PPE2b";
+	let fallbackSupabaseClient = null;
+	function qs(id) { return document.getElementById(id); }
+	function normalizePhone(value) { return String(value || "").replace(/[^0-9]/g, ""); }
+	function getClient() {
+		if (fallbackSupabaseClient) return fallbackSupabaseClient;
+		if (!window.supabase || typeof window.supabase.createClient !== "function") return null;
+		fallbackSupabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLIC_KEY, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });
+		return fallbackSupabaseClient;
+	}
+	function showProfileError(message, focusTarget) {
+		const modal = qs("authErrorModal");
+		const title = qs("authErrorTitle");
+		const body = qs("authErrorMessage");
+		const confirm = qs("authErrorConfirmBtn");
+		if (!modal) { alert(message); if (focusTarget && focusTarget.focus) focusTarget.focus(); return; }
+		if (modal.parentElement !== document.body) document.body.appendChild(modal);
+		modal.style.zIndex = "300000";
+		if (title) title.textContent = "개인정보 설정";
+		if (body) body.textContent = message;
+		modal.classList.add("open");
+		modal.setAttribute("aria-hidden", "false");
+		document.body.style.overflow = "hidden";
+		if (confirm) {
+			confirm.onclick = function (ev) {
+				ev.preventDefault();
+				modal.classList.remove("open");
+				modal.setAttribute("aria-hidden", "true");
+				document.body.style.overflow = qs("authModal") && qs("authModal").classList.contains("open") ? "hidden" : "";
+				if (focusTarget && focusTarget.focus) setTimeout(() => focusTarget.focus(), 0);
+			};
+			setTimeout(() => confirm.focus(), 0);
+		}
+	}
+	async function saveProfile(e) {
+		if (e) { e.preventDefault(); e.stopPropagation(); }
+		const screen = qs("authProfileSetupScreen");
+		if (screen && screen.classList.contains("auth-screen-hidden")) return;
+		const nameInput = qs("authProfileNameInput");
+		const phoneInput = qs("authProfilePhoneInput");
+		const roleSelect = qs("authProfileRoleRequestSelect");
+		const agreeCheck = qs("authProfilePrivacyAgreeCheck");
+		const saveBtn = qs("authProfileSaveBtn") || (qs("authProfileSetupForm") ? qs("authProfileSetupForm").querySelector(".auth-modal-submit") : null);
+		const name = String(nameInput && nameInput.value || "").trim();
+		const phone = normalizePhone(phoneInput && phoneInput.value || "");
+		const role = roleSelect && roleSelect.value ? roleSelect.value : "user";
+		if (!name) return showProfileError("이름을 입력하세요.", nameInput);
+		if (!phone || phone.length < 10) return showProfileError("휴대폰번호를 입력하세요.", phoneInput);
+		if (!agreeCheck || !agreeCheck.checked) return showProfileError("개인정보 수집 및 이용에 동의해 주세요.", agreeCheck);
+		const client = getClient();
+		if (!client) return showProfileError("Supabase 연결 설정을 확인하세요.", nameInput);
+		try {
+			if (saveBtn) saveBtn.disabled = true;
+			const userResult = await client.auth.getUser();
+			const user = userResult && userResult.data && userResult.data.user ? userResult.data.user : null;
+			if (!user || !user.id) return showProfileError("로그인 정보를 확인하지 못했습니다. 다시 로그인해 주세요.", nameInput);
+			const now = new Date().toISOString();
+			const result = await client.from("profiles").upsert({ id: user.id, name: name, phone: phone, role_request: role, profile_completed: true, privacy_agreed_at: now, updated_at: now }, { onConflict: "id" });
+			if (result && result.error) { console.error("개인정보 저장 실패:", result.error); return showProfileError("개인정보 저장에 실패했습니다.", nameInput); }
+			showProfileError("개인정보가 저장되었습니다.", null);
+			const authModal = qs("authModal");
+			if (authModal) { authModal.classList.remove("profile-page-mode"); authModal.classList.remove("open"); authModal.setAttribute("aria-hidden", "true"); }
+		} catch (err) {
+			console.error("개인정보 저장 오류:", err);
+			showProfileError("개인정보 저장 중 오류가 발생했습니다.", nameInput);
+		} finally {
+			if (saveBtn) saveBtn.disabled = false;
+		}
+	}
+	document.addEventListener("click", function (e) {
+		const btn = e.target.closest("#authProfileSaveBtn, #authProfileSetupForm .auth-modal-submit");
+		if (!btn) return;
+		saveProfile(e);
+	}, true);
+	document.addEventListener("submit", function (e) {
+		if (e.target && e.target.id === "authProfileSetupForm") saveProfile(e);
+	}, true);
+})();
 </script>
 
 </body>
