@@ -43,6 +43,9 @@
 	--radius-small: 0px;
 	--radius-pill: 0px;
 	--radius-round: 9999px;
+	--account-dropdown-padding-x: 20px;
+	--account-dropdown-padding-y: 16px;
+	--account-dropdown-line-color: #e5e7eb;
 }
 
 *
@@ -4638,7 +4641,7 @@ body.sidebar-list-collapsed .map-side-tools
 
 }
 
-/* v1.875: list stays square, top controls softly rounded */ .deal-buttons button, .type-buttons button
+/* v1.894: list stays square, top controls softly rounded */ .deal-buttons button, .type-buttons button
 {
 	border-radius: 10px !important;
 	padding: 8px 14px !important;
@@ -4655,7 +4658,7 @@ body.sidebar-list-collapsed .map-side-tools
 	border-radius: 100px !important;
 }
 
-/* v1.875: top filter buttons - pill shape, no shadow */ .deal-buttons button, .type-buttons button
+/* v1.894: top filter buttons - pill shape, no shadow */ .deal-buttons button, .type-buttons button
 {
 	border-radius: 999px !important;
 	box-shadow: none !important;
@@ -4796,7 +4799,7 @@ body.sidebar-list-collapsed .map-side-tools
 	font-size: var(--topbar-logo-font-size, 20px) !important;
 }
 
-/* Ver 1.875 표시: 하단바 왼쪽 고정 */ .sub-version-fixed
+/* Ver 1.894 표시: 하단바 왼쪽 고정 */ .sub-version-fixed
 {
 	position: absolute !important;
 	left: 22px !important;
@@ -4844,7 +4847,206 @@ body.sidebar-list-collapsed .map-side-tools
 	text-align: right !important;
 }
 
-/* ===== AUTH MODAL OVERRIDE FROM 1.875 ONLY ===== */ .auth-modal
+
+/* v1.894: 계정 드롭다운이 상단바 overflow/transform에 잘리지 않도록 보강 */
+.global-topbar,
+.global-topbar-inner,
+.global-topbar-right
+{
+	overflow: visible !important;
+}
+
+/* ===== ACCOUNT DROPDOWN FROM 1.894 ONLY ===== */
+.global-auth-trigger.logged-in
+{
+	max-width: 260px !important;
+	overflow: hidden !important;
+	text-overflow: ellipsis !important;
+}
+
+.global-auth-trigger .account-email-text
+{
+	display: inline-block;
+	max-width: 260px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	vertical-align: middle;
+}
+
+.global-account-dropdown
+{
+	position: fixed;
+	top: calc(var(--global-topbar-height) + 8px);
+	right: 18px;
+	z-index: 10020;
+	width: 292px;
+	padding: 6px 6px 6px;
+	border: 1px solid #e5e7eb;
+	background: rgba(255,255,255,0.98);
+	box-shadow: 0 18px 42px rgba(15, 23, 42, 0.16);
+	display: none;
+}
+
+.global-account-dropdown.open
+{
+	display: block !important;
+}
+
+.global-account-dropdown::before
+{
+	content: "";
+	position: absolute;
+	top: -9px;
+	right: 42px;
+	width: 16px;
+	height: 16px;
+	background: rgba(255,255,255,0.98);
+	border-left: 1px solid #e5e7eb;
+	border-top: 1px solid #e5e7eb;
+	transform: rotate(45deg);
+}
+
+.global-account-email
+{
+	position: relative;
+	z-index: 1;
+	padding: 6px 26px 14px;
+	font-size: 15px;
+	font-weight: 800;
+	color: #111827;
+	line-height: 1.35;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.global-account-divider
+{
+	height: 1px;
+	margin: 0 26px;
+	background: #e5e7eb;
+}
+
+.global-account-menu-item
+{
+	position: relative;
+	z-index: 1;
+	width: 100%;
+	height: 56px;
+	padding: 0 26px;
+	border: 0;
+	background: transparent;
+	color: #111827;
+	font-size: 16px;
+	font-weight: 700;
+	letter-spacing: -0.2px;
+	text-align: left;
+	cursor: pointer;
+}
+
+.global-account-menu-item:hover
+{
+	background: #f8fafc;
+}
+
+.profile-incomplete-dot
+{
+	display: none;
+	width: 7px;
+	height: 7px;
+	margin-left: 6px;
+	border-radius: 50%;
+	background: #ef4444;
+	vertical-align: middle;
+}
+
+.global-account-dropdown.profile-incomplete .profile-incomplete-dot
+{
+	display: inline-block;
+}
+
+/* v1.894: 개인정보 설정은 팝업이 아니라 전체 페이지 형태로 표시 */
+.auth-modal.profile-page-mode
+{
+	align-items: stretch;
+	justify-content: stretch;
+	padding: 0;
+	background: #f4f7fb;
+	backdrop-filter: none;
+	-webkit-backdrop-filter: none;
+}
+
+.auth-modal.profile-page-mode .auth-modal-dialog
+{
+	width: 100%;
+	max-width: none;
+	height: 100vh;
+	max-height: 100vh;
+	padding: 72px 24px 64px;
+	background: #ffffff;
+	color: #111827;
+	border: 0;
+	box-shadow: none;
+	backdrop-filter: none;
+	-webkit-backdrop-filter: none;
+	overflow-y: auto;
+}
+
+.auth-modal.profile-page-mode .auth-profile-setup-screen
+{
+	width: min(680px, calc(100vw - 40px));
+	margin: 0 auto;
+}
+
+.auth-modal.profile-page-mode .auth-modal-title
+{
+	margin: 0 0 12px;
+	color: #111827;
+	white-space: normal;
+}
+
+.auth-modal.profile-page-mode .auth-modal-divider
+{
+	background: #1B6FA4;
+}
+
+.auth-modal.profile-page-mode .auth-profile-guide
+{
+	color: #475569;
+}
+
+.auth-modal.profile-page-mode .auth-modal-field-label,
+.auth-modal.profile-page-mode .auth-profile-consent,
+.auth-modal.profile-page-mode .auth-profile-consent strong
+{
+	color: #111827;
+}
+
+.auth-modal.profile-page-mode .auth-modal-input
+{
+	border-color: #d1d5db;
+	background: #ffffff;
+	color: #111827;
+}
+
+.auth-modal.profile-page-mode .auth-modal-input::placeholder
+{
+	color: #9ca3af;
+}
+
+.auth-modal.profile-page-mode .auth-modal-submit
+{
+	background: #1B6FA4;
+	color: #ffffff;
+}
+
+.auth-modal.profile-page-mode .auth-modal-close
+{
+	color: #111827;
+}
+
+/* ===== AUTH MODAL OVERRIDE FROM 1.894 ONLY ===== */ .auth-modal
 {
 	position: fixed;
 	inset: 0;
@@ -4894,6 +5096,33 @@ body.sidebar-list-collapsed .map-side-tools
 	font-weight: 300;
 	line-height: 1;
 	cursor: pointer;
+}
+
+
+.auth-modal-back
+{
+	position: absolute;
+	top: 18px;
+	left: 18px;
+	width: 44px;
+	height: 44px;
+	border: 0;
+	border-radius: 0;
+	background: transparent;
+	color: #fff;
+	font-size: 38px;
+	font-weight: 300;
+	line-height: 1;
+	cursor: pointer;
+	display: none;
+	align-items: center;
+	justify-content: center;
+	z-index: 2;
+}
+
+.auth-modal-back.visible
+{
+	display: inline-flex;
 }
 
 .auth-modal-title
@@ -5066,6 +5295,7 @@ body.sidebar-list-collapsed .map-side-tools
 
 .auth-error-message
 {
+	white-space: pre-line;
 	margin: 0 0 24px;
 	font-size: 16px;
 	font-weight: 700;
@@ -5088,7 +5318,7 @@ body.sidebar-list-collapsed .map-side-tools
 	cursor: pointer;
 }
 
-.auth-login-screen, .auth-signup-terms-screen, .auth-signup-form-screen
+.auth-login-screen, .auth-signup-terms-screen, .auth-signup-form-screen, .auth-forgot-password-screen, .auth-reset-password-screen
 {
 	display: flex;
 	flex-direction: column;
@@ -5389,7 +5619,181 @@ body.sidebar-list-collapsed .map-side-tools
 {
 	cursor: pointer;
 }
-		</style>
+/* v1.894: 개인정보 설정 회원유형 드롭다운 복구 */
+.auth-profile-select-wrap
+{
+	position: relative;
+	width: 100%;
+}
+
+.auth-profile-select-wrap select
+{
+	width: 100%;
+	height: 50px;
+	border: 1px solid rgba(255,255,255,0.35);
+	background: rgba(255,255,255,0.08);
+	color: rgba(255,255,255,0.96);
+	padding: 0 44px 0 16px;
+	font-size: 16px;
+	font-weight: 800;
+	outline: none;
+	appearance: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+}
+
+.auth-profile-select-wrap select option
+{
+	color: #111827;
+	background: #ffffff;
+}
+
+.auth-profile-select-arrow
+{
+	position: absolute;
+	right: 16px;
+	top: 50%;
+	transform: translateY(-50%);
+	pointer-events: none;
+	font-size: 14px;
+	font-weight: 900;
+	color: rgba(255,255,255,0.82);
+	line-height: 1;
+}
+
+/* ===== PROFILE SETUP MODAL PATCH FROM 1.894 ONLY ===== */
+.auth-profile-guide
+{
+	margin: -6px 0 4px;
+	font-size: 14px;
+	font-weight: 700;
+	line-height: 1.55;
+	letter-spacing: -0.2px;
+	color: rgba(255,255,255,0.82);
+}
+
+.auth-modal-select
+{
+	appearance: none;
+	-webkit-appearance: none;
+	background-image: linear-gradient(45deg, transparent 50%, rgba(255,255,255,0.86) 50%), linear-gradient(135deg, rgba(255,255,255,0.86) 50%, transparent 50%);
+	background-position: calc(100% - 22px) 29px, calc(100% - 15px) 29px;
+	background-size: 7px 7px, 7px 7px;
+	background-repeat: no-repeat;
+}
+
+.auth-profile-consent
+{
+	display: flex;
+	align-items: flex-start;
+	gap: 10px;
+	margin-top: 2px;
+	color: rgba(255,255,255,0.92);
+	font-size: 14px;
+	font-weight: 700;
+	line-height: 1.45;
+	letter-spacing: -0.15px;
+	cursor: pointer;
+	user-select: none;
+}
+
+.auth-profile-consent input
+{
+	width: 18px;
+	height: 18px;
+	margin: 1px 0 0;
+	accent-color: #3B82F6;
+	flex: 0 0 auto;
+}
+
+.auth-profile-consent strong
+{
+	color: #fff;
+	font-weight: 900;
+}
+
+		
+/* ===== PATCH 1.894: profile role select visibility + account dropdown item lines ===== */
+.auth-modal.profile-page-mode .auth-profile-select-wrap
+{
+	display: block !important;
+	position: relative !important;
+	width: 100% !important;
+}
+
+.auth-modal.profile-page-mode .auth-profile-select-wrap select
+{
+	display: block !important;
+	width: 100% !important;
+	height: 66px !important;
+	border: 2px solid #d1d5db !important;
+	border-radius: 10px !important;
+	background: #ffffff !important;
+	color: #111827 !important;
+	padding: 0 52px 0 20px !important;
+	font-size: 17px !important;
+	font-weight: 700 !important;
+	line-height: 1 !important;
+	appearance: none !important;
+	-webkit-appearance: none !important;
+	-moz-appearance: none !important;
+}
+
+.auth-modal.profile-page-mode .auth-profile-select-arrow
+{
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	right: 20px !important;
+	color: #64748b !important;
+	font-size: 16px !important;
+	line-height: 1 !important;
+}
+
+.global-account-menu-item
+{
+	display: flex !important;
+	align-items: center !important;
+	justify-content: flex-start !important;
+	gap: 6px !important;
+	height: 60px;
+	min-height: 0 !important;
+	padding: var(--account-dropdown-padding-y) var(--account-dropdown-padding-x) !important;
+	border-bottom: 0 !important;
+}
+
+.global-account-menu-item::after
+{
+	content: "";
+	position: absolute;
+	left: var(--account-dropdown-padding-x);
+	right: var(--account-dropdown-padding-x);
+	bottom: 0;
+	height: 1px;
+	background: var(--account-dropdown-line-color);
+	pointer-events: none;
+}
+
+.global-account-menu-item:last-of-type::after
+{
+	display: none !important;
+}
+
+.global-account-divider
+{
+	display: none !important;
+}
+
+.profile-incomplete-dot
+{
+	flex: 0 0 7px !important;
+	align-self: center !important;
+	margin-left: 4px !important;
+	margin-top: 0 !important;
+	vertical-align: middle !important;
+}
+
+</style>
 	</head>
 	<body class="sidebar-list-collapsed">
 		<header class="global-topbar">
@@ -5445,7 +5849,7 @@ body.sidebar-list-collapsed .map-side-tools
 					</div>
 				</div>
 				<div class="global-topbar-right">
-					<button type="button" class="global-auth-trigger" id="detailAuthTrigger">
+					<button type="button" class="global-auth-trigger" id="detailAuthTrigger" data-auth-state="logged-out">
 						<span>
 							회원가입
 						</span>
@@ -5456,13 +5860,25 @@ body.sidebar-list-collapsed .map-side-tools
 							로그인
 						</span>
 					</button>
+					<div class="global-account-dropdown" id="globalAccountDropdown" aria-hidden="true">
+						<button type="button" class="global-account-menu-item" data-account-action="favorites">관심매물</button>
+						<button type="button" class="global-account-menu-item" data-account-action="recent">최근 본 매물</button>
+						<div class="global-account-divider"></div>
+						<button type="button" class="global-account-menu-item" data-account-action="inquiries">1:1 문의내역</button>
+						<button type="button" class="global-account-menu-item" data-account-action="reports">허위매물 신고내역</button>
+						<div class="global-account-divider"></div>
+						<button type="button" class="global-account-menu-item" data-account-action="myinfo">내 정보</button>
+						<button type="button" class="global-account-menu-item" data-account-action="profile">개인정보 설정 <span class="profile-incomplete-dot" id="profileIncompleteDot" aria-hidden="true"></span></button>
+						<div class="global-account-divider"></div>
+						<button type="button" class="global-account-menu-item" data-account-action="logout">로그아웃</button>
+					</div>
 				</div>
 			</div>
 		</header>
 		<div class="sub-topbar">
 			<div class="sub-topbar-inner">
 				<span class="sub-version-fixed">
-					Ver 1.875
+					Ver 1.894
 				</span>
 				<div class="sub-topbar-left">
 					<strong id="listInfoText">
@@ -5972,6 +6388,9 @@ if (globalBrandLink) {
 </script>
 <div class="auth-modal" id="authModal" aria-hidden="true">
 	<div class="auth-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
+		<button type="button" class="auth-modal-back" id="authModalBack" aria-label="뒤로가기">
+			‹
+		</button>
 		<button type="button" class="auth-modal-close" id="authModalClose" aria-label="닫기">
 			×
 		</button>
@@ -6000,10 +6419,10 @@ if (globalBrandLink) {
 				</button>
 			</form>
 			<div class="auth-modal-links">
-				<button type="button">
+				<button type="button" id="authFindIdBtn">
 					아이디 찾기
 				</button>
-				<button type="button">
+				<button type="button" id="authForgotPasswordOpenBtn">
 					비밀번호 찾기
 				</button>
 			</div>
@@ -6015,6 +6434,104 @@ if (globalBrandLink) {
 					회원가입
 				</button>
 			</div>
+		</div>
+		<div class="auth-forgot-password-screen auth-screen-hidden" id="authForgotPasswordScreen">
+			<h2 class="auth-modal-title">
+				비밀번호 찾기
+			</h2>
+			<div class="auth-modal-divider">
+			</div>
+			<form class="auth-modal-form" id="authForgotPasswordForm">
+				<div class="auth-modal-field">
+					<label class="auth-modal-field-label" for="authForgotEmailInput">
+						이메일
+					</label>
+					<input type="email" class="auth-modal-input" id="authForgotEmailInput" placeholder="가입한 이메일을 입력해주세요." autocomplete="username" />
+				</div>
+				<button type="submit" class="auth-modal-submit">
+					비밀번호 재설정 메일 보내기
+				</button>
+			</form>
+			<div class="auth-signup-footer">
+				<span>
+					✅&nbsp;&nbsp;비밀번호가 기억나셨나요?
+				</span>
+				<button type="button" class="auth-login-switch" id="authForgotLoginSwitchBtn">
+					로그인
+				</button>
+			</div>
+		</div>
+		<div class="auth-reset-password-screen auth-screen-hidden" id="authResetPasswordScreen">
+			<h2 class="auth-modal-title">
+				새 비밀번호 설정
+			</h2>
+			<div class="auth-modal-divider">
+			</div>
+			<form class="auth-modal-form" id="authResetPasswordForm">
+				<div class="auth-modal-field">
+					<label class="auth-modal-field-label" for="authResetPasswordInput">
+						새 비밀번호
+					</label>
+					<input type="password" class="auth-modal-input" id="authResetPasswordInput" placeholder="새 비밀번호를 입력해주세요." autocomplete="new-password" />
+				</div>
+				<div class="auth-modal-field">
+					<label class="auth-modal-field-label" for="authResetPasswordConfirmInput">
+						새 비밀번호 확인
+					</label>
+					<input type="password" class="auth-modal-input" id="authResetPasswordConfirmInput" placeholder="새 비밀번호를 한번 더 입력해주세요." autocomplete="new-password" />
+				</div>
+				<button type="submit" class="auth-modal-submit">
+					비밀번호 변경
+				</button>
+			</form>
+		</div>
+		<div class="auth-profile-setup-screen auth-screen-hidden" id="authProfileSetupScreen">
+			<h2 class="auth-modal-title">
+				개인정보 설정
+			</h2>
+			<div class="auth-modal-divider">
+			</div>
+			<form class="auth-modal-form" id="authProfileSetupForm">
+				<p class="auth-profile-guide">
+					회원 식별 및 서비스 제공을 위해 이름과 휴대폰번호를 수집합니다.
+				</p>
+				<div class="auth-modal-field">
+					<label class="auth-modal-field-label" for="authProfileNameInput">
+						이름
+					</label>
+					<input type="text" class="auth-modal-input" id="authProfileNameInput" placeholder="이름을 입력해주세요." autocomplete="name" />
+				</div>
+				<div class="auth-modal-field">
+					<label class="auth-modal-field-label" for="authProfilePhoneInput">
+						휴대폰번호
+					</label>
+					<input type="tel" class="auth-modal-input" id="authProfilePhoneInput" placeholder="010-0000-0000" autocomplete="tel" />
+				</div>
+				<div class="auth-modal-field">
+					<label class="auth-modal-field-label" for="authProfileRoleRequestSelect">
+						회원유형
+					</label>
+					<div class="auth-profile-select-wrap">
+						<select id="authProfileRoleRequestSelect">
+							<option value="user" selected>일반회원</option>
+							<option value="agent">대표 공인중개사</option>
+							<option value="agent_sub">소속 공인중개사</option>
+							<option value="agent_staff">중개보조원</option>
+							<option value="corporation">법인</option>
+						</select>
+						<span class="auth-profile-select-arrow">▾</span>
+					</div>
+				</div>
+				<label class="auth-profile-consent">
+					<input type="checkbox" id="authProfilePrivacyAgreeCheck" />
+					<span>
+						<strong>[필수]</strong> 개인정보 수집 및 이용에 동의합니다.
+					</span>
+				</label>
+				<button type="submit" class="auth-modal-submit">
+					저장
+				</button>
+			</form>
 		</div>
 		<div class="auth-signup-terms-screen auth-screen-hidden" id="authSignupTermsScreen">
 			<h2 class="auth-modal-title">
@@ -6194,7 +6711,7 @@ function hexToRgba(hex, alpha = 1)
 	return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 const APP_NAME = "REALJEJU.APP";
-const APP_VERSION = "1.875";
+const APP_VERSION = "1.894";
 
 function applyAppVersion()
 {
@@ -6295,8 +6812,14 @@ function updateViewCountElements(viewKey, count)
 	});
 }
 
+function shouldUseListViewCounts()
+{
+	return !!(state && state.isListOpen && !document.body.classList.contains("sidebar-list-collapsed"));
+}
+
 async function fetchViewCounts(items)
 {
+	if (!shouldUseListViewCounts()) return {};
 	const ids = [...new Set((items || []).map(item => getItemViewKey(item)).filter(Boolean))];
 	if (!ids.length) return {};
 	try {
@@ -6305,13 +6828,13 @@ async function fetchViewCounts(items)
 		const json = await res.json();
 		return json && typeof json.items === "object" ? (json.items || {}) : {};
 	} catch (err) {
-		console.error("조회 불러오기 실패:", err);
 		return {};
 	}
 }
 
 async function refreshCardViewCounts(items)
 {
+	if (!shouldUseListViewCounts()) return;
 	const renderSeq = ++state.viewRenderSeq;
 	const fetched = await fetchViewCounts(items);
 	if (renderSeq !== state.viewRenderSeq) return;
@@ -6323,6 +6846,7 @@ async function refreshCardViewCounts(items)
 
 async function incrementViewCount(viewKey)
 {
+	if (!shouldUseListViewCounts()) return null;
 	const key = getViewCountKey(viewKey);
 	if (!key) return null;
 	try {
@@ -6333,7 +6857,6 @@ async function incrementViewCount(viewKey)
 		});
 		const json = await res.json().catch(() => ({}));
 		if (!res.ok) {
-			console.error("조회 증가 실패:", json?.error || res.statusText);
 			return null;
 		}
 		const nextCount = Number(json?.views);
@@ -6342,7 +6865,6 @@ async function incrementViewCount(viewKey)
 		updateViewCountElements(key, nextCount);
 		return nextCount;
 	} catch (err) {
-		console.error("조회 증가 실패:", err);
 		return null;
 	}
 }
@@ -9622,6 +10144,10 @@ function initEvents()
 		detailAuthTrigger.addEventListener("click", (e) => {
 			e.preventDefault();
 			e.stopPropagation();
+			if (detailAuthTrigger.dataset && detailAuthTrigger.dataset.authState === "logged-in") {
+				if (typeof toggleGlobalAccountDropdown === "function") toggleGlobalAccountDropdown();
+				return;
+			}
 			openAuthModal();
 		});
 	}
@@ -9634,13 +10160,33 @@ function initEvents()
 		});
 	}
 
-	/* v1.875: 모달 바깥 클릭/마우스 이동으로 닫히지 않도록 overlay close 제거 */
+	/* v1.894: 모달 바깥 클릭/마우스 이동으로 닫히지 않도록 overlay close 제거 */
 	if (authModal) {
 		authModal.addEventListener("click", (e) => {
 			if (e.target === authModal) {
 				e.preventDefault();
 			}
 		});
+	}
+
+	function normalizeRealjejuPhone(value)
+	{
+		return String(value || "").replace(/[^0-9]/g, "");
+	}
+
+	async function requireProfileSetupIfNeeded(supabaseClient, user, profileData)
+	{
+		currentRealjejuAuthUser = user || null;
+		const profile = profileData || null;
+		const needsSetup = !profile || profile.profile_completed !== true || !profile.name || !profile.phone;
+		currentRealjejuProfileCompleted = !needsSetup;
+		if (needsSetup) {
+			if (authProfileNameInput) authProfileNameInput.value = profile && profile.name ? profile.name : "";
+			if (authProfilePhoneInput) authProfilePhoneInput.value = profile && profile.phone ? profile.phone : "";
+			if (authProfileRoleRequestSelect) authProfileRoleRequestSelect.value = profile && profile.role_request ? profile.role_request : "user";
+			if (authProfilePrivacyAgreeCheck) authProfilePrivacyAgreeCheck.checked = false;
+		}
+		return needsSetup;
 	}
 
 	if (authModalForm) {
@@ -10265,22 +10811,40 @@ bootstrap();
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 
-/* ===== AUTH MODAL FUNCTION PATCH FROM 1.875 ONLY ===== */
+/* ===== AUTH MODAL FUNCTION PATCH FROM 1.894 ONLY ===== */
 (function () {
 	const authModal = document.getElementById("authModal");
 	const authModalClose = document.getElementById("authModalClose");
+	const authModalBack = document.getElementById("authModalBack");
 	const authModalForm = document.getElementById("authModalForm");
 	const authLoginScreen = document.getElementById("authLoginScreen");
 	const authSignupTermsScreen = document.getElementById("authSignupTermsScreen");
 	const authSignupFormScreen = document.getElementById("authSignupFormScreen");
+	const authForgotPasswordScreen = document.getElementById("authForgotPasswordScreen");
+	const authResetPasswordScreen = document.getElementById("authResetPasswordScreen");
+	const authProfileSetupScreen = document.getElementById("authProfileSetupScreen");
 	const authSignupForm = document.getElementById("authSignupForm");
+	const authForgotPasswordForm = document.getElementById("authForgotPasswordForm");
+	const authResetPasswordForm = document.getElementById("authResetPasswordForm");
+	const authProfileSetupForm = document.getElementById("authProfileSetupForm");
 	const authSignupFormLoginBtn = document.getElementById("authSignupFormLoginBtn");
 	const authSignupOpenBtn = document.getElementById("authSignupOpenBtn");
+	const authFindIdBtn = document.getElementById("authFindIdBtn");
+	const authForgotPasswordOpenBtn = document.getElementById("authForgotPasswordOpenBtn");
+	const authForgotLoginSwitchBtn = document.getElementById("authForgotLoginSwitchBtn");
 	const authEmailInput = document.getElementById("authEmailInput");
 	const authPasswordInput = document.getElementById("authPasswordInput");
 	const authSignupEmailInput = document.getElementById("authSignupEmailInput");
 	const authSignupPasswordInput = document.getElementById("authSignupPasswordInput");
 	const authSignupPasswordConfirmInput = document.getElementById("authSignupPasswordConfirmInput");
+	const authForgotEmailInput = document.getElementById("authForgotEmailInput");
+	const authResetPasswordInput = document.getElementById("authResetPasswordInput");
+	const authResetPasswordConfirmInput = document.getElementById("authResetPasswordConfirmInput");
+	const authProfileNameInput = document.getElementById("authProfileNameInput");
+	const authProfilePhoneInput = document.getElementById("authProfilePhoneInput");
+	const authProfileRoleRequestSelect = document.getElementById("authProfileRoleRequestSelect");
+	const authProfilePrivacyAgreeCheck = document.getElementById("authProfilePrivacyAgreeCheck");
+	const authProfileAgentRegisterBtn = document.getElementById("authProfileAgentRegisterBtn");
 	const authErrorModal = document.getElementById("authErrorModal");
 	const authErrorTitle = document.getElementById("authErrorTitle");
 	const authErrorMessage = document.getElementById("authErrorMessage");
@@ -10297,10 +10861,201 @@ bootstrap();
 	const termsFullBody = document.getElementById("termsFullBody");
 	let currentTermsKey = null;
 	let authErrorReturnFocusTarget = null;
+	let authErrorConfirmAction = null;
+	let isRealjejuProfileSetupRequired = false;
+	let isRealjejuSavingProfile = false;
+	let currentRealjejuAuthUser = null;
+	let currentRealjejuProfileCompleted = false;
+	const REALJEJU_PROFILE_PROMPT_SESSION_KEY = "realjeju_profile_prompted_this_login";
+	const globalAuthTrigger = document.getElementById("detailAuthTrigger");
+	const globalAccountDropdown = document.getElementById("globalAccountDropdown");
+	const globalAccountEmail = document.getElementById("globalAccountEmail");
+	/* v1.894: 드롭다운은 topbar 내부 overflow/transform 영향을 받지 않게 body 직속으로 이동 */
+	if (globalAccountDropdown && globalAccountDropdown.parentElement !== document.body) {
+		document.body.appendChild(globalAccountDropdown);
+	}
 
-	/* v1.875: Supabase Auth public client only - SECRET_KEY 금지 */
+	function escapeAuthHtml(value)
+	{
+		return String(value == null ? "" : value)
+		.replace(/&/g, "&amp;")
+		.replace(/</g, "&lt;")
+		.replace(/>/g, "&gt;")
+		.replace(/"/g, "&quot;")
+		.replace(/'/g, "&#039;");
+	}
+
+	function closeGlobalAccountDropdown()
+	{
+		if (!globalAccountDropdown) return;
+		globalAccountDropdown.classList.remove("open");
+		globalAccountDropdown.setAttribute("aria-hidden", "true");
+		globalAccountDropdown.style.display = "none";
+	}
+
+	function toggleGlobalAccountDropdown()
+	{
+		if (!globalAccountDropdown) return;
+		const isOpen = globalAccountDropdown.classList.contains("open");
+		globalAccountDropdown.classList.toggle("open", !isOpen);
+		globalAccountDropdown.setAttribute("aria-hidden", isOpen ? "true" : "false");
+		globalAccountDropdown.style.display = isOpen ? "none" : "block";
+	}
+
+	function applyLoggedOutAccountUI()
+	{
+		closeGlobalAccountDropdown();
+		currentRealjejuAuthUser = null;
+		currentRealjejuProfileCompleted = false;
+		if (globalAuthTrigger) {
+			globalAuthTrigger.dataset.authState = "logged-out";
+			globalAuthTrigger.classList.remove("logged-in");
+			globalAuthTrigger.innerHTML = '<span>회원가입</span><span class="auth-dot">·</span><span>로그인</span>';
+		}
+		if (globalAccountEmail) globalAccountEmail.textContent = "";
+		if (globalAccountDropdown) globalAccountDropdown.classList.remove("profile-incomplete");
+	}
+
+	function applyLoggedInAccountUI(user, profile)
+	{
+		if (!user) return;
+		currentRealjejuAuthUser = user;
+		const email = user.email || "로그인 사용자";
+		const isCompleted = !!(profile && profile.profile_completed === true && profile.name && profile.phone);
+		currentRealjejuProfileCompleted = isCompleted;
+		if (globalAuthTrigger) {
+			globalAuthTrigger.dataset.authState = "logged-in";
+			globalAuthTrigger.classList.add("logged-in");
+			globalAuthTrigger.innerHTML = '<span class="account-email-text">' + escapeAuthHtml(email) + '</span>';
+		}
+		if (globalAccountEmail) globalAccountEmail.textContent = email;
+		if (globalAccountDropdown) globalAccountDropdown.classList.toggle("profile-incomplete", !isCompleted);
+	}
+
+	async function openProfileSetupFromAccountMenu()
+	{
+		closeGlobalAccountDropdown();
+		const supabaseForProfile = getRealjejuSupabaseClient();
+		if (!supabaseForProfile) {
+			openAuthErrorModal("Supabase URL과 PUBLIC KEY 설정이 필요합니다.", "개인정보 설정", null);
+			return;
+		}
+		try {
+			const { data: userData } = await supabaseForProfile.auth.getUser();
+			const user = userData && userData.user ? userData.user : null;
+			if (!user) {
+				openAuthModal();
+				return;
+			}
+			currentRealjejuAuthUser = user;
+			const { data: profile } = await supabaseForProfile
+				.from("profiles")
+				.select("name, phone, role_request, profile_completed")
+				.eq("id", user.id)
+				.maybeSingle();
+			fillAuthProfileSetupForm(profile);
+			openProfileSetupModalNow();
+		} catch (err) {
+			console.warn("개인정보 설정 열기 실패:", err);
+			openAuthErrorModal("개인정보 설정을 열지 못했습니다.", "개인정보 설정", null);
+		}
+	}
+
+	async function handleRealjejuLogout()
+	{
+		const supabaseForLogout = getRealjejuSupabaseClient();
+		try {
+			if (supabaseForLogout) await supabaseForLogout.auth.signOut();
+		} catch (err) {
+			console.warn("로그아웃 실패:", err);
+		}
+		sessionStorage.removeItem(REALJEJU_PROFILE_PROMPT_SESSION_KEY);
+		applyLoggedOutAccountUI();
+	}
+
+	async function initRealjejuAccountUI()
+	{
+		const supabaseForInit = getRealjejuSupabaseClient();
+		if (!supabaseForInit) {
+			applyLoggedOutAccountUI();
+			return;
+		}
+		try {
+			const { data: userData } = await supabaseForInit.auth.getUser();
+			const user = userData && userData.user ? userData.user : null;
+			if (!user) {
+				applyLoggedOutAccountUI();
+				return;
+			}
+			const { data: profile } = await supabaseForInit
+				.from("profiles")
+				.select("status, name, phone, role_request, profile_completed")
+				.eq("id", user.id)
+				.maybeSingle();
+			if (profile && profile.status && profile.status !== "active") {
+				await supabaseForInit.auth.signOut();
+				applyLoggedOutAccountUI();
+				return;
+			}
+			applyLoggedInAccountUI(user, profile);
+			currentRealjejuAuthUser = user;
+			currentRealjejuProfileCompleted = !!(profile && profile.profile_completed === true && profile.name && profile.phone);
+		} catch (err) {
+			console.warn("로그인 상태 확인 실패:", err);
+			applyLoggedOutAccountUI();
+		}
+	}
+
+	document.addEventListener("click", (e) => {
+		const trigger = e.target.closest("#detailAuthTrigger");
+		if (trigger && trigger.dataset.authState === "logged-in") {
+			e.preventDefault();
+			e.stopImmediatePropagation();
+			toggleGlobalAccountDropdown();
+			return;
+		}
+
+		const accountMenuItem = e.target.closest(".global-account-menu-item[data-account-action]");
+		if (accountMenuItem && globalAccountDropdown && globalAccountDropdown.contains(accountMenuItem)) {
+			e.preventDefault();
+			e.stopImmediatePropagation();
+			const action = accountMenuItem.dataset.accountAction || "";
+			if (action === "logout") {
+				handleRealjejuLogout();
+				return;
+			}
+			if (action === "profile" || action === "myinfo") {
+				openProfileSetupFromAccountMenu();
+				return;
+			}
+			closeGlobalAccountDropdown();
+			openAuthErrorModal("준비중입니다.", "이용 안내", null);
+			return;
+		}
+
+		if (globalAccountDropdown && globalAccountDropdown.classList.contains("open") && !e.target.closest("#globalAccountDropdown")) {
+			closeGlobalAccountDropdown();
+		}
+	}, true);
+
+	document.addEventListener("keydown", (e) => {
+		if (e.key === "Escape") closeGlobalAccountDropdown();
+	});
+
+	/* v1.894: account button direct fallback - 아이디 클릭 시 메뉴 강제 토글 */
+	if (globalAuthTrigger) {
+		globalAuthTrigger.addEventListener("click", (e) => {
+			if (!(globalAuthTrigger.dataset && globalAuthTrigger.dataset.authState === "logged-in")) return;
+			e.preventDefault();
+			e.stopImmediatePropagation();
+			toggleGlobalAccountDropdown();
+		}, true);
+	}
+
+	/* v1.894: Supabase Auth public client only - SECRET_KEY 금지 */
 	const REALJEJU_SUPABASE_URL = window.REALJEJU_SUPABASE_URL || "https://jctovfrcvfosoowribej.supabase.co";
 	const REALJEJU_SUPABASE_PUBLIC_KEY = window.REALJEJU_SUPABASE_PUBLIC_KEY || "sb_publishable_IX_sRsjfEGdPin-kqtYGLw_FH0PPE2b";
+	const REALJEJU_AUTH_REDIRECT_URL = window.REALJEJU_AUTH_REDIRECT_URL || "https://realjeju.app";
 	let realjejuSupabaseClient = null;
 
 	function getRealjejuSupabaseClient()
@@ -10332,25 +11087,103 @@ bootstrap();
 		privacy: "개인정보처리방침"
 	};
 
-	function showAuthLoginScreen()
+	function hideAllAuthScreens()
 	{
-		if (authLoginScreen) authLoginScreen.classList.remove("auth-screen-hidden");
+		if (authLoginScreen) authLoginScreen.classList.add("auth-screen-hidden");
 		if (authSignupTermsScreen) authSignupTermsScreen.classList.add("auth-screen-hidden");
 		if (authSignupFormScreen) authSignupFormScreen.classList.add("auth-screen-hidden");
+		if (authForgotPasswordScreen) authForgotPasswordScreen.classList.add("auth-screen-hidden");
+		if (authResetPasswordScreen) authResetPasswordScreen.classList.add("auth-screen-hidden");
+		if (authProfileSetupScreen) authProfileSetupScreen.classList.add("auth-screen-hidden");
+	}
+
+	function updateAuthBackVisibility(show)
+	{
+		if (!authModalBack) return;
+		authModalBack.classList.toggle("visible", !!show);
+		authModalBack.setAttribute("aria-hidden", show ? "false" : "true");
+	}
+
+	function showAuthLoginScreen()
+	{
+		if (authModal) authModal.classList.remove("profile-page-mode");
+		hideAllAuthScreens();
+		updateAuthBackVisibility(false);
+		if (authLoginScreen) authLoginScreen.classList.remove("auth-screen-hidden");
 	}
 
 	function showAuthSignupTermsScreen()
 	{
-		if (authLoginScreen) authLoginScreen.classList.add("auth-screen-hidden");
+		if (authModal) authModal.classList.remove("profile-page-mode");
+		hideAllAuthScreens();
+		updateAuthBackVisibility(true);
 		if (authSignupTermsScreen) authSignupTermsScreen.classList.remove("auth-screen-hidden");
-		if (authSignupFormScreen) authSignupFormScreen.classList.add("auth-screen-hidden");
 	}
 
 	function showAuthSignupFormScreen()
 	{
-		if (authLoginScreen) authLoginScreen.classList.add("auth-screen-hidden");
-		if (authSignupTermsScreen) authSignupTermsScreen.classList.add("auth-screen-hidden");
+		if (authModal) authModal.classList.remove("profile-page-mode");
+		hideAllAuthScreens();
+		updateAuthBackVisibility(true);
 		if (authSignupFormScreen) authSignupFormScreen.classList.remove("auth-screen-hidden");
+	}
+
+	function showAuthForgotPasswordScreen()
+	{
+		if (authModal) authModal.classList.remove("profile-page-mode");
+		hideAllAuthScreens();
+		updateAuthBackVisibility(true);
+		if (authForgotPasswordScreen) authForgotPasswordScreen.classList.remove("auth-screen-hidden");
+		if (authForgotEmailInput && authEmailInput && authEmailInput.value) authForgotEmailInput.value = authEmailInput.value;
+		setTimeout(() => { if (authForgotEmailInput) authForgotEmailInput.focus(); }, 0);
+	}
+
+	function showAuthResetPasswordScreen()
+	{
+		if (authModal) authModal.classList.remove("profile-page-mode");
+		hideAllAuthScreens();
+		updateAuthBackVisibility(true);
+		if (authResetPasswordScreen) authResetPasswordScreen.classList.remove("auth-screen-hidden");
+		setTimeout(() => { if (authResetPasswordInput) authResetPasswordInput.focus(); }, 0);
+	}
+
+	function showAuthProfileSetupScreen()
+	{
+		if (authModal) authModal.classList.add("profile-page-mode");
+		hideAllAuthScreens();
+		updateAuthBackVisibility(false);
+		if (authProfileSetupScreen) authProfileSetupScreen.classList.remove("auth-screen-hidden");
+		setTimeout(() => { if (authProfileNameInput) authProfileNameInput.focus(); }, 0);
+	}
+
+	function fillAuthProfileSetupForm(profile)
+	{
+		const source = profile || {};
+		if (authProfileNameInput) authProfileNameInput.value = source.name ? source.name : "";
+		if (authProfilePhoneInput) authProfilePhoneInput.value = source.phone ? source.phone : "";
+		if (authProfileRoleRequestSelect) authProfileRoleRequestSelect.value = source.role_request ? source.role_request : "user";
+		if (authProfilePrivacyAgreeCheck) authProfilePrivacyAgreeCheck.checked = false;
+	}
+
+	function openProfileSetupModalNow()
+	{
+		isRealjejuProfileSetupRequired = true;
+		showAuthProfileSetupScreen();
+		if (authModal) {
+			authModal.classList.add("open");
+			authModal.setAttribute("aria-hidden", "false");
+			document.body.style.overflow = "hidden";
+		}
+	}
+
+	function requireProfileSetupIfNeeded(supabaseClient, user, profileData)
+	{
+		currentRealjejuAuthUser = user || null;
+		const profile = profileData || null;
+		const needsSetup = !profile || profile.profile_completed !== true || !profile.name || !profile.phone;
+		currentRealjejuProfileCompleted = !needsSetup;
+		if (needsSetup) fillAuthProfileSetupForm(profile);
+		return needsSetup;
 	}
 
 	function openAuthModal()
@@ -10366,15 +11199,21 @@ bootstrap();
 	{
 		if (!authModal) return;
 		if (isAuthBusy() || isAuthErrorOpen()) return;
+		if (authProfileSetupScreen && !authProfileSetupScreen.classList.contains("auth-screen-hidden")) {
+			isRealjejuProfileSetupRequired = false;
+			showAuthLoginScreen();
+		}
 		authModal.classList.remove("open");
+		authModal.classList.remove("profile-page-mode");
 		authModal.setAttribute("aria-hidden", "true");
 		document.body.style.overflow = "";
 	}
 
-	function openAuthErrorModal(message, title, returnFocusTarget)
+	function openAuthErrorModal(message, title, returnFocusTarget, confirmAction)
 	{
 		if (!authErrorModal) return;
 		authErrorReturnFocusTarget = returnFocusTarget || authEmailInput || null;
+		authErrorConfirmAction = typeof confirmAction === "function" ? confirmAction : null;
 		if (authErrorTitle) authErrorTitle.textContent = title || "로그인 오류";
 		if (authErrorMessage) authErrorMessage.textContent = message || "아이디와 비밀번호를 입력하세요.";
 		authErrorModal.classList.add("open");
@@ -10389,14 +11228,57 @@ bootstrap();
 	{
 		if (!authErrorModal) return;
 		if (isAuthBusy()) return;
+		const focusTarget = authErrorReturnFocusTarget;
+		const confirmAction = authErrorConfirmAction;
+		authErrorReturnFocusTarget = null;
+		authErrorConfirmAction = null;
+
+		/* v1.894: aria-hidden 적용 전 에러창 내부 포커스를 먼저 해제 */
+		if (authErrorModal.contains(document.activeElement)) {
+			document.activeElement.blur();
+		}
+
 		authErrorModal.classList.remove("open");
 		authErrorModal.setAttribute("aria-hidden", "true");
 		document.body.style.overflow = authModal && authModal.classList.contains("open") ? "hidden" : "";
-		const focusTarget = authErrorReturnFocusTarget;
-		authErrorReturnFocusTarget = null;
+
+		if (typeof confirmAction === "function") {
+			setTimeout(confirmAction, 0);
+			return;
+		}
 		if (focusTarget && authModal && authModal.classList.contains("open")) {
 			setTimeout(() => focusTarget.focus(), 0);
 		}
+	}
+
+	function maskRealjejuEmail(email)
+	{
+		const value = String(email || "").trim();
+		const parts = value.split("@");
+		if (parts.length !== 2 || !parts[0] || !parts[1]) return value || "re****@gmail.com";
+		const local = parts[0];
+		const visible = local.slice(0, Math.min(2, local.length));
+		return visible + "****@" + parts[1];
+	}
+
+	function isValidRealjejuPassword(password)
+	{
+		return /^(?=.*[A-Za-z])(?=.*\d).{8,}$/.test(String(password || ""));
+	}
+
+	async function handleFindId()
+	{
+		let email = String(authEmailInput?.value || "").trim();
+		const supabaseForFindId = getRealjejuSupabaseClient();
+		if (!email && supabaseForFindId) {
+			try {
+				const { data } = await supabaseForFindId.auth.getUser();
+				if (data && data.user && data.user.email) email = data.user.email;
+			} catch (err) {
+				console.warn("아이디 찾기 사용자 확인 실패:", err);
+			}
+		}
+		openAuthErrorModal("아이디는 가입한 이메일 주소입니다.\n가입한 이메일을 확인해 주세요.\n\n" + maskRealjejuEmail(email), "아이디 찾기", authEmailInput);
 	}
 
 	function syncAuthTermsState()
@@ -10530,9 +11412,28 @@ bootstrap();
 		btn.addEventListener("click", (e) => {
 			e.preventDefault();
 			e.stopPropagation();
+
+			if (btn.dataset.authState === "logged-in") {
+				toggleGlobalAccountDropdown();
+				return;
+			}
+
 			openAuthModal();
 		});
 	});
+
+	if (authModalBack) {
+		authModalBack.addEventListener("click", (e) => {
+			e.preventDefault();
+			e.stopPropagation();
+			if (isAuthBusy() || isAuthErrorOpen()) return;
+			if (authSignupFormScreen && !authSignupFormScreen.classList.contains("auth-screen-hidden")) {
+				showAuthSignupTermsScreen();
+				return;
+			}
+			showAuthLoginScreen();
+		});
+	}
 
 	if (authModalClose) {
 		authModalClose.addEventListener("click", (e) => {
@@ -10541,7 +11442,7 @@ bootstrap();
 		});
 	}
 
-	/* v1.875: 모달 바깥 클릭/마우스 이동으로 닫히지 않도록 overlay close 제거 */
+	/* v1.894: 모달 바깥 클릭/마우스 이동으로 닫히지 않도록 overlay close 제거 */
 	if (authModal) {
 		authModal.addEventListener("click", (e) => {
 			if (e.target === authModal) {
@@ -10555,7 +11456,7 @@ bootstrap();
 
 	function isAuthBusy()
 	{
-		return isRealjejuSigningUp === true || isRealjejuLoggingIn === true;
+		return isRealjejuSigningUp === true || isRealjejuLoggingIn === true || isRealjejuSavingProfile === true;
 	}
 
 	function isAuthErrorOpen()
@@ -10595,26 +11496,10 @@ bootstrap();
 					return;
 				}
 				if (data && data.user) {
-					const { data: latestUserData, error: latestUserError } = await supabaseForLogin.auth.getUser();
-					if (latestUserError) {
-						await supabaseForLogin.auth.signOut();
-						openAuthErrorModal("로그인 정보를 확인하지 못했습니다.", "로그인 오류", authEmailInput);
-						return;
-					}
-
-					const latestUser = latestUserData && latestUserData.user ? latestUserData.user : data.user;
-					const isEmailConfirmed = !!(latestUser && (latestUser.email_confirmed_at || latestUser.confirmed_at));
-
-					if (!isEmailConfirmed) {
-						await supabaseForLogin.auth.signOut();
-						openAuthErrorModal("이메일 인증 후 로그인할 수 있습니다.", "로그인 오류", authEmailInput);
-						return;
-					}
-
 					const { data: profileData, error: profileError } = await supabaseForLogin
 						.from("profiles")
-						.select("status,email_verified")
-						.eq("id", latestUser.id)
+						.select("status, name, phone, role_request, profile_completed")
+						.eq("id", data.user.id)
 						.maybeSingle();
 
 					if (profileError) {
@@ -10629,16 +11514,12 @@ bootstrap();
 						return;
 					}
 
-					if (profileData && profileData.email_verified !== true) {
-						await supabaseForLogin
-							.from("profiles")
-							.update({ email_verified: true, updated_at: new Date().toISOString() })
-							.eq("id", latestUser.id);
-					}
-
 					if (authPasswordInput) authPasswordInput.value = "";
+					isRealjejuLoggingIn = false;
+					currentRealjejuProfileCompleted = !!(profileData && profileData.profile_completed === true && profileData.name && profileData.phone);
+					applyLoggedInAccountUI(data.user, profileData);
+					currentRealjejuAuthUser = data.user;
 					closeAuthModal();
-					
 				}
 			} catch (err) {
 				console.error("로그인 실패:", err);
@@ -10652,6 +11533,94 @@ bootstrap();
 		});
 	}
 
+
+	if (authProfileSetupForm) {
+		authProfileSetupForm.addEventListener("submit", async (e) => {
+			e.preventDefault();
+			if (isRealjejuSavingProfile) return;
+
+			const profileNameValue = String(authProfileNameInput?.value || "").trim();
+			const profilePhoneValue = normalizeRealjejuPhone(authProfilePhoneInput?.value || "");
+			const profileRoleRequestValue = authProfileRoleRequestSelect ? authProfileRoleRequestSelect.value : "user";
+
+			if (!profileNameValue) {
+				openAuthErrorModal("이름을 입력하세요.", "개인정보 설정", authProfileNameInput);
+				return;
+			}
+			if (!profilePhoneValue || profilePhoneValue.length < 10) {
+				openAuthErrorModal("휴대폰번호를 입력하세요.", "개인정보 설정", authProfilePhoneInput);
+				return;
+			}
+			if (!authProfilePrivacyAgreeCheck || !authProfilePrivacyAgreeCheck.checked) {
+				openAuthErrorModal("개인정보 수집 및 이용에 동의해 주세요.", "개인정보 설정", authProfilePrivacyAgreeCheck);
+				return;
+			}
+
+			const supabaseForProfile = getRealjejuSupabaseClient();
+			if (!supabaseForProfile) {
+				openAuthErrorModal("Supabase URL과 PUBLIC KEY 설정이 필요합니다.", "개인정보 설정", authProfileNameInput);
+				return;
+			}
+
+			let user = currentRealjejuAuthUser;
+			if (!user) {
+				const { data } = await supabaseForProfile.auth.getUser();
+				user = data && data.user ? data.user : null;
+			}
+			if (!user || !user.id) {
+				openAuthErrorModal("로그인 정보를 확인하지 못했습니다. 다시 로그인해 주세요.", "개인정보 설정", authProfileNameInput);
+				return;
+			}
+
+			const profileSubmitBtn = authProfileSetupForm.querySelector(".auth-modal-submit");
+			try {
+				isRealjejuSavingProfile = true;
+				if (profileSubmitBtn) profileSubmitBtn.disabled = true;
+				const { error } = await supabaseForProfile
+					.from("profiles")
+					.update({
+						name: profileNameValue,
+						phone: profilePhoneValue,
+						role_request: profileRoleRequestValue,
+						profile_completed: true,
+						privacy_agreed_at: new Date().toISOString(),
+						updated_at: new Date().toISOString()
+					})
+					.eq("id", user.id);
+
+				if (error) {
+					console.error("개인정보 저장 실패:", error);
+					openAuthErrorModal("개인정보 저장에 실패했습니다.", "개인정보 설정", authProfileNameInput);
+					return;
+				}
+
+				isRealjejuProfileSetupRequired = false;
+				currentRealjejuProfileCompleted = true;
+				applyLoggedInAccountUI(user, {
+					name: profileNameValue,
+					phone: profilePhoneValue,
+					role_request: profileRoleRequestValue,
+					profile_completed: true
+				});
+				sessionStorage.removeItem(REALJEJU_PROFILE_PROMPT_SESSION_KEY);
+				currentRealjejuAuthUser = null;
+				closeAuthModal();
+			} catch (err) {
+				console.error("개인정보 저장 오류:", err);
+				openAuthErrorModal("개인정보 저장 중 오류가 발생했습니다.", "개인정보 설정", authProfileNameInput);
+			} finally {
+				isRealjejuSavingProfile = false;
+				if (profileSubmitBtn) profileSubmitBtn.disabled = false;
+			}
+		});
+	}
+	if (authProfileAgentRegisterBtn) {
+		authProfileAgentRegisterBtn.addEventListener("click", (e) => {
+			e.preventDefault();
+			openAuthErrorModal("중개사 등록은 별도 신청 페이지에서 진행됩니다.", "중개사 등록", authProfileAgentRegisterBtn);
+		});
+	}
+
 	if (authErrorConfirmBtn) {
 		authErrorConfirmBtn.addEventListener("click", (e) => {
 			e.preventDefault();
@@ -10659,12 +11628,119 @@ bootstrap();
 		});
 	}
 
-	/* v1.875: 에러/안내창은 [확인] 버튼 외에는 닫히지 않음 */
+	/* v1.894: 에러/안내창은 [확인] 버튼 외에는 닫히지 않음 */
 	if (authErrorModal) {
 		authErrorModal.addEventListener("click", (e) => {
 			if (e.target === authErrorModal) {
 				e.preventDefault();
 				e.stopPropagation();
+			}
+		});
+	}
+
+	if (authFindIdBtn) {
+		authFindIdBtn.addEventListener("click", (e) => {
+			e.preventDefault();
+			handleFindId();
+		});
+	}
+
+	if (authForgotPasswordOpenBtn) {
+		authForgotPasswordOpenBtn.addEventListener("click", (e) => {
+			e.preventDefault();
+			e.stopPropagation();
+			showAuthForgotPasswordScreen();
+		});
+	}
+
+	if (authForgotLoginSwitchBtn) {
+		authForgotLoginSwitchBtn.addEventListener("click", (e) => {
+			e.preventDefault();
+			showAuthLoginScreen();
+		});
+	}
+
+	if (authForgotPasswordForm) {
+		authForgotPasswordForm.addEventListener("submit", async (e) => {
+			e.preventDefault();
+			const forgotEmailValue = String(authForgotEmailInput?.value || "").trim();
+			if (!forgotEmailValue) {
+				openAuthErrorModal("가입한 이메일을 입력하세요.", "비밀번호 찾기", authForgotEmailInput);
+				return;
+			}
+
+			const forgotSubmitBtn = authForgotPasswordForm.querySelector(".auth-modal-submit");
+			const supabaseForForgot = getRealjejuSupabaseClient();
+			if (!supabaseForForgot) {
+				openAuthErrorModal("Supabase URL과 PUBLIC KEY 설정이 필요합니다.", "비밀번호 찾기", authForgotEmailInput);
+				return;
+			}
+
+			try {
+				if (forgotSubmitBtn) forgotSubmitBtn.disabled = true;
+				const { error } = await supabaseForForgot.auth.resetPasswordForEmail(forgotEmailValue, {
+					redirectTo: REALJEJU_AUTH_REDIRECT_URL
+				});
+				if (error) {
+					openAuthErrorModal(error.message || "비밀번호 재설정 메일 발송에 실패했습니다.", "비밀번호 찾기", authForgotEmailInput);
+					return;
+				}
+				showAuthLoginScreen();
+				if (authEmailInput) authEmailInput.value = forgotEmailValue;
+				openAuthErrorModal("비밀번호 재설정 메일을 보냈습니다.\n이메일을 확인해 주세요.", "비밀번호 찾기", authEmailInput);
+			} catch (err) {
+				console.error("비밀번호 재설정 메일 발송 실패:", err);
+				openAuthErrorModal("비밀번호 재설정 메일 발송 중 오류가 발생했습니다.", "비밀번호 찾기", authForgotEmailInput);
+			} finally {
+				if (forgotSubmitBtn) forgotSubmitBtn.disabled = false;
+			}
+		});
+	}
+
+	if (authResetPasswordForm) {
+		authResetPasswordForm.addEventListener("submit", async (e) => {
+			e.preventDefault();
+			const resetPasswordValue = String(authResetPasswordInput?.value || "").trim();
+			const resetPasswordConfirmValue = String(authResetPasswordConfirmInput?.value || "").trim();
+			if (!resetPasswordValue || !resetPasswordConfirmValue) {
+				openAuthErrorModal("새 비밀번호를 입력하세요.", "비밀번호 변경", !resetPasswordValue ? authResetPasswordInput : authResetPasswordConfirmInput);
+				return;
+			}
+			if (!isValidRealjejuPassword(resetPasswordValue)) {
+				openAuthErrorModal("비밀번호는 8자 이상, 영문과 숫자를 포함해야 합니다.", "비밀번호 변경", authResetPasswordInput);
+				return;
+			}
+			if (resetPasswordValue !== resetPasswordConfirmValue) {
+				openAuthErrorModal("비밀번호가 서로 다릅니다.", "비밀번호 변경", authResetPasswordConfirmInput);
+				return;
+			}
+
+			const resetSubmitBtn = authResetPasswordForm.querySelector(".auth-modal-submit");
+			const supabaseForReset = getRealjejuSupabaseClient();
+			if (!supabaseForReset) {
+				openAuthErrorModal("Supabase URL과 PUBLIC KEY 설정이 필요합니다.", "비밀번호 변경", authResetPasswordInput);
+				return;
+			}
+
+			try {
+				if (resetSubmitBtn) resetSubmitBtn.disabled = true;
+				const { error } = await supabaseForReset.auth.updateUser({
+					password: resetPasswordValue
+				});
+				if (error) {
+					openAuthErrorModal(error.message || "비밀번호 변경에 실패했습니다.", "비밀번호 변경", authResetPasswordInput);
+					return;
+				}
+				if (authResetPasswordInput) authResetPasswordInput.value = "";
+				if (authResetPasswordConfirmInput) authResetPasswordConfirmInput.value = "";
+				await supabaseForReset.auth.signOut();
+				showAuthLoginScreen();
+				openAuthErrorModal("비밀번호가 변경되었습니다. 다시 로그인해 주세요.", "비밀번호 변경 완료", authEmailInput);
+			} catch (err) {
+				console.error("비밀번호 변경 실패:", err);
+				openAuthErrorModal("비밀번호 변경 처리 중 오류가 발생했습니다.", "비밀번호 변경", authResetPasswordInput);
+			} finally {
+				if (resetSubmitBtn) resetSubmitBtn.disabled = false;
 			}
 		});
 	}
@@ -10681,8 +11757,7 @@ bootstrap();
 				return;
 			}
 
-			const signupPasswordRule = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;
-			if (!signupPasswordRule.test(signupPasswordValue)) {
+			if (!isValidRealjejuPassword(signupPasswordValue)) {
 				openAuthErrorModal("비밀번호는 8자 이상, 영문과 숫자를 포함해야 합니다.", "회원가입 오류", authSignupPasswordInput);
 				return;
 			}
@@ -10797,7 +11872,7 @@ bootstrap();
 		});
 	}
 
-	/* v1.875: 에러/안내창 열린 상태에서는 Enter/ESC로 닫히지 않음 */
+	/* v1.894: 에러/안내창 열린 상태에서는 Enter/ESC로 닫히지 않음 */
 	window.addEventListener("keydown", (e) => {
 		if (!authErrorModal || !authErrorModal.classList.contains("open")) return;
 		if (e.key === "Enter" || e.key === "Escape") {
@@ -10806,16 +11881,89 @@ bootstrap();
 		}
 	});
 
+	setTimeout(() => {
+		initRealjejuAccountUI();
+	}, 700);
+
+	setTimeout(async () => {
+		const hasRecoveryToken = window.location.hash.includes("type=recovery") || window.location.search.includes("type=recovery");
+		if (!hasRecoveryToken) return;
+		const supabaseForRecovery = getRealjejuSupabaseClient();
+		if (!supabaseForRecovery) return;
+		try {
+			await supabaseForRecovery.auth.getSession();
+		} catch (err) {
+			console.warn("비밀번호 재설정 세션 확인 실패:", err);
+		}
+		if (authModal) {
+			authModal.classList.add("open");
+			authModal.setAttribute("aria-hidden", "false");
+			document.body.style.overflow = "hidden";
+		}
+		showAuthResetPasswordScreen();
+	}, 500);
+
+	async function requireRealjejuProfileCompletedForFeature(featureName)
+	{
+		if (currentRealjejuProfileCompleted) return true;
+		const supabaseForFeature = getRealjejuSupabaseClient();
+		if (!supabaseForFeature) {
+			openAuthErrorModal("로그인 후 이용 가능합니다.", featureName || "이용 안내", null, openAuthModal);
+			return false;
+		}
+		let user = currentRealjejuAuthUser;
+		if (!user) {
+			try {
+				const { data } = await supabaseForFeature.auth.getUser();
+				user = data && data.user ? data.user : null;
+			} catch (err) {
+				user = null;
+			}
+		}
+		if (!user || !user.id) {
+			openAuthErrorModal("로그인 후 이용 가능합니다.", featureName || "이용 안내", null, openAuthModal);
+			return false;
+		}
+		currentRealjejuAuthUser = user;
+		try {
+			const { data: profile } = await supabaseForFeature
+				.from("profiles")
+				.select("name, phone, role_request, profile_completed")
+				.eq("id", user.id)
+				.maybeSingle();
+			currentRealjejuProfileCompleted = !!(profile && profile.profile_completed === true && profile.name && profile.phone);
+			if (currentRealjejuProfileCompleted) return true;
+			fillAuthProfileSetupForm(profile);
+		} catch (err) {
+			console.warn("개인정보 설정 상태 확인 실패:", err);
+		}
+		openAuthErrorModal("개인정보 입력 후 이용 가능합니다.", featureName || "이용 안내", null, openProfileSetupModalNow);
+		return false;
+	}
+
+	document.addEventListener("click", async (e) => {
+		const target = e.target.closest("[data-requires-profile], .favorite-btn, .wish-btn, .inquiry-btn, .contact-btn, .register-btn, .detail-agent-cta-btn.phone, .detail-agent-cta-btn.kakao");
+		if (!target || target.closest("#authModal") || target.closest("#authErrorModal")) return;
+		const ok = await requireRealjejuProfileCompletedForFeature(target.dataset.featureName || target.textContent.trim() || "이용 안내");
+		if (!ok) {
+			e.preventDefault();
+			e.stopPropagation();
+		}
+	}, true);
+
+
 	window.openAuthModal = openAuthModal;
 	window.closeAuthModal = closeAuthModal;
 	window.openAuthErrorModal = openAuthErrorModal;
 	window.closeAuthErrorModal = closeAuthErrorModal;
+	window.requireRealjejuProfileCompletedForFeature = requireRealjejuProfileCompletedForFeature;
+	window.handleRealjejuLogout = handleRealjejuLogout;
 	window.openTermsFullPage = openTermsFullPage;
 	window.closeTermsFullPage = closeTermsFullPage;
 })();
 </script>
 <script>
-/* v1.875: auth modal dialog 내부 클릭은 overlay로 전파하지 않음 */
+/* v1.894: auth modal dialog 내부 클릭은 overlay로 전파하지 않음 */
 document.addEventListener("DOMContentLoaded", function () {
 	document.querySelectorAll(".auth-modal-dialog").forEach(function (dialog) {
 		dialog.addEventListener("click", function (e) {
