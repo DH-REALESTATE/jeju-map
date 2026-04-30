@@ -4799,7 +4799,7 @@ body.sidebar-list-collapsed .map-side-tools
 	font-size: var(--topbar-logo-font-size, 20px) !important;
 }
 
-/* Ver 1.912 표시: 하단바 왼쪽 고정 */ .sub-version-fixed
+/* Ver 1.914 표시: 하단바 왼쪽 고정 */ .sub-version-fixed
 {
 	position: absolute !important;
 	left: 22px !important;
@@ -5806,7 +5806,7 @@ body.sidebar-list-collapsed .map-side-tools
 	vertical-align: middle !important;
 }
 
-/* ===== PATCH 1.912: my info view + broker office menu/page ===== */
+/* ===== PATCH 1.914: my info view + broker office menu/page ===== */
 .auth-myinfo-screen, .auth-broker-office-screen
 {
 	display: flex;
@@ -5923,11 +5923,60 @@ body.sidebar-list-collapsed .map-side-tools
 }
 
 
-.auth-profile-photo-field{display:flex;flex-direction:column;gap:10px;}
-.auth-profile-photo-box{display:flex;align-items:center;gap:14px;}
-.auth-profile-photo-preview{width:74px;height:74px;border-radius:50%;border:2px solid #d1d5db;background:#f1f5f9;object-fit:cover;flex:0 0 auto;}
-.auth-profile-photo-select-btn{height:44px;padding:0 18px;border:0;border-radius:4px;background:#1B6FA4;color:#fff;font-size:14px;font-weight:900;letter-spacing:-0.1px;cursor:pointer;}
-.auth-profile-photo-hint{font-size:13px;font-weight:700;line-height:1.45;color:#64748b;}
+.auth-profile-photo-field
+{
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.auth-profile-photo-box
+{
+	display: flex;
+	align-items: center;
+	gap: 14px;
+}
+
+.auth-profile-photo-preview,
+.auth-myinfo-photo
+{
+	width: 84px;
+	height: 84px;
+	border-radius: 50%;
+	object-fit: cover;
+	background: #e5e7eb;
+	border: 2px solid #e5e7eb;
+	flex: 0 0 auto;
+}
+
+.auth-profile-photo-select-btn
+{
+	height: 44px;
+	padding: 0 18px;
+	border: 0;
+	border-radius: 4px;
+	background: #1B6FA4;
+	color: #ffffff;
+	font-size: 14px;
+	font-weight: 900;
+	letter-spacing: -0.1px;
+	cursor: pointer;
+}
+
+.auth-profile-photo-hint
+{
+	font-size: 13px;
+	font-weight: 700;
+	line-height: 1.45;
+	color: #64748b;
+}
+
+.auth-myinfo-photo-box
+{
+	display: flex;
+	justify-content: center;
+	margin-bottom: 4px;
+}
 
 </style>
 	</head>
@@ -6017,7 +6066,7 @@ body.sidebar-list-collapsed .map-side-tools
 		<div class="sub-topbar">
 			<div class="sub-topbar-inner">
 				<span class="sub-version-fixed">
-					Ver 1.912
+					Ver 1.914
 				</span>
 				<div class="sub-topbar-left">
 					<strong id="listInfoText">
@@ -6635,13 +6684,19 @@ if (globalBrandLink) {
 					회원 식별 및 서비스 제공을 위해 이름과 휴대폰번호를 수집합니다.
 				</p>
 				<div class="auth-profile-photo-field">
-					<label class="auth-modal-field-label">프로필 사진</label>
+					<label class="auth-modal-field-label">
+						프로필 사진
+					</label>
 					<div class="auth-profile-photo-box">
 						<img src="" alt="프로필 사진 미리보기" class="auth-profile-photo-preview" id="authProfilePhotoPreview" />
-						<button type="button" class="auth-profile-photo-select-btn" id="authProfilePhotoSelectBtn">사진 선택</button>
+						<button type="button" class="auth-profile-photo-select-btn" id="authProfilePhotoSelectBtn">
+							사진 선택
+						</button>
 						<input type="file" id="authProfilePhotoInput" accept="image/*" hidden />
 					</div>
-					<div class="auth-profile-photo-hint">선택한 사진은 저장 시 프로필에 함께 반영됩니다.</div>
+					<div class="auth-profile-photo-hint">
+						사진이 없으면 기본 이미지가 표시됩니다.
+					</div>
 				</div>
 				<div class="auth-modal-field">
 					<label class="auth-modal-field-label" for="authProfileNameInput">
@@ -6688,6 +6743,9 @@ if (globalBrandLink) {
 			<div class="auth-modal-divider">
 			</div>
 			<div class="auth-modal-form">
+				<div class="auth-myinfo-photo-box">
+					<img src="" alt="프로필 사진" class="auth-myinfo-photo" id="myInfoProfileImage" />
+				</div>
 				<p class="auth-profile-guide">
 					가입 계정과 개인정보 설정 상태를 확인합니다.
 				</p>
@@ -6964,7 +7022,7 @@ function hexToRgba(hex, alpha = 1)
 	return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 const APP_NAME = "REALJEJU.APP";
-const APP_VERSION = "1.912";
+const APP_VERSION = "1.914";
 
 function applyAppVersion()
 {
@@ -10438,6 +10496,7 @@ function initEvents()
 			if (authProfilePhoneInput) authProfilePhoneInput.value = profile && profile.phone ? profile.phone : "";
 			if (authProfileRoleRequestSelect) authProfileRoleRequestSelect.value = profile && profile.role_request ? profile.role_request : "user";
 			if (authProfilePrivacyAgreeCheck) authProfilePrivacyAgreeCheck.checked = false;
+			setAuthProfilePhotoPreview(profile && profile.profile_image ? profile.profile_image : "");
 		}
 		return needsSetup;
 	}
@@ -11233,7 +11292,7 @@ bootstrap();
 			currentRealjejuAuthUser = user;
 			const { data: profile } = await supabaseForProfile
 				.from("profiles")
-				.select("name, phone, role_request, profile_completed")
+				.select("name, phone, role_request, profile_completed, profile_image")
 				.eq("id", user.id)
 				.maybeSingle();
 			fillAuthProfileSetupForm(profile);
@@ -11254,7 +11313,7 @@ bootstrap();
 		if (!user) return { user: null, profile: null, brokerOffice: null };
 		const { data: profile } = await client
 			.from("profiles")
-			.select("status, name, email, phone, role_request, profile_completed")
+			.select("status, name, email, phone, role_request, profile_completed, profile_image")
 			.eq("id", user.id)
 			.maybeSingle();
 		let brokerOffice = null;
@@ -11311,6 +11370,7 @@ bootstrap();
 			setTextById("myInfoRoleValue", getRoleLabel(profile && profile.role_request));
 			setTextById("myInfoProfileStatusValue", completed ? "완료" : "미완료");
 			setTextById("myInfoBrokerOfficeValue", getBrokerOfficeStatusText(profile, brokerOffice));
+			setMyInfoProfileImage(profile && profile.profile_image ? profile.profile_image : "");
 			const brokerBtn = document.getElementById("myInfoBrokerOfficeBtn");
 			if (brokerBtn) {
 				const brokerRole = isBrokerRoleValue(profile && profile.role_request);
@@ -11557,6 +11617,92 @@ bootstrap();
 		setTimeout(() => { if (authProfileNameInput) authProfileNameInput.focus(); }, 0);
 	}
 
+	const REALJEJU_DEFAULT_PROFILE_IMAGE = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Crect width='160' height='160' rx='80' fill='%23e5e7eb'/%3E%3Ccircle cx='80' cy='60' r='28' fill='%239ca3af'/%3E%3Cpath d='M32 136c6-30 25-46 48-46s42 16 48 46' fill='%239ca3af'/%3E%3C/svg%3E";
+
+	function setProfileImageElement(img, url)
+	{
+		if (!img) return;
+		img.src = url || REALJEJU_DEFAULT_PROFILE_IMAGE;
+	}
+
+	function setAuthProfilePhotoPreview(url)
+	{
+		authProfilePhotoUrl = url || "";
+		setProfileImageElement(authProfilePhotoPreview, authProfilePhotoUrl);
+	}
+
+	function setMyInfoProfileImage(url)
+	{
+		setProfileImageElement(document.getElementById("myInfoProfileImage"), url || "");
+	}
+
+	async function uploadAuthProfilePhotoIfNeeded(client, userId)
+	{
+		if (!authProfilePhotoFile || !client || !userId) {
+			return authProfilePhotoUrl || "";
+		}
+
+		const ext = String(authProfilePhotoFile.name || "jpg")
+			.split(".")
+			.pop()
+			.toLowerCase()
+			.replace(/[^a-z0-9]/g, "") || "jpg";
+
+		const filePath = `${userId}/profile-${Date.now()}.${ext}`;
+
+		try {
+			const { data, error } = await client.storage
+				.from("profiles")
+				.upload(filePath, authProfilePhotoFile, {
+					cacheControl: "3600",
+					upsert: true
+				});
+
+			if (error) {
+				console.warn("프로필 사진 업로드 실패:", error);
+				return authProfilePhotoUrl || "";
+			}
+
+			const { data: urlData } = client.storage
+				.from("profiles")
+				.getPublicUrl(data && data.path ? data.path : filePath);
+
+			return urlData && urlData.publicUrl ? urlData.publicUrl : (authProfilePhotoUrl || "");
+		} catch (err) {
+			console.warn("프로필 사진 업로드 오류:", err);
+			return authProfilePhotoUrl || "";
+		}
+	}
+
+	if (authProfilePhotoSelectBtn && authProfilePhotoInput)
+	{
+		authProfilePhotoSelectBtn.addEventListener("click", () =>
+		{
+			authProfilePhotoInput.click();
+		});
+
+		authProfilePhotoInput.addEventListener("change", () =>
+		{
+			const file = authProfilePhotoInput.files && authProfilePhotoInput.files[0] ? authProfilePhotoInput.files[0] : null;
+			if (!file) return;
+
+			if (!/^image\//.test(file.type || "")) {
+				openAuthErrorModal("이미지 파일만 선택할 수 있습니다.", "프로필 사진", authProfilePhotoInput);
+				authProfilePhotoInput.value = "";
+				authProfilePhotoFile = null;
+				return;
+			}
+
+			authProfilePhotoFile = file;
+			const reader = new FileReader();
+			reader.onload = () =>
+			{
+				setProfileImageElement(authProfilePhotoPreview, reader.result);
+			};
+			reader.readAsDataURL(file);
+		});
+	}
+
 	function fillAuthProfileSetupForm(profile)
 	{
 		const source = profile || {};
@@ -11564,6 +11710,9 @@ bootstrap();
 		if (authProfilePhoneInput) authProfilePhoneInput.value = source.phone ? source.phone : "";
 		if (authProfileRoleRequestSelect) authProfileRoleRequestSelect.value = source.role_request ? source.role_request : "user";
 		if (authProfilePrivacyAgreeCheck) authProfilePrivacyAgreeCheck.checked = false;
+		if (authProfilePhotoInput) authProfilePhotoInput.value = "";
+		authProfilePhotoFile = null;
+		setAuthProfilePhotoPreview(source.profile_image || "");
 	}
 
 	function openProfileSetupModalNow()
@@ -11939,43 +12088,6 @@ bootstrap();
 		});
 	}
 
-	function setAuthProfilePhotoPreview(url)
-	{
-		if (!authProfilePhotoPreview) return;
-		if (url) authProfilePhotoPreview.src = url;
-	}
-
-	async function uploadAuthProfilePhotoIfNeeded(client, userId)
-	{
-		if (!authProfilePhotoFile || !client || !userId) return authProfilePhotoUrl || "";
-		const ext = String(authProfilePhotoFile.name || "jpg").split(".").pop().toLowerCase().replace(/[^a-z0-9]/g, "") || "jpg";
-		const filePath = `${userId}/profile-${Date.now()}.${ext}`;
-		const { data, error } = await client.storage.from("profiles").upload(filePath, authProfilePhotoFile, { cacheControl: "3600", upsert: true });
-		if (error) { console.warn("프로필 사진 업로드 실패:", error); return authProfilePhotoUrl || ""; }
-		const { data: urlData } = client.storage.from("profiles").getPublicUrl(data && data.path ? data.path : filePath);
-		return urlData && urlData.publicUrl ? urlData.publicUrl : (authProfilePhotoUrl || "");
-	}
-
-	if (authProfilePhotoSelectBtn && authProfilePhotoInput)
-	{
-		authProfilePhotoSelectBtn.addEventListener("click", () => authProfilePhotoInput.click());
-		authProfilePhotoInput.addEventListener("change", () =>
-		{
-			const file = authProfilePhotoInput.files && authProfilePhotoInput.files[0] ? authProfilePhotoInput.files[0] : null;
-			if (!file) return;
-			if (!/^image\//.test(file.type || "")) {
-				openAuthErrorModal("이미지 파일만 선택할 수 있습니다.", "프로필 사진", authProfilePhotoInput);
-				authProfilePhotoInput.value = "";
-				authProfilePhotoFile = null;
-				return;
-			}
-			authProfilePhotoFile = file;
-			const reader = new FileReader();
-			reader.onload = () => setAuthProfilePhotoPreview(reader.result);
-			reader.readAsDataURL(file);
-		});
-	}
-
 
 	if (authProfileSetupForm) {
 		authProfileSetupForm.addEventListener("submit", async (e) => {
@@ -12020,7 +12132,6 @@ bootstrap();
 				isRealjejuSavingProfile = true;
 				if (profileSubmitBtn) profileSubmitBtn.disabled = true;
 				const profileSavedAt = new Date().toISOString();
-				const profileImageUrlValue = await uploadAuthProfilePhotoIfNeeded(supabaseForProfile, user.id);
 				const { error } = await supabaseForProfile
 					.from("profiles")
 					.upsert({
@@ -12028,7 +12139,6 @@ bootstrap();
 						email: user.email || "",
 						name: profileNameValue,
 						phone: profilePhoneValue,
-						profile_image: profileImageUrlValue || null,
 						role_request: profileRoleRequestValue,
 						profile_completed: true,
 						privacy_agreed_at: profileSavedAt,
@@ -12405,7 +12515,7 @@ bootstrap();
 		try {
 			const { data: profile } = await supabaseForFeature
 				.from("profiles")
-				.select("name, phone, role_request, profile_completed")
+				.select("name, phone, role_request, profile_completed, profile_image")
 				.eq("id", user.id)
 				.maybeSingle();
 			currentRealjejuProfileCompleted = !!(profile && profile.profile_completed === true && profile.name && profile.phone);
@@ -12601,14 +12711,25 @@ document.addEventListener("DOMContentLoaded", function () {
 			const user = userResult && userResult.data && userResult.data.user ? userResult.data.user : null;
 			if (!user || !user.id) return showProfileError("로그인 정보를 확인하지 못했습니다. 다시 로그인해 주세요.", nameInput);
 			const now = new Date().toISOString();
-			const imageUrl = await uploadAuthProfilePhotoIfNeeded(client, user.id);
-			const result = await client.from("profiles").upsert({ id: user.id, email: user.email || "", name: name, phone: phone, profile_image: imageUrl || null, role_request: role, profile_completed: true, privacy_agreed_at: now, updated_at: now }, { onConflict: "id" });
+			const uploadedProfileImage = await uploadAuthProfilePhotoIfNeeded(client, user.id);
+			const profilePayload = { id: user.id, email: user.email || "", name: name, phone: phone, role_request: role, profile_completed: true, privacy_agreed_at: now, updated_at: now };
+			if (uploadedProfileImage) profilePayload.profile_image = uploadedProfileImage;
+			let result = await client.from("profiles").upsert(profilePayload, { onConflict: "id" });
+			if (result && result.error && /profile_image/i.test(String(result.error.message || ""))) {
+				delete profilePayload.profile_image;
+				result = await client.from("profiles").upsert(profilePayload, { onConflict: "id" });
+			}
 			if (result && result.error) { console.error("개인정보 저장 실패:", result.error); return showProfileError("개인정보 저장에 실패했습니다.", nameInput); }
 			showProfileError("개인정보가 저장되었습니다.", null);
 			const dropdown = qs("globalAccountDropdown");
 			if (dropdown) dropdown.classList.remove("profile-incomplete");
 			const accountNameText = document.querySelector(".account-email-text");
 			if (accountNameText) accountNameText.textContent = name;
+			authProfilePhotoUrl = uploadedProfileImage || authProfilePhotoUrl || "";
+			authProfilePhotoFile = null;
+			if (authProfilePhotoInput) authProfilePhotoInput.value = "";
+			setAuthProfilePhotoPreview(authProfilePhotoUrl);
+			setMyInfoProfileImage(authProfilePhotoUrl);
 			const brokerMenuItem = qs("brokerOfficeMenuItem");
 			if (brokerMenuItem) brokerMenuItem.style.display = ["broker", "agent", "agent_sub", "agent_staff", "corporation"].includes(role) ? "block" : "none";
 			const authModal = qs("authModal");
