@@ -250,7 +250,7 @@ body
 .auth-modal-dialog
 {
 	position: relative;
-	width: 480px;
+	width: 500px;
 	max-width: 92vw;
 	min-height: auto;
 	padding: 56px 52px 42px;
@@ -4799,7 +4799,7 @@ body.sidebar-list-collapsed .map-side-tools
 	font-size: var(--topbar-logo-font-size, 20px) !important;
 }
 
-/* Ver 1.897 표시: 하단바 왼쪽 고정 */ .sub-version-fixed
+/* Ver 1.912 표시: 하단바 왼쪽 고정 */ .sub-version-fixed
 {
 	position: absolute !important;
 	left: 22px !important;
@@ -4874,6 +4874,7 @@ body.sidebar-list-collapsed .map-side-tools
 	vertical-align: middle;
 }
 
+/* 드롭다운 위 아래 여백 */
 .global-account-dropdown
 {
 	position: fixed;
@@ -4881,7 +4882,7 @@ body.sidebar-list-collapsed .map-side-tools
 	right: 18px;
 	z-index: 10020;
 	width: 292px;
-	padding: 14px 0;
+	padding: 15px 0;
 	border: 1px solid #e5e7eb;
 	background: rgba(255,255,255,0.98);
 	box-shadow: 0 18px 42px rgba(15, 23, 42, 0.16);
@@ -4924,7 +4925,7 @@ body.sidebar-list-collapsed .map-side-tools
 .global-account-divider
 {
 	height: 1px;
-	margin: 0 26px;
+	margin: 0 22px;
 	background: #e5e7eb;
 }
 
@@ -4993,7 +4994,9 @@ body.sidebar-list-collapsed .map-side-tools
 	overflow-y: auto;
 }
 
-.auth-modal.profile-page-mode .auth-profile-setup-screen
+.auth-modal.profile-page-mode .auth-profile-setup-screen,
+.auth-modal.profile-page-mode .auth-myinfo-screen,
+.auth-modal.profile-page-mode .auth-broker-office-screen
 {
 	width: min(680px, calc(100vw - 40px));
 	margin: 0 auto;
@@ -5044,6 +5047,11 @@ body.sidebar-list-collapsed .map-side-tools
 .auth-modal.profile-page-mode .auth-modal-close
 {
 	color: #111827;
+}
+
+.auth-modal.profile-page-mode .auth-myinfo-screen .auth-modal-input[readonly]
+{
+	cursor: default;
 }
 
 /* ===== AUTH MODAL OVERRIDE FROM 1.897 ONLY ===== */ .auth-modal
@@ -5619,6 +5627,7 @@ body.sidebar-list-collapsed .map-side-tools
 {
 	cursor: pointer;
 }
+
 /* v1.897: 개인정보 설정 회원유형 드롭다운 복구 */
 .auth-profile-select-wrap
 {
@@ -5654,11 +5663,9 @@ body.sidebar-list-collapsed .map-side-tools
 	right: 16px;
 	top: 50%;
 	transform: translateY(-50%);
-	pointer-events: none;
-	font-size: 14px;
-	font-weight: 900;
+	font-size: 20px;  /* 30은 너무 큼 */
 	color: rgba(255,255,255,0.82);
-	line-height: 1;
+	pointer-events: none;
 }
 
 /* ===== PROFILE SETUP MODAL PATCH FROM 1.897 ONLY ===== */
@@ -5674,12 +5681,13 @@ body.sidebar-list-collapsed .map-side-tools
 
 .auth-modal-select
 {
+	width: 100%;
+	height: 66px;
+	padding: 0 44px 0 20px;
+	font-size: 17px;
 	appearance: none;
 	-webkit-appearance: none;
-	background-image: linear-gradient(45deg, transparent 50%, rgba(255,255,255,0.86) 50%), linear-gradient(135deg, rgba(255,255,255,0.86) 50%, transparent 50%);
-	background-position: calc(100% - 22px) 29px, calc(100% - 15px) 29px;
-	background-size: 7px 7px, 7px 7px;
-	background-repeat: no-repeat;
+	-moz-appearance: none;
 }
 
 .auth-profile-consent
@@ -5746,7 +5754,7 @@ body.sidebar-list-collapsed .map-side-tools
 	justify-content: center !important;
 	right: 20px !important;
 	color: #64748b !important;
-	font-size: 16px !important;
+	font-size: 42px !important;
 	line-height: 1 !important;
 }
 
@@ -5762,6 +5770,7 @@ body.sidebar-list-collapsed .map-side-tools
 	border-bottom: 0 !important;
 }
 
+/* 드롭다운 자동 밑줄 만드는 놈 */
 .global-account-menu-item::after
 {
 	content: "";
@@ -5772,6 +5781,7 @@ body.sidebar-list-collapsed .map-side-tools
 	height: 1px;
 	background: var(--account-dropdown-line-color);
 	pointer-events: none;
+	display: none !important;
 }
 
 .global-account-menu-item:last-of-type::after
@@ -5779,9 +5789,12 @@ body.sidebar-list-collapsed .map-side-tools
 	display: none !important;
 }
 
-.global-account-divider
+.
 {
-	display: none !important;
+	display: block !important;
+	height: 1px;
+	margin: 0 var(--account-dropdown-padding-x);
+	background: var(--account-dropdown-line-color);
 }
 
 .profile-incomplete-dot
@@ -5792,6 +5805,129 @@ body.sidebar-list-collapsed .map-side-tools
 	margin-top: 0 !important;
 	vertical-align: middle !important;
 }
+
+/* ===== PATCH 1.912: my info view + broker office menu/page ===== */
+.auth-myinfo-screen, .auth-broker-office-screen
+{
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+}
+
+.auth-myinfo-list
+{
+	display: flex;
+	flex-direction: column;
+	gap: 0;
+	margin-top: 18px;
+	border-top: 1px solid #e5e7eb;
+	border-bottom: 1px solid #e5e7eb;
+}
+
+.auth-myinfo-row
+{
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 20px;
+	padding: 12px 0;
+	border-bottom: 1px solid #eef2f6;
+}
+
+.auth-myinfo-row:last-child
+{
+	border-bottom: 0;
+}
+
+.auth-myinfo-row span
+{
+	font-size: 14px;
+	font-weight: 700;
+	line-height: 1.5;
+	color: #64748b;
+	white-space: nowrap;
+}
+
+.auth-myinfo-row strong
+{
+	font-size: 14px;
+	font-weight: 800;
+	line-height: 1.5;
+	color: #111827;
+	text-align: right;
+	word-break: keep-all;
+}
+
+.auth-myinfo-actions
+{
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	margin-top: 16px;
+}
+
+.auth-myinfo-edit-btn,
+.auth-myinfo-broker-btn
+{
+	width: 100%;
+	height: 44px;
+	border: 1px solid #e5e7eb;
+	border-radius: 4px;
+	background: #ffffff;
+	color: #111827;
+	font-size: 14px;
+	font-weight: 800;
+	letter-spacing: -0.1px;
+	cursor: pointer;
+}
+
+.auth-myinfo-broker-btn
+{
+	background: #3B82F6;
+	border-color: #3B82F6;
+	color: #ffffff;
+}
+
+.broker-office-inline-field
+{
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.broker-office-inline-field .auth-modal-input
+{
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+.broker-office-inline-btn
+{
+	flex: 0 0 auto;
+	height: 58px;
+	padding: 0 16px;
+	border: 0;
+	border-radius: 4px;
+	background: #3B82F6;
+	color: #ffffff;
+	font-size: 16px;
+	font-weight: 900;
+	letter-spacing: -0.1px;
+	white-space: nowrap;
+	cursor: pointer;
+}
+
+.auth-broker-office-screen .auth-modal-form
+{
+	gap: 14px;
+}
+
+
+.auth-profile-photo-field{display:flex;flex-direction:column;gap:10px;}
+.auth-profile-photo-box{display:flex;align-items:center;gap:14px;}
+.auth-profile-photo-preview{width:74px;height:74px;border-radius:50%;border:2px solid #d1d5db;background:#f1f5f9;object-fit:cover;flex:0 0 auto;}
+.auth-profile-photo-select-btn{height:44px;padding:0 18px;border:0;border-radius:4px;background:#1B6FA4;color:#fff;font-size:14px;font-weight:900;letter-spacing:-0.1px;cursor:pointer;}
+.auth-profile-photo-hint{font-size:13px;font-weight:700;line-height:1.45;color:#64748b;}
 
 </style>
 	</head>
@@ -5862,13 +5998,16 @@ body.sidebar-list-collapsed .map-side-tools
 					</button>
 					<div class="global-account-dropdown" id="globalAccountDropdown" aria-hidden="true">
 						<button type="button" class="global-account-menu-item" data-account-action="favorites">관심매물</button>
-						<button type="button" class="global-account-menu-item" data-account-action="recent">최근 본 매물</button>
 						<div class="global-account-divider"></div>
 						<button type="button" class="global-account-menu-item" data-account-action="inquiries">1:1 문의내역</button>
-						<button type="button" class="global-account-menu-item" data-account-action="reports">허위매물 신고내역</button>
+						<div class="global-account-divider"></div>
+						<button type="button" class="global-account-menu-item" data-account-action="reports">허위매물 신고</button>
 						<div class="global-account-divider"></div>
 						<button type="button" class="global-account-menu-item" data-account-action="myinfo">내 정보</button>
-						<button type="button" class="global-account-menu-item" data-account-action="profile">개인정보 설정 <span class="profile-incomplete-dot" id="profileIncompleteDot" aria-hidden="true"></span></button>
+						<div class="global-account-divider"></div>
+						<button type="button" class="global-account-menu-item" data-account-action="profile">개인정보 설정<span class="profile-incomplete-dot" id="profileIncompleteDot" aria-hidden="true"></span></button>
+						<div class="global-account-divider"></div>
+						<button type="button" class="global-account-menu-item" id="brokerOfficeMenuItem" data-account-action="broker-office" style="display:none;">중개사무소 가입 신청</button>
 						<div class="global-account-divider"></div>
 						<button type="button" class="global-account-menu-item" data-account-action="logout">로그아웃</button>
 					</div>
@@ -5878,7 +6017,7 @@ body.sidebar-list-collapsed .map-side-tools
 		<div class="sub-topbar">
 			<div class="sub-topbar-inner">
 				<span class="sub-version-fixed">
-					Ver 1.897
+					Ver 1.912
 				</span>
 				<div class="sub-topbar-left">
 					<strong id="listInfoText">
@@ -6495,6 +6634,15 @@ if (globalBrandLink) {
 				<p class="auth-profile-guide">
 					회원 식별 및 서비스 제공을 위해 이름과 휴대폰번호를 수집합니다.
 				</p>
+				<div class="auth-profile-photo-field">
+					<label class="auth-modal-field-label">프로필 사진</label>
+					<div class="auth-profile-photo-box">
+						<img src="" alt="프로필 사진 미리보기" class="auth-profile-photo-preview" id="authProfilePhotoPreview" />
+						<button type="button" class="auth-profile-photo-select-btn" id="authProfilePhotoSelectBtn">사진 선택</button>
+						<input type="file" id="authProfilePhotoInput" accept="image/*" hidden />
+					</div>
+					<div class="auth-profile-photo-hint">선택한 사진은 저장 시 프로필에 함께 반영됩니다.</div>
+				</div>
 				<div class="auth-modal-field">
 					<label class="auth-modal-field-label" for="authProfileNameInput">
 						이름
@@ -6509,7 +6657,7 @@ if (globalBrandLink) {
 				</div>
 				<div class="auth-modal-field">
 					<label class="auth-modal-field-label" for="authProfileRoleRequestSelect">
-						회원유형
+						회원유형(아래 유형 중에 선택해주세요.)
 					</label>
 					<div class="auth-profile-select-wrap">
 						<select id="authProfileRoleRequestSelect">
@@ -6531,6 +6679,111 @@ if (globalBrandLink) {
 				<button type="button" class="auth-modal-submit" id="authProfileSaveBtn">
 					저장
 				</button>
+			</form>
+		</div>
+		<div class="auth-myinfo-screen auth-screen-hidden" id="authMyInfoScreen">
+			<h2 class="auth-modal-title">
+				내 정보
+			</h2>
+			<div class="auth-modal-divider">
+			</div>
+			<div class="auth-modal-form">
+				<p class="auth-profile-guide">
+					가입 계정과 개인정보 설정 상태를 확인합니다.
+				</p>
+				<div class="auth-modal-field">
+					<label class="auth-modal-field-label" for="myInfoNameValue">
+						이름
+					</label>
+					<input type="text" class="auth-modal-input" id="myInfoNameValue" readonly value="-" />
+				</div>
+				<div class="auth-modal-field">
+					<label class="auth-modal-field-label" for="myInfoEmailValue">
+						이메일
+					</label>
+					<input type="text" class="auth-modal-input" id="myInfoEmailValue" readonly value="-" />
+				</div>
+				<div class="auth-modal-field">
+					<label class="auth-modal-field-label" for="myInfoPhoneValue">
+						휴대폰번호
+					</label>
+					<input type="text" class="auth-modal-input" id="myInfoPhoneValue" readonly value="-" />
+				</div>
+				<div class="auth-modal-field">
+					<label class="auth-modal-field-label" for="myInfoRoleValue">
+						회원유형
+					</label>
+					<input type="text" class="auth-modal-input" id="myInfoRoleValue" readonly value="-" />
+				</div>
+				<div class="auth-modal-field">
+					<label class="auth-modal-field-label" for="myInfoProfileStatusValue">
+						프로필 상태
+					</label>
+					<input type="text" class="auth-modal-input" id="myInfoProfileStatusValue" readonly value="-" />
+				</div>
+				<div class="auth-modal-field">
+					<label class="auth-modal-field-label" for="myInfoBrokerOfficeValue">
+						중개사무소
+					</label>
+					<input type="text" class="auth-modal-input" id="myInfoBrokerOfficeValue" readonly value="-" />
+				</div>
+				<button type="button" class="auth-modal-submit" id="myInfoEditProfileBtn">
+					수정하기
+				</button>
+				<button type="button" class="auth-modal-submit" id="myInfoBrokerOfficeBtn" style="display:none;">
+					중개사무소 가입 신청
+				</button>
+			</div>
+		</div>
+		<div class="auth-broker-office-screen auth-screen-hidden" id="authBrokerOfficeScreen">
+			<h2 class="auth-modal-title">
+				중개사무소 가입 신청
+			</h2>
+			<div class="auth-modal-divider">
+			</div>
+			<form class="auth-modal-form" id="brokerOfficeApplyForm">
+				<p class="auth-profile-guide">
+					중개사무소 정보를 확인한 뒤 승인 대기 상태로 접수합니다.
+				</p>
+				<div class="auth-modal-field">
+					<label class="auth-modal-field-label" for="brokerOfficeSearchInput">중개사무소 검색</label>
+					<div class="broker-office-inline-field">
+						<input type="text" class="auth-modal-input" id="brokerOfficeSearchInput" placeholder="중개사무소명을 입력하세요." />
+						<button type="button" class="broker-office-inline-btn" id="brokerOfficeSearchBtn">검색</button>
+					</div>
+				</div>
+				<div class="auth-modal-field broker-office-manual-name-field" id="brokerOfficeManualNameField" style="display:none;">
+					<label class="auth-modal-field-label" for="brokerOfficeNameInput">중개사무소명</label>
+					<input type="text" class="auth-modal-input" id="brokerOfficeNameInput" placeholder="직접 입력" />
+				</div>
+				<div class="auth-modal-field">
+					<label class="auth-modal-field-label" for="brokerOwnerNameInput">대표자명</label>
+					<input type="text" class="auth-modal-input" id="brokerOwnerNameInput" placeholder="대표자명" />
+				</div>
+				<div class="auth-modal-field">
+					<label class="auth-modal-field-label" for="brokerLicenseNoInput">등록번호</label>
+					<input type="text" class="auth-modal-input" id="brokerLicenseNoInput" placeholder="등록번호" />
+				</div>
+				<div class="auth-modal-field">
+					<label class="auth-modal-field-label" for="brokerOfficeAddressInput">주소</label>
+					<div class="broker-office-inline-field">
+						<input type="text" class="auth-modal-input" id="brokerOfficeAddressInput" placeholder="주소" readonly />
+						<button type="button" class="broker-office-inline-btn" id="brokerOfficeAddressSearchBtn">주소 검색</button>
+					</div>
+				</div>
+				<div class="auth-modal-field">
+					<label class="auth-modal-field-label" for="brokerOfficeAddressDetailInput">상세주소</label>
+					<input type="text" class="auth-modal-input" id="brokerOfficeAddressDetailInput" placeholder="상세주소" />
+				</div>
+				<div class="auth-modal-field">
+					<label class="auth-modal-field-label" for="brokerOfficePhoneInput">전화번호</label>
+					<input type="tel" class="auth-modal-input" id="brokerOfficePhoneInput" placeholder="064-000-0000" />
+				</div>
+				<div class="auth-modal-field">
+					<label class="auth-modal-field-label" for="brokerOfficeDocumentInput">증빙서류</label>
+					<input type="file" class="auth-modal-input" id="brokerOfficeDocumentInput" accept="image/*,.pdf" />
+				</div>
+				<button type="submit" class="auth-modal-submit">중개사무소 가입 신청</button>
 			</form>
 		</div>
 		<div class="auth-signup-terms-screen auth-screen-hidden" id="authSignupTermsScreen">
@@ -6711,7 +6964,7 @@ function hexToRgba(hex, alpha = 1)
 	return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 const APP_NAME = "REALJEJU.APP";
-const APP_VERSION = "1.897";
+const APP_VERSION = "1.912";
 
 function applyAppVersion()
 {
@@ -10808,6 +11061,7 @@ async function bootstrap()
 bootstrap();
 
 </script>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 
@@ -10823,6 +11077,8 @@ bootstrap();
 	const authForgotPasswordScreen = document.getElementById("authForgotPasswordScreen");
 	const authResetPasswordScreen = document.getElementById("authResetPasswordScreen");
 	const authProfileSetupScreen = document.getElementById("authProfileSetupScreen");
+	const authMyInfoScreen = document.getElementById("authMyInfoScreen");
+	const authBrokerOfficeScreen = document.getElementById("authBrokerOfficeScreen");
 	const authSignupForm = document.getElementById("authSignupForm");
 	const authForgotPasswordForm = document.getElementById("authForgotPasswordForm");
 	const authResetPasswordForm = document.getElementById("authResetPasswordForm");
@@ -10840,6 +11096,11 @@ bootstrap();
 	const authForgotEmailInput = document.getElementById("authForgotEmailInput");
 	const authResetPasswordInput = document.getElementById("authResetPasswordInput");
 	const authResetPasswordConfirmInput = document.getElementById("authResetPasswordConfirmInput");
+	const authProfilePhotoInput = document.getElementById("authProfilePhotoInput");
+	const authProfilePhotoPreview = document.getElementById("authProfilePhotoPreview");
+	const authProfilePhotoSelectBtn = document.getElementById("authProfilePhotoSelectBtn");
+	let authProfilePhotoFile = null;
+	let authProfilePhotoUrl = "";
 	const authProfileNameInput = document.getElementById("authProfileNameInput");
 	const authProfilePhoneInput = document.getElementById("authProfilePhoneInput");
 	const authProfileRoleRequestSelect = document.getElementById("authProfileRoleRequestSelect");
@@ -10916,20 +11177,42 @@ bootstrap();
 		if (globalAccountDropdown) globalAccountDropdown.classList.remove("profile-incomplete");
 	}
 
+	function isBrokerRoleValue(role)
+	{
+		return ["broker", "agent", "agent_sub", "agent_staff", "corporation"].includes(String(role || ""));
+	}
+
+	function getRoleLabel(role)
+	{
+		const value = String(role || "user");
+		if (value === "agent") return "대표 공인중개사";
+		if (value === "agent_sub") return "소속 공인중개사";
+		if (value === "agent_staff") return "중개보조원";
+		if (value === "corporation") return "법인";
+		if (value === "broker") return "중개사";
+		return "일반회원";
+	}
+
 	function applyLoggedInAccountUI(user, profile)
 	{
 		if (!user) return;
 		currentRealjejuAuthUser = user;
 		const email = user.email || "로그인 사용자";
+		const displayName = profile && profile.name ? profile.name : email;
 		const isCompleted = !!(profile && profile.profile_completed === true && profile.name && profile.phone);
 		currentRealjejuProfileCompleted = isCompleted;
 		if (globalAuthTrigger) {
 			globalAuthTrigger.dataset.authState = "logged-in";
 			globalAuthTrigger.classList.add("logged-in");
-			globalAuthTrigger.innerHTML = '<span class="account-email-text">' + escapeAuthHtml(email) + '</span>';
+			globalAuthTrigger.innerHTML = '<span class="account-email-text">' + escapeAuthHtml(displayName) + '</span>';
 		}
 		if (globalAccountEmail) globalAccountEmail.textContent = email;
 		if (globalAccountDropdown) globalAccountDropdown.classList.toggle("profile-incomplete", !isCompleted);
+		const brokerMenuItem = document.getElementById("brokerOfficeMenuItem");
+		if (brokerMenuItem) {
+			brokerMenuItem.style.display = isBrokerRoleValue(profile && profile.role_request) ? "block" : "none";
+			brokerMenuItem.textContent = "중개사무소 가입 신청";
+		}
 	}
 
 	async function openProfileSetupFromAccountMenu()
@@ -10958,6 +11241,114 @@ bootstrap();
 		} catch (err) {
 			console.warn("개인정보 설정 열기 실패:", err);
 			openAuthErrorModal("개인정보 설정을 열지 못했습니다.", "개인정보 설정", null);
+		}
+	}
+
+
+	async function fetchCurrentProfileAndBrokerOffice()
+	{
+		const client = getRealjejuSupabaseClient();
+		if (!client) return { user: null, profile: null, brokerOffice: null };
+		const { data: userData } = await client.auth.getUser();
+		const user = userData && userData.user ? userData.user : null;
+		if (!user) return { user: null, profile: null, brokerOffice: null };
+		const { data: profile } = await client
+			.from("profiles")
+			.select("status, name, email, phone, role_request, profile_completed")
+			.eq("id", user.id)
+			.maybeSingle();
+		let brokerOffice = null;
+		try {
+			const { data: officeData } = await client
+				.from("broker_offices")
+				.select("office_name, status")
+				.eq("user_id", user.id)
+				.order("created_at", { ascending: false })
+				.limit(1)
+				.maybeSingle();
+			brokerOffice = officeData || null;
+		} catch (err) {
+			brokerOffice = null;
+		}
+		return { user, profile: profile || null, brokerOffice };
+	}
+
+	function setTextById(id, value)
+	{
+		const el = document.getElementById(id);
+		const safeValue = value || "-";
+		if (!el) return;
+		if ("value" in el) {
+			el.value = safeValue;
+			return;
+		}
+		el.textContent = safeValue;
+	}
+
+	function getBrokerOfficeStatusText(profile, brokerOffice)
+	{
+		if (!isBrokerRoleValue(profile && profile.role_request)) return "해당 없음";
+		if (!brokerOffice) return "미신청";
+		if (brokerOffice.status === "pending") return "승인 대기중";
+		if (brokerOffice.status === "approved") return brokerOffice.office_name || "승인 완료";
+		if (brokerOffice.status === "rejected") return "반려";
+		return "미신청";
+	}
+
+	async function openMyInfoFromAccountMenu()
+	{
+		closeGlobalAccountDropdown();
+		try {
+			const { user, profile, brokerOffice } = await fetchCurrentProfileAndBrokerOffice();
+			if (!user) {
+				openAuthModal();
+				return;
+			}
+			const completed = !!(profile && profile.profile_completed === true && profile.name && profile.phone);
+			setTextById("myInfoNameValue", profile && profile.name ? profile.name : "-");
+			setTextById("myInfoEmailValue", user.email || (profile && profile.email) || "-");
+			setTextById("myInfoPhoneValue", profile && profile.phone ? profile.phone : "-");
+			setTextById("myInfoRoleValue", getRoleLabel(profile && profile.role_request));
+			setTextById("myInfoProfileStatusValue", completed ? "완료" : "미완료");
+			setTextById("myInfoBrokerOfficeValue", getBrokerOfficeStatusText(profile, brokerOffice));
+			const brokerBtn = document.getElementById("myInfoBrokerOfficeBtn");
+			if (brokerBtn) {
+				const brokerRole = isBrokerRoleValue(profile && profile.role_request);
+				brokerBtn.style.display = brokerRole && (!brokerOffice || brokerOffice.status !== "approved") ? "block" : "none";
+				brokerBtn.textContent = brokerOffice && brokerOffice.status === "pending" ? "승인 대기중" : "중개사무소 가입 신청";
+			}
+			if (authModal) authModal.classList.add("profile-page-mode", "open");
+			hideAllAuthScreens();
+			updateAuthBackVisibility(false);
+			if (authMyInfoScreen) authMyInfoScreen.classList.remove("auth-screen-hidden");
+			document.body.style.overflow = "hidden";
+		} catch (err) {
+			console.warn("내 정보 열기 실패:", err);
+			openAuthErrorModal("내 정보를 열지 못했습니다.", "내 정보", null);
+		}
+	}
+
+	async function openBrokerOfficeFromAccountMenu()
+	{
+		closeGlobalAccountDropdown();
+		try {
+			const { user, profile } = await fetchCurrentProfileAndBrokerOffice();
+			if (!user) {
+				openAuthModal();
+				return;
+			}
+			if (!isBrokerRoleValue(profile && profile.role_request)) {
+				openAuthErrorModal("중개사 회원유형에서 이용 가능합니다.", "중개사무소 가입 신청", null);
+				return;
+			}
+			if (authModal) authModal.classList.add("profile-page-mode", "open");
+			hideAllAuthScreens();
+			updateAuthBackVisibility(false);
+			if (authBrokerOfficeScreen) authBrokerOfficeScreen.classList.remove("auth-screen-hidden");
+			document.body.style.overflow = "hidden";
+		} catch (err) {
+			console.warn("중개사무소 가입 신청 열기 실패:", err);
+			openAuthErrorModal("중개사무소 가입 신청 화면을 열지 못했습니다.", "중개사무소 가입 신청", null);
 		}
 	}
 
@@ -11024,8 +11415,16 @@ bootstrap();
 				handleRealjejuLogout();
 				return;
 			}
-			if (action === "profile" || action === "myinfo") {
+			if (action === "myinfo") {
+				openMyInfoFromAccountMenu();
+				return;
+			}
+			if (action === "profile") {
 				openProfileSetupFromAccountMenu();
+				return;
+			}
+			if (action === "broker-office") {
+				openBrokerOfficeFromAccountMenu();
 				return;
 			}
 			closeGlobalAccountDropdown();
@@ -11095,6 +11494,8 @@ bootstrap();
 		if (authForgotPasswordScreen) authForgotPasswordScreen.classList.add("auth-screen-hidden");
 		if (authResetPasswordScreen) authResetPasswordScreen.classList.add("auth-screen-hidden");
 		if (authProfileSetupScreen) authProfileSetupScreen.classList.add("auth-screen-hidden");
+		if (authMyInfoScreen) authMyInfoScreen.classList.add("auth-screen-hidden");
+		if (authBrokerOfficeScreen) authBrokerOfficeScreen.classList.add("auth-screen-hidden");
 	}
 
 	function updateAuthBackVisibility(show)
@@ -11538,6 +11939,43 @@ bootstrap();
 		});
 	}
 
+	function setAuthProfilePhotoPreview(url)
+	{
+		if (!authProfilePhotoPreview) return;
+		if (url) authProfilePhotoPreview.src = url;
+	}
+
+	async function uploadAuthProfilePhotoIfNeeded(client, userId)
+	{
+		if (!authProfilePhotoFile || !client || !userId) return authProfilePhotoUrl || "";
+		const ext = String(authProfilePhotoFile.name || "jpg").split(".").pop().toLowerCase().replace(/[^a-z0-9]/g, "") || "jpg";
+		const filePath = `${userId}/profile-${Date.now()}.${ext}`;
+		const { data, error } = await client.storage.from("profiles").upload(filePath, authProfilePhotoFile, { cacheControl: "3600", upsert: true });
+		if (error) { console.warn("프로필 사진 업로드 실패:", error); return authProfilePhotoUrl || ""; }
+		const { data: urlData } = client.storage.from("profiles").getPublicUrl(data && data.path ? data.path : filePath);
+		return urlData && urlData.publicUrl ? urlData.publicUrl : (authProfilePhotoUrl || "");
+	}
+
+	if (authProfilePhotoSelectBtn && authProfilePhotoInput)
+	{
+		authProfilePhotoSelectBtn.addEventListener("click", () => authProfilePhotoInput.click());
+		authProfilePhotoInput.addEventListener("change", () =>
+		{
+			const file = authProfilePhotoInput.files && authProfilePhotoInput.files[0] ? authProfilePhotoInput.files[0] : null;
+			if (!file) return;
+			if (!/^image\//.test(file.type || "")) {
+				openAuthErrorModal("이미지 파일만 선택할 수 있습니다.", "프로필 사진", authProfilePhotoInput);
+				authProfilePhotoInput.value = "";
+				authProfilePhotoFile = null;
+				return;
+			}
+			authProfilePhotoFile = file;
+			const reader = new FileReader();
+			reader.onload = () => setAuthProfilePhotoPreview(reader.result);
+			reader.readAsDataURL(file);
+		});
+	}
+
 
 	if (authProfileSetupForm) {
 		authProfileSetupForm.addEventListener("submit", async (e) => {
@@ -11582,12 +12020,15 @@ bootstrap();
 				isRealjejuSavingProfile = true;
 				if (profileSubmitBtn) profileSubmitBtn.disabled = true;
 				const profileSavedAt = new Date().toISOString();
+				const profileImageUrlValue = await uploadAuthProfilePhotoIfNeeded(supabaseForProfile, user.id);
 				const { error } = await supabaseForProfile
 					.from("profiles")
 					.upsert({
 						id: user.id,
+						email: user.email || "",
 						name: profileNameValue,
 						phone: profilePhoneValue,
+						profile_image: profileImageUrlValue || null,
 						role_request: profileRoleRequestValue,
 						profile_completed: true,
 						privacy_agreed_at: profileSavedAt,
@@ -11987,6 +12428,96 @@ bootstrap();
 		}
 	}, true);
 
+	const myInfoEditProfileBtn = document.getElementById("myInfoEditProfileBtn");
+	if (myInfoEditProfileBtn) {
+		myInfoEditProfileBtn.addEventListener("click", (e) => {
+			e.preventDefault();
+			openProfileSetupFromAccountMenu();
+		});
+	}
+
+	const myInfoBrokerOfficeBtn = document.getElementById("myInfoBrokerOfficeBtn");
+	if (myInfoBrokerOfficeBtn) {
+		myInfoBrokerOfficeBtn.addEventListener("click", (e) => {
+			e.preventDefault();
+			openBrokerOfficeFromAccountMenu();
+		});
+	}
+
+	const brokerOfficeSearchBtn = document.getElementById("brokerOfficeSearchBtn");
+	if (brokerOfficeSearchBtn) {
+		brokerOfficeSearchBtn.addEventListener("click", (e) => {
+			e.preventDefault();
+			const searchInput = document.getElementById("brokerOfficeSearchInput");
+			const nameInput = document.getElementById("brokerOfficeNameInput");
+			const manualField = document.getElementById("brokerOfficeManualNameField");
+			if (manualField) manualField.style.display = "block";
+			if (nameInput && searchInput) nameInput.value = searchInput.value || "";
+			openAuthErrorModal("상호 검색 API 연결 전까지 직접 입력으로 접수합니다.", "중개사무소 검색", nameInput || searchInput);
+		});
+	}
+
+	const brokerOfficeAddressSearchBtn = document.getElementById("brokerOfficeAddressSearchBtn");
+	if (brokerOfficeAddressSearchBtn) {
+		brokerOfficeAddressSearchBtn.addEventListener("click", (e) => {
+			e.preventDefault();
+			if (window.daum && window.daum.Postcode) {
+				new window.daum.Postcode({
+					oncomplete: function(data) {
+						const addressInput = document.getElementById("brokerOfficeAddressInput");
+						if (addressInput) addressInput.value = data.roadAddress || data.jibunAddress || "";
+					}
+				}).open();
+				return;
+			}
+			openAuthErrorModal("주소 검색 스크립트를 불러오지 못했습니다.", "주소 검색", null);
+		});
+	}
+
+	const brokerOfficeApplyForm = document.getElementById("brokerOfficeApplyForm");
+	if (brokerOfficeApplyForm) {
+		brokerOfficeApplyForm.addEventListener("submit", async (e) => {
+			e.preventDefault();
+			const client = getRealjejuSupabaseClient();
+			if (!client) return openAuthErrorModal("Supabase 연결 설정을 확인하세요.", "중개사무소 가입 신청", null);
+			const { data: userData } = await client.auth.getUser();
+			const user = userData && userData.user ? userData.user : null;
+			if (!user) return openAuthModal();
+			const officeName = (document.getElementById("brokerOfficeNameInput")?.value || document.getElementById("brokerOfficeSearchInput")?.value || "").trim();
+			const ownerName = (document.getElementById("brokerOwnerNameInput")?.value || "").trim();
+			const licenseNo = (document.getElementById("brokerLicenseNoInput")?.value || "").trim();
+			const address = (document.getElementById("brokerOfficeAddressInput")?.value || "").trim();
+			const addressDetail = (document.getElementById("brokerOfficeAddressDetailInput")?.value || "").trim();
+			const phone = (document.getElementById("brokerOfficePhoneInput")?.value || "").trim();
+			if (!officeName) return openAuthErrorModal("중개사무소명을 입력하세요.", "중개사무소 가입 신청", document.getElementById("brokerOfficeSearchInput"));
+			if (!ownerName) return openAuthErrorModal("대표자명을 입력하세요.", "중개사무소 가입 신청", document.getElementById("brokerOwnerNameInput"));
+			if (!licenseNo) return openAuthErrorModal("등록번호를 입력하세요.", "중개사무소 가입 신청", document.getElementById("brokerLicenseNoInput"));
+			if (!address) return openAuthErrorModal("주소를 입력하세요.", "중개사무소 가입 신청", document.getElementById("brokerOfficeAddressInput"));
+			try {
+				const { error } = await client.from("broker_offices").insert({
+					user_id: user.id,
+					office_name: officeName,
+					owner_name: ownerName,
+					license_no: licenseNo,
+					office_address: addressDetail ? address + " " + addressDetail : address,
+					office_phone: phone,
+					status: "pending",
+					created_at: new Date().toISOString(),
+					updated_at: new Date().toISOString()
+				});
+				if (error) {
+					console.error("중개사무소 신청 실패:", error);
+					return openAuthErrorModal("중개사무소 신청 저장에 실패했습니다.", "중개사무소 가입 신청", null);
+				}
+				const brokerMenuItem = document.getElementById("brokerOfficeMenuItem");
+				if (brokerMenuItem) brokerMenuItem.textContent = "승인 대기중";
+				openAuthErrorModal("중개사무소 가입 신청이 접수되었습니다.", "중개사무소 가입 신청", null);
+			} catch (err) {
+				console.error("중개사무소 신청 오류:", err);
+				openAuthErrorModal("중개사무소 신청 중 오류가 발생했습니다.", "중개사무소 가입 신청", null);
+			}
+		});
+	}
 
 	window.openAuthModal = openAuthModal;
 	window.closeAuthModal = closeAuthModal;
@@ -12070,9 +12601,16 @@ document.addEventListener("DOMContentLoaded", function () {
 			const user = userResult && userResult.data && userResult.data.user ? userResult.data.user : null;
 			if (!user || !user.id) return showProfileError("로그인 정보를 확인하지 못했습니다. 다시 로그인해 주세요.", nameInput);
 			const now = new Date().toISOString();
-			const result = await client.from("profiles").upsert({ id: user.id, name: name, phone: phone, role_request: role, profile_completed: true, privacy_agreed_at: now, updated_at: now }, { onConflict: "id" });
+			const imageUrl = await uploadAuthProfilePhotoIfNeeded(client, user.id);
+			const result = await client.from("profiles").upsert({ id: user.id, email: user.email || "", name: name, phone: phone, profile_image: imageUrl || null, role_request: role, profile_completed: true, privacy_agreed_at: now, updated_at: now }, { onConflict: "id" });
 			if (result && result.error) { console.error("개인정보 저장 실패:", result.error); return showProfileError("개인정보 저장에 실패했습니다.", nameInput); }
 			showProfileError("개인정보가 저장되었습니다.", null);
+			const dropdown = qs("globalAccountDropdown");
+			if (dropdown) dropdown.classList.remove("profile-incomplete");
+			const accountNameText = document.querySelector(".account-email-text");
+			if (accountNameText) accountNameText.textContent = name;
+			const brokerMenuItem = qs("brokerOfficeMenuItem");
+			if (brokerMenuItem) brokerMenuItem.style.display = ["broker", "agent", "agent_sub", "agent_staff", "corporation"].includes(role) ? "block" : "none";
 			const authModal = qs("authModal");
 			if (authModal) { authModal.classList.remove("profile-page-mode"); authModal.classList.remove("open"); authModal.setAttribute("aria-hidden", "true"); }
 		} catch (err) {
