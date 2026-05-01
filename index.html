@@ -4921,7 +4921,7 @@ body.sidebar-list-collapsed .map-side-tools
 	background: #fff;
 }
 
-/* Ver 1.962 표시: 하단바 왼쪽 고정 */
+/* Ver 1.963 표시: 하단바 왼쪽 고정 */
 .sub-version-fixed
 {
 	position: absolute !important;
@@ -7007,7 +7007,7 @@ html, body
 }
 
 
-/* v1.962: 하단바 주소 검색 */
+/* v1.963: 하단바 주소 검색 */
 .sub-address-search
 {
 	position: relative;
@@ -7197,7 +7197,7 @@ html, body
 	color: var(--subbar-item-color) !important;
 }
 
-/* ===== v1.962: 상단바 텍스트 디자인 단일 관리 ===== */
+/* ===== v1.963: 상단바 텍스트 디자인 단일 관리 ===== */
 :root
 {
 	--topbar-text-font-family: var(--nav-font-family);
@@ -7211,7 +7211,7 @@ html, body
 	--topbar-profile-gap: 10px;
 }
 
-/* ===== v1.962: 하단바 텍스트 디자인 단일 관리 ===== */
+/* ===== v1.963: 하단바 텍스트 디자인 단일 관리 ===== */
 :root
 {
 	--subbar-menu-gap: 14px;
@@ -7317,8 +7317,8 @@ html, body
 	flex: 0 0 auto !important;
 }
 
-/* ===== v1.962: 우측 상단 계정 메뉴 hover 열림 ===== */
-/* ===== v1.962: 우측 상단 계정 메뉴 hover 표시 전용 ===== */
+/* ===== v1.963: 우측 상단 계정 메뉴 hover 열림 ===== */
+/* ===== v1.963: 우측 상단 계정 메뉴 hover 표시 전용 ===== */
 .global-auth-trigger:hover,
 .global-auth-trigger.account-open
 {
@@ -7330,7 +7330,7 @@ html, body
 	transform: none !important;
 }
 
-/* ===== v1.962: 상단바 기본 활성 메뉴 + hover 색 고정 ===== */
+/* ===== v1.963: 상단바 기본 활성 메뉴 + hover 색 고정 ===== */
 .topbar-menu-item.active
 {
 	color: var(--nav-active-color);
@@ -7341,7 +7341,7 @@ html, body
 	color: #111827 !important;
 }
 
-/* ===== v1.962: 상단 메뉴 hover 색상 차단 ===== */
+/* ===== v1.963: 상단 메뉴 hover 색상 차단 ===== */
 .topbar-menu-item:hover
 {
 	color: inherit !important;
@@ -7349,7 +7349,7 @@ html, body
 	border-color: transparent !important;
 }
 
-/* ===== v1.962: 상단 메뉴 active 전용 색상 관리 ===== */
+/* ===== v1.963: 상단 메뉴 active 전용 색상 관리 ===== */
 .global-topbar .topbar-menu-item
 {
 	color: var(--nav-color) !important;
@@ -7369,7 +7369,7 @@ html, body
 	font-weight: var(--nav-font-weight) !important;
 }
 
-/* ===== v1.962: 우측 상단 이름 hover 색상 고정 ===== */
+/* ===== v1.963: 우측 상단 이름 hover 색상 고정 ===== */
 .global-auth-trigger,
 .global-auth-trigger:hover,
 .global-auth-trigger.account-open,
@@ -7379,7 +7379,7 @@ html, body
 	background: transparent !important;
 }
 
-/* ===== v1.962: 상단 메뉴 active 색상만 관리 ===== */
+/* ===== v1.963: 상단 메뉴 active 색상만 관리 ===== */
 .global-topbar .topbar-menu-item
 {
 	color: var(--nav-color) !important;
@@ -7398,7 +7398,7 @@ html, body
 	color: var(--nav-active-color) !important;
 }
 
-/* ===== v1.962: 우측 상단 이름 hover/active/open 색상 고정 ===== */
+/* ===== v1.963: 우측 상단 이름 hover/active/open 색상 고정 ===== */
 .global-topbar-right .global-auth-trigger,
 .global-topbar-right .global-auth-trigger:hover,
 .global-topbar-right .global-auth-trigger:focus,
@@ -7419,6 +7419,37 @@ html, body
 	color: inherit !important;
 }
 
+/* ===== v1.963: 무료 뱃지 ===== */
+.topbar-menu-item-free
+{
+	display: inline-flex;
+	align-items: center;
+}
+
+.badge-free
+{
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+
+	height: 18px;
+	padding: 0 6px;
+	margin-left: 4px;
+
+	background: #3B82F6;
+	color: #fff;
+
+	font-size: 12px;
+	font-weight: 500;
+
+	line-height: 18px;
+
+	position: relative;
+	top: 0px;   /* ← 여기만 조절 */
+
+	border-radius: 0;
+}
+
 </style>
 	</head>
 	<body class="sidebar-list-collapsed">
@@ -7436,7 +7467,7 @@ html, body
 					<button type="button" class="topbar-menu-item">중개사 홈</button>
 					<button type="button" class="topbar-menu-item active">부동산 홈</button>
 					<button type="button" class="topbar-menu-item">분양 정보</button>
-					<button type="button" class="topbar-menu-item">매물 등록 (무료)</button>
+					<button type="button" class="topbar-menu-item topbar-menu-item-free">매물 등록 <span class="badge-free">무료</span></button>
 					<button type="button" class="topbar-menu-item">관심매물</button>
 					<button type="button" class="topbar-menu-item">공지사항</button>
 				</nav>
@@ -7475,7 +7506,7 @@ html, body
 		<div class="sub-topbar">
 			<div class="sub-topbar-inner">
 				<span class="sub-version-fixed">
-					Ver 1.962
+					Ver 1.963
 				</span>
 				<div class="sub-topbar-left">
 					<strong id="listInfoText">
@@ -8577,7 +8608,7 @@ function hexToRgba(hex, alpha = 1)
 	return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 const APP_NAME = "REALJEJU.APP";
-const APP_VERSION = "1.962";
+const APP_VERSION = "1.963";
 
 function applyAppVersion()
 {
@@ -13189,7 +13220,7 @@ bootstrap();
 		globalAccountDropdown.style.display = isOpen ? "none" : "block";
 	}
 
-	/* ===== v1.962: 우측 상단 계정 메뉴 hover 열림 ===== */
+	/* ===== v1.963: 우측 상단 계정 메뉴 hover 열림 ===== */
 	let globalAccountHoverCloseTimer = null;
 
 	function openGlobalAccountDropdownByHover()
@@ -13253,8 +13284,8 @@ bootstrap();
 		const topbarMenu = document.getElementById("topbarMenu");
 		if (!topbarMenu) return;
 		const menus = isBroker
-			? ["중개사 홈", "부동산 홈", "분양 정보", "매물 등록 (무료)", "관심매물", "공지사항"]
-			: ["부동산 홈", "분양 정보", "매물 등록 (무료)", "관심매물", "공지사항"];
+			? ["중개사 홈", "부동산 홈", "분양 정보", "매물 등록 <span class="badge-free">무료</span>", "관심매물", "공지사항"]
+			: ["부동산 홈", "분양 정보", "매물 등록 <span class="badge-free">무료</span>", "관심매물", "공지사항"];
 		const currentMenus = Array.from(topbarMenu.querySelectorAll(".topbar-menu-item")).map((button) => button.textContent.trim());
 		if (currentMenus.length === menus.length && currentMenus.every((label, index) => label === menus[index])) return;
 		topbarMenu.replaceChildren(...menus.map((label) => {
