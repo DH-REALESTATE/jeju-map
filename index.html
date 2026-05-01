@@ -13,11 +13,7 @@
 		<meta property="og:image" content="https://your-domain.example/og-image.jpg" />
 		<link rel="icon" href="favicon_realjeju_blue.png">
 		<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"/>
-		<link rel="preconnect" href="https://fonts.googleapis.com">
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-		<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+		<link rel="preload" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 		<style>
 :root
@@ -30,8 +26,8 @@
 	--line: #e7edf3;
 	--text: #17212b;
 	--shadow: 0 12px 30px rgba(15, 41, 66, 0.12);
-	--font-ui: "Pretendard", "Inter", "Noto Sans KR", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
-	--font-display: "Pretendard", "Inter", "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+	--font-ui: "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+	--font-display: "Pretendard Variable", "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
 	--topbar-row-height: 56px;
 	--global-topbar-height: var(--topbar-row-height);
 	--sub-topbar-height: var(--topbar-row-height);
@@ -46,6 +42,12 @@
 	--account-dropdown-padding-x: 20px;
 	--account-dropdown-padding-y: 16px;
 	--account-dropdown-line-color: #e5e7eb;
+	--nav-font-family: "Pretendard Variable", "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+	--nav-font-size: 18px;
+	--nav-font-weight: 900;
+	--nav-color: #111827;
+	--nav-active-color: #2563eb;
+	--nav-new-color: #ff2f7a;
 }
 
 *
@@ -138,7 +140,7 @@ body
 	height: 36px;
 	min-width: 36px;
 	padding: 0 10px;
-	font-weight: 100;
+	font-weight: 600;
 	font-size: 24px;
 }
 
@@ -276,7 +278,7 @@ body
 	background: transparent;
 	color: #fff;
 	font-size: 34px;
-	font-weight: 300;
+	font-weight: 600;
 	line-height: 1;
 	cursor: pointer;
 }
@@ -757,10 +759,10 @@ body
 
 .detail-summary-price
 {
-	font-family: "IBM Plex Sans", "Inter", sans-serif;
+	font-family: var(--font-ui);
 	font-variant-numeric: tabular-nums;
 	font-size: 38px;
-	font-weight: 1500;
+	font-weight: 900;
 	line-height: 1.05;
 	letter-spacing: -1px;
 	color: #111827;
@@ -910,7 +912,7 @@ body
 
 .area-rest
 {
-	font-weight: 500;
+	font-weight: 600;
 	color: #5c6b7a;
 	margin-left: 1px;
 }
@@ -1017,7 +1019,7 @@ body
 	min-width: 100px;
 	font-size: 14px;
 	letter-spacing: -0.1px;
-	font-weight: 400;
+	font-weight: 600;
 	color: #7a8794;
 	text-align: left;
 	line-height: 1.3;
@@ -1144,7 +1146,7 @@ body
 
 .detail-agent-phone-inline
 {
-	font-family: "IBM Plex Sans", "Inter", sans-serif;
+	font-family: var(--font-ui);
 	font-variant-numeric: tabular-nums;
 	font-size: 14px;
 	letter-spacing: -0.1px;
@@ -1295,16 +1297,16 @@ body
 
 .sub-topbar-left strong
 {
-	font-size: 15px;
+	font-size: var(--subbar-menu-font-size);
 	color: #1f6fff;
-	letter-spacing: -0.2px;
-	font-weight: 750;
+	letter-spacing: var(--subbar-menu-letter-spacing);
+	font-weight: var(--subbar-menu-font-weight);
 }
 
 .sub-topbar-left span
 {
-	font-size: 15px;
-	font-weight: 400;
+	font-size: var(--subbar-menu-font-size);
+	font-weight: var(--subbar-menu-font-weight);
 	color: #000;
 }
 
@@ -1318,19 +1320,19 @@ body
 #sortLabel.sort-latest
 {
 	color: #6b7280;
-	font-weight: 400;
+	font-weight: 600;
 }
 
 #sortLabel.sort-price-desc
 {
 	color: #dc2626;
-	font-weight: 400;
+	font-weight: 600;
 }
 
 #sortLabel.sort-price-asc
 {
 	color: #2563eb;
-	font-weight: 400;
+	font-weight: 600;
 }
 
 .sub-topbar .deal-buttons .deal-all-btn.active
@@ -1401,10 +1403,10 @@ body
 	border-radius: 0;
 	border: 1px solid #dbe4ee;
 	background: #fff;
-	color: #6b7785;
-	font-size: 15px;
-	font-weight: 800;
-	letter-spacing: -0.1px;
+	color: var(--subbar-menu-color);
+	font-size: var(--subbar-menu-font-size);
+	font-weight: var(--subbar-menu-font-weight);
+	letter-spacing: var(--subbar-menu-letter-spacing);
 	display: inline-flex;
 	align-items: center;
 	gap: 8px;
@@ -1474,10 +1476,10 @@ body
 	min-height: 36px;
 	padding: 0 10px;
 	border-radius: 0;
-	color: #334155;
-	font-size: 14px;
-	font-weight: 600;
-	letter-spacing: -0.1px;
+	color: var(--subbar-item-color);
+	font-size: var(--subbar-item-font-size);
+	font-weight: var(--subbar-item-font-weight);
+	letter-spacing: var(--subbar-item-letter-spacing);
 	cursor: pointer;
 	user-select: none;
 }
@@ -1540,6 +1542,77 @@ body
 	line-height: 1;
 }
 
+
+/* 거래유형 드롭다운: 기타 조건 버튼과 동일한 묶음 UI */
+.deal-filter-dropdown
+{
+	margin-left: 0;
+}
+
+.deal-filter-menu
+{
+	min-width: 160px;
+}
+
+.deal-filter-menu .deal-buttons
+{
+	display: flex !important;
+	flex-direction: column !important;
+	flex-wrap: nowrap !important;
+	gap: 2px !important;
+	width: 100% !important;
+	min-width: 0 !important;
+	overflow: visible !important;
+}
+
+.deal-filter-menu .deal-buttons button
+{
+	width: 100% !important;
+	min-height: 36px !important;
+	height: auto !important;
+	padding: 0 10px !important;
+	border: 0 !important;
+	border-radius: 0 !important;
+	background: transparent !important;
+	box-shadow: none !important;
+	color: #334155 !important;
+	font-size: var(--subbar-item-font-size) !important;
+	font-weight: var(--subbar-item-font-weight) !important;
+	letter-spacing: var(--subbar-item-letter-spacing) !important;
+	display: flex !important;
+	align-items: center !important;
+	justify-content: flex-start !important;
+	text-align: left !important;
+}
+
+.deal-filter-menu .deal-buttons button:hover
+{
+	background: #f8fafc !important;
+	color: #334155 !important;
+}
+
+.deal-filter-menu .deal-buttons button.active
+{
+	background: #eff6ff !important;
+	color: #2563eb !important;
+	font-weight: 800 !important;
+}
+
+.deal-method-filter-menu
+{
+	min-width: 190px;
+}
+
+.sub-topbar .deal-method-filter-option
+{
+	font-family: var(--subbar-item-font-family) !important;
+	font-size: var(--subbar-item-font-size) !important;
+	font-weight: var(--subbar-item-font-weight) !important;
+	letter-spacing: var(--subbar-item-letter-spacing) !important;
+	color: var(--subbar-item-color) !important;
+}
+
+
 .global-back-btn
 {
 	width: 38px;
@@ -1560,44 +1633,19 @@ body
 	background: #f5f7fa;
 }
 
+/* 왼쪽 상단 로고 왼쪽 여백 */
 .global-brand
 {
-	font-size: 27px;
-	font-weight: 900;
 	color: var(--brand);
 	letter-spacing: -0.45px;
 	white-space: nowrap;
 	display: inline-flex;
 	align-items: center;
-	gap: 8px;
-}
-
-.global-brand i
-{
-	font-size: 15px;
-	line-height: 1;
-	flex: 0 0 auto;
-	margin-right: 1px;
-	color: var(--brand);
-}
-
-.global-brand .brand-name
-{
+	gap: 0px;
 	line-height: 1;
 	font-size: 20px;
-	font-weight: 800;
+	font-weight: 900;
 	color: var(--brand);
-}
-
-.global-brand .brand-version
-{
-	line-height: 1;
-	font-size: 13px;
-	font-weight: 555;
-	color: var(--brand);
-	opacity: 0.72;
-	margin-top: 4px;
-	margin-left: 4px;
 }
 
 .global-nav-label
@@ -1655,6 +1703,21 @@ body
 {
 	margin: 0 4px;
 	color: #6b7280;
+}
+
+.global-auth-trigger .auth-arrow
+{
+	font-size: 12px;
+	margin-left: 6px;
+	line-height: 1;
+	transition: transform 0.18s ease;
+	flex: 0 0 auto;
+}
+
+.global-account-dropdown.open ~ .auth-arrow,
+.approval-year-filter-menu
+{
+	min-width: 190px;
 }
 
 .global-sort-chip
@@ -1987,7 +2050,7 @@ body
 	box-shadow: inset 0 0 0 1px rgba(220, 38, 38, 0.08);
 }
 
-/* 🔥 매물 유형별 색상 */ .card-badge[data-type="아파트"]
+/* 매물 종류별 색상 */ .card-badge[data-type="아파트"]
 {
 	background:rgba(59,130,246,0.08);
 	color:var(--brand);
@@ -2022,7 +2085,7 @@ body
 	box-shadow: inset 0 0 0 1px rgba(55,48,163,0.10);
 }
 
-/* 🔥 오른쪽 상세 패널 유형 색상 */ .detail-summary-type-badge[data-type="아파트"]
+/* 오른쪽 상세 패널 유형 색상 */ .detail-summary-type-badge[data-type="아파트"]
 {
 	background:rgba(59,130,246,0.08);
 	color:var(--brand);
@@ -2126,8 +2189,8 @@ body
 
 .card-price
 {
-	font-size: 24px;
-	font-weight: 600;
+	font-size: 12px;
+	font-weight: 500;
 	color: #111827;
 	letter-spacing: -0.8px;
 	line-height: 1.02;
@@ -2284,7 +2347,7 @@ body
 {
 	font-size: 14px;
 	letter-spacing: -0.1px;
-	font-weight: 800;
+	font-weight: 700;
 	color: #1f2a36;
 	letter-spacing: -0.15px;
 }
@@ -3010,7 +3073,7 @@ body
 
 .map-recommend-price
 {
-	font-family: "IBM Plex Sans", "Inter", sans-serif;
+	font-family: var(--font-ui);
 	font-variant-numeric: tabular-nums;
 	font-size: 24px;
 	font-weight: 950;
@@ -3551,10 +3614,10 @@ body
 	font-weight: 700;
 }
 
+/* 왼쪽 패널 - 제목 */
 .card-title
 {
 	font-size: 15px;
-	font-weight: 800;
 	line-height: 1.4;
 	margin-bottom: 6px;
 	letter-spacing: -0.25px;
@@ -3562,11 +3625,21 @@ body
 	-webkit-line-clamp: 2;
 }
 
+/* 왼쪽 패널 - 주소 */
 .card-address
 {
-	font-size: 13px;
-	line-height: 1.45;
+	font-size: 14px;
+	line-height: 1.4;
 	margin-bottom: 8px;
+	color: #7b8794;
+}
+
+/* 왼쪽 패널 - 면적 */
+.card-spec
+{
+	font-size: 14px;
+	line-height: 1.4;
+	margin-bottom: 10px;
 	color: #7b8794;
 }
 
@@ -3586,22 +3659,13 @@ body
 
 .card-price
 {
-	font-family: "IBM Plex Sans", "Inter", sans-serif;
+	font-family: var(--font-ui);
 	font-variant-numeric: tabular-nums;
-	font-size: 30px;
-	line-height: 1.02;
+	font-size: 24px;
+	line-height: 1.2;
 	font-weight: 900;
 	letter-spacing: -1px;
 	color: #0f172a;
-}
-
-.card-spec
-{
-	font-size: 13px;
-	line-height: 1.5;
-	margin-bottom: 10px;
-	color: #64748b;
-	font-weight: 600;
 }
 
 .card-agent-row
@@ -3642,18 +3706,20 @@ body
 	line-height: 1;
 }
 
+/* 왼쪽 패널 - 중개사 이름 */
 .card-agent-name
 {
+	color: #111827;
 	display: inline-flex;
 	align-items: center;
-	font-size: 15px;
-	font-weight: 900;
-	color: #111827;
+	font-size: 14px;
+	font-weight: 800;
 	letter-spacing: -0.2px;
 	line-height: 1;
 	flex: 0 0 auto;
 }
 
+/* 왼쪽 패널 - 중개사 직급 */
 .card-agent-title
 {
 	display: inline-flex;
@@ -3674,13 +3740,14 @@ body
 	font-weight: 700;
 }
 
+/* 왼쪽 패널 - 중개사 상호 */
 .card-agent-office
 {
+	color: #111827;
 	display: inline-flex;
 	align-items: center;
 	font-size: 14px;
 	font-weight: 800;
-	color: #4f5d6b;
 	letter-spacing: -0.12px;
 	line-height: 1;
 	min-width: 0;
@@ -3820,28 +3887,33 @@ body
 	color: #fff;
 }
 
-/* stronger premium font tuning */ .card-title, .detail-title, .brand-title
+/* stronger premium font tuning */ 
+.card-title, .detail-title, .brand-title
 {
 	font-weight: 900;
 }
 
+/* 왼쪽 패널 - 금액 */
 .card-price, .detail-summary-price, .detail-hero-price
 {
-	font-weight: 950;
-	letter-spacing: -0.7px;
+	font-weight: 800;
+	letter-spacing: -0.9px;
 }
 
+/* 왼쪽 패널 - 주소, 면적 */
 .card-spec, .card-address, .detail-summary-address, .detail-desc
 {
 	font-weight: 400;
 }
 
+/* 왼쪽 패널 - 매뮬 유형 뱃지 */
 .card-badge, .card-deal, .detail-summary-type-badge, .detail-summary-deal-badge, .map-tool-btn, .map-unit-half-btn
 {
-	font-weight: 800;
+	font-weight: 600;
 }
 
-/* right-panel open performance tuning */ .detail-hero, .detail-hero-slides, .detail-content
+/* right-panel open performance tuning */
+.detail-hero, .detail-hero-slides, .detail-content
 {
 	transform: translateZ(0);
 }
@@ -4254,7 +4326,7 @@ body.shared-detail-mode .sidebar:not(.expanded) .sidebar-detail-panel
 	height:100%;
 	font-size:12px;
 	color:#9aa3af;
-	font-weight:600;
+	font-weight: 600;
 	line-height:1;
 	white-space:nowrap;
 	margin-right:4px;
@@ -4453,7 +4525,7 @@ body.sidebar-list-collapsed .map-side-tools
 {
 	margin:0 !important;
 	font-size:14px !important;
-	font-weight:500 !important;
+	font-weight: 600 !important;
 	color:#6b7785 !important;
 	line-height:1.4 !important;
 }
@@ -4670,12 +4742,8 @@ body.sidebar-list-collapsed .map-side-tools
 	box-shadow: none !important;
 }
 
-/* ===== FORCE BRAND COLOR ===== */ .global-brand, .global-brand i, .global-brand .brand-name, .global-brand .brand-version
-{
-	color: var(--brand) !important;
-}
-
-/* ===== TOPBAR/SUBTOPBAR EXACT RULES: 매물유형 + 거래유형 동일 이동 규칙 ===== */ :root
+/* ===== TOPBAR/SUBTOPBAR EXACT RULES: 매물유형 + 거래유형 동일 이동 규칙 ===== */
+:root
 {
 	--topbar-logo-stop-x: 130px;		/* 로고 오른쪽 정지 지점 */ 
 	--topbar-type-width: 950px;			/* 매물유형 전체 폭 기준 */ 	
@@ -4683,13 +4751,15 @@ body.sidebar-list-collapsed .map-side-tools
 	--subtopbar-deal-width: 615px;		/* 거래유형 전체 폭 기준 */
 }
 
-/* 로고는 기존 위치 고정 */ .global-topbar-left
+/* 로고는 기존 위치 고정 */
+.global-topbar-left
 {
-	left: 22px !important;
+	left: 18px !important;
 	right: auto !important;
 }
 
-/* 매물유형: 가운데 정렬 → 창 축소 시 왼쪽 이동 → 로고 앞에서 정지 */ .global-topbar-menu
+/* 매물유형: 가운데 정렬 → 창 축소 시 왼쪽 이동 → 로고 앞에서 정지 */
+.global-topbar-menu
 {
 	position: absolute !important;
 	top: 50% !important;
@@ -4731,7 +4801,8 @@ body.sidebar-list-collapsed .map-side-tools
 	flex-shrink: 0 !important;
 }
 
-/* 회원가입·로그인: 매물유형 오른쪽 + 50px, 창 축소 시 오른쪽에서 덮임 */ .global-topbar-right
+/* 회원가입·로그인: 매물유형 오른쪽 + 50px, 창 축소 시 오른쪽에서 덮임 */
+.global-topbar-right
 {
 	position: absolute !important;
 	top: 50% !important;
@@ -4752,7 +4823,8 @@ body.sidebar-list-collapsed .map-side-tools
 	flex-shrink: 0 !important;
 }
 
-/* 거래유형: 매물유형과 같은 방식으로 가운데 → 왼쪽 이동 → 로고 앞 정지 */ .sub-topbar-right
+/* 거래유형: 매물유형과 같은 방식으로 가운데 → 왼쪽 이동 → 로고 앞 정지 */
+.sub-topbar-right
 {
 	position: absolute !important;
 	top: 50% !important;
@@ -4794,15 +4866,66 @@ body.sidebar-list-collapsed .map-side-tools
 	flex-shrink: 0 !important;
 }
 
-/* 로고 글자 크기 유지 */ .global-brand, .global-brand .brand-name
+/* 로고 글자 크기 유지 */
+.global-brand, .global-brand .brand-name
 {
-	font-size: var(--topbar-logo-font-size, 20px) !important;
+	font-size: var(--topbar-logo-font-size, 18px) !important;
 }
 
-/* Ver 1.914 표시: 하단바 왼쪽 고정 */ .sub-version-fixed
+
+/* v1.932: 상단 메뉴 폰트/색상/웨이트 통일 */
+.global-topbar .type-buttons button,
+.global-topbar .deal-buttons button
+{
+	font-family: var(--nav-font-family) !important;
+	font-size: var(--nav-font-size) !important;
+	font-weight: var(--nav-font-weight) !important;
+	color: var(--nav-color) !important;
+	letter-spacing: -0.35px !important;
+	background: transparent !important;
+	border-color: transparent !important;
+	box-shadow: none !important;
+}
+
+.global-topbar .type-buttons button.active,
+.global-topbar .deal-buttons button.active
+{
+	color: var(--nav-active-color) !important;
+	background: transparent !important;
+	border-color: transparent !important;
+	box-shadow: none !important;
+}
+
+.global-topbar .type-buttons button:hover,
+.global-topbar .deal-buttons button:hover
+{
+	color: var(--nav-active-color) !important;
+	background: transparent !important;
+	border-color: transparent !important;
+	box-shadow: none !important;
+}
+
+.nav-new-badge
+{
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	height: 30px;
+	padding: 0 13px;
+	border: 2px solid var(--nav-new-color);
+	border-radius: 999px;
+	color: var(--nav-new-color);
+	font-size: 14px;
+	font-weight: 700;
+	letter-spacing: -0.3px;
+	background: #fff;
+}
+
+/* Ver 1.962 표시: 하단바 왼쪽 고정 */
+.sub-version-fixed
 {
 	position: absolute !important;
-	left: 22px !important;
+	left: 18px !important;
 	top: 50% !important;
 	transform: translateY(-50%) !important;
 	display: inline-flex !important;
@@ -4811,7 +4934,7 @@ body.sidebar-list-collapsed .map-side-tools
 	flex-shrink: 0 !important;
 	z-index: 10 !important;
 	font-size: 13px !important;
-	font-weight: 555 !important;
+	font-weight: 600 !important;
 	color: var(--brand) !important;
 	opacity: 0.72 !important;
 }
@@ -4822,7 +4945,8 @@ body.sidebar-list-collapsed .map-side-tools
 	opacity: 1 !important;
 }
 
-/* 회원가입 로그인: 오른쪽 정렬, 매물유형 오른쪽 50px 경계 안쪽으로 침범 금지 */ .global-topbar-right
+/* 회원가입 로그인: 오른쪽 정렬, 매물유형 오른쪽 50px 경계 안쪽으로 침범 금지 */
+.global-topbar-right
 {
 	position: absolute !important;
 	top: 50% !important;
@@ -4874,15 +4998,15 @@ body.sidebar-list-collapsed .map-side-tools
 	vertical-align: middle;
 }
 
-/* 드롭다운 위 아래 여백 */
+/* 드롭다운 너비, 위 아래 여백 */
 .global-account-dropdown
 {
 	position: fixed;
 	top: calc(var(--global-topbar-height) + 8px);
 	right: 18px;
 	z-index: 10020;
-	width: 292px;
-	padding: 15px 0;
+	width: 252px;
+	padding: 0px 0px;
 	border: 1px solid #e5e7eb;
 	background: rgba(255,255,255,0.98);
 	box-shadow: 0 18px 42px rgba(15, 23, 42, 0.16);
@@ -4929,6 +5053,7 @@ body.sidebar-list-collapsed .map-side-tools
 	background: #e5e7eb;
 }
 
+/* 드롭다운 메뉴 - 글자 줄 높이 간격 */
 .global-account-menu-item
 {
 	position: relative;
@@ -4939,8 +5064,9 @@ body.sidebar-list-collapsed .map-side-tools
 	border: 0;
 	background: transparent;
 	color: #111827;
-	font-size: 16px;
-	font-weight: 700;
+	font-size: 15px;
+	line-height: 1.6;
+	font-weight: 600;
 	letter-spacing: -0.2px;
 	text-align: left;
 	cursor: pointer;
@@ -4984,7 +5110,7 @@ body.sidebar-list-collapsed .map-side-tools
 	max-width: none;
 	height: 100vh;
 	max-height: 100vh;
-	padding: 72px 24px 64px;
+	padding: 48px 48px 48px;
 	background: #ffffff;
 	color: #111827;
 	border: 0;
@@ -5019,6 +5145,12 @@ body.sidebar-list-collapsed .map-side-tools
 	color: #475569;
 }
 
+.auth-modal.profile-page-mode .auth-myinfo-display-label,
+.auth-modal.profile-page-mode .auth-myinfo-display-value
+{
+	color: #111827;
+}
+
 .auth-modal.profile-page-mode .auth-modal-field-label,
 .auth-modal.profile-page-mode .auth-profile-consent,
 .auth-modal.profile-page-mode .auth-profile-consent strong
@@ -5049,9 +5181,209 @@ body.sidebar-list-collapsed .map-side-tools
 	color: #111827;
 }
 
+.auth-myinfo-display-row
+{
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	width: 100%;
+	min-height: 34px;
+}
+
+.auth-myinfo-display-label
+{
+	flex: 0 0 auto;
+	font-size: 17px;
+	font-weight: 600;
+	letter-spacing: -0.25px;
+	color: #fff;
+	line-height: 1.35;
+	white-space: nowrap;
+}
+
+.auth-myinfo-display-value
+{
+	flex: 1 1 auto;
+	min-width: 0;
+	font-size: 17px;
+	font-weight: 600;
+	letter-spacing: -0.25px;
+	color: #fff;
+	line-height: 1.35;
+	text-align: right;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
 .auth-modal.profile-page-mode .auth-myinfo-screen .auth-modal-input[readonly]
 {
 	cursor: default;
+}
+
+/* ===== PATCH 1.928: 내 정보 카드형 디자인 ===== */
+.auth-modal.profile-page-mode .auth-myinfo-screen
+{
+	width: min(500px, calc(100vw - 40px));
+	margin: 0 auto;
+	padding: 36px 42px 42px;
+	background: #ffffff;
+	border: 1px solid #e5e7eb;
+	border-radius: 18px;
+	box-shadow: 0 18px 50px rgba(15, 23, 42, 0.10);
+}
+
+.auth-modal.profile-page-mode .auth-myinfo-screen .auth-modal-title
+{
+	font-size: 30px;
+	font-weight: 900;
+	margin: 0 0 14px;
+	letter-spacing: -0.8px;
+}
+
+.auth-modal.profile-page-mode .auth-myinfo-screen .auth-modal-divider
+{
+	width: 48px;
+	height: 4px;
+	margin: 0 0 28px;
+	border-radius: 999px;
+}
+
+.auth-modal.profile-page-mode .auth-myinfo-screen .auth-modal-form
+{
+	gap: 0;
+}
+
+.auth-modal.profile-page-mode .auth-myinfo-photo-box
+{
+	width: 92px;
+	height: 92px;
+	margin: 0 auto 30px;
+	border-radius: 50%;
+	padding: 4px;
+	background: #ffffff;
+	border: 1px solid #e5e7eb;
+	box-shadow: 0 10px 24px rgba(15, 23, 42, 0.16);
+}
+
+.auth-modal.profile-page-mode .auth-myinfo-photo
+{
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
+	object-fit: cover;
+	display: block;
+}
+
+.auth-modal.profile-page-mode .auth-myinfo-screen .auth-profile-guide
+{
+	display: none;
+}
+
+.auth-modal.profile-page-mode .auth-myinfo-display-row
+{
+	position: relative;
+	min-height: 54px;
+	padding: 0 0 0 52px;
+	margin: 0;
+	border-bottom: 1px solid #eef2f7;
+	gap: 24px;
+}
+
+.auth-modal.profile-page-mode .auth-myinfo-display-row::before
+{
+	content: "";
+	position: absolute;
+	left: 0;
+	top: 50%;
+	width: 34px;
+	height: 34px;
+	transform: translateY(-50%);
+	border-radius: 50%;
+	background: #f1f5f9;
+	border: 1px solid #e5e7eb;
+}
+
+.auth-modal.profile-page-mode .auth-myinfo-display-row::after
+{
+	position: absolute;
+	left: 0;
+	top: 50%;
+	width: 34px;
+	height: 34px;
+	transform: translateY(-50%);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-family: "Font Awesome 6 Free";
+	font-weight: 900;
+	font-size: 14px;
+	color: #334155;
+}
+
+.auth-modal.profile-page-mode .auth-myinfo-display-row.myinfo-row-name::after
+{
+	content: "\f007";
+}
+
+.auth-modal.profile-page-mode .auth-myinfo-display-row.myinfo-row-email::after
+{
+	content: "\f0e0";
+}
+
+.auth-modal.profile-page-mode .auth-myinfo-display-row.myinfo-row-phone::after
+{
+	content: "\f095";
+}
+
+.auth-modal.profile-page-mode .auth-myinfo-display-row.myinfo-row-role::after
+{
+	content: "\f2bb";
+}
+
+.auth-modal.profile-page-mode .auth-myinfo-display-row.myinfo-row-office::after
+{
+	content: "\f1ad";
+}
+
+/* 내 정보 페이지 글자 크기 */
+.auth-modal.profile-page-mode .auth-myinfo-display-label
+{
+	font-size: 18px;
+	font-weight: 600;
+	color: #334155 !important;
+}
+
+.auth-modal.profile-page-mode .auth-myinfo-display-label::after
+{
+	content: none;
+}
+
+.auth-modal.profile-page-mode .auth-myinfo-display-value
+{
+	font-size: 18px;
+	font-weight: 600;
+	color: #111827 !important;
+}
+
+.auth-modal.profile-page-mode .auth-myinfo-screen .auth-modal-submit
+{
+	height: 54px;
+	margin-top: 24px;
+	border-radius: 8px;
+	letter-spacing: 0;
+	font-size: 17px;
+	box-shadow: 0 10px 22px rgba(27, 111, 164, 0.22);
+}
+
+.auth-modal.profile-page-mode .auth-myinfo-screen #myInfoBrokerOfficeBtn
+{
+	margin-top: 14px;
+	background: #ffffff;
+	color: #1B6FA4;
+	border: 1px solid #1B6FA4;
+	box-shadow: none;
 }
 
 /* ===== AUTH MODAL OVERRIDE FROM 1.897 ONLY ===== */ .auth-modal
@@ -5101,7 +5433,7 @@ body.sidebar-list-collapsed .map-side-tools
 	background: transparent;
 	color: #fff;
 	font-size: 34px;
-	font-weight: 300;
+	font-weight: 600;
 	line-height: 1;
 	cursor: pointer;
 }
@@ -5119,7 +5451,7 @@ body.sidebar-list-collapsed .map-side-tools
 	background: transparent;
 	color: #fff;
 	font-size: 38px;
-	font-weight: 300;
+	font-weight: 600;
 	line-height: 1;
 	cursor: pointer;
 	display: none;
@@ -5361,7 +5693,7 @@ body.sidebar-list-collapsed .map-side-tools
 {
 	font-size: 32px;
 	line-height: 1;
-	font-weight: 400;
+	font-weight: 600;
 }
 
 .auth-terms-list
@@ -5459,7 +5791,7 @@ body.sidebar-list-collapsed .map-side-tools
 	margin-left: auto;
 	color: #fff;
 	font-size: 34px;
-	font-weight: 300;
+	font-weight: 600;
 	line-height: 1;
 }
 
@@ -5559,7 +5891,7 @@ body.sidebar-list-collapsed .map-side-tools
 	background: transparent;
 	color: #111827;
 	font-size: 38px;
-	font-weight: 300;
+	font-weight: 600;
 	line-height: 1;
 	cursor: pointer;
 }
@@ -5720,7 +6052,6 @@ body.sidebar-list-collapsed .map-side-tools
 	font-weight: 900;
 }
 
-		
 /* ===== PATCH 1.897: profile role select visibility + account dropdown item lines ===== */
 .auth-modal.profile-page-mode .auth-profile-select-wrap
 {
@@ -5806,7 +6137,7 @@ body.sidebar-list-collapsed .map-side-tools
 	vertical-align: middle !important;
 }
 
-/* ===== PATCH 1.914: my info view + broker office menu/page ===== */
+/* ===== PATCH 1.928: my info view + broker office menu/page ===== */
 .auth-myinfo-screen, .auth-broker-office-screen
 {
 	display: flex;
@@ -5923,6 +6254,283 @@ body.sidebar-list-collapsed .map-side-tools
 }
 
 
+/* ===== PATCH 1.928: broker office full page application layout ===== */
+.auth-modal.profile-page-mode .auth-broker-office-screen
+{
+	width: min(1120px, calc(100vw - 80px));
+	margin: 0 auto;
+}
+
+.broker-apply-page
+{
+	display: grid;
+	grid-template-columns: minmax(380px, 0.92fr) minmax(470px, 1.08fr);
+	gap: 72px;
+	align-items: start;
+	width: 100%;
+	padding: 0 0 28px;
+}
+
+.broker-apply-left
+{
+	padding-top: 4px;
+}
+
+.broker-apply-title
+{
+	margin: 0 0 46px;
+	font-size: 40px;
+	font-weight: 900;
+	line-height: 1.18;
+	letter-spacing: -1.2px;
+	color: #111827;
+}
+
+.broker-apply-guide-card
+{
+	width: 430px;
+	max-width: 100%;
+	padding: 22px 24px 20px;
+	border-radius: 0;
+	border: 1px solid #d6d6d6;
+	background: #f3f3f3;
+	color: #111827;
+}
+
+.broker-apply-guide-card p
+{
+	margin: 0 0 18px;
+	font-size: 16px;
+	font-weight: 600;
+	line-height: 1.45;
+	letter-spacing: -0.25px;
+	word-break: keep-all;
+}
+
+.broker-apply-guide-card p:last-of-type
+{
+	margin-bottom: 8px;
+}
+
+.broker-apply-guide-btn
+{
+	height: 40px;
+	padding: 0 16px;
+	border: 1px solid #d1d5db;
+	border-radius: 5px;
+	background: #ffffff;
+	color: #1f2937;
+	font-size: 14px;
+	font-weight: 700;
+	letter-spacing: -0.2px;
+	cursor: pointer;
+}
+
+.broker-apply-form
+{
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	padding-top: 0;
+}
+
+.broker-apply-field
+{
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.broker-apply-label
+{
+	font-size: 18px;
+	font-weight: 800;
+	line-height: 1.2;
+	letter-spacing: -0.4px;
+	color: #111827;
+}
+
+.broker-apply-label span
+{
+	font-weight: 600;
+	color: #6b7280;
+}
+
+.broker-apply-input,
+.broker-apply-select
+{
+	width: 100%;
+	height: 46px;
+	border: 2px solid #d8d8d8;
+	border-radius: 8px;
+	background: #ffffff;
+	color: #111827;
+	padding: 0 16px;
+	font-size: 15px;
+	font-weight: 600;
+	letter-spacing: -0.15px;
+	outline: none;
+	box-shadow: none;
+}
+
+.broker-apply-input::placeholder
+{
+	color: #6b7280;
+	font-weight: 600;
+}
+
+.broker-apply-search-btn
+{
+	position: absolute;
+	right: 6px;
+	bottom: 6px;
+	height: 30px;
+	padding: 0 12px;
+	border: 0;
+	border-radius: 4px;
+	background: #1B6FA4;
+	color: #ffffff;
+	font-size: 13px;
+	font-weight: 700;
+	letter-spacing: -0.1px;
+	cursor: pointer;
+}
+
+.broker-apply-search-btn + *
+{
+	margin-top: 0;
+}
+
+#brokerOfficeSearchInput
+{
+	padding-right: 64px;
+}
+
+.broker-apply-hidden-fields
+{
+	display: none !important;
+}
+
+.broker-apply-email-row
+{
+	display: grid;
+	grid-template-columns: 1fr 22px 1fr;
+	gap: 8px;
+	align-items: center;
+}
+
+.broker-apply-at
+{
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 16px;
+	font-weight: 700;
+	color: #111827;
+	line-height: 1;
+}
+
+.broker-apply-select
+{
+	appearance: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	background-image: linear-gradient(45deg, transparent 50%, #9ca3af 50%), linear-gradient(135deg, #9ca3af 50%, transparent 50%);
+	background-position: calc(100% - 16px) 17px, calc(100% - 11px) 17px;
+	background-size: 5px 5px, 5px 5px;
+	background-repeat: no-repeat;
+}
+
+.broker-apply-terms
+{
+	margin-top: 160px;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	height: 46px;
+	padding: 0 12px;
+	border: 1px solid #e5e7eb;
+	border-radius: 5px;
+	background: #ffffff;
+	color: #111827;
+	font-size: 14px;
+	font-weight: 600;
+	letter-spacing: -0.15px;
+	cursor: pointer;
+	user-select: none;
+}
+
+.broker-apply-terms input
+{
+	position: absolute;
+	opacity: 0;
+	pointer-events: none;
+}
+
+.broker-apply-checkmark
+{
+	width: 14px;
+	height: 14px;
+	border: 1px solid #fb923c;
+	border-radius: 3px;
+	background: #ffffff;
+	flex: 0 0 auto;
+}
+
+.broker-apply-terms input:checked + .broker-apply-checkmark
+{
+	background: #fb923c;
+	box-shadow: inset 0 0 0 3px #ffffff;
+}
+
+.broker-apply-terms i
+{
+	margin-left: auto;
+	font-size: 15px;
+	color: #111827;
+}
+
+.broker-apply-submit
+{
+	width: 100%;
+	height: 58px;
+	margin-top: 14px;
+	border: 0;
+	border-radius: 10px;
+	background: #1f79ae;
+	color: #ffffff;
+	font-size: 20px;
+	font-weight: 800;
+	letter-spacing: -0.4px;
+	cursor: pointer;
+}
+
+@media (max-width: 980px)
+{
+	.auth-modal.profile-page-mode .auth-broker-office-screen
+	{
+		width: min(680px, calc(100vw - 40px));
+	}
+
+	.broker-apply-page
+	{
+		grid-template-columns: 1fr;
+		gap: 34px;
+	}
+
+	.broker-apply-title
+	{
+		margin-bottom: 28px;
+		font-size: 34px;
+	}
+
+	.broker-apply-terms
+	{
+		margin-top: 30px;
+	}
+}
+
 .auth-profile-photo-field
 {
 	display: flex;
@@ -5978,6 +6586,839 @@ body.sidebar-list-collapsed .map-side-tools
 	margin-bottom: 4px;
 }
 
+
+/* ===== PATCH 1.928: profile edit + broker application card alignment ===== */
+.auth-modal.profile-page-mode
+{
+	align-items: center !important;
+	justify-content: center !important;
+	padding: 0 !important;
+	background: #f8fafc !important;
+}
+
+.auth-modal.profile-page-mode .auth-modal-dialog
+{
+	display: flex !important;
+	align-items: center !important;
+	justify-content: flex-start !important;
+	width: 100% !important;
+	max-width: none !important;
+	height: 100vh !important;
+	max-height: 100vh !important;
+	padding: 40px 24px 48px !important;
+	background: #f8fafc !important;
+	overflow-y: auto !important;
+}
+
+.auth-modal.profile-page-mode .auth-modal-close
+{
+	position: fixed !important;
+	top: 24px !important;
+	right: 28px !important;
+	z-index: 2 !important;
+	color: #111827 !important;
+}
+
+.auth-modal.profile-page-mode .auth-profile-setup-screen,
+.auth-modal.profile-page-mode .auth-myinfo-screen
+{
+	width: min(500px, calc(100vw - 40px)) !important;
+	margin-left: auto !important;
+	margin-right: auto !important;
+	padding: 36px 42px 42px !important;
+	background: #ffffff !important;
+	border: 1px solid #e5e7eb !important;
+	border-radius: 18px !important;
+	box-shadow: 0 18px 50px rgba(15, 23, 42, 0.10) !important;
+}
+
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-modal-title,
+.auth-modal.profile-page-mode .auth-myinfo-screen .auth-modal-title
+{
+	font-size: 30px !important;
+	font-weight: 900 !important;
+	margin: 0 0 14px !important;
+	letter-spacing: -0.8px !important;
+	color: #111827 !important;
+}
+
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-modal-divider,
+.auth-modal.profile-page-mode .auth-myinfo-screen .auth-modal-divider
+{
+	width: 48px !important;
+	height: 4px !important;
+	margin: 0 0 28px !important;
+	border-radius: 999px !important;
+	background: #1B6FA4 !important;
+}
+
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-modal-form
+{
+	gap: 16px !important;
+}
+
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-guide
+{
+	margin: 0 0 4px !important;
+	padding: 14px 16px !important;
+	border: 1px solid #e5e7eb !important;
+	border-radius: 12px !important;
+	background: #f8fafc !important;
+	color: #475569 !important;
+	font-size: 14px !important;
+	font-weight: 700 !important;
+	line-height: 1.55 !important;
+}
+
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-photo-field
+{
+	align-items: center !important;
+	gap: 8px !important;
+	padding: 16px !important;
+	border: 1px solid #e5e7eb !important;
+	border-radius: 14px !important;
+	background: #ffffff !important;
+}
+
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-photo-field .auth-modal-field-label
+{
+	align-self: flex-start !important;
+	margin-bottom: 2px !important;
+}
+
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-photo-box
+{
+	justify-content: center !important;
+	width: 100% !important;
+}
+
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-modal-field-label,
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-consent,
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-consent strong
+{
+	font-size: 14px !important;
+	font-weight: 800 !important;
+	color: #334155 !important;
+	letter-spacing: -0.15px !important;
+}
+
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-modal-input,
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-select-wrap select
+{
+	height: 54px !important;
+	border: 1px solid #dbe3ec !important;
+	border-radius: 12px !important;
+	background: #f8fafc !important;
+	color: #111827 !important;
+	font-size: 16px !important;
+	font-weight: 800 !important;
+	padding: 0 16px !important;
+}
+
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-modal-input:focus,
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-select-wrap select:focus
+{
+	border-color: #1B6FA4 !important;
+	background: #ffffff !important;
+	box-shadow: 0 0 0 3px rgba(27, 111, 164, 0.10) !important;
+}
+
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-modal-submit
+{
+	height: 54px !important;
+	margin-top: 8px !important;
+	border-radius: 8px !important;
+	background: #1B6FA4 !important;
+	color: #ffffff !important;
+	letter-spacing: 0 !important;
+	font-size: 17px !important;
+	box-shadow: 0 10px 22px rgba(27, 111, 164, 0.22) !important;
+}
+
+.auth-modal.profile-page-mode .auth-broker-office-screen
+{
+	width: min(1080px, calc(100vw - 80px)) !important;
+	margin-left: auto !important;
+	margin-right: auto !important;
+}
+
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-page
+{
+	grid-template-columns: minmax(320px, 0.85fr) minmax(440px, 1fr) !important;
+	gap: 42px !important;
+	align-items: start !important;
+	justify-content: center !important;
+	max-width: 1080px !important;
+	margin: 0 auto !important;
+	padding: 0 0 28px !important;
+}
+
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-form
+{
+	padding: 30px 32px 34px !important;
+	background: #ffffff !important;
+	border: 1px solid #e5e7eb !important;
+	border-radius: 18px !important;
+	box-shadow: 0 18px 50px rgba(15, 23, 42, 0.10) !important;
+	gap: 15px !important;
+}
+
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-field
+{
+	gap: 7px !important;
+}
+
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-label
+{
+	font-size: 14px !important;
+	font-weight: 900 !important;
+	color: #334155 !important;
+	letter-spacing: -0.15px !important;
+}
+
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-input,
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-select
+{
+	height: 52px !important;
+	border: 1px solid #dbe3ec !important;
+	border-radius: 12px !important;
+	background: #f8fafc !important;
+	color: #111827 !important;
+	padding: 0 16px !important;
+	font-size: 15px !important;
+	font-weight: 800 !important;
+}
+
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-input:focus,
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-select:focus
+{
+	border-color: #1B6FA4 !important;
+	background: #ffffff !important;
+	box-shadow: 0 0 0 3px rgba(27, 111, 164, 0.10) !important;
+}
+
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-submit
+{
+	height: 56px !important;
+	margin-top: 12px !important;
+	border-radius: 10px !important;
+	background: #1B6FA4 !important;
+	font-size: 18px !important;
+	font-weight: 900 !important;
+	box-shadow: 0 10px 22px rgba(27, 111, 164, 0.22) !important;
+}
+
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-title
+{
+	margin: 0 0 28px !important;
+	font-size: 36px !important;
+	line-height: 1.18 !important;
+	letter-spacing: -1px !important;
+}
+
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-guide-card
+{
+	border-radius: 18px !important;
+	border: 1px solid #e5e7eb !important;
+	background: #ffffff !important;
+	box-shadow: 0 12px 32px rgba(15, 23, 42, 0.06) !important;
+}
+
+@media (max-width: 980px)
+{
+	.auth-modal.profile-page-mode .auth-modal-dialog
+	{
+		padding: 28px 18px 36px !important;
+	}
+
+	.auth-modal.profile-page-mode .auth-profile-setup-screen,
+	.auth-modal.profile-page-mode .auth-myinfo-screen
+	{
+		width: min(500px, calc(100vw - 28px)) !important;
+		padding: 30px 24px 34px !important;
+	}
+
+	.auth-modal.profile-page-mode .auth-broker-office-screen
+	{
+		width: min(680px, calc(100vw - 28px)) !important;
+	}
+
+	.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-page
+	{
+		grid-template-columns: 1fr !important;
+		gap: 24px !important;
+	}
+
+	.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-form
+	{
+		padding: 26px 22px 30px !important;
+	}
+}
+
+/* ===== PATCH 1.929: profile card close + guide hanging indent ===== */
+.auth-modal.profile-page-mode > .auth-modal-dialog > .auth-modal-close
+{
+	display: none !important;
+}
+
+.auth-modal.profile-page-mode .auth-profile-setup-screen,
+.auth-modal.profile-page-mode .auth-myinfo-screen,
+.auth-modal.profile-page-mode .broker-apply-form
+{
+	position: relative !important;
+}
+
+.auth-card-close
+{
+	position: absolute !important;
+	top: 18px !important;
+	right: 18px !important;
+	width: 38px !important;
+	height: 38px !important;
+	border: 0 !important;
+	border-radius: 50% !important;
+	background: transparent !important;
+	color: #64748b !important;
+	font-size: 30px !important;
+	font-weight: 500 !important;
+	line-height: 1 !important;
+	cursor: pointer !important;
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	z-index: 3 !important;
+}
+
+.auth-card-close:hover
+{
+	background: #f1f5f9 !important;
+	color: #111827 !important;
+}
+
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-modal-title,
+.auth-modal.profile-page-mode .auth-myinfo-screen .auth-modal-title
+{
+	padding-right: 44px !important;
+}
+
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-form
+{
+	padding-top: 54px !important;
+}
+
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-guide-card p
+{
+	display: grid !important;
+	grid-template-columns: 12px 1fr !important;
+	column-gap: 6px !important;
+	align-items: start !important;
+	text-align: left !important;
+	padding-left: 0 !important;
+	text-indent: 0 !important;
+	line-height: 1.62 !important;
+	word-break: keep-all !important;
+}
+
+.broker-guide-dot
+{
+	display: block;
+	line-height: inherit;
+}
+
+.broker-guide-text
+{
+	display: block;
+	min-width: 0;
+}
+
+
+/* v1.932: 숫자 폰트 Pretendard 통일 */
+html, body
+{
+	font-variant-numeric: tabular-nums;
+	font-feature-settings: "tnum" 1, "lnum" 1;
+}
+
+.card-price,
+.card-date,
+.card-spec,
+.detail-summary-price,
+.detail-hero-price,
+.detail-meta-value,
+.detail-agent-phone-inline,
+.map-recommend-price,
+.map-agent-meta-value,
+#mapAgentPhone,
+.area-num,
+.area-rest,
+.sub-version-fixed,
+.global-sort-chip,
+.map-result-count
+{
+	font-family: var(--font-ui) !important;
+	font-variant-numeric: tabular-nums !important;
+	font-feature-settings: "tnum" 1, "lnum" 1 !important;
+}
+
+/* v1.938: 하단 매물 종류 체크박스 드롭다운 */
+.type-filter-dropdown
+{
+	position: relative;
+	flex: 0 0 auto;
+}
+
+.type-filter-menu
+{
+	min-width: 220px;
+	max-height: min(620px, calc(100vh - 96px));
+	overflow-y: auto;
+}
+
+.type-filter-dropdown.open .type-filter-menu
+{
+	display: flex;
+}
+
+.type-filter-dropdown.has-active .type-filter-trigger
+{
+	color: #2563eb;
+	border-color: #bfdbfe;
+	background: #eff6ff;
+}
+
+.type-filter-dropdown.open .type-filter-trigger i
+{
+	transform: rotate(180deg);
+}
+
+.type-filter-option input
+{
+	width: 16px;
+	height: 16px;
+	margin: 0;
+	accent-color: #2563eb;
+	cursor: pointer;
+	flex: 0 0 auto;
+}
+
+.type-filter-option span
+{
+	line-height: 1.2;
+}
+
+
+/* v1.962: 하단바 주소 검색 */
+.sub-address-search
+{
+	position: relative;
+	flex: 0 0 auto;
+	width: 278px;
+	max-width: 278px;
+	z-index: 90;
+}
+
+.sub-address-search-form
+{
+	position: relative;
+	display: flex;
+	align-items: center;
+	width: 100%;
+	height: 38px;
+	border: 1px solid #dbe4ee;
+	background: #fff;
+	color: #111827;
+	box-shadow: none;
+}
+
+.sub-address-search-form:focus-within
+{
+	border-color: #bfdbfe;
+	box-shadow: 0 0 0 3px rgba(37,99,235,0.10);
+}
+
+.sub-address-search-icon
+{
+	width: 38px;
+	height: 38px;
+	border: 0;
+	background: transparent;
+	color: #475569;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 15px;
+	cursor: pointer;
+	flex: 0 0 auto;
+}
+
+.sub-address-search-input
+{
+	flex: 1 1 auto;
+	min-width: 0;
+	height: 100%;
+	border: 0;
+	outline: 0;
+	background: transparent;
+	padding: 0 12px 0 0;
+	color: #111827;
+	font-size: 15px;
+	font-weight: 700;
+	letter-spacing: -0.25px;
+	font-family: var(--font-ui);
+}
+
+.sub-address-search-input::placeholder
+{
+	color: #9ca3af;
+	font-weight: 700;
+}
+
+.sub-address-search-status
+{
+	position: absolute;
+	top: calc(100% + 8px);
+	left: 0;
+	min-width: 100%;
+	max-width: 340px;
+	padding: 10px 12px;
+	border: 1px solid #e5e7eb;
+	background: rgba(255,255,255,0.98);
+	box-shadow: 0 12px 28px rgba(15,41,66,0.14);
+	color: #475569;
+	font-size: 13px;
+	font-weight: 700;
+	line-height: 1.35;
+	letter-spacing: -0.15px;
+	display: none;
+	z-index: 9999;
+	white-space: nowrap;
+}
+
+.sub-address-search-status.show
+{
+	display: block;
+}
+
+.sub-address-search-status.error
+{
+	color: #dc2626;
+}
+
+@media (max-width: 980px)
+{
+	.sub-address-search
+	{
+		width: 210px;
+		max-width: 210px;
+	}
+
+	.sub-address-search-input
+	{
+		font-size: 14px;
+	}
+}
+
+.sub-topbar .map-filter-bar
+{
+	gap: var(--sub-filter-gap) !important;
+}
+
+.sub-topbar .extra-filter-dropdown,
+.sub-topbar .deal-filter-dropdown,
+.sub-topbar .type-filter-dropdown,
+.sub-topbar .deal-method-filter-dropdown,
+.sub-address-search
+{
+	margin-left: 0 !important;
+}
+
+.sub-address-search-form
+{
+	height: 38px !important;
+	border-radius: 999px !important;
+	border: 1px solid #dbe4ee !important;
+	background: #fff !important;
+	box-shadow: none !important;
+	overflow: hidden !important;
+}
+
+.sub-address-search-form:focus-within
+{
+	border-color: #bfdbfe !important;
+	background: #f8fbff !important;
+	box-shadow: none !important;
+}
+
+.sub-address-search-icon
+{
+	width: 38px !important;
+	height: 38px !important;
+	color: #6b7785 !important;
+	font-weight: 500 !important;
+}
+
+.sub-address-search-input
+{
+	font-family: var(--sub-filter-font-family) !important;
+	font-size: var(--sub-filter-font-size) !important;
+	font-weight: var(--sub-filter-font-weight) !important;
+	letter-spacing: var(--sub-filter-letter-spacing) !important;
+	color: var(--sub-filter-color) !important;
+}
+
+.sub-address-search-input::placeholder
+{
+	font-weight: 500 !important;
+	color: #9ca3af !important;
+}
+
+.sub-topbar .extra-filter-trigger,
+.sub-topbar .type-filter-trigger,
+.sub-topbar .deal-filter-trigger,
+.sub-topbar .deal-method-filter-trigger
+{
+	font-family: var(--subbar-menu-font-family) !important;
+	font-size: var(--subbar-menu-font-size) !important;
+	font-weight: var(--subbar-menu-font-weight) !important;
+	letter-spacing: var(--subbar-menu-letter-spacing) !important;
+	color: var(--subbar-menu-color) !important;
+}
+
+.sub-topbar .extra-filter-option,
+.sub-topbar .type-filter-option,
+.sub-topbar .deal-filter-option,
+.sub-topbar .deal-method-filter-option,
+.sub-topbar .extra-filter-reset-btn
+{
+	font-family: var(--subbar-item-font-family) !important;
+	font-size: var(--subbar-item-font-size) !important;
+	font-weight: var(--subbar-item-font-weight) !important;
+	letter-spacing: var(--subbar-item-letter-spacing) !important;
+	color: var(--subbar-item-color) !important;
+}
+
+/* ===== v1.962: 상단바 텍스트 디자인 단일 관리 ===== */
+:root
+{
+	--topbar-text-font-family: var(--nav-font-family);
+	--topbar-text-font-size: 16px;
+	--topbar-text-font-weight: 777;
+	--topbar-text-color: #111827;
+	--topbar-text-hover-color: #2563eb;
+	--topbar-text-letter-spacing: -0.2px;
+	--topbar-menu-gap: 40px;
+	--topbar-profile-size: 28px;
+	--topbar-profile-gap: 10px;
+}
+
+/* ===== v1.962: 하단바 텍스트 디자인 단일 관리 ===== */
+:root
+{
+	--subbar-menu-gap: 14px;
+	--subbar-menu-font-family: var(--topbar-text-font-family, var(--font-ui));
+	--subbar-menu-font-size: 14px;
+	--subbar-menu-font-weight: 500;
+	--subbar-menu-letter-spacing: -0.1px;
+	--subbar-menu-color: #111827;
+
+	--subbar-item-font-family: var(--topbar-text-font-family, var(--font-ui));
+	--subbar-item-font-size: 14px;
+	--subbar-item-font-weight: 480;
+	--subbar-item-letter-spacing: -0.1px;
+	--subbar-item-color: #334155;
+
+	/* 기존 호환 변수 */
+	--sub-filter-gap: var(--subbar-menu-gap);
+	--sub-filter-font-family: var(--subbar-menu-font-family);
+	--sub-filter-font-size: var(--subbar-menu-font-size);
+	--sub-filter-font-weight: var(--subbar-menu-font-weight);
+	--sub-filter-letter-spacing: var(--subbar-menu-letter-spacing);
+	--sub-filter-color: var(--subbar-menu-color);
+}
+
+.global-topbar-menu
+{
+	position: absolute !important;
+	left: 50% !important;
+	top: 50% !important;
+	right: auto !important;
+	transform: translate(-50%, -50%) !important;
+	width: auto !important;
+	min-width: 0 !important;
+	max-width: calc(100vw - 520px) !important;
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	gap: var(--topbar-menu-gap) !important;
+	white-space: nowrap !important;
+	overflow: visible !important;
+	z-index: 4 !important;
+	padding: 0 !important;
+	margin: 0 !important;
+}
+
+.topbar-menu-item,
+.global-auth-trigger,
+.global-auth-trigger .account-email-text
+{
+	font-family: var(--topbar-text-font-family) !important;
+	font-size: var(--topbar-text-font-size) !important;
+	font-weight: var(--topbar-text-font-weight) !important;
+	color: var(--topbar-text-color) !important;
+	letter-spacing: var(--topbar-text-letter-spacing) !important;
+	line-height: 1 !important;
+	white-space: nowrap !important;
+}
+
+.topbar-menu-item
+{
+	border: 0 !important;
+	background: transparent !important;
+	padding: 0 !important;
+	margin: 0 !important;
+	cursor: pointer !important;
+}
+
+.topbar-menu-item:hover,
+.global-auth-trigger:hover,
+.global-auth-trigger:hover .account-email-text
+{
+	color: var(--topbar-text-hover-color) !important;
+}
+
+.global-topbar-right
+{
+	right: 18px !important;
+	left: auto !important;
+	justify-content: flex-end !important;
+	max-width: 260px !important;
+}
+
+.global-auth-trigger.logged-in
+{
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	gap: var(--topbar-profile-gap) !important;
+}
+
+.topbar-profile-image
+{
+	width: var(--topbar-profile-size) !important;
+	height: var(--topbar-profile-size) !important;
+	min-width: var(--topbar-profile-size) !important;
+	border-radius: 50% !important;
+	object-fit: cover !important;
+	display: inline-block !important;
+	background: #eef3f7 !important;
+	border: 1px solid #e5e7eb !important;
+	margin: 0 !important;
+	vertical-align: middle !important;
+	flex: 0 0 auto !important;
+}
+
+/* ===== v1.962: 우측 상단 계정 메뉴 hover 열림 ===== */
+/* ===== v1.962: 우측 상단 계정 메뉴 hover 표시 전용 ===== */
+.global-auth-trigger:hover,
+.global-auth-trigger.account-open
+{
+	color: #111827 !important;
+}
+
+.global-auth-trigger .auth-arrow
+{
+	transform: none !important;
+}
+
+/* ===== v1.962: 상단바 기본 활성 메뉴 + hover 색 고정 ===== */
+.topbar-menu-item.active
+{
+	color: var(--nav-active-color);
+}
+
+.global-auth-trigger:hover
+{
+	color: #111827 !important;
+}
+
+/* ===== v1.962: 상단 메뉴 hover 색상 차단 ===== */
+.topbar-menu-item:hover
+{
+	color: inherit !important;
+	background: transparent !important;
+	border-color: transparent !important;
+}
+
+/* ===== v1.962: 상단 메뉴 active 전용 색상 관리 ===== */
+.global-topbar .topbar-menu-item
+{
+	color: var(--nav-color) !important;
+}
+
+.global-topbar .topbar-menu-item:hover
+{
+	color: var(--nav-color) !important;
+	background: transparent !important;
+	border-color: transparent !important;
+}
+
+.global-topbar .topbar-menu-item.active,
+.global-topbar .topbar-menu-item.active:hover
+{
+	color: var(--nav-active-color) !important;
+	font-weight: var(--nav-font-weight) !important;
+}
+
+/* ===== v1.962: 우측 상단 이름 hover 색상 고정 ===== */
+.global-auth-trigger,
+.global-auth-trigger:hover,
+.global-auth-trigger.account-open,
+.global-auth-trigger.account-open:hover
+{
+	color: #111827 !important;
+	background: transparent !important;
+}
+
+/* ===== v1.962: 상단 메뉴 active 색상만 관리 ===== */
+.global-topbar .topbar-menu-item
+{
+	color: var(--nav-color) !important;
+}
+
+.global-topbar .topbar-menu-item:hover
+{
+	color: var(--nav-color) !important;
+	background: transparent !important;
+	border-color: transparent !important;
+}
+
+.global-topbar .topbar-menu-item.active,
+.global-topbar .topbar-menu-item.active:hover
+{
+	color: var(--nav-active-color) !important;
+}
+
+/* ===== v1.962: 우측 상단 이름 hover/active/open 색상 고정 ===== */
+.global-topbar-right .global-auth-trigger,
+.global-topbar-right .global-auth-trigger:hover,
+.global-topbar-right .global-auth-trigger:focus,
+.global-topbar-right .global-auth-trigger:active,
+.global-topbar-right .global-auth-trigger.account-open,
+.global-topbar-right .global-auth-trigger.account-open:hover,
+.global-topbar-right:hover .global-auth-trigger,
+.global-topbar-right:focus-within .global-auth-trigger
+{
+	color: #111827 !important;
+	background: transparent !important;
+}
+
+.global-topbar-right .global-auth-trigger *,
+.global-topbar-right .global-auth-trigger:hover *,
+.global-topbar-right:hover .global-auth-trigger *
+{
+	color: inherit !important;
+}
+
 </style>
 	</head>
 	<body class="sidebar-list-collapsed">
@@ -5985,54 +7426,20 @@ body.sidebar-list-collapsed .map-side-tools
 			<div class="global-topbar-inner">
 				<div class="global-topbar-left">
 					<div class="global-brand" id="appVersionText">
-						<i class="fa-solid fa-location-dot" aria-hidden="true">
-						</i>
+						<!-- <i class="fa-solid fa-location-dot" aria-hidden="true"> </i> -->
 						<span class="brand-name">
 							REALJEJU.APP
 						</span>
 					</div>
 				</div>
-				<div class="global-topbar-menu">
-					<div class="map-filter-bar">
-						<div class="type-buttons" id="typeButtons">
-							<button type="button" data-value="all" class="active">
-								<span>
-									전체
-								</span>
-							</button>
-							<button type="button" data-value="아파트오피스텔">
-								<span>
-									아파트ㆍ오피스텔
-								</span>
-							</button>
-							<button type="button" data-value="빌라주택">
-								<span>
-									빌라ㆍ주택
-								</span>
-							</button>
-							<button type="button" data-value="원룸">
-								<span>
-									원룸ㆍ투룸
-								</span>
-							</button>
-							<button type="button" data-value="상가">
-								<span>
-									상가ㆍ사무실
-								</span>
-							</button>
-							<button type="button" data-value="호텔펜션">
-								<span>
-									호텔ㆍ펜션
-								</span>
-							</button>
-							<button type="button" data-value="토지">
-								<span>
-									토지ㆍ임야
-								</span>
-							</button>
-						</div>
-					</div>
-				</div>
+				<nav class="global-topbar-menu" id="topbarMenu" aria-label="상단 메뉴">
+					<button type="button" class="topbar-menu-item">중개사 홈</button>
+					<button type="button" class="topbar-menu-item active">부동산 홈</button>
+					<button type="button" class="topbar-menu-item">분양 정보</button>
+					<button type="button" class="topbar-menu-item">매물 등록 (무료)</button>
+					<button type="button" class="topbar-menu-item">관심매물</button>
+					<button type="button" class="topbar-menu-item">공지사항</button>
+				</nav>
 				<div class="global-topbar-right">
 					<button type="button" class="global-auth-trigger" id="detailAuthTrigger" data-auth-state="logged-out">
 						<span>
@@ -6054,10 +7461,12 @@ body.sidebar-list-collapsed .map-side-tools
 						<div class="global-account-divider"></div>
 						<button type="button" class="global-account-menu-item" data-account-action="myinfo">내 정보</button>
 						<div class="global-account-divider"></div>
+						<!--
 						<button type="button" class="global-account-menu-item" data-account-action="profile">개인정보 설정<span class="profile-incomplete-dot" id="profileIncompleteDot" aria-hidden="true"></span></button>
 						<div class="global-account-divider"></div>
 						<button type="button" class="global-account-menu-item" id="brokerOfficeMenuItem" data-account-action="broker-office" style="display:none;">중개사무소 가입 신청</button>
 						<div class="global-account-divider"></div>
+						-->
 						<button type="button" class="global-account-menu-item" data-account-action="logout">로그아웃</button>
 					</div>
 				</div>
@@ -6066,7 +7475,7 @@ body.sidebar-list-collapsed .map-side-tools
 		<div class="sub-topbar">
 			<div class="sub-topbar-inner">
 				<span class="sub-version-fixed">
-					Ver 1.914
+					Ver 1.962
 				</span>
 				<div class="sub-topbar-left">
 					<strong id="listInfoText">
@@ -6078,24 +7487,181 @@ body.sidebar-list-collapsed .map-side-tools
 				</div>
 				<div class="sub-topbar-right">
 					<div class="map-filter-bar">
-						<div class="deal-buttons" id="dealButtons">
-							<button type="button" data-value="전체">
-								전체
-							</button>
-							<button type="button" data-value="매매">
-								매매
-							</button>
-							<button type="button" data-value="전세">
-								전세
-							</button>
-							<button type="button" data-value="년세">
-								년세
-							</button>
-							<button type="button" data-value="월세">
-								월세
-							</button>
+						<div class="sub-address-search" id="subAddressSearch">
+							<form class="sub-address-search-form" id="subAddressSearchForm" autocomplete="off">
+								<button type="submit" class="sub-address-search-icon" aria-label="주소 검색">
+									<i class="fa-solid fa-location-dot"></i>
+								</button>
+								<input type="search" class="sub-address-search-input" id="subAddressSearchInput" placeholder="주소지 검색" />
+							</form>
+							<div class="sub-address-search-status" id="subAddressSearchStatus" aria-live="polite"></div>
 						</div>
-						<div class="extra-filter-dropdown" id="extraFilterDropdown">
+						<div class="extra-filter-dropdown type-filter-dropdown" id="typeFilterDropdown">
+							<button type="button" class="extra-filter-trigger type-filter-trigger" id="typeFilterTrigger" aria-expanded="false">
+								<span id="typeFilterLabel">
+									매물 종류
+								</span>
+								<i class="fa-solid fa-chevron-down">
+								</i>
+							</button>
+							<div class="extra-filter-menu type-filter-menu" id="typeFilterMenu">
+								<div id="typeButtons">
+									<!--
+									<label class="extra-filter-option type-filter-option">
+										<input type="checkbox" data-value="all" />
+										<span>전체</span>
+									</label>
+									-->
+									<label class="extra-filter-option type-filter-option">
+										<input type="checkbox" data-value="아파트" />
+										<span>아파트</span>
+									</label>
+									<label class="extra-filter-option type-filter-option">
+										<input type="checkbox" data-value="오피스텔" />
+										<span>오피스텔</span>
+									</label>
+									<label class="extra-filter-option type-filter-option">
+										<input type="checkbox" data-value="원룸 / 투룸" />
+										<span>원룸 / 투룸</span>
+									</label>
+									<label class="extra-filter-option type-filter-option">
+										<input type="checkbox" data-value="빌라" />
+										<span>빌라</span>
+									</label>
+									<label class="extra-filter-option type-filter-option">
+										<input type="checkbox" data-value="단독주택" />
+										<span>단독주택</span>
+									</label>
+									<label class="extra-filter-option type-filter-option">
+										<input type="checkbox" data-value="상가" />
+										<span>상가</span>
+									</label>
+									<label class="extra-filter-option type-filter-option">
+										<input type="checkbox" data-value="사무실" />
+										<span>사무실</span>
+									</label>
+									<label class="extra-filter-option type-filter-option">
+										<input type="checkbox" data-value="호텔" />
+										<span>호텔</span>
+									</label>
+									<label class="extra-filter-option type-filter-option">
+										<input type="checkbox" data-value="펜션" />
+										<span>펜션</span>
+									</label>
+									<label class="extra-filter-option type-filter-option">
+										<input type="checkbox" data-value="토지" />
+										<span>토지</span>
+									</label>
+								</div>
+								<div class="extra-filter-reset-row">
+									<button type="button" class="extra-filter-reset-btn" id="typeFilterResetBtn">
+										<i class="fa-solid fa-rotate-left"></i>
+										초기화
+									</button>
+								</div>
+							</div>
+						</div>
+						<div class="extra-filter-dropdown deal-filter-dropdown" id="dealFilterDropdown">
+							<button type="button" class="extra-filter-trigger deal-filter-trigger" id="dealFilterTrigger" aria-expanded="false">
+								<span id="dealFilterLabel">
+									거래 유형
+								</span>
+								<i class="fa-solid fa-chevron-down">
+								</i>
+							</button>
+							<div class="extra-filter-menu deal-filter-menu" id="dealFilterMenu">
+								<div id="dealButtons">
+									<!--
+									<label class="extra-filter-option deal-filter-option">
+										<input type="checkbox" data-value="all" />
+										<span>전체</span>
+									-->
+									</label>
+									<label class="extra-filter-option deal-filter-option">
+										<input type="checkbox" data-value="매매" />
+										<span>매매</span>
+									</label>
+									<label class="extra-filter-option deal-filter-option">
+										<input type="checkbox" data-value="전세" />
+										<span>전세</span>
+									</label>
+									<label class="extra-filter-option deal-filter-option">
+										<input type="checkbox" data-value="년세" />
+										<span>년세</span>
+									</label>
+									<label class="extra-filter-option deal-filter-option">
+										<input type="checkbox" data-value="월세" />
+										<span>월세</span>
+									</label>
+								</div>
+								<div class="extra-filter-reset-row">
+									<button type="button" class="extra-filter-reset-btn" id="dealFilterResetBtn">
+										<i class="fa-solid fa-rotate-left"></i>
+										초기화
+									</button>
+								</div>
+							</div>
+						</div>
+						<div class="extra-filter-dropdown deal-method-filter-dropdown" id="dealMethodFilterDropdown">
+							<button type="button" class="extra-filter-trigger deal-method-filter-trigger" id="dealMethodFilterTrigger" aria-expanded="false">
+								<span id="dealMethodFilterLabel">
+									거래 방식
+								</span>
+								<i class="fa-solid fa-chevron-down">
+								</i>
+							</button>
+							<div class="extra-filter-menu deal-method-filter-menu" id="dealMethodFilterMenu">
+								<label class="extra-filter-option deal-method-filter-option">
+									<input type="radio" name="dealMethodFilter" value="all" checked />
+									<span>전체</span>
+								</label>
+								<label class="extra-filter-option deal-method-filter-option">
+									<input type="radio" name="dealMethodFilter" value="broker" />
+									<span>공인중개사 매물</span>
+								</label>
+								<label class="extra-filter-option deal-method-filter-option">
+									<input type="radio" name="dealMethodFilter" value="direct" />
+									<span>개인직거래 매물</span>
+								</label>
+							</div>
+						</div>
+						
+<!-- ===== 사용승인일 필터 ===== -->
+<div class="extra-filter-dropdown approval-year-filter-dropdown" id="approvalYearFilterDropdown">
+	<button type="button" class="extra-filter-trigger approval-year-filter-trigger" id="approvalYearFilterTrigger" aria-expanded="false">
+		<span id="approvalYearFilterLabel">사용승인일</span>
+		<i class="fa-solid fa-chevron-down"></i>
+	</button>
+
+	<div class="extra-filter-menu approval-year-filter-menu" id="approvalYearFilterMenu">
+		<label class="extra-filter-option approval-year-filter-option">
+			<input type="radio" name="approvalYear" value="all" checked />
+			<span>전체</span>
+		</label>
+		<label class="extra-filter-option approval-year-filter-option">
+			<input type="radio" name="approvalYear" value="1" />
+			<span>1년 이내 신축</span>
+		</label>
+		<label class="extra-filter-option approval-year-filter-option">
+			<input type="radio" name="approvalYear" value="5" />
+			<span>5년 이내</span>
+		</label>
+		<label class="extra-filter-option approval-year-filter-option">
+			<input type="radio" name="approvalYear" value="10" />
+			<span>10년 이내</span>
+		</label>
+		<label class="extra-filter-option approval-year-filter-option">
+			<input type="radio" name="approvalYear" value="15" />
+			<span>15년 이내</span>
+		</label>
+		<label class="extra-filter-option approval-year-filter-option">
+			<input type="radio" name="approvalYear" value="old" />
+			<span>15년 이상</span>
+		</label>
+	</div>
+</div>
+
+<div class="extra-filter-dropdown" id="extraFilterDropdown">
 							<button type="button" class="extra-filter-trigger" id="extraFilterTrigger" aria-expanded="false">
 								<span id="extraFilterLabel">
 									기타 조건
@@ -6119,7 +7685,7 @@ body.sidebar-list-collapsed .map-side-tools
 								<label class="extra-filter-option">
 									<input type="checkbox" id="extraPetChk" />
 									<span>
-										반려동물
+										반려동물 가능
 									</span>
 								</label>
 								<label class="extra-filter-option">
@@ -6565,7 +8131,7 @@ body.sidebar-list-collapsed .map-side-tools
 		<img id="detailImageLightboxImg" src="" alt="매물 사진 확대">
 	</div>
 </div>
-<script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=b7db2d3c35122f3ec33c88ea6d3195fb&libraries=clusterer">
+<script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=b7db2d3c35122f3ec33c88ea6d3195fb&libraries=clusterer,services">
 
 const globalBrandLink = document.querySelector('.global-brand');
 if (globalBrandLink) {
@@ -6674,6 +8240,7 @@ if (globalBrandLink) {
 			</form>
 		</div>
 		<div class="auth-profile-setup-screen auth-screen-hidden" id="authProfileSetupScreen">
+			<button type="button" class="auth-card-close" aria-label="닫기" onclick="window.closeAuthModal && window.closeAuthModal()">×</button>
 			<h2 class="auth-modal-title">
 				개인정보 설정
 			</h2>
@@ -6737,6 +8304,7 @@ if (globalBrandLink) {
 			</form>
 		</div>
 		<div class="auth-myinfo-screen auth-screen-hidden" id="authMyInfoScreen">
+			<button type="button" class="auth-card-close" aria-label="닫기" onclick="window.closeAuthModal && window.closeAuthModal()">×</button>
 			<h2 class="auth-modal-title">
 				내 정보
 			</h2>
@@ -6749,44 +8317,34 @@ if (globalBrandLink) {
 				<p class="auth-profile-guide">
 					가입 계정과 개인정보 설정 상태를 확인합니다.
 				</p>
-				<div class="auth-modal-field">
-					<label class="auth-modal-field-label" for="myInfoNameValue">
-						이름
-					</label>
-					<input type="text" class="auth-modal-input" id="myInfoNameValue" readonly value="-" />
+				<div class="auth-myinfo-display-row myinfo-row-name">
+					<span class="auth-myinfo-display-label">이름</span>
+					<span class="auth-myinfo-display-value" id="myInfoNameValue">-</span>
 				</div>
-				<div class="auth-modal-field">
-					<label class="auth-modal-field-label" for="myInfoEmailValue">
-						이메일
-					</label>
-					<input type="text" class="auth-modal-input" id="myInfoEmailValue" readonly value="-" />
+				<div class="auth-myinfo-display-row myinfo-row-email">
+					<span class="auth-myinfo-display-label">이메일</span>
+					<span class="auth-myinfo-display-value" id="myInfoEmailValue">-</span>
 				</div>
-				<div class="auth-modal-field">
-					<label class="auth-modal-field-label" for="myInfoPhoneValue">
-						휴대폰번호
-					</label>
-					<input type="text" class="auth-modal-input" id="myInfoPhoneValue" readonly value="-" />
+				<div class="auth-myinfo-display-row myinfo-row-phone">
+					<span class="auth-myinfo-display-label">휴대폰번호</span>
+					<span class="auth-myinfo-display-value" id="myInfoPhoneValue">-</span>
 				</div>
-				<div class="auth-modal-field">
-					<label class="auth-modal-field-label" for="myInfoRoleValue">
-						회원유형
-					</label>
-					<input type="text" class="auth-modal-input" id="myInfoRoleValue" readonly value="-" />
+				<div class="auth-myinfo-display-row myinfo-row-role">
+					<span class="auth-myinfo-display-label">회원유형</span>
+					<span class="auth-myinfo-display-value" id="myInfoRoleValue">-</span>
 				</div>
-				<div class="auth-modal-field">
-					<label class="auth-modal-field-label" for="myInfoProfileStatusValue">
-						프로필 상태
-					</label>
-					<input type="text" class="auth-modal-input" id="myInfoProfileStatusValue" readonly value="-" />
+				<!--
+				<div class="auth-myinfo-display-row">
+					<span class="auth-myinfo-display-label">프로필 상태 :</span>
+					<span class="auth-myinfo-display-value" id="myInfoProfileStatusValue">-</span>
 				</div>
-				<div class="auth-modal-field">
-					<label class="auth-modal-field-label" for="myInfoBrokerOfficeValue">
-						중개사무소
-					</label>
-					<input type="text" class="auth-modal-input" id="myInfoBrokerOfficeValue" readonly value="-" />
+				-->
+				<div class="auth-myinfo-display-row myinfo-row-office">
+					<span class="auth-myinfo-display-label">중개사무소</span>
+					<span class="auth-myinfo-display-value" id="myInfoBrokerOfficeValue">-</span>
 				</div>
 				<button type="button" class="auth-modal-submit" id="myInfoEditProfileBtn">
-					수정하기
+					수정
 				</button>
 				<button type="button" class="auth-modal-submit" id="myInfoBrokerOfficeBtn" style="display:none;">
 					중개사무소 가입 신청
@@ -6794,55 +8352,52 @@ if (globalBrandLink) {
 			</div>
 		</div>
 		<div class="auth-broker-office-screen auth-screen-hidden" id="authBrokerOfficeScreen">
-			<h2 class="auth-modal-title">
-				중개사무소 가입 신청
-			</h2>
-			<div class="auth-modal-divider">
+			<div class="broker-apply-page">
+				<div class="broker-apply-left">
+					<h2 class="broker-apply-title">
+						쉽고 빠른 회원가입을<br>도와드려요
+					</h2>
+					<div class="broker-apply-guide-card">
+						<p><span class="broker-guide-dot">·</span><span class="broker-guide-text">국가 공간 정보 포털의 부동산중개업 정보에 등록된 대표 공인중개사만 회원가입이 가능해요.</span></p>
+						<p><span class="broker-guide-dot">·</span><span class="broker-guide-text">중개사 회원가입 신청 시 업무일 기준 2일 이내 연락드립니다.</span></p>
+						<p><span class="broker-guide-dot">·</span><span class="broker-guide-text">문의사항은 064-745-0531 (평일 오전 10시 ~ 오후 6시)로 연락해 주세요.</span></p>
+					</div>
+				</div>
+				<form class="broker-apply-form" id="brokerOfficeApplyForm">
+					<button type="button" class="auth-card-close broker-card-close" aria-label="닫기" onclick="window.closeAuthModal && window.closeAuthModal()">×</button>
+					<div class="broker-apply-field">
+						<label class="broker-apply-label" for="brokerOfficeNameInput">중개사무소 명칭</label>
+						<input type="text" class="broker-apply-input" id="brokerOfficeNameInput" autocomplete="organization" />
+					</div>
+					<div class="broker-apply-field">
+						<label class="broker-apply-label" for="brokerOfficeAddressInput">주소지</label>
+						<input type="text" class="broker-apply-input" id="brokerOfficeAddressInput" autocomplete="street-address" />
+					</div>
+					<div class="broker-apply-field">
+						<label class="broker-apply-label" for="brokerLicenseNoInput">등록번호</label>
+						<input type="text" class="broker-apply-input" id="brokerLicenseNoInput" autocomplete="off" />
+					</div>
+					<div class="broker-apply-field">
+						<label class="broker-apply-label" for="brokerOwnerNameInput">대표자명</label>
+						<input type="text" class="broker-apply-input" id="brokerOwnerNameInput" autocomplete="name" />
+					</div>
+					<div class="broker-apply-field">
+						<label class="broker-apply-label" for="brokerOfficePhoneInput">연락처</label>
+						<input type="tel" class="broker-apply-input" id="brokerOfficePhoneInput" autocomplete="tel" />
+					</div>
+					<div class="broker-apply-field">
+						<label class="broker-apply-label" for="brokerOwnerEmailLocalInput">이메일</label>
+						<input type="email" class="broker-apply-input" id="brokerOwnerEmailLocalInput" autocomplete="email" />
+					</div>
+					<div class="broker-apply-hidden-fields" id="brokerOfficeManualNameField" style="display:none;">
+						<input type="text" id="brokerOfficeSearchInput" />
+						<input type="text" id="brokerOfficeAddressDetailInput" />
+						<input type="file" id="brokerOfficeDocumentInput" accept="image/*,.pdf" />
+						<select id="brokerOwnerEmailDomainSelect"><option value=""></option></select>
+					</div>
+					<button type="submit" class="broker-apply-submit">중개사무소 회원가입 신청</button>
+				</form>
 			</div>
-			<form class="auth-modal-form" id="brokerOfficeApplyForm">
-				<p class="auth-profile-guide">
-					중개사무소 정보를 확인한 뒤 승인 대기 상태로 접수합니다.
-				</p>
-				<div class="auth-modal-field">
-					<label class="auth-modal-field-label" for="brokerOfficeSearchInput">중개사무소 검색</label>
-					<div class="broker-office-inline-field">
-						<input type="text" class="auth-modal-input" id="brokerOfficeSearchInput" placeholder="중개사무소명을 입력하세요." />
-						<button type="button" class="broker-office-inline-btn" id="brokerOfficeSearchBtn">검색</button>
-					</div>
-				</div>
-				<div class="auth-modal-field broker-office-manual-name-field" id="brokerOfficeManualNameField" style="display:none;">
-					<label class="auth-modal-field-label" for="brokerOfficeNameInput">중개사무소명</label>
-					<input type="text" class="auth-modal-input" id="brokerOfficeNameInput" placeholder="직접 입력" />
-				</div>
-				<div class="auth-modal-field">
-					<label class="auth-modal-field-label" for="brokerOwnerNameInput">대표자명</label>
-					<input type="text" class="auth-modal-input" id="brokerOwnerNameInput" placeholder="대표자명" />
-				</div>
-				<div class="auth-modal-field">
-					<label class="auth-modal-field-label" for="brokerLicenseNoInput">등록번호</label>
-					<input type="text" class="auth-modal-input" id="brokerLicenseNoInput" placeholder="등록번호" />
-				</div>
-				<div class="auth-modal-field">
-					<label class="auth-modal-field-label" for="brokerOfficeAddressInput">주소</label>
-					<div class="broker-office-inline-field">
-						<input type="text" class="auth-modal-input" id="brokerOfficeAddressInput" placeholder="주소" readonly />
-						<button type="button" class="broker-office-inline-btn" id="brokerOfficeAddressSearchBtn">주소 검색</button>
-					</div>
-				</div>
-				<div class="auth-modal-field">
-					<label class="auth-modal-field-label" for="brokerOfficeAddressDetailInput">상세주소</label>
-					<input type="text" class="auth-modal-input" id="brokerOfficeAddressDetailInput" placeholder="상세주소" />
-				</div>
-				<div class="auth-modal-field">
-					<label class="auth-modal-field-label" for="brokerOfficePhoneInput">전화번호</label>
-					<input type="tel" class="auth-modal-input" id="brokerOfficePhoneInput" placeholder="064-000-0000" />
-				</div>
-				<div class="auth-modal-field">
-					<label class="auth-modal-field-label" for="brokerOfficeDocumentInput">증빙서류</label>
-					<input type="file" class="auth-modal-input" id="brokerOfficeDocumentInput" accept="image/*,.pdf" />
-				</div>
-				<button type="submit" class="auth-modal-submit">중개사무소 가입 신청</button>
-			</form>
 		</div>
 		<div class="auth-signup-terms-screen auth-screen-hidden" id="authSignupTermsScreen">
 			<h2 class="auth-modal-title">
@@ -7022,7 +8577,7 @@ function hexToRgba(hex, alpha = 1)
 	return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 const APP_NAME = "REALJEJU.APP";
-const APP_VERSION = "1.914";
+const APP_VERSION = "1.962";
 
 function applyAppVersion()
 {
@@ -7199,7 +8754,7 @@ const state = {
 	lastRecommendPoolKey: "",
 	isRecommendCardDismissed: false,
 	isRecommendAgentDismissed: false,
-	isListOpen: true
+	isListOpen: false
 };
 
 let recommendIds = [];
@@ -7220,6 +8775,7 @@ let roadviewOverlay = null;
 let roadviewFullscreenBtn = null;
 let selectedDeal = new Set();
 let selectedType = new Set();
+let selectedDealMethod = "all";
 let selectedPetOnly = false;
 let selectedParkingOnly = false;
 let selectedCityGasOnly = false;
@@ -7244,11 +8800,16 @@ const GEOLOCATION_MAP_LEVEL = 4;
 let preventMapViewportChange = false;
 let isClusterClicking = false;
 let allowDetailOpenFromListClick = false;
+let addressSearchMarker = null;
+let addressSearchStatusTimer = null;
 
 const sidebar = document.getElementById("sidebar");
 const propertyList = document.getElementById("propertyList");
 const sidebarListPanel = document.querySelector(".sidebar-list-panel");
 const keywordInput = document.getElementById("keyword");
+const subAddressSearchForm = document.getElementById("subAddressSearchForm");
+const subAddressSearchInput = document.getElementById("subAddressSearchInput");
+const subAddressSearchStatus = document.getElementById("subAddressSearchStatus");
 const mapResultCount = document.getElementById("mapResultCount");
 const mapEmptyState = document.getElementById("mapEmptyState");
 const mapTypeRoadBtn = document.getElementById("mapTypeRoadBtn");
@@ -7300,8 +8861,28 @@ state.isRecommendCardDismissed = isHideUntilActive(RECOMMEND_ITEM_HIDE_KEY);
 
 if (mapAgentHideTodayCheck) mapAgentHideTodayCheck.checked = state.isRecommendAgentDismissed;
 if (mapRecommendHideTodayCheck) mapRecommendHideTodayCheck.checked = state.isRecommendCardDismissed;
-const dealButtons = document.querySelectorAll("#dealButtons button");
-const typeButtons = document.querySelectorAll("#typeButtons button");
+const dealButtons = document.querySelectorAll("#dealButtons input");
+const dealFilterDropdown = document.getElementById("dealFilterDropdown");
+const dealFilterTrigger = document.getElementById("dealFilterTrigger");
+const dealFilterMenu = document.getElementById("dealFilterMenu");
+const dealFilterLabel = document.getElementById("dealFilterLabel");
+const dealFilterResetBtn = document.getElementById("dealFilterResetBtn");
+const dealMethodInputs = document.querySelectorAll('input[name="dealMethodFilter"]');
+const dealMethodFilterDropdown = document.getElementById("dealMethodFilterDropdown");
+const dealMethodFilterTrigger = document.getElementById("dealMethodFilterTrigger");
+const dealMethodFilterMenu = document.getElementById("dealMethodFilterMenu");
+const dealMethodFilterLabel = document.getElementById("dealMethodFilterLabel");
+const approvalYearInputs = document.querySelectorAll('input[name="approvalYear"]');
+const approvalYearFilterDropdown = document.getElementById("approvalYearFilterDropdown");
+const approvalYearFilterTrigger = document.getElementById("approvalYearFilterTrigger");
+const approvalYearFilterMenu = document.getElementById("approvalYearFilterMenu");
+const approvalYearFilterLabel = document.getElementById("approvalYearFilterLabel");
+const typeButtons = document.querySelectorAll("#typeButtons input");
+const typeFilterDropdown = document.getElementById("typeFilterDropdown");
+const typeFilterTrigger = document.getElementById("typeFilterTrigger");
+const typeFilterMenu = document.getElementById("typeFilterMenu");
+const typeFilterLabel = document.getElementById("typeFilterLabel");
+const typeFilterResetBtn = document.getElementById("typeFilterResetBtn");
 const featureButtons = document.querySelectorAll("#featureButtons button");
 const listInfoText = document.getElementById("listInfoText");
 const appVersionText = document.getElementById("appVersionText");
@@ -7310,7 +8891,7 @@ const sortLabel = document.getElementById("sortLabel");
 let currentSort = "latest";
 
 if (appVersionText) {
-	appVersionText.innerHTML = `<i class="fa-solid fa-location-dot" aria-hidden="true"></i><span class="brand-name">${APP_NAME}</span>`;
+	appVersionText.innerHTML = `<!-- <i class="fa-solid fa-location-dot" aria-hidden="true">--></i><span class="brand-name">${APP_NAME}</span>`;
 	appVersionText.style.cursor = "pointer";
 	appVersionText.setAttribute("role", "button");
 	appVersionText.setAttribute("aria-label", `${APP_NAME} 새로고침`);
@@ -7813,13 +9394,12 @@ function refreshViewportList()
 	const viewportItems = sortItems(getViewportFilteredItems(state.filtered));
 
 	if (state.initialRandomListActive !== false && isInitialAllListMode() && !sidebar.classList.contains("expanded") && !state.selectionMode) {
-		const initialItems = getInitialRandomListItems(state.filtered, 30);
-		renderList(initialItems);
-		setResultInfo(`총 ${initialItems.length}건`);
-		setListInfo(`총 ${initialItems.length}개 매물`);
+		propertyList.innerHTML = "";
+		setResultInfo(`총 ${state.filtered.length}건`);
+		setListInfo(`총 ${state.filtered.length}개 매물`);
 		refreshRecommendAgentCard();
 		refreshRecommendationCard(state.filtered);
-		return initialItems;
+		return [];
 	}
 
 	const shouldPreserveList = sidebar.classList.contains("expanded")
@@ -10062,9 +11642,10 @@ function syncLeftAllButtonToMapFilters()
 {
 	const leftAllBtn = document.querySelector('#featureButtons button[data-value="all"]');
 	if (!leftAllBtn) return;
-	const typeActive = document.querySelector('.type-buttons button.active');
-	const dealActive = document.querySelector('.deal-buttons button.active');
-	const isAllState = typeActive?.dataset.value === 'all' && dealActive?.dataset.value === 'all';
+	const isTypeAll = !(selectedType instanceof Set) || selectedType.size === 0;
+	const isDealAll = !(selectedDeal instanceof Set) || selectedDeal.size === 0;
+	const isMethodAll = !selectedDealMethod || selectedDealMethod === "all";
+	const isAllState = isTypeAll && isDealAll && isMethodAll;
 	leftAllBtn.classList.toggle('all-active', isAllState && state.selectedFeatures.size === 0);
 }
 
@@ -10105,6 +11686,7 @@ function isInitialAllListMode()
 	return !keyword
 	&& (!selectedDeal || selectedDeal.size === 0)
 	&& (!selectedType || selectedType.size === 0)
+	&& (!selectedDealMethod || selectedDealMethod === "all")
 	&& state.selectedFeatures.size === 0
 	&& !selectedPetOnly
 	&& !selectedParkingOnly
@@ -10159,6 +11741,7 @@ function applyFilter()
 	const typeValues = selectedType instanceof Set ? selectedType : new Set();
 	const isDealAll = dealValues.size === 0;
 	const isTypeAll = typeValues.size === 0;
+	const methodValue = selectedDealMethod || "all";
 
 	state.filtered = state.all.filter(item => {
 		const text = [
@@ -10185,20 +11768,44 @@ function applyFilter()
 		const isRentalDeal = ["전세", "년세", "월세"].includes(item.dealType);
 
 		const matchesTypeValue = (typeValue) =>
-		(typeValue === "아파트오피스텔" && (
-		["아파트", "아파트ㆍ빌라"].includes(itemType) ||
-		(itemType === "오피스텔" && isSaleDeal)
-		)) ||
+		(typeValue === "아파트" && ["아파트", "아파트ㆍ빌라"].includes(itemType)) ||
+		(typeValue === "오피스텔" && itemType === "오피스텔") ||
+		(typeValue === "빌라" && ["빌라", "연립", "다세대", "다세대주택", "다가구ㆍ다세대"].includes(itemType)) ||
+		(typeValue === "단독주택" && ["주택", "단독", "단독주택", "다가구"].includes(itemType)) ||
+		(typeValue === "원룸 / 투룸" && ["원룸", "투룸", "원룸ㆍ투룸"].includes(itemType)) ||
+		(typeValue === "상가" && ["상가", "상가건물", "상가ㆍ사무실"].includes(itemType)) ||
+		(typeValue === "사무실" && ["사무실", "공장", "상가ㆍ사무실"].includes(itemType)) ||
+		(typeValue === "호텔" && (["hotel", "호텔"].includes(itemType) || isHotelPensionType(itemType) && String(itemType).toLowerCase().includes("hotel"))) ||
+		(typeValue === "펜션" && (["pension", "펜션"].includes(itemType) || isHotelPensionType(itemType) && String(itemType).toLowerCase().includes("pension"))) ||
+		(typeValue === "토지" && ["토지", "임야", "토지ㆍ임야", "전", "대", "답", "과수원", "목장용지"].includes(itemType)) ||
+		(typeValue === "아파트오피스텔" && (["아파트", "아파트ㆍ빌라"].includes(itemType) || (itemType === "오피스텔" && isSaleDeal))) ||
 		(typeValue === "빌라주택" && ["빌라", "연립", "단독", "단독주택", "다가구", "다세대", "다가구ㆍ다세대", "다세대주택"].includes(itemType)) ||
-		(typeValue === "원룸" && (
-		["원룸", "투룸", "원룸ㆍ투룸"].includes(itemType) ||
-		(itemType === "오피스텔" && isRentalDeal)
-		)) ||
-		(typeValue === "상가" && ["상가", "상가건물", "사무실", "공장", "상가ㆍ사무실"].includes(itemType)) ||
-		(typeValue === "호텔펜션" && (["hotel", "호텔", "pension", "펜션"].includes(itemType) || isHotelPensionType(itemType))) ||
-		(typeValue === "토지" && ["토지", "임야", "토지ㆍ임야", "전", "대", "답", "과수원", "목장용지"].includes(itemType));
+		(typeValue === "호텔펜션" && (["hotel", "호텔", "pension", "펜션"].includes(itemType) || isHotelPensionType(itemType)));
 
 		const okType = isTypeAll || [...typeValues].some(matchesTypeValue);
+
+		const rawMethodText = String(
+		item.dealMethod ?? item.listingMethod ?? item.tradeMethod ?? item.ownerType ?? item.sellerType ?? item.listingType ?? item.userType ?? ""
+		).trim().toLowerCase();
+		const isDirectListing = rawMethodText.includes("direct")
+		|| rawMethodText.includes("private")
+		|| rawMethodText.includes("owner")
+		|| rawMethodText.includes("personal")
+		|| rawMethodText.includes("개인")
+		|| rawMethodText.includes("직거래");
+		const isBrokerListing = !isDirectListing && (
+		rawMethodText.includes("broker")
+		|| rawMethodText.includes("agent")
+		|| rawMethodText.includes("agency")
+		|| rawMethodText.includes("공인")
+		|| rawMethodText.includes("중개")
+		|| !!item.agent_folder
+		|| !!item.agentOffice
+		|| !!item.agentName
+		);
+		const okDealMethod = methodValue === "all"
+		|| (methodValue === "broker" && isBrokerListing)
+		|| (methodValue === "direct" && isDirectListing);
 
 		const normalizedText = searchableText;
 
@@ -10227,7 +11834,7 @@ function applyFilter()
 		const okFullOption = !selectedFullOptionOnly || hasFullOption;
 		const okImmediateMoveIn = !selectedImmediateMoveInOnly || hasImmediateMoveIn;
 		const okOceanView = !selectedOceanViewOnly || hasOceanView;
-		return okKeyword && okDeal && okType && okFeature && okPet && okParking && okCityGas && okDuplex && okVeranda && okElevator && okFullOption && okImmediateMoveIn && okOceanView;
+		return okKeyword && okDeal && okType && okDealMethod && okFeature && okPet && okParking && okCityGas && okDuplex && okVeranda && okElevator && okFullOption && okImmediateMoveIn && okOceanView;
 	});
 
 	state.selectedMarkerId = null;
@@ -10236,22 +11843,25 @@ function applyFilter()
 	clearListLock();
 
 	const viewportItems = getViewportFilteredItems(state.filtered);
-	const listItems = (state.initialRandomListActive !== false && isInitialAllListMode())
-	? getInitialRandomListItems(state.filtered, 30)
-	: viewportItems;
+	const shouldHideInitialList = state.initialRandomListActive !== false && isInitialAllListMode();
+	const listItems = shouldHideInitialList ? [] : viewportItems;
 	scrollListToTop();
-	renderList(listItems);
+	if (shouldHideInitialList) {
+		propertyList.innerHTML = "";
+	} else {
+		renderList(listItems);
+	}
 	scrollListToTop();
 	preventMapViewportChange = true;
 	renderMarkers(state.filtered, { preserveViewport: true });
 	preventMapViewportChange = false;
 	updateMapEmptyState(listItems);
 
-	setResultInfo(`총 ${listItems.length}건`);
-	setListInfo(`총 ${listItems.length}개 매물`);
+	setResultInfo(`총 ${shouldHideInitialList ? state.filtered.length : listItems.length}건`);
+	setListInfo(`총 ${shouldHideInitialList ? state.filtered.length : listItems.length}개 매물`);
 	syncLeftAllButtonToMapFilters();
 
-	if (!listItems.length) {
+	if (!shouldHideInitialList && !listItems.length) {
 		closeDetailPanel();
 		return;
 	}
@@ -10318,11 +11928,122 @@ function syncSortLabelUI()
 	}
 }
 
+
+function setAddressSearchStatus(message, isError = false)
+{
+	if (!subAddressSearchStatus) return;
+	clearTimeout(addressSearchStatusTimer);
+	if (!message) {
+		subAddressSearchStatus.textContent = "";
+		subAddressSearchStatus.classList.remove("show", "error");
+		return;
+	}
+	subAddressSearchStatus.textContent = message;
+	subAddressSearchStatus.classList.toggle("error", !!isError);
+	subAddressSearchStatus.classList.add("show");
+	addressSearchStatusTimer = setTimeout(() => {
+		subAddressSearchStatus.classList.remove("show", "error");
+	}, isError ? 2600 : 1800);
+}
+
+function focusMapByAddress(lat, lng, label = "")
+{
+	if (!state.map || !window.kakao || !kakao.maps) return;
+	const latLng = new kakao.maps.LatLng(Number(lat), Number(lng));
+	state.map.setLevel(4, { animate: { duration: 220 } });
+	state.map.panTo(latLng);
+	if (!addressSearchMarker) {
+		addressSearchMarker = new kakao.maps.Marker({
+			map: state.map,
+			position: latLng,
+			zIndex: 20
+		});
+	} else {
+		addressSearchMarker.setPosition(latLng);
+		addressSearchMarker.setMap(state.map);
+	}
+	setAddressSearchStatus(label ? `${label} 위치로 이동했습니다.` : "검색 위치로 이동했습니다.");
+}
+
+function searchAddressByGeocoder(geocoder, query)
+{
+	return new Promise(resolve => {
+		geocoder.addressSearch(query, (result, status) => {
+			if (status === kakao.maps.services.Status.OK && Array.isArray(result) && result.length) {
+				resolve(result[0]);
+				return;
+			}
+			resolve(null);
+		});
+	});
+}
+
+function searchAddressByKeyword(places, query)
+{
+	return new Promise(resolve => {
+		places.keywordSearch(query, (result, status) => {
+			if (status === kakao.maps.services.Status.OK && Array.isArray(result) && result.length) {
+				resolve(result[0]);
+				return;
+			}
+			resolve(null);
+		});
+	});
+}
+
+async function handleSubAddressSearch()
+{
+	const query = String(subAddressSearchInput?.value || "").trim();
+	if (!query) {
+		setAddressSearchStatus("검색할 주소지를 입력하세요.", true);
+		if (subAddressSearchInput) subAddressSearchInput.focus();
+		return;
+	}
+	if (!window.kakao || !kakao.maps || !kakao.maps.services) {
+		setAddressSearchStatus("주소 검색 서비스를 불러오지 못했습니다.", true);
+		return;
+	}
+	setAddressSearchStatus("주소를 검색하는 중입니다.");
+	const geocoder = new kakao.maps.services.Geocoder();
+	const places = new kakao.maps.services.Places();
+	const queries = query.includes("제주") ? [query] : [query, `제주 ${query}`, `제주특별자치도 ${query}`];
+
+	for (const q of queries) {
+		const found = await searchAddressByGeocoder(geocoder, q);
+		if (found) {
+			focusMapByAddress(found.y, found.x, found.address_name || query);
+			return;
+		}
+	}
+
+	for (const q of queries) {
+		const found = await searchAddressByKeyword(places, q);
+		if (found) {
+			focusMapByAddress(found.y, found.x, found.place_name || found.address_name || query);
+			return;
+		}
+	}
+
+	setAddressSearchStatus("검색 결과가 없습니다.", true);
+}
+
 function initEvents()
 {
 	if (keywordInput) keywordInput.addEventListener("input", () => {
 		state.initialRandomListActive = false;
 		applyFilter();
+	});
+
+	if (subAddressSearchForm) subAddressSearchForm.addEventListener("submit", (e) => {
+		e.preventDefault();
+		handleSubAddressSearch();
+	});
+
+	if (subAddressSearchInput) subAddressSearchInput.addEventListener("keydown", (e) => {
+		if (e.key === "Escape") {
+			subAddressSearchInput.value = "";
+			setAddressSearchStatus("");
+		}
 	});
 
 	if (sortLabel) {
@@ -10675,11 +12396,112 @@ function initEvents()
 	const extraOceanViewChk = document.getElementById("extraOceanViewChk");
 	const extraFilterResetBtn = document.getElementById("extraFilterResetBtn");
 
+	function closeDealFilterMenu()
+	{
+		if (!dealFilterDropdown || !dealFilterTrigger) return;
+		dealFilterDropdown.classList.remove("open");
+		dealFilterTrigger.setAttribute("aria-expanded", "false");
+	}
+
+	function syncDealFilterUI()
+	{
+		if (!dealFilterDropdown) return;
+		const activeLabels = selectedDeal instanceof Set ? Array.from(selectedDeal) : [];
+		const hasActive = activeLabels.length > 0;
+		dealFilterDropdown.classList.toggle("has-active", hasActive);
+		if (dealFilterLabel) dealFilterLabel.textContent = hasActive ? activeLabels.join(", ") : "거래 유형";
+
+		(dealButtons || []).forEach(input => {
+			const value = input.dataset.value || "";
+			if (value === "all" || value === "전체") {
+				input.checked = false;
+			} else {
+				input.checked = hasActive && selectedDeal.has(value);
+			}
+		});
+	}
+
+	function closeTypeFilterMenu()
+	{
+		if (!typeFilterDropdown || !typeFilterTrigger) return;
+		typeFilterDropdown.classList.remove("open");
+		typeFilterTrigger.setAttribute("aria-expanded", "false");
+	}
+
+	function syncTypeFilterUI()
+	{
+		if (!typeFilterDropdown) return;
+		const activeLabels = selectedType instanceof Set ? Array.from(selectedType) : [];
+		const hasActive = activeLabels.length > 0;
+		typeFilterDropdown.classList.toggle("has-active", hasActive);
+		if (typeFilterLabel) typeFilterLabel.textContent = hasActive ? activeLabels.join(", ") : "매물 종류";
+
+		(typeButtons || []).forEach(input => {
+			const value = input.dataset.value || "";
+			if (value === "all" || value === "전체") {
+				input.checked = false;
+			} else {
+				input.checked = hasActive && selectedType.has(value);
+			}
+		});
+	}
+
+	function closeDealMethodFilterMenu()
+	{
+		if (!dealMethodFilterDropdown || !dealMethodFilterTrigger) return;
+		dealMethodFilterDropdown.classList.remove("open");
+		dealMethodFilterTrigger.setAttribute("aria-expanded", "false");
+	}
+
+	function syncDealMethodFilterUI()
+	{
+		if (!dealMethodFilterDropdown) return;
+		const method = selectedDealMethod || "all";
+		const hasActive = method !== "all";
+		dealMethodFilterDropdown.classList.toggle("has-active", hasActive);
+
+		if (dealMethodFilterLabel) {
+			dealMethodFilterLabel.textContent = method === "broker"
+			? "공인중개사 매물"
+			: method === "direct"
+			? "개인직거래 매물"
+			: "거래 방식";
+		}
+
+		(dealMethodInputs || []).forEach(input => {
+			input.checked = (input.value || "all") === method;
+		});
+	}
+
 	function closeExtraFilterMenu()
 	{
 		if (!extraFilterDropdown || !extraFilterTrigger) return;
 		extraFilterDropdown.classList.remove("open");
 		extraFilterTrigger.setAttribute("aria-expanded", "false");
+	}
+
+	function closeApprovalYearFilterMenu()
+	{
+		if (!approvalYearFilterDropdown || !approvalYearFilterTrigger) return;
+		approvalYearFilterDropdown.classList.remove("open");
+		approvalYearFilterTrigger.setAttribute("aria-expanded", "false");
+	}
+
+	function syncApprovalYearFilterUI()
+	{
+		if (!approvalYearFilterLabel) return;
+		const checked = document.querySelector('input[name="approvalYear"]:checked');
+		const value = checked ? checked.value : "all";
+		const labelMap = {
+			all: "사용승인일",
+			1: "1년 이내 신축",
+			5: "5년 이내",
+			10: "10년 이내",
+			15: "15년 이내",
+			old: "15년 이상"
+		};
+		approvalYearFilterLabel.textContent = labelMap[value] || "사용승인일";
+		if (approvalYearFilterDropdown) approvalYearFilterDropdown.classList.toggle("has-active", value !== "all");
 	}
 
 	function syncExtraFilterUI()
@@ -10735,10 +12557,94 @@ function initEvents()
 		syncLeftAllButtonToMapFilters();
 	}
 
+	if (typeFilterTrigger) {
+		typeFilterTrigger.addEventListener("click", (e) => {
+			e.preventDefault();
+			e.stopPropagation();
+			closeDealFilterMenu();
+			closeDealMethodFilterMenu();
+			closeExtraFilterMenu();
+			closeApprovalYearFilterMenu();
+			const willOpen = !typeFilterDropdown.classList.contains("open");
+			typeFilterDropdown.classList.toggle("open", willOpen);
+			typeFilterTrigger.setAttribute("aria-expanded", willOpen ? "true" : "false");
+		});
+	}
+
+	if (typeFilterMenu) {
+		typeFilterMenu.addEventListener("click", (e) => e.stopPropagation());
+	}
+
+	if (dealFilterTrigger) {
+		dealFilterTrigger.addEventListener("click", (e) => {
+			e.preventDefault();
+			e.stopPropagation();
+			closeTypeFilterMenu();
+			closeDealMethodFilterMenu();
+			closeExtraFilterMenu();
+			closeApprovalYearFilterMenu();
+			const willOpen = !dealFilterDropdown.classList.contains("open");
+			dealFilterDropdown.classList.toggle("open", willOpen);
+			dealFilterTrigger.setAttribute("aria-expanded", willOpen ? "true" : "false");
+		});
+	}
+
+	if (dealFilterMenu) {
+		dealFilterMenu.addEventListener("click", (e) => e.stopPropagation());
+	}
+
+	if (dealMethodFilterTrigger) {
+		dealMethodFilterTrigger.addEventListener("click", (e) => {
+			e.preventDefault();
+			e.stopPropagation();
+			closeTypeFilterMenu();
+			closeDealFilterMenu();
+			closeExtraFilterMenu();
+			closeApprovalYearFilterMenu();
+			const willOpen = !dealMethodFilterDropdown.classList.contains("open");
+			dealMethodFilterDropdown.classList.toggle("open", willOpen);
+			dealMethodFilterTrigger.setAttribute("aria-expanded", willOpen ? "true" : "false");
+		});
+	}
+
+	if (dealMethodFilterMenu) {
+		dealMethodFilterMenu.addEventListener("click", (e) => e.stopPropagation());
+	}
+
+	if (approvalYearFilterTrigger) {
+		approvalYearFilterTrigger.addEventListener("click", (e) => {
+			e.preventDefault();
+			e.stopPropagation();
+			closeDealFilterMenu();
+			closeTypeFilterMenu();
+			closeDealMethodFilterMenu();
+			closeExtraFilterMenu();
+			const willOpen = !approvalYearFilterDropdown.classList.contains("open");
+			approvalYearFilterDropdown.classList.toggle("open", willOpen);
+			approvalYearFilterTrigger.setAttribute("aria-expanded", willOpen ? "true" : "false");
+		});
+	}
+
+	if (approvalYearFilterMenu) {
+		approvalYearFilterMenu.addEventListener("click", (e) => e.stopPropagation());
+	}
+
+	(approvalYearInputs || []).forEach(input => {
+		if (!input) return;
+		input.addEventListener("change", () => {
+			syncApprovalYearFilterUI();
+			closeApprovalYearFilterMenu();
+		});
+	});
+
 	if (extraFilterTrigger) {
 		extraFilterTrigger.addEventListener("click", (e) => {
 			e.preventDefault();
 			e.stopPropagation();
+			closeDealFilterMenu();
+			closeTypeFilterMenu();
+			closeDealMethodFilterMenu();
+			closeApprovalYearFilterMenu();
 			const willOpen = !extraFilterDropdown.classList.contains("open");
 			extraFilterDropdown.classList.toggle("open", willOpen);
 			extraFilterTrigger.setAttribute("aria-expanded", willOpen ? "true" : "false");
@@ -10783,7 +12689,21 @@ function initEvents()
 		});
 	}
 
+	syncApprovalYearFilterUI();
+
 	document.addEventListener("click", (e) => {
+		if (typeFilterDropdown && !typeFilterDropdown.contains(e.target)) {
+			closeTypeFilterMenu();
+		}
+		if (dealFilterDropdown && !dealFilterDropdown.contains(e.target)) {
+			closeDealFilterMenu();
+		}
+		if (dealMethodFilterDropdown && !dealMethodFilterDropdown.contains(e.target)) {
+			closeDealMethodFilterMenu();
+		}
+		if (approvalYearFilterDropdown && !approvalYearFilterDropdown.contains(e.target)) {
+			closeApprovalYearFilterMenu();
+		}
 		if (extraFilterDropdown && !extraFilterDropdown.contains(e.target)) {
 			closeExtraFilterMenu();
 		}
@@ -10808,21 +12728,34 @@ function initEvents()
 		state.selectionMode = null;
 	}
 
-	dealButtons.forEach(btn => {
-		btn.addEventListener("click", () => {
-			const value = btn.dataset.value || "";
+	dealMethodInputs.forEach(input => {
+		input.addEventListener("change", () => {
+			if (!input.checked) return;
+			selectedDealMethod = input.value || "all";
+			syncDealMethodFilterUI();
+			state.initialRandomListActive = false;
+			resetFilterSelectionState();
+			scrollListToTop();
+			applyFilter();
+			syncLeftAllButtonToMapFilters();
+		});
+	});
+
+	dealButtons.forEach(input => {
+		input.addEventListener("change", () => {
+			const value = input.dataset.value || "";
 
 			if (value === "전체" || value === "all") {
 				selectedDeal.clear();
 			} else {
-				if (selectedDeal.has(value)) {
-					selectedDeal.delete(value);
-				} else {
+				if (input.checked) {
 					selectedDeal.add(value);
+				} else {
+					selectedDeal.delete(value);
 				}
 			}
 
-			syncMultiFilterButtons(dealButtons, selectedDeal, ["all", "전체"]);
+			syncDealFilterUI();
 			state.initialRandomListActive = false;
 			resetFilterSelectionState();
 			scrollListToTop();
@@ -10831,21 +12764,35 @@ function initEvents()
 		});
 	});
 
-	typeButtons.forEach(btn => {
-		btn.addEventListener("click", () => {
-			const value = btn.dataset.value || "";
+	if (dealFilterResetBtn) {
+		dealFilterResetBtn.addEventListener("click", (e) => {
+			e.preventDefault();
+			e.stopPropagation();
+			selectedDeal.clear();
+			syncDealFilterUI();
+			state.initialRandomListActive = false;
+			resetFilterSelectionState();
+			scrollListToTop();
+			applyFilter();
+			syncLeftAllButtonToMapFilters();
+		});
+	}
+
+	typeButtons.forEach(input => {
+		input.addEventListener("change", () => {
+			const value = input.dataset.value || "";
 
 			if (value === "전체" || value === "all") {
 				selectedType.clear();
 			} else {
-				if (selectedType.has(value)) {
-					selectedType.delete(value);
-				} else {
+				if (input.checked) {
 					selectedType.add(value);
+				} else {
+					selectedType.delete(value);
 				}
 			}
 
-			syncMultiFilterButtons(typeButtons, selectedType, ["all", "전체"]);
+			syncTypeFilterUI();
 			state.initialRandomListActive = false;
 			resetFilterSelectionState();
 			scrollListToTop();
@@ -10854,8 +12801,23 @@ function initEvents()
 		});
 	});
 
-	syncMultiFilterButtons(dealButtons, selectedDeal, ["all", "전체"]);
-	syncMultiFilterButtons(typeButtons, selectedType, ["all", "전체"]);
+	if (typeFilterResetBtn) {
+		typeFilterResetBtn.addEventListener("click", (e) => {
+			e.preventDefault();
+			e.stopPropagation();
+			selectedType.clear();
+			syncTypeFilterUI();
+			state.initialRandomListActive = false;
+			resetFilterSelectionState();
+			scrollListToTop();
+			applyFilter();
+			syncLeftAllButtonToMapFilters();
+		});
+	}
+
+	syncDealFilterUI();
+	syncTypeFilterUI();
+	syncDealMethodFilterUI();
 	syncExtraFilterUI();
 
 	(featureButtons || []).forEach(btn => {
@@ -10867,8 +12829,10 @@ function initEvents()
 			if (value === "all") {
 				selectedDeal.clear();
 				selectedType.clear();
-				syncMultiFilterButtons(dealButtons, selectedDeal, ["all", "전체"]);
-				syncMultiFilterButtons(typeButtons, selectedType, ["all", "전체"]);
+				selectedDealMethod = "all";
+				syncDealFilterUI();
+				syncTypeFilterUI();
+				syncDealMethodFilterUI();
 				selectedPetOnly = false;
 				selectedParkingOnly = false;
 				selectedCityGasOnly = false;
@@ -11160,6 +13124,7 @@ bootstrap();
 	const authProfilePhotoSelectBtn = document.getElementById("authProfilePhotoSelectBtn");
 	let authProfilePhotoFile = null;
 	let authProfilePhotoUrl = "";
+	if (typeof window !== "undefined") window.authProfilePhotoUrl = "";
 	const authProfileNameInput = document.getElementById("authProfileNameInput");
 	const authProfilePhoneInput = document.getElementById("authProfilePhoneInput");
 	const authProfileRoleRequestSelect = document.getElementById("authProfileRoleRequestSelect");
@@ -11209,6 +13174,7 @@ bootstrap();
 	{
 		if (!globalAccountDropdown) return;
 		globalAccountDropdown.classList.remove("open");
+		if (globalAuthTrigger) globalAuthTrigger.classList.remove("account-open");
 		globalAccountDropdown.setAttribute("aria-hidden", "true");
 		globalAccountDropdown.style.display = "none";
 	}
@@ -11218,12 +13184,41 @@ bootstrap();
 		if (!globalAccountDropdown) return;
 		const isOpen = globalAccountDropdown.classList.contains("open");
 		globalAccountDropdown.classList.toggle("open", !isOpen);
+		if (globalAuthTrigger) globalAuthTrigger.classList.toggle("account-open", !isOpen);
 		globalAccountDropdown.setAttribute("aria-hidden", isOpen ? "true" : "false");
 		globalAccountDropdown.style.display = isOpen ? "none" : "block";
 	}
 
+	/* ===== v1.962: 우측 상단 계정 메뉴 hover 열림 ===== */
+	let globalAccountHoverCloseTimer = null;
+
+	function openGlobalAccountDropdownByHover()
+	{
+		if (!globalAuthTrigger || !globalAccountDropdown) return;
+		if (!(globalAuthTrigger.dataset && globalAuthTrigger.dataset.authState === "logged-in")) return;
+		clearTimeout(globalAccountHoverCloseTimer);
+		globalAccountDropdown.classList.add("open");
+		globalAccountDropdown.setAttribute("aria-hidden", "false");
+		globalAccountDropdown.style.display = "block";
+	}
+
+	function closeGlobalAccountDropdownByHover()
+	{
+		clearTimeout(globalAccountHoverCloseTimer);
+		if (!globalAccountDropdown) return;
+		globalAccountDropdown.classList.remove("open");
+		globalAccountDropdown.setAttribute("aria-hidden", "true");
+		globalAccountDropdown.style.display = "none";
+	}
+
+	if (globalAuthTrigger && globalAccountDropdown) {
+		globalAuthTrigger.addEventListener("mouseenter", openGlobalAccountDropdownByHover);
+		globalAuthTrigger.addEventListener("mouseleave", closeGlobalAccountDropdownByHover);
+	}
+
 	function applyLoggedOutAccountUI()
 	{
+		renderTopbarMenu(false);
 		closeGlobalAccountDropdown();
 		currentRealjejuAuthUser = null;
 		currentRealjejuProfileCompleted = false;
@@ -11252,6 +13247,25 @@ bootstrap();
 		return "일반회원";
 	}
 
+
+	function renderTopbarMenu(isBroker)
+	{
+		const topbarMenu = document.getElementById("topbarMenu");
+		if (!topbarMenu) return;
+		const menus = isBroker
+			? ["중개사 홈", "부동산 홈", "분양 정보", "매물 등록 (무료)", "관심매물", "공지사항"]
+			: ["부동산 홈", "분양 정보", "매물 등록 (무료)", "관심매물", "공지사항"];
+		const currentMenus = Array.from(topbarMenu.querySelectorAll(".topbar-menu-item")).map((button) => button.textContent.trim());
+		if (currentMenus.length === menus.length && currentMenus.every((label, index) => label === menus[index])) return;
+		topbarMenu.replaceChildren(...menus.map((label) => {
+			const button = document.createElement("button");
+			button.type = "button";
+			button.className = "topbar-menu-item";
+			button.textContent = label;
+			return button;
+		}));
+	}
+
 	function applyLoggedInAccountUI(user, profile)
 	{
 		if (!user) return;
@@ -11260,10 +13274,17 @@ bootstrap();
 		const displayName = profile && profile.name ? profile.name : email;
 		const isCompleted = !!(profile && profile.profile_completed === true && profile.name && profile.phone);
 		currentRealjejuProfileCompleted = isCompleted;
+		renderTopbarMenu(isBrokerRoleValue(profile && profile.role_request));
 		if (globalAuthTrigger) {
+			const profileImage = (profile && profile.profile_image) ? profile.profile_image : (window.authProfilePhotoUrl || REALJEJU_DEFAULT_PROFILE_IMAGE);
 			globalAuthTrigger.dataset.authState = "logged-in";
 			globalAuthTrigger.classList.add("logged-in");
-			globalAuthTrigger.innerHTML = '<span class="account-email-text">' + escapeAuthHtml(displayName) + '</span>';
+			globalAuthTrigger.innerHTML = '<img class="topbar-profile-image" src="' + escapeAuthHtml(profileImage || REALJEJU_DEFAULT_PROFILE_IMAGE) + '" alt="프로필">' + '<span class="account-email-text">' + escapeAuthHtml(displayName) + '</span>' + '<i class="fa-solid fa-chevron-down auth-arrow"></i>';
+			const topbarProfileImg = globalAuthTrigger.querySelector(".topbar-profile-image");
+			if (topbarProfileImg) {
+				topbarProfileImg.onerror = function () { this.onerror = null; this.src = REALJEJU_DEFAULT_PROFILE_IMAGE; };
+				topbarProfileImg.style.display = "inline-block";
+			}
 		}
 		if (globalAccountEmail) globalAccountEmail.textContent = email;
 		if (globalAccountDropdown) globalAccountDropdown.classList.toggle("profile-incomplete", !isCompleted);
@@ -11319,7 +13340,7 @@ bootstrap();
 		let brokerOffice = null;
 		try {
 			const { data: officeData } = await client
-				.from("broker_offices")
+				.from("agencies")
 				.select("office_name, status")
 				.eq("user_id", user.id)
 				.order("created_at", { ascending: false })
@@ -11440,7 +13461,7 @@ bootstrap();
 			}
 			const { data: profile } = await supabaseForInit
 				.from("profiles")
-				.select("status, name, phone, role_request, profile_completed")
+				.select("status, name, phone, role_request, profile_completed, profile_image")
 				.eq("id", user.id)
 				.maybeSingle();
 			if (profile && profile.status && profile.status !== "active") {
@@ -11628,12 +13649,19 @@ bootstrap();
 	function setAuthProfilePhotoPreview(url)
 	{
 		authProfilePhotoUrl = url || "";
+		if (typeof window !== "undefined") window.authProfilePhotoUrl = authProfilePhotoUrl;
 		setProfileImageElement(authProfilePhotoPreview, authProfilePhotoUrl);
 	}
 
 	function setMyInfoProfileImage(url)
 	{
 		setProfileImageElement(document.getElementById("myInfoProfileImage"), url || "");
+	}
+
+	function clearAuthProfilePhotoFile()
+	{
+		authProfilePhotoFile = null;
+		if (authProfilePhotoInput) authProfilePhotoInput.value = "";
 	}
 
 	async function uploadAuthProfilePhotoIfNeeded(client, userId)
@@ -11648,30 +13676,51 @@ bootstrap();
 			.toLowerCase()
 			.replace(/[^a-z0-9]/g, "") || "jpg";
 
+		const bucket = client.storage.from("profiles");
 		const filePath = `${userId}/profile-${Date.now()}.${ext}`;
 
 		try {
-			const { data, error } = await client.storage
-				.from("profiles")
-				.upload(filePath, authProfilePhotoFile, {
-					cacheControl: "3600",
-					upsert: true
-				});
+			const { data, error } = await bucket.upload(filePath, authProfilePhotoFile, {
+				cacheControl: "3600",
+				upsert: true
+			});
 
 			if (error) {
 				console.warn("프로필 사진 업로드 실패:", error);
 				return authProfilePhotoUrl || "";
 			}
 
-			const { data: urlData } = client.storage
-				.from("profiles")
-				.getPublicUrl(data && data.path ? data.path : filePath);
+			const savedPath = data && data.path ? data.path : filePath;
+			try {
+				const { data: listData, error: listError } = await bucket.list(userId, { limit: 100, offset: 0, sortBy: { column: "created_at", order: "desc" } });
+				if (!listError && Array.isArray(listData)) {
+					const removeTargets = listData
+						.map(item => item && item.name ? `${userId}/${item.name}` : "")
+						.filter(path => path && path !== savedPath && /^.+\/profile-/i.test(path));
+					if (removeTargets.length) {
+						const { error: removeError } = await bucket.remove(removeTargets);
+						if (removeError) console.warn("이전 프로필 사진 삭제 실패:", removeError);
+					}
+				} else if (listError) {
+					console.warn("이전 프로필 사진 목록 조회 실패:", listError);
+				}
+			} catch (cleanupErr) {
+				console.warn("이전 프로필 사진 정리 오류:", cleanupErr);
+			}
 
+			const { data: urlData } = bucket.getPublicUrl(savedPath);
 			return urlData && urlData.publicUrl ? urlData.publicUrl : (authProfilePhotoUrl || "");
 		} catch (err) {
 			console.warn("프로필 사진 업로드 오류:", err);
 			return authProfilePhotoUrl || "";
 		}
+	}
+
+	if (typeof window !== "undefined") {
+		window.uploadAuthProfilePhotoIfNeeded = uploadAuthProfilePhotoIfNeeded;
+		window.setAuthProfilePhotoPreview = setAuthProfilePhotoPreview;
+		window.setMyInfoProfileImage = setMyInfoProfileImage;
+		window.clearAuthProfilePhotoFile = clearAuthProfilePhotoFile;
 	}
 
 	if (authProfilePhotoSelectBtn && authProfilePhotoInput)
@@ -12053,7 +14102,7 @@ bootstrap();
 				if (data && data.user) {
 					const { data: profileData, error: profileError } = await supabaseForLogin
 						.from("profiles")
-						.select("status, name, phone, role_request, profile_completed")
+						.select("status, name, phone, role_request, profile_completed, profile_image")
 						.eq("id", data.user.id)
 						.maybeSingle();
 
@@ -12599,18 +14648,38 @@ bootstrap();
 			const address = (document.getElementById("brokerOfficeAddressInput")?.value || "").trim();
 			const addressDetail = (document.getElementById("brokerOfficeAddressDetailInput")?.value || "").trim();
 			const phone = (document.getElementById("brokerOfficePhoneInput")?.value || "").trim();
-			if (!officeName) return openAuthErrorModal("중개사무소명을 입력하세요.", "중개사무소 가입 신청", document.getElementById("brokerOfficeSearchInput"));
-			if (!ownerName) return openAuthErrorModal("대표자명을 입력하세요.", "중개사무소 가입 신청", document.getElementById("brokerOwnerNameInput"));
-			if (!licenseNo) return openAuthErrorModal("등록번호를 입력하세요.", "중개사무소 가입 신청", document.getElementById("brokerLicenseNoInput"));
+			const email = (document.getElementById("brokerOwnerEmailLocalInput")?.value || "").trim();
+			if (!officeName) return openAuthErrorModal("중개사무소명을 입력하세요.", "중개사무소 가입 신청", document.getElementById("brokerOfficeNameInput"));
 			if (!address) return openAuthErrorModal("주소를 입력하세요.", "중개사무소 가입 신청", document.getElementById("brokerOfficeAddressInput"));
+			if (!licenseNo) return openAuthErrorModal("등록번호를 입력하세요.", "중개사무소 가입 신청", document.getElementById("brokerLicenseNoInput"));
+			if (!ownerName) return openAuthErrorModal("대표자명을 입력하세요.", "중개사무소 가입 신청", document.getElementById("brokerOwnerNameInput"));
+			if (!phone) return openAuthErrorModal("연락처를 입력하세요.", "중개사무소 가입 신청", document.getElementById("brokerOfficePhoneInput"));
+			if (!email) return openAuthErrorModal("이메일을 입력하세요.", "중개사무소 가입 신청", document.getElementById("brokerOwnerEmailLocalInput"));
 			try {
-				const { error } = await client.from("broker_offices").insert({
+				// v1.927: 로그인 아이디당 중개사무소 가입 신청은 1회만 허용
+				const { data: existingAgency, error: existingAgencyError } = await client
+					.from("agencies")
+					.select("id")
+					.eq("user_id", user.id)
+					.maybeSingle();
+
+				if (existingAgencyError) {
+					console.error("중개사무소 신청 여부 확인 실패:", existingAgencyError);
+					return openAuthErrorModal("중개사무소 신청 여부 확인에 실패했습니다.", "중개사무소 가입 신청", null);
+				}
+
+				if (existingAgency) {
+					return openAuthErrorModal("이미 중개사무소 가입 신청이 접수되었습니다.", "중개사무소 가입 신청", null);
+				}
+
+				const { error } = await client.from("agencies").insert({
 					user_id: user.id,
 					office_name: officeName,
 					owner_name: ownerName,
-					license_no: licenseNo,
+					office_reg_no: licenseNo,
 					office_address: addressDetail ? address + " " + addressDetail : address,
-					office_phone: phone,
+					phone: phone,
+					email: email,
 					status: "pending",
 					created_at: new Date().toISOString(),
 					updated_at: new Date().toISOString()
@@ -12711,7 +14780,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			const user = userResult && userResult.data && userResult.data.user ? userResult.data.user : null;
 			if (!user || !user.id) return showProfileError("로그인 정보를 확인하지 못했습니다. 다시 로그인해 주세요.", nameInput);
 			const now = new Date().toISOString();
-			const uploadedProfileImage = await uploadAuthProfilePhotoIfNeeded(client, user.id);
+			const uploadedProfileImage = await (typeof uploadAuthProfilePhotoIfNeeded === "function" ? uploadAuthProfilePhotoIfNeeded : window.uploadAuthProfilePhotoIfNeeded)(client, user.id);
 			const profilePayload = { id: user.id, email: user.email || "", name: name, phone: phone, role_request: role, profile_completed: true, privacy_agreed_at: now, updated_at: now };
 			if (uploadedProfileImage) profilePayload.profile_image = uploadedProfileImage;
 			let result = await client.from("profiles").upsert(profilePayload, { onConflict: "id" });
@@ -12725,15 +14794,17 @@ document.addEventListener("DOMContentLoaded", function () {
 			if (dropdown) dropdown.classList.remove("profile-incomplete");
 			const accountNameText = document.querySelector(".account-email-text");
 			if (accountNameText) accountNameText.textContent = name;
-			authProfilePhotoUrl = uploadedProfileImage || authProfilePhotoUrl || "";
-			authProfilePhotoFile = null;
-			if (authProfilePhotoInput) authProfilePhotoInput.value = "";
-			setAuthProfilePhotoPreview(authProfilePhotoUrl);
-			setMyInfoProfileImage(authProfilePhotoUrl);
+			const finalProfileImage = uploadedProfileImage || window.authProfilePhotoUrl || "";
+			window.authProfilePhotoUrl = finalProfileImage;
+			const topbarProfileImgAfterSave = document.querySelector("#detailAuthTrigger .topbar-profile-image");
+			if (topbarProfileImgAfterSave) topbarProfileImgAfterSave.src = finalProfileImage || REALJEJU_DEFAULT_PROFILE_IMAGE;
+			if (typeof window.clearAuthProfilePhotoFile === "function") window.clearAuthProfilePhotoFile();
+			if (typeof window.setAuthProfilePhotoPreview === "function") window.setAuthProfilePhotoPreview(finalProfileImage);
+			if (typeof window.setMyInfoProfileImage === "function") window.setMyInfoProfileImage(finalProfileImage);
 			const brokerMenuItem = qs("brokerOfficeMenuItem");
 			if (brokerMenuItem) brokerMenuItem.style.display = ["broker", "agent", "agent_sub", "agent_staff", "corporation"].includes(role) ? "block" : "none";
 			const authModal = qs("authModal");
-			if (authModal) { authModal.classList.remove("profile-page-mode"); authModal.classList.remove("open"); authModal.setAttribute("aria-hidden", "true"); }
+			if (authModal) { authModal.classList.add("profile-page-mode"); authModal.classList.add("open"); authModal.setAttribute("aria-hidden", "false"); }
 		} catch (err) {
 			console.error("개인정보 저장 오류:", err);
 			showProfileError("개인정보 저장 중 오류가 발생했습니다.", nameInput);
