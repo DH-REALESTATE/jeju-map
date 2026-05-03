@@ -48,6 +48,80 @@
 	--nav-color: #111827;
 	--nav-active-color: #2563eb;
 	--nav-new-color: #ff2f7a;
+
+	/* ===== v2.038: 내 정보 / 개인정보 설정 / 중개사 가입 신청 버튼 전역 변수 ===== */
+	--profile-page-button-height: 50px;
+	--profile-page-button-radius: 0px;
+	--profile-page-button-font-size: 17px;
+	--profile-page-button-font-weight: 800;
+	--profile-page-button-letter-spacing: -0.18px;
+	--profile-page-button-shadow: none;
+	--profile-page-primary-button-bg: #1B6FA4;
+	--profile-page-primary-button-color: #ffffff;
+	--profile-page-primary-button-border: 1px solid #1B6FA4;
+	--profile-page-secondary-button-bg: #ffffff;
+	--profile-page-secondary-button-color: #1B6FA4;
+	--profile-page-secondary-button-border: 1px solid #1B6FA4;
+
+	/* ===== v2.038: 관리자 페이지 전용 전역 변수 ===== */
+	--admin-page-padding-top: 28px;
+	--admin-page-padding-x: 34px;
+	--admin-page-padding-bottom: 44px;
+
+	--admin-title-font-size: 24px;
+	--admin-title-font-weight: 600;
+	--admin-title-letter-spacing: -0.35px;
+	--admin-title-line-height: 1.25;
+	--admin-title-color: #111827;
+
+	--admin-desc-font-size: 14px;
+	--admin-desc-font-weight: 400;
+	--admin-desc-letter-spacing: -0.12px;
+	--admin-desc-line-height: 1.4;
+	--admin-desc-color: #64748b;
+
+	--admin-office-font-size: 17px;
+	--admin-office-font-weight: 600;
+	--admin-office-letter-spacing: -0.22px;
+	--admin-office-color: #111827;
+
+	--admin-meta-font-size: 14px;
+	--admin-meta-font-weight: 400;
+	--admin-meta-letter-spacing: -0.1px;
+	--admin-meta-line-height: 1.45;
+	--admin-meta-color: #475569;
+
+	--admin-status-font-size: 13px;
+	--admin-status-font-weight: 600;
+	--admin-status-letter-spacing: -0.1px;
+
+	--admin-button-height: 34px;
+	--admin-button-font-size: 13px;
+	--admin-button-font-weight: 500;
+	--admin-button-letter-spacing: -0.1px;
+	--admin-button-radius: 0px;
+
+	--admin-refresh-button-height: 38px;
+	--admin-refresh-button-font-size: 14px;
+	--admin-refresh-button-font-weight: 500;
+
+	/* ===== v2.038: 매물 등록 가격 박스 높이 조절 변수 ===== */
+	--property-price-card-min-height: 0px;
+	--property-register-input-height: 56px;
+	--property-register-dropdown-menu-height : 56px;
+
+	/* ===== v2.038: 매물 등록 체크박스/라디오/라벨 전역 설정 ===== */
+	--property-register-left-label-font-size: 16px;
+	--property-register-left-label-font-weight: 800;
+	--property-register-option-font-size: 16px;
+	--property-register-option-font-weight: 300;
+	--property-register-option-letter-spacing: -0.16px;
+	--property-register-option-gap: 10px;		/* 체크 버튼하고 글자 간격 */
+	--property-register-deal-option-gap: 69px;	/* 매매 전세 월세 년세 단기 글자 간격 */
+	--property-register-checkbox-size: 22px;
+	--property-register-radio-size: 22px;
+	--property-register-info-checkbox-size: 18px;
+	--property-register-info-radio-size: 18px;
 }
 
 *
@@ -349,7 +423,7 @@ body
 .auth-modal-submit
 {
 	width: 100%;
-	height: 58px;
+	height: 50px;
 	margin-top: 8px;
 	border: 0;
 	border-radius: 4px;
@@ -2057,7 +2131,8 @@ body
 	box-shadow: inset 0 0 0 1px rgba(59,130,246,0.12);
 }
 
-.card-badge[data-type="단독주택"]
+.card-badge[data-type="단독주택"],
+.card-badge[data-type="다가구주택"]
 {
 	background:rgba(59,130,246,0.06);
 	color:#1E3A8A;
@@ -2085,13 +2160,21 @@ body
 	box-shadow: inset 0 0 0 1px rgba(55,48,163,0.10);
 }
 
+.card-badge[data-type="오피스텔"], .card-badge[data-type="원룸 / 투룸"], .card-badge[data-type="빌라"], .card-badge[data-type="건물"], .card-badge[data-type="공장 / 창고"], .card-badge[data-type="호텔"], .card-badge[data-type="펜션"], .card-badge[data-type="pension"]
+{
+	background:rgba(59,130,246,0.10);
+	color:#3730A3;
+	box-shadow: inset 0 0 0 1px rgba(55,48,163,0.10);
+}
+
 /* 오른쪽 상세 패널 유형 색상 */ .detail-summary-type-badge[data-type="아파트"]
 {
 	background:rgba(59,130,246,0.08);
 	color:var(--brand);
 }
 
-.detail-summary-type-badge[data-type="단독주택"]
+.detail-summary-type-badge[data-type="단독주택"],
+.detail-summary-type-badge[data-type="다가구주택"]
 {
 	background:rgba(59,130,246,0.06);
 	color:#1E3A8A;
@@ -2110,6 +2193,12 @@ body
 }
 
 .detail-summary-type-badge[data-type="사무실"], .detail-summary-type-badge[data-type="hotel"]
+{
+	background:rgba(59,130,246,0.10);
+	color:#3730A3;
+}
+
+.detail-summary-type-badge[data-type="오피스텔"], .detail-summary-type-badge[data-type="원룸 / 투룸"], .detail-summary-type-badge[data-type="빌라"], .detail-summary-type-badge[data-type="건물"], .detail-summary-type-badge[data-type="공장 / 창고"], .detail-summary-type-badge[data-type="호텔"], .detail-summary-type-badge[data-type="펜션"], .detail-summary-type-badge[data-type="pension"]
 {
 	background:rgba(59,130,246,0.10);
 	color:#3730A3;
@@ -4921,7 +5010,7 @@ body.sidebar-list-collapsed .map-side-tools
 	background: #fff;
 }
 
-/* Ver 2.018 표시: 하단바 왼쪽 고정 */
+/* Ver 2.038 표시: 하단바 왼쪽 고정 */
 .sub-version-fixed
 {
 	position: absolute !important;
@@ -5380,7 +5469,7 @@ body.sidebar-list-collapsed .map-side-tools
 
 .auth-modal.profile-page-mode .auth-myinfo-screen .auth-modal-submit
 {
-	height: 54px;
+	height: 50px;
 	margin-top: 24px;
 	border-radius: 8px;
 	letter-spacing: 0;
@@ -5542,7 +5631,7 @@ body.sidebar-list-collapsed .map-side-tools
 .auth-modal-submit
 {
 	width: 100%;
-	height: 58px;
+	height: 50px;
 	margin-top: 8px;
 	border: 0;
 	border-radius: 4px;
@@ -6736,7 +6825,7 @@ body.sidebar-list-collapsed .map-side-tools
 
 .auth-modal.profile-page-mode .auth-profile-setup-screen .auth-modal-submit
 {
-	height: 54px !important;
+	height: 50px !important;
 	margin-top: 8px !important;
 	border-radius: 8px !important;
 	background: #1B6FA4 !important;
@@ -7020,7 +7109,7 @@ html, body
 }
 
 
-/* v2.018: 하단바 주소 검색 */
+/* v2.038: 하단바 주소 검색 */
 .sub-address-search
 {
 	position: relative;
@@ -7210,7 +7299,7 @@ html, body
 	color: var(--subbar-item-color) !important;
 }
 
-/* ===== v2.018: 상단바 텍스트 디자인 단일 관리 ===== */
+/* ===== v2.038: 상단바 텍스트 디자인 단일 관리 ===== */
 :root
 {
 	--topbar-text-font-family: var(--nav-font-family);
@@ -7224,7 +7313,7 @@ html, body
 	--topbar-profile-gap: 10px;
 }
 
-/* ===== v2.018: 하단바 텍스트 디자인 단일 관리 ===== */
+/* ===== v2.038: 하단바 텍스트 디자인 단일 관리 ===== */
 :root
 {
 	--subbar-menu-gap: 14px;
@@ -7330,8 +7419,8 @@ html, body
 	flex: 0 0 auto !important;
 }
 
-/* ===== v2.018: 우측 상단 계정 메뉴 hover 열림 ===== */
-/* ===== v2.018: 우측 상단 계정 메뉴 hover 표시 전용 ===== */
+/* ===== v2.038: 우측 상단 계정 메뉴 hover 열림 ===== */
+/* ===== v2.038: 우측 상단 계정 메뉴 hover 표시 전용 ===== */
 .global-auth-trigger:hover,
 .global-auth-trigger.account-open
 {
@@ -7343,7 +7432,7 @@ html, body
 	transform: none !important;
 }
 
-/* ===== v2.018: 상단바 기본 활성 메뉴 + hover 색 고정 ===== */
+/* ===== v2.038: 상단바 기본 활성 메뉴 + hover 색 고정 ===== */
 .topbar-menu-item.active
 {
 	color: var(--nav-active-color);
@@ -7354,7 +7443,7 @@ html, body
 	color: #111827 !important;
 }
 
-/* ===== v2.018: 상단 메뉴 hover 색상 차단 ===== */
+/* ===== v2.038: 상단 메뉴 hover 색상 차단 ===== */
 .topbar-menu-item:hover
 {
 	color: inherit !important;
@@ -7362,7 +7451,7 @@ html, body
 	border-color: transparent !important;
 }
 
-/* ===== v2.018: 상단 메뉴 active 전용 색상 관리 ===== */
+/* ===== v2.038: 상단 메뉴 active 전용 색상 관리 ===== */
 .global-topbar .topbar-menu-item
 {
 	color: var(--nav-color) !important;
@@ -7382,7 +7471,7 @@ html, body
 	font-weight: var(--nav-font-weight) !important;
 }
 
-/* ===== v2.018: 우측 상단 이름 hover 색상 고정 ===== */
+/* ===== v2.038: 우측 상단 이름 hover 색상 고정 ===== */
 .global-auth-trigger,
 .global-auth-trigger:hover,
 .global-auth-trigger.account-open,
@@ -7392,7 +7481,7 @@ html, body
 	background: transparent !important;
 }
 
-/* ===== v2.018: 상단 메뉴 active 색상만 관리 ===== */
+/* ===== v2.038: 상단 메뉴 active 색상만 관리 ===== */
 .global-topbar .topbar-menu-item
 {
 	color: var(--nav-color) !important;
@@ -7411,7 +7500,7 @@ html, body
 	color: var(--nav-active-color) !important;
 }
 
-/* ===== v2.018: 우측 상단 이름 hover/active/open 색상 고정 ===== */
+/* ===== v2.038: 우측 상단 이름 hover/active/open 색상 고정 ===== */
 .global-topbar-right .global-auth-trigger,
 .global-topbar-right .global-auth-trigger:hover,
 .global-topbar-right .global-auth-trigger:focus,
@@ -7433,7 +7522,7 @@ html, body
 }
 
 
-/* ===== v2.018: 무료 뱃지 - 매물등록 글자 위치 완전 분리 ===== */
+/* ===== v2.038: 무료 뱃지 - 매물등록 글자 위치 완전 분리 ===== */
 .topbar-menu-free-wrap
 {
 	position: relative;
@@ -7464,7 +7553,7 @@ html, body
 	white-space: nowrap;
 }
 
-/* ===== v2.018: 내 페이지 정보 / 개인정보 수정 화면 단일 변수 관리 ===== */
+/* ===== v2.038: 내 페이지 정보 / 개인정보 수정 화면 단일 변수 관리 ===== */
 :root
 {
 	--profile-page-bg: #f8fafc;
@@ -7741,7 +7830,7 @@ html, body
 	border: 1px solid #1B6FA4 !important;
 }
 
-/* ===== v2.018: 개인정보/내정보 최종 패치 ===== */
+/* ===== v2.038: 개인정보/내정보 최종 패치 ===== */
 :root
 {
 	--profile-page-card-width: clamp(320px, 90vw, 500px);
@@ -7782,7 +7871,7 @@ html, body
 }
 
 
-/* ===== v2.018: 중개사무소 신청 페이지 네모 처리 ===== */
+/* ===== v2.038: 중개사무소 신청 페이지 네모 처리 ===== */
 .auth-modal.broker-office-mode .auth-modal-dialog,
 .auth-modal.broker-office-mode .auth-modal-input,
 .auth-modal.broker-office-mode .auth-modal-submit,
@@ -7793,7 +7882,7 @@ html, body
 }
 
 
-/* ===== v2.018: 중개사무소 신청 / 개인정보 설정 남은 라운드 완전 제거 ===== */
+/* ===== v2.038: 중개사무소 신청 / 개인정보 설정 남은 라운드 완전 제거 ===== */
 
 /* 중개사무소 신청 페이지 전체 네모 강제 */
 .auth-modal.broker-office-mode *,
@@ -7835,7 +7924,7 @@ html, body
 }
 
 
-/* ===== v2.018: 중개사무소 신청 페이지 라운드 완전 제거 ===== */
+/* ===== v2.038: 중개사무소 신청 페이지 라운드 완전 제거 ===== */
 .auth-modal.profile-page-mode .auth-broker-office-screen,
 .auth-modal.profile-page-mode .auth-broker-office-screen *,
 .auth-modal.profile-page-mode .broker-apply-page,
@@ -7876,7 +7965,7 @@ html, body
 }
 
 
-/* ===== v2.018: 중개사무소 신청 오른쪽 입력칸 네모 최종 고정 ===== */
+/* ===== v2.038: 중개사무소 신청 오른쪽 입력칸 네모 최종 고정 ===== */
 #authBrokerOfficeScreen input,
 #authBrokerOfficeScreen textarea,
 #authBrokerOfficeScreen select,
@@ -7899,7 +7988,7 @@ html, body
 }
 
 
-/* ===== v2.018: 내정보/개인정보/중개사무소 버튼 단일 관리 + 신청 박스 네모 ===== */
+/* ===== v2.038: 내정보/개인정보/중개사무소 버튼 단일 관리 + 신청 박스 네모 ===== */
 :root
 {
 	--profile-common-button-width: 100%;
@@ -7990,7 +8079,7 @@ html, body
 }
 
 
-/* ===== v2.018: 중개사무소 신청 닫기 X 버튼만 기존 원형 효과 복원 ===== */
+/* ===== v2.038: 중개사무소 신청 닫기 X 버튼만 기존 원형 효과 복원 ===== */
 #authBrokerOfficeScreen .auth-card-close,
 #authBrokerOfficeScreen .auth-modal-close
 {
@@ -7998,7 +8087,7 @@ html, body
 }
 
 
-/* ===== v2.018: 개인정보 설정 프로필 사진 원형 ===== */
+/* ===== v2.038: 개인정보 설정 프로필 사진 원형 ===== */
 .auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-photo-preview,
 .auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-photo-preview img,
 .auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-photo-box img
@@ -8008,7 +8097,7 @@ html, body
 }
 
 
-/* ===== v2.018: 관리자 페이지 - 중개사 신청 관리 ===== */
+/* ===== v2.038: 관리자 페이지 - 중개사 신청 관리 ===== */
 .admin-page-panel
 {
 	position: absolute;
@@ -8213,14 +8302,14 @@ body.admin-page-open .map-wrap
 
 
 
-/* ===== v2.018: 드롭다운 내정보 구분선 유지 + 중개사 메뉴만 조건부 표시 ===== */
+/* ===== v2.038: 드롭다운 내정보 구분선 유지 + 중개사 메뉴만 조건부 표시 ===== */
 #globalAccountDropdown #brokerOfficeMenuWrapper
 {
 	display: none !important;
 }
 
 
-/* ===== v2.018: 내 정보 / 개인정보 설정 하단 버튼 2개 구성 ===== */
+/* ===== v2.038: 내 정보 / 개인정보 설정 하단 버튼 2개 구성 ===== */
 .auth-profile-action-row
 {
 	display: grid;
@@ -8252,7 +8341,7 @@ body.admin-page-open .map-wrap
 }
 
 
-/* ===== v2.018: 내 정보 / 개인정보 설정 하단 버튼 위치 정렬 ===== */
+/* ===== v2.038: 내 정보 / 개인정보 설정 하단 버튼 위치 정렬 ===== */
 .auth-modal.profile-page-mode .auth-profile-action-row
 {
 	display: grid !important;
@@ -8267,7 +8356,7 @@ body.admin-page-open .map-wrap
 {
 	width: 100% !important;
 	min-width: 0 !important;
-	height: 58px !important;
+	height: 50px !important;
 	margin: 0 !important;
 	padding: 0 !important;
 	display: inline-flex !important;
@@ -8285,13 +8374,2407 @@ body.admin-page-open .map-wrap
 	margin-top: 0 !important;
 }
 
-
-/* ===== v2.018: 중개사무소 신청 상태별 드롭다운 문구 ===== */
+/* ===== v2.038: 중개사무소 신청 상태별 드롭다운 문구 ===== */
 #brokerOfficeMenuItem.is-pending
 {
 	color: #1B6FA4 !important;
 	cursor: default !important;
 	opacity: 1 !important;
+}
+
+
+/* ===== v2.038: 내 정보 / 개인정보 설정 / 중개사 가입 신청 버튼 단일 관리 ===== */
+.auth-modal.profile-page-mode .auth-myinfo-screen .auth-profile-action-row,
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-action-row
+{
+	display: grid !important;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+	gap: 16px !important;
+	width: 100% !important;
+	margin-top: 32px !important;
+	align-items: stretch !important;
+}
+
+.auth-modal.profile-page-mode .auth-myinfo-screen .auth-profile-action-row > button,
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-action-row > button,
+.auth-modal.profile-page-mode .auth-broker-office-screen .auth-modal-submit,
+.auth-modal.profile-page-mode .auth-broker-office-screen button[type="submit"],
+.auth-modal.profile-page-mode .broker-apply-page .auth-modal-submit,
+.auth-modal.profile-page-mode .broker-apply-page button[type="submit"]
+{
+	width: 100% !important;
+	min-width: 0 !important;
+	height: var(--profile-page-button-height) !important;
+	min-height: var(--profile-page-button-height) !important;
+	margin: 0 !important;
+	padding: 0 16px !important;
+	border-radius: var(--profile-page-button-radius) !important;
+	box-shadow: var(--profile-page-button-shadow) !important;
+	font-size: var(--profile-page-button-font-size) !important;
+	font-weight: var(--profile-page-button-font-weight) !important;
+	letter-spacing: var(--profile-page-button-letter-spacing) !important;
+	line-height: 1 !important;
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	box-sizing: border-box !important;
+	cursor: pointer !important;
+}
+
+.auth-modal.profile-page-mode .auth-myinfo-screen .auth-modal-submit,
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-modal-submit,
+.auth-modal.profile-page-mode .auth-broker-office-screen .auth-modal-submit,
+.auth-modal.profile-page-mode .auth-broker-office-screen button[type="submit"],
+.auth-modal.profile-page-mode .broker-apply-page .auth-modal-submit,
+.auth-modal.profile-page-mode .broker-apply-page button[type="submit"]
+{
+	background: var(--profile-page-primary-button-bg) !important;
+	color: var(--profile-page-primary-button-color) !important;
+	border: var(--profile-page-primary-button-border) !important;
+}
+
+.auth-modal.profile-page-mode .auth-myinfo-screen .auth-modal-secondary,
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-modal-secondary
+{
+	background: var(--profile-page-secondary-button-bg) !important;
+	color: var(--profile-page-secondary-button-color) !important;
+	border: var(--profile-page-secondary-button-border) !important;
+}
+
+.auth-modal.profile-page-mode .auth-myinfo-screen .auth-profile-action-row > button:hover,
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-action-row > button:hover,
+.auth-modal.profile-page-mode .auth-broker-office-screen .auth-modal-submit:hover,
+.auth-modal.profile-page-mode .auth-broker-office-screen button[type="submit"]:hover,
+.auth-modal.profile-page-mode .broker-apply-page .auth-modal-submit:hover,
+.auth-modal.profile-page-mode .broker-apply-page button[type="submit"]:hover,
+.auth-modal.profile-page-mode .auth-myinfo-screen .auth-profile-action-row > button:focus,
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-action-row > button:focus,
+.auth-modal.profile-page-mode .auth-broker-office-screen .auth-modal-submit:focus,
+.auth-modal.profile-page-mode .auth-broker-office-screen button[type="submit"]:focus,
+.auth-modal.profile-page-mode .broker-apply-page .auth-modal-submit:focus,
+.auth-modal.profile-page-mode .broker-apply-page button[type="submit"]:focus,
+.auth-modal.profile-page-mode .auth-myinfo-screen .auth-profile-action-row > button:active,
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-action-row > button:active,
+.auth-modal.profile-page-mode .auth-broker-office-screen .auth-modal-submit:active,
+.auth-modal.profile-page-mode .auth-broker-office-screen button[type="submit"]:active,
+.auth-modal.profile-page-mode .broker-apply-page .auth-modal-submit:active,
+.auth-modal.profile-page-mode .broker-apply-page button[type="submit"]:active
+{
+	border-radius: var(--profile-page-button-radius) !important;
+	box-shadow: var(--profile-page-button-shadow) !important;
+}
+
+
+/* ===== v2.038: 관리자 페이지 글자/버튼 전역 변수 적용 ===== */
+.admin-page-panel
+{
+	padding: var(--admin-page-padding-top) var(--admin-page-padding-x) var(--admin-page-padding-bottom) !important;
+}
+
+.admin-page-title
+{
+	font-size: var(--admin-title-font-size) !important;
+	font-weight: var(--admin-title-font-weight) !important;
+	letter-spacing: var(--admin-title-letter-spacing) !important;
+	line-height: var(--admin-title-line-height) !important;
+	color: var(--admin-title-color) !important;
+}
+
+.admin-page-desc
+{
+	font-size: var(--admin-desc-font-size) !important;
+	font-weight: var(--admin-desc-font-weight) !important;
+	letter-spacing: var(--admin-desc-letter-spacing) !important;
+	line-height: var(--admin-desc-line-height) !important;
+	color: var(--admin-desc-color) !important;
+}
+
+.admin-application-office
+{
+	font-size: var(--admin-office-font-size) !important;
+	font-weight: var(--admin-office-font-weight) !important;
+	letter-spacing: var(--admin-office-letter-spacing) !important;
+	color: var(--admin-office-color) !important;
+}
+
+.admin-application-meta,
+.admin-empty
+{
+	font-size: var(--admin-meta-font-size) !important;
+	font-weight: var(--admin-meta-font-weight) !important;
+	letter-spacing: var(--admin-meta-letter-spacing) !important;
+	line-height: var(--admin-meta-line-height) !important;
+	color: var(--admin-meta-color) !important;
+}
+
+.admin-status-badge
+{
+	font-size: var(--admin-status-font-size) !important;
+	font-weight: var(--admin-status-font-weight) !important;
+	letter-spacing: var(--admin-status-letter-spacing) !important;
+	border-radius: var(--admin-button-radius) !important;
+}
+
+.admin-status-btn
+{
+	height: var(--admin-button-height) !important;
+	border-radius: var(--admin-button-radius) !important;
+	font-size: var(--admin-button-font-size) !important;
+	font-weight: var(--admin-button-font-weight) !important;
+	letter-spacing: var(--admin-button-letter-spacing) !important;
+	box-shadow: none !important;
+}
+
+.admin-refresh-btn
+{
+	height: var(--admin-refresh-button-height) !important;
+	border-radius: var(--admin-button-radius) !important;
+	font-size: var(--admin-refresh-button-font-size) !important;
+	font-weight: var(--admin-refresh-button-font-weight) !important;
+	box-shadow: none !important;
+}
+
+
+/* ===== v2.038: 매물 등록 기본 페이지 ===== */
+.property-register-page
+{
+	position: absolute;
+	inset: var(--global-topbar-height) 0 0 0;
+	z-index: 9990;
+	display: none;
+	background: #f4f7fb;
+	color: #111827;
+	overflow-y: auto;
+	padding: 42px 0 110px;
+}
+
+body.property-register-page-open .property-register-page
+{
+	display: block;
+}
+
+body.property-register-page-open .sub-topbar,
+body.property-register-page-open .sidebar,
+body.property-register-page-open .resizer,
+body.property-register-page-open .map-wrap
+{
+	display: none !important;
+}
+
+.property-register-inner
+{
+	width: min(960px, calc(100vw - 48px));
+	margin: 0 auto;
+}
+
+.property-register-head
+{
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	margin-bottom: 26px;
+}
+
+.property-register-title
+{
+	margin: 0;
+	font-size: 24px;
+	font-weight: 700;
+	letter-spacing: -0.35px;
+	color: #111827;
+	line-height: 1.25;
+}
+
+.property-register-top-actions
+{
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+	flex-wrap: wrap;
+}
+
+.property-register-top-btn
+{
+	height: 42px;
+	padding: 0 18px;
+	border: 1px solid #e5e7eb;
+	border-radius: 0;
+	background: #ffffff;
+	color: #111827;
+	font-size: 14px;
+	font-weight: 700;
+	letter-spacing: -0.12px;
+	cursor: pointer;
+	box-shadow: none;
+}
+
+.property-register-card
+{
+	background: #ffffff;
+	border: 1px solid #e5e7eb;
+	border-radius: 0;
+	box-shadow: none;
+	padding: 34px 40px 40px;
+	min-height: 520px;
+}
+
+.property-price-card
+{
+	min-height: var(--property-price-card-min-height);
+}
+
+.property-register-section-title
+{
+	margin: 0 0 28px;
+	font-size: 22px;
+	font-weight: 700;
+	letter-spacing: -0.28px;
+	color: #111827;
+	line-height: 1.3;
+}
+
+.property-register-placeholder
+{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 380px;
+	border: 1px dashed #cbd5e1;
+	background: #f8fafc;
+	color: #64748b;
+	font-size: 15px;
+	font-weight: 600;
+	letter-spacing: -0.12px;
+	text-align: center;
+	padding: 24px;
+}
+
+.property-register-bottom-bar
+{
+	position: fixed;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 9995;
+	display: none;
+	justify-content: center;
+	background: rgba(255,255,255,0.96);
+	border-top: 1px solid #e5e7eb;
+	padding: 18px 0;
+	box-shadow: 0 -8px 24px rgba(15, 23, 42, 0.05);
+}
+
+body.property-register-page-open .property-register-bottom-bar
+{
+	display: flex !important;
+}
+
+.property-register-bottom-inner
+{
+	width: min(960px, calc(100vw - 48px));
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 12px;
+}
+
+.property-register-bottom-btn
+{
+	height: 52px;
+	min-width: 132px;
+	padding: 0 22px;
+	border-radius: 0;
+	font-size: 16px;
+	font-weight: 800;
+	letter-spacing: -0.18px;
+	cursor: pointer;
+	box-shadow: none;
+}
+
+.property-register-bottom-btn.draft
+{
+	border: 1px solid #d1d5db;
+	background: #ffffff;
+	color: #111827;
+}
+
+.property-register-bottom-btn.submit
+{
+	border: 1px solid #1B6FA4;
+	background: #1B6FA4;
+	color: #ffffff;
+}
+
+@media (max-width: 720px)
+{
+	.property-register-page
+	{
+		padding-top: 26px;
+	}
+	.property-register-head
+	{
+		align-items: flex-start;
+		flex-direction: column;
+	}
+	.property-register-card
+	{
+		padding: 26px 22px 32px;
+	}
+	.property-register-bottom-inner
+	{
+		justify-content: stretch;
+	}
+	.property-register-bottom-btn
+	{
+		flex: 1 1 0;
+		min-width: 0;
+	}
+}
+
+/* ===== v2.038: 매물 등록 기본 정보 / 가격 입력 폼 ===== */
+.property-register-card + .property-register-card
+{
+	margin-top: 28px;
+}
+
+.property-form-row
+{
+	display: grid;
+	grid-template-columns: 140px minmax(0, 1fr);
+	gap: 24px;
+	align-items: center;
+	margin-bottom: 28px;
+}
+
+.property-form-row:last-child
+{
+	margin-bottom: 0;
+}
+
+.property-form-label
+{
+	font-size: var(--property-register-left-label-font-size);
+	font-weight: var(--property-register-left-label-font-weight);
+	color: #111827;
+	letter-spacing: -0.18px;
+	line-height: 1.3;
+}
+
+.property-required
+{
+	color: #ef4444;
+	margin-left: 2px;
+}
+
+.property-form-control
+{
+	position: relative;
+	min-width: 0;
+}
+
+.property-register-input,
+.property-register-select
+{
+	width: 100%;
+	height: 58px;
+	border: 1px solid #d8dee8;
+	border-radius: 0;
+	background: #ffffff;
+	color: #111827;
+	font-size: 16px;
+	font-weight: 600;
+	letter-spacing: -0.16px;
+	padding: 0 18px;
+	outline: none;
+	box-shadow: none;
+	box-sizing: border-box;
+}
+
+.property-register-input::placeholder
+{
+	color: #a8b0bd;
+	font-weight: 500;
+}
+
+.property-register-select
+{
+	appearance: none;
+	-webkit-appearance: none;
+	color: #a8b0bd;
+	cursor: pointer;
+}
+
+.property-select-wrap
+{
+	position: relative;
+}
+
+.property-select-wrap::after
+{
+	content: "⌄";
+	position: absolute;
+	right: 18px;
+	top: 50%;
+	transform: translateY(-50%);
+	font-size: 24px;
+	font-weight: 500;
+	color: #475569;
+	pointer-events: none;
+	line-height: 1;
+}
+
+
+/* ===== v2.038: 매물 등록 드롭다운 - 상단바 드롭다운형 / 밑줄 없음 ===== */
+.property-register-native-select
+{
+	position: absolute !important;
+	width: 1px !important;
+	height: 1px !important;
+	opacity: 0 !important;
+	pointer-events: none !important;
+	overflow: hidden !important;
+}
+
+.property-register-dropdown
+{
+	position: relative;
+}
+
+.property-register-dropdown::after
+{
+	display: none !important;
+	content: none !important;
+}
+
+.property-register-dropdown-trigger
+{
+	width: 100%;
+	height: 58px;
+	padding: 0 0;
+	border: 0;
+	border-radius: 0;
+	background: transparent;
+	color: #111827;
+	font-family: var(--font-ui);
+	font-size: 16px;
+	font-weight: 700;
+	letter-spacing: -0.16px;
+	line-height: 1;
+	display: inline-flex;
+	align-items: center;
+	justify-content: flex-start;
+	gap: 8px;
+	cursor: pointer;
+	box-shadow: none;
+	outline: none;
+}
+
+.property-register-dropdown-trigger span
+{
+	display: inline-block;
+	min-width: 0;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.property-register-dropdown-trigger i
+{
+	font-size: 12px;
+	line-height: 1;
+	color: #111827;
+	transition: transform 0.18s ease;
+}
+
+.property-register-dropdown.open .property-register-dropdown-trigger i
+{
+	transform: rotate(180deg);
+}
+
+.property-register-dropdown-menu
+{
+	position: absolute;
+	top: calc(100% + 8px);
+	left: 0;
+	right: auto;
+	min-width: 240px;
+	width: max-content;
+	max-width: min(360px, calc(100vw - 48px));
+	max-height: 320px;
+	overflow-y: auto;
+	padding: 8px;
+	border-radius: 0;
+	border: 1px solid #e2e8f0;
+	background: rgba(255,255,255,0.98);
+	box-shadow: 0 18px 34px rgba(15, 41, 66, 0.14);
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
+	display: none;
+	flex-direction: column;
+	gap: 2px;
+	z-index: 9999;
+}
+
+.property-type-dropdown .property-register-dropdown-menu
+{
+	max-height: none !important;
+	overflow-y: visible !important;
+}
+
+.property-register-dropdown.open .property-register-dropdown-menu
+{
+	display: flex;
+}
+
+.property-register-dropdown-option
+{
+	width: 100%;
+	min-height: 36px;
+	padding: 0 10px;
+	border: 0;
+	border-radius: 0;
+	background: transparent;
+	color: var(--subbar-item-color, #334155);
+	font-family: var(--subbar-item-font-family, var(--font-ui));
+	font-size: var(--subbar-item-font-size, 14px);
+	font-weight: var(--subbar-item-font-weight, 700);
+	letter-spacing: var(--subbar-item-letter-spacing, -0.1px);
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	text-align: left;
+	cursor: pointer;
+	white-space: nowrap;
+}
+
+.property-register-dropdown-option:hover
+{
+	background: #f8fafc;
+	color: #334155;
+}
+
+.property-register-dropdown-option.active
+{
+	background: #eff6ff;
+	color: #2563eb;
+	font-weight: 800;
+}
+
+/* ===== v2.038: 매물 등록 에디트 창 복구 / 드롭다운만 상단바형 유지 ===== */
+.property-register-input,
+.property-register-select
+{
+	width: 100%;
+	height: 58px;
+	border: 1px solid #d8dee8;
+	border-radius: 0;
+	background: #ffffff;
+	color: #111827;
+	font-family: var(--font-ui);
+	font-size: 16px;
+	font-weight: 600;
+	letter-spacing: -0.16px;
+	padding: 0 18px;
+	outline: none;
+	box-shadow: none;
+	box-sizing: border-box;
+}
+
+.property-register-input:focus,
+.property-register-select:focus
+{
+	border-color: #d8dee8;
+	background: #ffffff;
+	box-shadow: none;
+	outline: none;
+}
+
+.property-register-input::placeholder
+{
+	color: #a8b0bd;
+	font-weight: 500;
+}
+
+.property-register-dropdown-trigger
+{
+	border: 0 !important;
+	background: transparent !important;
+	box-shadow: none !important;
+	outline: none !important;
+}
+
+.property-register-dropdown-trigger:focus
+{
+	border: 0 !important;
+	background: transparent !important;
+	box-shadow: none !important;
+	outline: none !important;
+}
+
+/* ===== v2.038: 매물 등록 드롭다운 에디트 입력창 안에 배치 ===== */
+.property-form-control.property-register-dropdown
+{
+	width: 100%;
+	height: var(--property-register-dropdown-menu-height);
+	border: 1px solid #d8dee8;
+	border-radius: 0;
+	background: #ffffff;
+	padding: 0 18px;
+	display: flex;
+	align-items: center;
+	box-sizing: border-box;
+}
+
+.property-form-control.property-register-dropdown .property-register-dropdown-trigger
+{
+	height: 100%;
+	width: 100%;
+	padding: 0;
+}
+
+.property-form-control.property-register-dropdown .property-register-dropdown-menu
+{
+	top: calc(100% + 8px);
+	left: 0;
+}
+
+/* ===== v2.038: 매물 등록 드롭다운 너비 = 에디트 입력창 너비 ===== */
+.property-form-control.property-register-dropdown,
+.property-register-dropdown
+{
+	width: 100%;
+}
+
+/* 매물 등록 - 매물 종류, 건축물 용도 드롭 다운 너비 조정 */
+.property-form-control.property-register-dropdown .property-register-dropdown-menu,
+.property-register-dropdown-menu
+{
+	left: -1px;
+	right: auto;
+	width: calc(100% + 2px);
+	min-width: 0;
+	max-width: none;
+	box-sizing: border-box;
+}
+
+.property-register-dropdown-option
+{
+	width: 100%;
+}
+
+
+.property-address-wrap
+{
+	position: relative;
+}
+
+.property-address-wrap::before
+{
+	content: "\f002";
+	font-family: "Font Awesome 6 Free";
+	font-weight: 900;
+	position: absolute;
+	left: 18px;
+	top: 50%;
+	transform: translateY(-50%);
+	font-size: 18px;
+	color: #475569;
+	z-index: 1;
+}
+
+.property-address-wrap .property-register-input
+{
+	padding-left: 52px;
+}
+
+.property-area-pair
+{
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 28px minmax(0, 1fr);
+	gap: 16px;
+	align-items: center;
+}
+
+.property-unit-input
+{
+	position: relative;
+}
+
+.property-unit-input .property-register-input
+{
+	padding-right: 56px;
+}
+
+.property-unit-label
+{
+	position: absolute;
+	right: 18px;
+	top: 50%;
+	transform: translateY(-50%);
+	color: #475569;
+	font-size: 15px;
+	font-weight: 700;
+	line-height: 1;
+	pointer-events: none;
+}
+
+.property-area-eq
+{
+	text-align: center;
+	color: #6b7280;
+	font-size: 22px;
+	font-weight: 700;
+}
+
+/* 매물 등록 - 가격 (거래 유형이 2개 이상이면 모두 선택해 주세요. 글자) */
+.property-price-guide
+{
+	margin: -16px 0 28px 164px;
+	color: #64748b;
+	font-size: 14px;
+	font-weight: 500;
+	letter-spacing: -0.12px;
+	line-height: 1.5;
+}
+
+.property-deal-checks
+{
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	gap: var(--property-register-deal-option-gap);
+	flex-wrap: wrap;
+}
+
+.property-deal-option
+{
+	display: inline-flex;
+	align-items: center;
+	gap: var(--property-register-option-gap);
+	font-size: var(--property-register-option-font-size);
+	font-weight: var(--property-register-option-font-weight);
+	color: #111827;
+	letter-spacing: var(--property-register-option-letter-spacing);
+	cursor: pointer;
+	user-select: none;
+	white-space: nowrap;
+}
+
+/* 매물 등록 - 가격 거래 유형 체크 박스 */
+.property-deal-option input
+{
+	width: var(--property-register-checkbox-size);
+	height: var(--property-register-checkbox-size);
+	margin: 0;
+	accent-color: #2f363d;
+	cursor: pointer;
+	flex: 0 0 auto;
+}
+
+.property-price-dynamic
+{
+	display: flex;
+	flex-direction: column;
+	gap: 30px;
+	margin-top: 30px;
+}
+
+.property-price-row
+{
+	display: grid;
+	grid-template-columns: 140px minmax(0, 1fr);
+	gap: 24px;
+	align-items: start;
+}
+
+.property-price-fields
+{
+	display: grid;
+	gap: 14px 18px;
+}
+
+.property-price-fields.two
+{
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+
+.property-price-field-title
+{
+	margin: 0 0 10px;
+	font-size: 16px;
+	font-weight: 800;
+	color: #111827;
+	letter-spacing: -0.18px;
+}
+
+.property-price-field
+{
+	position: relative;
+}
+
+.property-price-field .property-register-input
+{
+	padding-right: 58px;
+}
+
+@media (max-width: 720px)
+{
+	.property-form-row,
+	.property-price-row
+	{
+		grid-template-columns: 1fr;
+		gap: 10px;
+	}
+	.property-price-guide
+	{
+		margin-left: 0;
+	}
+	.property-area-pair,
+	.property-price-fields.two
+	{
+		grid-template-columns: 1fr;
+	}
+	.property-area-eq
+	{
+		display: none;
+	}
+	.property-deal-checks
+	{
+		justify-content: flex-start;
+	}
+}
+
+
+
+/* ===== v2.038: 매물 등록 - 매물 정보 ===== */
+.property-info-card
+{
+	min-height: 0;
+}
+
+.property-info-card.is-hidden
+{
+	display: none !important;
+}
+
+.property-info-row
+{
+	display: grid;
+	grid-template-columns: 140px minmax(0, 1fr);
+	gap: 24px;
+	align-items: center;
+	margin-bottom: 28px;
+}
+
+.property-info-row:last-child
+{
+	margin-bottom: 0;
+}
+
+.property-info-field
+{
+	min-width: 0;
+}
+
+.property-inline-grid
+{
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 16px 32px;
+	align-items: center;
+}
+
+.property-inline-unit
+{
+	display: grid;
+	grid-template-columns: 56px minmax(0, 1fr);
+	gap: 10px;
+	align-items: center;
+}
+
+.property-inline-label
+{
+	font-size: var(--property-register-option-font-size);
+	font-weight: var(--property-register-option-font-weight);
+	color: #111827;
+	letter-spacing: var(--property-register-option-letter-spacing);
+	white-space: nowrap;
+}
+
+.property-check-row,
+.property-radio-row
+{
+	display: flex;
+	align-items: center;
+	gap: 34px;
+	flex-wrap: wrap;
+}
+
+.property-check-option,
+.property-radio-option
+{
+	display: inline-flex;
+	align-items: center;
+	gap: var(--property-register-option-gap);
+	font-size: var(--property-register-option-font-size);
+	font-weight: var(--property-register-option-font-weight);
+	color: #111827;
+	letter-spacing: var(--property-register-option-letter-spacing);
+	cursor: pointer;
+	user-select: none;
+	white-space: nowrap;
+}
+
+.property-check-option input
+{
+	width: var(--property-register-info-checkbox-size);
+	height: var(--property-register-info-checkbox-size);
+	margin: 0;
+	accent-color: #2f363d;
+	cursor: pointer;
+	flex: 0 0 auto;
+}
+
+.property-radio-option input
+{
+	width: var(--property-register-info-radio-size);
+	height: var(--property-register-info-radio-size);
+	margin: 0;
+	accent-color: #2f363d;
+	cursor: pointer;
+	flex: 0 0 auto;
+}
+
+.property-info-sub-options
+{
+	margin-top: 16px;
+}
+
+.property-floor-level-options,
+.property-building-whole-option,
+.property-parking-detail,
+.property-heating-row
+{
+	display: none;
+}
+
+.property-info-card[data-info-mode="residential"] .property-floor-level-options,
+.property-info-card[data-info-mode="residential"] .property-building-whole-option,
+.property-info-card[data-info-mode="residential"] .property-loan-row,
+.property-info-card[data-info-mode="residential"] .property-pet-row,
+.property-info-card[data-info-mode="residential"] .property-parking-row,
+.property-info-card[data-info-mode="residential"] .property-heating-row
+{
+	display: grid;
+}
+
+.property-info-card[data-info-mode="commercial"] .property-basement-options,
+.property-info-card[data-info-mode="commercial"] .property-parking-row
+{
+	display: grid;
+}
+
+.property-info-card[data-info-mode="building"] .property-building-whole-option,
+.property-info-card[data-info-mode="building"] .property-parking-row
+{
+	display: grid;
+}
+
+.property-info-card[data-info-mode="commercial"] .property-loan-row,
+.property-info-card[data-info-mode="commercial"] .property-pet-row,
+.property-info-card[data-info-mode="commercial"] .property-heating-row,
+.property-info-card[data-info-mode="building"] .property-loan-row,
+.property-info-card[data-info-mode="building"] .property-pet-row,
+.property-info-card[data-info-mode="building"] .property-heating-row
+{
+	display: none !important;
+}
+
+.property-info-card[data-info-mode="commercial"] .property-floor-level-options,
+.property-info-card[data-info-mode="commercial"] .property-building-whole-option,
+.property-info-card[data-info-mode="building"] .property-floor-level-options
+{
+	display: none !important;
+}
+
+.property-parking-detail.open
+{
+	display: grid;
+	margin-top: 16px;
+}
+
+.property-heating-fuel-wrap
+{
+	display: grid;
+	grid-template-columns: 100px minmax(0, 1fr);
+	gap: 12px;
+	align-items: center;
+	margin-top: 16px;
+}
+
+.property-land-type-grid
+{
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 28px 48px;
+}
+
+.property-land-info-card
+{
+	min-height: 0;
+}
+
+.property-land-info-card.is-hidden
+{
+	display: none !important;
+}
+
+@media (max-width: 900px)
+{
+	.property-inline-grid,
+	.property-land-type-grid
+	{
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+
+
+/* ===== v2.038: 매물 정보 층 옵션 1줄 정렬 / 건물 전체 표시 전환 ===== */
+.property-floor-display-options
+{
+	display: flex;
+	align-items: center;
+	gap: 18px;
+	flex-wrap: wrap;
+}
+
+.property-floor-level-inline
+{
+	display: inline-flex;
+	align-items: center;
+	gap: 18px;
+	flex-wrap: wrap;
+}
+
+.property-building-whole-inline
+{
+	display: none;
+}
+
+.property-info-card[data-info-mode="commercial"] .property-floor-level-inline,
+.property-info-card[data-info-mode="commercial"] .property-building-whole-inline
+{
+	display: none !important;
+}
+
+.property-info-card[data-info-floor-mode="whole"] .property-floor-level-inline
+{
+	display: none !important;
+}
+
+.property-info-card[data-info-floor-mode="whole"] .property-building-whole-inline
+{
+	display: inline-flex !important;
+}
+
+
+/* ===== v2.038: 매물 정보 라디오/체크 정렬 보정 ===== */
+.property-info-row.property-heating-row
+{
+	align-items: start;
+}
+
+.property-info-row.property-heating-row > .property-form-label
+{
+	display: flex;
+	align-items: center;
+	min-height: var(--property-register-info-radio-size);
+}
+
+.property-info-row.property-heating-row .property-radio-row
+{
+	align-items: center;
+	min-height: var(--property-register-info-radio-size);
+}
+
+.property-floor-display-options
+{
+	align-items: center;
+}
+
+
+/* ===== v2.038: 층 저/중/고 라디오 비활성 상태 + 매매 시 반려동물 숨김 ===== */
+.property-floor-level-inline input[name="propertyFloorLevel"]:disabled
+{
+	opacity: 0.42;
+	cursor: not-allowed;
+}
+
+.property-floor-level-inline:has(input[name="propertyFloorLevel"]:disabled) .property-radio-option
+{
+	cursor: not-allowed;
+	opacity: 0.62;
+}
+
+.property-info-card.is-sale-deal .property-pet-row
+{
+	display: none !important;
+}
+
+/* ===== v2.078: 사용승인일 하이픈 표시 + 달력 버튼 ===== */
+.property-date-input-wrap
+{
+	position: relative;
+	width: 100%;
+	display: flex;
+	align-items: center;
+}
+
+.property-date-text-input
+{
+	padding-right: 46px !important;
+}
+
+.property-date-picker-btn
+{
+	position: absolute;
+	top: 50%;
+	right: 0;
+	transform: translateY(-50%);
+	width: 42px;
+	height: 100%;
+	border: 0;
+	border-left: 1px solid #e5e7eb;
+	background: transparent;
+	color: #475569;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	font-size: 16px;
+	z-index: 2;
+}
+
+.property-date-picker-btn:hover
+{
+	color: #2563eb;
+	background: #f8fafc;
+}
+
+.property-date-native-picker
+{
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: 42px;
+	height: 100%;
+	opacity: 0;
+	pointer-events: none;
+	z-index: 1;
+}
+
+
+/* ===== v2.078: 매물 유형 변경 시 매물정보 카드 너비 고정 ===== */
+.property-register-card,
+.property-info-card
+{
+	width: 100%;
+	max-width: 100%;
+	min-width: 0;
+}
+
+.property-info-field,
+.property-inline-grid,
+.property-inline-unit,
+.property-check-row,
+.property-radio-row
+{
+	max-width: 100%;
+	min-width: 0;
+}
+
+/* ===== v2.078: 권리금 카드 - 상가일 때만 매물정보 아래 표시 ===== */
+.property-premium-card
+{
+	display: none;
+	min-height: 0;
+}
+
+.property-info-card[data-info-mode="commercial"] + .property-premium-card
+{
+	display: block;
+}
+
+.property-premium-grid
+{
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+	gap: 32px;
+	align-items: end;
+}
+
+.property-premium-field
+{
+	min-width: 0;
+}
+
+.property-premium-field .property-form-label
+{
+	display: block;
+	margin-bottom: 12px;
+}
+
+.property-label-optional
+{
+	color: #94a3b8;
+	font-weight: 500;
+}
+
+.property-premium-options
+{
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 30px;
+	margin-top: 30px;
+}
+
+@media (max-width: 720px)
+{
+	.property-premium-grid
+	{
+		grid-template-columns: 1fr;
+	}
+}
+
+
+/* ===== v2.078: 드롭다운 잘림 방지 + 카드 너비 고정 유지 ===== */
+.property-register-card,
+.property-info-card
+{
+	width: 100%;
+	max-width: 100%;
+	min-width: 0;
+	overflow: visible;
+}
+
+.property-info-field,
+.property-inline-grid,
+.property-inline-unit,
+.property-check-row,
+.property-radio-row
+{
+	max-width: 100%;
+	min-width: 0;
+}
+/* ===== v2.078: 매물 종류별 동/호수 입력 ===== */
+.property-dongho-row
+{
+	display: none;
+}
+
+.property-dongho-row.is-visible
+{
+	display: grid;
+}
+
+.property-dongho-field
+{
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	flex-wrap: wrap;
+	min-width: 0;
+}
+
+.property-dongho-input-unit
+{
+	display: grid;
+	grid-template-columns: 34px minmax(0, 1fr);
+	gap: 10px;
+	align-items: center;
+	width: 180px;
+	min-width: 0;
+}
+
+.property-dongho-note
+{
+	color: #64748b;
+	font-size: 14px;
+	font-weight: 500;
+	letter-spacing: -0.12px;
+	white-space: nowrap;
+}
+
+@media (max-width: 720px)
+{
+	.property-facility-row
+	{
+		grid-template-columns: 1fr;
+		gap: 12px;
+	}
+
+	.property-facility-options
+	{
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 16px 22px;
+	}
+
+	.property-dongho-field
+	{
+		align-items: flex-start;
+		flex-direction: column;
+	}
+
+	.property-dongho-input-unit
+	{
+		width: 100%;
+	}
+
+	.property-dongho-note
+	{
+		white-space: normal;
+	}
+}
+
+
+/* ===== v2.078: 층 정보 윗줄 수평 정렬 ===== */
+.property-floor-row
+{
+	align-items: flex-start;
+}
+
+.property-floor-row .property-info-field,
+.property-floor-row .property-inline-grid
+{
+	align-items: flex-start;
+}
+
+.property-floor-row .property-inline-unit
+{
+	align-items: center;
+}
+
+
+/* ===== v2.078: 매물 등록 - 시설 정보 정렬 정리 ===== */
+.property-facility-card
+{
+	min-height: 0;
+}
+
+.property-facility-row
+{
+	display: grid;
+	grid-template-columns: 140px minmax(0, 1fr);
+	gap: 24px;
+	align-items: flex-start;
+	margin-bottom: 24px;
+}
+
+.property-facility-row:last-child
+{
+	margin-bottom: 0;
+}
+
+.property-facility-options
+{
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 18px 28px;
+	align-items: center;
+	min-width: 0;
+	max-width: 100%;
+}
+
+.property-facility-card .property-check-option
+{
+	width: 100%;
+	display: inline-flex;
+	align-items: center;
+	gap: var(--property-register-option-gap);
+	white-space: nowrap;
+}
+
+@media (max-width: 720px)
+{
+	.property-facility-row
+	{
+		grid-template-columns: 1fr;
+		gap: 12px;
+	}
+
+	.property-facility-options
+	{
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 16px 22px;
+	}
+}
+
+
+/* ===== v2.078: 시설정보 주거형 전용 표시 ===== */
+.property-facility-card.is-hidden
+{
+	display: none !important;
+}
+
+
+/* ===== v2.078: 매물 등록 - 관리비 ===== */
+.property-maintenance-card
+{
+	min-height: 0;
+}
+
+.maintenance-form-row
+{
+	display: grid;
+	grid-template-columns: 140px minmax(0, 1fr);
+	gap: 24px;
+	align-items: flex-start;
+	margin-bottom: 28px;
+}
+
+.maintenance-form-row.maintenance-input-row
+{
+	align-items: center;
+}
+
+.maintenance-fixed-under100-row.is-hidden,
+.maintenance-fixed-detail-row.is-hidden
+{
+	display: none !important;
+}
+
+.maintenance-form-row:last-child
+{
+	margin-bottom: 0;
+}
+
+.maintenance-form-field
+{
+	min-width: 0;
+}
+
+.maintenance-tab-group
+{
+	width: 100%;
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 0;
+	padding: 6px;
+	border-radius: 999px;
+	background: #f3f4f6;
+}
+
+.maintenance-tab
+{
+	height: 44px;
+	border: 0;
+	border-radius: 999px;
+	background: transparent;
+	color: #9ca3af;
+	font-size: 16px;
+	font-weight: 800;
+	letter-spacing: -0.18px;
+	cursor: pointer;
+}
+
+.maintenance-tab.active
+{
+	background: #ffffff;
+	color: #111827;
+	box-shadow: 0 1px 4px rgba(15, 23, 42, 0.04);
+}
+
+.maintenance-section
+{
+	display: none;
+}
+
+.maintenance-section.active
+{
+	display: block;
+}
+
+.maintenance-choice-grid,
+.maintenance-include-grid
+{
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 24px 44px;
+	align-items: flex-start;
+}
+
+.maintenance-detail-type-grid
+{
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 24px 44px;
+	align-items: flex-start;
+}
+
+.maintenance-commercial-building-reason
+{
+	justify-self: end;
+}
+
+.maintenance-fee-field
+{
+	display: grid;
+	grid-template-columns: 110px 84px minmax(0, 1fr);
+	gap: 16px;
+	align-items: center;
+}
+
+.maintenance-etc-fee-field
+{
+	grid-template-columns: 90px 90px 74px minmax(0, 1fr);
+}
+
+.maintenance-fee-field .property-unit-input
+{
+	min-width: 0;
+}
+
+.maintenance-fee-field .property-register-input:disabled
+{
+	background: #f3f4f6;
+	color: #9ca3af;
+	-webkit-text-fill-color: #9ca3af;
+	cursor: not-allowed;
+}
+
+.maintenance-notice-box
+{
+	padding: 18px 20px;
+	background: #f3f4f6;
+	color: #111827;
+	font-size: 15px;
+	font-weight: 500;
+	letter-spacing: -0.12px;
+	line-height: 1.5;
+}
+
+@media (max-width: 720px)
+{
+	.maintenance-form-row
+	{
+		grid-template-columns: 1fr;
+		gap: 12px;
+	}
+
+	.maintenance-choice-grid,
+	.maintenance-include-grid,
+	.maintenance-detail-type-grid
+	{
+		grid-template-columns: 1fr;
+		gap: 16px;
+	}
+
+	.maintenance-fee-field,
+	.maintenance-etc-fee-field
+	{
+		grid-template-columns: 1fr;
+		gap: 12px;
+	}
+
+	.maintenance-tab
+	{
+		font-size: 14px;
+	}
+}
+
+
+.card-badge[data-type="다가구주택"],
+.detail-summary-type-badge[data-type="다가구주택"]
+{
+    background: rgba(59,130,246,0.06);
+    color: #1E3A8A;
+    box-shadow: inset 0 0 0 1px rgba(30,58,138,0.08);
+}
+
+
+
+/* ===== v2.111: 매물 등록 - 상세 정보 ===== */
+.property-detail-card
+{
+	min-height: 0;
+}
+
+.property-detail-row
+{
+	display: grid;
+	grid-template-columns: 140px minmax(0, 1fr);
+	gap: 24px;
+	align-items: flex-start;
+	margin-bottom: 32px;
+}
+
+.property-detail-row:last-child
+{
+	margin-bottom: 0;
+}
+
+.property-detail-row.property-detail-date-row
+{
+	margin-bottom: 18px;
+}
+
+.property-detail-date-check-row
+{
+	margin-top: -6px;
+	margin-bottom: 32px;
+}
+
+.property-detail-input,
+.property-detail-textarea
+{
+	width: 100%;
+	border: 1px solid #d7dee8;
+	border-radius: 0;
+	background: #ffffff;
+	color: #111827;
+	font-size: 16px;
+	font-weight: 500;
+	letter-spacing: -0.16px;
+	outline: none;
+	box-shadow: none;
+}
+
+.property-detail-input
+{
+	height: 54px;
+	padding: 0 16px;
+}
+
+.property-detail-input::placeholder,
+.property-detail-textarea::placeholder
+{
+	color: #a8b0bc;
+}
+
+.property-detail-textarea
+{
+	min-height: 256px;
+	padding: 16px;
+	resize: vertical;
+	line-height: 1.55;
+}
+
+.property-detail-text-count
+{
+	margin-top: 8px;
+	text-align: right;
+	font-size: 14px;
+	font-weight: 500;
+	color: #8b95a1;
+	letter-spacing: -0.12px;
+}
+
+.property-upload-box
+{
+	width: 100%;
+	min-height: 132px;
+	border: 2px dashed #e2e7ee;
+	border-radius: 0;
+	background: #ffffff;
+	color: #a8b0bc;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 12px;
+	text-align: center;
+	font-size: 16px;
+	font-weight: 500;
+	letter-spacing: -0.16px;
+	cursor: pointer;
+}
+
+.property-upload-box i
+{
+	font-size: 28px;
+	color: #d1d7df;
+}
+
+.property-owner-phone-input
+{
+	background: #f3f4f6;
+	color: #9ca3af;
+}
+
+.property-owner-phone-notice
+{
+	margin-top: 8px;
+	padding: 18px 18px;
+	border-radius: 8px;
+	background: #f3f4f6;
+	color: #374151;
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 1.5;
+	letter-spacing: -0.12px;
+	display: flex;
+	align-items: flex-start;
+	gap: 10px;
+}
+
+.property-owner-phone-notice i
+{
+	margin-top: 2px;
+	color: #111827;
+	font-size: 14px;
+}
+
+@media (max-width: 720px)
+{
+	.property-detail-row
+	{
+		grid-template-columns: 1fr;
+		gap: 12px;
+	}
+
+	.property-detail-date-check-row
+	{
+		margin-top: 0;
+	}
+}
+
+
+
+/* ===== v2.111: 매물 정보 / 관리비 / 상세 정보 정렬 보정 ===== */
+
+/* 매물 정보: 라벨과 오른쪽 입력 영역 수평 중앙 정렬 */
+.property-info-row
+{
+	align-items: center;
+}
+
+/* 층 정보는 기존처럼 윗줄 기준 유지 */
+.property-floor-row
+{
+	align-items: flex-start;
+}
+
+/* 관리비: 기본은 가운데, 부과 기준만 탑라인 */
+.maintenance-form-row
+{
+	align-items: center;
+}
+
+.maintenance-form-row.maintenance-base-row
+{
+	align-items: flex-start;
+}
+
+/* 상세 정보: 라벨과 오른쪽 항목 세로 중앙 정렬 */
+.property-detail-row
+{
+	align-items: center;
+}
+
+.property-detail-row .property-form-control,
+.property-detail-row .property-info-field
+{
+	align-self: center;
+}
+
+/* 상세 설명 textarea는 큰 박스 기준 중앙 정렬 */
+.property-detail-row:has(#propertyDetailDescriptionInput)
+{
+	align-items: center;
+}
+
+
+
+/* ===== v2.111: 관리비 세부 행 정렬 보정 ===== */
+.maintenance-form-row.maintenance-top-row
+{
+	align-items: flex-start;
+}
+
+.maintenance-fee-row > .property-form-label
+{
+	position: relative;
+	top: 1px;
+}
+
+
+
+/* ===== v2.111: 시설 정보 체크박스 높이/간격 통일 ===== */
+.property-facility-card .property-facility-options
+{
+	align-items: stretch;
+}
+
+.property-facility-card .property-check-option
+{
+	min-height: 28px;
+	align-items: center;
+	line-height: 1.2;
+}
+
+
+
+/* ===== v2.111: 시설 정보 라벨/체크박스 탑라인 정렬 ===== */
+.property-facility-row
+{
+	align-items: flex-start;
+}
+
+.property-facility-row .property-form-label
+{
+	align-self: flex-start;
+	padding-top: 1px;
+	line-height: 1.2;
+}
+
+.property-facility-card .property-check-option
+{
+	line-height: 1.2;
+}
+
+
+
+/* ===== v2.111: 시설 정보 체크박스 행 높이 균일화 ===== */
+.property-facility-card .property-facility-options
+{
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	row-gap: 10px;
+	column-gap: 28px;
+	align-items: start;
+}
+
+.property-facility-card .property-check-option
+{
+	height: 32px;
+	min-height: 32px;
+	display: inline-flex;
+	align-items: center;
+	line-height: 1.2;
+}
+
+.property-facility-row
+{
+	align-items: flex-start;
+}
+
+
+
+/* ===== v2.111: 시설 정보 왼쪽 라벨을 첫 번째 체크박스 글자 높이에 맞춤 ===== */
+.property-facility-row
+{
+	align-items: flex-start;
+}
+
+.property-facility-row .property-form-label
+{
+	display: flex;
+	align-items: center;
+	min-height: 32px;
+	height: 32px;
+	padding-top: 0;
+	line-height: 1.2;
+}
+
+.property-facility-card .property-check-option
+{
+	height: 32px;
+	min-height: 32px;
+	display: inline-flex;
+	align-items: center;
+	line-height: 1.2;
+}
+
+
+
+/* ===== v2.111: 매물 등록 - 중개사무소 설정 ===== */
+.property-agency-card
+{
+	min-height: 0;
+}
+
+.property-agency-row
+{
+	display: grid;
+	grid-template-columns: 140px minmax(0, 1fr);
+	gap: 24px;
+	align-items: flex-start;
+	margin-bottom: 32px;
+}
+
+.property-agency-row:last-child
+{
+	margin-bottom: 0;
+}
+
+.property-agency-textarea
+{
+	width: 100%;
+	min-height: 142px;
+	border: 1px solid #d7dee8;
+	border-radius: 0;
+	background: #ffffff;
+	color: #111827;
+	font-size: 16px;
+	font-weight: 500;
+	letter-spacing: -0.16px;
+	line-height: 1.55;
+	padding: 16px;
+	resize: vertical;
+	outline: none;
+	box-shadow: none;
+}
+
+.property-agency-textarea::placeholder
+{
+	color: #a8b0bc;
+}
+
+.property-agency-text-count
+{
+	margin-top: 8px;
+	text-align: right;
+	font-size: 14px;
+	font-weight: 500;
+	color: #8b95a1;
+	letter-spacing: -0.12px;
+}
+
+@media (max-width: 720px)
+{
+	.property-agency-row
+	{
+		grid-template-columns: 1fr;
+		gap: 12px;
+	}
+}
+
+
+
+/* ===== v2.111: 매물 등록 - 등록자 정보 ===== */
+.property-registrant-card
+{
+	min-height: 0;
+}
+
+.property-registrant-help
+{
+	color: #6b7280;
+	font-size: 14px;
+	font-weight: 500;
+	text-decoration: underline;
+	letter-spacing: -0.12px;
+}
+
+.property-registrant-inline
+{
+	display: flex;
+	align-items: center;
+	gap: 18px;
+	flex-wrap: wrap;
+}
+
+.property-registrant-field
+{
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.property-registrant-field-label
+{
+	font-size: 16px;
+	font-weight: 900;
+	color: #111827;
+	white-space: nowrap;
+}
+
+.property-registrant-input
+{
+	width: 240px;
+	height: 42px;
+	border: 1px solid #d7dee8;
+	border-radius: 0;
+	background: #ffffff;
+	color: #111827;
+	font-size: 16px;
+	font-weight: 600;
+	letter-spacing: -0.16px;
+	padding: 0 12px;
+	outline: none;
+	box-shadow: none;
+}
+
+.property-registrant-input.short
+{
+	width: 150px;
+}
+
+.property-registrant-input::placeholder
+{
+	color: #a8b0bc;
+}
+
+.property-registrant-note
+{
+	margin-top: 10px;
+	color: #8b95a1;
+	font-size: 15px;
+	font-weight: 500;
+	letter-spacing: -0.12px;
+}
+
+.property-registrant-license
+{
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	font-size: 16px;
+	font-weight: 700;
+	color: #111827;
+	white-space: nowrap;
+}
+
+.property-registrant-license input
+{
+	width: 22px;
+	height: 22px;
+	margin: 0;
+	accent-color: #2563eb;
+}
+
+@media (max-width: 900px)
+{
+	.property-registrant-inline
+	{
+		flex-direction: column;
+		align-items: flex-start;
+	}
+
+	.property-registrant-input,
+	.property-registrant-input.short
+	{
+		width: 100%;
+	}
+}
+
+
+
+/* ===== v2.111: 등록자 정보 카드 상단 디자인 톤 통일 ===== */
+.property-registrant-card
+{
+	min-height: 0;
+}
+
+.property-registrant-form-row
+{
+	display: grid;
+	grid-template-columns: 140px minmax(0, 1fr);
+	gap: 24px;
+	align-items: center;
+	margin-bottom: 28px;
+}
+
+.property-registrant-form-row:last-child
+{
+	margin-bottom: 0;
+}
+
+.property-registrant-form-field
+{
+	min-width: 0;
+}
+
+.property-registrant-inline
+{
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	flex-wrap: wrap;
+}
+
+.property-registrant-field
+{
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+	min-width: 0;
+}
+
+.property-registrant-field-label
+{
+	font-size: 16px;
+	font-weight: 800;
+	color: #111827;
+	letter-spacing: -0.18px;
+	white-space: nowrap;
+}
+
+.property-registrant-input
+{
+	width: 240px;
+	height: 58px;
+	border: 1px solid #d8dee8;
+	border-radius: 0;
+	background: #ffffff;
+	color: #111827;
+	font-size: 16px;
+	font-weight: 500;
+	letter-spacing: -0.16px;
+	padding: 0 16px;
+	outline: none;
+	box-shadow: none;
+}
+
+.property-registrant-input.short
+{
+	width: 150px;
+}
+
+.property-registrant-input::placeholder
+{
+	color: #a8b0bc;
+}
+
+.property-registrant-help,
+.property-registrant-note
+{
+	margin-top: 8px;
+	color: #8b95a1;
+	font-size: 14px;
+	font-weight: 500;
+	letter-spacing: -0.12px;
+	line-height: 1.4;
+}
+
+.property-registrant-help
+{
+	text-decoration: underline;
+}
+
+.property-registrant-license
+{
+	display: inline-flex;
+	align-items: center;
+	gap: var(--property-register-option-gap);
+	font-size: var(--property-register-option-font-size);
+	font-weight: var(--property-register-option-font-weight);
+	color: #111827;
+	letter-spacing: var(--property-register-option-letter-spacing);
+	white-space: nowrap;
+	cursor: pointer;
+}
+
+.property-registrant-license input
+{
+	width: var(--property-register-info-checkbox-size);
+	height: var(--property-register-info-checkbox-size);
+	margin: 0;
+	accent-color: #2563eb;
+}
+
+@media (max-width: 720px)
+{
+	.property-registrant-form-row
+	{
+		grid-template-columns: 1fr;
+		gap: 12px;
+	}
+
+	.property-registrant-inline
+	{
+		flex-direction: column;
+		align-items: stretch;
+	}
+
+	.property-registrant-field
+	{
+		width: 100%;
+		flex-direction: column;
+		align-items: flex-start;
+	}
+
+	.property-registrant-input,
+	.property-registrant-input.short
+	{
+		width: 100%;
+	}
+}
+
+
+
+/* ===== v2.111: 등록자 정보 2줄 구조 정리 ===== */
+.property-registrant-inline
+{
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	flex-wrap: wrap;
+}
+
+.property-registrant-input:disabled
+{
+	background: #f3f4f6;
+	color: #9ca3af;
+	-webkit-text-fill-color: #9ca3af;
+	cursor: not-allowed;
+}
+
+
+
+/* ===== v2.111: 등록자 정보 라인 정렬 / 담당자 너비 조정 ===== */
+.property-registrant-form-row
+{
+	align-items: flex-start;
+}
+
+.property-registrant-form-row .property-form-label
+{
+	display: flex;
+	align-items: center;
+	min-height: 58px;
+	height: 58px;
+	padding-top: 0;
+	line-height: 1.2;
+}
+
+.property-registrant-inline
+{
+	align-items: center;
+}
+
+.property-registrant-field
+{
+	height: 58px;
+	align-items: center;
+}
+
+.property-registrant-input.short#registrantManagerNameInput
+{
+	width: 150px;
+}
+
+
+
+/* ===== v2.111: 등록자 정보 최종 4줄 구조 ===== */
+.property-registrant-agency-row
+{
+	align-items: flex-start;
+}
+
+.property-registrant-agency-row > .property-form-label
+{
+	display: flex;
+	align-items: center;
+	min-height: 58px;
+	height: 58px;
+	padding-top: 0;
+	line-height: 1.2;
+}
+
+.property-registrant-stack
+{
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.property-registrant-stack .property-registrant-inline
+{
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	flex-wrap: wrap;
+	min-height: 58px;
+}
+
+.property-registrant-input[readonly]
+{
+	background: #f9fafb;
+	color: #111827;
+	-webkit-text-fill-color: #111827;
+}
+
+
+
+/* ===== v2.111: 등록자 정보 라벨 포함 4줄 구조 ===== */
+.property-registrant-stack
+{
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.property-registrant-stack .property-registrant-inline
+{
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	flex-wrap: wrap;
+	min-height: 58px;
+}
+
+.property-registrant-field
+{
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+	min-width: 0;
+	height: 58px;
+}
+
+.property-registrant-field-label
+{
+	min-width: 52px;
+	font-size: 16px;
+	font-weight: 800;
+	color: #111827;
+	letter-spacing: -0.18px;
+	white-space: nowrap;
+}
+
+.property-registrant-input[readonly]
+{
+	background: #f9fafb;
+	color: #111827;
+	-webkit-text-fill-color: #111827;
+}
+
+
+
+/* ===== v2.111: 등록자 정보 업소명/대표자 간격 조정 ===== */
+.property-registrant-office-line
+{
+	column-gap: 42px !important;
+}
+
+
+
+/* ===== v2.111: 매물 등록 input 높이 단일 관리 ===== */
+.property-register-page input[type="text"],
+.property-register-page input[type="tel"],
+.property-register-page input[type="number"],
+.property-register-page input[type="email"],
+.property-register-page input[type="url"],
+.property-register-page input[type="date"],
+.property-register-page select,
+.property-register-input,
+.property-register-select,
+.property-detail-input,
+.property-registrant-input,
+.broker-apply-input
+{
+	height: var(--property-register-input-height) !important;
+	min-height: var(--property-register-input-height) !important;
+	box-sizing: border-box;
+}
+
+.property-register-page textarea
+{
+	box-sizing: border-box;
 }
 
 </style>
@@ -8356,11 +10839,808 @@ body.admin-page-open .map-wrap
 			<div class="admin-empty">신청 목록을 불러오세요.</div>
 		</div>
 	</section>
+	<section class="property-register-page" id="propertyRegisterPage" aria-hidden="true">
+		<div class="property-register-inner">
+			<div class="property-register-head">
+				<h1 class="property-register-title">매물 등록</h1>
+				<div class="property-register-top-actions">
+					<button type="button" class="property-register-top-btn" id="loadExistingPropertyBtn">기존 매물 불러오기</button>
+					<button type="button" class="property-register-top-btn" id="quickPropertyRegisterBtn">간편 매물 등록</button>
+				</div>
+			</div>
+			<div class="property-register-card">
+				<h2 class="property-register-section-title">기본 정보</h2>
+
+				<div class="property-form-row">
+					<label class="property-form-label" for="propertyAddressInput">주소<span class="property-required">*</span></label>
+					<div class="property-form-control property-address-wrap">
+						<input type="text" class="property-register-input" id="propertyAddressInput" placeholder="주소를 입력하세요" autocomplete="off" />
+					</div>
+				</div>
+
+				<div class="property-form-row">
+					<label class="property-form-label" for="propertyTypeSelect">매물 종류<span class="property-required">*</span></label>
+					<div class="property-form-control property-select-wrap property-register-dropdown property-type-dropdown" data-register-dropdown>
+						<select class="property-register-select property-register-native-select" id="propertyTypeSelect" tabindex="-1" aria-hidden="true">
+							<option value="">매물 종류 선택</option>
+							<option value="apartment">아파트</option>
+							<option value="officetel">오피스텔</option>
+							<option value="room">원룸 / 투룸</option>
+							<option value="villa">빌라</option>
+							<option value="house">단독주택</option>
+							<option value="multi_family_house">다가구주택</option>
+							<option value="store">상가</option>
+							<option value="office">사무실</option>
+							<option value="building">건물</option>
+							<option value="factory_warehouse">공장 / 창고</option>
+							<option value="hotel">호텔</option>
+							<option value="pension">펜션</option>
+							<option value="land">토지</option>
+						</select>
+						<button type="button" class="property-register-dropdown-trigger" data-register-dropdown-trigger aria-haspopup="listbox" aria-expanded="false">
+							<span data-register-dropdown-label>매물 종류 선택</span>
+							<i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+						</button>
+						<div class="property-register-dropdown-menu" data-register-dropdown-menu role="listbox">
+							<button type="button" class="property-register-dropdown-option" data-value="apartment" role="option">아파트</button>
+							<button type="button" class="property-register-dropdown-option" data-value="officetel" role="option">오피스텔</button>
+							<button type="button" class="property-register-dropdown-option" data-value="room" role="option">원룸 / 투룸</button>
+							<button type="button" class="property-register-dropdown-option" data-value="villa" role="option">빌라</button>
+							<button type="button" class="property-register-dropdown-option" data-value="house" role="option">단독주택</button>
+							<button type="button" class="property-register-dropdown-option" data-value="multi_family_house" role="option">다가구주택</button>
+							<button type="button" class="property-register-dropdown-option" data-value="store" role="option">상가</button>
+							<button type="button" class="property-register-dropdown-option" data-value="office" role="option">사무실</button>
+							<button type="button" class="property-register-dropdown-option" data-value="building" role="option">건물</button>
+							<button type="button" class="property-register-dropdown-option" data-value="factory_warehouse" role="option">공장 / 창고</button>
+							<button type="button" class="property-register-dropdown-option" data-value="hotel" role="option">호텔</button>
+							<button type="button" class="property-register-dropdown-option" data-value="pension" role="option">펜션</button>
+							<button type="button" class="property-register-dropdown-option" data-value="land" role="option">토지</button>
+						</div>
+					</div>
+				</div>
+
+				<div class="property-form-row property-dongho-row" id="propertyDongHoRow">
+					<label class="property-form-label">동 / 호수</label>
+					<div class="property-form-control property-dongho-field">
+						<div class="property-dongho-input-unit">
+							<span class="property-inline-label">동</span>
+							<input type="text" class="property-register-input" id="propertyDongInput" autocomplete="off" />
+						</div>
+						<div class="property-dongho-input-unit">
+							<span class="property-inline-label">호수</span>
+							<input type="text" class="property-register-input" id="propertyHoInput" autocomplete="off" />
+						</div>
+						<span class="property-dongho-note">입력칸 호수는 노출되지 않습니다. (정보확인용)</span>
+					</div>
+				</div>
+
+
+				<div class="property-form-row">
+					<label class="property-form-label" for="buildingUseSelect">건축물 용도<span class="property-required">*</span></label>
+					<div class="property-form-control property-select-wrap property-register-dropdown" data-register-dropdown>
+						<select class="property-register-select property-register-native-select" id="buildingUseSelect" tabindex="-1" aria-hidden="true">
+							<option value="">건축물 용도 선택</option>
+							<option value="단독주택">단독주택</option>
+							<option value="공동주택">공동주택</option>
+							<option value="제1종 근린생활시설">제1종 근린생활시설</option>
+							<option value="제2종 근린생활시설">제2종 근린생활시설</option>
+							<option value="문화 및 집회시설">문화 및 집회시설</option>
+							<option value="종교시설">종교시설</option>
+							<option value="판매시설">판매시설</option>
+							<option value="운수시설">운수시설</option>
+							<option value="의료시설">의료시설</option>
+							<option value="교육연구시설">교육연구시설</option>
+							<option value="노유자시설">노유자시설</option>
+							<option value="수련시설">수련시설</option>
+							<option value="운동시설">운동시설</option>
+							<option value="업무시설">업무시설</option>
+							<option value="숙박시설">숙박시설</option>
+							<option value="위락시설">위락시설</option>
+							<option value="공장">공장</option>
+							<option value="창고시설">창고시설</option>
+							<option value="위험물저장 및 처리시설">위험물저장 및 처리시설</option>
+							<option value="자동차관련 시설">자동차관련 시설</option>
+							<option value="동물 및 식물관련 시설">동물 및 식물관련 시설</option>
+							<option value="자원 순환관련시설">자원 순환관련시설</option>
+							<option value="교정 및 군사시설">교정 및 군사시설</option>
+							<option value="방송통신시설">방송통신시설</option>
+							<option value="발전시설">발전시설</option>
+							<option value="묘지관련 시설">묘지관련 시설</option>
+							<option value="관광휴게시설">관광휴게시설</option>
+							<option value="장례시설">장례시설</option>
+							<option value="야영장 시설">야영장 시설</option>
+							<option value="미등기건물">미등기건물</option>
+							<option value="그 밖에 토지의 정착물">그 밖에 토지의 정착물</option>
+						</select>
+						<button type="button" class="property-register-dropdown-trigger" data-register-dropdown-trigger aria-haspopup="listbox" aria-expanded="false">
+							<span data-register-dropdown-label>건축물 용도 선택</span>
+							<i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+						</button>
+						<div class="property-register-dropdown-menu" data-register-dropdown-menu role="listbox">
+							<button type="button" class="property-register-dropdown-option" data-value="단독주택" role="option">단독주택</button>
+							<button type="button" class="property-register-dropdown-option" data-value="공동주택" role="option">공동주택</button>
+							<button type="button" class="property-register-dropdown-option" data-value="제1종 근린생활시설" role="option">제1종 근린생활시설</button>
+							<button type="button" class="property-register-dropdown-option" data-value="제2종 근린생활시설" role="option">제2종 근린생활시설</button>
+							<button type="button" class="property-register-dropdown-option" data-value="문화 및 집회시설" role="option">문화 및 집회시설</button>
+							<button type="button" class="property-register-dropdown-option" data-value="종교시설" role="option">종교시설</button>
+							<button type="button" class="property-register-dropdown-option" data-value="판매시설" role="option">판매시설</button>
+							<button type="button" class="property-register-dropdown-option" data-value="운수시설" role="option">운수시설</button>
+							<button type="button" class="property-register-dropdown-option" data-value="의료시설" role="option">의료시설</button>
+							<button type="button" class="property-register-dropdown-option" data-value="교육연구시설" role="option">교육연구시설</button>
+							<button type="button" class="property-register-dropdown-option" data-value="노유자시설" role="option">노유자시설</button>
+							<button type="button" class="property-register-dropdown-option" data-value="수련시설" role="option">수련시설</button>
+							<button type="button" class="property-register-dropdown-option" data-value="운동시설" role="option">운동시설</button>
+							<button type="button" class="property-register-dropdown-option" data-value="업무시설" role="option">업무시설</button>
+							<button type="button" class="property-register-dropdown-option" data-value="숙박시설" role="option">숙박시설</button>
+							<button type="button" class="property-register-dropdown-option" data-value="위락시설" role="option">위락시설</button>
+							<button type="button" class="property-register-dropdown-option" data-value="공장" role="option">공장</button>
+							<button type="button" class="property-register-dropdown-option" data-value="창고시설" role="option">창고시설</button>
+							<button type="button" class="property-register-dropdown-option" data-value="위험물저장 및 처리시설" role="option">위험물저장 및 처리시설</button>
+							<button type="button" class="property-register-dropdown-option" data-value="자동차관련 시설" role="option">자동차관련 시설</button>
+							<button type="button" class="property-register-dropdown-option" data-value="동물 및 식물관련 시설" role="option">동물 및 식물관련 시설</button>
+							<button type="button" class="property-register-dropdown-option" data-value="자원 순환관련시설" role="option">자원 순환관련시설</button>
+							<button type="button" class="property-register-dropdown-option" data-value="교정 및 군사시설" role="option">교정 및 군사시설</button>
+							<button type="button" class="property-register-dropdown-option" data-value="방송통신시설" role="option">방송통신시설</button>
+							<button type="button" class="property-register-dropdown-option" data-value="발전시설" role="option">발전시설</button>
+							<button type="button" class="property-register-dropdown-option" data-value="묘지관련 시설" role="option">묘지관련 시설</button>
+							<button type="button" class="property-register-dropdown-option" data-value="관광휴게시설" role="option">관광휴게시설</button>
+							<button type="button" class="property-register-dropdown-option" data-value="장례시설" role="option">장례시설</button>
+							<button type="button" class="property-register-dropdown-option" data-value="야영장 시설" role="option">야영장 시설</button>
+							<button type="button" class="property-register-dropdown-option" data-value="미등기건물" role="option">미등기건물</button>
+							<button type="button" class="property-register-dropdown-option" data-value="그 밖에 토지의 정착물" role="option">그 밖에 토지의 정착물</button>
+						</div>
+					</div>
+				</div>
+
+				<div class="property-form-row" id="exclusiveAreaRow">
+					<label class="property-form-label" id="exclusiveAreaLabel" for="exclusiveAreaM2Input">전용 면적<span class="property-required">*</span></label>
+					<div class="property-form-control property-area-pair">
+						<div class="property-unit-input">
+							<input type="number" class="property-register-input property-area-m2" id="exclusiveAreaM2Input" data-py-target="exclusiveAreaPyInput" placeholder="0" min="0" step="0.01" />
+							<span class="property-unit-label">m²</span>
+						</div>
+						<div class="property-area-eq">=</div>
+						<div class="property-unit-input">
+							<input type="number" class="property-register-input property-area-py" id="exclusiveAreaPyInput" data-m2-target="exclusiveAreaM2Input" placeholder="0" min="0" step="0.01" />
+							<span class="property-unit-label">평</span>
+						</div>
+					</div>
+				</div>
+
+				<div class="property-form-row" id="supplyAreaRow">
+					<label class="property-form-label" id="supplyAreaLabel" for="supplyAreaM2Input">공급 면적</label>
+					<div class="property-form-control property-area-pair">
+						<div class="property-unit-input">
+							<input type="number" class="property-register-input property-area-m2" id="supplyAreaM2Input" data-py-target="supplyAreaPyInput" placeholder="0" min="0" step="0.01" />
+							<span class="property-unit-label">m²</span>
+						</div>
+						<div class="property-area-eq">=</div>
+						<div class="property-unit-input">
+							<input type="number" class="property-register-input property-area-py" id="supplyAreaPyInput" data-m2-target="supplyAreaM2Input" placeholder="0" min="0" step="0.01" />
+							<span class="property-unit-label">평</span>
+						</div>
+					</div>
+				</div>
+
+				<div class="property-form-row" id="landAreaRow" style="display:none;">
+					<label class="property-form-label" for="landAreaM2Input">대지 면적<span class="property-required">*</span></label>
+					<div class="property-form-control property-area-pair">
+						<div class="property-unit-input">
+							<input type="number" class="property-register-input property-area-m2" id="landAreaM2Input" data-py-target="landAreaPyInput" placeholder="0" min="0" step="0.01" />
+							<span class="property-unit-label">m²</span>
+						</div>
+						<div class="property-area-eq">=</div>
+						<div class="property-unit-input">
+							<input type="number" class="property-register-input property-area-py" id="landAreaPyInput" data-m2-target="landAreaM2Input" placeholder="0" min="0" step="0.01" />
+							<span class="property-unit-label">평</span>
+						</div>
+					</div>
+				</div>
+
+				<div class="property-form-row" id="landRoadRow" style="display:none;">
+					<label class="property-form-label" for="landRoadInput">도로조건</label>
+					<div class="property-form-control">
+						<input type="text" class="property-register-input" id="landRoadInput" placeholder="예: 2차선 접함" autocomplete="off" />
+					</div>
+				</div>
+			</div>
+
+			<div class="property-register-card property-price-card">
+				<h2 class="property-register-section-title">가격</h2>
+
+				<div class="property-form-row">
+					<label class="property-form-label">거래 유형<span class="property-required">*</span></label>
+					<div class="property-form-control">
+						<div class="property-deal-checks">
+							<label class="property-deal-option"><input type="checkbox" class="property-deal-check" value="sale" /> 매매</label>
+							<label class="property-deal-option"><input type="checkbox" class="property-deal-check" value="jeonse" /> 전세</label>
+							<label class="property-deal-option"><input type="checkbox" class="property-deal-check" value="monthly" /> 월세</label>
+							<label class="property-deal-option"><input type="checkbox" class="property-deal-check" value="yearly" /> 년세</label>
+							<label class="property-deal-option"><input type="checkbox" class="property-deal-check" value="short" /> 단기</label>
+						</div>
+					</div>
+				</div>
+				<p class="property-price-guide">거래 유형이 2개 이상이면 모두 선택해 주세요. 따로 등록하면 중복 매물로 차단될 수 있어요.</p>
+				<div class="property-price-dynamic" id="propertyPriceDynamic"></div>
+			</div>
+
+			<div class="property-register-card property-info-card" id="propertyInfoCard" data-info-mode="residential">
+				<h2 class="property-register-section-title">매물 정보</h2>
+
+				<div class="property-info-row property-approval-row">
+					<label class="property-form-label" for="propertyApprovalDateInput">사용승인일<span class="property-required">*</span></label>
+					<div class="property-info-field">
+						<div class="property-date-input-wrap">
+							<input type="text" class="property-register-input property-date-text-input" id="propertyApprovalDateInput" maxlength="10" placeholder="YYYY-MM-DD" autocomplete="off" />
+							<button type="button" class="property-date-picker-btn" id="propertyApprovalDatePickerBtn" aria-label="사용승인일 달력 열기"><i class="fa-regular fa-calendar"></i></button>
+							<input type="date" class="property-date-native-picker" id="propertyApprovalDatePicker" max="9999-12-31" tabindex="-1" aria-hidden="true" />
+						</div>
+					</div>
+				</div>
+
+				<div class="property-info-row property-room-row">
+					<label class="property-form-label">방 / 욕실<span class="property-required">*</span></label>
+					<div class="property-info-field property-inline-grid">
+						<div class="property-inline-unit">
+							<span class="property-inline-label">방</span>
+							<div class="property-unit-input"><input type="number" class="property-register-input" id="propertyRoomCountInput" placeholder="0" min="0" /><span class="property-unit-label">개</span></div>
+						</div>
+						<div class="property-inline-unit">
+							<span class="property-inline-label">욕실</span>
+							<div class="property-unit-input"><input type="number" class="property-register-input" id="propertyBathCountInput" placeholder="0" min="0" /><span class="property-unit-label">개</span></div>
+						</div>
+					</div>
+				</div>
+
+				<div class="property-info-row property-floor-row">
+					<label class="property-form-label">층 정보</label>
+					<div class="property-info-field">
+						<div class="property-inline-grid">
+							<div class="property-inline-unit">
+								<span class="property-inline-label">전체</span>
+								<div class="property-unit-input"><input type="number" class="property-register-input" id="propertyTotalFloorInput" placeholder="1" /><span class="property-unit-label">층</span></div>
+							</div>
+							<div class="property-inline-unit">
+								<span class="property-inline-label">해당</span>
+								<div class="property-unit-input"><input type="number" class="property-register-input" id="propertyCurrentFloorInput" placeholder="0" /><span class="property-unit-label">층</span></div>
+							</div>
+						</div>
+						<div class="property-info-sub-options property-check-row property-floor-display-options">
+							<label class="property-check-option"><input type="checkbox" id="propertyBasementCheck" /> 지하</label>
+							<label class="property-check-option"><input type="checkbox" id="propertySemiBasementCheck" /> 반지하</label>
+							<span class="property-floor-level-inline">
+								<label class="property-check-option"><input type="checkbox" id="propertyFloorLevelUseCheck" /> 저/중/고로 표시</label>
+								<label class="property-radio-option"><input type="radio" name="propertyFloorLevel" value="low" /> 저층</label>
+								<label class="property-radio-option"><input type="radio" name="propertyFloorLevel" value="middle" /> 중층</label>
+								<label class="property-radio-option"><input type="radio" name="propertyFloorLevel" value="high" /> 고층</label>
+							</span>
+							<label class="property-check-option property-building-whole-inline"><input type="checkbox" id="propertyWholeBuildingCheck" /> 건물 전체로 표시</label>
+						</div>
+					</div>
+				</div>
+
+				<div class="property-info-row property-household-count-row" id="propertyHouseholdCountRow" style="display:none;">
+					<label class="property-form-label" for="propertyHouseholdCountInput">총 세대수</label>
+					<div class="property-info-field property-inline-grid">
+						<div class="property-inline-unit">
+							<div class="property-unit-input"><input type="number" class="property-register-input" id="propertyHouseholdCountInput" placeholder="0" min="0" /><span class="property-unit-label">세대</span></div>
+						</div>
+					</div>
+				</div>
+
+				<div class="property-info-row property-direction-row">
+					<label class="property-form-label" for="propertyDirectionSelect">방향<span class="property-required">*</span></label>
+					<div class="property-info-field property-form-control property-select-wrap property-register-dropdown" data-register-dropdown>
+						<select class="property-register-select property-register-native-select" id="propertyDirectionSelect" tabindex="-1" aria-hidden="true">
+							<option value="">방향 선택</option>
+							<option value="동향">동향</option><option value="서향">서향</option><option value="남향">남향</option><option value="북향">북향</option>
+							<option value="남동향">남동향</option><option value="남서향">남서향</option><option value="북동향">북동향</option><option value="북서향">북서향</option>
+						</select>
+						<button type="button" class="property-register-dropdown-trigger" data-register-dropdown-trigger aria-haspopup="listbox" aria-expanded="false"><span data-register-dropdown-label>방향 선택</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
+						<div class="property-register-dropdown-menu" data-register-dropdown-menu role="listbox">
+							<button type="button" class="property-register-dropdown-option" data-value="동향" role="option">동향</button><button type="button" class="property-register-dropdown-option" data-value="서향" role="option">서향</button><button type="button" class="property-register-dropdown-option" data-value="남향" role="option">남향</button><button type="button" class="property-register-dropdown-option" data-value="북향" role="option">북향</button>
+							<button type="button" class="property-register-dropdown-option" data-value="남동향" role="option">남동향</button><button type="button" class="property-register-dropdown-option" data-value="남서향" role="option">남서향</button><button type="button" class="property-register-dropdown-option" data-value="북동향" role="option">북동향</button><button type="button" class="property-register-dropdown-option" data-value="북서향" role="option">북서향</button>
+						</div>
+					</div>
+				</div>
+
+				<div class="property-info-row property-loan-row">
+					<label class="property-form-label">대출<span class="property-required">*</span></label>
+					<div class="property-radio-row"><label class="property-radio-option"><input type="radio" name="propertyLoan" value="check" /> 확인 필요</label><label class="property-radio-option"><input type="radio" name="propertyLoan" value="possible" /> 가능</label><label class="property-radio-option"><input type="radio" name="propertyLoan" value="impossible" /> 불가능</label></div>
+				</div>
+
+				<div class="property-info-row property-pet-row">
+					<label class="property-form-label">반려동물 가능<span class="property-required">*</span></label>
+					<div class="property-radio-row"><label class="property-radio-option"><input type="radio" name="propertyPet" value="check" /> 확인 필요</label><label class="property-radio-option"><input type="radio" name="propertyPet" value="possible" /> 가능</label><label class="property-radio-option"><input type="radio" name="propertyPet" value="impossible" /> 불가능</label></div>
+				</div>
+
+				<div class="property-info-row property-parking-row">
+					<label class="property-form-label">주차<span class="property-required">*</span></label>
+					<div class="property-info-field">
+						<div class="property-radio-row"><label class="property-radio-option"><input type="radio" name="propertyParking" value="possible" /> 가능</label><label class="property-radio-option"><input type="radio" name="propertyParking" value="impossible" /> 불가능</label></div>
+						<div class="property-parking-detail" id="propertyParkingDetail">
+							<div class="property-inline-grid"><div class="property-inline-unit"><span class="property-inline-label">총</span><div class="property-unit-input"><input type="number" class="property-register-input" id="propertyParkingTotalInput" placeholder="0" min="0" /><span class="property-unit-label">대</span></div></div><div class="property-inline-unit"><span class="property-inline-label">세대당</span><div class="property-unit-input"><input type="number" class="property-register-input" id="propertyParkingPerInput" placeholder="0" min="0" step="0.01" /><span class="property-unit-label">대</span></div></div></div>
+						</div>
+					</div>
+				</div>
+
+				<div class="property-info-row property-heating-row">
+					<label class="property-form-label">난방방식</label>
+					<div class="property-info-field">
+						<div class="property-radio-row"><label class="property-radio-option"><input type="radio" name="propertyHeating" value="individual" /> 개별난방</label><label class="property-radio-option"><input type="radio" name="propertyHeating" value="central" /> 중앙난방</label><label class="property-radio-option"><input type="radio" name="propertyHeating" value="district" /> 지역난방</label></div>
+						<div class="property-heating-fuel-wrap"><span class="property-inline-label">난방연료</span><div class="property-form-control property-select-wrap property-register-dropdown" data-register-dropdown><select class="property-register-select property-register-native-select" id="propertyHeatingFuelSelect" tabindex="-1" aria-hidden="true"><option value="">선택</option><option value="도시가스">도시가스</option><option value="LPG">LPG</option><option value="기름">기름</option><option value="전기">전기</option><option value="태양열">태양열</option><option value="기타">기타</option></select><button type="button" class="property-register-dropdown-trigger" data-register-dropdown-trigger aria-haspopup="listbox" aria-expanded="false"><span data-register-dropdown-label>선택</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button><div class="property-register-dropdown-menu" data-register-dropdown-menu role="listbox"><button type="button" class="property-register-dropdown-option" data-value="도시가스" role="option">도시가스</button><button type="button" class="property-register-dropdown-option" data-value="LPG" role="option">LPG</button><button type="button" class="property-register-dropdown-option" data-value="기름" role="option">기름</button><button type="button" class="property-register-dropdown-option" data-value="전기" role="option">전기</button><button type="button" class="property-register-dropdown-option" data-value="태양열" role="option">태양열</button><button type="button" class="property-register-dropdown-option" data-value="기타" role="option">기타</button></div></div></div>
+					</div>
+				</div>
+			</div>
+
+			<div class="property-register-card property-premium-card" id="propertyPremiumCard">
+				<h2 class="property-register-section-title">권리금</h2>
+
+				<div class="property-premium-grid">
+					<div class="property-premium-field">
+						<label class="property-form-label" for="propertyPremiumInput">권리금</label>
+						<div class="property-unit-input">
+							<input type="text" class="property-register-input" id="propertyPremiumInput" placeholder="0" />
+							<span class="property-unit-label">만원</span>
+						</div>
+					</div>
+
+					<div class="property-premium-field">
+						<label class="property-form-label" for="propertyPremiumDescInput">권리금 설명 <span class="property-label-optional">(선택)</span></label>
+						<input type="text" class="property-register-input" id="propertyPremiumDescInput" placeholder="권리금 설명을 입력해주세요." />
+					</div>
+				</div>
+
+				<div class="property-premium-options">
+					<label class="property-check-option">
+						<input type="checkbox" id="propertyPremiumNoneChk" />
+						<span>권리금 없음</span>
+					</label>
+
+					<label class="property-check-option">
+						<input type="checkbox" id="propertyPremiumNegotiableChk" />
+						<span>협의 가능</span>
+					</label>
+				</div>
+			</div>
+
+			<div class="property-register-card property-facility-card" id="propertyFacilityCard">
+				<h2 class="property-register-section-title">시설 정보</h2>
+
+				<div class="property-facility-row property-facility-feature-row">
+					<label class="property-form-label">매물 특징</label>
+					<div class="property-facility-options">
+						<label class="property-check-option"><input type="checkbox" id="facilityFullOptionChk" /><span>풀옵션</span></label>
+						<label class="property-check-option"><input type="checkbox" id="facilityDuplexChk" /><span>복층형</span></label>
+						<label class="property-check-option"><input type="checkbox" id="facilityElevatorChk" /><span>엘리베이터</span></label>
+						<label class="property-check-option"><input type="checkbox" id="facilityOceanViewChk" /><span>오션뷰</span></label>
+					</div>
+				</div>
+<div class="property-facility-row">
+					<label class="property-form-label">냉방시설</label>
+					<div class="property-facility-options">
+						<label class="property-check-option"><input type="checkbox" id="coolingWallChk" /><span>벽걸이에어컨</span></label>
+						<label class="property-check-option"><input type="checkbox" id="coolingStandChk" /><span>스탠드에어컨</span></label>
+						<label class="property-check-option"><input type="checkbox" id="coolingCeilingChk" /><span>천장에어컨</span></label>
+					</div>
+				</div>
+
+				<div class="property-facility-row">
+					<label class="property-form-label">가구</label>
+					<div class="property-facility-options">
+						<label class="property-check-option"><input type="checkbox" id="furnitureTableChk" /><span>식탁</span></label>
+						<label class="property-check-option"><input type="checkbox" id="furnitureBedChk" /><span>침대</span></label>
+						<label class="property-check-option"><input type="checkbox" id="furnitureDeskChk" /><span>책상</span></label>
+						<label class="property-check-option"><input type="checkbox" id="furnitureClosetChk" /><span>옷장</span></label>
+						<label class="property-check-option"><input type="checkbox" id="furnitureShoesChk" /><span>신발장</span></label>
+						<label class="property-check-option"><input type="checkbox" id="furnitureSofaChk" /><span>소파</span></label>
+						<label class="property-check-option"><input type="checkbox" id="furnitureBuiltInChk" /><span>붙박이장</span></label>
+					</div>
+				</div>
+
+				<div class="property-facility-row">
+					<label class="property-form-label">가전</label>
+					<div class="property-facility-options">
+						<label class="property-check-option"><input type="checkbox" id="applianceMicrowaveChk" /><span>전자레인지</span></label>
+						<label class="property-check-option"><input type="checkbox" id="applianceWasherChk" /><span>세탁기</span></label>
+						<label class="property-check-option"><input type="checkbox" id="applianceFridgeChk" /><span>냉장고</span></label>
+						<label class="property-check-option"><input type="checkbox" id="applianceTvChk" /><span>TV</span></label>
+						<label class="property-check-option"><input type="checkbox" id="applianceGasRangeChk" /><span>가스레인지</span></label>
+						<label class="property-check-option"><input type="checkbox" id="applianceInductionChk" /><span>인덕션레인지</span></label>
+						<label class="property-check-option"><input type="checkbox" id="applianceGasOvenChk" /><span>가스오븐</span></label>
+						<label class="property-check-option"><input type="checkbox" id="applianceDryerChk" /><span>건조기</span></label>
+					</div>
+				</div>
+
+				<div class="property-facility-row">
+					<label class="property-form-label">주방 / 욕실</label>
+					<div class="property-facility-options">
+						<label class="property-check-option"><input type="checkbox" id="kitchenDishwasherChk" /><span>식기세척기</span></label>
+						<label class="property-check-option"><input type="checkbox" id="kitchenFoodWasteDisposerChk" /><span>음식물 처리기</span></label>
+						<label class="property-check-option"><input type="checkbox" id="bathShowerBoothChk" /><span>샤워부스</span></label>
+						<label class="property-check-option"><input type="checkbox" id="bathBidetChk" /><span>비데</span></label>
+						<label class="property-check-option"><input type="checkbox" id="bathTubChk" /><span>욕조</span></label>
+						<label class="property-check-option"><input type="checkbox" id="kitchenSinkChk" /><span>싱크대</span></label>
+					</div>
+				</div>
+
+				<div class="property-facility-row">
+					<label class="property-form-label">건물보안</label>
+					<div class="property-facility-options">
+						<label class="property-check-option"><input type="checkbox" id="securityGuardChk" /><span>자체경비원</span></label>
+						<label class="property-check-option"><input type="checkbox" id="securityPrivateChk" /><span>사설경비원</span></label>
+						<label class="property-check-option"><input type="checkbox" id="securityVideoPhoneChk" /><span>비디오폰</span></label>
+						<label class="property-check-option"><input type="checkbox" id="securityInterphoneChk" /><span>인터폰</span></label>
+						<label class="property-check-option"><input type="checkbox" id="securityCardKeyChk" /><span>카드키</span></label>
+						<label class="property-check-option"><input type="checkbox" id="securityCctvChk" /><span>CCTV</span></label>
+						<label class="property-check-option"><input type="checkbox" id="securityEntranceChk" /><span>현관보안</span></label>
+						<label class="property-check-option"><input type="checkbox" id="securityWindowChk" /><span>방범창</span></label>
+					</div>
+				</div>
+
+				<div class="property-facility-row">
+					<label class="property-form-label">기타시설</label>
+					<div class="property-facility-options">
+<label class="property-check-option"><input type="checkbox" id="etcElevatorChk" /><span>엘리베이터</span></label>
+<label class="property-check-option"><input type="checkbox" id="etcFireAlarmChk" /><span>화재경보</span></label>
+<label class="property-check-option"><input type="checkbox" id="etcVentilationChk" /><span>환기시설</span></label>
+<label class="property-check-option"><input type="checkbox" id="etcLaundryChk" /><span>세탁실</span></label>
+
+<label class="property-check-option"><input type="checkbox" id="etcEntranceChk" /><span>중문</span></label>
+<label class="property-check-option"><input type="checkbox" id="etcDressingChk" /><span>드레스룸</span></label>
+<label class="property-check-option"><input type="checkbox" id="etcUtilityChk" /><span>다용도실</span></label>
+<label class="property-check-option"><input type="checkbox" id="etcVerandaChk" /><span>베란다</span></label>
+<label class="property-check-option"><input type="checkbox" id="etcTerraceChk" /><span>테라스</span></label>
+<label class="property-check-option"><input type="checkbox" id="etcParcelBoxChk" /><span>무인택배함</span></label>
+<label class="property-check-option"><input type="checkbox" id="etcYardChk" /><span>마당</span></label>
+</div>
+				</div>
+			</div>
+
+			<div class="property-register-card property-maintenance-card" id="propertyMaintenanceCard">
+				<h2 class="property-register-section-title">관리비</h2>
+
+				<div class="maintenance-form-row">
+					<label class="property-form-label">부과 방식</label>
+					<div class="maintenance-form-field">
+						<div class="maintenance-tab-group" id="maintenanceTypeTab">
+							<button type="button" class="maintenance-tab active" data-maintenance-type="fixed">정액 관리비</button>
+							<button type="button" class="maintenance-tab" data-maintenance-type="extra">기타 부과</button>
+							<button type="button" class="maintenance-tab" data-maintenance-type="unknown">확인 불가</button>
+						</div>
+					</div>
+				</div>
+
+				<div class="maintenance-section active" data-maintenance-section="fixed">
+					<div class="maintenance-form-row">
+						<label class="property-form-label"></label>
+						<div class="maintenance-form-field">
+							<label class="property-check-option"><input type="checkbox" id="maintenanceUnder100kChk" /><span>10만원 미만 혹은 의뢰인이 세부 내역 미제공</span></label>
+						</div>
+					</div>
+
+					<div class="maintenance-form-row maintenance-base-row">
+						<label class="property-form-label">부과 기준<span class="property-required">*</span></label>
+						<div class="maintenance-form-field maintenance-choice-grid">
+							<label class="property-radio-option"><input type="radio" name="maintenanceFixedBase" value="prev_month" /><span>직전 월</span></label>
+							<label class="property-radio-option"><input type="radio" name="maintenanceFixedBase" value="recent_3_months" /><span>최근 3개월 평균</span></label>
+							<label class="property-radio-option"><input type="radio" name="maintenanceFixedBase" value="recent_1_year" /><span>최근 1년 평균</span></label>
+							<label class="property-radio-option"><input type="radio" name="maintenanceFixedBase" value="etc" /><span>기타 (직접입력)</span></label>
+						</div>
+					</div>
+
+					<div class="maintenance-form-row maintenance-input-row maintenance-fixed-under100-row is-hidden">
+						<label class="property-form-label">총 관리비<span class="property-required">*</span></label>
+						<div class="maintenance-form-field">
+							<div class="property-unit-input"><input type="text" class="property-register-input" id="maintenanceFixedTotalInput" placeholder="0" /><span class="property-unit-label">만원</span></div>
+						</div>
+					</div>
+
+					<div class="maintenance-form-row maintenance-fixed-under100-row maintenance-top-row is-hidden">
+						<label class="property-form-label">관리비에 포함<span class="property-required">*</span></label>
+						<div class="maintenance-form-field maintenance-include-grid">
+							<label class="property-check-option"><input type="checkbox" id="maintenanceFixedIncludeCommonChk" /><span>공용</span></label>
+							<label class="property-check-option"><input type="checkbox" id="maintenanceFixedIncludeElectricChk" /><span>전기료</span></label>
+							<label class="property-check-option"><input type="checkbox" id="maintenanceFixedIncludeWaterChk" /><span>수도료</span></label>
+							<label class="property-check-option"><input type="checkbox" id="maintenanceFixedIncludeGasChk" /><span>가스비</span></label>
+							<label class="property-check-option"><input type="checkbox" id="maintenanceFixedIncludeHeatingChk" /><span>난방비</span></label>
+							<label class="property-check-option"><input type="checkbox" id="maintenanceFixedIncludeInternetChk" /><span>인터넷</span></label>
+							<label class="property-check-option"><input type="checkbox" id="maintenanceFixedIncludeTvChk" /><span>TV</span></label>
+							<label class="property-check-option"><input type="checkbox" id="maintenanceFixedIncludeEtcChk" /><span>기타</span></label>
+						</div>
+					</div>
+
+					<div class="maintenance-form-row maintenance-input-row maintenance-fixed-detail-row">
+						<label class="property-form-label">공용<span class="property-required">*</span></label>
+						<div class="maintenance-form-field">
+							<div class="property-unit-input"><input type="text" class="property-register-input" id="maintenanceCommonInput" placeholder="0" /><span class="property-unit-label">만원</span></div>
+						</div>
+					</div>
+
+					<div class="maintenance-form-row maintenance-fee-row maintenance-fixed-detail-row">
+						<label class="property-form-label">전기료</label>
+						<div class="maintenance-form-field maintenance-fee-field">
+							<label class="property-radio-option"><input type="radio" name="maintenanceElectricType" value="usage" checked /><span>쓴 만큼</span></label>
+							<label class="property-radio-option"><input type="radio" name="maintenanceElectricType" value="fixed" /><span>정액</span></label>
+							<div class="property-unit-input"><input type="text" class="property-register-input" id="maintenanceElectricInput" placeholder="0" disabled /><span class="property-unit-label">만원</span></div>
+						</div>
+					</div>
+
+					<div class="maintenance-form-row maintenance-fee-row maintenance-fixed-detail-row">
+						<label class="property-form-label">수도료</label>
+						<div class="maintenance-form-field maintenance-fee-field">
+							<label class="property-radio-option"><input type="radio" name="maintenanceWaterType" value="usage" checked /><span>쓴 만큼</span></label>
+							<label class="property-radio-option"><input type="radio" name="maintenanceWaterType" value="fixed" /><span>정액</span></label>
+							<div class="property-unit-input"><input type="text" class="property-register-input" id="maintenanceWaterInput" placeholder="0" disabled /><span class="property-unit-label">만원</span></div>
+						</div>
+					</div>
+
+					<div class="maintenance-form-row maintenance-fee-row maintenance-fixed-detail-row">
+						<label class="property-form-label">가스비</label>
+						<div class="maintenance-form-field maintenance-fee-field">
+							<label class="property-radio-option"><input type="radio" name="maintenanceGasType" value="usage" checked /><span>쓴 만큼</span></label>
+							<label class="property-radio-option"><input type="radio" name="maintenanceGasType" value="fixed" /><span>정액</span></label>
+							<div class="property-unit-input"><input type="text" class="property-register-input" id="maintenanceGasInput" placeholder="0" disabled /><span class="property-unit-label">만원</span></div>
+						</div>
+					</div>
+
+					<div class="maintenance-form-row maintenance-fee-row maintenance-fixed-detail-row">
+						<label class="property-form-label">난방비</label>
+						<div class="maintenance-form-field maintenance-fee-field">
+							<label class="property-radio-option"><input type="radio" name="maintenanceHeatingType" value="usage" checked /><span>쓴 만큼</span></label>
+							<label class="property-radio-option"><input type="radio" name="maintenanceHeatingType" value="fixed" /><span>정액</span></label>
+							<div class="property-unit-input"><input type="text" class="property-register-input" id="maintenanceHeatingInput" placeholder="0" disabled /><span class="property-unit-label">만원</span></div>
+						</div>
+					</div>
+
+					<div class="maintenance-form-row maintenance-fee-row maintenance-fixed-detail-row">
+						<label class="property-form-label">인터넷</label>
+						<div class="maintenance-form-field maintenance-fee-field">
+							<label class="property-radio-option"><input type="radio" name="maintenanceInternetType" value="usage" checked /><span>쓴 만큼</span></label>
+							<label class="property-radio-option"><input type="radio" name="maintenanceInternetType" value="fixed" /><span>정액</span></label>
+							<div class="property-unit-input"><input type="text" class="property-register-input" id="maintenanceInternetInput" placeholder="0" disabled /><span class="property-unit-label">만원</span></div>
+						</div>
+					</div>
+
+					<div class="maintenance-form-row maintenance-fee-row maintenance-fixed-detail-row">
+						<label class="property-form-label">TV</label>
+						<div class="maintenance-form-field maintenance-fee-field">
+							<label class="property-radio-option"><input type="radio" name="maintenanceTvType" value="usage" checked /><span>쓴 만큼</span></label>
+							<label class="property-radio-option"><input type="radio" name="maintenanceTvType" value="fixed" /><span>정액</span></label>
+							<div class="property-unit-input"><input type="text" class="property-register-input" id="maintenanceTvInput" placeholder="0" disabled /><span class="property-unit-label">만원</span></div>
+						</div>
+					</div>
+
+					<div class="maintenance-form-row maintenance-fee-row maintenance-fixed-detail-row">
+						<label class="property-form-label">기타</label>
+						<div class="maintenance-form-field maintenance-fee-field maintenance-etc-fee-field">
+							<label class="property-radio-option"><input type="radio" name="maintenanceEtcType" value="none" checked /><span>없음</span></label>
+							<label class="property-radio-option"><input type="radio" name="maintenanceEtcType" value="usage" /><span>쓴 만큼</span></label>
+							<label class="property-radio-option"><input type="radio" name="maintenanceEtcType" value="fixed" /><span>정액</span></label>
+							<div class="property-unit-input"><input type="text" class="property-register-input" id="maintenanceEtcInput" placeholder="0" disabled /><span class="property-unit-label">만원</span></div>
+						</div>
+					</div>
+				</div>
+
+				<div class="maintenance-section" data-maintenance-section="extra">
+					<div class="maintenance-form-row maintenance-base-row">
+						<label class="property-form-label">부과 기준<span class="property-required">*</span></label>
+						<div class="maintenance-form-field maintenance-choice-grid">
+							<label class="property-radio-option"><input type="radio" name="maintenanceExtraBase" value="prev_month" /><span>직전 월</span></label>
+							<label class="property-radio-option"><input type="radio" name="maintenanceExtraBase" value="recent_3_months" /><span>최근 3개월 평균</span></label>
+							<label class="property-radio-option"><input type="radio" name="maintenanceExtraBase" value="recent_1_year" /><span>최근 1년 평균</span></label>
+							<label class="property-radio-option"><input type="radio" name="maintenanceExtraBase" value="etc" /><span>기타 (직접입력)</span></label>
+						</div>
+					</div>
+
+					<div class="maintenance-form-row maintenance-input-row">
+						<label class="property-form-label">총 관리비<span class="property-required">*</span></label>
+						<div class="maintenance-form-field">
+							<div class="property-unit-input"><input type="text" class="property-register-input" id="maintenanceTotalInput" placeholder="0" /><span class="property-unit-label">만원</span></div>
+						</div>
+					</div>
+
+					<div class="maintenance-form-row maintenance-top-row">
+						<label class="property-form-label">관리비에 포함<span class="property-required">*</span></label>
+						<div class="maintenance-form-field maintenance-include-grid">
+							<label class="property-check-option"><input type="checkbox" id="maintenanceIncludeCommonChk" /><span>공용</span></label>
+							<label class="property-check-option"><input type="checkbox" id="maintenanceIncludeElectricChk" /><span>전기료</span></label>
+							<label class="property-check-option"><input type="checkbox" id="maintenanceIncludeWaterChk" /><span>수도료</span></label>
+							<label class="property-check-option"><input type="checkbox" id="maintenanceIncludeGasChk" /><span>가스비</span></label>
+							<label class="property-check-option"><input type="checkbox" id="maintenanceIncludeHeatingChk" /><span>난방비</span></label>
+							<label class="property-check-option"><input type="checkbox" id="maintenanceIncludeInternetChk" /><span>인터넷</span></label>
+							<label class="property-check-option"><input type="checkbox" id="maintenanceIncludeTvChk" /><span>TV</span></label>
+							<label class="property-check-option"><input type="checkbox" id="maintenanceIncludeEtcChk" /><span>기타</span></label>
+						</div>
+					</div>
+
+					<div class="maintenance-form-row maintenance-top-row">
+						<label class="property-form-label">관리비 세부 타입<span class="property-required">*</span></label>
+						<div class="maintenance-form-field maintenance-detail-type-grid">
+							<label class="property-radio-option"><input type="radio" name="maintenanceDetailType" value="usage_by_household" /><span>세대별 사용량에 따라 부과</span></label>
+							<label class="property-radio-option"><input type="radio" name="maintenanceDetailType" value="area_rule" /><span>관리규약에 따라 부과</span></label>
+							<label class="property-radio-option"><input type="radio" name="maintenanceDetailType" value="common_area_usage" /><span>공용관리비는 면적/세대별로 부과하고<br>사용료는 사용량에 따른 부과</span></label>
+							<label class="property-radio-option"><input type="radio" name="maintenanceDetailType" value="broker_unprovided" /><span>중개의뢰인 관리비 미제시</span></label>
+							<label class="property-radio-option"><input type="radio" name="maintenanceDetailType" value="etc" /><span>기타 (직접입력)</span></label>
+							<label class="property-radio-option"><input type="radio" name="maintenanceDetailType" value="divide_total" /><span>전체 사용량을 세대수로 나누어 부과</span></label>
+						</div>
+					</div>
+				</div>
+
+				<div class="maintenance-section" data-maintenance-section="unknown">
+					<div class="maintenance-form-row">
+						<label class="property-form-label"></label>
+						<div class="maintenance-form-field">
+							<div class="maintenance-notice-box">관리비 확인이 어려운 경우 사유를 고지해야 하고 중개 과정에서 추가 확인이 필요할 수 있어요.</div>
+						</div>
+					</div>
+
+					<div class="maintenance-form-row maintenance-top-row">
+						<label class="property-form-label">확인 불가 사유<span class="property-required">*</span></label>
+						<div class="maintenance-form-field maintenance-detail-type-grid">
+							<label class="property-radio-option"><input type="radio" name="maintenanceUnknownReason" value="single_house" /><span>건축법 시행령 별표 1의 제1호 가목의 단독주택</span></label>
+							<label class="property-radio-option maintenance-commercial-building-reason"><input type="radio" name="maintenanceUnknownReason" value="commercial_building" /><span>오피스텔 제외 상가 건물에 해당하는 경우</span></label>
+							<label class="property-radio-option"><input type="radio" name="maintenanceUnknownReason" value="unconfirmed" /><span>미등기건물, 신축건물 등 관리비 내역이 확인불가한 경우</span></label>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+
+
+			<div class="property-register-card property-detail-card" id="propertyDetailCard">
+				<h2 class="property-register-section-title">상세 정보</h2>
+
+				<div class="property-detail-row property-detail-date-row">
+					<label class="property-form-label" for="propertyMoveInDateInput">입주가능일<span class="property-required">*</span></label>
+					<div class="property-info-field">
+						<div class="property-date-input-wrap">
+							<input type="text" class="property-register-input property-date-text-input" id="propertyMoveInDateInput" maxlength="10" placeholder="YYYY-MM-DD" autocomplete="off" />
+							<button type="button" class="property-date-picker-btn" id="propertyMoveInDatePickerBtn" aria-label="입주가능일 달력 열기"><i class="fa-regular fa-calendar"></i></button>
+							<input type="date" class="property-date-native-picker" id="propertyMoveInDatePicker" max="9999-12-31" tabindex="-1" aria-hidden="true" />
+						</div>
+					</div>
+				</div>
+
+				<div class="property-detail-row property-detail-date-check-row">
+					<label class="property-form-label"></label>
+					<div class="property-form-control">
+						<label class="property-check-option"><input type="checkbox" id="propertyMoveInNowChk" /><span>즉시 입주 가능</span></label>
+					</div>
+				</div>
+
+				<div class="property-detail-row">
+					<label class="property-form-label" for="propertyLocationSummaryInput">제목 (간략소개)</label>
+					<div class="property-form-control">
+						<input type="text" class="property-detail-input" id="propertyLocationSummaryInput" placeholder="예) 노형오거리 이마트 5분거리, 채광 좋은 투룸" autocomplete="off" />
+					</div>
+				</div>
+
+				<div class="property-detail-row">
+					<label class="property-form-label" for="propertyDetailDescriptionInput">상세 설명</label>
+					<div class="property-form-control">
+						<textarea class="property-detail-textarea" id="propertyDetailDescriptionInput" maxlength="1000" placeholder="매물의 특징과 장점을 자세히 적어주세요.&#10;압류/가압류 등기된 매물인 경우 상세설명에 &quot;압류 등기 있음&quot;, &quot;압류 매물&quot; 등을 반드시 기재해 주세요.(미표기시 과태료 대상)"></textarea>
+						<div class="property-detail-text-count" id="propertyDetailDescriptionCount">0/1000</div>
+					</div>
+				</div>
+
+				<div class="property-detail-row">
+					<label class="property-form-label">사진</label>
+					<div class="property-form-control">
+						<label class="property-upload-box" for="propertyPhotoUploadInput">
+							<i class="fa-regular fa-image" aria-hidden="true"></i>
+							<span>이미지/폴더를 드래그하거나 클릭해 업로드하기</span>
+						</label>
+						<input type="file" id="propertyPhotoUploadInput" accept="image/*" multiple hidden />
+					</div>
+				</div>
+
+				<div class="property-detail-row">
+					<label class="property-form-label">평면도</label>
+					<div class="property-form-control">
+						<label class="property-upload-box" for="propertyFloorPlanUploadInput">
+							<i class="fa-regular fa-image" aria-hidden="true"></i>
+							<span>평면도를 여기에 드래그하거나 클릭해서 추가할 수 있어요</span>
+						</label>
+						<input type="file" id="propertyFloorPlanUploadInput" accept="image/*" multiple hidden />
+					</div>
+				</div>
+
+				<div class="property-detail-row">
+					<label class="property-form-label" for="propertyYoutubeLinkInput">유튜브 링크</label>
+					<div class="property-form-control">
+						<input type="url" class="property-detail-input" id="propertyYoutubeLinkInput" placeholder="https://www.youtube.com/watch?v=..." autocomplete="off" />
+					</div>
+				</div>
+
+			</div>
+
+
+
+			<div class="property-register-card property-agency-card" id="propertyAgencyCard">
+				<h2 class="property-register-section-title">중개사무소 설정</h2>
+
+				<div class="property-agency-row">
+					<label class="property-form-label" for="propertyAgencyMemoInput">중개사무소 메모</label>
+					<div class="property-form-control">
+						<textarea class="property-agency-textarea" id="propertyAgencyMemoInput" maxlength="800" placeholder="서비스 화면에 노출되지 않고 작성한 중개사만 볼 수 있는 비공개 메모입니다."></textarea>
+						<div class="property-agency-text-count" id="propertyAgencyMemoCount">0/800</div>
+					</div>
+				</div>
+			</div>
+
+
+
+			<div class="property-register-card property-registrant-card" id="propertyRegistrantCard">
+				<h2 class="property-register-section-title">등록자 정보</h2>
+
+				<div class="property-registrant-form-row property-registrant-agency-row">
+					<label class="property-form-label">중개업소정보</label>
+					<div class="property-registrant-form-field property-registrant-stack">
+						<div class="property-registrant-inline property-registrant-office-line">
+							<div class="property-registrant-field">
+								<span class="property-registrant-field-label">업소명</span>
+								<input type="text" class="property-registrant-input" id="registrantOfficeNameInput" readonly />
+							</div>
+							<div class="property-registrant-field">
+								<span class="property-registrant-field-label">대표자</span>
+								<input type="text" class="property-registrant-input short" id="registrantRepresentativeInput" maxlength="5" readonly />
+							</div>
+						</div>
+						<div class="property-registrant-inline">
+							<div class="property-registrant-field">
+								<span class="property-registrant-field-label">연락처</span>
+								<input type="tel" class="property-registrant-input" id="registrantPhone1Input" readonly />
+							</div>
+						</div>
+						<div class="property-registrant-inline">
+							<div class="property-registrant-field">
+								<span class="property-registrant-field-label">담당자</span>
+								<input type="text" class="property-registrant-input short" id="registrantManagerNameInput" disabled />
+							</div>
+							<label class="property-registrant-license"><input type="checkbox" id="registrantLicensedAgentChk" />소속공인중개사</label>
+						</div>
+						<div class="property-registrant-inline">
+							<div class="property-registrant-field">
+								<span class="property-registrant-field-label">연락처</span>
+								<input type="tel" class="property-registrant-input" id="registrantPhone2Input" />
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="property-register-card property-land-info-card is-hidden" id="propertyLandInfoCard">
+				<h2 class="property-register-section-title">매물 정보</h2>
+				<div class="property-info-row">
+					<label class="property-form-label">토지종류</label>
+					<div class="property-land-type-grid">
+						<label class="property-radio-option"><input type="radio" name="landType" value="전" /> 전</label><label class="property-radio-option"><input type="radio" name="landType" value="대" /> 대(垈)</label><label class="property-radio-option"><input type="radio" name="landType" value="답" /> 답</label><label class="property-radio-option"><input type="radio" name="landType" value="임야" /> 임야</label>
+						<label class="property-radio-option"><input type="radio" name="landType" value="과수원" /> 과수원</label><label class="property-radio-option"><input type="radio" name="landType" value="공장용지" /> 공장용지</label><label class="property-radio-option"><input type="radio" name="landType" value="주차장" /> 주차장</label><label class="property-radio-option"><input type="radio" name="landType" value="잡종지" /> 잡종지</label>
+						<label class="property-radio-option"><input type="radio" name="landType" value="창고용지" /> 창고용지</label><label class="property-radio-option"><input type="radio" name="landType" value="유지" /> 유지(溜池)</label><label class="property-radio-option"><input type="radio" name="landType" value="목장용지" /> 목장용지</label><label class="property-radio-option"><input type="radio" name="landType" value="제방" /> 제방(堤防)</label>
+						<label class="property-radio-option"><input type="radio" name="landType" value="구거" /> 구거(溝渠)</label><label class="property-radio-option"><input type="radio" name="landType" value="양어장" /> 양어장</label><label class="property-radio-option"><input type="radio" name="landType" value="주유소용지" /> 주유소용지</label><label class="property-radio-option"><input type="radio" name="landType" value="묘지" /> 묘지</label>
+						<label class="property-radio-option"><input type="radio" name="landType" value="체육용지" /> 체육용지</label><label class="property-radio-option"><input type="radio" name="landType" value="사적지" /> 사적지</label><label class="property-radio-option"><input type="radio" name="landType" value="광천지" /> 광천지</label><label class="property-radio-option"><input type="radio" name="landType" value="공원" /> 공원</label>
+						<label class="property-radio-option"><input type="radio" name="landType" value="철도용지" /> 철도용지</label><label class="property-radio-option"><input type="radio" name="landType" value="유원지" /> 유원지</label><label class="property-radio-option"><input type="radio" name="landType" value="종교용지" /> 종교용지</label><label class="property-radio-option"><input type="radio" name="landType" value="하천" /> 하천</label>
+						<label class="property-radio-option"><input type="radio" name="landType" value="도로" /> 도로</label><label class="property-radio-option"><input type="radio" name="landType" value="염전" /> 염전</label><label class="property-radio-option"><input type="radio" name="landType" value="학교용지" /> 학교용지</label><label class="property-radio-option"><input type="radio" name="landType" value="수도용지" /> 수도용지</label>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<div class="property-register-bottom-bar" id="propertyRegisterBottomBar">
+		<div class="property-register-bottom-inner">
+			<button type="button" class="property-register-bottom-btn draft" id="propertyDraftSaveBtn">임시저장</button>
+			<button type="button" class="property-register-bottom-btn submit" id="propertySubmitBtn">매물 등록하기</button>
+		</div>
+	</div>
+
 
 		<div class="sub-topbar">
 			<div class="sub-topbar-inner">
 				<span class="sub-version-fixed">
-					Ver 2.018
+					Ver 2.038
 				</span>
 				<div class="sub-topbar-left">
 					<strong id="listInfoText">
@@ -8418,12 +11698,24 @@ body.admin-page-open .map-wrap
 										<span>단독주택</span>
 									</label>
 									<label class="extra-filter-option type-filter-option">
+										<input type="checkbox" data-value="다가구주택" />
+										<span>다가구주택</span>
+									</label>
+									<label class="extra-filter-option type-filter-option">
 										<input type="checkbox" data-value="상가" />
 										<span>상가</span>
 									</label>
 									<label class="extra-filter-option type-filter-option">
 										<input type="checkbox" data-value="사무실" />
 										<span>사무실</span>
+									</label>
+									<label class="extra-filter-option type-filter-option">
+										<input type="checkbox" data-value="건물" />
+										<span>건물</span>
+									</label>
+									<label class="extra-filter-option type-filter-option">
+										<input type="checkbox" data-value="공장 / 창고" />
+										<span>공장 / 창고</span>
 									</label>
 									<label class="extra-filter-option type-filter-option">
 										<input type="checkbox" data-value="호텔" />
@@ -8625,7 +11917,6 @@ body.admin-page-open .map-wrap
 			</div>
 		</div>
 	</div>
-</div>
 <div class="app">
 	<aside class="sidebar" id="sidebar">
 		<div class="sidebar-inner">
@@ -9024,6 +12315,65 @@ if (globalBrandLink) {
 		window.location.href = "https://realjeju.app";
 	});
 }
+
+/* ===== v2.111: 매물 등록 - 상세 정보 글자수 ===== */
+(function bindPropertyDetailDescriptionCounter()
+{
+	const textarea = document.getElementById("propertyDetailDescriptionInput");
+	const counter = document.getElementById("propertyDetailDescriptionCount");
+	if (!textarea || !counter) return;
+
+	const update = () => {
+		if (textarea.value.length > 1000) textarea.value = textarea.value.slice(0, 1000);
+		counter.textContent = textarea.value.length + "/1000";
+	};
+
+	textarea.addEventListener("input", update);
+	update();
+})();
+
+
+/* ===== v2.111: 중개사무소 메모 글자수 ===== */
+(function bindPropertyAgencyMemoCounter()
+{
+	const textarea = document.getElementById("propertyAgencyMemoInput");
+	const counter = document.getElementById("propertyAgencyMemoCount");
+	if (!textarea || !counter) return;
+
+	const update = () => {
+		if (textarea.value.length > 800) textarea.value = textarea.value.slice(0, 800);
+		counter.textContent = textarea.value.length + "/800";
+	};
+
+	textarea.addEventListener("input", update);
+	update();
+})();
+
+
+/* ===== v2.111: 소속공인중개사 체크 시 담당자명 활성화 ===== */
+(function bindRegistrantLicensedAgentToggle()
+{
+	const chk = document.getElementById("registrantLicensedAgentChk");
+	const input = document.getElementById("registrantManagerNameInput");
+	if (!chk || !input) return;
+
+	function toggle()
+	{
+		if (chk.checked)
+		{
+			input.disabled = false;
+		}
+		else
+		{
+			input.value = "";
+			input.disabled = true;
+		}
+	}
+
+	chk.addEventListener("change", toggle);
+	toggle();
+})();
+
 </script>
 <div class="auth-modal" id="authModal" aria-hidden="true">
 	<div class="auth-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
@@ -9162,7 +12512,7 @@ if (globalBrandLink) {
 					<label class="auth-modal-field-label" for="authProfilePhoneInput">
 						휴대폰번호
 					</label>
-					<input type="tel" class="auth-modal-input" id="authProfilePhoneInput" placeholder="010-0000-0000" autocomplete="tel" />
+					<input type="tel" class="auth-modal-input" id="authProfilePhoneInput" placeholder="010-0000-0000" autocomplete="tel" inputmode="numeric" maxlength="13" />
 				</div>
 				<div class="auth-modal-field">
 					<label class="auth-modal-field-label" for="authProfileEmailInput">
@@ -9480,7 +12830,7 @@ function hexToRgba(hex, alpha = 1)
 	return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 const APP_NAME = "REALJEJU.APP";
-const APP_VERSION = "2.018";
+const APP_VERSION = "2.111";
 
 function applyAppVersion()
 {
@@ -10530,6 +13880,12 @@ function isDetachedHouseType(typeText)
 	return ["단독", "단독주택"].includes(text);
 }
 
+function isMultiFamilyHouseType(typeText)
+{
+	const text = String(typeText || "").trim();
+	return ["다가구", "다가구주택"].includes(text);
+}
+
 function isLandSubtypeType(typeText)
 {
 	const text = String(typeText || "").trim();
@@ -10547,6 +13903,7 @@ function getDisplayTypeLabel(typeText)
 {
 	const text = String(typeText || "").trim();
 	if (["전", "대", "답", "과수원", "목장용지", "임야", "토지", "토지ㆍ임야"].includes(text)) return getLandTypeDetailLabel(text);
+	if (["다가구", "다가구주택"].includes(text)) return "다가구주택";
 	if (["단독", "단독주택"].includes(text)) return "단독주택";
 	if (text === "연립") return "빌라";
 	if (isHotelType(text)) return "호텔";
@@ -10569,7 +13926,7 @@ function isCommercialType(typeText)
 function parseDetachedHouseAreas(areaText)
 {
 	const raw = String(areaText || "-").trim();
-	const landMatch = raw.match(/대지면적\s*([\d,.]+)㎡/);
+	const landMatch = raw.match(/대지 면적\s*([\d,.]+)㎡/);
 	const totalMatch = raw.match(/연면적\s*([\d,.]+)㎡/);
 
 	const land = landMatch ? Number(String(landMatch[1]).replace(/,/g, "")) : null;
@@ -10742,8 +14099,8 @@ function formatCardAreaByUnit(areaText, unit, typeText = "")
 		raw.match(/연\s*([\d,.]+)평/);
 
 		const landMatch =
-		raw.match(/대지면적\s*([\d,.]+)㎡/) ||
-		raw.match(/대지면적\s*([\d,.]+)평/) ||
+		raw.match(/대지 면적\s*([\d,.]+)㎡/) ||
+		raw.match(/대지 면적\s*([\d,.]+)평/) ||
 		raw.match(/\(대지\)\s*([\d,.]+)㎡/) ||
 		raw.match(/\(대지\)\s*([\d,.]+)평/) ||
 		raw.match(/대지\s*([\d,.]+)㎡/) ||
@@ -12550,10 +15907,13 @@ function applyFilter()
 		(typeValue === "아파트" && ["아파트", "아파트ㆍ빌라"].includes(itemType)) ||
 		(typeValue === "오피스텔" && itemType === "오피스텔") ||
 		(typeValue === "빌라" && ["빌라", "연립", "다세대", "다세대주택", "다가구ㆍ다세대"].includes(itemType)) ||
-		(typeValue === "단독주택" && ["주택", "단독", "단독주택", "다가구"].includes(itemType)) ||
+		(typeValue === "단독주택" && ["주택", "단독", "단독주택"].includes(itemType)) ||
+		(typeValue === "다가구주택" && ["다가구", "다가구주택"].includes(itemType)) ||
 		(typeValue === "원룸 / 투룸" && ["원룸", "투룸", "원룸ㆍ투룸"].includes(itemType)) ||
 		(typeValue === "상가" && ["상가", "상가건물", "상가ㆍ사무실"].includes(itemType)) ||
-		(typeValue === "사무실" && ["사무실", "공장", "상가ㆍ사무실"].includes(itemType)) ||
+		(typeValue === "사무실" && ["사무실", "상가ㆍ사무실"].includes(itemType)) ||
+		(typeValue === "건물" && ["건물", "빌딩", "상가건물", "통건물"].includes(itemType)) ||
+		(typeValue === "공장 / 창고" && ["공장", "창고", "공장/창고", "공장ㆍ창고", "창고시설"].includes(itemType)) ||
 		(typeValue === "호텔" && (["hotel", "호텔"].includes(itemType) || isHotelPensionType(itemType) && String(itemType).toLowerCase().includes("hotel"))) ||
 		(typeValue === "펜션" && (["pension", "펜션"].includes(itemType) || isHotelPensionType(itemType) && String(itemType).toLowerCase().includes("pension"))) ||
 		(typeValue === "토지" && ["토지", "임야", "토지ㆍ임야", "전", "대", "답", "과수원", "목장용지"].includes(itemType)) ||
@@ -14000,7 +17360,7 @@ bootstrap();
 		globalAccountDropdown.style.display = isOpen ? "none" : "block";
 	}
 
-	/* ===== v2.018: 우측 상단 계정 메뉴 hover 열림 ===== */
+	/* ===== v2.038: 우측 상단 계정 메뉴 hover 열림 ===== */
 	let globalAccountHoverCloseTimer = null;
 
 
@@ -14009,7 +17369,7 @@ bootstrap();
 }
 
 
-	/* ===== v2.018: 계정 드롭다운 hover 완전 안정화 ===== */
+	/* ===== v2.038: 계정 드롭다운 hover 완전 안정화 ===== */
 	const accountHoverTrigger = document.querySelector(".global-auth-trigger");
 	const accountHoverDropdown = document.querySelector(".global-account-dropdown");
 
@@ -14062,6 +17422,8 @@ bootstrap();
 		if (currentRealjejuAuthUser && currentRealjejuAuthUser.id) clearRealjejuCachedProfile(currentRealjejuAuthUser.id);
 		currentRealjejuAuthUser = null;
 		currentRealjejuProfileCompleted = false;
+		if (typeof window.realjejuResetRegistrantInfo === "function") window.realjejuResetRegistrantInfo();
+		if (typeof window.realjejuGoRealEstateHome === "function") window.realjejuGoRealEstateHome();
 		if (globalAuthTrigger) {
 			globalAuthTrigger.dataset.authState = "logged-out";
 			globalAuthTrigger.classList.remove("logged-in");
@@ -14254,7 +17616,7 @@ bootstrap();
 		}));
 	}
 
-	/* v2.018: 권한 확인 전에는 중개사 홈을 표시하지 않음 */
+	/* v2.038: 권한 확인 전에는 중개사 홈을 표시하지 않음 */
 	renderTopbarMenu(false);
 	
 	function syncAuthProfileEmail(user)
@@ -14265,10 +17627,39 @@ bootstrap();
 		}
 	}
 
+	function formatRealjejuPhoneInputValue(value)
+	{
+		const digits = String(value || "").replace(/\D/g, "").slice(0, 11);
+		if (digits.length <= 3) return digits;
+		if (digits.length <= 7) return digits.slice(0, 3) + "-" + digits.slice(3);
+		return digits.slice(0, 3) + "-" + digits.slice(3, 7) + "-" + digits.slice(7);
+	}
+
+	function bindRealjejuPhoneAutoHyphen(input)
+	{
+		if (!input || input.dataset.phoneAutoHyphenBound === "1") return;
+		input.dataset.phoneAutoHyphenBound = "1";
+		input.setAttribute("inputmode", "numeric");
+		input.setAttribute("maxlength", "13");
+		input.addEventListener("input", function(e) {
+			e.target.value = formatRealjejuPhoneInputValue(e.target.value);
+		});
+		input.addEventListener("blur", function(e) {
+			e.target.value = formatRealjejuPhoneInputValue(e.target.value);
+		});
+	}
+
+	bindRealjejuPhoneAutoHyphen(authProfilePhoneInput);
+
 function applyLoggedInAccountUI(user, profile)
 	{
 		if (!user) return;
+		if (typeof window.realjejuResetRegistrantInfo === "function") window.realjejuResetRegistrantInfo();
 		currentRealjejuAuthUser = user;
+		window.realjejuCurrentAuthUser = user;
+		window.realjejuCurrentProfile = profile || null;
+		window.realjejuCurrentBrokerOffice = null;
+		if (typeof window.realjejuLoadRegistrantInfo === "function") setTimeout(window.realjejuLoadRegistrantInfo, 0);
 			syncAuthProfileEmail(currentRealjejuAuthUser);
 		if (profile && profile.name) if (typeof writeRealjejuCachedProfile === "function") writeRealjejuCachedProfile(user.id, profile);
 		const email = user.email || "로그인 사용자";
@@ -14343,7 +17734,7 @@ function applyLoggedInAccountUI(user, profile)
 		try {
 			const { data: officeData } = await client
 				.from("agencies")
-				.select("office_name, status")
+				.select("office_name, owner_name, phone, status, created_at")
 				.eq("user_id", user.id)
 				.order("created_at", { ascending: false })
 				.limit(1)
@@ -14387,7 +17778,11 @@ function applyLoggedInAccountUI(user, profile)
 				return;
 			}
 			const completed = !!(profile && profile.profile_completed === true && profile.name && profile.phone);
-			renderTopbarMenu(!!(isBrokerRoleValue(profile && profile.role_request) && brokerOffice && brokerOffice.status === "active"));
+			if (isAdminUser(user)) {
+				renderAdminTopbarMenu();
+			} else {
+				renderTopbarMenu(!!(isBrokerRoleValue(profile && profile.role_request) && brokerOffice && brokerOffice.status === "active"));
+			}
 			setTextById("myInfoNameValue", profile && profile.name ? profile.name : "-");
 			setTextById("myInfoEmailValue", user.email || (profile && profile.email) || "-");
 			setTextById("myInfoPhoneValue", profile && profile.phone ? profile.phone : "-");
@@ -14482,6 +17877,24 @@ function applyLoggedInAccountUI(user, profile)
 			}
 			applyLoggedInAccountUI(user, profile);
 			currentRealjejuAuthUser = user;
+			window.realjejuCurrentAuthUser = user;
+			window.realjejuCurrentProfile = profile || null;
+			try {
+				const { data: agencyRows } = await supabaseForInit
+					.from("agencies")
+					.select("office_name, owner_name, phone, status, created_at")
+					.eq("user_id", user.id)
+					.order("created_at", { ascending: false })
+					.limit(5);
+				const rows = Array.isArray(agencyRows) ? agencyRows : [];
+				window.realjejuCurrentBrokerOffice = rows.find(row => row && row.status === "active") || rows[0] || null;
+			} catch (agencyError) {
+				window.realjejuCurrentBrokerOffice = null;
+			}
+			if (typeof window.realjejuLoadRegistrantInfo === "function") {
+				window.realjejuLoadRegistrantInfo();
+				setTimeout(window.realjejuLoadRegistrantInfo, 250);
+			}
 			currentRealjejuProfileCompleted = !!(profile && profile.profile_completed === true && profile.name && profile.phone);
 		} catch (err) {
 			console.warn("로그인 상태 확인 실패:", err);
@@ -14540,7 +17953,7 @@ function applyLoggedInAccountUI(user, profile)
 		if (e.key === "Escape") closeGlobalAccountDropdown();
 	});
 
-	/* v2.018: account button click block - 로그인 이름 클릭 시 메뉴 닫힘/토글 방지 */
+	/* v2.038: account button click block - 로그인 이름 클릭 시 메뉴 닫힘/토글 방지 */
 	if (globalAuthTrigger) {
 		globalAuthTrigger.addEventListener("click", (e) => {
 			if (!(globalAuthTrigger.dataset && globalAuthTrigger.dataset.authState === "logged-in")) return;
@@ -14550,7 +17963,7 @@ function applyLoggedInAccountUI(user, profile)
 	}
 
 
-	/* ===== v2.018: 로그인 버튼 클릭 복구 ===== */
+	/* ===== v2.038: 로그인 버튼 클릭 복구 ===== */
 	if (globalAuthTrigger) {
 		globalAuthTrigger.addEventListener("click", (e) => {
 			if (globalAuthTrigger.dataset && globalAuthTrigger.dataset.authState === "logged-in") return;
@@ -15850,6 +19263,402 @@ function applyLoggedInAccountUI(user, profile)
 		if (adminPagePanel) adminPagePanel.setAttribute("aria-hidden", "true");
 	}
 
+	function closePropertyRegisterPage()
+	{
+		document.body.classList.remove("property-register-page-open");
+		const propertyRegisterPage = document.getElementById("propertyRegisterPage");
+		if (propertyRegisterPage) propertyRegisterPage.setAttribute("aria-hidden", "true");
+	}
+
+	function openPropertyRegisterPage()
+	{
+		closeGlobalAccountDropdown();
+		closeAdminPage();
+		document.body.classList.add("property-register-page-open");
+		const propertyRegisterPage = document.getElementById("propertyRegisterPage");
+		if (propertyRegisterPage) propertyRegisterPage.setAttribute("aria-hidden", "false");
+		renderPropertyPriceFields();
+		if (typeof window.realjejuResetRegistrantInfo === "function") window.realjejuResetRegistrantInfo();
+		if (currentRealjejuAuthUser) window.realjejuCurrentAuthUser = currentRealjejuAuthUser;
+		if (typeof window.realjejuLoadRegistrantInfo === "function") {
+			window.realjejuLoadRegistrantInfo();
+			setTimeout(window.realjejuLoadRegistrantInfo, 250);
+		}
+	}
+
+	function formatPropertyNumber(value)
+	{
+		const num = Number(value);
+		if (!Number.isFinite(num)) return "";
+		const fixed = Math.round(num * 100) / 100;
+		return String(fixed).replace(/\.00$/, "").replace(/(\.\d)0$/, "$1");
+	}
+
+	function bindPropertyAreaAutoCalc()
+	{
+		document.querySelectorAll(".property-area-m2").forEach((input) => {
+			if (input.dataset.areaBound === "1") return;
+			input.dataset.areaBound = "1";
+			input.addEventListener("input", () => {
+				const target = document.getElementById(input.dataset.pyTarget || "");
+				if (!target || target.dataset.locked === "1") return;
+				target.dataset.locked = "1";
+				target.value = input.value ? formatPropertyNumber(Number(input.value) / 3.305785) : "";
+				target.dataset.locked = "";
+			});
+		});
+
+		document.querySelectorAll(".property-area-py").forEach((input) => {
+			if (input.dataset.areaBound === "1") return;
+			input.dataset.areaBound = "1";
+			input.addEventListener("input", () => {
+				const target = document.getElementById(input.dataset.m2Target || "");
+				if (!target || target.dataset.locked === "1") return;
+				target.dataset.locked = "1";
+				target.value = input.value ? formatPropertyNumber(Number(input.value) * 3.305785) : "";
+				target.dataset.locked = "";
+			});
+		});
+	}
+
+	function getPropertyPriceFieldHtml(type)
+	{
+		const templates = {
+			monthly: `
+				<div class="property-price-row" data-price-type="monthly">
+					<div class="property-form-label">월세<span class="property-required">*</span></div>
+					<div class="property-price-fields two">
+						<div>
+							<div class="property-price-field-title">보증금</div>
+							<div class="property-price-field">
+								<input type="number" class="property-register-input" id="priceMonthlyDepositInput" placeholder="0" min="0" />
+								<span class="property-unit-label">만원</span>
+							</div>
+						</div>
+						<div>
+							<div class="property-price-field-title">월세</div>
+							<div class="property-price-field">
+								<input type="number" class="property-register-input" id="priceMonthlyRentInput" placeholder="0" min="0" />
+								<span class="property-unit-label">만원</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			`,
+			sale: `
+				<div class="property-price-row" data-price-type="sale">
+					<div class="property-form-label">매매<span class="property-required">*</span></div>
+					<div class="property-price-fields">
+						<div>
+							<div class="property-price-field-title">가격</div>
+							<div class="property-price-field">
+								<input type="number" class="property-register-input" id="priceSaleInput" placeholder="0" min="0" />
+								<span class="property-unit-label">만원</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			`,
+			jeonse: `
+				<div class="property-price-row" data-price-type="jeonse">
+					<div class="property-form-label">전세<span class="property-required">*</span></div>
+					<div class="property-price-fields">
+						<div>
+							<div class="property-price-field-title">보증금</div>
+							<div class="property-price-field">
+								<input type="number" class="property-register-input" id="priceJeonseDepositInput" placeholder="0" min="0" />
+								<span class="property-unit-label">만원</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			`,
+			yearly: `
+				<div class="property-price-row" data-price-type="yearly">
+					<div class="property-form-label">년세<span class="property-required">*</span></div>
+					<div class="property-price-fields two">
+						<div>
+							<div class="property-price-field-title">보증금</div>
+							<div class="property-price-field">
+								<input type="number" class="property-register-input" id="priceYearlyDepositInput" placeholder="0" min="0" />
+								<span class="property-unit-label">만원</span>
+							</div>
+						</div>
+						<div>
+							<div class="property-price-field-title">년세</div>
+							<div class="property-price-field">
+								<input type="number" class="property-register-input" id="priceYearlyRentInput" placeholder="0" min="0" />
+								<span class="property-unit-label">만원</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			`,
+			short: `
+				<div class="property-price-row" data-price-type="short">
+					<div class="property-form-label">단기<span class="property-required">*</span></div>
+					<div class="property-price-fields two">
+						<div>
+							<div class="property-price-field-title">보증금</div>
+							<div class="property-price-field">
+								<input type="number" class="property-register-input" id="priceShortDepositInput" placeholder="0" min="0" />
+								<span class="property-unit-label">만원</span>
+							</div>
+						</div>
+						<div>
+							<div class="property-price-field-title">단기 월세</div>
+							<div class="property-price-field">
+								<input type="number" class="property-register-input" id="priceShortRentInput" placeholder="0" min="0" />
+								<span class="property-unit-label">만원</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			`
+		};
+		return templates[type] || "";
+	}
+
+	function renderPropertyPriceFields()
+	{
+		const box = document.getElementById("propertyPriceDynamic");
+		if (!box) return;
+		const checked = Array.from(document.querySelectorAll(".property-deal-check:checked")).map((input) => input.value);
+		box.innerHTML = checked.map(getPropertyPriceFieldHtml).join("");
+	}
+
+	function updatePropertyRegisterAreaFields()
+	{
+		const propertyTypeSelect = document.getElementById("propertyTypeSelect");
+		const exclusiveAreaRow = document.getElementById("exclusiveAreaRow");
+		const supplyAreaRow = document.getElementById("supplyAreaRow");
+		const landAreaRow = document.getElementById("landAreaRow");
+		const landRoadRow = document.getElementById("landRoadRow");
+		const exclusiveAreaLabel = document.getElementById("exclusiveAreaLabel");
+		const supplyAreaLabel = document.getElementById("supplyAreaLabel");
+		if (!propertyTypeSelect || !exclusiveAreaRow || !supplyAreaRow || !landAreaRow || !landRoadRow || !exclusiveAreaLabel || !supplyAreaLabel) return;
+
+		const type = propertyTypeSelect.value || "";
+		exclusiveAreaRow.style.display = "grid";
+		supplyAreaRow.style.display = "grid";
+		landAreaRow.style.display = "none";
+		landRoadRow.style.display = "none";
+
+		let firstLabel = "전용 면적";
+		let secondLabel = "공급 면적";
+
+		if (type === "officetel" || type === "office" || type === "store") {
+			firstLabel = "전용 면적";
+			secondLabel = "계약 면적";
+		} else if (type === "building") {
+			firstLabel = "건축 면적";
+			secondLabel = "연면적";
+		} else if (type === "factory_warehouse") {
+			firstLabel = "대지 면적";
+			secondLabel = "연면적";
+		} else if (type === "land") {
+			exclusiveAreaRow.style.display = "none";
+			supplyAreaRow.style.display = "none";
+			landAreaRow.style.display = "grid";
+			landRoadRow.style.display = "grid";
+		}
+
+		exclusiveAreaLabel.innerHTML = firstLabel + '<span class="property-required">*</span>';
+		supplyAreaLabel.textContent = secondLabel;
+	}
+
+
+	function updatePropertyInfoFieldsByType()
+	{
+		const propertyTypeSelect = document.getElementById("propertyTypeSelect");
+		const infoCard = document.getElementById("propertyInfoCard");
+		const landInfoCard = document.getElementById("propertyLandInfoCard");
+		if (!propertyTypeSelect || !infoCard || !landInfoCard) return;
+		const type = propertyTypeSelect.value || "";
+		const residentialTypes = ["apartment", "officetel", "room", "villa", "house", "multi_family_house", "hotel", "pension"];
+		const commercialTypes = ["store", "office"];
+		const buildingTypes = ["building", "factory_warehouse"];
+		if (type === "land") {
+			infoCard.classList.add("is-hidden");
+			landInfoCard.classList.remove("is-hidden");
+			const householdCountRow = document.getElementById("propertyHouseholdCountRow");
+			if (householdCountRow) householdCountRow.style.display = "none";
+			return;
+		}
+		landInfoCard.classList.add("is-hidden");
+		infoCard.classList.remove("is-hidden");
+		let mode = "residential";
+		if (commercialTypes.includes(type)) mode = "commercial";
+		else if (buildingTypes.includes(type)) mode = "building";
+		else if (residentialTypes.includes(type)) mode = "residential";
+		infoCard.dataset.infoMode = mode;
+		const wholeFloorTypes = ["house", "multi_family_house", "building", "factory_warehouse"];
+		infoCard.dataset.infoFloorMode = wholeFloorTypes.includes(type) ? "whole" : "level";
+
+		const householdCountRow = document.getElementById("propertyHouseholdCountRow");
+		if (householdCountRow) householdCountRow.style.display = type === "multi_family_house" ? "grid" : "none";
+	}
+
+	function updatePropertyParkingDetail()
+	{
+		const box = document.getElementById("propertyParkingDetail");
+		const selected = document.querySelector('input[name="propertyParking"]:checked');
+		if (!box) return;
+		box.classList.toggle("open", !!selected && selected.value === "possible");
+	}
+
+
+	function clearPropertyFloorLevelRadios()
+	{
+		document.querySelectorAll('input[name="propertyFloorLevel"]').forEach((radio) => {
+			radio.checked = false;
+		});
+	}
+
+	function bindPropertyFloorExclusiveOptions()
+	{
+		const basementCheck = document.getElementById("propertyBasementCheck");
+		const semiBasementCheck = document.getElementById("propertySemiBasementCheck");
+		const levelUseCheck = document.getElementById("propertyFloorLevelUseCheck");
+		const wholeBuildingCheck = document.getElementById("propertyWholeBuildingCheck");
+		const levelRadios = Array.from(document.querySelectorAll('input[name="propertyFloorLevel"]'));
+		if (!basementCheck || !semiBasementCheck || !levelUseCheck) return;
+
+		const clearBasementOptions = () => {
+			basementCheck.checked = false;
+			semiBasementCheck.checked = false;
+		};
+
+		const clearLevelOptions = () => {
+			levelUseCheck.checked = false;
+			clearPropertyFloorLevelRadios();
+		};
+
+		if (basementCheck.dataset.exclusiveBound !== "1") {
+			basementCheck.dataset.exclusiveBound = "1";
+			basementCheck.addEventListener("change", () => {
+				if (!basementCheck.checked) return;
+				semiBasementCheck.checked = false;
+				clearLevelOptions();
+				if (wholeBuildingCheck) wholeBuildingCheck.checked = false;
+				updatePropertyFloorLevelRadioState();
+			});
+		}
+
+		if (semiBasementCheck.dataset.exclusiveBound !== "1") {
+			semiBasementCheck.dataset.exclusiveBound = "1";
+			semiBasementCheck.addEventListener("change", () => {
+				if (!semiBasementCheck.checked) return;
+				basementCheck.checked = false;
+				clearLevelOptions();
+				if (wholeBuildingCheck) wholeBuildingCheck.checked = false;
+				updatePropertyFloorLevelRadioState();
+			});
+		}
+
+		if (levelUseCheck.dataset.exclusiveBound !== "1") {
+			levelUseCheck.dataset.exclusiveBound = "1";
+			levelUseCheck.addEventListener("change", () => {
+				if (levelUseCheck.checked) {
+					clearBasementOptions();
+					if (wholeBuildingCheck) wholeBuildingCheck.checked = false;
+				} else {
+					clearPropertyFloorLevelRadios();
+				}
+				updatePropertyFloorLevelRadioState();
+			});
+		}
+
+		levelRadios.forEach((radio) => {
+			if (radio.dataset.exclusiveBound === "1") return;
+			radio.dataset.exclusiveBound = "1";
+			radio.addEventListener("change", () => {
+				if (!radio.checked) return;
+				clearBasementOptions();
+				levelUseCheck.checked = true;
+				if (wholeBuildingCheck) wholeBuildingCheck.checked = false;
+				updatePropertyFloorLevelRadioState();
+			});
+		});
+
+		if (wholeBuildingCheck && wholeBuildingCheck.dataset.exclusiveBound !== "1") {
+			wholeBuildingCheck.dataset.exclusiveBound = "1";
+			wholeBuildingCheck.addEventListener("change", () => {
+				if (!wholeBuildingCheck.checked) return;
+				clearBasementOptions();
+				clearLevelOptions();
+				updatePropertyFloorLevelRadioState();
+			});
+		}
+		updatePropertyFloorLevelRadioState();
+	}
+
+
+	function updatePropertyFloorLevelRadioState()
+	{
+		const levelUseCheck = document.getElementById("propertyFloorLevelUseCheck");
+		const levelRadios = Array.from(document.querySelectorAll('input[name="propertyFloorLevel"]'));
+		if (!levelUseCheck || !levelRadios.length) return;
+		levelRadios.forEach((radio) => {
+			radio.disabled = !levelUseCheck.checked;
+			if (!levelUseCheck.checked) radio.checked = false;
+		});
+	}
+
+	function updatePropertyPetVisibilityByDeal()
+	{
+		const infoCard = document.getElementById("propertyInfoCard");
+		if (!infoCard) return;
+		const isSale = Array.from(document.querySelectorAll(".property-deal-check")).some((input) => input.checked && input.value === "sale");
+		infoCard.classList.toggle("is-sale-deal", isSale);
+		if (isSale) {
+			document.querySelectorAll('input[name="propertyPet"]').forEach((input) => { input.checked = false; });
+		}
+	}
+
+	function bindPropertyRegisterPageEvents()
+	{
+		bindPropertyAreaAutoCalc();
+		const propertyTypeSelect = document.getElementById("propertyTypeSelect");
+		if (propertyTypeSelect && propertyTypeSelect.dataset.areaBound !== "1") {
+			propertyTypeSelect.dataset.areaBound = "1";
+			propertyTypeSelect.addEventListener("change", updatePropertyRegisterAreaFields);
+			propertyTypeSelect.addEventListener("change", updatePropertyInfoFieldsByType);
+		}
+		updatePropertyRegisterAreaFields();
+		updatePropertyInfoFieldsByType();
+		bindPropertyFloorExclusiveOptions();
+		updatePropertyFloorLevelRadioState();
+		document.querySelectorAll('input[name="propertyFloorLevel"], #propertyFloorLevelUseCheck, #propertyBasementCheck, #propertySemiBasementCheck, #propertyWholeBuildingCheck').forEach((input) => {
+			if (input.dataset.floorStateBound === "1") return;
+			input.dataset.floorStateBound = "1";
+			input.addEventListener("change", updatePropertyFloorLevelRadioState);
+		});
+		document.querySelectorAll('input[name="propertyParking"]').forEach((input) => {
+			if (input.dataset.parkingBound === "1") return;
+			input.dataset.parkingBound = "1";
+			input.addEventListener("change", updatePropertyParkingDetail);
+		});
+		updatePropertyParkingDetail();
+		document.querySelectorAll(".property-deal-check").forEach((input) => {
+			if (input.dataset.priceBound !== "1") {
+				input.dataset.priceBound = "1";
+				input.addEventListener("change", renderPropertyPriceFields);
+			}
+			if (input.dataset.petVisibilityBound !== "1") {
+				input.dataset.petVisibilityBound = "1";
+				input.addEventListener("change", updatePropertyPetVisibilityByDeal);
+			}
+		});
+		updatePropertyPetVisibilityByDeal();
+	}
+
+	if (document.readyState === "loading") {
+		document.addEventListener("DOMContentLoaded", bindPropertyRegisterPageEvents);
+	} else {
+		bindPropertyRegisterPageEvents();
+	}
+
 	async function openAdminPage()
 	{
 		const user = currentRealjejuAuthUser;
@@ -16020,21 +19829,38 @@ function applyLoggedInAccountUI(user, profile)
 		if (adminMenuBtn && adminMenuBtn.textContent.trim() === "관리자 페이지") {
 			e.preventDefault();
 			e.stopPropagation();
+			closePropertyRegisterPage();
 			openAdminPage();
 			return;
 		}
 
+		const propertyRegisterMenuBtn = e.target.closest(".topbar-menu-item");
+		if (propertyRegisterMenuBtn && propertyRegisterMenuBtn.textContent.trim() === "매물 등록") {
+			e.preventDefault();
+			e.stopPropagation();
+			openPropertyRegisterPage();
+			return;
+		}
+
 		const topbarMenuBtn = e.target.closest(".topbar-menu-item");
-		if (topbarMenuBtn && topbarMenuBtn.textContent.trim() !== "관리자 페이지") {
+		if (topbarMenuBtn && topbarMenuBtn.textContent.trim() !== "관리자 페이지" && topbarMenuBtn.textContent.trim() !== "매물 등록") {
 			closeAdminPage();
+			closePropertyRegisterPage();
 		}
 	});
 
 	window.openAuthModal = openAuthModal;
-	window.closeAuthModal = closeAuthModal;
+	window.closeAuthModal = function() {
+		closeAuthModal();
+		if (isAdminUser(currentRealjejuAuthUser)) {
+			renderAdminTopbarMenu();
+		}
+	};
 	window.openAuthErrorModal = openAuthErrorModal;
 	window.closeAuthErrorModal = closeAuthErrorModal;
 	window.openAdminPage = openAdminPage;
+	window.openPropertyRegisterPage = openPropertyRegisterPage;
+	window.closePropertyRegisterPage = closePropertyRegisterPage;
 	window.loadAdminApplications = loadAdminApplications;
 	window.requireRealjejuProfileCompletedForFeature = requireRealjejuProfileCompletedForFeature;
 	window.handleRealjejuLogout = handleRealjejuLogout;
@@ -16091,6 +19917,25 @@ document.addEventListener("DOMContentLoaded", function () {
 			setTimeout(() => confirm.focus(), 0);
 		}
 	}
+	function formatFallbackPhoneInputValue(value) {
+		const digits = String(value || "").replace(/\D/g, "").slice(0, 11);
+		if (digits.length <= 3) return digits;
+		if (digits.length <= 7) return digits.slice(0, 3) + "-" + digits.slice(3);
+		return digits.slice(0, 3) + "-" + digits.slice(3, 7) + "-" + digits.slice(7);
+	}
+	const fallbackPhoneInput = qs("authProfilePhoneInput");
+	if (fallbackPhoneInput && fallbackPhoneInput.dataset.phoneAutoHyphenBound !== "1") {
+		fallbackPhoneInput.dataset.phoneAutoHyphenBound = "1";
+		fallbackPhoneInput.setAttribute("inputmode", "numeric");
+		fallbackPhoneInput.setAttribute("maxlength", "13");
+		fallbackPhoneInput.addEventListener("input", function(e) {
+			e.target.value = formatFallbackPhoneInputValue(e.target.value);
+		});
+		fallbackPhoneInput.addEventListener("blur", function(e) {
+			e.target.value = formatFallbackPhoneInputValue(e.target.value);
+		});
+	}
+
 	async function saveProfile(e) {
 		if (e) { e.preventDefault(); e.stopPropagation(); }
 		const screen = qs("authProfileSetupScreen");
@@ -16115,12 +19960,17 @@ document.addEventListener("DOMContentLoaded", function () {
 			if (!user || !user.id) return showProfileError("로그인 정보를 확인하지 못했습니다. 다시 로그인해 주세요.", nameInput);
 			const now = new Date().toISOString();
 			const uploadedProfileImage = await (typeof uploadAuthProfilePhotoIfNeeded === "function" ? uploadAuthProfilePhotoIfNeeded : window.uploadAuthProfilePhotoIfNeeded)(client, user.id);
-			const profilePayload = { id: user.id, name: name, phone: phone, role_request: role, profile_completed: true, privacy_agreed_at: now, updated_at: now };
+			const profilePayload = { id: user.id, email: user.email || "", name: name, phone: phone, role_request: role, profile_completed: true, privacy_agreed_at: now, updated_at: now };
 			if (uploadedProfileImage) profilePayload.profile_image = uploadedProfileImage;
 			let result = await client.from("profiles").upsert(profilePayload, { onConflict: "id" });
 			if (result && result.error && /profile_image/i.test(String(result.error.message || ""))) {
 				delete profilePayload.profile_image;
 				result = await client.from("profiles").upsert(profilePayload, { onConflict: "id" });
+			}
+			if (result && result.error && (String(result.error.code || "") === "23505" || /profiles_email_key|duplicate key/i.test(String(result.error.message || "")))) {
+				const retryPayload = { id: user.id, name: name, phone: phone, role_request: role, profile_completed: true, privacy_agreed_at: now, updated_at: now };
+				if (uploadedProfileImage) retryPayload.profile_image = uploadedProfileImage;
+				result = await client.from("profiles").update(retryPayload).eq("id", user.id);
 			}
 			if (result && result.error) { console.error("개인정보 저장 실패:", result.error); return showProfileError("개인정보 저장에 실패했습니다.", nameInput); }
 			showProfileError("개인정보가 저장되었습니다.", null);
@@ -16186,6 +20036,926 @@ document.addEventListener("DOMContentLoaded", function () {
 	document.addEventListener("submit", function (e) {
 		if (e.target && e.target.id === "authProfileSetupForm") saveProfile(e);
 	}, true);
+})();
+
+
+/* ===== v2.038: 매물 등록 커스텀 드롭다운 ===== */
+(function initPropertyRegisterDropdowns()
+{
+	const dropdowns = document.querySelectorAll("[data-register-dropdown]");
+	if (!dropdowns.length) return;
+
+	const closeAll = (except = null) =>
+	{
+		dropdowns.forEach((dropdown) =>
+		{
+			if (dropdown === except) return;
+			dropdown.classList.remove("open");
+			const trigger = dropdown.querySelector("[data-register-dropdown-trigger]");
+			if (trigger) trigger.setAttribute("aria-expanded", "false");
+		});
+	};
+
+	dropdowns.forEach((dropdown) =>
+	{
+		const select = dropdown.querySelector("select");
+		const trigger = dropdown.querySelector("[data-register-dropdown-trigger]");
+		const label = dropdown.querySelector("[data-register-dropdown-label]");
+		const options = dropdown.querySelectorAll(".property-register-dropdown-option");
+		if (!select || !trigger || !label || !options.length) return;
+
+		const placeholder = select.options[0] ? select.options[0].textContent.trim() : "선택";
+
+		const syncLabel = () =>
+		{
+			const selectedOption = select.options[select.selectedIndex];
+			const selectedText = selectedOption ? selectedOption.textContent.trim() : placeholder;
+			label.textContent = select.value ? selectedText : placeholder;
+			options.forEach((option) =>
+			{
+				option.classList.toggle("active", option.dataset.value === select.value);
+				option.setAttribute("aria-selected", option.dataset.value === select.value ? "true" : "false");
+			});
+		};
+
+		trigger.addEventListener("click", (event) =>
+		{
+			event.preventDefault();
+			event.stopPropagation();
+			const willOpen = !dropdown.classList.contains("open");
+			closeAll(dropdown);
+			dropdown.classList.toggle("open", willOpen);
+			trigger.setAttribute("aria-expanded", willOpen ? "true" : "false");
+		});
+
+		options.forEach((option) =>
+		{
+			option.addEventListener("click", (event) =>
+			{
+				event.preventDefault();
+				event.stopPropagation();
+				select.value = option.dataset.value || "";
+				select.dispatchEvent(new Event("change", { bubbles: true }));
+				syncLabel();
+				dropdown.classList.remove("open");
+				trigger.setAttribute("aria-expanded", "false");
+			});
+		});
+
+		select.addEventListener("change", syncLabel);
+		syncLabel();
+	});
+
+	document.addEventListener("click", () => closeAll());
+	document.addEventListener("keydown", (event) =>
+	{
+		if (event.key === "Escape") closeAll();
+	});
+})();
+</script>
+
+
+
+
+
+
+<!-- ===== v2.078 PATCH: 사용승인일 백스페이스 무간섭 + 달력 연동 ===== -->
+<script>
+(function () {
+	const textInput = document.getElementById("propertyApprovalDateInput");
+	const pickerInput = document.getElementById("propertyApprovalDatePicker");
+	const pickerBtn = document.getElementById("propertyApprovalDatePickerBtn");
+
+	if (!textInput || !pickerInput || !pickerBtn) return;
+
+	function normalizeApprovalDate(value) {
+		const raw = String(value || "").trim();
+		if (!raw) return "";
+
+		const separated = raw.match(/^(\d{4})[.\-/](\d{1,2})[.\-/](\d{1,2})\.?$/);
+		if (separated) {
+			return separated[1] + "-" + separated[2].padStart(2, "0") + "-" + separated[3].padStart(2, "0");
+		}
+
+		const digits = raw.replace(/\D/g, "").slice(0, 8);
+		if (digits.length === 8) {
+			return digits.slice(0, 4) + "-" + digits.slice(4, 6) + "-" + digits.slice(6, 8);
+		}
+
+		return raw;
+	}
+
+	function syncTextToPicker() {
+		const value = normalizeApprovalDate(textInput.value);
+		textInput.value = value;
+
+		if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+			pickerInput.value = value;
+		} else {
+			pickerInput.value = "";
+		}
+	}
+
+	textInput.addEventListener("blur", syncTextToPicker);
+	textInput.addEventListener("change", syncTextToPicker);
+
+	pickerInput.addEventListener("change", function () {
+		if (!pickerInput.value) return;
+		textInput.value = pickerInput.value;
+	});
+
+	pickerBtn.addEventListener("click", function () {
+		syncTextToPicker();
+
+		try {
+			if (typeof pickerInput.showPicker === "function") {
+				pickerInput.showPicker();
+				return;
+			}
+		} catch (error) {}
+
+		pickerInput.style.pointerEvents = "auto";
+		pickerInput.focus();
+		pickerInput.click();
+		setTimeout(function () {
+			pickerInput.style.pointerEvents = "none";
+		}, 300);
+	});
+})();
+</script>
+
+<!-- ===== v2.111 PATCH: 입주가능일 - 사용승인일 로직 복제 + 즉시입주 ===== -->
+<script>
+(function () {
+	const textInput = document.getElementById("propertyMoveInDateInput");
+	const pickerInput = document.getElementById("propertyMoveInDatePicker");
+	const pickerBtn = document.getElementById("propertyMoveInDatePickerBtn");
+
+	if (!textInput || !pickerInput || !pickerBtn) return;
+
+	function normalizeMoveInDate(value) {
+		const raw = String(value || "").trim();
+		if (!raw) return "";
+
+		const separated = raw.match(/^(\d{4})[.\-/](\d{1,2})[.\-/](\d{1,2})\.?$/);
+		if (separated) {
+			return separated[1] + "-" + separated[2].padStart(2, "0") + "-" + separated[3].padStart(2, "0");
+		}
+
+		const digits = raw.replace(/\D/g, "").slice(0, 8);
+		if (digits.length === 8) {
+			return digits.slice(0, 4) + "-" + digits.slice(4, 6) + "-" + digits.slice(6, 8);
+		}
+
+		return raw;
+	}
+
+	function syncTextToPicker() {
+		const value = normalizeMoveInDate(textInput.value);
+		textInput.value = value;
+
+		if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+			pickerInput.value = value;
+		} else {
+			pickerInput.value = "";
+		}
+	}
+
+	textInput.addEventListener("blur", syncTextToPicker);
+	textInput.addEventListener("change", syncTextToPicker);
+
+	pickerInput.addEventListener("change", function () {
+		if (!pickerInput.value) return;
+		textInput.value = pickerInput.value;
+	});
+
+	pickerBtn.addEventListener("click", function () {
+		syncTextToPicker();
+
+		try {
+			if (typeof pickerInput.showPicker === "function") {
+				pickerInput.showPicker();
+				return;
+			}
+		} catch (error) {}
+
+		pickerInput.style.pointerEvents = "auto";
+		pickerInput.focus();
+		pickerInput.click();
+		setTimeout(function () {
+			pickerInput.style.pointerEvents = "none";
+		}, 300);
+	});
+	const nowCheck = document.getElementById("propertyMoveInNowChk");
+	if (nowCheck) {
+		nowCheck.addEventListener("change", function () {
+			if (nowCheck.checked) {
+				textInput.value = "즉시입주";
+				textInput.disabled = true;
+				pickerInput.value = "";
+				pickerInput.disabled = true;
+				pickerBtn.disabled = true;
+				pickerBtn.style.pointerEvents = "none";
+				pickerBtn.style.opacity = "0.45";
+			} else {
+				if (textInput.value === "즉시입주") textInput.value = "";
+				textInput.disabled = false;
+				pickerInput.disabled = false;
+				pickerBtn.disabled = false;
+				pickerBtn.style.pointerEvents = "";
+				pickerBtn.style.opacity = "";
+			}
+		});
+	}
+
+})();
+</script>
+
+<!-- ===== v2.111 PATCH: 입주가능일 - 자동 하이픈 + 달력 + 즉시입주 ===== -->
+<script>
+(function () {
+	const textInput = document.getElementById("propertyMoveInDateInput");
+	const pickerInput = document.getElementById("propertyMoveInDatePicker");
+	const pickerBtn = document.getElementById("propertyMoveInDatePickerBtn");
+	const nowCheck = document.getElementById("propertyMoveInNowChk");
+
+	if (!textInput || !pickerInput || !pickerBtn) return;
+
+	function formatMoveInDateTyping(value) {
+		const digits = String(value || "").replace(/\D/g, "").slice(0, 8);
+		if (digits.length <= 4) return digits;
+		if (digits.length <= 6) return digits.slice(0, 4) + "-" + digits.slice(4);
+		return digits.slice(0, 4) + "-" + digits.slice(4, 6) + "-" + digits.slice(6);
+	}
+
+	function normalizeMoveInDate(value) {
+		const raw = String(value || "").trim();
+		if (!raw || raw === "즉시입주") return raw;
+
+		const separated = raw.match(/^(\d{4})[.\-/](\d{1,2})[.\-/](\d{1,2})\.?$/);
+		if (separated) {
+			return separated[1] + "-" + separated[2].padStart(2, "0") + "-" + separated[3].padStart(2, "0");
+		}
+
+		const digits = raw.replace(/\D/g, "").slice(0, 8);
+		if (digits.length === 8) {
+			return digits.slice(0, 4) + "-" + digits.slice(4, 6) + "-" + digits.slice(6, 8);
+		}
+
+		return formatMoveInDateTyping(raw);
+	}
+
+	function syncTextToPicker() {
+		if (nowCheck && nowCheck.checked) return;
+
+		const value = normalizeMoveInDate(textInput.value);
+		textInput.value = value;
+
+		if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+			pickerInput.value = value;
+		} else {
+			pickerInput.value = "";
+		}
+	}
+
+	textInput.addEventListener("input", function () {
+		if (nowCheck && nowCheck.checked) return;
+		textInput.value = formatMoveInDateTyping(textInput.value);
+		if (/^\d{4}-\d{2}-\d{2}$/.test(textInput.value)) {
+			pickerInput.value = textInput.value;
+		} else {
+			pickerInput.value = "";
+		}
+	});
+
+	textInput.addEventListener("blur", syncTextToPicker);
+	textInput.addEventListener("change", syncTextToPicker);
+
+	pickerInput.addEventListener("change", function () {
+		if (!pickerInput.value || (nowCheck && nowCheck.checked)) return;
+		textInput.value = pickerInput.value;
+	});
+
+	pickerBtn.addEventListener("click", function () {
+		if (nowCheck && nowCheck.checked) return;
+
+		syncTextToPicker();
+
+		try {
+			if (typeof pickerInput.showPicker === "function") {
+				pickerInput.showPicker();
+				return;
+			}
+		} catch (error) {}
+
+		pickerInput.style.pointerEvents = "auto";
+		pickerInput.focus();
+		pickerInput.click();
+		setTimeout(function () {
+			pickerInput.style.pointerEvents = "none";
+		}, 300);
+	});
+
+	if (nowCheck) {
+		nowCheck.addEventListener("change", function () {
+			if (nowCheck.checked) {
+				textInput.value = "즉시입주";
+				textInput.disabled = true;
+				pickerInput.value = "";
+				pickerInput.disabled = true;
+				pickerBtn.disabled = true;
+				pickerBtn.style.pointerEvents = "none";
+				pickerBtn.style.opacity = "0.45";
+			} else {
+				if (textInput.value === "즉시입주") textInput.value = "";
+				textInput.disabled = false;
+				pickerInput.disabled = false;
+				pickerBtn.disabled = false;
+				pickerBtn.style.pointerEvents = "";
+				pickerBtn.style.opacity = "";
+			}
+		});
+	}
+})();
+</script>
+
+
+
+<!-- ===== v2.078 PATCH: 사용승인일 자동 하이픈 + 삭제 무간섭 + 달력 연동 ===== -->
+<script>
+(function () {
+	const textInput = document.getElementById("propertyApprovalDateInput");
+	const pickerInput = document.getElementById("propertyApprovalDatePicker");
+	const pickerBtn = document.getElementById("propertyApprovalDatePickerBtn");
+
+	if (!textInput || !pickerInput || !pickerBtn) return;
+
+	function onlyDateDigits(value) {
+		return String(value || "").replace(/\D/g, "").slice(0, 8);
+	}
+
+	function formatApprovalDateFromDigits(digits) {
+		const value = onlyDateDigits(digits);
+
+		if (value.length < 4) return value;
+		if (value.length === 4) return value + "-";
+		if (value.length <= 6) return value.slice(0, 4) + "-" + value.slice(4);
+		if (value.length === 6) return value.slice(0, 4) + "-" + value.slice(4, 6) + "-";
+
+		return value.slice(0, 4) + "-" + value.slice(4, 6) + "-" + value.slice(6, 8);
+	}
+
+	function normalizeApprovalDate(value) {
+		const raw = String(value || "").trim();
+		if (!raw) return "";
+
+		const separated = raw.match(/^(\d{4})[.\-/](\d{1,2})[.\-/](\d{1,2})\.?$/);
+		if (separated) {
+			return separated[1] + "-" + separated[2].padStart(2, "0") + "-" + separated[3].padStart(2, "0");
+		}
+
+		const digits = onlyDateDigits(raw);
+		if (digits.length === 8) {
+			return digits.slice(0, 4) + "-" + digits.slice(4, 6) + "-" + digits.slice(6, 8);
+		}
+
+		return formatApprovalDateFromDigits(digits);
+	}
+
+	function syncPickerValue() {
+		const value = textInput.value;
+		if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+			pickerInput.value = value;
+		} else {
+			pickerInput.value = "";
+		}
+	}
+
+	textInput.addEventListener("input", function (event) {
+		if (event.inputType && event.inputType.indexOf("delete") !== -1) {
+			syncPickerValue();
+			return;
+		}
+
+		const digits = onlyDateDigits(textInput.value);
+		textInput.value = formatApprovalDateFromDigits(digits);
+		syncPickerValue();
+	});
+
+	textInput.addEventListener("blur", function () {
+		textInput.value = normalizeApprovalDate(textInput.value);
+		syncPickerValue();
+	});
+
+	textInput.addEventListener("change", function () {
+		textInput.value = normalizeApprovalDate(textInput.value);
+		syncPickerValue();
+	});
+
+	pickerInput.addEventListener("change", function () {
+		if (!pickerInput.value) return;
+		textInput.value = pickerInput.value;
+		syncPickerValue();
+	});
+
+	pickerBtn.addEventListener("click", function () {
+		textInput.value = normalizeApprovalDate(textInput.value);
+		syncPickerValue();
+
+		try {
+			if (typeof pickerInput.showPicker === "function") {
+				pickerInput.showPicker();
+				return;
+			}
+		} catch (error) {}
+
+		pickerInput.style.pointerEvents = "auto";
+		pickerInput.focus();
+		pickerInput.click();
+		setTimeout(function () {
+			pickerInput.style.pointerEvents = "none";
+		}, 300);
+	});
+})();
+</script>
+
+<!-- ===== v2.111 PATCH: 입주가능일 자동 하이픈 - 사용승인일 로직 복제 ===== -->
+<script>
+(function () {
+	const textInput = document.getElementById("propertyMoveInDateInput");
+	const pickerInput = document.getElementById("propertyMoveInDatePicker");
+	const pickerBtn = document.getElementById("propertyMoveInDatePickerBtn");
+	const nowCheck = document.getElementById("propertyMoveInNowChk");
+
+	if (!textInput || !pickerInput || !pickerBtn) return;
+
+	function onlyDateDigits(value) {
+		return String(value || "").replace(/\D/g, "").slice(0, 8);
+	}
+
+	function formatMoveInDateFromDigits(digits) {
+		const value = onlyDateDigits(digits);
+
+		if (value.length < 4) return value;
+		if (value.length === 4) return value + "-";
+		if (value.length <= 6) return value.slice(0, 4) + "-" + value.slice(4);
+		if (value.length === 6) return value.slice(0, 4) + "-" + value.slice(4, 6) + "-";
+
+		return value.slice(0, 4) + "-" + value.slice(4, 6) + "-" + value.slice(6, 8);
+	}
+
+	function normalizeMoveInDate(value) {
+		const raw = String(value || "").trim();
+		if (!raw) return "";
+
+		const separated = raw.match(/^(\d{4})[.\-/](\d{1,2})[.\-/](\d{1,2})\.?$/);
+		if (separated) {
+			return separated[1] + "-" + separated[2].padStart(2, "0") + "-" + separated[3].padStart(2, "0");
+		}
+
+		const digits = onlyDateDigits(raw);
+		if (digits.length === 8) {
+			return digits.slice(0, 4) + "-" + digits.slice(4, 6) + "-" + digits.slice(6, 8);
+		}
+
+		return formatMoveInDateFromDigits(digits);
+	}
+
+	function syncPickerValue() {
+		const value = textInput.value;
+		if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+			pickerInput.value = value;
+		} else {
+			pickerInput.value = "";
+		}
+	}
+
+	textInput.addEventListener("input", function (event) {
+		if (nowCheck && nowCheck.checked) return;
+		if (event.inputType && event.inputType.indexOf("delete") !== -1) {
+			syncPickerValue();
+			return;
+		}
+
+		const digits = onlyDateDigits(textInput.value);
+		textInput.value = formatMoveInDateFromDigits(digits);
+		syncPickerValue();
+	});
+
+	textInput.addEventListener("blur", function () {
+		if (nowCheck && nowCheck.checked) return;
+		textInput.value = normalizeMoveInDate(textInput.value);
+		syncPickerValue();
+	});
+
+	textInput.addEventListener("change", function () {
+		if (nowCheck && nowCheck.checked) return;
+		textInput.value = normalizeMoveInDate(textInput.value);
+		syncPickerValue();
+	});
+
+	pickerInput.addEventListener("change", function () {
+		if (nowCheck && nowCheck.checked) return;
+		if (!pickerInput.value) return;
+		textInput.value = pickerInput.value;
+		syncPickerValue();
+	});
+
+	pickerBtn.addEventListener("click", function () {
+		if (nowCheck && nowCheck.checked) return;
+		textInput.value = normalizeMoveInDate(textInput.value);
+		syncPickerValue();
+
+		try {
+			if (typeof pickerInput.showPicker === "function") {
+				pickerInput.showPicker();
+				return;
+			}
+		} catch (error) {}
+
+		pickerInput.style.pointerEvents = "auto";
+		pickerInput.focus();
+		pickerInput.click();
+		setTimeout(function () {
+			pickerInput.style.pointerEvents = "none";
+		}, 300);
+	});
+	if (nowCheck) {
+		nowCheck.addEventListener("change", function () {
+			if (nowCheck.checked) {
+				textInput.value = "즉시입주";
+				textInput.disabled = true;
+				pickerInput.value = "";
+				pickerInput.disabled = true;
+				pickerBtn.disabled = true;
+				pickerBtn.style.pointerEvents = "none";
+				pickerBtn.style.opacity = "0.45";
+			} else {
+				if (textInput.value === "즉시입주") textInput.value = "";
+				textInput.disabled = false;
+				pickerInput.disabled = false;
+				pickerBtn.disabled = false;
+				pickerBtn.style.pointerEvents = "";
+				pickerBtn.style.opacity = "";
+			}
+		});
+	}
+
+})();
+</script>
+
+<!-- ===== v2.078 PATCH: 아파트/오피스텔/원룸·투룸/빌라 동·호수 표시 ===== -->
+<script>
+(function () {
+	const dongHoRow = document.getElementById("propertyDongHoRow");
+	const propertyTypeSelect = document.getElementById("propertyTypeSelect");
+	if (!dongHoRow || !propertyTypeSelect) return;
+
+	const visibleTypeValues = ["apartment", "officetel", "room", "villa"];
+
+	function updateDongHoVisibility() {
+		const shouldShow = visibleTypeValues.includes(propertyTypeSelect.value);
+		dongHoRow.classList.toggle("is-visible", shouldShow);
+	}
+
+	propertyTypeSelect.addEventListener("change", updateDongHoVisibility);
+
+	document.addEventListener("click", function (event) {
+		const option = event.target.closest(".property-type-dropdown .property-register-dropdown-option");
+		if (!option) return;
+		setTimeout(updateDongHoVisibility, 0);
+	});
+
+	updateDongHoVisibility();
+})();
+</script>
+
+
+<!-- ===== v2.078 PATCH: 시설정보 주거형일 때만 표시 ===== -->
+<script>
+(function () {
+	const propertyTypeSelect = document.getElementById("propertyTypeSelect");
+	const facilityCard = document.getElementById("propertyFacilityCard");
+
+	if (!propertyTypeSelect || !facilityCard) return;
+
+	const showFacilityTypes = [
+		"apartment",
+		"officetel",
+		"room",
+		"villa",
+		"house",
+		"multi_family_house",
+		"pension",
+		"hotel"
+	];
+
+	function updateFacilityVisibility() {
+		const shouldShow = showFacilityTypes.includes(propertyTypeSelect.value);
+		facilityCard.classList.toggle("is-hidden", !shouldShow);
+	}
+
+	propertyTypeSelect.addEventListener("change", updateFacilityVisibility);
+
+	document.addEventListener("click", function (event) {
+		const option = event.target.closest(".property-type-dropdown .property-register-dropdown-option");
+		if (!option) return;
+		setTimeout(updateFacilityVisibility, 0);
+	});
+
+	updateFacilityVisibility();
+})();
+</script>
+
+
+<!-- ===== v2.078 PATCH: 하단 버튼 실제 페이지 라인 정렬 ===== -->
+<script>
+(function () {
+	const pageInner = document.querySelector(".property-register-inner");
+	const bottomBar = document.getElementById("propertyRegisterBottomBar");
+	const bottomInner = bottomBar ? bottomBar.querySelector(".property-register-bottom-inner") : null;
+
+	if (!pageInner || !bottomBar || !bottomInner) return;
+
+	function alignRegisterBottomBar() {
+		const rect = pageInner.getBoundingClientRect();
+
+		bottomBar.style.justifyContent = "flex-start";
+		bottomBar.style.paddingLeft = "0";
+		bottomBar.style.paddingRight = "0";
+
+		bottomInner.style.width = rect.width + "px";
+		bottomInner.style.marginLeft = rect.left + "px";
+		bottomInner.style.marginRight = "0";
+		bottomInner.style.boxSizing = "border-box";
+		bottomInner.style.display = "flex";
+		bottomInner.style.alignItems = "center";
+		bottomInner.style.justifyContent = "flex-end";
+	}
+
+	window.addEventListener("resize", alignRegisterBottomBar);
+	window.addEventListener("orientationchange", alignRegisterBottomBar);
+	document.addEventListener("DOMContentLoaded", alignRegisterBottomBar);
+
+	const observer = new MutationObserver(alignRegisterBottomBar);
+	observer.observe(document.body, { attributes: true, attributeFilter: ["class"] });
+
+	alignRegisterBottomBar();
+})();
+</script>
+
+
+<!-- ===== v2.078 PATCH: 관리비 탭 전환 + 정액 입력 활성화 ===== -->
+<script>
+(function () {
+	const card = document.getElementById("propertyMaintenanceCard");
+	if (!card) return;
+
+	const tabs = card.querySelectorAll(".maintenance-tab");
+	const sections = card.querySelectorAll(".maintenance-section");
+
+	tabs.forEach(function (tab) {
+		tab.addEventListener("click", function () {
+			const type = tab.getAttribute("data-maintenance-type");
+
+			tabs.forEach(function (item) {
+				item.classList.toggle("active", item === tab);
+			});
+
+			sections.forEach(function (section) {
+				section.classList.toggle("active", section.getAttribute("data-maintenance-section") === type);
+			});
+		});
+	});
+
+	function syncFixedInputs() {
+		card.querySelectorAll(".maintenance-fee-row").forEach(function (row) {
+			const input = row.querySelector(".property-register-input");
+			const checked = row.querySelector("input[type='radio']:checked");
+			if (!input || !checked) return;
+
+			const enabled = checked.value === "fixed";
+			input.disabled = !enabled;
+			if (!enabled) input.value = "";
+		});
+	}
+
+	function syncUnder100Mode() {
+		const under100 = document.getElementById("maintenanceUnder100kChk");
+		if (!under100) return;
+
+		const isUnder100 = under100.checked;
+		card.querySelectorAll(".maintenance-fixed-detail-row").forEach(function (row) {
+			row.classList.toggle("is-hidden", isUnder100);
+		});
+		card.querySelectorAll(".maintenance-fixed-under100-row").forEach(function (row) {
+			row.classList.toggle("is-hidden", !isUnder100);
+		});
+	}
+
+	card.addEventListener("change", function (event) {
+		if (event.target && event.target.type === "radio") syncFixedInputs();
+		if (event.target && event.target.id === "maintenanceUnder100kChk") syncUnder100Mode();
+	});
+
+	syncFixedInputs();
+	syncUnder100Mode();
+})();
+</script>
+
+
+
+
+
+<script>
+/* ===== v2.111: 등록자 정보 내 정보와 동일 소스 자동 주입 ===== */
+(function bindRegistrantInfoV2107()
+{
+	const officeInput = document.getElementById("registrantOfficeNameInput");
+	const repInput = document.getElementById("registrantRepresentativeInput");
+	const phone1Input = document.getElementById("registrantPhone1Input");
+	const managerInput = document.getElementById("registrantManagerNameInput");
+	const phone2Input = document.getElementById("registrantPhone2Input");
+	const licensedChk = document.getElementById("registrantLicensedAgentChk");
+
+	function setValue(el, value)
+	{
+		if (!el) return;
+		el.value = value || "";
+	}
+
+	function getDomValue(id)
+	{
+		const el = document.getElementById(id);
+		return el && "value" in el ? String(el.value || "").trim() : "";
+	}
+
+	function getDomText(id)
+	{
+		const el = document.getElementById(id);
+		return el ? String(el.textContent || "").trim() : "";
+	}
+
+	function cleanValue(value)
+	{
+		const text = String(value || "").trim();
+		return ["-", "해당 없음", "미신청", "승인 대기중"].includes(text) ? "" : text;
+	}
+
+	function applyToggle()
+	{
+		if (!licensedChk || !managerInput) return;
+		if (licensedChk.checked)
+		{
+			managerInput.disabled = false;
+		}
+		else
+		{
+			managerInput.value = "";
+			managerInput.disabled = true;
+		}
+	}
+
+	async function loadRegistrantInfo()
+	{
+		const client = typeof getRealjejuSupabaseClient === "function" ? getRealjejuSupabaseClient() : null;
+
+		let profile = window.realjejuCurrentProfile || null;
+		let user = window.realjejuCurrentAuthUser || null;
+
+		const fallbackOffice = getDomValue("brokerOfficeNameInput") || getDomValue("brokerOfficeSearchInput") || cleanValue(getDomText("myInfoBrokerOfficeValue"));
+		const fallbackName = getDomValue("brokerOwnerNameInput") || cleanValue(getDomText("myInfoNameValue"));
+		const fallbackPhone = getDomValue("brokerOfficePhoneInput") || getDomValue("authProfilePhoneInput") || cleanValue(getDomText("myInfoPhoneValue"));
+
+		const cachedAgency = window.realjejuCurrentBrokerOffice || null;
+
+		let officeName = (cachedAgency && cachedAgency.office_name) || fallbackOffice;
+		let personName = (cachedAgency && cachedAgency.owner_name) || fallbackName || (profile && profile.name) || "";
+		let phone = (cachedAgency && cachedAgency.phone) || fallbackPhone || (profile && profile.phone) || "";
+
+		if (client)
+		{
+			try
+			{
+				const { data: userData } = await client.auth.getUser();
+				user = userData && userData.user ? userData.user : user;
+				window.realjejuCurrentAuthUser = user || null;
+
+				if (user)
+				{
+					try
+					{
+						const { data: profileData } = await client
+							.from("profiles")
+							.select("name, phone, role_request")
+							.eq("id", user.id)
+							.maybeSingle();
+						if (profileData) {
+							profile = profileData;
+							window.realjejuCurrentProfile = profileData;
+						}
+					}
+					catch (profileError) {}
+
+					try
+					{
+						const { data: agencyData } = await client
+							.from("agencies")
+							.select("office_name, owner_name, phone, status, created_at")
+							.eq("user_id", user.id)
+							.order("created_at", { ascending: false })
+							.limit(5);
+
+						const rows = Array.isArray(agencyData) ? agencyData : [];
+						const agency = rows.find(row => row && row.status === "active") || rows[0] || null;
+						window.realjejuCurrentBrokerOffice = agency || null;
+						if (agency && agency.office_name) officeName = agency.office_name;
+						if (agency && agency.owner_name) personName = agency.owner_name;
+						if (agency && agency.phone) phone = agency.phone;
+					}
+					catch (agencyError)
+					{
+						console.warn("등록자 정보 중개사무소명 조회 실패:", agencyError);
+					}
+
+					personName = (profile && profile.name) || personName || "";
+					phone = (profile && profile.phone) || phone || "";
+				}
+			}
+			catch (error)
+			{
+				console.warn("등록자 정보 불러오기 실패:", error);
+			}
+		}
+
+		setValue(officeInput, officeName);
+		setValue(repInput, personName);
+		setValue(phone1Input, phone);
+
+	}
+
+	if (licensedChk)
+	{
+		licensedChk.addEventListener("change", applyToggle);
+		applyToggle();
+	}
+
+	window.realjejuLoadRegistrantInfo = loadRegistrantInfo;
+	loadRegistrantInfo();
+	setTimeout(loadRegistrantInfo, 300);
+	setTimeout(loadRegistrantInfo, 1000);
+
+	document.addEventListener("realjeju:auth-updated", loadRegistrantInfo);
+	document.addEventListener("realjeju:profile-updated", loadRegistrantInfo);
+})();
+</script>
+
+
+<script>
+/* ===== v2.111: 로그인/로그아웃 등록자 정보 안전 초기화 ===== */
+(function bindRegistrantAuthSafetyV2110()
+{
+	function resetRegistrantInfo()
+	{
+		window.realjejuCurrentAuthUser = null;
+		window.realjejuCurrentProfile = null;
+		window.realjejuCurrentBrokerOffice = null;
+
+		[
+			"registrantOfficeNameInput",
+			"registrantRepresentativeInput",
+			"registrantPhone1Input",
+			"registrantManagerNameInput",
+			"registrantPhone2Input"
+		].forEach((id) => {
+			const el = document.getElementById(id);
+			if (el) el.value = "";
+		});
+
+		const chk = document.getElementById("registrantLicensedAgentChk");
+		const manager = document.getElementById("registrantManagerNameInput");
+		if (chk) chk.checked = false;
+		if (manager) manager.disabled = true;
+	}
+
+	function goRealEstateHome()
+	{
+		try {
+			closePropertyRegisterPage && closePropertyRegisterPage();
+		} catch (error) {}
+
+		try {
+			closeAdminPage && closeAdminPage();
+		} catch (error) {}
+
+		document.body.classList.remove("property-register-page-open", "admin-page-open");
+		const topbarItems = document.querySelectorAll(".topbar-menu-item");
+		topbarItems.forEach((btn) => btn.classList.remove("active"));
+		if (topbarItems[0]) topbarItems[0].classList.add("active");
+	}
+
+	window.realjejuResetRegistrantInfo = resetRegistrantInfo;
+	window.realjejuGoRealEstateHome = goRealEstateHome;
 })();
 </script>
 
