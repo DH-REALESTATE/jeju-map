@@ -5010,7 +5010,7 @@ body.sidebar-list-collapsed .map-side-tools
 	background: #fff;
 }
 
-/* Ver 2.138 표시: 하단바 왼쪽 고정 */
+/* Ver 2.139 표시: 하단바 왼쪽 고정 */
 .sub-version-fixed
 {
 	position: absolute !important;
@@ -11405,7 +11405,7 @@ body[data-property-type="factory_warehouse"] #propertyMaintenanceCard
 
 
 
-/* ===== PATCH 2.138: 매물 등록 주소 검색 모달 ===== */
+/* ===== PATCH 2.139: 매물 등록 주소 검색 모달 ===== */
 .property-address-wrap .property-register-input
 {
 	cursor: pointer;
@@ -11787,7 +11787,7 @@ body[data-property-type="factory_warehouse"] #propertyMaintenanceCard
 
 
 
-/* ===== PATCH 2.138: 매물 주소 모달 글자 크기 매물등록 기준 통일 ===== */
+/* ===== PATCH 2.139: 매물 주소 모달 글자 크기 매물등록 기준 통일 ===== */
 .property-address-search-modal
 {
 	font-size: var(--property-register-option-font-size);
@@ -11837,6 +11837,71 @@ body[data-property-type="factory_warehouse"] #propertyMaintenanceCard
 {
 	font-size: 16px !important;
 }
+
+
+/* ===== PATCH 2.139: 주소 선택 후 상세주소 화면 단순화 ===== */
+.property-address-search-screen
+{
+	display: none;
+}
+
+.property-address-search-screen.open
+{
+	display: block;
+}
+
+.property-address-detail-screen.open .property-address-detail-head,
+.property-address-detail-screen.open .property-address-detail-label,
+.property-address-detail-screen.open .property-address-detail-selected
+{
+	display: none !important;
+}
+
+.property-address-detail-screen.open
+{
+	padding-top: 0;
+}
+
+.property-address-detail-screen.open .property-address-detail-section-title
+{
+	margin-top: 0;
+	margin-bottom: 6px;
+	font-size: var(--property-register-left-label-font-size) !important;
+	font-weight: var(--property-register-left-label-font-weight) !important;
+}
+
+.property-address-detail-screen.open .property-address-detail-help
+{
+	margin-bottom: 14px;
+	font-size: 14px !important;
+}
+
+.property-address-detail-confirm
+{
+	height: 52px !important;
+	min-width: 132px !important;
+	width: auto !important;
+	padding: 0 22px !important;
+	border-radius: 0 !important;
+	background: #4A7EDC !important;
+	border: 1px solid #4A7EDC !important;
+	color: #ffffff !important;
+	font-size: 16px !important;
+	font-weight: 800 !important;
+	letter-spacing: -0.18px !important;
+}
+
+.property-address-detail-confirm:hover
+{
+	background: #3F6FCC !important;
+	border-color: #3F6FCC !important;
+}
+
+.property-address-detail-actions
+{
+	margin-top: 16px !important;
+}
+
 </style>
 	</head>
 	<body class="sidebar-list-collapsed">
@@ -12751,7 +12816,7 @@ body[data-property-type="factory_warehouse"] #propertyMaintenanceCard
 		<div class="sub-topbar">
 			<div class="sub-topbar-inner">
 				<span class="sub-version-fixed">
-					Ver 2.138
+					Ver 2.139
 				</span>
 				<div class="sub-topbar-left">
 					<strong id="listInfoText">
@@ -13944,7 +14009,7 @@ function hexToRgba(hex, alpha = 1)
 	return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 const APP_NAME = "REALJEJU.APP";
-const APP_VERSION = "2.138";
+const APP_VERSION = "2.139";
 
 function applyAppVersion()
 {
@@ -22428,7 +22493,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 <script>
-/* ===== PATCH 2.138: 매물 등록 주소 입력 모달 ===== */
+/* ===== PATCH 2.139: 매물 등록 주소 입력 모달 ===== */
 (function initPropertyAddressInputModal(){
 	const addressInput = document.getElementById("propertyAddressInput");
 	const modal = document.getElementById("propertyAddressSearchModal");
