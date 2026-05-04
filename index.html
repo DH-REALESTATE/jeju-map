@@ -5010,7 +5010,7 @@ body.sidebar-list-collapsed .map-side-tools
 	background: #fff;
 }
 
-/* Ver 2.132 표시: 하단바 왼쪽 고정 */
+/* Ver 2.134 표시: 하단바 왼쪽 고정 */
 .sub-version-fixed
 {
 	position: absolute !important;
@@ -11312,7 +11312,7 @@ body[data-property-type="factory_warehouse"] #propertyMaintenanceCard
 /* 내 정보 [수정] */
 .auth-modal.profile-page-mode #myInfoEditProfileBtn,
 /* 개인정보 설정 [저장] */
-.auth-modal.profile-page-mode #authProfileSubmitBtn,
+.auth-modal.profile-page-mode #authProfileSaveBtn,
 /* 중개사무소 가입신청 */
 .auth-modal.profile-page-mode #myInfoBrokerOfficeBtn:not(:disabled):not(.is-disabled),
 /* 매물 등록하기 */
@@ -11326,7 +11326,7 @@ body[data-property-type="factory_warehouse"] #propertyMaintenanceCard
 
 /* hover */
 .auth-modal.profile-page-mode #myInfoEditProfileBtn:hover,
-.auth-modal.profile-page-mode #authProfileSubmitBtn:hover,
+.auth-modal.profile-page-mode #authProfileSaveBtn:hover,
 .auth-modal.profile-page-mode #myInfoBrokerOfficeBtn:not(:disabled):not(.is-disabled):hover,
 #propertySubmitBtn:hover
 {
@@ -11337,12 +11337,32 @@ body[data-property-type="factory_warehouse"] #propertyMaintenanceCard
 
 /* active */
 .auth-modal.profile-page-mode #myInfoEditProfileBtn:active,
-.auth-modal.profile-page-mode #authProfileSubmitBtn:active,
+.auth-modal.profile-page-mode #authProfileSaveBtn:active,
 .auth-modal.profile-page-mode #myInfoBrokerOfficeBtn:not(:disabled):not(.is-disabled):active,
 #propertySubmitBtn:active
 {
 	background: #355FB0 !important;
 	border-color: #355FB0 !important;
+	color: #ffffff !important;
+}
+
+
+
+/* ===== PATCH 2.134: 개인정보 설정 저장 버튼 파랑 강제 적용 ===== */
+.auth-modal.profile-page-mode #authProfileSaveBtn,
+.auth-modal.profile-page-mode #authProfileSetupForm #authProfileSaveBtn.auth-modal-submit
+{
+	background: #4A7EDC !important;
+	color: #ffffff !important;
+	border: 1px solid #4A7EDC !important;
+	box-shadow: none !important;
+}
+
+.auth-modal.profile-page-mode #authProfileSaveBtn:hover,
+.auth-modal.profile-page-mode #authProfileSetupForm #authProfileSaveBtn.auth-modal-submit:hover
+{
+	background: #3F6FCC !important;
+	border-color: #3F6FCC !important;
 	color: #ffffff !important;
 }
 
@@ -11355,6 +11375,29 @@ body[data-property-type="factory_warehouse"] #propertyMaintenanceCard
 	border: 1px solid #e5e7eb !important;
 	cursor: not-allowed !important;
 	box-shadow: none !important;
+}
+
+
+/* ===== PATCH 2.134: 개인정보 수정 전화번호 초기값 + 저장 버튼 파랑 최종 고정 ===== */
+.auth-modal.profile-page-mode #myInfoBrokerOfficeBtn:not(:disabled):not(.is-disabled):not(.is-pending),
+.auth-modal.profile-page-mode .auth-myinfo-screen #myInfoBrokerOfficeBtn:not(:disabled):not(.is-disabled):not(.is-pending),
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-submit,
+#authBrokerOfficeScreen .broker-apply-submit
+{
+	background: #4A7EDC !important;
+	color: #ffffff !important;
+	border: 1px solid #4A7EDC !important;
+	box-shadow: none !important;
+}
+
+.auth-modal.profile-page-mode #myInfoBrokerOfficeBtn:not(:disabled):not(.is-disabled):not(.is-pending):hover,
+.auth-modal.profile-page-mode .auth-myinfo-screen #myInfoBrokerOfficeBtn:not(:disabled):not(.is-disabled):not(.is-pending):hover,
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-submit:hover,
+#authBrokerOfficeScreen .broker-apply-submit:hover
+{
+	background: #3F6FCC !important;
+	border-color: #3F6FCC !important;
+	color: #ffffff !important;
 }
 
 </style>
@@ -12222,7 +12265,7 @@ body[data-property-type="factory_warehouse"] #propertyMaintenanceCard
 		<div class="sub-topbar">
 			<div class="sub-topbar-inner">
 				<span class="sub-version-fixed">
-					Ver 2.132
+					Ver 2.134
 				</span>
 				<div class="sub-topbar-left">
 					<strong id="listInfoText">
@@ -13414,7 +13457,7 @@ function hexToRgba(hex, alpha = 1)
 	return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 const APP_NAME = "REALJEJU.APP";
-const APP_VERSION = "2.132";
+const APP_VERSION = "2.134";
 
 function applyAppVersion()
 {
@@ -16937,7 +16980,7 @@ function normalizeRealjejuPhone(value)
 		currentRealjejuProfileCompleted = !needsSetup;
 		if (needsSetup) {
 			if (authProfileNameInput) authProfileNameInput.value = profile && profile.name ? profile.name : "";
-			if (authProfilePhoneInput) authProfilePhoneInput.value = profile && profile.phone ? profile.phone : "";
+			if (authProfilePhoneInput) authProfilePhoneInput.value = profile && profile.phone ? formatRealjejuPhoneInputValue(profile.phone) : "";
 			if (authProfileRoleRequestSelect) authProfileRoleRequestSelect.value = profile && profile.role_request ? profile.role_request : "user";
 			if (authProfilePrivacyAgreeCheck) authProfilePrivacyAgreeCheck.checked = false;
 			setAuthProfilePhotoPreview(profile && profile.profile_image ? profile.profile_image : "");
@@ -18375,7 +18418,7 @@ function applyLoggedInAccountUI(user, profile)
 			}
 			setTextById("myInfoNameValue", profile && profile.name ? profile.name : "-");
 			setTextById("myInfoEmailValue", user.email || (profile && profile.email) || "-");
-			setTextById("myInfoPhoneValue", profile && profile.phone ? profile.phone : "-");
+			setTextById("myInfoPhoneValue", profile && profile.phone ? formatRealjejuPhoneInputValue(profile.phone) : "-");
 			setTextById("myInfoRoleValue", getRoleLabel(profile && profile.role_request));
 			setTextById("myInfoProfileStatusValue", completed ? "완료" : "미완료");
 			setTextById("myInfoBrokerOfficeValue", getBrokerOfficeStatusText(profile, brokerOffice));
@@ -18820,7 +18863,7 @@ function applyLoggedInAccountUI(user, profile)
 	{
 		const source = profile || {};
 		if (authProfileNameInput) authProfileNameInput.value = source.name ? source.name : "";
-		if (authProfilePhoneInput) authProfilePhoneInput.value = source.phone ? source.phone : "";
+		if (authProfilePhoneInput) authProfilePhoneInput.value = source.phone ? formatRealjejuPhoneInputValue(source.phone) : "";
 		if (authProfileRoleRequestSelect) authProfileRoleRequestSelect.value = source.role_request ? source.role_request : "user";
 		if (authProfilePrivacyAgreeCheck) authProfilePrivacyAgreeCheck.checked = false;
 		if (authProfilePhotoInput) authProfilePhotoInput.value = "";
@@ -21847,12 +21890,8 @@ document.addEventListener("DOMContentLoaded", function () {
 	}
 
 	function bind(input){
-		if (!input) return;
-
-		// remove previous handlers by cloning (safe override)
-		const clone = input.cloneNode(true);
-		input.parentNode.replaceChild(clone, input);
-		input = clone;
+		if (!input || input.dataset.realjejuPhoneBackspaceBound === "1") return;
+		input.dataset.realjejuPhoneBackspaceBound = "1";
 
 		input.setAttribute("inputmode","numeric");
 		input.setAttribute("maxlength","13");
