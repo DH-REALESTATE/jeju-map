@@ -5010,7 +5010,7 @@ body.sidebar-list-collapsed .map-side-tools
 	background: #fff;
 }
 
-/* Ver 2.114 표시: 하단바 왼쪽 고정 */
+/* Ver 2.132 표시: 하단바 왼쪽 고정 */
 .sub-version-fixed
 {
 	position: absolute !important;
@@ -5505,10 +5505,11 @@ body.sidebar-list-collapsed .map-side-tools
 	display: flex;
 }
 
+/* 로그인, 회원가입 창 너비 설정 */
 .auth-modal-dialog
 {
 	position: relative;
-	width: 480px;
+	width: 500px;
 	height: 690px;
 	display: flex;
 	flex-direction: column;
@@ -7557,7 +7558,7 @@ html, body
 :root
 {
 	--profile-page-bg: #f8fafc;
-	--profile-page-card-width: clamp(320px, 90vw, 500px);
+	--profile-page-card-width: clamp(320px, 90vw, 600px);
 	--profile-page-card-padding: 34px 40px 40px;
 	--profile-page-card-bg: #ffffff;
 	--profile-page-card-border: 1px solid #e5e7eb;
@@ -7833,7 +7834,6 @@ html, body
 /* ===== PATCH: 개인정보/내정보 최종 패치 ===== */
 :root
 {
-	--profile-page-card-width: clamp(320px, 90vw, 500px);
 	--profile-page-card-radius: 0;
 	--profile-page-input-radius: 0;
 	--profile-page-button-radius: 0;
@@ -10841,6 +10841,522 @@ body.property-register-page-open .property-register-bottom-bar
 	line-height: 1.2;
 }
 
+
+
+/* ===== PATCH: 홈 상태에서는 매물등록 화면/하단바 강제 숨김 ===== */
+body:not(.property-register-page-open) #propertyRegisterPage,
+body:not(.property-register-page-open) #propertyRegisterBottomBar
+{
+	display: none !important;
+	visibility: hidden !important;
+	pointer-events: none !important;
+}
+
+
+
+/* ===== PATCH: 관리비 숨김 유형 강제 차단 ===== */
+body[data-property-type="land"] #propertyMaintenanceCard,
+body[data-property-type="hotel"] #propertyMaintenanceCard,
+body[data-property-type="pension"] #propertyMaintenanceCard,
+body[data-property-type="building"] #propertyMaintenanceCard,
+body[data-property-type="factory_warehouse"] #propertyMaintenanceCard
+{
+	display: none !important;
+	visibility: hidden !important;
+	pointer-events: none !important;
+}
+
+
+
+/* ===== PATCH: 내 정보 화면 매물등록 UI 톤 통일 ===== */
+.auth-modal.profile-page-mode .auth-myinfo-screen
+{
+	background: #ffffff !important;
+	color: #111827 !important;
+	border: 1px solid #e5e7eb !important;
+	border-radius: 0 !important;
+	box-shadow: none !important;
+	padding: 34px 36px 38px !important;
+}
+
+.auth-modal.profile-page-mode .auth-myinfo-screen .auth-modal-title
+{
+	margin: 0 0 22px !important;
+	color: #111827 !important;
+	font-family: var(--font-ui) !important;
+	font-size: 24px !important;
+	font-weight: 900 !important;
+	letter-spacing: -0.35px !important;
+	line-height: 1.25 !important;
+}
+
+.auth-modal.profile-page-mode .auth-myinfo-screen .auth-modal-divider,
+.auth-modal.profile-page-mode .auth-myinfo-screen .auth-profile-guide
+{
+	display: none !important;
+}
+
+.auth-modal.profile-page-mode .auth-myinfo-display-row
+{
+	display: grid !important;
+	grid-template-columns: 140px minmax(0, 1fr) !important;
+	gap: 24px !important;
+	align-items: center !important;
+	min-height: var(--property-register-input-height) !important;
+	margin: 0 0 14px !important;
+	padding: 0 !important;
+	border: 0 !important;
+	background: transparent !important;
+}
+
+.auth-modal.profile-page-mode .auth-myinfo-display-label
+{
+	color: #111827 !important;
+	font-family: var(--font-ui) !important;
+	font-size: var(--property-register-left-label-font-size) !important;
+	font-weight: var(--property-register-left-label-font-weight) !important;
+	letter-spacing: -0.18px !important;
+	line-height: 1.2 !important;
+	text-align: left !important;
+	white-space: nowrap !important;
+}
+
+.auth-modal.profile-page-mode .auth-myinfo-display-value
+{
+	width: 100% !important;
+	min-height: var(--property-register-input-height) !important;
+	height: var(--property-register-input-height) !important;
+	border: 1px solid #d8dee8 !important;
+	border-radius: 0 !important;
+	background: #f9fafb !important;
+	color: #111827 !important;
+	font-family: var(--font-ui) !important;
+	font-size: 16px !important;
+	font-weight: 600 !important;
+	letter-spacing: -0.16px !important;
+	line-height: 1 !important;
+	padding: 0 18px !important;
+	display: flex !important;
+	align-items: center !important;
+	box-shadow: none !important;
+	box-sizing: border-box !important;
+	overflow: hidden !important;
+	text-overflow: ellipsis !important;
+	white-space: nowrap !important;
+}
+
+.auth-modal.profile-page-mode .auth-myinfo-screen .auth-profile-action-row
+{
+	display: grid !important;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+	gap: 12px !important;
+	margin-top: 28px !important;
+}
+
+.auth-modal.profile-page-mode .auth-myinfo-screen .auth-modal-submit,
+.auth-modal.profile-page-mode .auth-myinfo-screen .auth-modal-secondary
+{
+	height: var(--property-register-input-height) !important;
+	min-height: var(--property-register-input-height) !important;
+	border-radius: 0 !important;
+	font-family: var(--font-ui) !important;
+	font-size: 16px !important;
+	font-weight: 800 !important;
+	letter-spacing: -0.16px !important;
+	box-shadow: none !important;
+}
+
+.auth-modal.profile-page-mode .auth-myinfo-screen .auth-modal-submit
+{
+	background: #1B6FA4 !important;
+	color: #ffffff !important;
+	border: 1px solid #1B6FA4 !important;
+}
+
+.auth-modal.profile-page-mode .auth-myinfo-screen .auth-modal-secondary
+{
+	background: #ffffff !important;
+	color: #1B6FA4 !important;
+	border: 1px solid #1B6FA4 !important;
+}
+
+@media (max-width: 720px)
+{
+	.auth-modal.profile-page-mode .auth-myinfo-display-row
+	{
+		grid-template-columns: 1fr !important;
+		gap: 8px !important;
+	}
+}
+
+
+
+/* ===== PATCH: 내 정보 값 영역은 입력창이 아닌 텍스트로 표시 ===== */
+.auth-modal.profile-page-mode .auth-myinfo-display-value
+{
+	width: auto !important;
+	min-height: 0 !important;
+	height: auto !important;
+	border: 0 !important;
+	border-radius: 0 !important;
+	background: transparent !important;
+	color: #111827 !important;
+	font-family: var(--font-ui) !important;
+	font-size: 16px !important;
+	font-weight: 600 !important;
+	letter-spacing: -0.16px !important;
+	line-height: 1.45 !important;
+	padding: 0 !important;
+	display: block !important;
+	box-shadow: none !important;
+	box-sizing: border-box !important;
+	overflow: visible !important;
+	text-overflow: clip !important;
+	white-space: normal !important;
+}
+
+.auth-modal.profile-page-mode .auth-myinfo-display-row
+{
+	min-height: 34px !important;
+	align-items: center !important;
+}
+
+
+
+/* ===== PATCH: 개인정보 설정 화면을 내 정보 페이지 디자인 톤으로 통일 ===== */
+.auth-modal.profile-page-mode .auth-profile-setup-screen
+{
+	width: var(--profile-page-card-width) !important;
+	margin: 0 auto !important;
+	padding: var(--profile-page-card-padding) !important;
+	background: var(--profile-page-card-bg) !important;
+	border: var(--profile-page-card-border) !important;
+	border-radius: var(--profile-page-card-radius) !important;
+	box-shadow: var(--profile-page-card-shadow) !important;
+	color: var(--profile-page-value-color) !important;
+}
+
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-modal-title
+{
+	margin: 0 0 22px !important;
+	color: var(--profile-page-title-color) !important;
+	font-family: var(--profile-page-title-font-family) !important;
+	font-size: var(--profile-page-title-font-size) !important;
+	font-weight: var(--profile-page-title-font-weight) !important;
+	letter-spacing: var(--profile-page-title-letter-spacing) !important;
+	line-height: 1.25 !important;
+}
+
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-modal-divider
+{
+	display: none !important;
+}
+
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-guide
+{
+	display: none !important;
+}
+
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-modal-form
+{
+	display: flex !important;
+	flex-direction: column !important;
+	gap: 14px !important;
+	margin: 0 !important;
+}
+
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-modal-field
+{
+	display: grid !important;
+	grid-template-columns: 140px minmax(0, 1fr) !important;
+	gap: 24px !important;
+	align-items: center !important;
+	min-height: var(--profile-page-input-height, 54px) !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	border: 0 !important;
+	background: transparent !important;
+}
+
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-modal-field-label
+{
+	margin: 0 !important;
+	color: var(--profile-page-label-color) !important;
+	font-family: var(--profile-page-text-font-family) !important;
+	font-size: var(--profile-page-text-font-size) !important;
+	font-weight: var(--profile-page-label-font-weight) !important;
+	letter-spacing: var(--profile-page-text-letter-spacing) !important;
+	line-height: 1.2 !important;
+	text-align: left !important;
+	white-space: nowrap !important;
+}
+
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-modal-input,
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-modal-select
+{
+	width: 100% !important;
+	height: var(--profile-page-input-height, 54px) !important;
+	min-height: var(--profile-page-input-height, 54px) !important;
+	padding: 0 16px !important;
+	border: var(--profile-page-input-border) !important;
+	border-radius: var(--profile-page-input-radius) !important;
+	background: var(--profile-page-input-bg) !important;
+	color: var(--profile-page-value-color) !important;
+	font-family: var(--profile-page-text-font-family) !important;
+	font-size: var(--profile-page-text-font-size) !important;
+	font-weight: var(--profile-page-value-font-weight) !important;
+	letter-spacing: var(--profile-page-text-letter-spacing) !important;
+	line-height: 1 !important;
+	box-shadow: none !important;
+	box-sizing: border-box !important;
+}
+
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-modal-input::placeholder
+{
+	color: #9ca3af !important;
+	font-weight: 500 !important;
+}
+
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-modal-input:focus,
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-modal-select:focus
+{
+	border-color: #1B6FA4 !important;
+	background: #ffffff !important;
+	outline: none !important;
+	box-shadow: none !important;
+}
+
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-photo-field
+{
+	display: grid !important;
+	grid-template-columns: 140px minmax(0, 1fr) !important;
+	gap: 24px !important;
+	align-items: center !important;
+	min-height: 84px !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	border: 0 !important;
+	border-radius: 0 !important;
+	background: transparent !important;
+}
+
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-photo-field .auth-modal-field-label
+{
+	align-self: center !important;
+	margin: 0 !important;
+}
+
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-photo-box
+{
+	width: 100% !important;
+	justify-content: flex-start !important;
+}
+
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-photo-preview
+{
+	width: 64px !important;
+	height: 64px !important;
+	border-radius: 50% !important;
+	border: 1px solid #e5e7eb !important;
+	background: #f3f4f6 !important;
+	box-shadow: none !important;
+}
+
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-photo-select-btn
+{
+	height: 42px !important;
+	min-height: 42px !important;
+	padding: 0 16px !important;
+	border-radius: var(--profile-page-button-radius) !important;
+	border: var(--profile-page-secondary-button-border) !important;
+	background: var(--profile-page-secondary-button-bg) !important;
+	color: var(--profile-page-secondary-button-color) !important;
+	font-family: var(--profile-page-text-font-family) !important;
+	font-size: 15px !important;
+	font-weight: var(--profile-page-button-font-weight) !important;
+	letter-spacing: var(--profile-page-button-letter-spacing) !important;
+	box-shadow: none !important;
+}
+
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-consent
+{
+	display: grid !important;
+	grid-template-columns: 140px minmax(0, 1fr) !important;
+	gap: 24px !important;
+	align-items: center !important;
+	min-height: 34px !important;
+	margin: 4px 0 0 !important;
+	padding: 0 !important;
+	border: 0 !important;
+	background: transparent !important;
+	color: var(--profile-page-value-color) !important;
+	font-family: var(--profile-page-text-font-family) !important;
+	font-size: 15px !important;
+	font-weight: 600 !important;
+	line-height: 1.4 !important;
+}
+
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-consent::before
+{
+	content: "동의" !important;
+	color: var(--profile-page-label-color) !important;
+	font-family: var(--profile-page-text-font-family) !important;
+	font-size: var(--profile-page-text-font-size) !important;
+	font-weight: var(--profile-page-label-font-weight) !important;
+	letter-spacing: var(--profile-page-text-letter-spacing) !important;
+	line-height: 1.2 !important;
+}
+
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-consent input
+{
+	margin: 0 8px 0 0 !important;
+}
+
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-consent strong
+{
+	color: var(--profile-page-value-color) !important;
+	font-weight: 700 !important;
+}
+
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-modal-submit
+{
+	height: var(--profile-page-button-height) !important;
+	min-height: var(--profile-page-button-height) !important;
+	margin-top: 22px !important;
+	border-radius: var(--profile-page-button-radius) !important;
+	background: var(--profile-page-primary-button-bg) !important;
+	color: var(--profile-page-primary-button-color) !important;
+	border: var(--profile-page-primary-button-border) !important;
+	font-family: var(--profile-page-text-font-family) !important;
+	font-size: var(--profile-page-button-font-size) !important;
+	font-weight: var(--profile-page-button-font-weight) !important;
+	letter-spacing: var(--profile-page-button-letter-spacing) !important;
+	box-shadow: var(--profile-page-button-shadow) !important;
+}
+
+@media (max-width: 720px)
+{
+	.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-modal-field,
+	.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-photo-field,
+	.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-consent
+	{
+		grid-template-columns: 1fr !important;
+		gap: 8px !important;
+	}
+}
+
+
+
+/* ===== PATCH: 프로필 이미지 크기 통일 (내 정보 기준 84px) ===== */
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-photo-preview
+{
+    width: 84px !important;
+    height: 84px !important;
+}
+
+
+
+
+/* ===== PATCH: 개인정보 동의 UI 정리 ===== */
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-consent::before
+{
+    content: none !important; /* '동의' 라벨 제거 */
+}
+
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-consent
+{
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    justify-content: flex-start !important;
+    padding-left: 0 !important;
+}
+
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-consent input
+{
+    margin: 0 !important;
+}
+
+
+
+
+/* ===== PATCH: 내 정보 값 텍스트를 개인정보 설정과 동일 스타일로 ===== */
+.auth-modal.profile-page-mode .auth-myinfo-display-value
+{
+    font-family: var(--profile-page-text-font-family) !important;
+    font-size: var(--profile-page-text-font-size) !important;
+    font-weight: var(--profile-page-value-font-weight) !important;
+    letter-spacing: var(--profile-page-text-letter-spacing) !important;
+    color: var(--profile-page-value-color) !important;
+    line-height: 1.45 !important;
+}
+
+
+
+
+/* ===== PATCH: 중개사무소 가입신청 버튼 신청중 비활성화 ===== */
+.auth-modal.profile-page-mode #myInfoBrokerOfficeBtn.is-disabled,
+.auth-modal.profile-page-mode #myInfoBrokerOfficeBtn:disabled
+{
+	background: #e5e7eb !important;
+	color: #9ca3af !important;
+	border: 1px solid #e5e7eb !important;
+	cursor: not-allowed !important;
+	box-shadow: none !important;
+	pointer-events: none !important;
+}
+
+
+
+/* ===== PATCH: 주요 실행 버튼 4종 파랑 통일 ===== */
+/* 내 정보 [수정] */
+.auth-modal.profile-page-mode #myInfoEditProfileBtn,
+/* 개인정보 설정 [저장] */
+.auth-modal.profile-page-mode #authProfileSubmitBtn,
+/* 중개사무소 가입신청 */
+.auth-modal.profile-page-mode #myInfoBrokerOfficeBtn:not(:disabled):not(.is-disabled),
+/* 매물 등록하기 */
+#propertySubmitBtn
+{
+	background: #4A7EDC !important;
+	color: #ffffff !important;
+	border: 1px solid #4A7EDC !important;
+	box-shadow: none !important;
+}
+
+/* hover */
+.auth-modal.profile-page-mode #myInfoEditProfileBtn:hover,
+.auth-modal.profile-page-mode #authProfileSubmitBtn:hover,
+.auth-modal.profile-page-mode #myInfoBrokerOfficeBtn:not(:disabled):not(.is-disabled):hover,
+#propertySubmitBtn:hover
+{
+	background: #3F6FCC !important;
+	border-color: #3F6FCC !important;
+	color: #ffffff !important;
+}
+
+/* active */
+.auth-modal.profile-page-mode #myInfoEditProfileBtn:active,
+.auth-modal.profile-page-mode #authProfileSubmitBtn:active,
+.auth-modal.profile-page-mode #myInfoBrokerOfficeBtn:not(:disabled):not(.is-disabled):active,
+#propertySubmitBtn:active
+{
+	background: #355FB0 !important;
+	border-color: #355FB0 !important;
+	color: #ffffff !important;
+}
+
+/* 신청중/비활성 상태는 기존 회색 유지 */
+.auth-modal.profile-page-mode #myInfoBrokerOfficeBtn:disabled,
+.auth-modal.profile-page-mode #myInfoBrokerOfficeBtn.is-disabled
+{
+	background: #e5e7eb !important;
+	color: #9ca3af !important;
+	border: 1px solid #e5e7eb !important;
+	cursor: not-allowed !important;
+	box-shadow: none !important;
+}
+
 </style>
 	</head>
 	<body class="sidebar-list-collapsed">
@@ -11236,6 +11752,23 @@ body.property-register-page-open .property-register-bottom-bar
 					</div>
 				</div>
 			</div>
+
+			<div class="property-register-card property-land-info-card is-hidden" id="propertyLandInfoCard">
+				<h2 class="property-register-section-title">매물 정보</h2>
+				<div class="property-info-row">
+					<label class="property-form-label">토지종류</label>
+					<div class="property-land-type-grid">
+						<label class="property-radio-option"><input type="radio" name="landType" value="전" /> 전</label><label class="property-radio-option"><input type="radio" name="landType" value="대" /> 대(垈)</label><label class="property-radio-option"><input type="radio" name="landType" value="답" /> 답</label><label class="property-radio-option"><input type="radio" name="landType" value="임야" /> 임야</label>
+						<label class="property-radio-option"><input type="radio" name="landType" value="과수원" /> 과수원</label><label class="property-radio-option"><input type="radio" name="landType" value="공장용지" /> 공장용지</label><label class="property-radio-option"><input type="radio" name="landType" value="주차장" /> 주차장</label><label class="property-radio-option"><input type="radio" name="landType" value="잡종지" /> 잡종지</label>
+						<label class="property-radio-option"><input type="radio" name="landType" value="창고용지" /> 창고용지</label><label class="property-radio-option"><input type="radio" name="landType" value="유지" /> 유지(溜池)</label><label class="property-radio-option"><input type="radio" name="landType" value="목장용지" /> 목장용지</label><label class="property-radio-option"><input type="radio" name="landType" value="제방" /> 제방(堤防)</label>
+						<label class="property-radio-option"><input type="radio" name="landType" value="구거" /> 구거(溝渠)</label><label class="property-radio-option"><input type="radio" name="landType" value="양어장" /> 양어장</label><label class="property-radio-option"><input type="radio" name="landType" value="주유소용지" /> 주유소용지</label><label class="property-radio-option"><input type="radio" name="landType" value="묘지" /> 묘지</label>
+						<label class="property-radio-option"><input type="radio" name="landType" value="체육용지" /> 체육용지</label><label class="property-radio-option"><input type="radio" name="landType" value="사적지" /> 사적지</label><label class="property-radio-option"><input type="radio" name="landType" value="광천지" /> 광천지</label><label class="property-radio-option"><input type="radio" name="landType" value="공원" /> 공원</label>
+						<label class="property-radio-option"><input type="radio" name="landType" value="철도용지" /> 철도용지</label><label class="property-radio-option"><input type="radio" name="landType" value="유원지" /> 유원지</label><label class="property-radio-option"><input type="radio" name="landType" value="종교용지" /> 종교용지</label><label class="property-radio-option"><input type="radio" name="landType" value="하천" /> 하천</label>
+						<label class="property-radio-option"><input type="radio" name="landType" value="도로" /> 도로</label><label class="property-radio-option"><input type="radio" name="landType" value="염전" /> 염전</label><label class="property-radio-option"><input type="radio" name="landType" value="학교용지" /> 학교용지</label><label class="property-radio-option"><input type="radio" name="landType" value="수도용지" /> 수도용지</label>
+					</div>
+				</div>
+			</div>
+
 
 			<div class="property-register-card property-premium-card" id="propertyPremiumCard">
 				<h2 class="property-register-section-title">권리금</h2>
@@ -11676,21 +12209,6 @@ body.property-register-page-open .property-register-bottom-bar
 				</div>
 			</div>
 
-			<div class="property-register-card property-land-info-card is-hidden" id="propertyLandInfoCard">
-				<h2 class="property-register-section-title">매물 정보</h2>
-				<div class="property-info-row">
-					<label class="property-form-label">토지종류</label>
-					<div class="property-land-type-grid">
-						<label class="property-radio-option"><input type="radio" name="landType" value="전" /> 전</label><label class="property-radio-option"><input type="radio" name="landType" value="대" /> 대(垈)</label><label class="property-radio-option"><input type="radio" name="landType" value="답" /> 답</label><label class="property-radio-option"><input type="radio" name="landType" value="임야" /> 임야</label>
-						<label class="property-radio-option"><input type="radio" name="landType" value="과수원" /> 과수원</label><label class="property-radio-option"><input type="radio" name="landType" value="공장용지" /> 공장용지</label><label class="property-radio-option"><input type="radio" name="landType" value="주차장" /> 주차장</label><label class="property-radio-option"><input type="radio" name="landType" value="잡종지" /> 잡종지</label>
-						<label class="property-radio-option"><input type="radio" name="landType" value="창고용지" /> 창고용지</label><label class="property-radio-option"><input type="radio" name="landType" value="유지" /> 유지(溜池)</label><label class="property-radio-option"><input type="radio" name="landType" value="목장용지" /> 목장용지</label><label class="property-radio-option"><input type="radio" name="landType" value="제방" /> 제방(堤防)</label>
-						<label class="property-radio-option"><input type="radio" name="landType" value="구거" /> 구거(溝渠)</label><label class="property-radio-option"><input type="radio" name="landType" value="양어장" /> 양어장</label><label class="property-radio-option"><input type="radio" name="landType" value="주유소용지" /> 주유소용지</label><label class="property-radio-option"><input type="radio" name="landType" value="묘지" /> 묘지</label>
-						<label class="property-radio-option"><input type="radio" name="landType" value="체육용지" /> 체육용지</label><label class="property-radio-option"><input type="radio" name="landType" value="사적지" /> 사적지</label><label class="property-radio-option"><input type="radio" name="landType" value="광천지" /> 광천지</label><label class="property-radio-option"><input type="radio" name="landType" value="공원" /> 공원</label>
-						<label class="property-radio-option"><input type="radio" name="landType" value="철도용지" /> 철도용지</label><label class="property-radio-option"><input type="radio" name="landType" value="유원지" /> 유원지</label><label class="property-radio-option"><input type="radio" name="landType" value="종교용지" /> 종교용지</label><label class="property-radio-option"><input type="radio" name="landType" value="하천" /> 하천</label>
-						<label class="property-radio-option"><input type="radio" name="landType" value="도로" /> 도로</label><label class="property-radio-option"><input type="radio" name="landType" value="염전" /> 염전</label><label class="property-radio-option"><input type="radio" name="landType" value="학교용지" /> 학교용지</label><label class="property-radio-option"><input type="radio" name="landType" value="수도용지" /> 수도용지</label>
-					</div>
-				</div>
-			</div>
 		</div>
 	</section>
 	<div class="property-register-bottom-bar" id="propertyRegisterBottomBar">
@@ -11704,7 +12222,7 @@ body.property-register-page-open .property-register-bottom-bar
 		<div class="sub-topbar">
 			<div class="sub-topbar-inner">
 				<span class="sub-version-fixed">
-					Ver 2.114
+					Ver 2.132
 				</span>
 				<div class="sub-topbar-left">
 					<strong id="listInfoText">
@@ -12441,9 +12959,11 @@ if (globalBrandLink) {
 </script>
 <div class="auth-modal" id="authModal" aria-hidden="true">
 	<div class="auth-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
+		<!--
 		<button type="button" class="auth-modal-back" id="authModalBack" aria-label="뒤로가기">
 			‹
 		</button>
+		-->
 		<button type="button" class="auth-modal-close" id="authModalClose" aria-label="닫기">
 			×
 		</button>
@@ -12586,7 +13106,7 @@ if (globalBrandLink) {
 				</div>
 				<div class="auth-modal-field">
 					<label class="auth-modal-field-label" for="authProfileRoleRequestSelect">
-						회원유형(아래 유형 중에 선택해주세요.)
+						회원유형
 					</label>
 					<div class="auth-profile-select-wrap">
 						<select id="authProfileRoleRequestSelect">
@@ -12894,7 +13414,7 @@ function hexToRgba(hex, alpha = 1)
 	return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 const APP_NAME = "REALJEJU.APP";
-const APP_VERSION = "2.114";
+const APP_VERSION = "2.132";
 
 function applyAppVersion()
 {
@@ -17487,7 +18007,7 @@ bootstrap();
 		currentRealjejuAuthUser = null;
 		currentRealjejuProfileCompleted = false;
 		if (typeof window.realjejuResetRegistrantInfo === "function") window.realjejuResetRegistrantInfo();
-		if (typeof window.realjejuGoRealEstateHome === "function") window.realjejuGoRealEstateHome();
+		if (typeof window.realjejuGoHome === "function") window.realjejuGoHome();
 		if (globalAuthTrigger) {
 			globalAuthTrigger.dataset.authState = "logged-out";
 			globalAuthTrigger.classList.remove("logged-in");
@@ -17495,6 +18015,7 @@ bootstrap();
 		}
 		if (globalAccountEmail) globalAccountEmail.textContent = "";
 		if (globalAccountDropdown) globalAccountDropdown.classList.remove("profile-incomplete");
+		if (typeof window.realjejuGoHome === "function") window.realjejuGoHome();
 		const brokerMenuWrapper = document.getElementById("brokerOfficeMenuWrapper");
 		if (brokerMenuWrapper) brokerMenuWrapper.style.setProperty("display", "none", "important");
 		renderTopbarMenu(false);
@@ -17736,6 +18257,11 @@ function applyLoggedInAccountUI(user, profile)
 			renderTopbarMenu(false);
 			updateApprovedBrokerTopbarMenu(user, profile);
 		}
+		if (typeof window.realjejuGoHome === "function") {
+			window.realjejuGoHome();
+			setTimeout(window.realjejuGoHome, 50);
+			setTimeout(window.realjejuGoHome, 250);
+		}
 		if (globalAuthTrigger) {
 			const profileImage = (profile && profile.profile_image) ? profile.profile_image : (window.authProfilePhotoUrl || REALJEJU_DEFAULT_PROFILE_IMAGE);
 			globalAuthTrigger.dataset.authState = "logged-in";
@@ -17860,10 +18386,12 @@ function applyLoggedInAccountUI(user, profile)
 				const isPending = brokerOffice && brokerOffice.status === "pending";
 
 				brokerBtn.style.display = brokerRole && (!brokerOffice || brokerOffice.status !== "approved") ? "block" : "none";
-				brokerBtn.textContent = isPending ? "승인 대기중" : "중개사무소 가입 신청";
+				brokerBtn.textContent = isPending ? "가입 신청 진행중" : "중개사무소 가입 신청";
+				brokerBtn.disabled = !!isPending;
+				brokerBtn.setAttribute("aria-disabled", isPending ? "true" : "false");
 
-				// 여기 추가 (상태 클래스)
 				brokerBtn.classList.toggle("is-pending", isPending);
+				brokerBtn.classList.toggle("is-disabled", isPending);
 			}
 			if (authModal) authModal.classList.add("profile-page-mode", "open");
 			hideAllAuthScreens();
@@ -17902,6 +18430,30 @@ function applyLoggedInAccountUI(user, profile)
 
 	async function handleRealjejuLogout()
 	{
+		function forceGoHomeAfterLogout()
+		{
+			document.body.classList.remove("property-register-page-open", "admin-page-open");
+
+			const propertyRegisterPage = document.getElementById("propertyRegisterPage");
+			if (propertyRegisterPage) propertyRegisterPage.setAttribute("aria-hidden", "true");
+
+			const propertyRegisterBottomBar = document.getElementById("propertyRegisterBottomBar");
+			if (propertyRegisterBottomBar) propertyRegisterBottomBar.classList.remove("open", "active", "is-open");
+
+			const adminPagePanel = document.getElementById("adminPagePanel");
+			if (adminPagePanel) adminPagePanel.setAttribute("aria-hidden", "true");
+
+			document.querySelectorAll(".topbar-menu-item").forEach((btn) => btn.classList.remove("active"));
+
+			const homeBtn = Array.from(document.querySelectorAll(".topbar-menu-item")).find((btn) => {
+				const label = String(btn.textContent || "").trim();
+				return label === "부동산 홈" || label === "홈";
+			});
+			if (homeBtn) homeBtn.classList.add("active");
+		}
+
+		forceGoHomeAfterLogout();
+
 		const supabaseForLogout = getRealjejuSupabaseClient();
 		try {
 			if (supabaseForLogout) await supabaseForLogout.auth.signOut();
@@ -17910,6 +18462,9 @@ function applyLoggedInAccountUI(user, profile)
 		}
 		sessionStorage.removeItem(REALJEJU_PROFILE_PROMPT_SESSION_KEY);
 		applyLoggedOutAccountUI();
+		forceGoHomeAfterLogout();
+		setTimeout(forceGoHomeAfterLogout, 50);
+		setTimeout(forceGoHomeAfterLogout, 250);
 	}
 
 	async function initRealjejuAccountUI()
@@ -19334,20 +19889,101 @@ function applyLoggedInAccountUI(user, profile)
 		if (propertyRegisterPage) propertyRegisterPage.setAttribute("aria-hidden", "true");
 	}
 
-	function openPropertyRegisterPage()
+
+	function resetPropertyRegistrantInputs()
+	{
+		[
+			"registrantOfficeNameInput",
+			"registrantRepresentativeInput",
+			"registrantPhone1Input",
+			"registrantManagerNameInput",
+			"registrantPhone2Input"
+		].forEach((id) => {
+			const el = document.getElementById(id);
+			if (el) el.value = "";
+		});
+
+		const chk = document.getElementById("registrantLicensedAgentChk");
+		const manager = document.getElementById("registrantManagerNameInput");
+		if (chk) chk.checked = false;
+		if (manager) manager.disabled = true;
+	}
+
+	function setPropertyRegistrantValue(id, value)
+	{
+		const el = document.getElementById(id);
+		if (el) el.value = value || "";
+	}
+
+	async function loadPropertyRegistrantInfoDirect()
+	{
+		resetPropertyRegistrantInputs();
+
+		const client = getRealjejuSupabaseClient();
+		if (!client) return;
+
+		try
+		{
+			const { data: userData } = await client.auth.getUser();
+			const user = userData && userData.user ? userData.user : null;
+			if (!user) return;
+
+			let profile = null;
+			try
+			{
+				const { data: profileData } = await client
+					.from("profiles")
+					.select("name, phone, role_request")
+					.eq("id", user.id)
+					.maybeSingle();
+				profile = profileData || null;
+				window.realjejuCurrentProfile = profile;
+			}
+			catch (profileError)
+			{
+				console.warn("매물등록 등록자 정보 profiles 조회 실패:", profileError);
+			}
+
+			let agency = null;
+			try
+			{
+				const { data: agencyRows } = await client
+					.from("agencies")
+					.select("office_name, status, created_at")
+					.eq("user_id", user.id)
+					.order("created_at", { ascending: false })
+					.limit(5);
+
+				const rows = Array.isArray(agencyRows) ? agencyRows : [];
+				agency = rows.find(row => row && row.status === "active") || rows[0] || null;
+				window.realjejuCurrentBrokerOffice = agency || null;
+			}
+			catch (agencyError)
+			{
+				console.warn("매물등록 등록자 정보 agencies 조회 실패:", agencyError);
+			}
+
+			setPropertyRegistrantValue("registrantOfficeNameInput", agency && agency.office_name ? agency.office_name : "");
+			setPropertyRegistrantValue("registrantRepresentativeInput", profile && profile.name ? profile.name : "");
+			setPropertyRegistrantValue("registrantPhone1Input", profile && profile.phone ? profile.phone : "");
+		}
+		catch (error)
+		{
+			console.warn("매물등록 등록자 정보 직접 조회 실패:", error);
+		}
+	}
+
+	async function openPropertyRegisterPage()
 	{
 		closeGlobalAccountDropdown();
 		closeAdminPage();
+
 		document.body.classList.add("property-register-page-open");
 		const propertyRegisterPage = document.getElementById("propertyRegisterPage");
 		if (propertyRegisterPage) propertyRegisterPage.setAttribute("aria-hidden", "false");
 		renderPropertyPriceFields();
-		if (typeof window.realjejuResetRegistrantInfo === "function") window.realjejuResetRegistrantInfo();
-		if (currentRealjejuAuthUser) window.realjejuCurrentAuthUser = currentRealjejuAuthUser;
-		if (typeof window.realjejuLoadRegistrantInfo === "function") {
-			window.realjejuLoadRegistrantInfo();
-			setTimeout(window.realjejuLoadRegistrantInfo, 250);
-		}
+
+		await loadPropertyRegistrantInfoDirect();
 	}
 
 	function formatPropertyNumber(value)
@@ -19537,20 +20173,28 @@ function applyLoggedInAccountUI(user, profile)
 		const propertyTypeSelect = document.getElementById("propertyTypeSelect");
 		const infoCard = document.getElementById("propertyInfoCard");
 		const landInfoCard = document.getElementById("propertyLandInfoCard");
+		const maintenanceCard = document.getElementById("propertyMaintenanceCard");
 		if (!propertyTypeSelect || !infoCard || !landInfoCard) return;
 		const type = propertyTypeSelect.value || "";
+		document.body.setAttribute("data-property-type", type);
 		const residentialTypes = ["apartment", "officetel", "room", "villa", "house", "multi_family_house", "hotel", "pension"];
 		const commercialTypes = ["store", "office"];
 		const buildingTypes = ["building", "factory_warehouse"];
+		const noMaintenanceTypes = ["land", "hotel", "pension", "building", "factory_warehouse"];
+
 		if (type === "land") {
 			infoCard.classList.add("is-hidden");
 			landInfoCard.classList.remove("is-hidden");
+			if (maintenanceCard) maintenanceCard.classList.add("is-hidden");
 			const householdCountRow = document.getElementById("propertyHouseholdCountRow");
 			if (householdCountRow) householdCountRow.style.display = "none";
 			return;
 		}
 		landInfoCard.classList.add("is-hidden");
 		infoCard.classList.remove("is-hidden");
+		if (maintenanceCard) {
+			maintenanceCard.classList.toggle("is-hidden", noMaintenanceTypes.includes(type));
+		}
 		let mode = "residential";
 		if (commercialTypes.includes(type)) mode = "commercial";
 		else if (buildingTypes.includes(type)) mode = "building";
@@ -20831,158 +21475,42 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-<script>
-/* ===== PATCH: 등록자 정보 내 정보와 동일 소스 자동 주입 ===== */
-(function bindRegistrantInfoV2107()
-{
-	const officeInput = document.getElementById("registrantOfficeNameInput");
-	const repInput = document.getElementById("registrantRepresentativeInput");
-	const phone1Input = document.getElementById("registrantPhone1Input");
-	const managerInput = document.getElementById("registrantManagerNameInput");
-	const phone2Input = document.getElementById("registrantPhone2Input");
-	const licensedChk = document.getElementById("registrantLicensedAgentChk");
 
-	function setValue(el, value)
+
+
+
+
+
+<script>
+/* ===== PATCH: 매물등록 진입 시 등록자 정보 최신 조회 ===== */
+(function bindRegistrantInfoOnRegisterOpen()
+{
+	function setValue(id, value)
 	{
-		if (!el) return;
-		el.value = value || "";
+		const el = document.getElementById(id);
+		if (el) el.value = value || "";
 	}
 
-	function getDomValue(id)
+	function getInputValue(id)
 	{
 		const el = document.getElementById(id);
 		return el && "value" in el ? String(el.value || "").trim() : "";
 	}
 
-	function getDomText(id)
+	function getTextValue(id)
 	{
 		const el = document.getElementById(id);
 		return el ? String(el.textContent || "").trim() : "";
 	}
 
-	function cleanValue(value)
+	function cleanInfoValue(value)
 	{
 		const text = String(value || "").trim();
-		return ["-", "해당 없음", "미신청", "승인 대기중"].includes(text) ? "" : text;
+		return ["", "-", "해당 없음", "미신청", "승인 대기중"].includes(text) ? "" : text;
 	}
 
-	function applyToggle()
-	{
-		if (!licensedChk || !managerInput) return;
-		if (licensedChk.checked)
-		{
-			managerInput.disabled = false;
-		}
-		else
-		{
-			managerInput.value = "";
-			managerInput.disabled = true;
-		}
-	}
-
-	async function loadRegistrantInfo()
-	{
-		const client = typeof getRealjejuSupabaseClient === "function" ? getRealjejuSupabaseClient() : null;
-
-		let profile = window.realjejuCurrentProfile || null;
-		let user = window.realjejuCurrentAuthUser || null;
-
-		const fallbackOffice = getDomValue("brokerOfficeNameInput") || getDomValue("brokerOfficeSearchInput") || cleanValue(getDomText("myInfoBrokerOfficeValue"));
-		const fallbackName = getDomValue("brokerOwnerNameInput") || cleanValue(getDomText("myInfoNameValue"));
-		const fallbackPhone = getDomValue("brokerOfficePhoneInput") || getDomValue("authProfilePhoneInput") || cleanValue(getDomText("myInfoPhoneValue"));
-
-		const cachedAgency = window.realjejuCurrentBrokerOffice || null;
-
-		let officeName = (cachedAgency && cachedAgency.office_name) || fallbackOffice;
-		let personName = (cachedAgency && cachedAgency.owner_name) || fallbackName || (profile && profile.name) || "";
-		let phone = (cachedAgency && cachedAgency.phone) || fallbackPhone || (profile && profile.phone) || "";
-
-		if (client)
-		{
-			try
-			{
-				const { data: userData } = await client.auth.getUser();
-				user = userData && userData.user ? userData.user : user;
-				window.realjejuCurrentAuthUser = user || null;
-
-				if (user)
-				{
-					try
-					{
-						const { data: profileData } = await client
-							.from("profiles")
-							.select("name, phone, role_request")
-							.eq("id", user.id)
-							.maybeSingle();
-						if (profileData) {
-							profile = profileData;
-							window.realjejuCurrentProfile = profileData;
-						}
-					}
-					catch (profileError) {}
-
-					try
-					{
-						const { data: agencyData } = await client
-							.from("agencies")
-							.select("office_name, owner_name, phone, status, created_at")
-							.eq("user_id", user.id)
-							.order("created_at", { ascending: false })
-							.limit(5);
-
-						const rows = Array.isArray(agencyData) ? agencyData : [];
-						const agency = rows.find(row => row && row.status === "active") || rows[0] || null;
-						window.realjejuCurrentBrokerOffice = agency || null;
-						if (agency && agency.office_name) officeName = agency.office_name;
-						if (agency && agency.owner_name) personName = agency.owner_name;
-						if (agency && agency.phone) phone = agency.phone;
-					}
-					catch (agencyError)
-					{
-						console.warn("등록자 정보 중개사무소명 조회 실패:", agencyError);
-					}
-
-					personName = (profile && profile.name) || personName || "";
-					phone = (profile && profile.phone) || phone || "";
-				}
-			}
-			catch (error)
-			{
-				console.warn("등록자 정보 불러오기 실패:", error);
-			}
-		}
-
-		setValue(officeInput, officeName);
-		setValue(repInput, personName);
-		setValue(phone1Input, phone);
-
-	}
-
-	if (licensedChk)
-	{
-		licensedChk.addEventListener("change", applyToggle);
-		applyToggle();
-	}
-
-	window.realjejuLoadRegistrantInfo = loadRegistrantInfo;
-	loadRegistrantInfo();
-	setTimeout(loadRegistrantInfo, 300);
-	setTimeout(loadRegistrantInfo, 1000);
-
-	document.addEventListener("realjeju:auth-updated", loadRegistrantInfo);
-	document.addEventListener("realjeju:profile-updated", loadRegistrantInfo);
-})();
-</script>
-
-
-<script>
-/* ===== PATCH: 로그인/로그아웃 등록자 정보 안전 초기화 ===== */
-(function bindRegistrantAuthSafetyV2110()
-{
 	function resetRegistrantInfo()
 	{
-		window.realjejuCurrentAuthUser = null;
-		window.realjejuCurrentProfile = null;
 		window.realjejuCurrentBrokerOffice = null;
 
 		[
@@ -20991,10 +21519,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			"registrantPhone1Input",
 			"registrantManagerNameInput",
 			"registrantPhone2Input"
-		].forEach((id) => {
-			const el = document.getElementById(id);
-			if (el) el.value = "";
-		});
+		].forEach((id) => setValue(id, ""));
 
 		const chk = document.getElementById("registrantLicensedAgentChk");
 		const manager = document.getElementById("registrantManagerNameInput");
@@ -21002,24 +21527,375 @@ document.addEventListener("DOMContentLoaded", function () {
 		if (manager) manager.disabled = true;
 	}
 
-	function goRealEstateHome()
+	function bindLicensedAgentToggle()
 	{
-		try {
-			closePropertyRegisterPage && closePropertyRegisterPage();
-		} catch (error) {}
+		const chk = document.getElementById("registrantLicensedAgentChk");
+		const manager = document.getElementById("registrantManagerNameInput");
+		if (!chk || !manager || chk.dataset.registrantToggleBound === "1") return;
+		chk.dataset.registrantToggleBound = "1";
 
-		try {
-			closeAdminPage && closeAdminPage();
-		} catch (error) {}
+		function sync()
+		{
+			if (chk.checked)
+			{
+				manager.disabled = false;
+			}
+			else
+			{
+				manager.value = "";
+				manager.disabled = true;
+			}
+		}
 
-		document.body.classList.remove("property-register-page-open", "admin-page-open");
-		const topbarItems = document.querySelectorAll(".topbar-menu-item");
-		topbarItems.forEach((btn) => btn.classList.remove("active"));
-		if (topbarItems[0]) topbarItems[0].classList.add("active");
+		chk.addEventListener("change", sync);
+		sync();
+	}
+
+	function applyMyInfoFallback()
+	{
+		const office = cleanInfoValue(getTextValue("myInfoBrokerOfficeValue"));
+		const name = cleanInfoValue(getTextValue("myInfoNameValue"));
+		const phone = cleanInfoValue(getTextValue("myInfoPhoneValue"));
+
+		if (!getInputValue("registrantOfficeNameInput") && office) setValue("registrantOfficeNameInput", office);
+		if (!getInputValue("registrantRepresentativeInput") && name) setValue("registrantRepresentativeInput", name);
+		if (!getInputValue("registrantPhone1Input") && phone) setValue("registrantPhone1Input", phone);
+	}
+
+	async function loadRegistrantInfoForRegister()
+	{
+		resetRegistrantInfo();
+		bindLicensedAgentToggle();
+
+		const client = typeof getRealjejuSupabaseClient === "function" ? getRealjejuSupabaseClient() : null;
+		let profile = null;
+		let agency = null;
+
+		if (client)
+		{
+			try
+			{
+				const { data: userData } = await client.auth.getUser();
+				const user = userData && userData.user ? userData.user : null;
+				if (user)
+				{
+					window.realjejuCurrentAuthUser = user;
+
+					try
+					{
+						const { data: profileData } = await client
+							.from("profiles")
+							.select("name, phone, role_request")
+							.eq("id", user.id)
+							.maybeSingle();
+						profile = profileData || null;
+						window.realjejuCurrentProfile = profile;
+					}
+					catch (profileError)
+					{
+						console.warn("등록자 정보 profiles 조회 실패:", profileError);
+					}
+
+					try
+					{
+						const { data: agencyRows } = await client
+							.from("agencies")
+							.select("office_name, owner_name, phone, status, created_at")
+							.eq("user_id", user.id)
+							.order("created_at", { ascending: false })
+							.limit(5);
+
+						const rows = Array.isArray(agencyRows) ? agencyRows : [];
+						agency = rows.find(row => row && row.status === "active") || rows[0] || null;
+						window.realjejuCurrentBrokerOffice = agency || null;
+					}
+					catch (agencyError)
+					{
+						console.warn("등록자 정보 agencies 조회 실패:", agencyError);
+					}
+				}
+			}
+			catch (error)
+			{
+				console.warn("등록자 정보 불러오기 실패:", error);
+			}
+		}
+
+		const domOffice = cleanInfoValue(getTextValue("myInfoBrokerOfficeValue"));
+		const domName = cleanInfoValue(getTextValue("myInfoNameValue"));
+		const domPhone = cleanInfoValue(getTextValue("myInfoPhoneValue"));
+
+		const fallbackOffice = getInputValue("brokerOfficeNameInput") || getInputValue("brokerOfficeSearchInput") || domOffice;
+		const fallbackName = getInputValue("brokerOwnerNameInput") || domName;
+		const fallbackPhone = getInputValue("brokerOfficePhoneInput") || getInputValue("authProfilePhoneInput") || domPhone;
+
+		setValue("registrantOfficeNameInput", (agency && agency.office_name) || fallbackOffice);
+		setValue("registrantRepresentativeInput", (agency && agency.owner_name) || (profile && profile.name) || fallbackName);
+		setValue("registrantPhone1Input", (agency && agency.phone) || (profile && profile.phone) || fallbackPhone);
+
+		applyMyInfoFallback();
+
+		setTimeout(applyMyInfoFallback, 100);
+		setTimeout(applyMyInfoFallback, 400);
+
+		return { profile, agency };
 	}
 
 	window.realjejuResetRegistrantInfo = resetRegistrantInfo;
-	window.realjejuGoRealEstateHome = goRealEstateHome;
+	window.realjejuLoadRegistrantInfoForRegister = loadRegistrantInfoForRegister;
+})();
+</script>
+
+
+<script>
+/* ===== PATCH: 등록자 정보 소속공인중개사 토글 직접 바인딩 ===== */
+(function bindRegistrantLicensedToggleDirect()
+{
+	function bind()
+	{
+		const chk = document.getElementById("registrantLicensedAgentChk");
+		const manager = document.getElementById("registrantManagerNameInput");
+		if (!chk || !manager || chk.dataset.directRegistrantToggleBound === "1") return;
+		chk.dataset.directRegistrantToggleBound = "1";
+
+		function sync()
+		{
+			if (chk.checked)
+			{
+				manager.disabled = false;
+			}
+			else
+			{
+				manager.value = "";
+				manager.disabled = true;
+			}
+		}
+
+		chk.addEventListener("change", sync);
+		sync();
+	}
+
+	if (document.readyState === "loading") {
+		document.addEventListener("DOMContentLoaded", bind);
+	} else {
+		bind();
+	}
+})();
+</script>
+
+
+<script>
+/* ===== PATCH: 로그인/로그아웃/세션 복구 시 부동산 홈 전환 ===== */
+(function bindAuthStateGoHome()
+{
+	let authHomeBound = false;
+
+	function goRealjejuHome()
+	{
+		try {
+			if (typeof closePropertyRegisterPage === "function") closePropertyRegisterPage();
+		} catch (error) {}
+
+		try {
+			if (typeof closeAdminPage === "function") closeAdminPage();
+		} catch (error) {}
+
+		document.body.classList.remove("property-register-page-open", "admin-page-open");
+
+		const propertyRegisterPage = document.getElementById("propertyRegisterPage");
+		if (propertyRegisterPage) {
+			propertyRegisterPage.setAttribute("aria-hidden", "true");
+			propertyRegisterPage.style.display = "";
+			propertyRegisterPage.classList.remove("open", "active", "is-open");
+		}
+
+		const propertyRegisterBottomBar = document.getElementById("propertyRegisterBottomBar");
+		if (propertyRegisterBottomBar) {
+			propertyRegisterBottomBar.style.display = "";
+			propertyRegisterBottomBar.classList.remove("open", "active", "is-open");
+		}
+
+		const adminPagePanel = document.getElementById("adminPagePanel");
+		if (adminPagePanel) {
+			adminPagePanel.setAttribute("aria-hidden", "true");
+			adminPagePanel.style.display = "";
+			adminPagePanel.classList.remove("open", "active", "is-open");
+		}
+
+		const authModal = document.getElementById("authModal");
+		if (authModal) {
+			authModal.classList.remove("open", "profile-page-mode");
+			authModal.setAttribute("aria-hidden", "true");
+		}
+
+		document.querySelectorAll(".topbar-menu-item").forEach((btn) => {
+			btn.classList.remove("active");
+		});
+
+		const homeBtn = Array.from(document.querySelectorAll(".topbar-menu-item")).find((btn) => {
+			const text = String(btn.textContent || "").trim();
+			return text === "부동산 홈" || text === "홈";
+		});
+
+		if (homeBtn) homeBtn.classList.add("active");
+
+		try {
+			window.scrollTo(0, 0);
+		} catch (error) {}
+	}
+
+	function bind()
+	{
+		if (authHomeBound) return;
+		const client = typeof getRealjejuSupabaseClient === "function" ? getRealjejuSupabaseClient() : null;
+		if (!client || !client.auth || typeof client.auth.onAuthStateChange !== "function") return;
+
+		authHomeBound = true;
+
+		client.auth.onAuthStateChange(function (event)
+		{
+			if (event === "SIGNED_IN" || event === "SIGNED_OUT" || event === "TOKEN_REFRESHED" || event === "INITIAL_SESSION")
+			{
+				goRealjejuHome();
+			}
+		});
+	}
+
+	window.realjejuGoHome = goRealjejuHome;
+
+	if (document.readyState === "loading") {
+		document.addEventListener("DOMContentLoaded", bind);
+	} else {
+		bind();
+	}
+})();
+</script>
+
+
+<script>
+/* ===== PATCH: 모든 휴대폰 입력 010-0000-0000 자동 포맷 ===== */
+(function bindRealjejuPhoneInputs()
+{
+	function formatPhoneNumber(value)
+	{
+		const digits = String(value || "").replace(/[^0-9]/g, "").slice(0, 11);
+
+		if (digits.length === 0) return "";
+		if (digits.length <= 3)
+		{
+			return digits.length === 3 ? digits + "-" : digits;
+		}
+		if (digits.length <= 7)
+		{
+			return digits.slice(0, 3) + "-" + digits.slice(3) + (digits.length === 7 ? "-" : "");
+		}
+		return digits.slice(0, 3) + "-" + digits.slice(3, 7) + "-" + digits.slice(7);
+	}
+
+	function bindPhoneInput(input)
+	{
+		if (!input || input.dataset.realjejuPhoneFormatBound === "1") return;
+		input.dataset.realjejuPhoneFormatBound = "1";
+		input.setAttribute("inputmode", "numeric");
+		input.setAttribute("maxlength", "13");
+
+		input.addEventListener("input", function ()
+		{
+			const before = input.value;
+			const beforeCursor = input.selectionStart || before.length;
+			const formatted = formatPhoneNumber(before);
+			input.value = formatted;
+
+			const diff = formatted.length - before.length;
+			const nextCursor = Math.max(0, Math.min(formatted.length, beforeCursor + diff));
+			try {
+				input.setSelectionRange(nextCursor, nextCursor);
+			} catch (error) {}
+		});
+
+		if (input.value) input.value = formatPhoneNumber(input.value);
+	}
+
+	function bindAll()
+	{
+		document.querySelectorAll('input[type="tel"]').forEach(bindPhoneInput);
+	}
+
+	if (document.readyState === "loading") {
+		document.addEventListener("DOMContentLoaded", bindAll);
+	} else {
+		bindAll();
+	}
+
+	document.addEventListener("focusin", function (event)
+	{
+		const input = event.target && event.target.matches ? event.target : null;
+		if (input && input.matches('input[type="tel"]')) bindPhoneInput(input);
+	});
+})();
+</script>
+
+
+<script>
+/* ===== PATCH: 전화번호 입력 백스페이스/커서 개선 ===== */
+(function enhancePhoneInputs(){
+	function formatPhone(value){
+		const d = String(value||"").replace(/[^0-9]/g,"").slice(0,11);
+		if (d.length <= 3) return d.length===3 ? d+"-" : d;
+		if (d.length <= 7) return d.slice(0,3)+"-"+d.slice(3) + (d.length===7 ? "-" : "");
+		return d.slice(0,3)+"-"+d.slice(3,7)+"-"+d.slice(7);
+	}
+
+	function bind(input){
+		if (!input) return;
+
+		// remove previous handlers by cloning (safe override)
+		const clone = input.cloneNode(true);
+		input.parentNode.replaceChild(clone, input);
+		input = clone;
+
+		input.setAttribute("inputmode","numeric");
+		input.setAttribute("maxlength","13");
+
+		input.addEventListener("input", function(){
+			const before = input.value;
+			const pos = input.selectionStart || before.length;
+			const formatted = formatPhone(before);
+			input.value = formatted;
+
+			let newPos = pos;
+			if (formatted[pos-1] === '-') newPos = pos + 1;
+
+			try { input.setSelectionRange(newPos, newPos); } catch(e){}
+		});
+
+		input.addEventListener("keydown", function(e){
+			if (e.key !== "Backspace") return;
+			const pos = input.selectionStart;
+
+			if (pos > 0 && input.value[pos-1] === '-') {
+				e.preventDefault();
+
+				const newVal = input.value.slice(0,pos-2) + input.value.slice(pos);
+				input.value = newVal;
+
+				const newPos = pos - 1;
+				try { input.setSelectionRange(newPos,newPos); } catch(e){}
+			}
+		});
+
+		if (input.value) input.value = formatPhone(input.value);
+	}
+
+	function init(){
+		document.querySelectorAll('input[type="tel"]').forEach(bind);
+	}
+
+	if (document.readyState === "loading") {
+		document.addEventListener("DOMContentLoaded", init);
+	} else {
+		init();
+	}
 })();
 </script>
 
