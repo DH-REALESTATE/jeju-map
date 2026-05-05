@@ -5175,7 +5175,7 @@ body.sidebar-list-collapsed .map-side-tools
 	background: #fff;
 }
 
-/* Ver 2.173 표시: 하단바 왼쪽 고정 */
+/* Ver 2.232 표시: 하단바 왼쪽 고정 */
 .sub-version-fixed
 {
 	position: absolute !important;
@@ -5908,7 +5908,7 @@ body.sidebar-list-collapsed .map-side-tools
 	white-space: pre-line;
 	margin: 0 0 18px;
 	font-size: 16px;
-	font-weight: 700;
+	font-weight: 300;
 	color: #4b5563;
 	letter-spacing: -0.2px;
 	line-height: 1.5;
@@ -5926,6 +5926,34 @@ body.sidebar-list-collapsed .map-side-tools
 	font-weight: 900;
 	letter-spacing: -0.2px;
 	cursor: pointer;
+}
+
+.auth-error-actions
+{
+	display: flex;
+	gap: 10px;
+}
+
+.auth-error-cancel
+{
+	display: none;
+	width: 100%;
+	height: 46px;
+	border: 1px solid #d1d5db;
+	border-radius: 0;
+	background: #ffffff;
+	color: #374151;
+	font-size: 16px;
+	font-weight: 900;
+	letter-spacing: -0.2px;
+	cursor: pointer;
+}
+
+.auth-error-modal.confirm-mode .auth-error-cancel
+{
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .auth-login-screen, .auth-signup-terms-screen, .auth-signup-form-screen, .auth-forgot-password-screen, .auth-reset-password-screen
@@ -9254,6 +9282,27 @@ body.property-register-page-open .property-register-bottom-bar
 	position: relative;
 }
 
+.property-money-inline
+{
+	position: relative;
+	display: block;
+	width: 100%;
+	min-width: 0;
+}
+
+.property-money-inline .property-unit-input
+{
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+.property-money-input-wrap
+{
+	position: relative;
+	width: 100%;
+	min-width: 0;
+}
+
 .property-unit-input .property-register-input
 {
 	padding-right: 56px;
@@ -9364,11 +9413,47 @@ body.property-register-page-open .property-register-bottom-bar
 .property-price-field
 {
 	position: relative;
+	display: block;
+	min-width: 0;
 }
 
-.property-price-field .property-register-input
+.property-price-field .property-register-input,
+.property-money-input-wrap .property-register-input
 {
-	padding-right: 58px;
+	padding-right: 190px;
+}
+
+.property-money-korean
+{
+	position: absolute;
+	right: 18px;
+	top: 50%;
+	transform: translateY(-50%);
+	color: #6b7280;
+	font-size: 15px;
+	font-weight: 700;
+	line-height: 1;
+	letter-spacing: -0.12px;
+	white-space: nowrap;
+	pointer-events: none;
+	z-index: 2;
+	max-width: 170px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	text-align: right;
+}
+
+.property-money-input-wrap .property-unit-label,
+.property-money-inline .property-unit-label
+{
+	left: var(--money-unit-left, 74px);
+	right: auto;
+	z-index: 2;
+}
+
+.property-money-korean:empty
+{
+	display: none;
 }
 
 @media (max-width: 720px)
@@ -9495,6 +9580,21 @@ body.property-register-page-open .property-register-bottom-bar
 	accent-color: #2f363d;
 	cursor: pointer;
 	flex: 0 0 auto;
+}
+
+.property-parking-row
+{
+	align-items: start;
+}
+
+/* PATCH 2.210: 주차 라벨 높이를 가능/불가능 라디오 줄과 맞춤 */
+.property-parking-row > .property-form-label,
+.property-parking-row > .property-info-field > .property-radio-row
+{
+	display: flex;
+	align-items: center;
+	min-height: 24px;
+	line-height: 1.3;
 }
 
 .property-info-sub-options
@@ -9748,6 +9848,7 @@ body.property-register-page-open .property-register-bottom-bar
 	min-height: 0;
 }
 
+.property-premium-card.is-visible,
 .property-info-card[data-info-mode="commercial"] + .property-premium-card
 {
 	display: block;
@@ -9756,9 +9857,9 @@ body.property-register-page-open .property-register-bottom-bar
 .property-premium-grid
 {
 	display: grid;
-	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-	gap: 32px;
-	align-items: end;
+	grid-template-columns: minmax(0, 1fr);
+	gap: 28px;
+	align-items: start;
 }
 
 .property-premium-field
@@ -9766,10 +9867,36 @@ body.property-register-page-open .property-register-bottom-bar
 	min-width: 0;
 }
 
+.property-premium-amount-field
+{
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto;
+	gap: 12px 42px;
+	align-items: end;
+}
+
+.property-premium-amount-field .property-money-inline
+{
+	grid-column: 1;
+}
+
+.property-premium-amount-field .property-premium-options
+{
+	grid-column: 2;
+	margin-top: 0;
+	padding-bottom: calc((var(--property-register-input-height) - var(--property-register-info-checkbox-size)) / 2);
+}
+
 .property-premium-field .property-form-label
 {
 	display: block;
 	margin-bottom: 12px;
+}
+
+.property-premium-field.property-premium-amount-field .property-form-label
+{
+	grid-column: 1 / -1;
+	margin-bottom: 0;
 }
 
 .property-label-optional
@@ -9781,17 +9908,151 @@ body.property-register-page-open .property-register-bottom-bar
 .property-premium-options
 {
 	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-	gap: 30px;
-	margin-top: 22px;
+	align-items: center;
+	flex-wrap: nowrap;
+	gap: 36px;
+	margin-top: 12px;
+	white-space: nowrap;
+}
+
+.property-premium-desc-field
+{
+	width: min(520px, 100%);
+}
+
+.property-premium-options .property-check-option
+{
+	flex: 0 0 auto;
+}
+
+/* PATCH 2.218: 권리금은 입력 2개를 첫 줄에, 체크박스는 둘째 줄에 배치 */
+.property-premium-grid
+{
+	display: grid !important;
+	grid-template-columns: minmax(0, 1fr) !important;
+	gap: 20px !important;
+}
+
+.property-premium-input-row
+{
+	display: grid;
+	grid-template-columns: 140px minmax(0, 1fr) 140px minmax(0, 1fr);
+	gap: 24px;
+	align-items: center;
+}
+
+.property-premium-field
+{
+	display: contents;
+}
+
+.property-premium-field .property-form-label
+{
+	margin-bottom: 0 !important;
+}
+
+.property-premium-amount-field .property-money-inline,
+.property-premium-desc-field .property-register-input
+{
+	width: 100%;
+	min-width: 0;
+}
+
+.property-premium-options
+{
+	display: flex !important;
+	align-items: center !important;
+	gap: 44px !important;
+	margin-top: 0 !important;
+	margin-left: 164px !important;
+	padding-bottom: 0 !important;
+	white-space: nowrap;
+}
+
+/* PATCH 2.222: 권리금 입력 폭/위치는 월세 보증금+월세 레이아웃을 따름 */
+.property-premium-grid
+{
+	display: grid !important;
+	grid-template-columns: 140px minmax(0, 1fr) !important;
+	gap: 14px 24px !important;
+	align-items: start !important;
+}
+
+.property-premium-main-label
+{
+	grid-column: 1;
+	grid-row: 1 / span 2;
+}
+
+.property-premium-input-row
+{
+	grid-column: 2;
+	display: grid !important;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+	gap: 18px !important;
+	align-items: start !important;
+}
+
+.property-premium-field
+{
+	display: block !important;
+	min-width: 0;
+}
+
+.property-premium-field .property-form-label
+{
+	display: block !important;
+	margin: 0 0 10px !important;
+	font-size: 16px;
+	font-weight: 800;
+	color: #111827;
+	letter-spacing: -0.18px;
+}
+
+.property-premium-options
+{
+	grid-column: 2;
+	margin-left: 0 !important;
+	margin-top: 0 !important;
 }
 
 @media (max-width: 720px)
 {
 	.property-premium-grid
 	{
+		grid-template-columns: 1fr !important;
+	}
+
+	.property-premium-main-label,
+	.property-premium-input-row,
+	.property-premium-options
+	{
+		grid-column: 1 !important;
+		grid-row: auto !important;
+	}
+
+	.property-premium-input-row
+	{
 		grid-template-columns: 1fr;
+		gap: 12px;
+	}
+
+	.property-premium-field
+	{
+		display: block;
+	}
+
+	.property-premium-field .property-form-label
+	{
+		display: block;
+		margin-bottom: 12px !important;
+	}
+
+	.property-premium-options
+	{
+		margin-left: 0 !important;
+		flex-wrap: wrap !important;
+		gap: 24px !important;
 	}
 }
 
@@ -10001,7 +10262,7 @@ body.property-register-page-open .property-register-bottom-bar
 {
 	width: 100%;
 	display: grid;
-	grid-template-columns: repeat(3, minmax(0, 1fr));
+	grid-template-columns: repeat(4, minmax(0, 1fr));
 	gap: 0;
 	padding: 6px;
 	border-radius: 999px;
@@ -10038,6 +10299,39 @@ body.property-register-page-open .property-register-bottom-bar
 	display: block;
 }
 
+.maintenance-none-summary
+{
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	color: #111827;
+	font-size: var(--property-register-option-font-size);
+	font-weight: 800;
+	line-height: 1.3;
+	letter-spacing: -0.18px;
+}
+
+.maintenance-none-row
+{
+	align-items: start;
+}
+
+.maintenance-none-row > .property-form-label,
+.maintenance-none-summary-main
+{
+	display: flex;
+	align-items: center;
+	min-height: 24px;
+	line-height: 1.3;
+}
+
+.maintenance-none-summary-sub
+{
+	color: #6b7280;
+	font-size: 15px;
+	font-weight: 700;
+}
+
 .maintenance-choice-grid,
 .maintenance-include-grid
 {
@@ -10053,6 +10347,39 @@ body.property-register-page-open .property-register-bottom-bar
 	grid-template-columns: repeat(2, minmax(0, 1fr));
 	gap: 24px 44px;
 	align-items: flex-start;
+}
+
+/* PATCH 2.229: 관리비 부과기준 라디오를 긴 문구 기준으로 수평 정렬 */
+.maintenance-detail-type-grid
+{
+	grid-auto-rows: minmax(40px, auto);
+	align-items: stretch;
+	row-gap: 10px;
+}
+
+.maintenance-detail-type-grid .property-radio-option
+{
+	height: 100%;
+	min-height: 40px;
+	align-items: center;
+	line-height: 1.35;
+}
+
+/* PATCH 2.230: 관리비 부과기준 라디오 세로 간격을 조금 더 촘촘하게 조정 */
+.maintenance-detail-type-grid
+{
+	row-gap: 10px !important;
+}
+
+.maintenance-detail-type-grid .property-radio-option input
+{
+	align-self: center;
+}
+
+.maintenance-detail-type-grid .property-radio-option span
+{
+	display: inline-block;
+	line-height: 1.35;
 }
 
 .maintenance-commercial-building-reason
@@ -10163,6 +10490,21 @@ body.property-register-page-open .property-register-bottom-bar
 {
 	margin-top: -6px;
 	margin-bottom: 32px;
+}
+
+/* PATCH 2.226: 입주가능일 즉시입주/협의가능 체크박스를 같은 줄에 배치 */
+.property-move-in-checks
+{
+	display: flex;
+	align-items: center;
+	gap: 36px;
+	flex-wrap: wrap;
+}
+
+/* PATCH 2.227: 입주가능일 체크박스 간격을 권리금 체크박스와 동일하게 맞춤 */
+.property-move-in-checks.property-form-control
+{
+	gap: 36px !important;
 }
 
 .property-detail-input,
@@ -10334,6 +10676,57 @@ body.property-register-page-open .property-register-bottom-bar
 	top: 1px;
 }
 
+/* PATCH 2.214: 관리비 없음 행은 왼쪽 라벨과 첫 번째 값을 같은 라인에 고정 */
+.maintenance-form-row.maintenance-none-row
+{
+	align-items: flex-start !important;
+}
+
+.maintenance-form-row.maintenance-none-row > .property-form-label,
+.maintenance-form-row.maintenance-none-row .maintenance-none-summary-main
+{
+	display: flex !important;
+	align-items: center !important;
+	height: 24px !important;
+	min-height: 24px !important;
+	padding-top: 0 !important;
+	line-height: 24px !important;
+}
+
+.maintenance-form-row.maintenance-none-row .maintenance-none-summary
+{
+	gap: 8px !important;
+}
+
+/* PATCH 2.220: 주차 라벨을 가능/불가능 라디오 첫 줄 높이에 고정 */
+.property-info-row.property-parking-row
+{
+	align-items: flex-start !important;
+}
+
+.property-info-row.property-parking-row > .property-form-label,
+.property-info-row.property-parking-row > .property-info-field > .property-radio-row
+{
+	display: flex !important;
+	align-items: center !important;
+	height: 24px !important;
+	min-height: 24px !important;
+	padding-top: 0 !important;
+	line-height: 24px !important;
+}
+
+.property-info-row.property-parking-row > .property-info-field
+{
+	align-self: flex-start !important;
+}
+
+.property-info-row.property-parking-row .property-radio-option
+{
+	height: 24px !important;
+	align-items: center !important;
+	line-height: 24px !important;
+}
+
 /* ===== PATCH: 시설 정보 체크박스 높이/간격 통일 ===== */
 .property-facility-card .property-facility-options
 {
@@ -10384,6 +10777,61 @@ body.property-register-page-open .property-register-bottom-bar
 	line-height: 1.2;
 }
 
+/* ===== PATCH 2.200: 시설 정보 체크박스/라벨 간격 최종 통일 ===== */
+.property-facility-card
+{
+	--facility-option-height: 32px;
+	--facility-row-gap: 12px;
+	--facility-column-gap: 28px;
+}
+
+.property-facility-card .property-facility-row
+{
+	align-items: start !important;
+	margin-bottom: 20px;
+}
+
+.property-facility-card .property-facility-row .property-form-label
+{
+	display: flex !important;
+	align-items: center !important;
+	height: var(--facility-option-height) !important;
+	min-height: var(--facility-option-height) !important;
+	padding-top: 0 !important;
+	line-height: 1.2 !important;
+}
+
+.property-facility-card .property-facility-options
+{
+	display: grid !important;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	column-gap: var(--facility-column-gap) !important;
+	row-gap: var(--facility-row-gap) !important;
+	align-items: start !important;
+}
+
+.property-facility-card .property-check-option
+{
+	display: inline-flex !important;
+	align-items: center !important;
+	height: var(--facility-option-height) !important;
+	min-height: var(--facility-option-height) !important;
+	line-height: 1.2 !important;
+}
+
+.property-facility-card .property-check-option input
+{
+	align-self: center;
+}
+
+@media (max-width: 720px)
+{
+	.property-facility-card .property-facility-options
+	{
+		grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+	}
+}
+
 .property-facility-row
 {
 	align-items: flex-start;
@@ -10412,6 +10860,53 @@ body.property-register-page-open .property-register-bottom-bar
 	display: inline-flex;
 	align-items: center;
 	line-height: 1.2;
+}
+
+/* PATCH 2.211: 시설정보 전체 체크박스 칸 높이와 내부 정렬을 동일하게 고정 */
+.property-facility-card .property-facility-options
+{
+	grid-auto-rows: var(--facility-option-height, 32px) !important;
+	align-items: stretch !important;
+}
+
+.property-facility-card .property-check-option
+{
+	box-sizing: border-box !important;
+	height: var(--facility-option-height, 32px) !important;
+	min-height: var(--facility-option-height, 32px) !important;
+	max-height: var(--facility-option-height, 32px) !important;
+	padding: 0 !important;
+	align-self: stretch !important;
+	display: inline-flex !important;
+	align-items: center !important;
+}
+
+.property-facility-card .property-check-option input
+{
+	width: var(--property-register-info-checkbox-size) !important;
+	height: var(--property-register-info-checkbox-size) !important;
+	margin: 0 !important;
+	align-self: center !important;
+	flex: 0 0 auto !important;
+}
+
+.property-facility-card .property-check-option span
+{
+	display: inline-flex !important;
+	align-items: center !important;
+	height: 100% !important;
+	line-height: 1 !important;
+}
+
+/* PATCH 2.213: 시설정보 그룹 사이 간격도 체크박스 줄 간격과 동일하게 맞춤 */
+.property-facility-card .property-facility-row
+{
+	margin-bottom: var(--facility-row-gap, 12px) !important;
+}
+
+.property-facility-card .property-facility-row:last-child
+{
+	margin-bottom: 0 !important;
 }
 
 /* ===== PATCH: 매물 등록 - 중개사무소 설정 ===== */
@@ -10880,6 +11375,144 @@ body.property-register-page-open .property-register-bottom-bar
 	box-sizing: border-box;
 }
 
+/* PATCH 2.221: 등록자 정보는 2열 그리드로 정리하고 긴 업소명 칸을 넓게 확보 */
+.property-registrant-stack
+{
+	display: grid !important;
+	grid-template-columns: minmax(520px, 1.45fr) minmax(300px, 0.9fr);
+	gap: 18px 36px !important;
+	align-items: center;
+	max-width: 980px;
+}
+
+.property-registrant-stack .property-registrant-inline
+{
+	display: contents !important;
+	min-height: 0 !important;
+}
+
+.property-registrant-office-line
+{
+	column-gap: 0 !important;
+}
+
+.property-registrant-field
+{
+	width: 100%;
+	display: grid !important;
+	grid-template-columns: 68px minmax(0, 1fr);
+	gap: 12px !important;
+	align-items: center !important;
+	height: var(--property-register-input-height) !important;
+}
+
+.property-registrant-field-label
+{
+	min-width: 0 !important;
+	text-align: left;
+}
+
+.property-registrant-input,
+.property-registrant-input.short,
+.property-registrant-input.short#registrantManagerNameInput
+{
+	width: 100% !important;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.property-registrant-license
+{
+	grid-column: 1 / -1;
+	justify-self: start;
+	margin-left: 80px;
+}
+
+@media (max-width: 1080px)
+{
+	.property-registrant-stack
+	{
+		grid-template-columns: 1fr !important;
+		max-width: 100%;
+	}
+
+	.property-registrant-license
+	{
+		margin-left: 0;
+	}
+}
+
+/* PATCH 2.223: 등록자 정보 줄 순서를 업소명 단독 + 2칸 입력 구조로 재정렬 */
+.property-registrant-stack
+{
+	display: grid !important;
+	grid-template-columns: minmax(0, 1fr) !important;
+	gap: 14px !important;
+	max-width: 1060px !important;
+}
+
+.property-registrant-stack .property-registrant-inline
+{
+	display: grid !important;
+	min-height: 0 !important;
+	gap: 18px 36px !important;
+	align-items: center !important;
+}
+
+.property-registrant-row-full
+{
+	grid-template-columns: minmax(0, 1fr) !important;
+}
+
+.property-registrant-row-two
+{
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+}
+
+.property-registrant-check-line
+{
+	grid-template-columns: 1fr !important;
+	padding-left: 80px;
+}
+
+.property-registrant-field
+{
+	width: 100%;
+	display: grid !important;
+	grid-template-columns: 68px minmax(0, 1fr) !important;
+	gap: 12px !important;
+	align-items: center !important;
+	height: var(--property-register-input-height) !important;
+}
+
+.property-registrant-input,
+.property-registrant-input.short,
+.property-registrant-input.short#registrantManagerNameInput
+{
+	width: 100% !important;
+	min-width: 0;
+}
+
+.property-registrant-license
+{
+	margin-left: 0 !important;
+	justify-self: start;
+}
+
+@media (max-width: 900px)
+{
+	.property-registrant-row-two
+	{
+		grid-template-columns: 1fr !important;
+	}
+
+	.property-registrant-check-line
+	{
+		padding-left: 0;
+	}
+}
+
 .property-register-page textarea
 {
 	box-sizing: border-box;
@@ -10920,6 +11553,23 @@ body.property-register-page-open .property-register-bottom-bar
 	line-height: 1.2;
 }
 
+/* PATCH 2.216: 중개사무소 메모 라벨은 글자수 카운터를 빼고 textarea 높이만 기준으로 중앙 정렬 */
+.property-agency-row
+{
+	align-items: flex-start !important;
+}
+
+.property-agency-row > .property-form-label
+{
+	align-self: flex-start !important;
+	height: 142px !important;
+	min-height: 142px !important;
+	display: flex !important;
+	align-items: center !important;
+	padding-top: 0 !important;
+	line-height: 1.2 !important;
+}
+
 /* ===== PATCH: 층 정보 라벨/전체/해당 글자 baseline 정렬 ===== */
 .property-info-row.property-floor-row
 {
@@ -10958,6 +11608,15 @@ body[data-property-type="hotel"] #propertyMaintenanceCard,
 body[data-property-type="pension"] #propertyMaintenanceCard,
 body[data-property-type="building"] #propertyMaintenanceCard,
 body[data-property-type="factory_warehouse"] #propertyMaintenanceCard
+{
+	display: none !important;
+	visibility: hidden !important;
+	pointer-events: none !important;
+}
+
+body[data-property-type="land"] #buildingUseRow,
+body[data-property-type="land"] .property-detail-date-row,
+body[data-property-type="land"] .property-detail-date-check-row
 {
 	display: none !important;
 	visibility: hidden !important;
@@ -11666,7 +12325,7 @@ body[data-property-type="factory_warehouse"] #propertyMaintenanceCard
 	box-sizing: border-box !important;
 }
 
-/* ===== PATCH 2.173: 간편 매물 등록 모달 / 상세설명 길이 / 관리비 원 단위 ===== */
+/* ===== PATCH 2.184: 간편 매물 등록 모달 / 상세설명 길이 / 관리비 원 단위 / 교차로 라벨 파싱 ===== */
 .quick-property-modal
 {
 	position: fixed;
@@ -11675,8 +12334,9 @@ body[data-property-type="factory_warehouse"] #propertyMaintenanceCard
 	display: none;
 	align-items: center;
 	justify-content: center;
-	padding: 28px;
-	background: rgba(17, 24, 39, 0.42);
+	padding: var(--property-address-modal-padding);
+	background: var(--property-address-modal-bg);
+	font-size: var(--property-register-option-font-size);
 }
 
 .quick-property-modal.open
@@ -11686,10 +12346,16 @@ body[data-property-type="factory_warehouse"] #propertyMaintenanceCard
 
 .quick-property-dialog
 {
-	width: min(920px, calc(100vw - 56px));
-	background: #ffffff;
-	border-radius: 28px;
-	box-shadow: 0 28px 80px rgba(15, 23, 42, 0.24);
+	position: relative;
+	width: var(--property-address-dialog-width);
+	max-width: var(--property-address-dialog-max-width);
+	max-height: var(--property-address-dialog-max-height);
+	padding: var(--property-address-dialog-padding-top)
+	        var(--property-address-dialog-padding-x)
+	        var(--property-address-dialog-padding-bottom);
+	background: var(--property-address-dialog-bg);
+	border-radius: var(--property-address-dialog-radius);
+	box-shadow: var(--property-address-dialog-shadow);
 	overflow: hidden;
 }
 
@@ -11698,33 +12364,33 @@ body[data-property-type="factory_warehouse"] #propertyMaintenanceCard
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	gap: 24px;
-	padding: 38px 54px 28px;
+	gap: 14px;
+	padding: 0;
+	margin: 0 0 18px;
 }
 
 .quick-property-title
 {
 	margin: 0;
-	color: #050816;
-	font-size: 40px;
-	font-weight: 900;
-	line-height: 1.15;
-	letter-spacing: -1px;
+	color: var(--property-address-title-color);
+	font-size: var(--property-address-title-font-size);
+	font-weight: var(--property-address-title-font-weight);
+	line-height: var(--property-address-title-line-height);
+	letter-spacing: var(--property-address-title-letter-spacing);
 }
 
 .quick-property-paste-btn,
 .quick-property-cancel-btn,
 .quick-property-apply-btn
 {
-	height: 80px;
-	min-width: 170px;
-	padding: 0 30px;
-	border: 0;
-	border-radius: 14px;
+	height: var(--property-address-secondary-button-height);
+	min-width: var(--property-address-secondary-button-min-width);
+	padding: 0 var(--property-address-secondary-button-padding-x);
+	border-radius: var(--property-address-secondary-button-radius);
 	font-family: var(--font-ui);
-	font-size: 24px;
-	font-weight: 900;
-	letter-spacing: -0.4px;
+	font-size: var(--property-address-secondary-button-font-size);
+	font-weight: var(--property-address-secondary-button-font-weight);
+	letter-spacing: -0.18px;
 	line-height: 1;
 	display: inline-flex;
 	align-items: center;
@@ -11736,29 +12402,62 @@ body[data-property-type="factory_warehouse"] #propertyMaintenanceCard
 .quick-property-paste-btn,
 .quick-property-cancel-btn
 {
-	background: #2d333d;
-	color: #ffffff;
+	background: var(--property-address-secondary-button-bg);
+	color: var(--property-address-secondary-button-color);
+	border: var(--property-address-secondary-button-border);
 }
 
 .quick-property-body
 {
-	padding: 18px 54px 52px;
+	padding: 0;
+}
+
+.quick-property-source-row
+{
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 10px 18px;
+	margin: 0 0 14px;
+}
+
+.quick-property-source-option
+{
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	color: var(--property-address-input-color);
+	font-family: var(--font-ui);
+	font-size: 15px;
+	font-weight: 600;
+	line-height: 1.2;
+	cursor: pointer;
+	white-space: nowrap;
+}
+
+.quick-property-source-option input
+{
+	width: 18px;
+	height: 18px;
+	margin: 0;
+	accent-color: #2563eb;
+	cursor: pointer;
 }
 
 .quick-property-textarea
 {
 	width: 100%;
-	height: 190px;
-	padding: 28px 32px;
-	border: 2px solid #d9dee7;
-	border-radius: 24px;
-	background: #ffffff;
-	color: #111827;
+	height: 188px;
+	padding: 18px;
+	border: var(--property-address-input-border);
+	border-radius: var(--property-address-input-radius);
+	background: var(--property-address-input-bg);
+	color: var(--property-address-input-color);
 	font-family: var(--font-ui);
-	font-size: 24px;
-	font-weight: 600;
-	line-height: 1.5;
-	letter-spacing: -0.3px;
+	font-size: var(--property-address-input-font-size);
+	font-weight: 400;
+	line-height: 1.55;
+	letter-spacing: var(--property-address-input-letter-spacing);
 	resize: none;
 	outline: none;
 	box-sizing: border-box;
@@ -11766,13 +12465,16 @@ body[data-property-type="factory_warehouse"] #propertyMaintenanceCard
 
 .quick-property-textarea::placeholder
 {
-	color: #a8b0bd;
+	color: var(--property-address-input-placeholder-color);
+	font-weight: 400;
 }
 
 .quick-property-textarea:focus
 {
-	border-color: #b8c3d4;
-	box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.08);
+	border: var(--property-address-input-border-focus);
+	background: var(--property-address-input-bg);
+	box-shadow: none;
+	outline: none;
 }
 
 .quick-property-foot
@@ -11780,15 +12482,22 @@ body[data-property-type="factory_warehouse"] #propertyMaintenanceCard
 	display: flex;
 	align-items: center;
 	justify-content: flex-end;
-	gap: 16px;
-	padding: 32px 54px 40px;
-	border-top: 1px solid #edf0f5;
+	gap: 10px;
+	padding: 22px 0 0;
+	border-top: 0;
 }
 
 .quick-property-apply-btn
 {
-	background: #ff5b12;
-	color: #ffffff;
+	min-width: var(--property-address-secondary-button-min-width);
+	padding: 0 var(--property-address-primary-button-padding-x);
+	border-radius: var(--property-address-primary-button-radius);
+	font-size: var(--property-address-primary-button-font-size);
+	font-weight: var(--property-address-primary-button-font-weight);
+	letter-spacing: var(--property-address-primary-button-letter-spacing);
+	background: var(--property-address-primary-button-bg);
+	color: var(--property-address-primary-button-color);
+	border: var(--property-address-primary-button-border);
 }
 
 @media (max-width: 720px)
@@ -11796,39 +12505,33 @@ body[data-property-type="factory_warehouse"] #propertyMaintenanceCard
 	.quick-property-dialog
 	{
 		width: calc(100vw - 32px);
-		border-radius: 22px;
+		padding: 24px;
+		border-radius: var(--property-address-dialog-radius);
 	}
 	.quick-property-head
 	{
-		padding: 28px 24px 18px;
 		align-items: flex-start;
 		flex-direction: column;
 	}
 	.quick-property-title
 	{
-		font-size: 30px;
-	}
-	.quick-property-body
-	{
-		padding: 12px 24px 32px;
+		font-size: 24px;
 	}
 	.quick-property-textarea
 	{
 		height: 220px;
-		font-size: 18px;
 	}
 	.quick-property-foot
 	{
-		padding: 24px;
+		padding-top: 18px;
 	}
 	.quick-property-paste-btn,
 	.quick-property-cancel-btn,
 	.quick-property-apply-btn
 	{
-		height: 58px;
+		height: var(--property-address-secondary-button-height);
 		min-width: 0;
 		flex: 1 1 0;
-		font-size: 19px;
 	}
 }
 
@@ -12498,7 +13201,7 @@ body[data-property-type="factory_warehouse"] #propertyMaintenanceCard
 				</div>
 
 
-				<div class="property-form-row">
+				<div class="property-form-row" id="buildingUseRow">
 					<label class="property-form-label" for="buildingUseSelect">건축물 용도<span class="property-required">*</span></label>
 					<div class="property-form-control property-select-wrap property-register-dropdown" data-register-dropdown>
 						<select class="property-register-select property-register-native-select" id="buildingUseSelect" tabindex="-1" aria-hidden="true">
@@ -12579,12 +13282,12 @@ body[data-property-type="factory_warehouse"] #propertyMaintenanceCard
 					<label class="property-form-label" id="exclusiveAreaLabel" for="exclusiveAreaM2Input">전용 면적<span class="property-required">*</span></label>
 					<div class="property-form-control property-area-pair">
 						<div class="property-unit-input">
-							<input type="number" class="property-register-input property-area-m2" id="exclusiveAreaM2Input" data-py-target="exclusiveAreaPyInput" placeholder="0" min="0" step="0.01" />
+							<input type="text" class="property-register-input property-area-m2" id="exclusiveAreaM2Input" data-py-target="exclusiveAreaPyInput" placeholder="0" inputmode="decimal" />
 							<span class="property-unit-label">m²</span>
 						</div>
 						<div class="property-area-eq">=</div>
 						<div class="property-unit-input">
-							<input type="number" class="property-register-input property-area-py" id="exclusiveAreaPyInput" data-m2-target="exclusiveAreaM2Input" placeholder="0" min="0" step="0.01" />
+							<input type="text" class="property-register-input property-area-py" id="exclusiveAreaPyInput" data-m2-target="exclusiveAreaM2Input" placeholder="0" inputmode="decimal" />
 							<span class="property-unit-label">평</span>
 						</div>
 					</div>
@@ -12594,27 +13297,27 @@ body[data-property-type="factory_warehouse"] #propertyMaintenanceCard
 					<label class="property-form-label" id="supplyAreaLabel" for="supplyAreaM2Input">공급 면적</label>
 					<div class="property-form-control property-area-pair">
 						<div class="property-unit-input">
-							<input type="number" class="property-register-input property-area-m2" id="supplyAreaM2Input" data-py-target="supplyAreaPyInput" placeholder="0" min="0" step="0.01" />
+							<input type="text" class="property-register-input property-area-m2" id="supplyAreaM2Input" data-py-target="supplyAreaPyInput" placeholder="0" inputmode="decimal" />
 							<span class="property-unit-label">m²</span>
 						</div>
 						<div class="property-area-eq">=</div>
 						<div class="property-unit-input">
-							<input type="number" class="property-register-input property-area-py" id="supplyAreaPyInput" data-m2-target="supplyAreaM2Input" placeholder="0" min="0" step="0.01" />
+							<input type="text" class="property-register-input property-area-py" id="supplyAreaPyInput" data-m2-target="supplyAreaM2Input" placeholder="0" inputmode="decimal" />
 							<span class="property-unit-label">평</span>
 						</div>
 					</div>
 				</div>
 
 				<div class="property-form-row" id="landAreaRow" style="display:none;">
-					<label class="property-form-label" for="landAreaM2Input">대지 면적<span class="property-required">*</span></label>
+					<label class="property-form-label" id="landAreaLabel" for="landAreaM2Input">대지 면적<span class="property-required">*</span></label>
 					<div class="property-form-control property-area-pair">
 						<div class="property-unit-input">
-							<input type="number" class="property-register-input property-area-m2" id="landAreaM2Input" data-py-target="landAreaPyInput" placeholder="0" min="0" step="0.01" />
+							<input type="text" class="property-register-input property-area-m2" id="landAreaM2Input" data-py-target="landAreaPyInput" placeholder="0" inputmode="decimal" />
 							<span class="property-unit-label">m²</span>
 						</div>
 						<div class="property-area-eq">=</div>
 						<div class="property-unit-input">
-							<input type="number" class="property-register-input property-area-py" id="landAreaPyInput" data-m2-target="landAreaM2Input" placeholder="0" min="0" step="0.01" />
+							<input type="text" class="property-register-input property-area-py" id="landAreaPyInput" data-m2-target="landAreaM2Input" placeholder="0" inputmode="decimal" />
 							<span class="property-unit-label">평</span>
 						</div>
 					</div>
@@ -12666,11 +13369,11 @@ body[data-property-type="factory_warehouse"] #propertyMaintenanceCard
 					<div class="property-info-field property-inline-grid">
 						<div class="property-inline-unit">
 							<span class="property-inline-label">방</span>
-							<div class="property-unit-input"><input type="number" class="property-register-input" id="propertyRoomCountInput" placeholder="0" min="0" /><span class="property-unit-label">개</span></div>
+							<div class="property-unit-input"><input type="text" class="property-register-input property-comma-number-input" id="propertyRoomCountInput" placeholder="0" inputmode="numeric" /><span class="property-unit-label">개</span></div>
 						</div>
 						<div class="property-inline-unit">
 							<span class="property-inline-label">욕실</span>
-							<div class="property-unit-input"><input type="number" class="property-register-input" id="propertyBathCountInput" placeholder="0" min="0" /><span class="property-unit-label">개</span></div>
+							<div class="property-unit-input"><input type="text" class="property-register-input property-comma-number-input" id="propertyBathCountInput" placeholder="0" inputmode="numeric" /><span class="property-unit-label">개</span></div>
 						</div>
 					</div>
 				</div>
@@ -12706,7 +13409,7 @@ body[data-property-type="factory_warehouse"] #propertyMaintenanceCard
 					<label class="property-form-label" for="propertyHouseholdCountInput">총 세대수</label>
 					<div class="property-info-field property-inline-grid">
 						<div class="property-inline-unit">
-							<div class="property-unit-input"><input type="number" class="property-register-input" id="propertyHouseholdCountInput" placeholder="0" min="0" /><span class="property-unit-label">세대</span></div>
+							<div class="property-unit-input"><input type="text" class="property-register-input property-comma-number-input" id="propertyHouseholdCountInput" placeholder="0" inputmode="numeric" /><span class="property-unit-label">세대</span></div>
 						</div>
 					</div>
 				</div>
@@ -12742,7 +13445,7 @@ body[data-property-type="factory_warehouse"] #propertyMaintenanceCard
 					<div class="property-info-field">
 						<div class="property-radio-row"><label class="property-radio-option"><input type="radio" name="propertyParking" value="possible" /> 가능</label><label class="property-radio-option"><input type="radio" name="propertyParking" value="impossible" /> 불가능</label></div>
 						<div class="property-parking-detail" id="propertyParkingDetail">
-							<div class="property-inline-grid"><div class="property-inline-unit"><span class="property-inline-label">총</span><div class="property-unit-input"><input type="number" class="property-register-input" id="propertyParkingTotalInput" placeholder="0" min="0" /><span class="property-unit-label">대</span></div></div><div class="property-inline-unit"><span class="property-inline-label">세대당</span><div class="property-unit-input"><input type="number" class="property-register-input" id="propertyParkingPerInput" placeholder="0" min="0" step="0.01" /><span class="property-unit-label">대</span></div></div></div>
+							<div class="property-inline-grid"><div class="property-inline-unit"><span class="property-inline-label">총</span><div class="property-unit-input"><input type="text" class="property-register-input property-comma-number-input" id="propertyParkingTotalInput" placeholder="0" inputmode="numeric" /><span class="property-unit-label">대</span></div></div><div class="property-inline-unit"><span class="property-inline-label">세대당</span><div class="property-unit-input"><input type="text" class="property-register-input property-comma-decimal-input" id="propertyParkingPerInput" placeholder="0" inputmode="decimal" /><span class="property-unit-label">대</span></div></div></div>
 						</div>
 					</div>
 				</div>
@@ -12777,31 +13480,39 @@ body[data-property-type="factory_warehouse"] #propertyMaintenanceCard
 				<h2 class="property-register-section-title">권리금</h2>
 
 				<div class="property-premium-grid">
-					<div class="property-premium-field">
-						<label class="property-form-label" for="propertyPremiumInput">권리금</label>
-						<div class="property-unit-input">
-							<input type="text" class="property-register-input" id="propertyPremiumInput" placeholder="0" />
-							<span class="property-unit-label">만원</span>
+					<div class="property-form-label property-premium-main-label">권리금</div>
+					<div class="property-premium-input-row">
+						<div class="property-premium-field property-premium-amount-field">
+							<label class="property-form-label" for="propertyPremiumInput">권리금</label>
+							<div class="property-money-inline">
+								<div class="property-unit-input">
+									<input type="text" class="property-register-input" id="propertyPremiumInput" placeholder="0" />
+									<span class="property-unit-label">만원</span>
+								</div>
+								<span class="property-money-korean" data-money-korean-for="propertyPremiumInput"></span>
+							</div>
+						</div>
+
+						<div class="property-premium-field property-premium-desc-field">
+							<!-- PATCH 2.224: 권리금 설명 라벨에 선택 표시 복구 -->
+							<label class="property-form-label" for="propertyPremiumDescInput">권리금 설명 <span class="property-label-optional">(선택)</span></label>
+							<input type="text" class="property-register-input" id="propertyPremiumDescInput" placeholder="권리금 설명을 입력해주세요." />
 						</div>
 					</div>
 
-					<div class="property-premium-field">
-						<label class="property-form-label" for="propertyPremiumDescInput">권리금 설명 <span class="property-label-optional">(선택)</span></label>
-						<input type="text" class="property-register-input" id="propertyPremiumDescInput" placeholder="권리금 설명을 입력해주세요." />
+					<div class="property-premium-options">
+						<label class="property-check-option">
+							<input type="checkbox" id="propertyPremiumNoneChk" />
+							<span>권리금 없음</span>
+						</label>
+
+						<label class="property-check-option">
+							<input type="checkbox" id="propertyPremiumNegotiableChk" />
+							<span>협의 가능</span>
+						</label>
 					</div>
 				</div>
 
-				<div class="property-premium-options">
-					<label class="property-check-option">
-						<input type="checkbox" id="propertyPremiumNoneChk" />
-						<span>권리금 없음</span>
-					</label>
-
-					<label class="property-check-option">
-						<input type="checkbox" id="propertyPremiumNegotiableChk" />
-						<span>협의 가능</span>
-					</label>
-				</div>
 			</div>
 
 			<div class="property-register-card property-facility-card" id="propertyFacilityCard">
@@ -12906,7 +13617,18 @@ body[data-property-type="factory_warehouse"] #propertyMaintenanceCard
 						<div class="maintenance-tab-group" id="maintenanceTypeTab">
 							<button type="button" class="maintenance-tab active" data-maintenance-type="fixed">정액 관리비</button>
 							<button type="button" class="maintenance-tab" data-maintenance-type="extra">기타 부과</button>
+							<button type="button" class="maintenance-tab" data-maintenance-type="none">관리비 없음</button>
 							<button type="button" class="maintenance-tab" data-maintenance-type="unknown">확인 불가</button>
+						</div>
+					</div>
+				</div>
+
+				<div class="maintenance-section" data-maintenance-section="none">
+					<div class="maintenance-form-row maintenance-none-row">
+						<label class="property-form-label">관리비</label>
+						<div class="maintenance-form-field maintenance-none-summary">
+							<div class="maintenance-none-summary-main" id="maintenanceNoneValue">관리비없음</div>
+							<div class="maintenance-none-summary-sub" id="maintenanceNoneReason">관리비 부과내역 없음</div>
 						</div>
 					</div>
 				</div>
@@ -13055,7 +13777,7 @@ body[data-property-type="factory_warehouse"] #propertyMaintenanceCard
 					</div>
 
 					<div class="maintenance-form-row maintenance-top-row">
-						<label class="property-form-label">관리비 세부 타입<span class="property-required">*</span></label>
+						<label class="property-form-label">부과기준<span class="property-required">*</span></label>
 						<div class="maintenance-form-field maintenance-detail-type-grid">
 							<label class="property-radio-option"><input type="radio" name="maintenanceDetailType" value="usage_by_household" /><span>세대별 사용량에 따라 부과</span></label>
 							<label class="property-radio-option"><input type="radio" name="maintenanceDetailType" value="area_rule" /><span>관리규약에 따라 부과</span></label>
@@ -13106,8 +13828,9 @@ body[data-property-type="factory_warehouse"] #propertyMaintenanceCard
 
 				<div class="property-detail-row property-detail-date-check-row">
 					<label class="property-form-label"></label>
-					<div class="property-form-control">
+					<div class="property-form-control property-move-in-checks">
 						<label class="property-check-option"><input type="checkbox" id="propertyMoveInNowChk" /><span>즉시 입주 가능</span></label>
+						<label class="property-check-option"><input type="checkbox" id="propertyMoveInNegotiableChk" /><span>협의 가능</span></label>
 					</div>
 				</div>
 
@@ -13179,34 +13902,34 @@ body[data-property-type="factory_warehouse"] #propertyMaintenanceCard
 				<div class="property-registrant-form-row property-registrant-agency-row">
 					<label class="property-form-label">중개업소정보</label>
 					<div class="property-registrant-form-field property-registrant-stack">
-						<div class="property-registrant-inline property-registrant-office-line">
+						<div class="property-registrant-inline property-registrant-office-line property-registrant-row-full">
 							<div class="property-registrant-field">
 								<span class="property-registrant-field-label">업소명</span>
 								<input type="text" class="property-registrant-input" id="registrantOfficeNameInput" readonly />
 							</div>
+						</div>
+						<div class="property-registrant-inline property-registrant-row-two">
 							<div class="property-registrant-field">
 								<span class="property-registrant-field-label">대표자</span>
 								<input type="text" class="property-registrant-input short" id="registrantRepresentativeInput" maxlength="5" readonly />
 							</div>
-						</div>
-						<div class="property-registrant-inline">
 							<div class="property-registrant-field">
 								<span class="property-registrant-field-label">연락처</span>
 								<input type="tel" class="property-registrant-input" id="registrantPhone1Input" readonly />
 							</div>
 						</div>
-						<div class="property-registrant-inline">
+						<div class="property-registrant-inline property-registrant-row-two">
 							<div class="property-registrant-field">
 								<span class="property-registrant-field-label">담당자</span>
 								<input type="text" class="property-registrant-input short" id="registrantManagerNameInput" disabled />
 							</div>
-							<label class="property-registrant-license"><input type="checkbox" id="registrantLicensedAgentChk" />소속공인중개사</label>
-						</div>
-						<div class="property-registrant-inline">
 							<div class="property-registrant-field">
 								<span class="property-registrant-field-label">연락처</span>
 								<input type="tel" class="property-registrant-input" id="registrantPhone2Input" />
 							</div>
+						</div>
+						<div class="property-registrant-inline property-registrant-check-line">
+							<label class="property-registrant-license"><input type="checkbox" id="registrantLicensedAgentChk" />소속공인중개사</label>
 						</div>
 					</div>
 				</div>
@@ -13228,7 +13951,13 @@ body[data-property-type="factory_warehouse"] #propertyMaintenanceCard
 				<button type="button" class="quick-property-paste-btn" id="quickPropertyPasteBtn">텍스트 붙여넣기</button>
 			</div>
 			<div class="quick-property-body">
-				<textarea class="quick-property-textarea" id="quickPropertyTextarea" placeholder="평소 메모장이나 메신저에 관리하던 매물 정보를 복사하고&#10;(ctrl+c) 붙여넣기(ctrl+v)만 하면 글쓰기 항목에 자동으로&#10;정보가 입력돼요."></textarea>
+				<div class="quick-property-source-row" aria-label="간편 입력 출처 선택">
+					<label class="quick-property-source-option"><input type="checkbox" id="quickPropertySourceCrossroad" name="quickPropertySource" value="crossroad" checked /> 교차로</label>
+					<label class="quick-property-source-option"><input type="checkbox" name="quickPropertySource" value="oiljang" /> 오일장</label>
+					<label class="quick-property-source-option"><input type="checkbox" name="quickPropertySource" value="naver_blog" /> 네이버 블로그</label>
+					<label class="quick-property-source-option"><input type="checkbox" name="quickPropertySource" value="etc" /> 기타</label>
+				</div>
+				<textarea class="quick-property-textarea" id="quickPropertyTextarea" placeholder="메모장이나 메신저에 매물 정보를 복사하고(ctrl+c) 붙여넣기(ctrl+v)만 하면&#10;매물 정보에 자동으로 정보가 입력됩니다."></textarea>
 			</div>
 			<div class="quick-property-foot">
 				<button type="button" class="quick-property-cancel-btn" id="quickPropertyCancelBtn">취소</button>
@@ -13291,8 +14020,8 @@ body[data-property-type="factory_warehouse"] #propertyMaintenanceCard
 
 		<div class="sub-topbar">
 			<div class="sub-topbar-inner">
-				<a class="sub-version-fixed" href="realjeju_2.173.html" download="realjeju_2.173.html" title="realjeju_2.173.html 다운로드">
-					Ver 2.173 다운로드
+				<a class="sub-version-fixed" href="realjeju_2.232.html" download="realjeju_2.232.html" title="realjeju_2.232.html 다운로드">
+					Ver 2.232 다운로드
 				</a>
 				<div class="sub-topbar-left">
 					<strong id="listInfoText">
@@ -14490,9 +15219,14 @@ if (globalBrandLink) {
 		<p class="auth-error-message" id="authErrorMessage">
 			아이디와 비밀번호를 입력하세요.
 		</p>
-		<button type="button" class="auth-error-confirm" id="authErrorConfirmBtn">
-			확인
-		</button>
+		<div class="auth-error-actions">
+			<button type="button" class="auth-error-cancel" id="authErrorCancelBtn">
+				취소
+			</button>
+			<button type="button" class="auth-error-confirm" id="authErrorConfirmBtn">
+				확인
+			</button>
+		</div>
 	</div>
 </div>
 <div id="termsFullPage" class="terms-full-page" aria-hidden="true">
@@ -14530,7 +15264,7 @@ function hexToRgba(hex, alpha = 1)
 	return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 const APP_NAME = "REALJEJU.APP";
-const APP_VERSION = "2.173";
+const APP_VERSION = "2.232";
 
 function applyAppVersion()
 {
@@ -18966,6 +19700,7 @@ bootstrap();
 	const authErrorTitle = document.getElementById("authErrorTitle");
 	const authErrorMessage = document.getElementById("authErrorMessage");
 	const authErrorConfirmBtn = document.getElementById("authErrorConfirmBtn");
+	const authErrorCancelBtn = document.getElementById("authErrorCancelBtn");
 	const authLoginSwitchBtn = document.getElementById("authLoginSwitchBtn");
 	const authTermsAllBtn = document.getElementById("authTermsAllBtn");
 	const authTermsNextBtn = document.getElementById("authTermsNextBtn");
@@ -18979,6 +19714,7 @@ bootstrap();
 	let currentTermsKey = null;
 	let authErrorReturnFocusTarget = null;
 	let authErrorConfirmAction = null;
+	let authErrorCancelAction = null;
 	let isRealjejuProfileSetupRequired = false;
 	let isRealjejuSavingProfile = false;
 	let currentRealjejuAuthUser = null;
@@ -20093,10 +20829,36 @@ function applyLoggedInAccountUI(user, profile)
 			document.body.appendChild(authErrorModal);
 		}
 		authErrorModal.style.zIndex = "200000";
+		authErrorModal.classList.remove("confirm-mode");
 		authErrorReturnFocusTarget = returnFocusTarget || authEmailInput || null;
 		authErrorConfirmAction = typeof confirmAction === "function" ? confirmAction : null;
+		authErrorCancelAction = null;
 		if (authErrorTitle) authErrorTitle.textContent = title || "로그인 오류";
 		if (authErrorMessage) authErrorMessage.textContent = message || "아이디와 비밀번호를 입력하세요.";
+		if (authErrorConfirmBtn) authErrorConfirmBtn.textContent = "확인";
+		authErrorModal.classList.add("open");
+		authErrorModal.setAttribute("aria-hidden", "false");
+		document.body.style.overflow = "hidden";
+		setTimeout(() => {
+			if (authErrorConfirmBtn) authErrorConfirmBtn.focus();
+		}, 0);
+	}
+
+	function openAuthConfirmModal(message, title, confirmAction, cancelAction)
+	{
+		if (!authErrorModal) return;
+		if (authErrorModal.parentElement !== document.body) {
+			document.body.appendChild(authErrorModal);
+		}
+		authErrorModal.style.zIndex = "200000";
+		authErrorModal.classList.add("confirm-mode");
+		authErrorReturnFocusTarget = null;
+		authErrorConfirmAction = typeof confirmAction === "function" ? confirmAction : null;
+		authErrorCancelAction = typeof cancelAction === "function" ? cancelAction : null;
+		if (authErrorTitle) authErrorTitle.textContent = title || "확인";
+		if (authErrorMessage) authErrorMessage.textContent = message || "";
+		if (authErrorConfirmBtn) authErrorConfirmBtn.textContent = "확인";
+		if (authErrorCancelBtn) authErrorCancelBtn.textContent = "취소";
 		authErrorModal.classList.add("open");
 		authErrorModal.setAttribute("aria-hidden", "false");
 		document.body.style.overflow = "hidden";
@@ -20113,6 +20875,7 @@ function applyLoggedInAccountUI(user, profile)
 		const confirmAction = authErrorConfirmAction;
 		authErrorReturnFocusTarget = null;
 		authErrorConfirmAction = null;
+		authErrorCancelAction = null;
 
 		/* PATCH: aria-hidden 적용 전 에러창 내부 포커스를 먼저 해제 */
 		if (authErrorModal.contains(document.activeElement)) {
@@ -20120,6 +20883,7 @@ function applyLoggedInAccountUI(user, profile)
 		}
 
 		authErrorModal.classList.remove("open");
+		authErrorModal.classList.remove("confirm-mode");
 		authErrorModal.setAttribute("aria-hidden", "true");
 		document.body.style.overflow = authModal && authModal.classList.contains("open") ? "hidden" : "";
 
@@ -20549,6 +21313,27 @@ function applyLoggedInAccountUI(user, profile)
 		authErrorConfirmBtn.addEventListener("click", (e) => {
 			e.preventDefault();
 			closeAuthErrorModal();
+		});
+	}
+
+	if (authErrorCancelBtn) {
+		authErrorCancelBtn.addEventListener("click", (e) => {
+			e.preventDefault();
+			if (!authErrorModal || isAuthBusy()) return;
+			const cancelAction = authErrorCancelAction;
+			authErrorReturnFocusTarget = null;
+			authErrorConfirmAction = null;
+			authErrorCancelAction = null;
+			if (authErrorModal.contains(document.activeElement)) {
+				document.activeElement.blur();
+			}
+			authErrorModal.classList.remove("open");
+			authErrorModal.classList.remove("confirm-mode");
+			authErrorModal.setAttribute("aria-hidden", "true");
+			document.body.style.overflow = authModal && authModal.classList.contains("open") ? "hidden" : "";
+			if (typeof cancelAction === "function") {
+				setTimeout(cancelAction, 0);
+			}
 		});
 	}
 
@@ -21239,10 +22024,123 @@ function applyLoggedInAccountUI(user, profile)
 		}
 	}
 
+	function hasPropertyRegisterDraft()
+	{
+		const page = document.getElementById("propertyRegisterPage");
+		if (!page) return false;
+
+		const draftFieldIds = [
+			"propertyAddressInput", "propertyDongInput", "propertyHoInput",
+			"exclusiveAreaM2Input", "exclusiveAreaPyInput", "supplyAreaM2Input", "supplyAreaPyInput",
+			"landAreaM2Input", "landAreaPyInput", "landRoadInput",
+			"priceMonthlyDepositInput", "priceMonthlyRentInput", "priceSaleInput",
+			"priceJeonseDepositInput", "priceYearlyDepositInput", "priceYearlyRentInput",
+			"priceShortDepositInput", "priceShortRentInput",
+			"propertyApprovalDateInput", "propertyRoomCountInput", "propertyBathCountInput",
+			"propertyTotalFloorInput", "propertyCurrentFloorInput", "propertyHouseholdCountInput",
+			"propertyParkingTotalInput", "propertyParkingPerInput", "propertyPremiumInput",
+			"propertyPremiumDescInput", "maintenanceFixedTotalInput", "maintenanceCommonInput",
+			"maintenanceElectricInput", "maintenanceWaterInput", "maintenanceGasInput",
+			"maintenanceHeatingInput", "maintenanceInternetInput", "maintenanceTvInput",
+			"maintenanceEtcInput", "maintenanceTotalInput", "propertyMoveInDateInput",
+			"propertyLocationSummaryInput", "propertyDetailDescriptionInput", "propertyAgencyMemoInput"
+		];
+
+		if (draftFieldIds.some((id) => {
+			const el = document.getElementById(id);
+			return el && String(el.value || "").trim() !== "";
+		})) return true;
+
+		const propertyType = document.getElementById("propertyTypeSelect");
+		if (propertyType && propertyType.value && propertyType.value !== "apartment") return true;
+		const buildingUse = document.getElementById("buildingUseSelect");
+		if (buildingUse && buildingUse.value) return true;
+		const direction = document.getElementById("propertyDirectionSelect");
+		if (direction && direction.value) return true;
+
+		const defaultRadioValues = {
+			propertyAddressLocationMode: "marker",
+			maintenanceElectricType: "usage",
+			maintenanceWaterType: "usage",
+			maintenanceGasType: "usage",
+			maintenanceHeatingType: "usage",
+			maintenanceInternetType: "usage",
+			maintenanceTvType: "usage",
+			maintenanceEtcType: "none"
+		};
+
+		return Array.from(page.querySelectorAll("input[type='checkbox'], input[type='radio']")).some((input) => {
+			if (!input.checked) return false;
+			if (input.closest(".property-registrant-card")) return false;
+			if (input.type === "radio" && defaultRadioValues[input.name] === input.value) return false;
+			return true;
+		});
+	}
+
+	// PATCH 2.228: 작성 중인 글 확인 모달에서 취소를 누르면 매물 등록 폼 전체 초기화
+	async function resetPropertyRegisterForm()
+	{
+		const page = document.getElementById("propertyRegisterPage");
+		if (!page) return;
+
+		page.querySelectorAll("input, textarea, select").forEach((el) => {
+			if (el.closest(".property-registrant-card")) return;
+			if (el.type === "checkbox" || el.type === "radio") {
+				el.checked = false;
+			} else {
+				el.value = "";
+			}
+			el.dispatchEvent(new Event("input", { bubbles: true }));
+			el.dispatchEvent(new Event("change", { bubbles: true }));
+		});
+
+		const propertyTypeSelect = document.getElementById("propertyTypeSelect");
+		if (propertyTypeSelect) propertyTypeSelect.value = "apartment";
+		const addressMode = document.querySelector('input[name="propertyAddressLocationMode"][value="marker"]');
+		if (addressMode) addressMode.checked = true;
+
+		const maintenanceTab = document.querySelector('#propertyMaintenanceCard .maintenance-tab[data-maintenance-type="fixed"]');
+		if (maintenanceTab) maintenanceTab.click();
+		["maintenanceElectricType", "maintenanceWaterType", "maintenanceGasType", "maintenanceHeatingType", "maintenanceInternetType", "maintenanceTvType"].forEach((name) => {
+			const radio = document.querySelector(`input[name="${name}"][value="usage"]`);
+			if (radio) radio.checked = true;
+		});
+		const maintenanceEtcNone = document.querySelector('input[name="maintenanceEtcType"][value="none"]');
+		if (maintenanceEtcNone) maintenanceEtcNone.checked = true;
+
+		if (typeof renderPropertyPriceFields === "function") renderPropertyPriceFields();
+		if (typeof updatePropertyRegisterAreaFields === "function") updatePropertyRegisterAreaFields();
+		if (typeof updatePropertyInfoFieldsByType === "function") updatePropertyInfoFieldsByType();
+		if (typeof updatePropertyParkingDetail === "function") updatePropertyParkingDetail();
+		if (typeof updatePropertyPetVisibilityByDeal === "function") updatePropertyPetVisibilityByDeal();
+		if (typeof ensureDefaultCheckRadios === "function") ensureDefaultCheckRadios();
+		if (typeof loadPropertyRegistrantInfoDirect === "function") await loadPropertyRegistrantInfoDirect();
+		page.scrollIntoView({ block: "start" });
+	}
+
 	async function openPropertyRegisterPage()
 	{
 		closeGlobalAccountDropdown();
 		closeAdminPage();
+
+		if (document.body.classList.contains("property-register-page-open")) {
+			const propertyRegisterPage = document.getElementById("propertyRegisterPage");
+			if (propertyRegisterPage) propertyRegisterPage.setAttribute("aria-hidden", "false");
+			if (hasPropertyRegisterDraft() && typeof openAuthConfirmModal === "function") {
+				openAuthConfirmModal(
+					"작성 중인 글이 있습니다. 글을 이어서 쓸까요?",
+					"매물 등록",
+					function () {
+						const page = document.getElementById("propertyRegisterPage");
+						if (page) page.scrollIntoView({ block: "start" });
+					},
+					function () {
+						resetPropertyRegisterForm();
+					}
+				);
+			}
+			return;
+		}
 
 		document.body.classList.add("property-register-page-open");
 		const propertyRegisterPage = document.getElementById("propertyRegisterPage");
@@ -21260,16 +22158,127 @@ function applyLoggedInAccountUI(user, profile)
 		return String(fixed).replace(/\.00$/, "").replace(/(\.\d)0$/, "$1");
 	}
 
+	function formatPropertyCommaNumber(value)
+	{
+		const digits = String(value || "").replace(/[^0-9]/g, "");
+		return digits ? digits.replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "";
+	}
+
+	// PATCH 2.215: 대지면적은 소수점을 유지하면서 3자리 콤마 표시
+	function parsePropertyDecimalNumber(value)
+	{
+		const num = Number(String(value || "").replace(/,/g, ""));
+		return Number.isFinite(num) ? num : 0;
+	}
+
+	function formatPropertyDecimalComma(value)
+	{
+		const raw = String(value || "").replace(/,/g, "").replace(/[^\d.]/g, "");
+		if (!raw) return "";
+		const dotIndex = raw.indexOf(".");
+		const integerPart = dotIndex >= 0 ? raw.slice(0, dotIndex) : raw;
+		const decimalPart = dotIndex >= 0 ? raw.slice(dotIndex + 1).replace(/\./g, "") : "";
+		const formattedInteger = integerPart ? integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0";
+		return dotIndex >= 0 ? `${formattedInteger}.${decimalPart}` : formattedInteger;
+	}
+
+	function formatPropertyManwonKorean(value)
+	{
+		const manwon = Number(String(value || "").replace(/[^0-9]/g, ""));
+		if (!Number.isFinite(manwon) || manwon < 10000) return "";
+		const eok = Math.floor(manwon / 10000);
+		const rest = manwon % 10000;
+		const inner = (eok ? `${formatPropertyCommaNumber(eok)}억` : "") + (rest ? ` ${formatPropertyCommaNumber(rest)}` : "");
+		return `${inner.trim()}${rest ? "만원" : "원"}`;
+	}
+
+	function updatePropertyMoneyKoreanHint(input)
+	{
+		if (!input || !input.id) return;
+		const hint = document.querySelector(`[data-money-korean-for="${CSS.escape(input.id)}"]`);
+		if (hint) hint.textContent = formatPropertyManwonKorean(input.value);
+		updatePropertyMoneyUnitPosition(input);
+	}
+
+	function updatePropertyMoneyUnitPosition(input)
+	{
+		if (!input) return;
+		const wrap = input.closest(".property-money-input-wrap, .property-money-inline, .property-unit-input");
+		if (!wrap) return;
+		const computed = window.getComputedStyle(input);
+		const text = String(input.value || "");
+		const canvas = updatePropertyMoneyUnitPosition.canvas || (updatePropertyMoneyUnitPosition.canvas = document.createElement("canvas"));
+		const context = canvas.getContext("2d");
+		context.font = `${computed.fontStyle} ${computed.fontVariant} ${computed.fontWeight} ${computed.fontSize} ${computed.fontFamily}`;
+		const textWidth = context.measureText(text || "0").width;
+		const paddingLeft = Number.parseFloat(computed.paddingLeft) || 0;
+		const maxLeft = Math.max(54, input.clientWidth - 210);
+		const nextLeft = Math.min(maxLeft, paddingLeft + textWidth + 6);
+		wrap.style.setProperty("--money-unit-left", `${Math.round(nextLeft)}px`);
+	}
+
+	function bindPropertyMoneyCommaInputs(root)
+	{
+		const scope = root || document;
+		const ids = [
+			"priceMonthlyDepositInput", "priceMonthlyRentInput", "priceSaleInput",
+			"priceJeonseDepositInput", "priceYearlyDepositInput", "priceYearlyRentInput",
+			"priceShortDepositInput", "priceShortRentInput", "propertyPremiumInput",
+			"maintenanceFixedTotalInput", "maintenanceCommonInput", "maintenanceElectricInput",
+			"maintenanceWaterInput", "maintenanceGasInput", "maintenanceHeatingInput",
+			"maintenanceInternetInput", "maintenanceTvInput", "maintenanceEtcInput",
+			"maintenanceTotalInput"
+		];
+		ids.forEach((id) => {
+			const input = scope.getElementById ? scope.getElementById(id) : scope.querySelector(`#${CSS.escape(id)}`);
+			if (!input || input.dataset.commaBound === "1") return;
+			input.dataset.commaBound = "1";
+			input.setAttribute("inputmode", "numeric");
+			input.addEventListener("input", () => {
+				const nextValue = formatPropertyCommaNumber(input.value);
+				if (input.value !== nextValue) input.value = nextValue;
+				updatePropertyMoneyKoreanHint(input);
+			});
+			if (input.value) input.value = formatPropertyCommaNumber(input.value);
+			updatePropertyMoneyKoreanHint(input);
+		});
+	}
+
+	// PATCH 2.217: 금액 외 면적/세대수/주차대수 숫자 입력도 3자리 콤마 표시
+	function bindPropertyPlainNumberCommaInputs(root)
+	{
+		const scope = root || document;
+		scope.querySelectorAll(".property-comma-number-input, .property-comma-decimal-input").forEach((input) => {
+			if (input.dataset.plainCommaBound === "1") return;
+			input.dataset.plainCommaBound = "1";
+			input.addEventListener("input", () => {
+				const formatter = input.classList.contains("property-comma-decimal-input")
+					? formatPropertyDecimalComma
+					: formatPropertyCommaNumber;
+				const nextValue = formatter(input.value);
+				if (input.value !== nextValue) input.value = nextValue;
+			});
+			if (input.value) {
+				const formatter = input.classList.contains("property-comma-decimal-input")
+					? formatPropertyDecimalComma
+					: formatPropertyCommaNumber;
+				input.value = formatter(input.value);
+			}
+		});
+	}
+
 	function bindPropertyAreaAutoCalc()
 	{
 		document.querySelectorAll(".property-area-m2").forEach((input) => {
 			if (input.dataset.areaBound === "1") return;
 			input.dataset.areaBound = "1";
 			input.addEventListener("input", () => {
+				const nextValue = formatPropertyDecimalComma(input.value);
+				if (input.value !== nextValue) input.value = nextValue;
 				const target = document.getElementById(input.dataset.pyTarget || "");
 				if (!target || target.dataset.locked === "1") return;
 				target.dataset.locked = "1";
-				target.value = input.value ? formatPropertyNumber(Number(input.value) / 3.305785) : "";
+				target.value = input.value ? formatPropertyDecimalComma(formatPropertyNumber(parsePropertyDecimalNumber(input.value) / 3.305785)) : "";
 				target.dataset.locked = "";
 			});
 		});
@@ -21278,10 +22287,12 @@ function applyLoggedInAccountUI(user, profile)
 			if (input.dataset.areaBound === "1") return;
 			input.dataset.areaBound = "1";
 			input.addEventListener("input", () => {
+				const nextValue = formatPropertyDecimalComma(input.value);
+				if (input.value !== nextValue) input.value = nextValue;
 				const target = document.getElementById(input.dataset.m2Target || "");
 				if (!target || target.dataset.locked === "1") return;
 				target.dataset.locked = "1";
-				target.value = input.value ? formatPropertyNumber(Number(input.value) * 3.305785) : "";
+				target.value = input.value ? formatPropertyDecimalComma(formatPropertyNumber(parsePropertyDecimalNumber(input.value) * 3.305785)) : "";
 				target.dataset.locked = "";
 			});
 		});
@@ -21297,15 +22308,15 @@ function applyLoggedInAccountUI(user, profile)
 						<div>
 							<div class="property-price-field-title">보증금</div>
 							<div class="property-price-field">
-								<input type="number" class="property-register-input" id="priceMonthlyDepositInput" placeholder="0" min="0" />
-								<span class="property-unit-label">만원</span>
+								<div class="property-money-input-wrap"><input type="text" class="property-register-input" id="priceMonthlyDepositInput" placeholder="0" inputmode="numeric" /><span class="property-unit-label">만원</span></div>
+								<span class="property-money-korean" data-money-korean-for="priceMonthlyDepositInput"></span>
 							</div>
 						</div>
 						<div>
 							<div class="property-price-field-title">월세</div>
 							<div class="property-price-field">
-								<input type="number" class="property-register-input" id="priceMonthlyRentInput" placeholder="0" min="0" />
-								<span class="property-unit-label">만원</span>
+								<div class="property-money-input-wrap"><input type="text" class="property-register-input" id="priceMonthlyRentInput" placeholder="0" inputmode="numeric" /><span class="property-unit-label">만원</span></div>
+								<span class="property-money-korean" data-money-korean-for="priceMonthlyRentInput"></span>
 							</div>
 						</div>
 					</div>
@@ -21318,8 +22329,8 @@ function applyLoggedInAccountUI(user, profile)
 						<div>
 							<div class="property-price-field-title">가격</div>
 							<div class="property-price-field">
-								<input type="number" class="property-register-input" id="priceSaleInput" placeholder="0" min="0" />
-								<span class="property-unit-label">만원</span>
+								<div class="property-money-input-wrap"><input type="text" class="property-register-input" id="priceSaleInput" placeholder="0" inputmode="numeric" /><span class="property-unit-label">만원</span></div>
+								<span class="property-money-korean" data-money-korean-for="priceSaleInput"></span>
 							</div>
 						</div>
 					</div>
@@ -21332,8 +22343,8 @@ function applyLoggedInAccountUI(user, profile)
 						<div>
 							<div class="property-price-field-title">보증금</div>
 							<div class="property-price-field">
-								<input type="number" class="property-register-input" id="priceJeonseDepositInput" placeholder="0" min="0" />
-								<span class="property-unit-label">만원</span>
+								<div class="property-money-input-wrap"><input type="text" class="property-register-input" id="priceJeonseDepositInput" placeholder="0" inputmode="numeric" /><span class="property-unit-label">만원</span></div>
+								<span class="property-money-korean" data-money-korean-for="priceJeonseDepositInput"></span>
 							</div>
 						</div>
 					</div>
@@ -21346,15 +22357,15 @@ function applyLoggedInAccountUI(user, profile)
 						<div>
 							<div class="property-price-field-title">보증금</div>
 							<div class="property-price-field">
-								<input type="number" class="property-register-input" id="priceYearlyDepositInput" placeholder="0" min="0" />
-								<span class="property-unit-label">만원</span>
+								<div class="property-money-input-wrap"><input type="text" class="property-register-input" id="priceYearlyDepositInput" placeholder="0" inputmode="numeric" /><span class="property-unit-label">만원</span></div>
+								<span class="property-money-korean" data-money-korean-for="priceYearlyDepositInput"></span>
 							</div>
 						</div>
 						<div>
 							<div class="property-price-field-title">년세</div>
 							<div class="property-price-field">
-								<input type="number" class="property-register-input" id="priceYearlyRentInput" placeholder="0" min="0" />
-								<span class="property-unit-label">만원</span>
+								<div class="property-money-input-wrap"><input type="text" class="property-register-input" id="priceYearlyRentInput" placeholder="0" inputmode="numeric" /><span class="property-unit-label">만원</span></div>
+								<span class="property-money-korean" data-money-korean-for="priceYearlyRentInput"></span>
 							</div>
 						</div>
 					</div>
@@ -21367,15 +22378,15 @@ function applyLoggedInAccountUI(user, profile)
 						<div>
 							<div class="property-price-field-title">보증금</div>
 							<div class="property-price-field">
-								<input type="number" class="property-register-input" id="priceShortDepositInput" placeholder="0" min="0" />
-								<span class="property-unit-label">만원</span>
+								<div class="property-money-input-wrap"><input type="text" class="property-register-input" id="priceShortDepositInput" placeholder="0" inputmode="numeric" /><span class="property-unit-label">만원</span></div>
+								<span class="property-money-korean" data-money-korean-for="priceShortDepositInput"></span>
 							</div>
 						</div>
 						<div>
 							<div class="property-price-field-title">단기 월세</div>
 							<div class="property-price-field">
-								<input type="number" class="property-register-input" id="priceShortRentInput" placeholder="0" min="0" />
-								<span class="property-unit-label">만원</span>
+								<div class="property-money-input-wrap"><input type="text" class="property-register-input" id="priceShortRentInput" placeholder="0" inputmode="numeric" /><span class="property-unit-label">만원</span></div>
+								<span class="property-money-korean" data-money-korean-for="priceShortRentInput"></span>
 							</div>
 						</div>
 					</div>
@@ -21385,12 +22396,43 @@ function applyLoggedInAccountUI(user, profile)
 		return templates[type] || "";
 	}
 
+	// PATCH 2.212: 거래유형을 추가/해제해도 이미 입력한 가격 값은 유지
+	function collectPropertyPriceValues(baseValues)
+	{
+		const priceInputIds = [
+			"priceMonthlyDepositInput", "priceMonthlyRentInput", "priceSaleInput",
+			"priceJeonseDepositInput", "priceYearlyDepositInput", "priceYearlyRentInput",
+			"priceShortDepositInput", "priceShortRentInput"
+		];
+		return priceInputIds.reduce((values, id) => {
+			const input = document.getElementById(id);
+			if (input) values[id] = input.value;
+			return values;
+		}, { ...(baseValues || {}) });
+	}
+
+	function restorePropertyPriceValues(values)
+	{
+		if (!values || typeof values !== "object") return;
+		Object.entries(values).forEach(([id, value]) => {
+			const input = document.getElementById(id);
+			if (!input || value === undefined) return;
+			input.value = value;
+			input.dispatchEvent(new Event("input", { bubbles: true }));
+			input.dispatchEvent(new Event("change", { bubbles: true }));
+		});
+	}
+
 	function renderPropertyPriceFields()
 	{
 		const box = document.getElementById("propertyPriceDynamic");
 		if (!box) return;
+		const previousValues = collectPropertyPriceValues(renderPropertyPriceFields.priceValues);
+		renderPropertyPriceFields.priceValues = previousValues;
 		const checked = Array.from(document.querySelectorAll(".property-deal-check:checked")).map((input) => input.value);
 		box.innerHTML = checked.map(getPropertyPriceFieldHtml).join("");
+		bindPropertyMoneyCommaInputs(box);
+		restorePropertyPriceValues(previousValues);
 	}
 
 	function updatePropertyRegisterAreaFields()
@@ -21402,31 +22444,51 @@ function applyLoggedInAccountUI(user, profile)
 		const landRoadRow = document.getElementById("landRoadRow");
 		const exclusiveAreaLabel = document.getElementById("exclusiveAreaLabel");
 		const supplyAreaLabel = document.getElementById("supplyAreaLabel");
-		if (!propertyTypeSelect || !exclusiveAreaRow || !supplyAreaRow || !landAreaRow || !landRoadRow || !exclusiveAreaLabel || !supplyAreaLabel) return;
+		const landAreaLabel = document.getElementById("landAreaLabel");
+		if (!propertyTypeSelect || !exclusiveAreaRow || !supplyAreaRow || !landAreaRow || !landRoadRow || !exclusiveAreaLabel || !supplyAreaLabel || !landAreaLabel) return;
 
 		const type = propertyTypeSelect.value || "";
 		exclusiveAreaRow.style.display = "grid";
 		supplyAreaRow.style.display = "grid";
 		landAreaRow.style.display = "none";
 		landRoadRow.style.display = "none";
+		if (exclusiveAreaRow.parentNode && landAreaRow.previousElementSibling !== supplyAreaRow) {
+			exclusiveAreaRow.parentNode.insertBefore(landAreaRow, supplyAreaRow.nextSibling);
+		}
 
 		let firstLabel = "전용 면적";
 		let secondLabel = "공급 면적";
+		landAreaLabel.innerHTML = '대지 면적<span class="property-required">*</span>';
 
 		if (type === "officetel" || type === "office" || type === "store") {
 			firstLabel = "전용 면적";
 			secondLabel = "계약 면적";
-		} else if (type === "building") {
+		} else if (type === "house" || type === "multi_family_house" || type === "building" || type === "factory_warehouse") {
+			if (exclusiveAreaRow.parentNode && landAreaRow.nextElementSibling !== exclusiveAreaRow) {
+				exclusiveAreaRow.parentNode.insertBefore(landAreaRow, exclusiveAreaRow);
+			}
+			landAreaRow.style.display = "grid";
 			firstLabel = "건축 면적";
-			secondLabel = "연면적";
-		} else if (type === "factory_warehouse") {
-			firstLabel = "대지 면적";
-			secondLabel = "연면적";
+			secondLabel = "연 면적";
 		} else if (type === "land") {
 			exclusiveAreaRow.style.display = "none";
 			supplyAreaRow.style.display = "none";
 			landAreaRow.style.display = "grid";
 			landRoadRow.style.display = "grid";
+		}
+
+		/* PATCH 2.232: 면적 원문에 대지/건축/연면적이 있으면 매물유형과 관계없이 3개 면적 표시 */
+		if (propertyTypeSelect.dataset.areaMode === "land_building_total") {
+			if (exclusiveAreaRow.parentNode && landAreaRow.nextElementSibling !== exclusiveAreaRow) {
+				exclusiveAreaRow.parentNode.insertBefore(landAreaRow, exclusiveAreaRow);
+			}
+			exclusiveAreaRow.style.display = "grid";
+			supplyAreaRow.style.display = "grid";
+			landAreaRow.style.display = "grid";
+			landRoadRow.style.display = type === "land" ? "grid" : "none";
+			firstLabel = "건축 면적";
+			secondLabel = "연 면적";
+			landAreaLabel.innerHTML = '대지 면적<span class="property-required">*</span>';
 		}
 
 		exclusiveAreaLabel.innerHTML = firstLabel + '<span class="property-required">*</span>';
@@ -21440,6 +22502,7 @@ function applyLoggedInAccountUI(user, profile)
 		const infoCard = document.getElementById("propertyInfoCard");
 		const landInfoCard = document.getElementById("propertyLandInfoCard");
 		const maintenanceCard = document.getElementById("propertyMaintenanceCard");
+		const premiumCard = document.getElementById("propertyPremiumCard");
 		if (!propertyTypeSelect || !infoCard || !landInfoCard) return;
 		const type = propertyTypeSelect.value || "";
 		document.body.setAttribute("data-property-type", type);
@@ -21452,12 +22515,14 @@ function applyLoggedInAccountUI(user, profile)
 			infoCard.classList.add("is-hidden");
 			landInfoCard.classList.remove("is-hidden");
 			if (maintenanceCard) maintenanceCard.classList.add("is-hidden");
+			if (premiumCard) premiumCard.classList.remove("is-visible");
 			const householdCountRow = document.getElementById("propertyHouseholdCountRow");
 			if (householdCountRow) householdCountRow.style.display = "none";
 			return;
 		}
 		landInfoCard.classList.add("is-hidden");
 		infoCard.classList.remove("is-hidden");
+		if (premiumCard) premiumCard.classList.toggle("is-visible", type === "store");
 		if (maintenanceCard) {
 			maintenanceCard.classList.toggle("is-hidden", noMaintenanceTypes.includes(type));
 		}
@@ -21590,9 +22655,20 @@ function applyLoggedInAccountUI(user, profile)
 		}
 	}
 
+	// PATCH 2.209: 대출/반려동물 값이 없으면 확인 필요를 기본 선택
+	function ensureDefaultCheckRadios()
+	{
+		if (!radioValue("propertyLoan")) setRadio("propertyLoan", "check");
+		const petRow = document.querySelector(".property-pet-row");
+		const petVisible = !!(petRow && petRow.offsetParent !== null && getComputedStyle(petRow).display !== "none" && !petRow.closest(".is-hidden"));
+		if (petVisible && !radioValue("propertyPet")) setRadio("propertyPet", "check");
+	}
+
 	function bindPropertyRegisterPageEvents()
 	{
 		bindPropertyAreaAutoCalc();
+		bindPropertyMoneyCommaInputs(document);
+		bindPropertyPlainNumberCommaInputs(document);
 		const propertyTypeSelect = document.getElementById("propertyTypeSelect");
 		if (propertyTypeSelect && propertyTypeSelect.dataset.areaBound !== "1") {
 			propertyTypeSelect.dataset.areaBound = "1";
@@ -21625,6 +22701,7 @@ function applyLoggedInAccountUI(user, profile)
 			}
 		});
 		updatePropertyPetVisibilityByDeal();
+		ensureDefaultCheckRadios();
 	}
 
 	if (document.readyState === "loading") {
@@ -21831,6 +22908,7 @@ function applyLoggedInAccountUI(user, profile)
 		}
 	};
 	window.openAuthErrorModal = openAuthErrorModal;
+	window.openAuthConfirmModal = openAuthConfirmModal;
 	window.closeAuthErrorModal = closeAuthErrorModal;
 	window.openAdminPage = openAdminPage;
 	window.openPropertyRegisterPage = openPropertyRegisterPage;
@@ -23000,7 +24078,9 @@ document.addEventListener("DOMContentLoaded", function () {
 	function value(id)
 	{
 		const el = $(id);
-		return el && "value" in el ? String(el.value || "").trim() : "";
+		if (!el) return "";
+		if ("value" in el) return String(el.value || "").trim();
+		return String(el.textContent || "").trim();
 	}
 
 	function checked(id)
@@ -23120,8 +24200,12 @@ document.addEventListener("DOMContentLoaded", function () {
 					whole_building: checked("propertyWholeBuildingCheck")
 				},
 				maintenance: {
+					type: document.querySelector("#propertyMaintenanceCard .maintenance-tab.active")?.getAttribute("data-maintenance-type") || "",
+					no_fee_value: value("maintenanceNoneValue"),
+					no_fee_reason: value("maintenanceNoneReason"),
 					under_100k_or_unprovided: checked("maintenanceUnder100kChk"),
 					fixed_base: radioValue("maintenanceFixedBase"),
+					extra_base: radioValue("maintenanceExtraBase"),
 					fixed_total_won: numberValue("maintenanceFixedTotalInput"),
 					total_won: numberValue("maintenanceTotalInput"),
 					common_manwon: numberValue("maintenanceCommonInput"),
@@ -23141,7 +24225,8 @@ document.addEventListener("DOMContentLoaded", function () {
 				},
 				move_in: {
 					date: value("propertyMoveInDateInput"),
-					now: checked("propertyMoveInNowChk")
+					now: checked("propertyMoveInNowChk"),
+					negotiable: checked("propertyMoveInNegotiableChk")
 				},
 				description: value("propertyDetailDescriptionInput"),
 				youtube_url: value("propertyYoutubeLinkInput"),
@@ -23165,6 +24250,24 @@ document.addEventListener("DOMContentLoaded", function () {
 		if (!payload.address1) return { message: "주소를 입력하세요.", target: $("propertyAddressInput") };
 		if (status === "published" && (!payload.deal_types || !payload.deal_types.length)) {
 			return { message: "거래 유형을 선택하세요.", target: document.querySelector(".property-deal-check") };
+		}
+		if (status === "published") {
+			const missingCheckedItems = [];
+			const loanRow = document.querySelector(".property-loan-row");
+			const parkingRow = document.querySelector(".property-parking-row");
+			const isVisible = (el) => !!(el && el.offsetParent !== null && getComputedStyle(el).display !== "none" && !el.closest(".is-hidden"));
+			if (isVisible(loanRow) && !radioValue("propertyLoan")) {
+				missingCheckedItems.push({ label: "대출*", target: document.querySelector('input[name="propertyLoan"]') });
+			}
+			if (isVisible(parkingRow) && !radioValue("propertyParking")) {
+				missingCheckedItems.push({ label: "주차*", target: document.querySelector('input[name="propertyParking"]') });
+			}
+			if (missingCheckedItems.length) {
+				return {
+					message: "체크하지 않은 항목이 있습니다.\n[항목]\n" + missingCheckedItems.map((item) => item.label).join("\n"),
+					target: missingCheckedItems[0].target
+				};
+			}
 		}
 		return null;
 	}
@@ -23268,6 +24371,15 @@ document.addEventListener("DOMContentLoaded", function () {
 		el.dispatchEvent(new Event("change", { bubbles: true }));
 	}
 
+	function clearInput(id)
+	{
+		const el = $(id);
+		if (!el) return;
+		el.value = "";
+		el.dispatchEvent(new Event("input", { bubbles: true }));
+		el.dispatchEvent(new Event("change", { bubbles: true }));
+	}
+
 	function setCheck(selector, checked)
 	{
 		const el = typeof selector === "string"
@@ -23282,6 +24394,14 @@ document.addEventListener("DOMContentLoaded", function () {
 	{
 		const radio = document.querySelector(`input[name="${name}"][value="${value}"]`);
 		if (radio) setCheck(radio, true);
+	}
+
+	function clearRadio(name)
+	{
+		document.querySelectorAll(`input[name="${name}"]`).forEach((radio) => {
+			radio.checked = false;
+			radio.dispatchEvent(new Event("change", { bubbles: true }));
+		});
 	}
 
 	function setSelectValue(id, value)
@@ -23301,12 +24421,18 @@ document.addEventListener("DOMContentLoaded", function () {
 		select.dispatchEvent(new Event("change", { bubbles: true }));
 	}
 
+	function setMaintenanceTab(type)
+	{
+		const tab = document.querySelector(`#propertyMaintenanceCard .maintenance-tab[data-maintenance-type="${CSS.escape(type)}"]`);
+		if (tab) tab.click();
+	}
+
 	function parseMoneyToManwon(text)
 	{
 		const value = String(text || "").replace(/,/g, "");
 		const eok = value.match(/(\d+(?:\.\d+)?)\s*억/);
 		const man = value.match(/(\d+(?:\.\d+)?)\s*만/);
-		if (eok) return Math.round(Number(eok[1]) * 10000);
+		if (eok) return Math.round((Number(eok[1]) * 10000) + (man ? Number(man[1]) : 0));
 		if (man) return Math.round(Number(man[1]));
 		const raw = value.match(/전세금\s*([0-9]+)/);
 		return raw ? Math.round(Number(raw[1]) / 10000) : "";
@@ -23318,52 +24444,200 @@ document.addEventListener("DOMContentLoaded", function () {
 		return match ? match[1].trim() : "";
 	}
 
+	// PATCH 2.225: 입주가능일 날짜형 값을 YYYY-MM-DD로 추출
+	function parseMoveInDateText(text)
+	{
+		const raw = String(text || "").trim();
+		if (!raw) return "";
+		if (/즉시입주|즉시\s*입주/.test(raw)) return "즉시입주";
+		const separated = raw.match(/(\d{4})[.\-/](\d{1,2})[.\-/](\d{1,2})/);
+		if (separated) return `${separated[1]}-${separated[2].padStart(2, "0")}-${separated[3].padStart(2, "0")}`;
+		const compact = raw.match(/(\d{8})/);
+		if (compact) return `${compact[1].slice(0, 4)}-${compact[1].slice(4, 6)}-${compact[1].slice(6, 8)}`;
+		return "";
+	}
+
+	function normalizeCrossroadLabel(label)
+	{
+		return String(label || "").replace(/\s+/g, "").trim();
+	}
+
+	function parseCrossroadFieldMap(text)
+	{
+		const fields = {};
+		String(text || "").split(/\n/).forEach((line) => {
+			const row = line.trim();
+			if (!row || /^\[[^\]]+\]$/.test(row)) return;
+
+			let label = "";
+			let content = "";
+			if (row.includes("\t")) {
+				const parts = row.split(/\t+/);
+				label = parts.shift();
+				content = parts.join(" ");
+			} else {
+				const colon = row.match(/^([^:：]+)[:：]\s*(.+)$/);
+				if (!colon) return;
+				label = colon[1];
+				content = colon[2];
+			}
+
+			const key = normalizeCrossroadLabel(label);
+			const value = String(content || "").trim();
+			if (key && value && !fields[key]) fields[key] = value;
+		});
+		return fields;
+	}
+
+	function fieldValue(fields, labels)
+	{
+		for (const label of labels) {
+			const value = fields[normalizeCrossroadLabel(label)];
+			if (value) return value;
+		}
+		return "";
+	}
+
 	function normalizeAddress(text)
 	{
 		const full = String(text || "");
-		const exact = full.match(/(?:제주(?:특별자치도)?\s*)?제주시\s+[가-힣0-9\s-]+(?:동|읍|면|리)\s+\d+(?:-\d+)?/);
-		if (exact) return exact[0].replace(/^제주도\s*/, "제주특별자치도 ").trim();
-		const line = full.split(/\n/).find((row) => /제주시|소재지|수덕로|노형동/.test(row) && /\d/.test(row));
-		return line ? line.replace(/^[🔹\s]*소재지\s*[:：]\s*/, "").trim() : "";
+		const normalizeJejuPrefix = (value) => String(value || "")
+			.replace(/^제주도\s*/, "제주특별자치도 ")
+			.replace(/^제주\s+/, "제주특별자치도 ")
+			.replace(/\s+/g, " ")
+			.trim();
+		const splitCompactEupMyeonRi = (value) => String(value || "")
+			.replace(/([가-힣]+(?:읍|면))([가-힣]+리)(?=\s|$|\d)/g, "$1 $2")
+			.replace(/\s+/g, " ")
+			.trim();
+		const exact = full.match(/(?:제주(?:특별자치도|도)?[ \t]*)?(?:제주시|서귀포시)[ \t]+[가-힣0-9-]+(?:읍|면)[ \t]*[가-힣0-9-]+리(?:[ \t]+\d+(?:-\d+)?)?|(?:제주(?:특별자치도|도)?[ \t]*)?(?:제주시|서귀포시)[ \t]+[가-힣0-9 \t-]+(?:동|읍|면|리)(?:[ \t]+\d+(?:-\d+)?)?/);
+		if (exact) return splitCompactEupMyeonRi(normalizeJejuPrefix(exact[0]));
+		const line = full.split(/\n/).find((row) => {
+			const cleaned = row.replace(/^[🔹\s]*소재지\s*[:：]\s*/, "").trim();
+			return /제주시|서귀포시|소재지|수덕로|노형동/.test(cleaned) && (/\d/.test(cleaned) || /(?:동|읍|면|리)/.test(cleaned));
+		});
+		return line ? splitCompactEupMyeonRi(normalizeJejuPrefix(line.replace(/^[🔹\s]*소재지\s*[:：]\s*/, ""))) : "";
 	}
 
 	function parseCrossroadListing(text)
 	{
 		const value = String(text || "");
+		const fields = parseCrossroadFieldMap(value);
+		const firstLines = value.split(/\n/).slice(0, 5).join("\n");
 		const title = getFirstMatch(value, /\[(?:전세|매매|월세|년세)\]\s*([^\n]+)/) || getFirstMatch(value, /\((?:디|D)-?\d+\)\s*([^\n]+)/i);
-		const supply = getFirstMatch(value, /공급면적\s*[:：]?\s*([\d.]+)\s*㎡/);
-		const exclusive = getFirstMatch(value, /전용면적\s*[:：]?\s*([\d.]+)\s*㎡/);
-		const approvalDate = getFirstMatch(value, /사용승인일\s*[:：]?\s*(\d{4}-\d{2}-\d{2})/);
-		const household = getFirstMatch(value, /총세대수\s*[:：]?\s*([\d,]+)\s*세대/).replace(/,/g, "");
+		const totalArea = getFirstMatch(value, /연\s*면적\s*[:：]?\s*([\d,.]+)\s*㎡/).replace(/,/g, "");
+		const supply = getFirstMatch(value, /공급면적\s*[:：]?\s*([\d,.]+)\s*㎡/) || totalArea;
+		const exclusive = getFirstMatch(value, /전용면적\s*[:：]?\s*([\d,.]+)\s*㎡/);
+		const buildingArea = getFirstMatch(value, /건축\s*면적\s*[:：]?\s*([\d,.]+)\s*㎡/).replace(/,/g, "");
+		const landArea = getFirstMatch(value, /대지\s*면적\s*[:：]?\s*([\d,.]+)\s*㎡/).replace(/,/g, "");
+		const approvalDate = fieldValue(fields, ["사용승인일"]) || getFirstMatch(value, /사용승인일\s*[:：]?\s*(\d{4}-\d{2}-\d{2})/);
+		const household = (fieldValue(fields, ["총세대수"]) || getFirstMatch(value, /총세대수\s*[:：]?\s*([\d,]+)\s*세대/)).replace(/[^0-9]/g, "");
 		const rooms = value.match(/방\s*\/?\s*욕실수\s*[:：]?\s*(\d+)\s*\/\s*(\d+)/) || value.match(/방\s*(\d+)\s*\/\s*욕실\s*(\d+)/);
-		const floors = value.match(/해당층\/총층\s*[:：]?\s*([가-힣]+|\d+)\s*\/\s*(\d+)/);
+		const floors = value.match(/해당층\/총층\s*[:：]?\s*([가-힣]+|\d+)\s*\/\s*(\d+)/) || (fieldValue(fields, ["해당층/총층"]).match(/([가-힣]+|\d+)\s*\/\s*(\d+)/));
 		const parking = value.match(/총\s*주차대수\s*[:：]?\s*([\d,]+)\s*대\s*\(세대당\s*([\d.]+)\s*대\)/);
-		const maintenanceWon = getFirstMatch(value, /관리비\s*합계\s*([\d,]+)\s*원/);
+		const maintenanceRawText = fieldValue(fields, ["관리비"]);
+		const maintenanceNone = /관리비\s*없음|없음/.test(maintenanceRawText) || /관리비\s*부과내역\s*없음/.test(value);
+		const maintenanceWon = (fieldValue(fields, ["관리비 합계"]) || getFirstMatch(value, /관리비\s*합계\s*([\d,]+)\s*원/)).replace(/[^0-9]/g, "");
+		const landRoad = getFirstMatch(value, /도로\s*[:：]\s*([^\n]+)/);
+		const landType = fieldValue(fields, ["지목"]) || getFirstMatch(value, /지목\s*[:：]?\s*([가-힣]+)/) || (/^\s*\[매매\]\s*([가-힣]+)\s*$/m.exec(firstLines)?.[1] || "");
+		const buildingKindText = fieldValue(fields, ["건물종류"]);
+		const buildingUseText = fieldValue(fields, ["건축물용도"]);
+		const listingTypeTitle = getFirstMatch(firstLines, /^\s*\[(?:매매|전세|월세|년세)\]\s*([^\n]+)/m);
+		const propertyTypeClues = [firstLines, buildingKindText, buildingUseText].join("\n");
+		const strongPropertyTypeClues = [listingTypeTitle, buildingKindText, buildingUseText].join("\n");
+		const landTitleTypes = /^(전|답|대|임야|과수원|공장용지|주차장|잡종지|창고용지|목장용지|도로|하천)$/;
+		const hasLandBuildingTotalAreas = !!(landArea && buildingArea && totalArea);
+		let parsedPropertyType = "";
+		// PATCH 2.231: 숙박/펜션/호텔/콘도는 대지면적이 있어도 토지보다 먼저 분류
+		if (/상가|상가건물/.test(propertyTypeClues)) parsedPropertyType = "store";
+		else if (/호텔/.test(propertyTypeClues)) parsedPropertyType = "hotel";
+		else if (/펜션|콘도|모텔|숙박/.test(propertyTypeClues)) parsedPropertyType = "pension";
+		else if (/토지\/임야|토지|임야/.test(propertyTypeClues) || (landTitleTypes.test(listingTypeTitle) && /토지\/임야/.test(firstLines))) parsedPropertyType = "land";
+		else if (/오피스텔/.test(propertyTypeClues)) parsedPropertyType = "officetel";
+		else if (/아파트|아이파크|뜨란채/.test(propertyTypeClues)) parsedPropertyType = "apartment";
+		else if (/빌라|연립|다세대/.test(propertyTypeClues)) parsedPropertyType = "villa";
+		else if (/다가구/.test(strongPropertyTypeClues) || (/다가구/.test(firstLines) && !/단독/.test(firstLines))) parsedPropertyType = "multi_family_house";
+		else if (/단독|단독주택/.test(strongPropertyTypeClues) || /단독\/다가구/.test(firstLines)) parsedPropertyType = "house";
+		const basicFloor = fieldValue(fields, ["지하층/지상층"]).match(/(-?\d+)\s*\/\s*(\d+)/);
+		const roomBath = rooms || fieldValue(fields, ["방/욕실수"]).match(/(\d+)\s*\/\s*(\d+)/);
+		const dealTypes = [];
+		if (/매매/.test(firstLines) || getFirstMatch(value, /매매가\s*[:：]?\s*([^\n]+)/)) dealTypes.push("sale");
+		if (/전세/.test(value) || fieldValue(fields, ["전세금"])) dealTypes.push("jeonse");
+		if (/월세/.test(value) || fieldValue(fields, ["월세금"]) || fieldValue(fields, ["보증금"])) dealTypes.push("monthly");
+		if (/년세|연세/.test(value) || fieldValue(fields, ["년세금"])) dealTypes.push("yearly");
+		const direction = fieldValue(fields, ["방향"]) || getFirstMatch(value, /방향\s*[:：]?\s*([가-힣]+향)/);
+		const maintenanceIncludes = fieldValue(fields, ["관리비 포함 내역"]);
+		const maintenanceBaseText = fieldValue(fields, ["부과기준"]);
+		const maintenanceReasonText = fieldValue(fields, ["부과사유"]);
+		const heatingText = fieldValue(fields, ["난방시설"]);
+		const coolingText = fieldValue(fields, ["냉방시설"]);
+		const furnitureText = fieldValue(fields, ["가구"]);
+		const applianceText = fieldValue(fields, ["가전"]);
+		const etcFacilityText = fieldValue(fields, ["기타시설"]);
+		const moveInText = fieldValue(fields, ["입주가능일"]);
+		const moveInDate = parseMoveInDateText(moveInText);
+		// PATCH 2.219: 융자금 정보가 없으면 이전 선택값 대신 확인 필요로 자동 선택
+		const loanText = fieldValue(fields, ["융자금여부"]);
+		const loanStatus = /융자금\s*없음/.test(value) ? "impossible" : (loanText ? "possible" : "check");
+		const maintenanceDetailType = /관리규약/.test(maintenanceReasonText)
+			? "area_rule"
+			: (/공용관리비는\s*면적|면적\/세대별/.test(maintenanceReasonText)
+				? "common_area_usage"
+				: (/세대별\s*사용량|사용량에\s*따라/.test(maintenanceReasonText)
+					? "usage_by_household"
+					: (/전체\s*사용량.*세대수/.test(maintenanceReasonText)
+						? "divide_total"
+						: (/미제시|미제공/.test(maintenanceReasonText) ? "broker_unprovided" : ""))));
 		const address = normalizeAddress(value);
 		const descriptionStart = value.indexOf("(디-");
 		const description = descriptionStart >= 0 ? value.slice(descriptionStart).trim() : value.trim();
 
 		return {
-			propertyType: /아파트|뜨란채/.test(value) ? "apartment" : "",
-			buildingUse: /공동주택/.test(value) ? "공동주택" : "",
-			deal: /전세/.test(value) ? "jeonse" : "",
+			propertyType: parsedPropertyType,
+			buildingUse: buildingUseText,
+			deal: dealTypes[0] || "",
+			dealTypes,
+			priceSale: parseMoneyToManwon(getFirstMatch(value, /매매가\s*[:：]?\s*([^\n]+)/)),
+			priceMonthlyDeposit: parseMoneyToManwon(fieldValue(fields, ["보증금"])),
+			priceMonthlyRent: parseMoneyToManwon(fieldValue(fields, ["월세금"])),
+			priceYearlyRent: parseMoneyToManwon(fieldValue(fields, ["년세금"])),
 			priceJeonse: parseMoneyToManwon(getFirstMatch(value, /전세금\s*[:：]?\s*([^\n]+)/)),
 			title,
 			address,
-			supply,
-			exclusive,
+			supply: supply.replace(/,/g, ""),
+			totalArea,
+			exclusive: (buildingArea || exclusive).replace(/,/g, ""),
+			buildingArea,
+			landArea,
+			hasLandBuildingTotalAreas,
+			landType,
+			landRoad,
 			approvalDate,
 			household,
-			roomCount: rooms ? rooms[1] : "",
-			bathCount: rooms ? rooms[2] : "",
+			roomCount: roomBath ? roomBath[1] : "",
+			bathCount: roomBath ? roomBath[2] : "",
 			floorLevel: floors ? floors[1] : "",
-			totalFloor: floors ? floors[2] : "",
+			totalFloor: floors ? floors[2] : (basicFloor ? basicFloor[2] : ""),
 			dong: getFirstMatch(value, /해당동\s*[:：]?\s*([^\n]+)/).replace(/동$/, ""),
-			direction: getFirstMatch(value, /방향\s*[:：]?\s*([가-힣]+향)/),
+			direction: getFirstMatch(direction, /([가-힣]+향)/),
 			parkingTotal: parking ? parking[1].replace(/,/g, "") : "",
 			parkingPer: parking ? parking[2] : "",
+			maintenanceNone,
 			maintenanceWon,
-			moveNow: /즉시입주|즉시 입주/.test(value),
+			maintenanceIncludes,
+			maintenanceBase: /직전/.test(maintenanceBaseText) ? "prev_month" : (/3개월/.test(maintenanceBaseText) ? "recent_3_months" : (/1년/.test(maintenanceBaseText) ? "recent_1_year" : "")),
+			maintenanceDetailType,
+			loanStatus,
+			parkingStatus: /주차가능/.test(fieldValue(fields, ["주차가능여부"]) || value) ? "possible" : (/주차불가/.test(fieldValue(fields, ["주차가능여부"]) || value) ? "impossible" : ""),
+			heatingType: /개별난방/.test(heatingText) ? "individual" : (/중앙난방/.test(heatingText) ? "central" : (/지역난방/.test(heatingText) ? "district" : "")),
+			heatingFuel: /도시가스|LNG/.test(heatingText) ? "도시가스" : (/LPG/.test(heatingText) ? "LPG" : (/기름/.test(heatingText) ? "기름" : "")),
+			coolingText,
+			furnitureText,
+			applianceText,
+			etcFacilityText,
+			moveInDate,
+			moveNegotiable: /협의/.test(moveInText || ""),
+			moveNow: /즉시입주|즉시 입주/.test(moveInText || value),
 			description
 		};
 	}
@@ -23372,11 +24646,24 @@ document.addEventListener("DOMContentLoaded", function () {
 	{
 		if (parsed.propertyType) setSelectValue("propertyTypeSelect", parsed.propertyType);
 		if (parsed.buildingUse) setSelectValue("buildingUseSelect", parsed.buildingUse);
-		if (parsed.deal) {
+		const propertyTypeSelect = $("propertyTypeSelect");
+		if (propertyTypeSelect) {
+			propertyTypeSelect.dataset.areaMode = parsed.hasLandBuildingTotalAreas ? "land_building_total" : "";
+			if (typeof updatePropertyRegisterAreaFields === "function") updatePropertyRegisterAreaFields();
+		}
+		const dealTypes = Array.isArray(parsed.dealTypes) && parsed.dealTypes.length ? parsed.dealTypes : (parsed.deal ? [parsed.deal] : []);
+		if (dealTypes.length) {
 			document.querySelectorAll(".property-deal-check").forEach((input) => { input.checked = false; });
-			setCheck(`.property-deal-check[value="${parsed.deal}"]`, true);
+			dealTypes.forEach((deal) => setCheck(`.property-deal-check[value="${deal}"]`, true));
 			if (typeof renderPropertyPriceFields === "function") renderPropertyPriceFields();
-			setTimeout(() => setInput("priceJeonseDepositInput", parsed.priceJeonse), 0);
+			setTimeout(() => {
+				setInput("priceJeonseDepositInput", parsed.priceJeonse);
+				setInput("priceSaleInput", parsed.priceSale);
+				setInput("priceMonthlyDepositInput", parsed.priceMonthlyDeposit);
+				setInput("priceMonthlyRentInput", parsed.priceMonthlyRent);
+				setInput("priceYearlyDepositInput", parsed.priceMonthlyDeposit);
+				setInput("priceYearlyRentInput", parsed.priceYearlyRent);
+			}, 0);
 		}
 		setInput("propertyLocationSummaryInput", parsed.title);
 		setInput("propertyAddressInput", parsed.address);
@@ -23386,8 +24673,11 @@ document.addEventListener("DOMContentLoaded", function () {
 			addressInput.dataset.publicAddress = parsed.address;
 			addressInput.dataset.jibunAddress = parsed.address;
 		}
-		setInput("supplyAreaM2Input", parsed.supply);
+		setInput("supplyAreaM2Input", parsed.totalArea || parsed.supply);
 		setInput("exclusiveAreaM2Input", parsed.exclusive);
+		setInput("landAreaM2Input", parsed.landArea);
+		setInput("landRoadInput", parsed.landRoad);
+		if (parsed.landType) setRadio("landType", parsed.landType);
 		setInput("propertyApprovalDateInput", parsed.approvalDate);
 		setInput("propertyHouseholdCountInput", parsed.household);
 		setInput("propertyRoomCountInput", parsed.roomCount);
@@ -23399,28 +24689,109 @@ document.addEventListener("DOMContentLoaded", function () {
 		}
 		setInput("propertyDongInput", parsed.dong);
 		if (parsed.direction) setSelectValue("propertyDirectionSelect", parsed.direction);
-		if (/융자금\s*없음/.test(parsed.description)) setRadio("propertyLoan", "impossible");
-		if (parsed.parkingTotal || /주차가능/.test(parsed.description)) {
-			setRadio("propertyParking", "possible");
+		if (parsed.loanStatus) setRadio("propertyLoan", parsed.loanStatus);
+		if (typeof ensureDefaultCheckRadios === "function") ensureDefaultCheckRadios();
+		if (parsed.parkingTotal || parsed.parkingStatus) {
+			setRadio("propertyParking", parsed.parkingStatus || "possible");
 			setInput("propertyParkingTotalInput", parsed.parkingTotal);
 			setInput("propertyParkingPerInput", parsed.parkingPer);
 		}
-		if (parsed.maintenanceWon) {
-			setCheck("maintenanceUnder100kChk", true);
-			setInput("maintenanceFixedTotalInput", parsed.maintenanceWon);
-			setCheck("maintenanceFixedIncludeElectricChk", true);
-			setCheck("maintenanceFixedIncludeWaterChk", true);
-			setCheck("maintenanceFixedIncludeCommonChk", true);
-			setRadio("maintenanceFixedBase", "recent_1_year");
+		if (parsed.maintenanceNone) {
+			setMaintenanceTab("none");
 		}
-		if (parsed.moveNow) {
+		else if (parsed.maintenanceWon) {
+			const maintenanceWon = Number(String(parsed.maintenanceWon || "").replace(/[^0-9]/g, ""));
+			const isUnder100k = Number.isFinite(maintenanceWon) && maintenanceWon > 0 && maintenanceWon < 100000;
+			const includePrefix = isUnder100k ? "maintenanceFixedInclude" : "maintenanceInclude";
+			[
+				"maintenanceFixedIncludeElectricChk", "maintenanceFixedIncludeWaterChk", "maintenanceFixedIncludeCommonChk", "maintenanceFixedIncludeGasChk",
+				"maintenanceFixedIncludeHeatingChk", "maintenanceFixedIncludeInternetChk", "maintenanceFixedIncludeTvChk", "maintenanceFixedIncludeEtcChk",
+				"maintenanceIncludeElectricChk", "maintenanceIncludeWaterChk", "maintenanceIncludeCommonChk", "maintenanceIncludeGasChk",
+				"maintenanceIncludeHeatingChk", "maintenanceIncludeInternetChk", "maintenanceIncludeTvChk", "maintenanceIncludeEtcChk"
+			].forEach((id) => setCheck(id, false));
+			clearInput("maintenanceFixedTotalInput");
+			clearInput("maintenanceTotalInput");
+			clearRadio("maintenanceFixedBase");
+			clearRadio("maintenanceExtraBase");
+			clearRadio("maintenanceDetailType");
+			setMaintenanceTab(isUnder100k ? "fixed" : "extra");
+			setCheck("maintenanceUnder100kChk", isUnder100k);
+			setInput(isUnder100k ? "maintenanceFixedTotalInput" : "maintenanceTotalInput", parsed.maintenanceWon);
+			const includes = parsed.maintenanceIncludes || "";
+			setCheck(`${includePrefix}ElectricChk`, /전기/.test(includes));
+			setCheck(`${includePrefix}WaterChk`, /수도/.test(includes));
+			setCheck(`${includePrefix}CommonChk`, /공용/.test(includes));
+			setCheck(`${includePrefix}GasChk`, /가스/.test(includes));
+			setCheck(`${includePrefix}HeatingChk`, /난방/.test(includes));
+			setCheck(`${includePrefix}InternetChk`, /인터넷/.test(includes));
+			setCheck(`${includePrefix}TvChk`, /TV|티비/.test(includes));
+			setCheck(`${includePrefix}EtcChk`, /기타/.test(includes));
+			setRadio(isUnder100k ? "maintenanceFixedBase" : "maintenanceExtraBase", parsed.maintenanceBase || "recent_1_year");
+			if (parsed.maintenanceDetailType) setRadio("maintenanceDetailType", parsed.maintenanceDetailType);
+		}
+		if (parsed.heatingType) setRadio("propertyHeating", parsed.heatingType);
+		if (parsed.heatingFuel) setSelectValue("propertyHeatingFuelSelect", parsed.heatingFuel);
+		if (parsed.moveInDate) {
+			if (parsed.moveInDate === "즉시입주") {
+				setCheck("propertyMoveInNowChk", true);
+				setInput("propertyMoveInDateInput", "즉시입주");
+			} else {
+				setCheck("propertyMoveInNowChk", false);
+				setInput("propertyMoveInDateInput", parsed.moveInDate);
+			}
+		}
+		else if (parsed.moveNow) {
 			setCheck("propertyMoveInNowChk", true);
-			setInput("propertyMoveInDateInput", "즉시입주 협의가능");
+			setInput("propertyMoveInDateInput", "즉시입주");
 		}
-		if (/붙박이장/.test(parsed.description)) setCheck("furnitureBuiltInChk", true);
-		if (/가스레인지/.test(parsed.description)) setCheck("applianceGasRangeChk", true);
-		if (/베란다/.test(parsed.description)) setCheck("etcVerandaChk", true);
+		setCheck("propertyMoveInNegotiableChk", !!parsed.moveNegotiable);
+		const furnitureText = parsed.furnitureText || parsed.description;
+		if (/침대/.test(furnitureText)) setCheck("furnitureBedChk", true);
+		if (/신발장/.test(furnitureText)) setCheck("furnitureShoesChk", true);
+		if (/붙박이장/.test(furnitureText)) setCheck("furnitureBuiltInChk", true);
+		const applianceText = parsed.applianceText || parsed.description;
+		if (/전자레인지/.test(applianceText)) setCheck("applianceMicrowaveChk", true);
+		if (/세탁기/.test(applianceText)) setCheck("applianceWasherChk", true);
+		if (/냉장고/.test(applianceText)) setCheck("applianceFridgeChk", true);
+		if (/TV|티비/.test(applianceText)) setCheck("applianceTvChk", true);
+		if (/가스레인지/.test(applianceText)) setCheck("applianceGasRangeChk", true);
+		if (/인덕션/.test(applianceText)) setCheck("applianceInductionChk", true);
+		if (/천장에어컨/.test(parsed.coolingText || parsed.description)) setCheck("coolingCeilingChk", true);
+		if (/엘리베이터/.test(parsed.etcFacilityText || parsed.description)) setCheck("facilityElevatorChk", true);
+		if (/베란다/.test(parsed.etcFacilityText || parsed.description)) setCheck("etcVerandaChk", true);
+		if (/테라스/.test(parsed.etcFacilityText || parsed.description)) setCheck("etcTerraceChk", true);
 		setInput("propertyDetailDescriptionInput", parsed.description);
+		if (parsed.address && typeof window.realjejuApplyQuickAddressToLocationMap === "function") {
+			window.realjejuApplyQuickAddressToLocationMap(parsed.address);
+		}
+	}
+
+	function bindQuickPropertySourceOptions()
+	{
+		const options = Array.from(document.querySelectorAll('input[name="quickPropertySource"]'));
+		if (!options.length) return;
+		options.forEach((input) => {
+			if (input.dataset.quickSourceBound === "1") return;
+			input.dataset.quickSourceBound = "1";
+			input.addEventListener("change", () => {
+				if (input.checked) {
+					options.forEach((other) => {
+						if (other !== input) other.checked = false;
+					});
+				}
+				if (!options.some((option) => option.checked)) {
+					$("quickPropertySourceCrossroad")?.click();
+					const crossroad = options.find((option) => option.value === "crossroad");
+					if (crossroad) crossroad.checked = true;
+				}
+			});
+		});
+	}
+
+	function getQuickPropertySource()
+	{
+		const selected = document.querySelector('input[name="quickPropertySource"]:checked');
+		return selected ? selected.value : "crossroad";
 	}
 
 	function openQuickPropertyModal()
@@ -23469,10 +24840,17 @@ document.addEventListener("DOMContentLoaded", function () {
 			textarea?.focus();
 			return;
 		}
+		const source = getQuickPropertySource();
+		if (source !== "crossroad") {
+			if (typeof openAuthErrorModal === "function") {
+				openAuthErrorModal("현재 자동 입력은 교차로 기준으로 동작합니다.\n오일장, 네이버 블로그, 기타 기준은 별도 변환 규칙을 추가한 뒤 사용할 수 있어요.", "간편 매물 등록", null);
+			}
+			return;
+		}
 		applyParsedListing(parseCrossroadListing(text));
 		closeQuickPropertyModal();
 		if (typeof openAuthErrorModal === "function") {
-			openAuthErrorModal("복사글에서 확인 가능한 항목을 자동 입력했습니다. 주소와 좌표, 가격, 면적은 등록 전 한 번 확인해 주세요.", "간편 매물 등록", null);
+			openAuthErrorModal("확인 가능한 항목을 자동 입력했습니다.\n주소와 좌표, 가격, 면적과 같은 중요 정보는 등록 전에 다시 한 번 확인해 주세요.", "간편 매물 등록", null);
 		}
 	}
 
@@ -23481,6 +24859,8 @@ document.addEventListener("DOMContentLoaded", function () {
 		const btn = $("quickPropertyRegisterBtn");
 		if (!btn || btn.dataset.crossroadImportBound === "1") return;
 		btn.dataset.crossroadImportBound = "1";
+		bindQuickPropertySourceOptions();
+		let quickPropertyBackdropPointerStarted = false;
 		btn.addEventListener("click", (event) => {
 			event.preventDefault();
 			openQuickPropertyModal();
@@ -23498,8 +24878,12 @@ document.addEventListener("DOMContentLoaded", function () {
 			event.preventDefault();
 			applyQuickPropertyText();
 		});
+		$("quickPropertyModal")?.addEventListener("pointerdown", (event) => {
+			quickPropertyBackdropPointerStarted = event.target === $("quickPropertyModal");
+		});
 		$("quickPropertyModal")?.addEventListener("click", (event) => {
-			if (event.target === $("quickPropertyModal")) closeQuickPropertyModal();
+			if (quickPropertyBackdropPointerStarted && event.target === $("quickPropertyModal")) closeQuickPropertyModal();
+			quickPropertyBackdropPointerStarted = false;
 		});
 		document.addEventListener("keydown", (event) => {
 			const modal = $("quickPropertyModal");
@@ -24120,6 +25504,68 @@ document.addEventListener("DOMContentLoaded", function () {
 		setAddressLocationDataset(mode);
 	}
 
+	async function applyQuickAddressToLocationMap(query){
+		const value = String(query || "").trim();
+		if (!value || !window.kakao || !kakao.maps || !kakao.maps.services) return false;
+		let found = null;
+		const queries = buildPropertyAddressSearchQueries(value);
+		for (const q of queries) {
+			const list = await searchAddressByGeocoder(q);
+			if (list.length) {
+				found = normalizeAddressResult(list[0]);
+				break;
+			}
+		}
+		if (!found) {
+			for (const q of queries) {
+				const list = await searchAddressByKeyword(q);
+				if (list.length) {
+					found = normalizeAddressResult(list[0]);
+					break;
+				}
+			}
+		}
+		if (!found || !found.lat || !found.lng) return false;
+
+		selectedAddress = found;
+		const addressRoad = found.roadAddress || "";
+		const addressJibun = found.jibunAddress || addressRoad || value;
+		const address1 = addressJibun || addressRoad || value;
+		const publicAddress = address1;
+		addressInput.value = address1;
+		addressInput.dataset.address1 = address1;
+		addressInput.dataset.address2 = "";
+		addressInput.dataset.publicAddress = publicAddress;
+		addressInput.dataset.privateAddress = "";
+		addressInput.dataset.hideDetailJibun = "0";
+		addressInput.dataset.roadAddress = addressRoad;
+		addressInput.dataset.jibunAddress = addressJibun;
+		addressInput.dataset.zonecode = found.zonecode || "";
+		addressInput.dataset.detailAddress = "";
+		addressInput.dataset.lat = found.lat || "";
+		addressInput.dataset.lng = found.lng || "";
+		if (mainDetailEl) mainDetailEl.textContent = "";
+		addressWrap?.classList.remove("has-detail-address");
+		renderAddressLocationMap();
+		window.REALJEJU_PROPERTY_ADDRESS = {
+			address1,
+			address2: "",
+			addressRoad,
+			addressJibun,
+			addressDetail: "",
+			addressDisplay: publicAddress,
+			publicAddress,
+			privateAddress: "",
+			hideDetailJibun: false,
+			zonecode: found.zonecode || "",
+			lat: found.lat || "",
+			lng: found.lng || "",
+			locationDisplayType: getAddressLocationMode(),
+			locationBounds: addressLocationBounds
+		};
+		return true;
+	}
+
 	async function handleSearch(){
 		const query = String(searchInput?.value || "").trim();
 		if (!query) {
@@ -24264,6 +25710,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		setAddressLocationDataset(getAddressLocationMode());
 	});
 	updateDetailHideRow();
+	window.realjejuApplyQuickAddressToLocationMap = applyQuickAddressToLocationMap;
 	editBtn?.addEventListener("click", showSearchScreen);
 	confirmBtn?.addEventListener("click", confirmAddress);
 })();
