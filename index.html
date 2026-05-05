@@ -56,12 +56,12 @@
 	--profile-page-button-font-weight: 800;
 	--profile-page-button-letter-spacing: -0.18px;
 	--profile-page-button-shadow: none;
-	--profile-page-primary-button-bg: #1B6FA4;
+	--profile-page-primary-button-bg: #4A7EDC;
 	--profile-page-primary-button-color: #ffffff;
-	--profile-page-primary-button-border: 1px solid #1B6FA4;
+	--profile-page-primary-button-border: 1px solid #4A7EDC;
 	--profile-page-secondary-button-bg: #ffffff;
-	--profile-page-secondary-button-color: #1B6FA4;
-	--profile-page-secondary-button-border: 1px solid #1B6FA4;
+	--profile-page-secondary-button-color: #4A7EDC;
+	--profile-page-secondary-button-border: 1px solid #4A7EDC;
 
 	/* ===== PATCH: 관리자 페이지 전용 전역 변수 ===== */
 	--admin-page-padding-top: 28px;
@@ -209,9 +209,9 @@
 	--property-address-primary-button-height: 52px;
 	--property-address-primary-button-min-width: 52px;
 	--property-address-primary-button-padding-x: 22px;
-	--property-address-primary-button-bg: var(--profile-page-button-bg, var(--profile-page-primary-button-bg));
-	--property-address-primary-button-color: var(--profile-page-button-color, var(--profile-page-primary-button-color));
-	--property-address-primary-button-border: 1px solid var(--profile-page-button-bg, var(--profile-page-primary-button-bg));
+	--property-address-primary-button-bg: var(--profile-page-primary-button-bg);
+	--property-address-primary-button-color: var(--profile-page-primary-button-color);
+	--property-address-primary-button-border: var(--profile-page-primary-button-border);
 	--property-address-primary-button-radius: 0px;
 	--property-address-primary-button-font-size: 16px;
 	--property-address-primary-button-font-weight: 800;
@@ -222,9 +222,9 @@
 	--property-address-secondary-button-height: 52px;
 	--property-address-secondary-button-min-width: 132px;
 	--property-address-secondary-button-padding-x: 22px;
-	--property-address-secondary-button-bg: #ffffff;
-	--property-address-secondary-button-color: var(--profile-page-button-bg, var(--profile-page-primary-button-bg));
-	--property-address-secondary-button-border: 1px solid var(--profile-page-button-bg, var(--profile-page-primary-button-bg));
+	--property-address-secondary-button-bg: var(--profile-page-secondary-button-bg);
+	--property-address-secondary-button-color: var(--profile-page-secondary-button-color);
+	--property-address-secondary-button-border: var(--profile-page-secondary-button-border);
 	--property-address-secondary-button-radius: 0px;
 	--property-address-secondary-button-font-size: 16px;
 	--property-address-secondary-button-font-weight: 800;
@@ -252,6 +252,34 @@
 	--property-address-main-detail-font-weight: 600;
 	--property-address-main-detail-color: #9ca3af;
 	--property-address-main-detail-padding-right: 220px;
+
+	/* ===== PATCH 2.171: 위치 직접검색 / 지도 크기 전역 변수 ===== */
+	--location-search-btn-height: 40px;
+	--location-search-input-height: 40px;
+	--property-map-height: 300px;
+
+	--property-address-location-row-margin-top: 12px;
+	--property-address-location-row-margin-bottom: 28px;
+	--property-address-location-row-margin-left: calc(140px + 24px);
+	--property-address-location-mode-gap: 18px;
+	--property-address-location-mode-margin-bottom: 10px;
+	--property-address-location-map-height: var(--property-map-height);
+	--property-address-location-map-border: 1px solid #d8dee8;
+	--property-address-location-map-bg: #f8fafc;
+	--property-address-location-help-margin-top: 8px;
+	--property-address-location-help-font-size: 14px;
+	--property-address-location-help-color: #2563eb;
+	--property-address-location-rectangle-stroke: #3B82F6;
+	--property-address-location-rectangle-fill: rgba(59, 130, 246, 0.26);
+	--property-address-location-direct-button-width: 116px;
+	--property-address-location-direct-button-height: var(--location-search-btn-height);
+	--property-address-location-direct-button-padding-x: 14px;
+	--property-address-location-direct-button-font-size: 14px;
+	--property-address-location-direct-button-font-weight: 800;
+	--property-address-location-direct-input-height: var(--location-search-input-height);
+	--property-address-location-direct-input-padding-x: 14px;
+	--property-address-location-direct-input-font-size: 14px;
+	--property-address-location-direct-gap: 10px;
 
 	--property-address-hide-row-margin-top: 16px;
 	--property-address-hide-row-margin-bottom: 28px;
@@ -5147,7 +5175,7 @@ body.sidebar-list-collapsed .map-side-tools
 	background: #fff;
 }
 
-/* Ver 2.152 표시: 하단바 왼쪽 고정 */
+/* Ver 2.173 표시: 하단바 왼쪽 고정 */
 .sub-version-fixed
 {
 	position: absolute !important;
@@ -5169,6 +5197,13 @@ body.sidebar-list-collapsed .map-side-tools
 {
 	color: #6b7280 !important;
 	opacity: 1 !important;
+	text-decoration: none !important;
+	cursor: pointer !important;
+}
+
+.sub-version-fixed:hover
+{
+	color: var(--brand) !important;
 }
 
 /* 회원가입 로그인: 오른쪽 정렬, 매물유형 오른쪽 50px 경계 안쪽으로 침범 금지 */
@@ -7937,6 +7972,7 @@ html, body
 
 /* 버튼 */
 .auth-modal.profile-page-mode .auth-myinfo-screen .auth-modal-submit,
+.auth-modal.profile-page-mode #authBrokerOfficeInfoScreen #brokerOfficeInfoEditBtn,
 .auth-modal.profile-page-mode .auth-profile-setup-screen .auth-modal-submit,
 .auth-modal.profile-page-mode .auth-profile-photo-select-btn
 {
@@ -8546,7 +8582,8 @@ body.admin-page-open .map-wrap
 .auth-modal.profile-page-mode .auth-broker-office-screen .auth-modal-submit,
 .auth-modal.profile-page-mode .auth-broker-office-screen button[type="submit"],
 .auth-modal.profile-page-mode .broker-apply-page .auth-modal-submit,
-.auth-modal.profile-page-mode .broker-apply-page button[type="submit"]
+.auth-modal.profile-page-mode .broker-apply-page button[type="submit"],
+.auth-modal.profile-page-mode #authBrokerOfficeInfoScreen #brokerOfficeInfoEditBtn
 {
 	background: var(--profile-page-primary-button-bg) !important;
 	color: var(--profile-page-primary-button-color) !important;
@@ -11522,12 +11559,308 @@ body[data-property-type="factory_warehouse"] #propertyMaintenanceCard
 	margin: var(--property-address-hide-help-margin-top)
 	        0
 	        0
-	        calc(var(--property-address-hide-checkbox-size) + 10px);
+	        0;
 	font-size: var(--property-address-hide-help-font-size);
-	font-weight: 500;
+	font-weight: 400;
 	line-height: 1.45;
-	letter-spacing: -0.18px;
+	letter-spacing: -0.1px;
 	color: var(--property-address-hide-help-color);
+}
+
+.property-address-location-row
+{
+	display: none;
+	margin: var(--property-address-location-row-margin-top)
+	        0
+	        var(--property-address-location-row-margin-bottom)
+	        var(--property-address-location-row-margin-left);
+}
+
+.property-address-location-row.open
+{
+	display: block;
+}
+
+.property-address-location-mode-group
+{
+	display: flex;
+	align-items: center;
+	gap: var(--property-address-location-mode-gap);
+	margin: 0
+	        0
+	        var(--property-address-location-mode-margin-bottom);
+}
+
+.property-address-location-direct-group
+{
+	display: flex;
+	align-items: center;
+	gap: var(--property-address-location-direct-gap);
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+.property-address-location-direct-search-btn
+{
+	flex: 0 0 var(--property-address-location-direct-button-width);
+	width: var(--property-address-location-direct-button-width) !important;
+	height: var(--property-address-location-direct-button-height) !important;
+	min-height: var(--property-address-location-direct-button-height) !important;
+	max-height: var(--property-address-location-direct-button-height) !important;
+	padding: 0
+	        var(--property-address-location-direct-button-padding-x);
+	border: var(--profile-page-secondary-button-border);
+	border-radius: var(--profile-page-button-radius);
+	box-sizing: border-box;
+	background: var(--profile-page-secondary-button-bg);
+	color: var(--profile-page-secondary-button-color);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-size: var(--property-address-location-direct-button-font-size);
+	font-weight: var(--property-address-location-direct-button-font-weight);
+	line-height: 1;
+	letter-spacing: -0.1px;
+	cursor: pointer;
+}
+
+.property-address-location-direct-search-box
+{
+	display: none;
+	flex: 1 1 auto;
+	min-width: 0;
+	height: var(--property-address-location-direct-button-height);
+}
+
+.property-address-location-direct-search-box.open
+{
+	display: flex;
+	align-items: center;
+}
+
+.property-address-location-direct-search-input
+{
+	width: 100% !important;
+	height: var(--property-address-location-direct-button-height) !important;
+	min-height: var(--property-address-location-direct-button-height) !important;
+	max-height: var(--property-address-location-direct-button-height) !important;
+	padding: 0
+	        var(--property-address-location-direct-input-padding-x);
+	border: var(--property-address-input-border);
+	border-radius: var(--property-address-input-radius);
+	box-sizing: border-box;
+	background: var(--property-address-input-bg);
+	color: var(--property-address-input-color);
+	font-size: var(--property-address-location-direct-input-font-size);
+	font-weight: 600;
+	line-height: 1;
+	appearance: none;
+	outline: none;
+}
+
+.property-register-page .property-address-location-mode-group .property-address-location-direct-search-input
+{
+	height: var(--property-address-location-direct-button-height) !important;
+	min-height: var(--property-address-location-direct-button-height) !important;
+	max-height: var(--property-address-location-direct-button-height) !important;
+	box-sizing: border-box !important;
+}
+
+/* ===== PATCH 2.173: 간편 매물 등록 모달 / 상세설명 길이 / 관리비 원 단위 ===== */
+.quick-property-modal
+{
+	position: fixed;
+	inset: 0;
+	z-index: 100600;
+	display: none;
+	align-items: center;
+	justify-content: center;
+	padding: 28px;
+	background: rgba(17, 24, 39, 0.42);
+}
+
+.quick-property-modal.open
+{
+	display: flex;
+}
+
+.quick-property-dialog
+{
+	width: min(920px, calc(100vw - 56px));
+	background: #ffffff;
+	border-radius: 28px;
+	box-shadow: 0 28px 80px rgba(15, 23, 42, 0.24);
+	overflow: hidden;
+}
+
+.quick-property-head
+{
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 24px;
+	padding: 38px 54px 28px;
+}
+
+.quick-property-title
+{
+	margin: 0;
+	color: #050816;
+	font-size: 40px;
+	font-weight: 900;
+	line-height: 1.15;
+	letter-spacing: -1px;
+}
+
+.quick-property-paste-btn,
+.quick-property-cancel-btn,
+.quick-property-apply-btn
+{
+	height: 80px;
+	min-width: 170px;
+	padding: 0 30px;
+	border: 0;
+	border-radius: 14px;
+	font-family: var(--font-ui);
+	font-size: 24px;
+	font-weight: 900;
+	letter-spacing: -0.4px;
+	line-height: 1;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	white-space: nowrap;
+}
+
+.quick-property-paste-btn,
+.quick-property-cancel-btn
+{
+	background: #2d333d;
+	color: #ffffff;
+}
+
+.quick-property-body
+{
+	padding: 18px 54px 52px;
+}
+
+.quick-property-textarea
+{
+	width: 100%;
+	height: 190px;
+	padding: 28px 32px;
+	border: 2px solid #d9dee7;
+	border-radius: 24px;
+	background: #ffffff;
+	color: #111827;
+	font-family: var(--font-ui);
+	font-size: 24px;
+	font-weight: 600;
+	line-height: 1.5;
+	letter-spacing: -0.3px;
+	resize: none;
+	outline: none;
+	box-sizing: border-box;
+}
+
+.quick-property-textarea::placeholder
+{
+	color: #a8b0bd;
+}
+
+.quick-property-textarea:focus
+{
+	border-color: #b8c3d4;
+	box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.08);
+}
+
+.quick-property-foot
+{
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 16px;
+	padding: 32px 54px 40px;
+	border-top: 1px solid #edf0f5;
+}
+
+.quick-property-apply-btn
+{
+	background: #ff5b12;
+	color: #ffffff;
+}
+
+@media (max-width: 720px)
+{
+	.quick-property-dialog
+	{
+		width: calc(100vw - 32px);
+		border-radius: 22px;
+	}
+	.quick-property-head
+	{
+		padding: 28px 24px 18px;
+		align-items: flex-start;
+		flex-direction: column;
+	}
+	.quick-property-title
+	{
+		font-size: 30px;
+	}
+	.quick-property-body
+	{
+		padding: 12px 24px 32px;
+	}
+	.quick-property-textarea
+	{
+		height: 220px;
+		font-size: 18px;
+	}
+	.quick-property-foot
+	{
+		padding: 24px;
+	}
+	.quick-property-paste-btn,
+	.quick-property-cancel-btn,
+	.quick-property-apply-btn
+	{
+		height: 58px;
+		min-width: 0;
+		flex: 1 1 0;
+		font-size: 19px;
+	}
+}
+
+.property-address-location-direct-search-input::placeholder
+{
+	color: var(--property-address-input-placeholder-color);
+}
+
+.property-address-location-map
+{
+	width: 100%;
+	height: var(--property-address-location-map-height);
+	border: var(--property-address-location-map-border);
+	background: var(--property-address-location-map-bg);
+	overflow: hidden;
+}
+
+.property-address-location-help
+{
+	margin: var(--property-address-location-help-margin-top)
+	        0
+	        0;
+	font-size: var(--property-address-location-help-font-size);
+	font-weight: 700;
+	line-height: 1.45;
+	letter-spacing: -0.1px;
+	color: var(--property-address-location-help-color);
+}
+
+.property-address-location-row[data-location-mode="hidden"] .property-address-location-help
+{
+	color: #6b7280;
 }
 
 .property-address-search-modal
@@ -11936,16 +12269,14 @@ body[data-property-type="factory_warehouse"] #propertyMaintenanceCard
 	margin-top: var(--property-address-detail-actions-margin-top);
 }
 
-.property-address-detail-actions .property-address-detail-edit
+.property-address-detail-actions .property-address-detail-edit,
+.property-address-detail-actions .property-address-detail-confirm
 {
 	height: var(--property-address-secondary-button-height);
 	min-width: var(--property-address-secondary-button-min-width);
 	padding: 0
 	        var(--property-address-secondary-button-padding-x);
 	border-radius: var(--property-address-secondary-button-radius);
-	border: var(--property-address-secondary-button-border);
-	background: var(--property-address-secondary-button-bg);
-	color: var(--property-address-secondary-button-color);
 	font-size: var(--property-address-secondary-button-font-size);
 	font-weight: var(--property-address-secondary-button-font-weight);
 	letter-spacing: -0.18px;
@@ -11956,11 +12287,32 @@ body[data-property-type="factory_warehouse"] #propertyMaintenanceCard
 	cursor: pointer;
 }
 
+.property-address-detail-actions .property-address-detail-edit
+{
+	border: var(--property-address-secondary-button-border);
+	background: var(--property-address-secondary-button-bg);
+	color: var(--property-address-secondary-button-color);
+}
+
+.property-address-detail-actions .property-address-detail-confirm
+{
+	border: var(--property-address-primary-button-border);
+	background: var(--property-address-primary-button-bg);
+	color: var(--property-address-primary-button-color);
+}
+
 .property-address-detail-actions .property-address-detail-edit:hover
 {
 	background: var(--property-address-secondary-button-bg);
 	color: var(--property-address-secondary-button-color);
 	border: var(--property-address-secondary-button-border);
+}
+
+.property-address-detail-actions .property-address-detail-confirm:hover
+{
+	background: var(--property-address-primary-button-bg);
+	color: var(--property-address-primary-button-color);
+	border: var(--property-address-primary-button-border);
 }
 
 .property-address-detail-address-row .property-address-detail-edit
@@ -12058,22 +12410,6 @@ body[data-property-type="factory_warehouse"] #propertyMaintenanceCard
 				<h2 class="property-register-section-title">기본 정보</h2>
 
 				<div class="property-form-row">
-					<label class="property-form-label" for="propertyAddressInput">주소<span class="property-required">*</span></label>
-					<div class="property-form-control property-address-wrap">
-						<input type="text" class="property-register-input" id="propertyAddressInput" placeholder="주소를 입력하세요" autocomplete="off" />
-						<span class="property-address-main-detail" id="propertyAddressMainDetail" aria-hidden="true"></span>
-					</div>
-				</div>
-
-				<div class="property-address-hide-row" id="propertyAddressHideRow">
-					<label class="property-address-hide-label" for="propertyAddressHideDetailCheck">
-						<input type="checkbox" id="propertyAddressHideDetailCheck" />
-						<span>상세지번은 노출하지 않겠습니다.</span>
-					</label>
-					<p class="property-address-hide-help">매물의 상세지번을 노출하고 싶지 않을때 선택해 주세요. 선택하면 읍ㆍ면ㆍ동ㆍ리까지만 보여요.</p>
-				</div>
-
-				<div class="property-form-row">
 					<label class="property-form-label" for="propertyTypeSelect">매물 종류<span class="property-required">*</span></label>
 					<div class="property-form-control property-select-wrap property-register-dropdown property-type-dropdown" data-register-dropdown>
 						<select class="property-register-select property-register-native-select" id="propertyTypeSelect" tabindex="-1" aria-hidden="true">
@@ -12112,6 +12448,38 @@ body[data-property-type="factory_warehouse"] #propertyMaintenanceCard
 							<button type="button" class="property-register-dropdown-option" data-value="land" role="option">토지</button>
 						</div>
 					</div>
+				</div>
+
+				<div class="property-form-row">
+					<label class="property-form-label" for="propertyAddressInput">주소<span class="property-required">*</span></label>
+					<div class="property-form-control property-address-wrap">
+						<input type="text" class="property-register-input" id="propertyAddressInput" placeholder="주소를 입력하세요" autocomplete="off" />
+						<span class="property-address-main-detail" id="propertyAddressMainDetail" aria-hidden="true"></span>
+					</div>
+				</div>
+
+				<div class="property-address-hide-row" id="propertyAddressHideRow">
+					<label class="property-address-hide-label" for="propertyAddressHideDetailCheck">
+						<input type="checkbox" id="propertyAddressHideDetailCheck" />
+						<span>상세지번은 노출하지 않겠습니다.</span>
+					</label>
+					<p class="property-address-hide-help">매물의 상세지번을 노출하고 싶지 않을때 선택해 주세요. 선택하면 읍ㆍ면ㆍ동ㆍ리까지만 보여요.</p>
+				</div>
+
+				<div class="property-address-location-row" id="propertyAddressLocationRow" aria-hidden="true">
+					<div class="property-address-location-mode-group" id="propertyAddressLocationModeGroup">
+						<label class="property-radio-option"><input type="radio" name="propertyAddressLocationMode" value="marker" checked /><span>표시함</span></label>
+						<label class="property-radio-option"><input type="radio" name="propertyAddressLocationMode" value="rectangle" /><span>사각영역</span></label>
+						<label class="property-radio-option"><input type="radio" name="propertyAddressLocationMode" value="hidden" /><span>표시안함</span></label>
+						<div class="property-address-location-direct-group">
+							<button type="button" class="property-address-location-direct-search-btn" id="propertyAddressLocationDirectSearchBtn">위치 직접검색</button>
+							<div class="property-address-location-direct-search-box" id="propertyAddressLocationDirectSearchBox">
+								<input type="text" class="property-address-location-direct-search-input" id="propertyAddressLocationDirectSearchInput" placeholder="이동할 위치를 입력하세요" />
+							</div>
+						</div>
+					</div>
+					<div class="property-address-location-map" id="propertyAddressLocationMap"></div>
+					<p class="property-address-location-help" id="propertyAddressLocationHelp">지도상에 표시된 포인트를 원하는 위치로 끌어다 놓으세요.</p>
 				</div>
 
 				<div class="property-form-row property-dongho-row" id="propertyDongHoRow">
@@ -12564,7 +12932,7 @@ body[data-property-type="factory_warehouse"] #propertyMaintenanceCard
 					<div class="maintenance-form-row maintenance-input-row maintenance-fixed-under100-row is-hidden">
 						<label class="property-form-label">총 관리비<span class="property-required">*</span></label>
 						<div class="maintenance-form-field">
-							<div class="property-unit-input"><input type="text" class="property-register-input" id="maintenanceFixedTotalInput" placeholder="0" /><span class="property-unit-label">만원</span></div>
+							<div class="property-unit-input"><input type="text" class="property-register-input" id="maintenanceFixedTotalInput" placeholder="0" /><span class="property-unit-label">원</span></div>
 						</div>
 					</div>
 
@@ -12668,7 +13036,7 @@ body[data-property-type="factory_warehouse"] #propertyMaintenanceCard
 					<div class="maintenance-form-row maintenance-input-row">
 						<label class="property-form-label">총 관리비<span class="property-required">*</span></label>
 						<div class="maintenance-form-field">
-							<div class="property-unit-input"><input type="text" class="property-register-input" id="maintenanceTotalInput" placeholder="0" /><span class="property-unit-label">만원</span></div>
+							<div class="property-unit-input"><input type="text" class="property-register-input" id="maintenanceTotalInput" placeholder="0" /><span class="property-unit-label">원</span></div>
 						</div>
 					</div>
 
@@ -12753,8 +13121,8 @@ body[data-property-type="factory_warehouse"] #propertyMaintenanceCard
 				<div class="property-detail-row">
 					<label class="property-form-label" for="propertyDetailDescriptionInput">상세 설명</label>
 					<div class="property-form-control">
-						<textarea class="property-detail-textarea" id="propertyDetailDescriptionInput" maxlength="1000" placeholder="매물의 특징과 장점을 자세히 적어주세요.&#10;압류/가압류 등기된 매물인 경우 상세설명에 &quot;압류 등기 있음&quot;, &quot;압류 매물&quot; 등을 반드시 기재해 주세요.(미표기시 과태료 대상)"></textarea>
-						<div class="property-detail-text-count" id="propertyDetailDescriptionCount">0/1000</div>
+						<textarea class="property-detail-textarea" id="propertyDetailDescriptionInput" maxlength="5000" placeholder="매물의 특징과 장점을 자세히 적어주세요.&#10;압류/가압류 등기된 매물인 경우 상세설명에 &quot;압류 등기 있음&quot;, &quot;압류 매물&quot; 등을 반드시 기재해 주세요.(미표기시 과태료 대상)"></textarea>
+						<div class="property-detail-text-count" id="propertyDetailDescriptionCount">0/5000</div>
 					</div>
 				</div>
 
@@ -12853,6 +13221,22 @@ body[data-property-type="factory_warehouse"] #propertyMaintenanceCard
 		</div>
 	</div>
 
+	<div class="quick-property-modal" id="quickPropertyModal" aria-hidden="true">
+		<div class="quick-property-dialog" role="dialog" aria-modal="true" aria-labelledby="quickPropertyTitle">
+			<div class="quick-property-head">
+				<h2 class="quick-property-title" id="quickPropertyTitle">매물 정보 간편 입력하기</h2>
+				<button type="button" class="quick-property-paste-btn" id="quickPropertyPasteBtn">텍스트 붙여넣기</button>
+			</div>
+			<div class="quick-property-body">
+				<textarea class="quick-property-textarea" id="quickPropertyTextarea" placeholder="평소 메모장이나 메신저에 관리하던 매물 정보를 복사하고&#10;(ctrl+c) 붙여넣기(ctrl+v)만 하면 글쓰기 항목에 자동으로&#10;정보가 입력돼요."></textarea>
+			</div>
+			<div class="quick-property-foot">
+				<button type="button" class="quick-property-cancel-btn" id="quickPropertyCancelBtn">취소</button>
+				<button type="button" class="quick-property-apply-btn" id="quickPropertyApplyBtn">입력 완료</button>
+			</div>
+		</div>
+	</div>
+
 
 	<div class="property-address-search-modal" id="propertyAddressSearchModal" aria-hidden="true">
 		<div class="property-address-search-dialog" role="dialog" aria-modal="true" aria-labelledby="propertyAddressSearchTitle">
@@ -12907,9 +13291,9 @@ body[data-property-type="factory_warehouse"] #propertyMaintenanceCard
 
 		<div class="sub-topbar">
 			<div class="sub-topbar-inner">
-				<span class="sub-version-fixed">
-					Ver 2.152
-				</span>
+				<a class="sub-version-fixed" href="realjeju_2.173.html" download="realjeju_2.173.html" title="realjeju_2.173.html 다운로드">
+					Ver 2.173 다운로드
+				</a>
 				<div class="sub-topbar-left">
 					<strong id="listInfoText">
 						총 0개 매물
@@ -13593,8 +13977,8 @@ if (globalBrandLink) {
 	if (!textarea || !counter) return;
 
 	const update = () => {
-		if (textarea.value.length > 1000) textarea.value = textarea.value.slice(0, 1000);
-		counter.textContent = textarea.value.length + "/1000";
+		if (textarea.value.length > 5000) textarea.value = textarea.value.slice(0, 5000);
+		counter.textContent = textarea.value.length + "/5000";
 	};
 
 	textarea.addEventListener("input", update);
@@ -13875,6 +14259,51 @@ if (globalBrandLink) {
 				</button>
 			</div>
 		</div>
+		<div class="auth-myinfo-screen auth-screen-hidden" id="authBrokerOfficeInfoScreen">
+			<button type="button" class="auth-card-close" aria-label="닫기" onclick="window.closeAuthModal && window.closeAuthModal()">×</button>
+			<h2 class="auth-modal-title">
+				중개사무소 정보
+			</h2>
+			<div class="auth-modal-divider">
+			</div>
+			<div class="auth-modal-form">
+				<p class="auth-profile-guide">
+					승인 완료된 중개사무소 정보를 확인합니다.
+				</p>
+				<div class="auth-myinfo-display-row">
+					<span class="auth-myinfo-display-label">승인상태</span>
+					<span class="auth-myinfo-display-value" id="brokerOfficeInfoStatusValue">-</span>
+				</div>
+				<div class="auth-myinfo-display-row">
+					<span class="auth-myinfo-display-label">중개사무소명</span>
+					<span class="auth-myinfo-display-value" id="brokerOfficeInfoNameValue">-</span>
+				</div>
+				<div class="auth-myinfo-display-row">
+					<span class="auth-myinfo-display-label">대표자</span>
+					<span class="auth-myinfo-display-value" id="brokerOfficeInfoOwnerValue">-</span>
+				</div>
+				<div class="auth-myinfo-display-row">
+					<span class="auth-myinfo-display-label">등록번호</span>
+					<span class="auth-myinfo-display-value" id="brokerOfficeInfoRegNoValue">-</span>
+				</div>
+				<div class="auth-myinfo-display-row">
+					<span class="auth-myinfo-display-label">주소</span>
+					<span class="auth-myinfo-display-value" id="brokerOfficeInfoAddressValue">-</span>
+				</div>
+				<div class="auth-myinfo-display-row">
+					<span class="auth-myinfo-display-label">연락처</span>
+					<span class="auth-myinfo-display-value" id="brokerOfficeInfoPhoneValue">-</span>
+				</div>
+				<div class="auth-profile-action-row">
+					<button type="button" class="auth-modal-submit" id="brokerOfficeInfoEditBtn">
+						수정
+					</button>
+					<button type="button" class="auth-modal-secondary" id="brokerOfficeInfoCloseBtn">
+						닫기
+					</button>
+				</div>
+			</div>
+		</div>
 		<div class="auth-broker-office-screen auth-screen-hidden" id="authBrokerOfficeScreen">
 			<div class="broker-apply-page">
 				<div class="broker-apply-left">
@@ -14101,7 +14530,7 @@ function hexToRgba(hex, alpha = 1)
 	return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 const APP_NAME = "REALJEJU.APP";
-const APP_VERSION = "2.152";
+const APP_VERSION = "2.173";
 
 function applyAppVersion()
 {
@@ -18502,6 +18931,7 @@ bootstrap();
 	const authResetPasswordScreen = document.getElementById("authResetPasswordScreen");
 	const authProfileSetupScreen = document.getElementById("authProfileSetupScreen");
 	const authMyInfoScreen = document.getElementById("authMyInfoScreen");
+	const authBrokerOfficeInfoScreen = document.getElementById("authBrokerOfficeInfoScreen");
 	const authBrokerOfficeScreen = document.getElementById("authBrokerOfficeScreen");
 	const authSignupForm = document.getElementById("authSignupForm");
 	const authForgotPasswordForm = document.getElementById("authForgotPasswordForm");
@@ -18759,6 +19189,14 @@ bootstrap();
 		}
 	}
 
+	function getBrokerOfficeStatusLabel(status)
+	{
+		if (status === "active") return "승인 완료";
+		if (status === "pending") return "승인 대기중";
+		if (status === "rejected") return "반려";
+		return "미신청";
+	}
+
 	async function updateBrokerOfficeDropdownMenu(user, profile)
 	{
 		const brokerMenuWrapper = document.getElementById("brokerOfficeMenuWrapper");
@@ -18784,7 +19222,7 @@ bootstrap();
 			brokerMenuItem.disabled = true;
 			brokerMenuItem.classList.add("is-pending");
 		} else if (status === "active") {
-			brokerMenuItem.textContent = "중개사 홈으로";
+			brokerMenuItem.textContent = "중개사무소 정보";
 			brokerMenuItem.classList.add("is-active");
 		} else if (status === "rejected") {
 			brokerMenuItem.textContent = "다시 신청하기";
@@ -19011,7 +19449,7 @@ function applyLoggedInAccountUI(user, profile)
 		try {
 			const { data: officeData } = await client
 				.from("agencies")
-				.select("office_name, owner_name, phone, status, created_at")
+				.select("id, office_name, owner_name, office_reg_no, office_address, phone, email, status, created_at")
 				.eq("user_id", user.id)
 				.order("created_at", { ascending: false })
 				.limit(1)
@@ -19045,6 +19483,84 @@ function applyLoggedInAccountUI(user, profile)
 		return "미신청";
 	}
 
+	function fillBrokerOfficeInfoScreen(brokerOffice)
+	{
+		setTextById("brokerOfficeInfoStatusValue", getBrokerOfficeStatusLabel(brokerOffice && brokerOffice.status));
+		setTextById("brokerOfficeInfoNameValue", brokerOffice && brokerOffice.office_name);
+		setTextById("brokerOfficeInfoOwnerValue", brokerOffice && brokerOffice.owner_name);
+		setTextById("brokerOfficeInfoRegNoValue", brokerOffice && brokerOffice.office_reg_no);
+		setTextById("brokerOfficeInfoAddressValue", brokerOffice && brokerOffice.office_address);
+		setTextById("brokerOfficeInfoPhoneValue", brokerOffice && brokerOffice.phone);
+	}
+
+	function setValueById(id, value)
+	{
+		const el = document.getElementById(id);
+		if (!el || !("value" in el)) return;
+		el.value = value || "";
+	}
+
+	function fillBrokerOfficeApplyForm(brokerOffice)
+	{
+		if (!brokerOffice) return;
+		const form = document.getElementById("brokerOfficeApplyForm");
+		if (form) {
+			form.dataset.mode = brokerOffice.id ? "edit" : "create";
+			form.dataset.agencyId = brokerOffice.id || "";
+			const submitBtn = form.querySelector(".broker-apply-submit");
+			if (submitBtn) submitBtn.textContent = brokerOffice.id ? "중개사무소 정보 수정" : "중개사무소 회원가입 신청";
+		}
+		setValueById("brokerOfficeNameInput", brokerOffice.office_name);
+		setValueById("brokerOfficeSearchInput", brokerOffice.office_name);
+		setValueById("brokerOwnerNameInput", brokerOffice.owner_name);
+		setValueById("brokerLicenseNoInput", brokerOffice.office_reg_no);
+		setValueById("brokerOfficeAddressInput", brokerOffice.office_address);
+		setValueById("brokerOfficePhoneInput", brokerOffice.phone);
+		setValueById("brokerOwnerEmailLocalInput", brokerOffice.email);
+	}
+
+	async function openBrokerOfficeInfoFromAccountMenu()
+	{
+		closeGlobalAccountDropdown();
+		try {
+			const { user, brokerOffice } = await fetchCurrentProfileAndBrokerOffice();
+			if (!user) {
+				openAuthModal();
+				return;
+			}
+			if (!brokerOffice || brokerOffice.status !== "active") {
+				openAuthErrorModal("승인 완료된 중개사무소 정보가 없습니다.", "중개사무소 정보", null);
+				return;
+			}
+			fillBrokerOfficeInfoScreen(brokerOffice);
+			if (authModal) authModal.classList.add("profile-page-mode", "open");
+			hideAllAuthScreens();
+			updateAuthBackVisibility(false);
+			const screen = document.getElementById("authBrokerOfficeInfoScreen");
+			if (screen) screen.classList.remove("auth-screen-hidden");
+			document.body.style.overflow = "hidden";
+		} catch (err) {
+			console.warn("중개사무소 정보 열기 실패:", err);
+			openAuthErrorModal("중개사무소 정보를 열지 못했습니다.", "중개사무소 정보", null);
+		}
+	}
+
+	async function openBrokerOfficeEditFromInfo()
+	{
+		try {
+			const { user, brokerOffice } = await fetchCurrentProfileAndBrokerOffice();
+			if (!user) {
+				openAuthModal();
+				return;
+			}
+			await openBrokerOfficeFromAccountMenu();
+			if (brokerOffice) setTimeout(() => fillBrokerOfficeApplyForm(brokerOffice), 0);
+		} catch (err) {
+			console.warn("중개사무소 수정 열기 실패:", err);
+			openAuthErrorModal("중개사무소 수정 화면을 열지 못했습니다.", "중개사무소 정보", null);
+		}
+	}
+
 	async function openMyInfoFromAccountMenu()
 	{
 		closeGlobalAccountDropdown();
@@ -19071,13 +19587,15 @@ function applyLoggedInAccountUI(user, profile)
 			if (brokerBtn) {
 				const brokerRole = isBrokerRoleValue(profile && profile.role_request);
 				const isPending = brokerOffice && brokerOffice.status === "pending";
+				const isActive = brokerOffice && brokerOffice.status === "active";
 
-				brokerBtn.style.display = brokerRole && (!brokerOffice || brokerOffice.status !== "approved") ? "block" : "none";
-				brokerBtn.textContent = isPending ? "가입 신청 진행중" : "중개사무소 가입 신청";
+				brokerBtn.style.display = brokerRole ? "block" : "none";
+				brokerBtn.textContent = isActive ? "중개사무소 정보" : (isPending ? "가입 신청 진행중" : "중개사무소 가입 신청");
 				brokerBtn.disabled = !!isPending;
 				brokerBtn.setAttribute("aria-disabled", isPending ? "true" : "false");
 
 				brokerBtn.classList.toggle("is-pending", isPending);
+				brokerBtn.classList.toggle("is-active", isActive);
 				brokerBtn.classList.toggle("is-disabled", isPending);
 			}
 			if (authModal) authModal.classList.add("profile-page-mode", "open");
@@ -19103,6 +19621,13 @@ function applyLoggedInAccountUI(user, profile)
 			if (!isBrokerRoleValue(profile && profile.role_request)) {
 				openAuthErrorModal("중개사 회원유형에서 이용 가능합니다.", "중개사무소 가입 신청", null);
 				return;
+			}
+			const form = document.getElementById("brokerOfficeApplyForm");
+			if (form && form.dataset.mode !== "edit") {
+				form.dataset.mode = "create";
+				form.dataset.agencyId = "";
+				const submitBtn = form.querySelector(".broker-apply-submit");
+				if (submitBtn) submitBtn.textContent = "중개사무소 회원가입 신청";
 			}
 			if (authModal) authModal.classList.add("profile-page-mode", "open");
 			hideAllAuthScreens();
@@ -19239,7 +19764,7 @@ function applyLoggedInAccountUI(user, profile)
 					return;
 				}
 				if (accountMenuItem.classList.contains("is-active")) {
-					closeGlobalAccountDropdown();
+					openBrokerOfficeInfoFromAccountMenu();
 					return;
 				}
 				openBrokerOfficeFromAccountMenu();
@@ -19327,6 +19852,7 @@ function applyLoggedInAccountUI(user, profile)
 		if (authResetPasswordScreen) authResetPasswordScreen.classList.add("auth-screen-hidden");
 		if (authProfileSetupScreen) authProfileSetupScreen.classList.add("auth-screen-hidden");
 		if (authMyInfoScreen) authMyInfoScreen.classList.add("auth-screen-hidden");
+		if (authBrokerOfficeInfoScreen) authBrokerOfficeInfoScreen.classList.add("auth-screen-hidden");
 		if (authBrokerOfficeScreen) authBrokerOfficeScreen.classList.add("auth-screen-hidden");
 	}
 
@@ -19965,6 +20491,11 @@ function applyLoggedInAccountUI(user, profile)
 					role_request: profileRoleRequestValue,
 					profile_completed: true
 				});
+				if (typeof updateBrokerOfficeDropdownMenu === "function") {
+					await updateBrokerOfficeDropdownMenu(user, {
+						role_request: profileRoleRequestValue
+					});
+				}
 				sessionStorage.removeItem(REALJEJU_PROFILE_PROMPT_SESSION_KEY);
 				currentRealjejuAuthUser = null;
 				closeAuthModal();
@@ -20360,7 +20891,27 @@ function applyLoggedInAccountUI(user, profile)
 				openAuthErrorModal("현재 승인 대기중입니다.", "중개사무소", null);
 				return;
 			}
+			if (myInfoBrokerOfficeBtn.classList.contains("is-active")) {
+				openBrokerOfficeInfoFromAccountMenu();
+				return;
+			}
 			openBrokerOfficeFromAccountMenu();
+		});
+	}
+
+	const brokerOfficeInfoCloseBtn = document.getElementById("brokerOfficeInfoCloseBtn");
+	if (brokerOfficeInfoCloseBtn) {
+		brokerOfficeInfoCloseBtn.addEventListener("click", (e) => {
+			e.preventDefault();
+			if (typeof window.closeAuthModal === "function") window.closeAuthModal();
+		});
+	}
+
+	const brokerOfficeInfoEditBtn = document.getElementById("brokerOfficeInfoEditBtn");
+	if (brokerOfficeInfoEditBtn) {
+		brokerOfficeInfoEditBtn.addEventListener("click", (e) => {
+			e.preventDefault();
+			openBrokerOfficeEditFromInfo();
 		});
 	}
 
@@ -20499,6 +21050,40 @@ function applyLoggedInAccountUI(user, profile)
 			if (!phone) return openAuthErrorModal("연락처를 입력하세요.", "중개사무소 가입 신청", document.getElementById("brokerOfficePhoneInput"));
 			if (!email) return openAuthErrorModal("이메일을 입력하세요.", "중개사무소 가입 신청", document.getElementById("brokerOwnerEmailLocalInput"));
 			try {
+				const isEditMode = brokerOfficeApplyForm.dataset.mode === "edit" && brokerOfficeApplyForm.dataset.agencyId;
+				const agencyPayload = {
+					office_name: officeName,
+					owner_name: ownerName,
+					office_reg_no: licenseNo,
+					office_address: addressDetail ? address + " " + addressDetail : address,
+					phone: phone,
+					email: email,
+					updated_at: new Date().toISOString()
+				};
+
+				if (isEditMode) {
+					const { error } = await client
+						.from("agencies")
+						.update(agencyPayload)
+						.eq("id", brokerOfficeApplyForm.dataset.agencyId)
+						.eq("user_id", user.id);
+
+					if (error) {
+						console.error("중개사무소 정보 수정 실패:", error);
+						return openAuthErrorModal("중개사무소 정보 수정에 실패했습니다.", "중개사무소 정보", null);
+					}
+
+					openAuthErrorModal(
+						"중개사무소 정보가 수정되었습니다.",
+						"중개사무소 정보",
+						null,
+						function () {
+							if (typeof openBrokerOfficeInfoFromAccountMenu === "function") openBrokerOfficeInfoFromAccountMenu();
+						}
+					);
+					return;
+				}
+
 				// PATCH: 로그인 아이디당 중개사무소 가입 신청은 1회만 허용
 				const { data: existingAgency, error: existingAgencyError } = await client
 					.from("agencies")
@@ -20517,15 +21102,9 @@ function applyLoggedInAccountUI(user, profile)
 
 				const { error } = await client.from("agencies").insert({
 					user_id: user.id,
-					office_name: officeName,
-					owner_name: ownerName,
-					office_reg_no: licenseNo,
-					office_address: addressDetail ? address + " " + addressDetail : address,
-					phone: phone,
-					email: email,
+					...agencyPayload,
 					status: "pending",
 					created_at: new Date().toISOString(),
-					updated_at: new Date().toISOString()
 				});
 				if (error) {
 					console.error("중개사무소 신청 실패:", error);
@@ -21258,6 +21837,7 @@ function applyLoggedInAccountUI(user, profile)
 	window.closePropertyRegisterPage = closePropertyRegisterPage;
 	window.loadAdminApplications = loadAdminApplications;
 	window.requireRealjejuProfileCompletedForFeature = requireRealjejuProfileCompletedForFeature;
+	window.updateBrokerOfficeDropdownMenu = updateBrokerOfficeDropdownMenu;
 	window.handleRealjejuLogout = handleRealjejuLogout;
 	window.openTermsFullPage = openTermsFullPage;
 	window.closeTermsFullPage = closeTermsFullPage;
@@ -21390,11 +21970,46 @@ document.addEventListener("DOMContentLoaded", function () {
 			const showBrokerOfficeMenu = brokerRoles.includes(role);
 			const brokerMenuWrapper = qs("brokerOfficeMenuWrapper");
 			const brokerMenuItem = qs("brokerOfficeMenuItem");
+			let latestBrokerOfficeStatus = null;
+			if (showBrokerOfficeMenu) {
+				try {
+					const { data: agencyRows } = await client
+						.from("agencies")
+						.select("status, office_name, created_at")
+						.eq("user_id", user.id)
+						.order("created_at", { ascending: false })
+						.limit(1);
+					latestBrokerOfficeStatus = Array.isArray(agencyRows) && agencyRows[0] ? agencyRows[0].status : null;
+				} catch (brokerStatusError) {
+					console.warn("중개사무소 신청 상태 재확인 실패:", brokerStatusError);
+				}
+			}
 			if (brokerMenuWrapper) {
 				brokerMenuWrapper.style.setProperty("display", showBrokerOfficeMenu ? "block" : "none", "important");
 			}
 			if (brokerMenuItem) {
-				brokerMenuItem.textContent = "중개사무소 가입 신청";
+				brokerMenuItem.disabled = false;
+				brokerMenuItem.classList.remove("is-pending", "is-active", "is-rejected");
+				if (!showBrokerOfficeMenu) {
+					brokerMenuItem.textContent = "중개사무소 가입 신청";
+				} else if (latestBrokerOfficeStatus === "pending") {
+					brokerMenuItem.textContent = "승인 대기중";
+					brokerMenuItem.disabled = true;
+					brokerMenuItem.classList.add("is-pending");
+				} else if (latestBrokerOfficeStatus === "active") {
+					brokerMenuItem.textContent = "중개사무소 정보";
+					brokerMenuItem.classList.add("is-active");
+				} else if (latestBrokerOfficeStatus === "rejected") {
+					brokerMenuItem.textContent = "다시 신청하기";
+					brokerMenuItem.classList.add("is-rejected");
+				} else {
+					brokerMenuItem.textContent = "중개사무소 가입 신청";
+				}
+			}
+			if (typeof window.updateBrokerOfficeDropdownMenu === "function") {
+				window.updateBrokerOfficeDropdownMenu(user, {
+					role_request: role
+				});
 			}
 			const authModal = qs("authModal");
 			if (authModal) { authModal.classList.add("profile-page-mode"); authModal.classList.add("open"); authModal.setAttribute("aria-hidden", "false"); }
@@ -22287,7 +22902,7 @@ document.addEventListener("DOMContentLoaded", function () {
 					{
 						const { data: agencyRows } = await client
 							.from("agencies")
-							.select("office_name, owner_name, phone, status, created_at")
+							.select("id, office_name, owner_name, phone, status, created_at")
 							.eq("user_id", user.id)
 							.order("created_at", { ascending: false })
 							.limit(5);
@@ -22367,6 +22982,533 @@ document.addEventListener("DOMContentLoaded", function () {
 	} else {
 		bind();
 	}
+})();
+</script>
+
+
+<script>
+/* ===== PATCH 2.166: 매물 등록 Supabase 저장 ===== */
+(function bindPropertyListingSave()
+{
+	const TABLE_NAME = "property_listings";
+
+	function $(id)
+	{
+		return document.getElementById(id);
+	}
+
+	function value(id)
+	{
+		const el = $(id);
+		return el && "value" in el ? String(el.value || "").trim() : "";
+	}
+
+	function checked(id)
+	{
+		return !!($(id)?.checked);
+	}
+
+	function radioValue(name)
+	{
+		return document.querySelector(`input[name="${name}"]:checked`)?.value || "";
+	}
+
+	function checkedValues(selector)
+	{
+		return Array.from(document.querySelectorAll(selector))
+			.filter((input) => input.checked)
+			.map((input) => input.value);
+	}
+
+	function numberValue(id)
+	{
+		const text = value(id).replace(/,/g, "");
+		if (!text) return null;
+		const num = Number(text);
+		return Number.isFinite(num) ? num : null;
+	}
+
+	function selectedOptionText(selectId)
+	{
+		const select = $(selectId);
+		if (!select) return "";
+		return select.options[select.selectedIndex]?.textContent?.trim() || "";
+	}
+
+	function collectPricePayload()
+	{
+		return {
+			sale: {
+				price: numberValue("priceSaleInput")
+			},
+			jeonse: {
+				deposit: numberValue("priceJeonseDepositInput")
+			},
+			monthly: {
+				deposit: numberValue("priceMonthlyDepositInput"),
+				rent: numberValue("priceMonthlyRentInput")
+			},
+			yearly: {
+				deposit: numberValue("priceYearlyDepositInput"),
+				rent: numberValue("priceYearlyRentInput")
+			},
+			short: {
+				deposit: numberValue("priceShortDepositInput"),
+				rent: numberValue("priceShortRentInput")
+			}
+		};
+	}
+
+	function collectListingPayload(status)
+	{
+		const addressInput = $("propertyAddressInput");
+		const dealTypes = checkedValues(".property-deal-check");
+		const title = value("propertyLocationSummaryInput") || selectedOptionText("propertyTypeSelect") || "신규 매물";
+		const lat = Number(addressInput?.dataset.lat || "");
+		const lng = Number(addressInput?.dataset.lng || "");
+
+		return {
+			status,
+			property_type: value("propertyTypeSelect"),
+			property_type_label: selectedOptionText("propertyTypeSelect"),
+			deal_types: dealTypes,
+			title,
+			address1: addressInput?.dataset.address1 || addressInput?.value?.trim() || "",
+			address2: addressInput?.dataset.address2 || "",
+			public_address: addressInput?.dataset.publicAddress || addressInput?.value?.trim() || "",
+			hide_detail_jibun: addressInput?.dataset.hideDetailJibun === "1",
+			location_display_type: addressInput?.dataset.locationDisplayType || radioValue("propertyAddressLocationMode") || "marker",
+			lat: Number.isFinite(lat) ? lat : null,
+			lng: Number.isFinite(lng) ? lng : null,
+			payload: {
+				version: APP_VERSION,
+				building_use: value("buildingUseSelect"),
+				dong: value("propertyDongInput"),
+				ho: value("propertyHoInput"),
+				areas: {
+					exclusive_m2: numberValue("exclusiveAreaM2Input"),
+					exclusive_py: numberValue("exclusiveAreaPyInput"),
+					supply_m2: numberValue("supplyAreaM2Input"),
+					supply_py: numberValue("supplyAreaPyInput"),
+					land_m2: numberValue("landAreaM2Input"),
+					land_py: numberValue("landAreaPyInput"),
+					land_road: value("landRoadInput")
+				},
+				prices: collectPricePayload(),
+				building: {
+					approval_date: value("propertyApprovalDateInput"),
+					household_count: numberValue("propertyHouseholdCountInput"),
+					direction: value("propertyDirectionSelect"),
+					loan: radioValue("propertyLoan"),
+					parking: radioValue("propertyParking"),
+					parking_total: numberValue("propertyParkingTotalInput"),
+					parking_per_household: numberValue("propertyParkingPerInput"),
+					heating: radioValue("propertyHeating"),
+					heating_fuel: value("propertyHeatingFuelSelect")
+				},
+				rooms: {
+					room_count: numberValue("propertyRoomCountInput"),
+					bath_count: numberValue("propertyBathCountInput")
+				},
+				floors: {
+					total_floor: numberValue("propertyTotalFloorInput"),
+					current_floor: numberValue("propertyCurrentFloorInput"),
+					use_level_label: checked("propertyFloorLevelUseCheck"),
+					level_label: radioValue("propertyFloorLevel"),
+					basement: checked("propertyBasementCheck"),
+					semi_basement: checked("propertySemiBasementCheck"),
+					whole_building: checked("propertyWholeBuildingCheck")
+				},
+				maintenance: {
+					under_100k_or_unprovided: checked("maintenanceUnder100kChk"),
+					fixed_base: radioValue("maintenanceFixedBase"),
+					fixed_total_won: numberValue("maintenanceFixedTotalInput"),
+					total_won: numberValue("maintenanceTotalInput"),
+					common_manwon: numberValue("maintenanceCommonInput"),
+					include_common: checked("maintenanceFixedIncludeCommonChk") || checked("maintenanceIncludeCommonChk"),
+					include_electric: checked("maintenanceFixedIncludeElectricChk") || checked("maintenanceIncludeElectricChk"),
+					include_water: checked("maintenanceFixedIncludeWaterChk") || checked("maintenanceIncludeWaterChk"),
+					include_gas: checked("maintenanceFixedIncludeGasChk") || checked("maintenanceIncludeGasChk"),
+					include_heating: checked("maintenanceFixedIncludeHeatingChk") || checked("maintenanceIncludeHeatingChk"),
+					include_internet: checked("maintenanceFixedIncludeInternetChk") || checked("maintenanceIncludeInternetChk"),
+					include_tv: checked("maintenanceFixedIncludeTvChk") || checked("maintenanceIncludeTvChk"),
+					include_etc: checked("maintenanceFixedIncludeEtcChk") || checked("maintenanceIncludeEtcChk")
+				},
+				facilities: {
+					furniture_built_in: checked("furnitureBuiltInChk"),
+					appliance_gas_range: checked("applianceGasRangeChk"),
+					veranda: checked("etcVerandaChk")
+				},
+				move_in: {
+					date: value("propertyMoveInDateInput"),
+					now: checked("propertyMoveInNowChk")
+				},
+				description: value("propertyDetailDescriptionInput"),
+				youtube_url: value("propertyYoutubeLinkInput"),
+				agency_memo: value("propertyAgencyMemoInput"),
+				registrant: {
+					office_name: value("registrantOfficeNameInput"),
+					representative: value("registrantRepresentativeInput"),
+					phone1: value("registrantPhone1Input"),
+					manager_name: value("registrantManagerNameInput"),
+					is_licensed_agent: checked("registrantLicensedAgentChk"),
+					phone2: value("registrantPhone2Input")
+				},
+				address: window.REALJEJU_PROPERTY_ADDRESS || null
+			}
+		};
+	}
+
+	function validateListing(payload, status)
+	{
+		if (!payload.property_type) return { message: "매물 종류를 선택하세요.", target: $("propertyTypeSelect") };
+		if (!payload.address1) return { message: "주소를 입력하세요.", target: $("propertyAddressInput") };
+		if (status === "published" && (!payload.deal_types || !payload.deal_types.length)) {
+			return { message: "거래 유형을 선택하세요.", target: document.querySelector(".property-deal-check") };
+		}
+		return null;
+	}
+
+	async function saveListing(status)
+	{
+		const client = typeof getRealjejuSupabaseClient === "function" ? getRealjejuSupabaseClient() : null;
+		if (!client) {
+			openAuthErrorModal("Supabase 연결 설정을 확인하세요.", "매물 등록", null);
+			return;
+		}
+
+		const { data: userData, error: userError } = await client.auth.getUser();
+		const user = userData && userData.user ? userData.user : null;
+		if (userError || !user) {
+			openAuthErrorModal("로그인 후 매물을 등록할 수 있습니다.", "매물 등록", null, typeof openAuthModal === "function" ? openAuthModal : null);
+			return;
+		}
+
+		const payload = collectListingPayload(status);
+		const validation = validateListing(payload, status);
+		if (validation) {
+			openAuthErrorModal(validation.message, "매물 등록", validation.target);
+			return;
+		}
+
+		const submitBtn = $("propertySubmitBtn");
+		const draftBtn = $("propertyDraftSaveBtn");
+		[submitBtn, draftBtn].forEach((btn) => { if (btn) btn.disabled = true; });
+
+		try {
+			const row = {
+				...payload,
+				user_id: user.id,
+				agency_id: window.realjejuCurrentBrokerOffice?.id || null,
+				updated_at: new Date().toISOString()
+			};
+
+			const { data, error } = await client
+				.from(TABLE_NAME)
+				.insert(row)
+				.select("id")
+				.single();
+
+			if (error) {
+				console.error("매물 저장 실패:", error);
+				openAuthErrorModal(`매물 저장에 실패했습니다.\n${error.message || "Supabase 테이블과 RLS 정책을 확인하세요."}`, "매물 등록", null);
+				return;
+			}
+
+			openAuthErrorModal(status === "draft" ? "임시저장되었습니다." : "매물이 등록되었습니다.", "매물 등록 완료", null);
+			window.REALJEJU_LAST_SAVED_LISTING_ID = data?.id || "";
+		}
+		catch (err) {
+			console.error("매물 저장 오류:", err);
+			openAuthErrorModal("매물 저장 중 오류가 발생했습니다.", "매물 등록", null);
+		}
+		finally {
+			[submitBtn, draftBtn].forEach((btn) => { if (btn) btn.disabled = false; });
+		}
+	}
+
+	function bind()
+	{
+		const submitBtn = $("propertySubmitBtn");
+		const draftBtn = $("propertyDraftSaveBtn");
+		if (submitBtn && submitBtn.dataset.listingSaveBound !== "1") {
+			submitBtn.dataset.listingSaveBound = "1";
+			submitBtn.addEventListener("click", () => saveListing("published"));
+		}
+		if (draftBtn && draftBtn.dataset.listingSaveBound !== "1") {
+			draftBtn.dataset.listingSaveBound = "1";
+			draftBtn.addEventListener("click", () => saveListing("draft"));
+		}
+	}
+
+	if (document.readyState === "loading") {
+		document.addEventListener("DOMContentLoaded", bind);
+	} else {
+		bind();
+	}
+})();
+</script>
+
+
+<script>
+/* ===== PATCH 2.170: 교차로 복사글 간편 매물 등록 ===== */
+(function bindCrossroadPasteImport()
+{
+	function $(id)
+	{
+		return document.getElementById(id);
+	}
+
+	function setInput(id, value)
+	{
+		const el = $(id);
+		if (!el || value === null || value === undefined || value === "") return;
+		el.value = String(value);
+		el.dispatchEvent(new Event("input", { bubbles: true }));
+		el.dispatchEvent(new Event("change", { bubbles: true }));
+	}
+
+	function setCheck(selector, checked)
+	{
+		const el = typeof selector === "string"
+			? (document.getElementById(selector) || document.querySelector(selector))
+			: selector;
+		if (!el) return;
+		el.checked = !!checked;
+		el.dispatchEvent(new Event("change", { bubbles: true }));
+	}
+
+	function setRadio(name, value)
+	{
+		const radio = document.querySelector(`input[name="${name}"][value="${value}"]`);
+		if (radio) setCheck(radio, true);
+	}
+
+	function setSelectValue(id, value)
+	{
+		const select = $(id);
+		if (!select || !value) return;
+		select.value = value;
+		const wrap = select.closest("[data-register-dropdown]");
+		if (wrap) {
+			const label = wrap.querySelector("[data-register-dropdown-label]");
+			const option = wrap.querySelector(`.property-register-dropdown-option[data-value="${CSS.escape(value)}"]`);
+			wrap.querySelectorAll(".property-register-dropdown-option").forEach((btn) => {
+				btn.classList.toggle("active", btn === option);
+			});
+			if (label) label.textContent = option ? option.textContent.trim() : (select.options[select.selectedIndex]?.textContent || "");
+		}
+		select.dispatchEvent(new Event("change", { bubbles: true }));
+	}
+
+	function parseMoneyToManwon(text)
+	{
+		const value = String(text || "").replace(/,/g, "");
+		const eok = value.match(/(\d+(?:\.\d+)?)\s*억/);
+		const man = value.match(/(\d+(?:\.\d+)?)\s*만/);
+		if (eok) return Math.round(Number(eok[1]) * 10000);
+		if (man) return Math.round(Number(man[1]));
+		const raw = value.match(/전세금\s*([0-9]+)/);
+		return raw ? Math.round(Number(raw[1]) / 10000) : "";
+	}
+
+	function getFirstMatch(text, regex)
+	{
+		const match = String(text || "").match(regex);
+		return match ? match[1].trim() : "";
+	}
+
+	function normalizeAddress(text)
+	{
+		const full = String(text || "");
+		const exact = full.match(/(?:제주(?:특별자치도)?\s*)?제주시\s+[가-힣0-9\s-]+(?:동|읍|면|리)\s+\d+(?:-\d+)?/);
+		if (exact) return exact[0].replace(/^제주도\s*/, "제주특별자치도 ").trim();
+		const line = full.split(/\n/).find((row) => /제주시|소재지|수덕로|노형동/.test(row) && /\d/.test(row));
+		return line ? line.replace(/^[🔹\s]*소재지\s*[:：]\s*/, "").trim() : "";
+	}
+
+	function parseCrossroadListing(text)
+	{
+		const value = String(text || "");
+		const title = getFirstMatch(value, /\[(?:전세|매매|월세|년세)\]\s*([^\n]+)/) || getFirstMatch(value, /\((?:디|D)-?\d+\)\s*([^\n]+)/i);
+		const supply = getFirstMatch(value, /공급면적\s*[:：]?\s*([\d.]+)\s*㎡/);
+		const exclusive = getFirstMatch(value, /전용면적\s*[:：]?\s*([\d.]+)\s*㎡/);
+		const approvalDate = getFirstMatch(value, /사용승인일\s*[:：]?\s*(\d{4}-\d{2}-\d{2})/);
+		const household = getFirstMatch(value, /총세대수\s*[:：]?\s*([\d,]+)\s*세대/).replace(/,/g, "");
+		const rooms = value.match(/방\s*\/?\s*욕실수\s*[:：]?\s*(\d+)\s*\/\s*(\d+)/) || value.match(/방\s*(\d+)\s*\/\s*욕실\s*(\d+)/);
+		const floors = value.match(/해당층\/총층\s*[:：]?\s*([가-힣]+|\d+)\s*\/\s*(\d+)/);
+		const parking = value.match(/총\s*주차대수\s*[:：]?\s*([\d,]+)\s*대\s*\(세대당\s*([\d.]+)\s*대\)/);
+		const maintenanceWon = getFirstMatch(value, /관리비\s*합계\s*([\d,]+)\s*원/);
+		const address = normalizeAddress(value);
+		const descriptionStart = value.indexOf("(디-");
+		const description = descriptionStart >= 0 ? value.slice(descriptionStart).trim() : value.trim();
+
+		return {
+			propertyType: /아파트|뜨란채/.test(value) ? "apartment" : "",
+			buildingUse: /공동주택/.test(value) ? "공동주택" : "",
+			deal: /전세/.test(value) ? "jeonse" : "",
+			priceJeonse: parseMoneyToManwon(getFirstMatch(value, /전세금\s*[:：]?\s*([^\n]+)/)),
+			title,
+			address,
+			supply,
+			exclusive,
+			approvalDate,
+			household,
+			roomCount: rooms ? rooms[1] : "",
+			bathCount: rooms ? rooms[2] : "",
+			floorLevel: floors ? floors[1] : "",
+			totalFloor: floors ? floors[2] : "",
+			dong: getFirstMatch(value, /해당동\s*[:：]?\s*([^\n]+)/).replace(/동$/, ""),
+			direction: getFirstMatch(value, /방향\s*[:：]?\s*([가-힣]+향)/),
+			parkingTotal: parking ? parking[1].replace(/,/g, "") : "",
+			parkingPer: parking ? parking[2] : "",
+			maintenanceWon,
+			moveNow: /즉시입주|즉시 입주/.test(value),
+			description
+		};
+	}
+
+	function applyParsedListing(parsed)
+	{
+		if (parsed.propertyType) setSelectValue("propertyTypeSelect", parsed.propertyType);
+		if (parsed.buildingUse) setSelectValue("buildingUseSelect", parsed.buildingUse);
+		if (parsed.deal) {
+			document.querySelectorAll(".property-deal-check").forEach((input) => { input.checked = false; });
+			setCheck(`.property-deal-check[value="${parsed.deal}"]`, true);
+			if (typeof renderPropertyPriceFields === "function") renderPropertyPriceFields();
+			setTimeout(() => setInput("priceJeonseDepositInput", parsed.priceJeonse), 0);
+		}
+		setInput("propertyLocationSummaryInput", parsed.title);
+		setInput("propertyAddressInput", parsed.address);
+		const addressInput = $("propertyAddressInput");
+		if (addressInput && parsed.address) {
+			addressInput.dataset.address1 = parsed.address;
+			addressInput.dataset.publicAddress = parsed.address;
+			addressInput.dataset.jibunAddress = parsed.address;
+		}
+		setInput("supplyAreaM2Input", parsed.supply);
+		setInput("exclusiveAreaM2Input", parsed.exclusive);
+		setInput("propertyApprovalDateInput", parsed.approvalDate);
+		setInput("propertyHouseholdCountInput", parsed.household);
+		setInput("propertyRoomCountInput", parsed.roomCount);
+		setInput("propertyBathCountInput", parsed.bathCount);
+		setInput("propertyTotalFloorInput", parsed.totalFloor);
+		if (parsed.floorLevel === "중층") {
+			setCheck("propertyFloorLevelUseCheck", true);
+			setRadio("propertyFloorLevel", "middle");
+		}
+		setInput("propertyDongInput", parsed.dong);
+		if (parsed.direction) setSelectValue("propertyDirectionSelect", parsed.direction);
+		if (/융자금\s*없음/.test(parsed.description)) setRadio("propertyLoan", "impossible");
+		if (parsed.parkingTotal || /주차가능/.test(parsed.description)) {
+			setRadio("propertyParking", "possible");
+			setInput("propertyParkingTotalInput", parsed.parkingTotal);
+			setInput("propertyParkingPerInput", parsed.parkingPer);
+		}
+		if (parsed.maintenanceWon) {
+			setCheck("maintenanceUnder100kChk", true);
+			setInput("maintenanceFixedTotalInput", parsed.maintenanceWon);
+			setCheck("maintenanceFixedIncludeElectricChk", true);
+			setCheck("maintenanceFixedIncludeWaterChk", true);
+			setCheck("maintenanceFixedIncludeCommonChk", true);
+			setRadio("maintenanceFixedBase", "recent_1_year");
+		}
+		if (parsed.moveNow) {
+			setCheck("propertyMoveInNowChk", true);
+			setInput("propertyMoveInDateInput", "즉시입주 협의가능");
+		}
+		if (/붙박이장/.test(parsed.description)) setCheck("furnitureBuiltInChk", true);
+		if (/가스레인지/.test(parsed.description)) setCheck("applianceGasRangeChk", true);
+		if (/베란다/.test(parsed.description)) setCheck("etcVerandaChk", true);
+		setInput("propertyDetailDescriptionInput", parsed.description);
+	}
+
+	function openQuickPropertyModal()
+	{
+		const modal = $("quickPropertyModal");
+		const textarea = $("quickPropertyTextarea");
+		if (!modal) return;
+		modal.classList.add("open");
+		modal.setAttribute("aria-hidden", "false");
+		document.body.style.overflow = "hidden";
+		setTimeout(() => textarea?.focus(), 30);
+	}
+
+	function closeQuickPropertyModal()
+	{
+		const modal = $("quickPropertyModal");
+		if (!modal) return;
+		modal.classList.remove("open");
+		modal.setAttribute("aria-hidden", "true");
+		document.body.style.overflow = document.body.classList.contains("property-register-page-open") ? "" : document.body.style.overflow;
+	}
+
+	async function pasteQuickPropertyText()
+	{
+		const textarea = $("quickPropertyTextarea");
+		if (!textarea) return;
+		try {
+			if (navigator.clipboard && navigator.clipboard.readText) {
+				const text = await navigator.clipboard.readText();
+				if (text) {
+					textarea.value = text;
+					textarea.dispatchEvent(new Event("input", { bubbles: true }));
+				}
+			}
+		} catch (err) {
+			console.warn("간편 매물 클립보드 붙여넣기 실패:", err);
+			textarea.focus();
+		}
+	}
+
+	function applyQuickPropertyText()
+	{
+		const textarea = $("quickPropertyTextarea");
+		const text = String(textarea?.value || "").trim();
+		if (!text) {
+			textarea?.focus();
+			return;
+		}
+		applyParsedListing(parseCrossroadListing(text));
+		closeQuickPropertyModal();
+		if (typeof openAuthErrorModal === "function") {
+			openAuthErrorModal("복사글에서 확인 가능한 항목을 자동 입력했습니다. 주소와 좌표, 가격, 면적은 등록 전 한 번 확인해 주세요.", "간편 매물 등록", null);
+		}
+	}
+
+	function bind()
+	{
+		const btn = $("quickPropertyRegisterBtn");
+		if (!btn || btn.dataset.crossroadImportBound === "1") return;
+		btn.dataset.crossroadImportBound = "1";
+		btn.addEventListener("click", (event) => {
+			event.preventDefault();
+			openQuickPropertyModal();
+		});
+
+		$("quickPropertyPasteBtn")?.addEventListener("click", (event) => {
+			event.preventDefault();
+			pasteQuickPropertyText();
+		});
+		$("quickPropertyCancelBtn")?.addEventListener("click", (event) => {
+			event.preventDefault();
+			closeQuickPropertyModal();
+		});
+		$("quickPropertyApplyBtn")?.addEventListener("click", (event) => {
+			event.preventDefault();
+			applyQuickPropertyText();
+		});
+		$("quickPropertyModal")?.addEventListener("click", (event) => {
+			if (event.target === $("quickPropertyModal")) closeQuickPropertyModal();
+		});
+		document.addEventListener("keydown", (event) => {
+			const modal = $("quickPropertyModal");
+			if (event.key === "Escape" && modal?.classList.contains("open")) closeQuickPropertyModal();
+		});
+	}
+
+	if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", bind);
+	else bind();
 })();
 </script>
 
@@ -22608,8 +23750,22 @@ document.addEventListener("DOMContentLoaded", function () {
 	const propertyTypeSelect = document.getElementById("propertyTypeSelect");
 	const detailHideRow = document.getElementById("propertyAddressHideRow");
 	const detailHideCheck = document.getElementById("propertyAddressHideDetailCheck");
-	const detailHideTargetTypes = new Set(["house", "multi_family_house", "store", "office", "building", "factory_warehouse", "land"]);
+	const locationRow = document.getElementById("propertyAddressLocationRow");
+	const locationMapEl = document.getElementById("propertyAddressLocationMap");
+	const locationModeRadios = Array.from(document.querySelectorAll('input[name="propertyAddressLocationMode"]'));
+	const locationHelp = document.getElementById("propertyAddressLocationHelp");
+	const locationDirectSearchBtn = document.getElementById("propertyAddressLocationDirectSearchBtn");
+	const locationDirectSearchBox = document.getElementById("propertyAddressLocationDirectSearchBox");
+	const locationDirectSearchInput = document.getElementById("propertyAddressLocationDirectSearchInput");
+	const detailHideTargetTypes = new Set(["house", "store", "office", "building", "factory_warehouse", "land"]);
 	let selectedAddress = null;
+	let addressLocationMap = null;
+	let addressLocationMarker = null;
+	let addressLocationRectangle = null;
+	let addressLocationCenter = null;
+	let addressLocationBounds = null;
+	let isAddressRectangleDragging = false;
+	let addressRectangleDragStartLatLng = null;
 
 	function normalizeAddressResult(item){
 		const roadAddress = item?.road_address?.address_name || item?.road_address_name || "";
@@ -22646,6 +23802,168 @@ document.addEventListener("DOMContentLoaded", function () {
 		const value = String(address || "").trim();
 		const match = value.match(/^(.+?(?:읍|면|동|리))(?=\s|$)/);
 		return match ? match[1] : value;
+	}
+
+	function getAddressLocationMode(){
+		return locationModeRadios.find(radio => radio.checked)?.value || "marker";
+	}
+
+	function setAddressLocationDataset(mode){
+		if (!addressInput) return;
+		addressInput.dataset.locationDisplayType = mode;
+		if (addressLocationBounds) {
+			addressInput.dataset.locationSwLat = addressLocationBounds.swLat;
+			addressInput.dataset.locationSwLng = addressLocationBounds.swLng;
+			addressInput.dataset.locationNeLat = addressLocationBounds.neLat;
+			addressInput.dataset.locationNeLng = addressLocationBounds.neLng;
+		}
+	}
+
+	function getRectangleBoundsFromCenter(center){
+		if (!center) return null;
+		const lat = Number(center.getLat ? center.getLat() : center.Ma || 0);
+		const lng = Number(center.getLng ? center.getLng() : center.La || 0);
+		const halfMeter = 100;
+		const latDelta = halfMeter / 111320;
+		const lngDelta = halfMeter / (111320 * Math.max(Math.cos(lat * Math.PI / 180), 0.000001));
+		return {
+			swLat: lat - latDelta,
+			swLng: lng - lngDelta,
+			neLat: lat + latDelta,
+			neLng: lng + lngDelta
+		};
+	}
+
+	function createKakaoBounds(bounds){
+		if (!bounds || !window.kakao || !kakao.maps) return null;
+		return new kakao.maps.LatLngBounds(
+			new kakao.maps.LatLng(bounds.swLat, bounds.swLng),
+			new kakao.maps.LatLng(bounds.neLat, bounds.neLng)
+		);
+	}
+
+	function isLatLngInsideAddressBounds(latLng){
+		if (!latLng || !addressLocationBounds) return false;
+		const lat = latLng.getLat();
+		const lng = latLng.getLng();
+		return lat >= addressLocationBounds.swLat
+			&& lat <= addressLocationBounds.neLat
+			&& lng >= addressLocationBounds.swLng
+			&& lng <= addressLocationBounds.neLng;
+	}
+
+	function moveAddressRectangleByDelta(latDiff, lngDiff){
+		if (!addressLocationBounds || !window.kakao || !kakao.maps) return;
+		addressLocationBounds = {
+			swLat: addressLocationBounds.swLat + latDiff,
+			swLng: addressLocationBounds.swLng + lngDiff,
+			neLat: addressLocationBounds.neLat + latDiff,
+			neLng: addressLocationBounds.neLng + lngDiff
+		};
+		const centerLat = (addressLocationBounds.swLat + addressLocationBounds.neLat) / 2;
+		const centerLng = (addressLocationBounds.swLng + addressLocationBounds.neLng) / 2;
+		addressLocationCenter = new kakao.maps.LatLng(centerLat, centerLng);
+		selectedAddress.lat = centerLat;
+		selectedAddress.lng = centerLng;
+		addressLocationRectangle?.setBounds(createKakaoBounds(addressLocationBounds));
+		setAddressLocationDataset(getAddressLocationMode());
+	}
+
+	function startAddressRectangleDrag(latLng){
+		if (getAddressLocationMode() !== "rectangle" || !isLatLngInsideAddressBounds(latLng)) return;
+		isAddressRectangleDragging = true;
+		addressRectangleDragStartLatLng = latLng;
+		addressLocationMap?.setDraggable(false);
+	}
+
+	function updateAddressRectangle(center){
+		if (!addressLocationMap || !center || !window.kakao || !kakao.maps) return;
+		addressLocationBounds = getRectangleBoundsFromCenter(center);
+		const kakaoBounds = createKakaoBounds(addressLocationBounds);
+		if (!kakaoBounds) return;
+		if (!addressLocationRectangle) {
+			addressLocationRectangle = new kakao.maps.Rectangle({
+				map: addressLocationMap,
+				bounds: kakaoBounds,
+				strokeWeight: 3,
+				strokeColor: getComputedStyle(document.documentElement).getPropertyValue("--property-address-location-rectangle-stroke").trim() || "#3B82F6",
+				strokeOpacity: 0.95,
+				fillColor: getComputedStyle(document.documentElement).getPropertyValue("--property-address-location-rectangle-fill").trim() || "rgba(59, 130, 246, 0.26)",
+				fillOpacity: 0.7,
+				clickable: false
+			});
+		} else {
+			addressLocationRectangle.setBounds(kakaoBounds);
+		}
+		addressLocationRectangle.setMap(addressLocationMap);
+		setAddressLocationDataset(getAddressLocationMode());
+	}
+
+	function renderAddressLocationMap(){
+		if (!selectedAddress || !locationRow || !locationMapEl || !window.kakao || !kakao.maps) return;
+		const lat = Number(selectedAddress.lat);
+		const lng = Number(selectedAddress.lng);
+		if (!lat || !lng) return;
+		locationRow.classList.add("open");
+		locationRow.setAttribute("aria-hidden", "false");
+		addressLocationCenter = new kakao.maps.LatLng(lat, lng);
+		if (!addressLocationMap) {
+			addressLocationMap = new kakao.maps.Map(locationMapEl, {
+				center: addressLocationCenter,
+				level: 3
+			});
+			addressLocationMarker = new kakao.maps.Marker({
+				position: addressLocationCenter,
+				draggable: true
+			});
+			kakao.maps.event.addListener(addressLocationMarker, "dragend", () => {
+				addressLocationCenter = addressLocationMarker.getPosition();
+				selectedAddress.lat = addressLocationCenter.getLat();
+				selectedAddress.lng = addressLocationCenter.getLng();
+				setAddressLocationDataset(getAddressLocationMode());
+			});
+			kakao.maps.event.addListener(addressLocationMap, "mousedown", (mouseEvent) => {
+				startAddressRectangleDrag(mouseEvent.latLng);
+			});
+			kakao.maps.event.addListener(addressLocationMap, "mousemove", (mouseEvent) => {
+				if (!isAddressRectangleDragging || !addressRectangleDragStartLatLng) return;
+				const latDiff = mouseEvent.latLng.getLat() - addressRectangleDragStartLatLng.getLat();
+				const lngDiff = mouseEvent.latLng.getLng() - addressRectangleDragStartLatLng.getLng();
+				moveAddressRectangleByDelta(latDiff, lngDiff);
+				addressRectangleDragStartLatLng = mouseEvent.latLng;
+			});
+		} else {
+			addressLocationMap.setCenter(addressLocationCenter);
+			addressLocationMarker.setPosition(addressLocationCenter);
+			setTimeout(() => addressLocationMap.relayout(), 0);
+		}
+		setTimeout(() => {
+			addressLocationMap.relayout();
+			addressLocationMap.setCenter(addressLocationCenter);
+			applyAddressLocationMode();
+		}, 40);
+	}
+
+	function applyAddressLocationMode(){
+		const mode = getAddressLocationMode();
+		locationRow?.setAttribute("data-location-mode", mode);
+		if (!addressLocationMap || !addressLocationCenter) return;
+		if (mode === "marker") {
+			addressLocationMarker?.setMap(addressLocationMap);
+			addressLocationRectangle?.setMap(null);
+			if (locationHelp) locationHelp.textContent = "지도상에 표시된 포인트를 원하는 위치로 끌어다 놓으세요.";
+		}
+		else if (mode === "rectangle") {
+			addressLocationMarker?.setMap(null);
+			updateAddressRectangle(addressLocationCenter);
+			if (locationHelp) locationHelp.textContent = "지도상에 표시된 사각형을 원하는 지역으로 끌어다 놓으세요.";
+		}
+		else {
+			addressLocationMarker?.setMap(null);
+			addressLocationRectangle?.setMap(null);
+			if (locationHelp) locationHelp.textContent = "지도 위치를 공개하지 않습니다.";
+		}
+		setAddressLocationDataset(mode);
 	}
 
 	function updateDetailHideRow(){
@@ -22765,6 +24083,43 @@ document.addEventListener("DOMContentLoaded", function () {
 		});
 	}
 
+	async function searchAddressLocationDirect(){
+		const query = String(locationDirectSearchInput?.value || "").trim();
+		if (!query || !window.kakao || !kakao.maps || !kakao.maps.services) return;
+		let found = null;
+		const queries = buildPropertyAddressSearchQueries(query);
+		for (const q of queries) {
+			const list = await searchAddressByGeocoder(q);
+			if (list.length) {
+				found = normalizeAddressResult(list[0]);
+				break;
+			}
+		}
+		if (!found) {
+			for (const q of queries) {
+				const list = await searchAddressByKeyword(q);
+				if (list.length) {
+					found = normalizeAddressResult(list[0]);
+					break;
+				}
+			}
+		}
+		if (!found || !found.lat || !found.lng || !addressLocationMap || !window.kakao || !kakao.maps) return;
+		const nextCenter = new kakao.maps.LatLng(Number(found.lat), Number(found.lng));
+		addressLocationCenter = nextCenter;
+		selectedAddress.lat = found.lat;
+		selectedAddress.lng = found.lng;
+		addressLocationMap.setCenter(nextCenter);
+		const mode = getAddressLocationMode();
+		if (mode === "marker") {
+			addressLocationMarker?.setPosition(nextCenter);
+		}
+		else if (mode === "rectangle") {
+			updateAddressRectangle(nextCenter);
+		}
+		setAddressLocationDataset(mode);
+	}
+
 	async function handleSearch(){
 		const query = String(searchInput?.value || "").trim();
 		if (!query) {
@@ -22834,10 +24189,12 @@ document.addEventListener("DOMContentLoaded", function () {
 		addressInput.dataset.detailAddress = address2;
 		addressInput.dataset.lat = selectedAddress.lat || "";
 		addressInput.dataset.lng = selectedAddress.lng || "";
+		setAddressLocationDataset(getAddressLocationMode());
 		if (mainDetailEl) {
 			mainDetailEl.textContent = address2 ? `[${address2}]` : "";
 		}
 		addressWrap?.classList.toggle("has-detail-address", !!address2);
+		renderAddressLocationMap();
 		window.REALJEJU_PROPERTY_ADDRESS = {
 			address1,
 			address2,
@@ -22850,7 +24207,9 @@ document.addEventListener("DOMContentLoaded", function () {
 			hideDetailJibun,
 			zonecode: selectedAddress.zonecode || "",
 			lat: selectedAddress.lat || "",
-			lng: selectedAddress.lng || ""
+			lng: selectedAddress.lng || "",
+			locationDisplayType: getAddressLocationMode(),
+			locationBounds: addressLocationBounds
 		};
 		closeModal();
 	}
@@ -22882,6 +24241,28 @@ document.addEventListener("DOMContentLoaded", function () {
 	});
 	searchInput?.addEventListener("input", updateSearchValueState);
 	propertyTypeSelect?.addEventListener("change", updateDetailHideRow);
+	locationDirectSearchBtn?.addEventListener("click", () => {
+		if (!locationDirectSearchBox?.classList.contains("open")) {
+			locationDirectSearchBox?.classList.add("open");
+			setTimeout(() => locationDirectSearchInput?.focus(), 20);
+			return;
+		}
+		searchAddressLocationDirect();
+	});
+	locationDirectSearchInput?.addEventListener("keydown", (e) => {
+		if (e.key === "Enter") {
+			e.preventDefault();
+			searchAddressLocationDirect();
+		}
+	});
+	locationModeRadios.forEach(radio => radio.addEventListener("change", applyAddressLocationMode));
+	document.addEventListener("mouseup", () => {
+		if (!isAddressRectangleDragging) return;
+		isAddressRectangleDragging = false;
+		addressRectangleDragStartLatLng = null;
+		addressLocationMap?.setDraggable(true);
+		setAddressLocationDataset(getAddressLocationMode());
+	});
 	updateDetailHideRow();
 	editBtn?.addEventListener("click", showSearchScreen);
 	confirmBtn?.addEventListener("click", confirmAddress);
