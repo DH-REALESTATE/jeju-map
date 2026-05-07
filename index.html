@@ -5175,7 +5175,7 @@ body.sidebar-list-collapsed .map-side-tools
 	background: #fff;
 }
 
-/* Ver 2.259 표시: 하단바 왼쪽 고정 */
+/* Ver 2.264 표시: 하단바 왼쪽 고정 */
 .sub-version-fixed
 {
 	position: absolute !important;
@@ -14070,9 +14070,9 @@ body[data-property-type="land"] .property-detail-date-check-row
 
 		<div class="sub-topbar">
 			<div class="sub-topbar-inner">
-				<!-- PATCH 2.259: 하단 버전 링크는 다운로드 기능만 유지하고 화면 문구에서는 다운로드 글자 제거 -->
-				<a class="sub-version-fixed" href="realjeju_2.259.html" download="realjeju_2.259.html" title="realjeju_2.259.html 다운로드">
-					Ver 2.259
+				<!-- PATCH 2.264: 하단 버전 링크는 다운로드 기능만 유지하고 화면 문구에서는 다운로드 글자 제거 -->
+				<a class="sub-version-fixed" href="realjeju_2.264.html" download="realjeju_2.264.html" title="realjeju_2.264.html 다운로드">
+					Ver 2.264
 				</a>
 				<div class="sub-topbar-left">
 					<strong id="listInfoText">
@@ -15315,7 +15315,7 @@ function hexToRgba(hex, alpha = 1)
 	return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 const APP_NAME = "REALJEJU.APP";
-const APP_VERSION = "2.259";
+const APP_VERSION = "2.264";
 
 function applyAppVersion()
 {
@@ -22151,6 +22151,8 @@ function applyLoggedInAccountUI(user, profile)
 		if (propertyTypeSelect) propertyTypeSelect.value = "apartment";
 		const addressMode = document.querySelector('input[name="propertyAddressLocationMode"][value="marker"]');
 		if (addressMode) addressMode.checked = true;
+		// PATCH 2.262: 새 글 시작 초기화에는 주소 지도/좌표/마커 상태까지 포함
+		if (typeof window.realjejuResetPropertyAddressLocation === "function") window.realjejuResetPropertyAddressLocation();
 
 		const maintenanceTab = document.querySelector('#propertyMaintenanceCard .maintenance-tab[data-maintenance-type="fixed"]');
 		if (maintenanceTab) maintenanceTab.click();
@@ -24663,6 +24665,71 @@ document.addEventListener("DOMContentLoaded", function () {
 		return line ? splitCompactEupMyeonRi(normalizeJejuPrefix(line.replace(/^[🔹\s]*소재지\s*[:：]\s*/, ""))) : "";
 	}
 
+	// PATCH 2.260: 상세설명은 상단 5줄과 교차로 관리비/기본정보/건물정보/옵션 라벨 이후 본문만 추출
+	function extractCrossroadDescription(text)
+	{
+		const value = String(text || "");
+		const structuredLabels = new Set([
+			"관리비", "관리비합계", "관리비포함내역", "관리비미포함내역", "부과사유", "부과기준",
+			"해당동", "입주가능일", "방향", "지하층/지상층", "현관구조", "해당층/총층", "방/욕실수",
+			"보증금", "월세금", "년세금", "연세금", "전세금", "매매가", "융자금여부", "주차가능여부",
+			"건물종류", "건축물용도", "현업종", "추천업종", "총점포수", "사용전력", "용도", "방형태", "원룸종류",
+			"총세대수", "사용승인일", "사용검사일", "준공일자", "일자확인불가", "위반건축물여부",
+			"옵션", "총주차대수", "난방시설", "냉방시설", "가구", "가전", "주방/욕실", "건물보안", "기타시설",
+			"지목", "용도지역", "대지면적", "건축면적", "연면적", "계약면적", "공급면적", "전용면적",
+			"총동수", "총층수", "난방방식", "주차대수", "입주시기", "건설사", "타입", "분양세대수", "방수/욕실수", "베이"
+		]);
+		const isStructuredLine = (line) => {
+			const row = String(line || "").trim();
+			if (!row) return true;
+			if (/^\[[^\]]+\]$/.test(row)) return true;
+			if (/^(월\s*관리비|월관리비|기본정보|건물정보)$/i.test(row)) return true;
+			if (/^관리비\s*부과내역\s*없음$/.test(row)) return true;
+			if (/^(총\s*주차대수|난방시설|냉방시설|가구|가전|주방\/욕실|건물보안|기타시설)\s*[:：]/.test(row)) return true;
+
+			let label = "";
+			if (row.includes("\t")) {
+				label = row.split(/\t+/)[0];
+			} else {
+				const colon = row.match(/^([^:：]+)[:：]\s*(.+)$/);
+				if (colon) label = colon[1];
+			}
+			return !!label && structuredLabels.has(normalizeCrossroadLabel(label));
+		};
+
+		let nonEmptyCount = 0;
+		const lines = value.split(/\r?\n/);
+		for (let i = 0; i < lines.length; i++) {
+			const row = lines[i].trim();
+			if (!row) continue;
+			nonEmptyCount += 1;
+			if (nonEmptyCount <= 5) continue;
+			if (isStructuredLine(row)) continue;
+			return lines.slice(i).join("\n").trim();
+		}
+
+		const legacyStart = value.indexOf("(디-");
+		return legacyStart >= 0 ? value.slice(legacyStart).trim() : value.trim();
+	}
+
+	// PATCH 2.264: 본문 뒤에 10줄 이상 공백 후 붙는 꼬리 영역은 상세설명에서 제외
+	function trimCrossroadDescriptionTail(description)
+	{
+		return String(description || "").replace(/\n(?:[ \t]*\n){9,}[\s\S]*$/, "").trimEnd();
+	}
+
+	// PATCH 2.262: 본문 첫 줄은 제목으로 쓰고 상세설명에서는 첫 줄과 뒤 공백을 제거
+	function splitCrossroadDescriptionTitle(description)
+	{
+		const lines = trimCrossroadDescriptionTail(description).split(/\r?\n/);
+		const firstIndex = lines.findIndex((line) => line.trim());
+		if (firstIndex < 0) return { title: "", body: "" };
+		return {
+			title: lines[firstIndex].trim(),
+			body: lines.slice(firstIndex + 1).join("\n").replace(/^\s*\n+/, "").trimStart()
+		};
+	}
+
 	function parseCrossroadListing(text)
 	{
 		const value = String(text || "");
@@ -24761,8 +24828,8 @@ document.addEventListener("DOMContentLoaded", function () {
 						? "divide_total"
 						: (/미제시|미제공/.test(maintenanceReasonText) ? "broker_unprovided" : ""))));
 		const address = normalizeAddress(value);
-		const descriptionStart = value.indexOf("(디-");
-		const description = descriptionStart >= 0 ? value.slice(descriptionStart).trim() : value.trim();
+		const description = extractCrossroadDescription(value);
+		const descriptionParts = splitCrossroadDescriptionTitle(description);
 
 		return {
 			propertyType: parsedPropertyType,
@@ -24774,7 +24841,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			priceMonthlyRent: parseMoneyToManwon(fieldValue(fields, ["월세금"])),
 			priceYearlyRent: parseMoneyToManwon(fieldValue(fields, ["년세금"])),
 			priceJeonse: parseMoneyToManwon(getFirstMatch(value, /전세금\s*[:：]?\s*([^\n]+)/)),
-			title,
+			title: descriptionParts.title || title,
 			address,
 			supply: supply.replace(/,/g, ""),
 			totalArea,
@@ -24813,7 +24880,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			moveInDate,
 			moveNegotiable: /협의/.test(moveInText || ""),
 			moveNow: /즉시입주|즉시 입주/.test(moveInText || value),
-			description
+			description: descriptionParts.title ? descriptionParts.body : description
 		};
 	}
 
@@ -24992,11 +25059,25 @@ document.addEventListener("DOMContentLoaded", function () {
 		return selected ? selected.value : "crossroad";
 	}
 
+	// PATCH 2.263: 간편매물등록 모달은 열 때마다 이전 붙여넣기 내용을 비움
+	function resetQuickPropertyModal()
+	{
+		const textarea = $("quickPropertyTextarea");
+		if (textarea) {
+			textarea.value = "";
+			textarea.dispatchEvent(new Event("input", { bubbles: true }));
+		}
+		document.querySelectorAll('input[name="quickPropertySource"]').forEach((input) => {
+			input.checked = input.value === "crossroad";
+		});
+	}
+
 	function openQuickPropertyModal()
 	{
 		const modal = $("quickPropertyModal");
 		const textarea = $("quickPropertyTextarea");
 		if (!modal) return;
+		resetQuickPropertyModal();
 		modal.classList.add("open");
 		modal.setAttribute("aria-hidden", "false");
 		document.body.style.overflow = "hidden";
@@ -25348,6 +25429,39 @@ document.addEventListener("DOMContentLoaded", function () {
 	let addressLocationBounds = null;
 	let isAddressRectangleDragging = false;
 	let addressRectangleDragStartLatLng = null;
+
+	// PATCH 2.262: 매물등록 새 글 시작 시 주소 지도와 좌표 상태를 완전히 비움
+	function resetPropertyAddressLocationState(){
+		selectedAddress = null;
+		addressLocationCenter = null;
+		addressLocationBounds = null;
+		isAddressRectangleDragging = false;
+		addressRectangleDragStartLatLng = null;
+		addressLocationMarker?.setMap(null);
+		addressLocationRectangle?.setMap(null);
+		addressLocationMap?.setDraggable(true);
+		locationRow?.classList.remove("open");
+		locationRow?.removeAttribute("data-location-mode");
+		locationRow?.setAttribute("aria-hidden", "true");
+		locationDirectSearchBox?.classList.remove("open");
+		if (locationDirectSearchInput) locationDirectSearchInput.value = "";
+		if (locationHelp) locationHelp.textContent = "지도상에 표시된 포인트를 원하는 위치로 끌어다 놓으세요.";
+		detailHideRow?.classList.remove("open");
+		if (detailHideCheck) detailHideCheck.checked = false;
+		if (detailInput) detailInput.value = "";
+		if (mainDetailEl) mainDetailEl.textContent = "";
+		addressWrap?.classList.remove("has-detail-address");
+		const markerMode = locationModeRadios.find((radio) => radio.value === "marker");
+		if (markerMode) markerMode.checked = true;
+		[
+			"address1", "address2", "publicAddress", "privateAddress", "hideDetailJibun",
+			"roadAddress", "jibunAddress", "zonecode", "detailAddress", "lat", "lng",
+			"locationDisplayType", "locationSwLat", "locationSwLng", "locationNeLat", "locationNeLng"
+		].forEach((key) => {
+			if (addressInput) delete addressInput.dataset[key];
+		});
+		window.REALJEJU_PROPERTY_ADDRESS = null;
+	}
 
 	function normalizeAddressResult(item){
 		const roadAddress = item?.road_address?.address_name || item?.road_address_name || "";
@@ -25908,6 +26022,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		setAddressLocationDataset(getAddressLocationMode());
 	});
 	updateDetailHideRow();
+	window.realjejuResetPropertyAddressLocation = resetPropertyAddressLocationState;
 	window.realjejuApplyQuickAddressToLocationMap = applyQuickAddressToLocationMap;
 	editBtn?.addEventListener("click", showSearchScreen);
 	confirmBtn?.addEventListener("click", confirmAddress);
