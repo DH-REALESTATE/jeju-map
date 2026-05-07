@@ -5175,7 +5175,7 @@ body.sidebar-list-collapsed .map-side-tools
 	background: #fff;
 }
 
-/* Ver 2.283 표시: 하단바 왼쪽 고정 */
+/* Ver 2.294 표시: 하단바 왼쪽 고정 */
 .sub-version-fixed
 {
 	position: absolute !important;
@@ -9061,6 +9061,14 @@ body.property-register-page-open .property-register-bottom-bar
 	text-overflow: ellipsis;
 }
 
+/* PATCH 2.288: 용도지역처럼 숫자가 섞인 드롭다운 문구는 숫자 폭을 고정 */
+.property-register-dropdown-trigger span,
+.property-register-dropdown-option
+{
+	font-variant-numeric: tabular-nums;
+	font-feature-settings: "tnum" 1;
+}
+
 .property-register-dropdown-trigger i
 {
 	font-size: 12px;
@@ -9703,11 +9711,27 @@ body.property-register-page-open .property-register-bottom-bar
 	margin-top: 12px;
 }
 
-.property-land-type-grid
+.property-land-select-row
 {
 	display: grid;
-	grid-template-columns: repeat(4, minmax(0, 1fr));
-	gap: 28px 48px;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 16px 32px;
+	align-items: center;
+}
+
+.property-land-select-field
+{
+	display: grid;
+	grid-template-columns: 84px minmax(0, 1fr);
+	gap: 12px;
+	align-items: center;
+}
+
+/* PATCH 2.290: 토지 정보 드롭다운은 12줄만 보이고 이후는 스크롤 */
+.property-land-select-field .property-register-dropdown-menu
+{
+	max-height: 470px;
+	overflow-y: auto;
 }
 
 .property-land-info-card
@@ -9723,9 +9747,14 @@ body.property-register-page-open .property-register-bottom-bar
 @media (max-width: 900px)
 {
 	.property-inline-grid,
-	.property-land-type-grid
+	.property-land-select-row
 	{
-		grid-template-columns: repeat(2, minmax(0, 1fr));
+		grid-template-columns: 1fr;
+	}
+
+	.property-land-select-field
+	{
+		grid-template-columns: 84px minmax(0, 1fr);
 	}
 }
 
@@ -13512,15 +13541,57 @@ body[data-property-type="land"] .property-detail-date-check-row
 			<div class="property-register-card property-land-info-card is-hidden" id="propertyLandInfoCard">
 				<h2 class="property-register-section-title">매물 정보</h2>
 				<div class="property-info-row">
-					<label class="property-form-label">토지종류</label>
-					<div class="property-land-type-grid">
-						<label class="property-radio-option"><input type="radio" name="landType" value="전" /> 전</label><label class="property-radio-option"><input type="radio" name="landType" value="대" /> 대(垈)</label><label class="property-radio-option"><input type="radio" name="landType" value="답" /> 답</label><label class="property-radio-option"><input type="radio" name="landType" value="임야" /> 임야</label>
-						<label class="property-radio-option"><input type="radio" name="landType" value="과수원" /> 과수원</label><label class="property-radio-option"><input type="radio" name="landType" value="공장용지" /> 공장용지</label><label class="property-radio-option"><input type="radio" name="landType" value="주차장" /> 주차장</label><label class="property-radio-option"><input type="radio" name="landType" value="잡종지" /> 잡종지</label>
-						<label class="property-radio-option"><input type="radio" name="landType" value="창고용지" /> 창고용지</label><label class="property-radio-option"><input type="radio" name="landType" value="유지" /> 유지(溜池)</label><label class="property-radio-option"><input type="radio" name="landType" value="목장용지" /> 목장용지</label><label class="property-radio-option"><input type="radio" name="landType" value="제방" /> 제방(堤防)</label>
-						<label class="property-radio-option"><input type="radio" name="landType" value="구거" /> 구거(溝渠)</label><label class="property-radio-option"><input type="radio" name="landType" value="양어장" /> 양어장</label><label class="property-radio-option"><input type="radio" name="landType" value="주유소용지" /> 주유소용지</label><label class="property-radio-option"><input type="radio" name="landType" value="묘지" /> 묘지</label>
-						<label class="property-radio-option"><input type="radio" name="landType" value="체육용지" /> 체육용지</label><label class="property-radio-option"><input type="radio" name="landType" value="사적지" /> 사적지</label><label class="property-radio-option"><input type="radio" name="landType" value="광천지" /> 광천지</label><label class="property-radio-option"><input type="radio" name="landType" value="공원" /> 공원</label>
-						<label class="property-radio-option"><input type="radio" name="landType" value="철도용지" /> 철도용지</label><label class="property-radio-option"><input type="radio" name="landType" value="유원지" /> 유원지</label><label class="property-radio-option"><input type="radio" name="landType" value="종교용지" /> 종교용지</label><label class="property-radio-option"><input type="radio" name="landType" value="하천" /> 하천</label>
-						<label class="property-radio-option"><input type="radio" name="landType" value="도로" /> 도로</label><label class="property-radio-option"><input type="radio" name="landType" value="염전" /> 염전</label><label class="property-radio-option"><input type="radio" name="landType" value="학교용지" /> 학교용지</label><label class="property-radio-option"><input type="radio" name="landType" value="수도용지" /> 수도용지</label>
+					<label class="property-form-label">토지 정보</label>
+					<!-- PATCH 2.287: 토지종류와 용도지역을 같은 행의 드롭다운으로 정리 -->
+					<div class="property-info-field property-land-select-row">
+						<div class="property-land-select-field">
+							<span class="property-inline-label">토지종류</span>
+							<div class="property-form-control property-select-wrap property-register-dropdown" data-register-dropdown>
+								<select class="property-register-select property-register-native-select" id="landTypeSelect" tabindex="-1" aria-hidden="true">
+									<option value="">토지종류 선택</option>
+									<option value="전">전</option><option value="대">대(垈)</option><option value="답">답</option><option value="임야">임야</option>
+									<option value="과수원">과수원</option><option value="공장용지">공장용지</option><option value="주차장">주차장</option><option value="잡종지">잡종지</option>
+									<option value="창고용지">창고용지</option><option value="유지">유지(溜池)</option><option value="목장용지">목장용지</option><option value="제방">제방(堤防)</option>
+									<option value="구거">구거(溝渠)</option><option value="양어장">양어장</option><option value="주유소용지">주유소용지</option><option value="묘지">묘지</option>
+									<option value="체육용지">체육용지</option><option value="사적지">사적지</option><option value="광천지">광천지</option><option value="공원">공원</option>
+									<option value="철도용지">철도용지</option><option value="유원지">유원지</option><option value="종교용지">종교용지</option><option value="하천">하천</option>
+									<option value="도로">도로</option><option value="염전">염전</option><option value="학교용지">학교용지</option><option value="수도용지">수도용지</option>
+								</select>
+								<button type="button" class="property-register-dropdown-trigger" data-register-dropdown-trigger aria-haspopup="listbox" aria-expanded="false"><span data-register-dropdown-label>토지종류 선택</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
+								<div class="property-register-dropdown-menu" data-register-dropdown-menu role="listbox">
+									<button type="button" class="property-register-dropdown-option" data-value="전" role="option">전</button><button type="button" class="property-register-dropdown-option" data-value="대" role="option">대(垈)</button><button type="button" class="property-register-dropdown-option" data-value="답" role="option">답</button><button type="button" class="property-register-dropdown-option" data-value="임야" role="option">임야</button>
+									<button type="button" class="property-register-dropdown-option" data-value="과수원" role="option">과수원</button><button type="button" class="property-register-dropdown-option" data-value="공장용지" role="option">공장용지</button><button type="button" class="property-register-dropdown-option" data-value="주차장" role="option">주차장</button><button type="button" class="property-register-dropdown-option" data-value="잡종지" role="option">잡종지</button>
+									<button type="button" class="property-register-dropdown-option" data-value="창고용지" role="option">창고용지</button><button type="button" class="property-register-dropdown-option" data-value="유지" role="option">유지(溜池)</button><button type="button" class="property-register-dropdown-option" data-value="목장용지" role="option">목장용지</button><button type="button" class="property-register-dropdown-option" data-value="제방" role="option">제방(堤防)</button>
+									<button type="button" class="property-register-dropdown-option" data-value="구거" role="option">구거(溝渠)</button><button type="button" class="property-register-dropdown-option" data-value="양어장" role="option">양어장</button><button type="button" class="property-register-dropdown-option" data-value="주유소용지" role="option">주유소용지</button><button type="button" class="property-register-dropdown-option" data-value="묘지" role="option">묘지</button>
+									<button type="button" class="property-register-dropdown-option" data-value="체육용지" role="option">체육용지</button><button type="button" class="property-register-dropdown-option" data-value="사적지" role="option">사적지</button><button type="button" class="property-register-dropdown-option" data-value="광천지" role="option">광천지</button><button type="button" class="property-register-dropdown-option" data-value="공원" role="option">공원</button>
+									<button type="button" class="property-register-dropdown-option" data-value="철도용지" role="option">철도용지</button><button type="button" class="property-register-dropdown-option" data-value="유원지" role="option">유원지</button><button type="button" class="property-register-dropdown-option" data-value="종교용지" role="option">종교용지</button><button type="button" class="property-register-dropdown-option" data-value="하천" role="option">하천</button>
+									<button type="button" class="property-register-dropdown-option" data-value="도로" role="option">도로</button><button type="button" class="property-register-dropdown-option" data-value="염전" role="option">염전</button><button type="button" class="property-register-dropdown-option" data-value="학교용지" role="option">학교용지</button><button type="button" class="property-register-dropdown-option" data-value="수도용지" role="option">수도용지</button>
+								</div>
+							</div>
+						</div>
+						<div class="property-land-select-field">
+							<span class="property-inline-label">용도지역</span>
+							<div class="property-form-control property-select-wrap property-register-dropdown" data-register-dropdown>
+								<select class="property-register-select property-register-native-select" id="landUseZoneSelect" tabindex="-1" aria-hidden="true">
+									<option value="">용도지역 선택</option>
+									<option value="제1종 전용주거지역">제1종 전용주거지역</option><option value="제2종 전용주거지역">제2종 전용주거지역</option><option value="제1종 일반주거지역">제1종 일반주거지역</option><option value="제2종 일반주거지역">제2종 일반주거지역</option><option value="제3종 일반주거지역">제3종 일반주거지역</option><option value="준주거지역">준주거지역</option>
+									<option value="중심상업지역">중심상업지역</option><option value="일반상업지역">일반상업지역</option><option value="근린상업지역">근린상업지역</option><option value="유통상업지역">유통상업지역</option>
+									<option value="전용공업지역">전용공업지역</option><option value="일반공업지역">일반공업지역</option><option value="준공업지역">준공업지역</option>
+									<option value="보전녹지지역">보전녹지지역</option><option value="생산녹지지역">생산녹지지역</option><option value="자연녹지지역">자연녹지지역</option>
+									<option value="보전관리지역">보전관리지역</option><option value="생산관리지역">생산관리지역</option><option value="계획관리지역">계획관리지역</option>
+									<option value="농림지역">농림지역</option><option value="자연환경보전지역">자연환경보전지역</option>
+								</select>
+								<button type="button" class="property-register-dropdown-trigger" data-register-dropdown-trigger aria-haspopup="listbox" aria-expanded="false"><span data-register-dropdown-label>용도지역 선택</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
+								<div class="property-register-dropdown-menu" data-register-dropdown-menu role="listbox">
+									<button type="button" class="property-register-dropdown-option" data-value="제1종 전용주거지역" role="option">제1종 전용주거지역</button><button type="button" class="property-register-dropdown-option" data-value="제2종 전용주거지역" role="option">제2종 전용주거지역</button><button type="button" class="property-register-dropdown-option" data-value="제1종 일반주거지역" role="option">제1종 일반주거지역</button><button type="button" class="property-register-dropdown-option" data-value="제2종 일반주거지역" role="option">제2종 일반주거지역</button><button type="button" class="property-register-dropdown-option" data-value="제3종 일반주거지역" role="option">제3종 일반주거지역</button><button type="button" class="property-register-dropdown-option" data-value="준주거지역" role="option">준주거지역</button>
+									<button type="button" class="property-register-dropdown-option" data-value="중심상업지역" role="option">중심상업지역</button><button type="button" class="property-register-dropdown-option" data-value="일반상업지역" role="option">일반상업지역</button><button type="button" class="property-register-dropdown-option" data-value="근린상업지역" role="option">근린상업지역</button><button type="button" class="property-register-dropdown-option" data-value="유통상업지역" role="option">유통상업지역</button>
+									<button type="button" class="property-register-dropdown-option" data-value="전용공업지역" role="option">전용공업지역</button><button type="button" class="property-register-dropdown-option" data-value="일반공업지역" role="option">일반공업지역</button><button type="button" class="property-register-dropdown-option" data-value="준공업지역" role="option">준공업지역</button>
+									<button type="button" class="property-register-dropdown-option" data-value="보전녹지지역" role="option">보전녹지지역</button><button type="button" class="property-register-dropdown-option" data-value="생산녹지지역" role="option">생산녹지지역</button><button type="button" class="property-register-dropdown-option" data-value="자연녹지지역" role="option">자연녹지지역</button>
+									<button type="button" class="property-register-dropdown-option" data-value="보전관리지역" role="option">보전관리지역</button><button type="button" class="property-register-dropdown-option" data-value="생산관리지역" role="option">생산관리지역</button><button type="button" class="property-register-dropdown-option" data-value="계획관리지역" role="option">계획관리지역</button>
+									<button type="button" class="property-register-dropdown-option" data-value="농림지역" role="option">농림지역</button><button type="button" class="property-register-dropdown-option" data-value="자연환경보전지역" role="option">자연환경보전지역</button>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -14070,9 +14141,9 @@ body[data-property-type="land"] .property-detail-date-check-row
 
 		<div class="sub-topbar">
 			<div class="sub-topbar-inner">
-				<!-- PATCH 2.283: 하단 버전 링크는 다운로드 기능만 유지하고 화면 문구에서는 다운로드 글자 제거 -->
-				<a class="sub-version-fixed" href="realjeju_2.283.html" download="realjeju_2.283.html" title="realjeju_2.283.html 다운로드">
-					Ver 2.283
+				<!-- PATCH 2.294: 하단 버전 링크를 최신 파일로 갱신 -->
+				<a class="sub-version-fixed" href="realjeju_2.294.html" download="realjeju_2.294.html" title="realjeju_2.294.html 다운로드">
+					Ver 2.294
 				</a>
 				<div class="sub-topbar-left">
 					<strong id="listInfoText">
@@ -15315,7 +15386,7 @@ function hexToRgba(hex, alpha = 1)
 	return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 const APP_NAME = "REALJEJU.APP";
-const APP_VERSION = "2.283";
+const APP_VERSION = "2.294";
 
 function applyAppVersion()
 {
@@ -22102,7 +22173,8 @@ function applyLoggedInAccountUI(user, profile)
 			"maintenanceElectricInput", "maintenanceWaterInput", "maintenanceGasInput",
 			"maintenanceHeatingInput", "maintenanceInternetInput", "maintenanceTvInput",
 			"maintenanceEtcInput", "maintenanceTotalInput", "propertyMoveInDateInput",
-			"propertyLocationSummaryInput", "propertyDetailDescriptionInput", "propertyAgencyMemoInput"
+			"propertyLocationSummaryInput", "propertyDetailDescriptionInput", "propertyAgencyMemoInput",
+			"landTypeSelect", "landUseZoneSelect"
 		];
 
 		if (draftFieldIds.some((id) => {
@@ -24348,6 +24420,9 @@ document.addEventListener("DOMContentLoaded", function () {
 					supply_py: numberValue("supplyAreaPyInput"),
 					land_m2: numberValue("landAreaM2Input"),
 					land_py: numberValue("landAreaPyInput"),
+					// PATCH 2.287: 토지종류와 용도지역 드롭다운 값을 저장 payload에 포함
+					land_type: value("landTypeSelect"),
+					land_use_zone: value("landUseZoneSelect"),
 					land_road: value("landRoadInput")
 				},
 				prices: collectPricePayload(),
@@ -24594,7 +24669,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	function setSelectValue(id, value)
 	{
 		const select = $(id);
-		if (!select || !value) return;
+		if (!select || value === null || value === undefined) return;
 		select.value = value;
 		const wrap = select.closest("[data-register-dropdown]");
 		if (wrap) {
@@ -24647,6 +24722,12 @@ document.addEventListener("DOMContentLoaded", function () {
 	function normalizeCrossroadLabel(label)
 	{
 		return String(label || "").replace(/\s+/g, "").trim();
+	}
+
+	// PATCH 2.291: 용도지역은 "1종전용주거지역"처럼 제/공백이 빠진 교차로 표기도 드롭다운 값과 맞춤
+	function normalizeLandUseZoneLabel(label)
+	{
+		return normalizeCrossroadLabel(label).replace(/^제?([1-3])종/, "제$1종");
 	}
 
 	function parseCrossroadFieldMap(text)
@@ -24715,7 +24796,8 @@ document.addEventListener("DOMContentLoaded", function () {
 		const structuredLabels = new Set([
 			"관리비", "관리비합계", "관리비포함내역", "관리비미포함내역", "부과사유", "부과기준",
 			"해당동", "입주가능일", "방향", "지하층/지상층", "현관구조", "해당층/총층", "방/욕실수",
-			"보증금", "월세금", "년세금", "연세금", "전세금", "매매가", "융자금여부", "주차가능여부",
+			// PATCH 2.294: 교차로 기본정보의 기전세금은 상세설명 제목 후보에서 제외
+			"보증금", "월세금", "년세금", "연세금", "전세금", "기전세금", "매매가", "융자금여부", "주차가능여부",
 			"건물종류", "건축물용도", "현업종", "추천업종", "총점포수", "사용전력", "용도", "방형태", "원룸종류",
 			"총세대수", "사용승인일", "사용검사일", "준공일자", "일자확인불가", "위반건축물여부",
 			"옵션", "총주차대수", "난방시설", "냉방시설", "가구", "가전", "주방/욕실", "건물보안", "기타시설",
@@ -24810,7 +24892,8 @@ document.addEventListener("DOMContentLoaded", function () {
 		const hasHouseholdSource = !!household;
 		const rooms = value.match(/방\s*\/?\s*욕실수\s*[:：]?\s*(\d+)\s*\/\s*(\d+)/) || value.match(/방\s*(\d+)\s*\/\s*욕실\s*(\d+)/);
 		const floors = value.match(/해당층\/총층\s*[:：]?\s*([가-힣]+|\d+)\s*\/\s*(\d+)/) || (fieldValue(fields, ["해당층/총층"]).match(/([가-힣]+|\d+)\s*\/\s*(\d+)/));
-		const parking = value.match(/총\s*주차대수\s*[:：]?\s*([\d,]+)\s*대\s*\(세대당\s*([\d.]+)\s*대\)/);
+		// PATCH 2.293: "총 주차대수: 2대"처럼 세대당/점포당 괄호가 없어도 총 주차대수를 반영
+		const parking = value.match(/총\s*주차\s*대수\s*[:：]?\s*([\d,]+)\s*대(?:\s*\((?:세대당|점포당)\s*([\d.]+)\s*대\))?/);
 		const maintenanceRawText = fieldValue(fields, ["관리비"]);
 		const maintenanceNone = /관리비\s*없음|없음/.test(maintenanceRawText) || /관리비\s*부과내역\s*없음/.test(value);
 		// PATCH 2.273: 교차로 관리비가 "관리비 150,000원"으로 들어오는 경우도 총 관리비로 처리
@@ -24822,8 +24905,22 @@ document.addEventListener("DOMContentLoaded", function () {
 		).replace(/[^0-9]/g, "");
 		const landRoad = getFirstMatch(value, /도로\s*[:：]\s*([^\n]+)/);
 		const landType = fieldValue(fields, ["지목"]) || getFirstMatch(value, /지목\s*[:：]?\s*([가-힣]+)/) || (/^\s*\[매매\]\s*([가-힣]+)\s*$/m.exec(firstLines)?.[1] || "");
+		// PATCH 2.291: 교차로 용도지역 텍스트를 토지 용도지역 드롭다운 값으로 정규화
+		const landUseZoneOptions = [
+			"제1종 전용주거지역", "제2종 전용주거지역", "제1종 일반주거지역", "제2종 일반주거지역", "제3종 일반주거지역", "준주거지역",
+			"중심상업지역", "일반상업지역", "근린상업지역", "유통상업지역",
+			"전용공업지역", "일반공업지역", "준공업지역",
+			"보전녹지지역", "생산녹지지역", "자연녹지지역",
+			"보전관리지역", "생산관리지역", "계획관리지역",
+			"농림지역", "자연환경보전지역"
+		];
+		const landUseZoneRaw = fieldValue(fields, ["용도지역"]) || getFirstMatch(value, /용도지역\s*[:：]?\s*([가-힣0-9\s]+지역)/);
+		const landUseZone = landUseZoneOptions.find(option => normalizeLandUseZoneLabel(option) === normalizeLandUseZoneLabel(landUseZoneRaw)) || "";
 		const buildingKindText = fieldValue(fields, ["건물종류"]);
 		const buildingUseText = fieldValue(fields, ["건축물용도"]);
+		// PATCH 2.284: 교차로 매물 유형은 처음 5줄 중 두 번째 줄을 최우선 기준으로 사용
+		const firstFiveRows = value.split(/\n/).map((line) => line.trim()).filter(Boolean).slice(0, 5);
+		const crossroadTypeLine = firstFiveRows[1] || "";
 		const listingTypeTitle = getFirstMatch(firstLines, /^\s*\[(?:매매|전세|월세|년세)\]\s*([^\n]+)/m);
 		const propertyTypeClues = [firstLines, buildingKindText, buildingUseText].join("\n");
 		const strongPropertyTypeClues = [listingTypeTitle, buildingKindText, buildingUseText].join("\n");
@@ -24842,8 +24939,12 @@ document.addEventListener("DOMContentLoaded", function () {
 		// PATCH 2.252: 오피스텔/오피스텔형은 숙박시설이어도 펜션보다 먼저 원룸/투룸으로 분류
 		if (/오피스텔(?:형)?/.test(buildingKindText) && /숙박시설/.test(buildingUseText)) parsedPropertyType = "room";
 		else if (/오피스텔(?:형)?/.test(buildingKindText) && /업무시설/.test(buildingUseText)) parsedPropertyType = "officetel";
-		// PATCH 2.272: 교차로 사무실 매물은 토지/숙박 판정보다 먼저 사무실로 확정
-		else if (/사무실|중소형사무실|대형사무실/.test(propertyTypeClues)) parsedPropertyType = "office";
+		else if (/상가|상가점포|상가건물/.test(crossroadTypeLine)) parsedPropertyType = "store";
+		else if (/사무실/.test(crossroadTypeLine)) parsedPropertyType = "office";
+		// PATCH 2.292: 교차로 두 번째 줄 또는 건물종류의 공장/창고는 공장 / 창고 매물로 분류
+		else if (/공장\s*\/\s*창고|공장|창고/.test(crossroadTypeLine) || /공장|창고/.test(buildingKindText) || /공장|창고시설/.test(buildingUseText)) parsedPropertyType = "factory_warehouse";
+		// PATCH 2.284: 사무실 보조 판정은 건물종류가 사무실일 때만 적용
+		else if (/중소형사무실|대형사무실/.test(buildingKindText)) parsedPropertyType = "office";
 		else if (/상가|상가건물/.test(propertyTypeClues)) parsedPropertyType = "store";
 		else if (/호텔/.test(propertyTypeClues)) parsedPropertyType = "hotel";
 		else if (/펜션|콘도|모텔|숙박/.test(propertyTypeClues)) parsedPropertyType = "pension";
@@ -24912,6 +25013,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			landArea,
 			areaMode,
 			landType,
+			landUseZone,
 			landRoad,
 			approvalDate,
 			storeCount,
@@ -24963,6 +25065,9 @@ document.addEventListener("DOMContentLoaded", function () {
 			clearInput("landAreaM2Input");
 			clearInput("landAreaPyInput");
 			clearInput("landRoadInput");
+			// PATCH 2.287: 간편등록을 다시 적용할 때 이전 토지종류/용도지역 선택값 제거
+			setSelectValue("landTypeSelect", "");
+			setSelectValue("landUseZoneSelect", "");
 			if (typeof updatePropertyRegisterAreaFields === "function") updatePropertyRegisterAreaFields();
 		}
 		const dealTypes = Array.isArray(parsed.dealTypes) && parsed.dealTypes.length ? parsed.dealTypes : (parsed.deal ? [parsed.deal] : []);
@@ -24991,7 +25096,8 @@ document.addEventListener("DOMContentLoaded", function () {
 		setInput("exclusiveAreaM2Input", parsed.exclusive);
 		setInput("landAreaM2Input", parsed.landArea);
 		setInput("landRoadInput", parsed.landRoad);
-		if (parsed.landType) setRadio("landType", parsed.landType);
+		if (parsed.landType) setSelectValue("landTypeSelect", parsed.landType);
+		if (parsed.landUseZone) setSelectValue("landUseZoneSelect", parsed.landUseZone);
 		setInput("propertyApprovalDateInput", parsed.approvalDate);
 		// PATCH 2.257: 새 붙여넣기마다 이전 총점포수/총세대수 값을 먼저 비우고 원문 값만 반영
 		clearInput("propertyStoreCountInput");
