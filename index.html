@@ -5175,7 +5175,7 @@ body.sidebar-list-collapsed .map-side-tools
 	background: #fff;
 }
 
-/* Ver 2.296 표시: 하단바 왼쪽 고정 */
+/* Ver 2.334 표시: 하단바 왼쪽 고정 */
 .sub-version-fixed
 {
 	position: absolute !important;
@@ -8299,7 +8299,8 @@ html, body
 	padding: 18px 18px 18px;
 }
 
-body.admin-page-open .admin-page-panel
+body.admin-page-open .admin-page-panel,
+body.broker-home-page-open .broker-home-panel
 {
 	display: block;
 }
@@ -8307,7 +8308,11 @@ body.admin-page-open .admin-page-panel
 body.admin-page-open .sub-topbar,
 body.admin-page-open .sidebar,
 body.admin-page-open .resizer,
-body.admin-page-open .map-wrap
+body.admin-page-open .map-wrap,
+body.broker-home-page-open .sub-topbar,
+body.broker-home-page-open .sidebar,
+body.broker-home-page-open .resizer,
+body.broker-home-page-open .map-wrap
 {
 	display: none !important;
 }
@@ -8466,6 +8471,285 @@ body.admin-page-open .map-wrap
 	color: #dc2626;
 }
 
+/* PATCH 2.316: 중개사 홈에서 본인이 올린 매물을 관리 목록으로 표시 */
+.broker-home-panel
+{
+	position: absolute;
+	inset: var(--global-topbar-height) 0 0 0;
+	z-index: 9990;
+	display: none;
+	background: #f4f7fb;
+	color: #111827;
+	overflow: auto;
+	padding: 18px 18px 18px;
+}
+
+/* PATCH 2.324: 중개사 홈 목록을 사진/유형/상태/날짜/번호/제목/가격/작업 순서의 관리 리스트로 표시 */
+.broker-listing-list
+{
+	display: grid;
+	gap: 0;
+	border: 1px solid #d8dee8;
+	background: #ffffff;
+}
+
+.broker-listing-bulkbar
+{
+	/* PATCH 2.333: 일괄 작업 바는 목록 박스 밖에 두고 버튼은 네모 형태로 유지 */
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 14px;
+	margin: 0 0 10px 0;
+	padding: 0;
+	background: transparent;
+}
+
+.broker-listing-bulk-left,
+.broker-listing-bulk-right
+{
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.broker-listing-bulk-btn
+{
+	height: 34px;
+	padding: 0 18px;
+	border: 1px solid #d8dee8;
+	background: #ffffff;
+	color: #111827;
+	font-size: 14px;
+	font-weight: 400;
+	letter-spacing: -0.08px;
+	cursor: pointer;
+}
+
+.broker-listing-bulk-btn.danger
+{
+	border-color: #ef3b23;
+	color: #ef3b23;
+}
+
+.broker-listing-bulk-btn:hover
+{
+	background: #f8fafc;
+}
+
+.broker-listing-row
+{
+	display: grid;
+	grid-template-columns: 34px 104px 110px 78px 112px 118px minmax(220px, 1fr) 118px 76px 106px;
+	column-gap: 12px;
+	row-gap: 8px;
+	align-items: center;
+	padding: 14px 16px;
+	border-bottom: 1px solid #e5e7eb;
+	background: #ffffff;
+}
+
+.broker-listing-head
+{
+	/* PATCH 2.330: 중개사 홈 목록 왼쪽에 다중 선택 체크박스 열 추가 */
+	display: grid;
+	grid-template-columns: 34px 104px 110px 78px 112px 118px minmax(220px, 1fr) 118px 76px 106px;
+	column-gap: 12px;
+	align-items: center;
+	text-align: center;
+	padding: 12px 16px;
+	border-bottom: 1px solid #e5e7eb;
+	background: #ffffff;
+	color: #8b95a1;
+	font-size: 13px;
+	font-weight: 350;
+	letter-spacing: -0.08px;
+}
+
+.broker-listing-head > div:nth-child(3),
+.broker-listing-head > div:nth-child(6),
+.broker-listing-head > div:nth-child(7),
+.broker-listing-head > div:nth-child(8)
+{
+	text-align: left;
+}
+
+.broker-listing-row > div:nth-child(4),
+.broker-listing-row > div:nth-child(5)
+{
+	text-align: center;
+}
+
+.broker-listing-select-cell
+{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.broker-listing-check
+{
+	width: 18px;
+	height: 18px;
+	margin: 0;
+	accent-color: #4A7EDC;
+	cursor: pointer;
+}
+
+.broker-listing-row:last-child
+{
+	border-bottom: 0;
+}
+
+.broker-listing-thumb
+{
+	width: 104px;
+	aspect-ratio: 4 / 3;
+	border: 1px solid #d8dee8;
+	background: #f8fafc;
+	overflow: hidden;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: #94a3b8;
+	font-size: 12px;
+	font-weight: 400;
+	letter-spacing: -0.1px;
+}
+
+.broker-listing-thumb img
+{
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+}
+
+.broker-listing-type
+{
+	/* PATCH 2.326: 중개사 홈 목록 텍스트를 요청대로 전부 400 웨이트로 통일 */
+	font-size: 14px;
+	font-weight: 400;
+	color: #2563eb;
+	line-height: 1.45;
+	letter-spacing: -0.18px;
+}
+
+.broker-listing-address
+{
+	margin-top: 5px;
+	/* PATCH 2.327: 제목 아래 주소는 제목보다 작되 읽기 쉽게 14px로 조정 */
+	font-size: 14px;
+	font-weight: 400;
+	color: #64748b;
+	line-height: 1.45;
+	letter-spacing: -0.1px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.broker-listing-title-cell
+{
+	min-width: 0;
+}
+
+.broker-listing-title
+{
+	font-size: 16px;
+	font-weight: 550;
+	color: #111827;
+	letter-spacing: -0.22px;
+	line-height: 1.42;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.broker-listing-meta
+{
+	font-size: 14px;
+	font-weight: 400;
+	color: #475569;
+	line-height: 1.45;
+	letter-spacing: -0.1px;
+}
+
+.broker-listing-status
+{
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 58px;
+	height: 28px;
+	border: 1px solid #d8dee8;
+	background: #f8fafc;
+	color: #334155;
+	font-size: 14px;
+	font-weight: 400;
+}
+
+.broker-listing-status.published
+{
+	border-color: #2563eb;
+	color: #2563eb;
+	background: #eff6ff;
+}
+
+.broker-listing-no
+{
+	font-size: 14px;
+	font-weight: 400;
+	color: #334155;
+	letter-spacing: -0.1px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.broker-listing-price
+{
+	color: #ef3b23;
+	font-size: 14px;
+	font-weight: 550;
+	letter-spacing: -0.18px;
+	text-align: left;
+	white-space: nowrap;
+}
+
+.broker-listing-actions
+{
+	display: contents;
+}
+
+.broker-listing-edit-btn,
+.broker-listing-blog-copy-btn
+{
+	height: 34px;
+	border: 0;
+	background: #ef3b23;
+	color: #ffffff;
+	font-size: 14px;
+	font-weight: 400;
+	letter-spacing: -0.12px;
+	cursor: pointer;
+}
+
+.broker-listing-blog-copy-btn
+{
+	background: #22c55e;
+}
+
+.broker-listing-edit-btn:hover
+{
+	background: #d92f1b;
+}
+
+.broker-listing-blog-copy-btn:hover
+{
+	background: #16a34a;
+}
+
 .admin-empty
 {
 	padding: 28px;
@@ -8486,6 +8770,26 @@ body.admin-page-open .map-wrap
 	.admin-application-actions
 	{
 		justify-content: flex-start;
+	}
+	.broker-listing-row
+	{
+		grid-template-columns: 34px 96px minmax(0, 1fr);
+	}
+	.broker-listing-head
+	{
+		display: none;
+	}
+	.broker-listing-price,
+	.broker-listing-actions
+	{
+		grid-column: 3;
+		text-align: left;
+	}
+	.broker-listing-actions
+	{
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 8px;
 	}
 }
 
@@ -9644,6 +9948,42 @@ body.property-register-page-open .property-register-bottom-bar
 .property-room-na-option
 {
 	margin-top: 0;
+	cursor: default;
+	user-select: text;
+}
+
+/* PATCH 2.302: 해당없음은 체크박스 네모에만 클릭 가능 커서를 표시 */
+.property-room-na-option input
+{
+	cursor: pointer;
+}
+
+.property-room-na-option span
+{
+	cursor: default;
+}
+
+/* PATCH 2.297: 방/욕실 라벨을 층 정보처럼 첫 입력 줄 기준으로 정렬 */
+.property-info-row.property-room-row
+{
+	align-items: baseline;
+}
+
+.property-info-row.property-room-row > .property-form-label
+{
+	display: flex;
+	align-items: baseline;
+	height: auto;
+	min-height: 0;
+	padding-top: 0;
+	line-height: 1.2;
+}
+
+.property-room-row .property-inline-label
+{
+	display: inline-flex;
+	align-items: baseline;
+	line-height: 1.2;
 }
 
 /* PATCH 2.210: 주차 라벨 높이를 가능/불가능 라디오 줄과 맞춤 */
@@ -10445,10 +10785,18 @@ body.property-register-page-open .property-register-bottom-bar
 	line-height: 1.35;
 }
 
-/* PATCH 2.230: 관리비 부과기준 라디오 세로 간격을 조금 더 촘촘하게 조정 */
+/* PATCH 2.317: 부과기준 왼쪽 라벨과 첫 라디오 항목의 높이 기준을 맞춤 */
 .maintenance-detail-type-grid
 {
-	row-gap: 10px !important;
+	row-gap: 10px;
+}
+
+.maintenance-form-row.maintenance-detail-row > .property-form-label
+{
+	display: flex;
+	align-items: center;
+	min-height: 40px;
+	line-height: 1.3;
 }
 
 .maintenance-detail-type-grid .property-radio-option input
@@ -10636,6 +10984,7 @@ body.property-register-page-open .property-register-bottom-bar
 {
 	width: 100%;
 	min-height: 132px;
+	padding: 22px;
 	border: 2px dashed #e2e7ee;
 	border-radius: 0;
 	background: #ffffff;
@@ -10650,12 +10999,163 @@ body.property-register-page-open .property-register-bottom-bar
 	font-weight: 500;
 	letter-spacing: -0.16px;
 	cursor: pointer;
+	box-sizing: border-box;
+}
+
+/* PATCH 2.320: 사진 드래그 중에도 업로드 박스 배경과 테두리 색은 기본값 유지 */
+.property-upload-box.is-dragover
+{
+	border-color: #e2e7ee;
+	background: #ffffff;
+	color: #a8b0bc;
 }
 
 .property-upload-box i
 {
 	font-size: 22px;
 	color: #d1d7df;
+}
+
+/* PATCH 2.309: 사진 장수 표시는 업로드 박스 밖 우측 상단에 배치 */
+.property-photo-count
+{
+	display: block;
+	margin-bottom: 8px;
+	text-align: right;
+	color: #6b7280;
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 1;
+	letter-spacing: -0.12px;
+}
+
+/* PATCH 2.305: 사진이 있으면 업로드 안내 문구를 숨기고 썸네일만 표시 */
+.property-upload-box.has-photo-preview .property-upload-guide
+{
+	display: none;
+}
+
+/* PATCH 2.304: 사진 썸네일은 업로드 박스 안에서 바로 표시 */
+.property-photo-preview-grid
+{
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+	gap: 12px;
+	width: 100%;
+	margin-top: 8px;
+}
+
+.property-upload-box.has-photo-preview
+{
+	justify-content: flex-start;
+}
+
+/* PATCH 2.319: 사진이 있으면 썸네일 상단 여백도 좌/우/하단과 같은 박스 패딩만 사용 */
+.property-upload-box.has-photo-preview .property-photo-preview-grid
+{
+	margin-top: 0;
+}
+
+.property-photo-preview-grid.is-hidden
+{
+	display: none;
+}
+
+.property-photo-preview-item
+{
+	position: relative;
+	aspect-ratio: 4 / 3;
+	border: 1px solid #d7dee8;
+	background: #f8fafc;
+	overflow: hidden;
+	cursor: grab;
+}
+
+.property-photo-preview-item.is-dragging
+{
+	opacity: 0.46;
+	cursor: grabbing;
+}
+
+.property-photo-preview-item.is-drop-target
+{
+	border-color: #4A7EDC;
+	box-shadow: 0 0 0 2px rgba(74, 126, 220, 0.18) inset;
+}
+
+.property-photo-preview-item img
+{
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+}
+
+.property-photo-remove-btn
+{
+	position: absolute;
+	top: 6px;
+	right: 6px;
+	width: 28px;
+	height: 28px;
+	border: 1px solid rgba(17, 24, 39, 0.16);
+	background: rgba(255, 255, 255, 0.92);
+	color: #111827;
+	font-size: 14px;
+	line-height: 1;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+}
+
+.property-photo-remove-btn:hover
+{
+	background: #ffffff;
+	border-color: #4A7EDC;
+	color: #4A7EDC;
+}
+
+.property-photo-preview-name
+{
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	padding: 6px 8px;
+	background: rgba(17, 24, 39, 0.68);
+	color: #ffffff;
+	font-size: 12px;
+	font-weight: 600;
+	letter-spacing: -0.1px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+/* PATCH 2.307: 파일 선택 버튼은 드래그 박스 아래에 분리 배치 */
+.property-photo-select-btn
+{
+	height: 42px;
+	margin-top: 10px;
+	padding: 0 18px;
+	border: 1px solid #cbd5e1;
+	background: #ffffff;
+	color: #111827;
+	font-size: 15px;
+	font-weight: 700;
+	letter-spacing: -0.12px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	cursor: pointer;
+}
+
+.property-photo-select-btn:hover
+{
+	border-color: #4A7EDC;
+	color: #4A7EDC;
 }
 
 .property-owner-phone-input
@@ -13180,6 +13680,28 @@ body[data-property-type="land"] .property-detail-date-check-row
 			<div class="admin-empty">신청 목록을 불러오세요.</div>
 		</div>
 	</section>
+	<!-- PATCH 2.316: 중개사 홈은 등록한 매물 관리 목록을 보여주는 전용 패널 -->
+	<section class="broker-home-panel" id="brokerHomePanel" aria-hidden="true">
+		<div class="admin-page-head">
+			<div>
+				<h1 class="admin-page-title">중개사 홈</h1>
+				<p class="admin-page-desc">내가 등록한 매물을 확인하고 관리합니다.</p>
+			</div>
+		</div>
+		<!-- PATCH 2.333: 마감/보관/삭제 작업 바는 매물 목록 박스 밖에 배치 -->
+		<div class="broker-listing-bulkbar" id="brokerListingsBulkBar" hidden>
+			<div class="broker-listing-bulk-left">
+				<button type="button" class="broker-listing-bulk-btn" data-broker-listing-bulk="closed">마감</button>
+				<button type="button" class="broker-listing-bulk-btn" data-broker-listing-bulk="archive">보관</button>
+			</div>
+			<div class="broker-listing-bulk-right">
+				<button type="button" class="broker-listing-bulk-btn danger" data-broker-listing-bulk="delete">삭제</button>
+			</div>
+		</div>
+		<div class="admin-application-list" id="brokerListingsList">
+			<div class="admin-empty">등록한 매물을 불러오세요.</div>
+		</div>
+	</section>
 	<section class="property-register-page" id="propertyRegisterPage" aria-hidden="true">
 		<div class="property-register-inner">
 			<div class="property-register-head">
@@ -13458,8 +13980,8 @@ body[data-property-type="land"] .property-detail-date-check-row
 								<div class="property-unit-input"><input type="text" class="property-register-input property-comma-number-input" id="propertyBathCountInput" placeholder="0" inputmode="numeric" /><span class="property-unit-label">개</span></div>
 							</div>
 						</div>
-						<!-- PATCH 2.295: 사무실/상가/창고처럼 방·욕실 개수가 맞지 않는 매물을 위한 예외 선택 -->
-						<label class="property-check-option property-room-na-option"><input type="checkbox" id="propertyRoomBathNotApplicableChk" /><span>해당없음</span></label>
+						<!-- PATCH 2.301: 해당없음은 체크박스 네모를 직접 누를 때만 선택되도록 label 클릭 영역 제거 -->
+						<div class="property-check-option property-room-na-option"><input type="checkbox" id="propertyRoomBathNotApplicableChk" /><span>해당없음</span></div>
 					</div>
 				</div>
 
@@ -13913,7 +14435,7 @@ body[data-property-type="land"] .property-detail-date-check-row
 						</div>
 					</div>
 
-					<div class="maintenance-form-row maintenance-top-row">
+					<div class="maintenance-form-row maintenance-top-row maintenance-detail-row">
 						<label class="property-form-label">부과기준<span class="property-required">*</span></label>
 						<div class="maintenance-form-field maintenance-detail-type-grid">
 							<label class="property-radio-option"><input type="radio" name="maintenanceDetailType" value="usage_by_household" /><span>세대별 사용량에 따라 부과</span></label>
@@ -13989,25 +14511,21 @@ body[data-property-type="land"] .property-detail-date-check-row
 				<div class="property-detail-row">
 					<label class="property-form-label">사진</label>
 					<div class="property-form-control">
-						<label class="property-upload-box" for="propertyPhotoUploadInput">
-							<i class="fa-regular fa-image" aria-hidden="true"></i>
-							<span>이미지/폴더를 드래그하거나 클릭해 업로드하기</span>
+						<!-- PATCH 2.309: 사진 장수는 드래그 박스 내부가 아니라 외곽 위쪽에 표시 -->
+						<span class="property-photo-count" id="propertyPhotoCount">(0/20)</span>
+						<label class="property-upload-box" id="propertyPhotoUploadBox" for="propertyPhotoUploadInput">
+							<i class="fa-regular fa-image property-upload-guide" aria-hidden="true"></i>
+							<span class="property-upload-guide">이미지/폴더를 드래그하거나 클릭해 업로드하기</span>
+							<!-- PATCH 2.304: 사진 미리보기는 업로드 박스 내부에 표시 -->
+							<div class="property-photo-preview-grid is-hidden" id="propertyPhotoPreviewGrid" aria-label="사진 미리보기"></div>
 						</label>
 						<input type="file" id="propertyPhotoUploadInput" accept="image/*" multiple hidden />
+						<!-- PATCH 2.307: 파일 선택 버튼은 드래그 박스 하단에 별도 표시 -->
+						<button type="button" class="property-photo-select-btn" id="propertyPhotoSelectBtn"><i class="fa-regular fa-image" aria-hidden="true"></i>파일 선택</button>
 					</div>
 				</div>
 
-				<div class="property-detail-row">
-					<label class="property-form-label">평면도</label>
-					<div class="property-form-control">
-						<label class="property-upload-box" for="propertyFloorPlanUploadInput">
-							<i class="fa-regular fa-image" aria-hidden="true"></i>
-							<span>평면도를 여기에 드래그하거나 클릭해서 추가할 수 있어요</span>
-						</label>
-						<input type="file" id="propertyFloorPlanUploadInput" accept="image/*" multiple hidden />
-					</div>
-				</div>
-
+				<!-- PATCH 2.311: 평면도 별도 업로드는 제거하고 사진 업로드 20장 안에 포함 -->
 				<div class="property-detail-row">
 					<label class="property-form-label" for="propertyYoutubeLinkInput">유튜브 링크</label>
 					<div class="property-form-control">
@@ -14157,9 +14675,9 @@ body[data-property-type="land"] .property-detail-date-check-row
 
 		<div class="sub-topbar">
 			<div class="sub-topbar-inner">
-				<!-- PATCH 2.296: 하단 버전 링크를 최신 파일로 갱신 -->
-				<a class="sub-version-fixed" href="realjeju_2.296.html" download="realjeju_2.296.html" title="realjeju_2.296.html 다운로드">
-					Ver 2.296
+				<!-- PATCH 2.316: 하단 버전 링크를 최신 파일로 갱신 -->
+				<a class="sub-version-fixed" href="realjeju_2.334.html" download="realjeju_2.334.html" title="realjeju_2.334.html 다운로드">
+					Ver 2.334
 				</a>
 				<div class="sub-topbar-left">
 					<strong id="listInfoText">
@@ -15402,7 +15920,7 @@ function hexToRgba(hex, alpha = 1)
 	return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 const APP_NAME = "REALJEJU.APP";
-const APP_VERSION = "2.296";
+const APP_VERSION = "2.334";
 
 function applyAppVersion()
 {
@@ -20518,7 +21036,8 @@ function applyLoggedInAccountUI(user, profile)
 	{
 		function forceGoHomeAfterLogout()
 		{
-			document.body.classList.remove("property-register-page-open", "admin-page-open");
+			// PATCH 2.316: 로그아웃 강제 홈 전환에서도 중개사 홈 패널을 함께 닫는다
+			document.body.classList.remove("property-register-page-open", "admin-page-open", "broker-home-page-open");
 
 			const propertyRegisterPage = document.getElementById("propertyRegisterPage");
 			if (propertyRegisterPage) propertyRegisterPage.setAttribute("aria-hidden", "true");
@@ -20528,6 +21047,9 @@ function applyLoggedInAccountUI(user, profile)
 
 			const adminPagePanel = document.getElementById("adminPagePanel");
 			if (adminPagePanel) adminPagePanel.setAttribute("aria-hidden", "true");
+
+			const brokerHomePanel = document.getElementById("brokerHomePanel");
+			if (brokerHomePanel) brokerHomePanel.setAttribute("aria-hidden", "true");
 
 			document.querySelectorAll(".topbar-menu-item").forEach((btn) => btn.classList.remove("active"));
 
@@ -20704,6 +21226,9 @@ function applyLoggedInAccountUI(user, profile)
 		});
 		return realjejuSupabaseClient;
 	}
+
+	// PATCH 2.313: 매물 저장 등 다른 스크립트에서도 같은 Supabase 클라이언트를 쓰도록 전역 노출
+	window.getRealjejuSupabaseClient = getRealjejuSupabaseClient;
 
 	const TERMS_JSON_URLS = {
 		service: "https://realjeju.app/terms/terms_of_service.json",
@@ -22079,6 +22604,14 @@ function applyLoggedInAccountUI(user, profile)
 		if (adminPagePanel) adminPagePanel.setAttribute("aria-hidden", "true");
 	}
 
+	// PATCH 2.316: 중개사 홈 패널은 등록 매물 저장 완료 후 이동할 관리 화면
+	function closeBrokerHomePage()
+	{
+		document.body.classList.remove("broker-home-page-open");
+		const brokerHomePanel = document.getElementById("brokerHomePanel");
+		if (brokerHomePanel) brokerHomePanel.setAttribute("aria-hidden", "true");
+	}
+
 	function closePropertyRegisterPage()
 	{
 		document.body.classList.remove("property-register-page-open");
@@ -22251,11 +22784,27 @@ function applyLoggedInAccountUI(user, profile)
 		resetPropertyRegisterFormFields();
 	}
 
+	// PATCH 2.322: 매물 등록/수정 모드를 같은 폼에서 명확히 구분해 하단 버튼 문구를 전환
+	function setPropertyRegisterEditMode(isEdit)
+	{
+		const page = document.getElementById("propertyRegisterPage");
+		const submitBtn = document.getElementById("propertySubmitBtn");
+		const draftBtn = document.getElementById("propertyDraftSaveBtn");
+		if (page) page.classList.toggle("is-edit-mode", !!isEdit);
+		if (submitBtn) submitBtn.textContent = isEdit ? "매물 수정하기" : "매물 등록하기";
+		if (draftBtn) draftBtn.textContent = isEdit ? "취소" : "임시저장";
+	}
+	window.realjejuSetPropertyRegisterEditMode = setPropertyRegisterEditMode;
+
 	// PATCH 2.280: 매물 등록 폼 값 초기화는 동기 처리로 분리해 확인 콜백에서 즉시 반영
 	function resetPropertyRegisterFormFields()
 	{
 		const page = document.getElementById("propertyRegisterPage");
 		if (!page) return;
+		// PATCH 2.315: 새 글 시작 시 이전 저장 매물 ID를 비워 다음 저장이 새 매물이 되게 함
+		delete page.dataset.listingId;
+		window.REALJEJU_LAST_SAVED_LISTING_ID = "";
+		setPropertyRegisterEditMode(false);
 
 		page.querySelectorAll("input, textarea, select").forEach((el) => {
 			if (el.closest(".property-registrant-card")) return;
@@ -22267,6 +22816,8 @@ function applyLoggedInAccountUI(user, profile)
 			el.dispatchEvent(new Event("input", { bubbles: true }));
 			el.dispatchEvent(new Event("change", { bubbles: true }));
 		});
+		// PATCH 2.303: 새 글 시작 시 사진 미리보기와 선택 파일도 함께 초기화
+		if (typeof window.realjejuClearPropertyPhotoPreview === "function") window.realjejuClearPropertyPhotoPreview();
 
 		const propertyTypeSelect = document.getElementById("propertyTypeSelect");
 		if (propertyTypeSelect) propertyTypeSelect.value = "apartment";
@@ -22305,6 +22856,7 @@ function applyLoggedInAccountUI(user, profile)
 	{
 		closeGlobalAccountDropdown();
 		closeAdminPage();
+		closeBrokerHomePage();
 
 		if (document.body.classList.contains("property-register-page-open")) {
 			const propertyRegisterPage = document.getElementById("propertyRegisterPage");
@@ -22333,6 +22885,7 @@ function applyLoggedInAccountUI(user, profile)
 		document.body.classList.add("property-register-page-open");
 		const propertyRegisterPage = document.getElementById("propertyRegisterPage");
 		if (propertyRegisterPage) propertyRegisterPage.setAttribute("aria-hidden", "false");
+		setPropertyRegisterEditMode(false);
 		renderPropertyPriceFields();
 		scrollPropertyRegisterToTop();
 
@@ -22825,6 +23378,28 @@ function applyLoggedInAccountUI(user, profile)
 		});
 	}
 
+	// PATCH 2.300: 방/욕실 value가 비어 있고 placeholder가 0인 화면 상태도 0으로 간주
+	function syncPropertyRoomBathZeroState()
+	{
+		const checkbox = document.getElementById("propertyRoomBathNotApplicableChk");
+		const roomInput = document.getElementById("propertyRoomCountInput");
+		const bathInput = document.getElementById("propertyBathCountInput");
+		if (!checkbox || !roomInput || !bathInput || checkbox.checked) return;
+		const visibleNumberValue = (input) => {
+			const raw = String(input.value || "").replace(/,/g, "").trim();
+			if (raw) return raw;
+			return String(input.getAttribute("placeholder") || "").replace(/,/g, "").trim();
+		};
+		const roomValue = visibleNumberValue(roomInput);
+		const bathValue = visibleNumberValue(bathInput);
+		if (roomValue === "0" && bathValue === "0") {
+			checkbox.checked = true;
+			updatePropertyRoomBathNotApplicable();
+		}
+	}
+
+	window.realjejuSyncPropertyRoomBathZeroState = syncPropertyRoomBathZeroState;
+
 	function bindPropertyRoomBathNotApplicable()
 	{
 		const checkbox = document.getElementById("propertyRoomBathNotApplicableChk");
@@ -22843,8 +23418,11 @@ function applyLoggedInAccountUI(user, profile)
 					checkbox.checked = false;
 					updatePropertyRoomBathNotApplicable();
 				}
+				syncPropertyRoomBathZeroState();
 			});
+			input.addEventListener("change", syncPropertyRoomBathZeroState);
 		});
+		syncPropertyRoomBathZeroState();
 		updatePropertyRoomBathNotApplicable();
 	}
 
@@ -22961,12 +23539,208 @@ function applyLoggedInAccountUI(user, profile)
 		if (!radioValue("propertyPet")) setRadio("propertyPet", "check");
 	}
 
+	// PATCH 2.308: 사진은 최대 20장까지 등록하고 카운터를 한곳에서 갱신
+	const PROPERTY_PHOTO_MAX_COUNT = 20;
+
+	// PATCH 2.303: 사진 드래그/선택 파일을 하단 썸네일로 바로 보여줌
+	const propertyPhotoPreviewState = {
+		items: [],
+		nextId: 1,
+		draggingId: null
+	};
+
+	// PATCH 2.319: 썸네일 정렬 순서와 실제 업로드 파일 순서를 항상 같이 맞춤
+	function syncPropertyPhotoFiles()
+	{
+		window.realjejuPropertyPhotoFiles = propertyPhotoPreviewState.items.map((photo) => photo.file);
+	}
+
+	function clearPropertyPhotoDropTarget()
+	{
+		document.querySelectorAll(".property-photo-preview-item.is-drop-target").forEach((el) => {
+			el.classList.remove("is-drop-target");
+		});
+	}
+
+	function reorderPropertyPhotoPreview(dragId, targetId)
+	{
+		const fromIndex = propertyPhotoPreviewState.items.findIndex((photo) => photo.id === dragId);
+		const toIndex = propertyPhotoPreviewState.items.findIndex((photo) => photo.id === targetId);
+		if (fromIndex < 0 || toIndex < 0 || fromIndex === toIndex) return;
+		const [moving] = propertyPhotoPreviewState.items.splice(fromIndex, 1);
+		propertyPhotoPreviewState.items.splice(toIndex, 0, moving);
+		syncPropertyPhotoFiles();
+		renderPropertyPhotoPreview();
+	}
+
+	function renderPropertyPhotoPreview()
+	{
+		const grid = document.getElementById("propertyPhotoPreviewGrid");
+		const uploadBox = document.getElementById("propertyPhotoUploadBox");
+		const count = document.getElementById("propertyPhotoCount");
+		if (!grid) return;
+		grid.innerHTML = "";
+		grid.classList.toggle("is-hidden", propertyPhotoPreviewState.items.length === 0);
+		if (uploadBox) uploadBox.classList.toggle("has-photo-preview", propertyPhotoPreviewState.items.length > 0);
+		if (count) count.textContent = `(${propertyPhotoPreviewState.items.length}/${PROPERTY_PHOTO_MAX_COUNT})`;
+		propertyPhotoPreviewState.items.forEach((item) => {
+			const box = document.createElement("div");
+			box.className = "property-photo-preview-item";
+			box.dataset.photoId = String(item.id);
+			box.draggable = true;
+			box.setAttribute("aria-label", "사진 순서 변경");
+			box.addEventListener("click", (event) => {
+				event.preventDefault();
+				event.stopPropagation();
+			});
+
+			box.addEventListener("dragstart", (event) => {
+				propertyPhotoPreviewState.draggingId = item.id;
+				box.classList.add("is-dragging");
+				event.dataTransfer.effectAllowed = "move";
+				event.dataTransfer.setData("text/plain", String(item.id));
+			});
+			box.addEventListener("dragover", (event) => {
+				event.preventDefault();
+				if (propertyPhotoPreviewState.draggingId && propertyPhotoPreviewState.draggingId !== item.id) {
+					clearPropertyPhotoDropTarget();
+					box.classList.add("is-drop-target");
+					event.dataTransfer.dropEffect = "move";
+				}
+			});
+			box.addEventListener("dragleave", () => {
+				box.classList.remove("is-drop-target");
+			});
+			box.addEventListener("drop", (event) => {
+				event.preventDefault();
+				event.stopPropagation();
+				const dragId = Number(event.dataTransfer.getData("text/plain") || propertyPhotoPreviewState.draggingId);
+				clearPropertyPhotoDropTarget();
+				reorderPropertyPhotoPreview(dragId, item.id);
+				propertyPhotoPreviewState.draggingId = null;
+			});
+			box.addEventListener("dragend", () => {
+				propertyPhotoPreviewState.draggingId = null;
+				box.classList.remove("is-dragging");
+				clearPropertyPhotoDropTarget();
+			});
+
+			const img = document.createElement("img");
+			img.src = item.url;
+			img.alt = item.file.name || "매물 사진";
+			img.draggable = false;
+
+			const removeBtn = document.createElement("button");
+			removeBtn.type = "button";
+			removeBtn.className = "property-photo-remove-btn";
+			removeBtn.setAttribute("aria-label", "사진 삭제");
+			removeBtn.innerHTML = '<i class="fa-solid fa-xmark" aria-hidden="true"></i>';
+			removeBtn.addEventListener("click", (event) => {
+				event.preventDefault();
+				event.stopPropagation();
+				URL.revokeObjectURL(item.url);
+				propertyPhotoPreviewState.items = propertyPhotoPreviewState.items.filter((photo) => photo.id !== item.id);
+				syncPropertyPhotoFiles();
+				renderPropertyPhotoPreview();
+			});
+
+			const name = document.createElement("div");
+			name.className = "property-photo-preview-name";
+			name.textContent = item.file.name || "사진";
+
+			box.appendChild(img);
+			box.appendChild(removeBtn);
+			box.appendChild(name);
+			grid.appendChild(box);
+		});
+	}
+
+	function addPropertyPhotoFiles(files)
+	{
+		const imageFiles = Array.from(files || []).filter((file) => {
+			return /^image\//.test(file.type || "") || /\.(jpe?g|png|gif|webp|bmp|heic|heif)$/i.test(file.name || "");
+		});
+		if (!imageFiles.length) return;
+		const remainingCount = PROPERTY_PHOTO_MAX_COUNT - propertyPhotoPreviewState.items.length;
+		if (remainingCount <= 0) {
+			if (typeof openAuthErrorModal === "function") openAuthErrorModal("사진은 최대 20장까지 등록할 수 있습니다.", "사진 등록", null);
+			return;
+		}
+		const filesToAdd = imageFiles.slice(0, remainingCount);
+		filesToAdd.forEach((file) => {
+			propertyPhotoPreviewState.items.push({
+				id: propertyPhotoPreviewState.nextId++,
+				file,
+				url: URL.createObjectURL(file)
+			});
+		});
+		syncPropertyPhotoFiles();
+		renderPropertyPhotoPreview();
+		// PATCH 2.310: 사진 제한 안내 문구는 한 문장만 표시
+		if (imageFiles.length > remainingCount && typeof openAuthErrorModal === "function") openAuthErrorModal("사진은 최대 20장까지 등록할 수 있습니다.", "사진 등록", null);
+	}
+
+	function clearPropertyPhotoPreview()
+	{
+		propertyPhotoPreviewState.items.forEach((item) => URL.revokeObjectURL(item.url));
+		propertyPhotoPreviewState.items = [];
+		propertyPhotoPreviewState.draggingId = null;
+		syncPropertyPhotoFiles();
+		const input = document.getElementById("propertyPhotoUploadInput");
+		if (input) input.value = "";
+		renderPropertyPhotoPreview();
+	}
+
+	window.realjejuClearPropertyPhotoPreview = clearPropertyPhotoPreview;
+
+	function bindPropertyPhotoPreviewUpload()
+	{
+		const uploadBox = document.getElementById("propertyPhotoUploadBox");
+		const input = document.getElementById("propertyPhotoUploadInput");
+		const selectBtn = document.getElementById("propertyPhotoSelectBtn");
+		if (!uploadBox || !input || uploadBox.dataset.photoPreviewBound === "1") return;
+		uploadBox.dataset.photoPreviewBound = "1";
+
+		if (selectBtn) {
+			selectBtn.addEventListener("click", (event) => {
+				event.preventDefault();
+				event.stopPropagation();
+				input.click();
+			});
+		}
+
+		input.addEventListener("change", () => {
+			addPropertyPhotoFiles(input.files);
+			input.value = "";
+		});
+
+		["dragenter", "dragover"].forEach((type) => {
+			uploadBox.addEventListener(type, (event) => {
+				event.preventDefault();
+				if (propertyPhotoPreviewState.draggingId) return;
+				uploadBox.classList.add("is-dragover");
+			});
+		});
+
+		["dragleave", "drop"].forEach((type) => {
+			uploadBox.addEventListener(type, () => {
+				uploadBox.classList.remove("is-dragover");
+			});
+		});
+
+		uploadBox.addEventListener("drop", (event) => {
+			event.preventDefault();
+			addPropertyPhotoFiles(event.dataTransfer ? event.dataTransfer.files : []);
+		});
+	}
+
 	function bindPropertyRegisterPageEvents()
 	{
 		bindPropertyAreaAutoCalc();
 		bindPropertyMoneyCommaInputs(document);
 		bindPropertyPlainNumberCommaInputs(document);
 		bindPropertyRoomBathNotApplicable();
+		bindPropertyPhotoPreviewUpload();
 		const propertyTypeSelect = document.getElementById("propertyTypeSelect");
 		if (propertyTypeSelect && propertyTypeSelect.dataset.areaBound !== "1") {
 			propertyTypeSelect.dataset.areaBound = "1";
@@ -23026,6 +23800,7 @@ function applyLoggedInAccountUI(user, profile)
 		}
 
 		closeGlobalAccountDropdown();
+		closeBrokerHomePage();
 		if (authModal) {
 			authModal.classList.remove("open");
 			authModal.classList.remove("profile-page-mode");
@@ -23052,6 +23827,344 @@ function applyLoggedInAccountUI(user, profile)
 			.replace(/>/g, "&gt;")
 			.replace(/"/g, "&quot;")
 			.replace(/'/g, "&#39;");
+	}
+
+	function formatBrokerManwon(value)
+	{
+		const num = Number(value);
+		if (!Number.isFinite(num) || num <= 0) return "";
+		return num.toLocaleString("ko-KR");
+	}
+
+	function getBrokerDealLabel(deal)
+	{
+		const labels = { sale: "매매", jeonse: "전세", monthly: "월세", yearly: "년세", short: "단기" };
+		return labels[deal] || deal || "-";
+	}
+
+	function getBrokerListingPrice(row)
+	{
+		const payload = row && row.payload && typeof row.payload === "object" ? row.payload : {};
+		const prices = payload.prices || {};
+		const deals = Array.isArray(row.deal_types) ? row.deal_types : [];
+		// PATCH 2.327: 중개사 홈 가격 앞에 대표 거래유형을 함께 표시
+		if (deals.includes("sale") && prices.sale?.price) return `매매 ${formatBrokerManwon(prices.sale.price)}`;
+		if (deals.includes("jeonse") && prices.jeonse?.deposit) return `전세 ${formatBrokerManwon(prices.jeonse.deposit)}`;
+		if (deals.includes("monthly")) {
+			const deposit = formatBrokerManwon(prices.monthly?.deposit);
+			const rent = formatBrokerManwon(prices.monthly?.rent);
+			const price = [deposit, rent].filter(Boolean).join(" / ");
+			return price ? `월세 ${price}` : "-";
+		}
+		if (deals.includes("yearly")) {
+			const deposit = formatBrokerManwon(prices.yearly?.deposit);
+			const rent = formatBrokerManwon(prices.yearly?.rent);
+			const price = [deposit, rent].filter(Boolean).join(" / ");
+			return price ? `년세 ${price}` : "-";
+		}
+		if (deals.includes("short")) {
+			const deposit = formatBrokerManwon(prices.short?.deposit);
+			const rent = formatBrokerManwon(prices.short?.rent);
+			const price = [deposit, rent].filter(Boolean).join(" / ");
+			return price ? `단기 ${price}` : "-";
+		}
+		return "-";
+	}
+
+	function getBrokerListingThumbHtml(row)
+	{
+		const photos = Array.isArray(row.photos) ? row.photos : [];
+		const first = photos.find((photo) => photo && (photo.url || photo.publicUrl));
+		const url = first ? (first.url || first.publicUrl) : "";
+		return url
+			? `<img src="${escapeAdminHtml(url)}" alt="매물 사진">`
+			: `<span>사진 없음</span>`;
+	}
+
+	// PATCH 2.324: 중개사 홈 목록용 등록일/매물번호/블로그 복사 문구를 한곳에서 만든다
+	function formatBrokerListingDate(value)
+	{
+		if (!value) return "-";
+		const date = new Date(value);
+		if (Number.isNaN(date.getTime())) return "-";
+		const yy = String(date.getFullYear()).slice(2);
+		const mm = String(date.getMonth() + 1).padStart(2, "0");
+		const dd = String(date.getDate()).padStart(2, "0");
+		return `${yy}.${mm}.${dd}`;
+	}
+
+	function getBrokerListingStatusLabel(status)
+	{
+		if (status === "published") return "등록";
+		if (status === "draft") return "임시";
+		return status || "-";
+	}
+
+	function getBrokerListingNo(row)
+	{
+		const payload = row && row.payload && typeof row.payload === "object" ? row.payload : {};
+		const source = [
+			row?.title,
+			payload.description,
+			payload.agency_memo
+		].filter(Boolean).join("\n");
+		const match = source.match(/(?:매물번호\s*[:：]?\s*)?([가-힣A-Za-z]{1,4}[-\s]?\d{2,5})/);
+		if (match) return match[1].replace(/\s+/g, "");
+		return String(row?.id || "").slice(0, 8) || "-";
+	}
+
+	function getBrokerListingBlogText(row)
+	{
+		const payload = row && row.payload && typeof row.payload === "object" ? row.payload : {};
+		const deals = Array.isArray(row.deal_types) && row.deal_types.length ? row.deal_types.map(getBrokerDealLabel).join(", ") : "";
+		return [
+			row.title || "",
+			`매물유형: ${row.property_type_label || "-"}`,
+			deals ? `거래유형: ${deals}` : "",
+			`가격: ${getBrokerListingPrice(row)}만원`,
+			`주소: ${row.public_address || "-"}`,
+			"",
+			payload.description || ""
+		].filter((line, index) => index === 5 || String(line || "").trim()).join("\n");
+	}
+
+	async function copyBrokerListingBlogText(listingId)
+	{
+		const row = window.realjejuBrokerListingRowsById?.get(String(listingId || ""));
+		if (!row) return;
+		const text = getBrokerListingBlogText(row);
+		try {
+			await navigator.clipboard.writeText(text);
+			openAuthErrorModal("블로그용 문구를 복사했습니다.", "블로그복사", null);
+		}
+		catch (err) {
+			console.warn("블로그 문구 복사 실패:", err);
+			openAuthErrorModal("복사에 실패했습니다. 브라우저 권한을 확인하세요.", "블로그복사", null);
+		}
+	}
+
+	function setBrokerEditInput(id, value)
+	{
+		const el = document.getElementById(id);
+		if (!el || value === undefined || value === null) return;
+		el.value = String(value);
+		el.dispatchEvent(new Event("input", { bubbles: true }));
+		el.dispatchEvent(new Event("change", { bubbles: true }));
+	}
+
+	function setBrokerEditSelect(id, value)
+	{
+		const select = document.getElementById(id);
+		if (!select || value === undefined || value === null) return;
+		select.value = String(value || "");
+		const wrap = select.closest("[data-register-dropdown]");
+		if (wrap) {
+			const label = wrap.querySelector("[data-register-dropdown-label]");
+			const option = wrap.querySelector(`.property-register-dropdown-option[data-value="${CSS.escape(select.value)}"]`);
+			wrap.querySelectorAll(".property-register-dropdown-option").forEach((btn) => btn.classList.toggle("active", btn === option));
+			if (label) label.textContent = option ? option.textContent.trim() : (select.options[select.selectedIndex]?.textContent || "선택");
+		}
+		select.dispatchEvent(new Event("change", { bubbles: true }));
+	}
+
+	function setBrokerEditRadio(name, value)
+	{
+		const radio = document.querySelector(`input[name="${name}"][value="${CSS.escape(String(value || ""))}"]`);
+		if (!radio) return;
+		radio.checked = true;
+		radio.dispatchEvent(new Event("change", { bubbles: true }));
+	}
+
+	function setBrokerEditCheck(id, checked)
+	{
+		const el = document.getElementById(id);
+		if (!el) return;
+		el.checked = !!checked;
+		el.dispatchEvent(new Event("change", { bubbles: true }));
+	}
+
+	// PATCH 2.322: 저장 당시 폼 상태가 있으면 수정 화면에서 빠진 항목 없이 우선 복원
+	function restoreBrokerEditFormState(formState)
+	{
+		if (!formState || typeof formState !== "object") return;
+		Object.entries(formState.selects || {}).forEach(([id, value]) => setBrokerEditSelect(id, value));
+		Object.entries(formState.inputs || {}).forEach(([id, value]) => setBrokerEditInput(id, value));
+		Object.entries(formState.checks || {}).forEach(([id, checked]) => setBrokerEditCheck(id, checked));
+		Object.entries(formState.radios || {}).forEach(([name, value]) => setBrokerEditRadio(name, value));
+		if (typeof renderPropertyPriceFields === "function") renderPropertyPriceFields();
+	}
+
+	function setBrokerEditMaintenanceTab(type)
+	{
+		const tab = document.querySelector(`#propertyMaintenanceCard .maintenance-tab[data-maintenance-type="${CSS.escape(String(type || "fixed"))}"]`);
+		if (tab) tab.click();
+	}
+
+	// PATCH 2.322: 기존 저장 데이터의 관리비 탭과 세부 체크값을 수정 화면에 다시 표시
+	function restoreBrokerEditMaintenance(maintenance)
+	{
+		if (!maintenance || typeof maintenance !== "object") return;
+		const maintenanceType = maintenance.type || "fixed";
+		// PATCH 2.323: 기존 저장분에 부과기준 값이 없으면 기타 부과 기본값으로 복원
+		const detailType = maintenance.detail_type || (maintenanceType === "extra" ? "common_area_usage" : "");
+		setBrokerEditMaintenanceTab(maintenanceType);
+		setBrokerEditCheck("maintenanceUnder100kChk", !!maintenance.under_100k_or_unprovided);
+		setBrokerEditRadio("maintenanceFixedBase", maintenance.fixed_base || "");
+		setBrokerEditRadio("maintenanceExtraBase", maintenance.extra_base || "");
+		setBrokerEditRadio("maintenanceDetailType", detailType);
+		setBrokerEditRadio("maintenanceUnknownReason", maintenance.unknown_reason || "");
+		setBrokerEditInput("maintenanceNoneValue", maintenance.no_fee_value || "");
+		setBrokerEditInput("maintenanceNoneReason", maintenance.no_fee_reason || "");
+		setBrokerEditInput("maintenanceFixedTotalInput", maintenance.fixed_total_won ?? "");
+		setBrokerEditInput("maintenanceTotalInput", maintenance.total_won ?? "");
+		setBrokerEditInput("maintenanceCommonInput", maintenance.common_manwon ?? "");
+		[
+			["Common", "common"],
+			["Electric", "electric"],
+			["Water", "water"],
+			["Gas", "gas"],
+			["Heating", "heating"],
+			["Internet", "internet"],
+			["Tv", "tv"],
+			["Etc", "etc"]
+		].forEach(([suffix, key]) => {
+			const checked = !!maintenance[`include_${key}`];
+			setBrokerEditCheck(`maintenanceFixedInclude${suffix}Chk`, checked);
+			setBrokerEditCheck(`maintenanceInclude${suffix}Chk`, checked);
+		});
+		[
+			["maintenanceElectricType", "electric_type"],
+			["maintenanceWaterType", "water_type"],
+			["maintenanceGasType", "gas_type"],
+			["maintenanceHeatingType", "heating_type"],
+			["maintenanceInternetType", "internet_type"],
+			["maintenanceTvType", "tv_type"],
+			["maintenanceEtcType", "etc_type"]
+		].forEach(([name, key]) => setBrokerEditRadio(name, maintenance[key] || ""));
+		[
+			["maintenanceElectricInput", "electric_manwon"],
+			["maintenanceWaterInput", "water_manwon"],
+			["maintenanceGasInput", "gas_manwon"],
+			["maintenanceHeatingInput", "heating_manwon"],
+			["maintenanceInternetInput", "internet_manwon"],
+			["maintenanceTvInput", "tv_manwon"],
+			["maintenanceEtcInput", "etc_manwon"]
+		].forEach(([id, key]) => setBrokerEditInput(id, maintenance[key] ?? ""));
+	}
+
+	function fillBrokerListingEditForm(row)
+	{
+		const payload = row && row.payload && typeof row.payload === "object" ? row.payload : {};
+		const prices = payload.prices || {};
+		const areas = payload.areas || {};
+		const building = payload.building || {};
+		const rooms = payload.rooms || {};
+		const floors = payload.floors || {};
+		const moveIn = payload.move_in || {};
+		const registrant = payload.registrant || {};
+		const address = payload.address || {};
+		const page = document.getElementById("propertyRegisterPage");
+		if (page) page.dataset.listingId = row.id || "";
+		if (typeof window.realjejuSetPropertyRegisterEditMode === "function") window.realjejuSetPropertyRegisterEditMode(true);
+
+		setBrokerEditSelect("propertyTypeSelect", row.property_type || "");
+		setBrokerEditSelect("buildingUseSelect", payload.building_use || "");
+		document.querySelectorAll(".property-deal-check").forEach((input) => {
+			input.checked = Array.isArray(row.deal_types) && row.deal_types.includes(input.value);
+		});
+		if (typeof renderPropertyPriceFields === "function") renderPropertyPriceFields();
+		restoreBrokerEditFormState(payload.form_state);
+		setBrokerEditInput("priceSaleInput", prices.sale?.price || "");
+		setBrokerEditInput("priceJeonseDepositInput", prices.jeonse?.deposit || "");
+		setBrokerEditInput("priceMonthlyDepositInput", prices.monthly?.deposit || "");
+		setBrokerEditInput("priceMonthlyRentInput", prices.monthly?.rent || "");
+		setBrokerEditInput("priceYearlyDepositInput", prices.yearly?.deposit || "");
+		setBrokerEditInput("priceYearlyRentInput", prices.yearly?.rent || "");
+		setBrokerEditInput("priceShortDepositInput", prices.short?.deposit || "");
+		setBrokerEditInput("priceShortRentInput", prices.short?.rent || "");
+
+		setBrokerEditInput("propertyLocationSummaryInput", row.title || "");
+		const addressInput = document.getElementById("propertyAddressInput");
+		if (addressInput) {
+			addressInput.value = row.address1 || row.public_address || "";
+			addressInput.dataset.address1 = row.address1 || row.public_address || "";
+			addressInput.dataset.address2 = row.address2 || "";
+			addressInput.dataset.publicAddress = row.public_address || row.address1 || "";
+			addressInput.dataset.privateAddress = row.address2 || "";
+			addressInput.dataset.hideDetailJibun = row.hide_detail_jibun ? "1" : "0";
+			addressInput.dataset.roadAddress = address.addressRoad || "";
+			addressInput.dataset.jibunAddress = address.addressJibun || row.address1 || "";
+			addressInput.dataset.zonecode = address.zonecode || "";
+			addressInput.dataset.detailAddress = row.address2 || "";
+			if (row.lat || address.lat) addressInput.dataset.lat = row.lat || address.lat;
+			if (row.lng || address.lng) addressInput.dataset.lng = row.lng || address.lng;
+			addressInput.dispatchEvent(new Event("input", { bubbles: true }));
+			addressInput.dispatchEvent(new Event("change", { bubbles: true }));
+		}
+		if (typeof window.realjejuRestorePropertyAddressLocation === "function") {
+			window.realjejuRestorePropertyAddressLocation({
+				...address,
+				address1: row.address1 || row.public_address || address.address1 || address.addressDisplay || "",
+				address2: row.address2 || address.address2 || address.addressDetail || "",
+				publicAddress: row.public_address || address.publicAddress || address.addressDisplay || "",
+				lat: row.lat ?? address.lat,
+				lng: row.lng ?? address.lng,
+				locationDisplayType: row.location_display_type || address.locationDisplayType
+			});
+		}
+
+		setBrokerEditInput("exclusiveAreaM2Input", areas.exclusive_m2 || "");
+		setBrokerEditInput("exclusiveAreaPyInput", areas.exclusive_py || "");
+		setBrokerEditInput("supplyAreaM2Input", areas.supply_m2 || "");
+		setBrokerEditInput("supplyAreaPyInput", areas.supply_py || "");
+		setBrokerEditInput("landAreaM2Input", areas.land_m2 || "");
+		setBrokerEditInput("landAreaPyInput", areas.land_py || "");
+		setBrokerEditInput("landRoadInput", areas.land_road || "");
+		setBrokerEditSelect("landTypeSelect", areas.land_type || "");
+		setBrokerEditSelect("landUseZoneSelect", areas.land_use_zone || "");
+
+		setBrokerEditInput("propertyApprovalDateInput", building.approval_date || "");
+		setBrokerEditInput("propertyStoreCountInput", building.store_count || "");
+		setBrokerEditInput("propertyHouseholdCountInput", building.household_count || "");
+		setBrokerEditSelect("propertyDirectionSelect", building.direction || "");
+		setBrokerEditRadio("propertyLoan", building.loan || "check");
+		setBrokerEditRadio("propertyParking", building.parking || "");
+		setBrokerEditInput("propertyParkingTotalInput", building.parking_total || "");
+		setBrokerEditInput("propertyParkingPerInput", building.parking_per_household || "");
+		setBrokerEditRadio("propertyHeating", building.heating || "");
+		setBrokerEditSelect("propertyHeatingFuelSelect", building.heating_fuel || "");
+
+		setBrokerEditCheck("propertyRoomBathNotApplicableChk", !!rooms.not_applicable);
+		setBrokerEditInput("propertyRoomCountInput", rooms.room_count ?? "");
+		setBrokerEditInput("propertyBathCountInput", rooms.bath_count ?? "");
+		setBrokerEditInput("propertyTotalFloorInput", floors.total_floor || "");
+		setBrokerEditInput("propertyCurrentFloorInput", floors.current_floor || "");
+		setBrokerEditCheck("propertyFloorLevelUseCheck", !!floors.use_level_label);
+		setBrokerEditRadio("propertyFloorLevel", floors.level_label || "");
+		setBrokerEditCheck("propertyBasementCheck", !!floors.basement);
+		setBrokerEditCheck("propertySemiBasementCheck", !!floors.semi_basement);
+		setBrokerEditCheck("propertyWholeBuildingCheck", !!floors.whole_building);
+
+		setBrokerEditInput("propertyMoveInDateInput", moveIn.date || "");
+		setBrokerEditCheck("propertyMoveInNowChk", !!moveIn.now);
+		setBrokerEditCheck("propertyMoveInNegotiableChk", !!moveIn.negotiable);
+		setBrokerEditInput("propertyDetailDescriptionInput", payload.description || "");
+		setBrokerEditInput("propertyYoutubeLinkInput", payload.youtube_url || "");
+		setBrokerEditInput("propertyAgencyMemoInput", payload.agency_memo || "");
+		setBrokerEditInput("registrantOfficeNameInput", registrant.office_name || "");
+		setBrokerEditInput("registrantRepresentativeInput", registrant.representative || "");
+		setBrokerEditInput("registrantPhone1Input", registrant.phone1 || "");
+		setBrokerEditInput("registrantManagerNameInput", registrant.manager_name || "");
+		setBrokerEditCheck("registrantLicensedAgentChk", !!registrant.is_licensed_agent);
+		setBrokerEditInput("registrantPhone2Input", registrant.phone2 || "");
+		restoreBrokerEditMaintenance(payload.maintenance);
+
+		if (typeof updatePropertyRegisterAreaFields === "function") updatePropertyRegisterAreaFields();
+		if (typeof updatePropertyInfoFieldsByType === "function") updatePropertyInfoFieldsByType();
+		if (typeof window.realjejuSyncPropertyCountRowsVisibility === "function") window.realjejuSyncPropertyCountRowsVisibility();
+		if (typeof updatePropertyParkingDetail === "function") updatePropertyParkingDetail();
+		if (typeof updatePropertyFloorLevelRadioState === "function") updatePropertyFloorLevelRadioState();
+		if (typeof window.realjejuClearPropertyPhotoPreview === "function") window.realjejuClearPropertyPhotoPreview();
 	}
 
 	async function loadAdminApplications()
@@ -23121,6 +24234,161 @@ function applyLoggedInAccountUI(user, profile)
 		}
 	}
 
+	// PATCH 2.316: 중개사 홈은 현재 로그인 사용자의 등록 매물만 불러온다
+	async function loadBrokerListings(currentListingId)
+	{
+		const listEl = document.getElementById("brokerListingsList");
+		if (!listEl) return;
+		const bulkBar = document.getElementById("brokerListingsBulkBar");
+		const user = currentRealjejuAuthUser;
+		if (!user || !user.id) {
+			if (bulkBar) bulkBar.hidden = true;
+			listEl.innerHTML = '<div class="admin-empty">로그인 후 매물을 확인할 수 있습니다.</div>';
+			return;
+		}
+
+		const client = getRealjejuSupabaseClient();
+		if (!client) {
+			if (bulkBar) bulkBar.hidden = true;
+			listEl.innerHTML = '<div class="admin-empty">Supabase 연결 설정을 확인하세요.</div>';
+			return;
+		}
+
+		if (bulkBar) bulkBar.hidden = true;
+		listEl.innerHTML = '<div class="admin-empty">등록 매물을 불러오는 중입니다.</div>';
+		listEl.classList.remove("broker-listing-list");
+
+		try {
+			const { data, error } = await client
+				.from("property_listings")
+				.select("id, status, property_type, property_type_label, deal_types, title, public_address, created_at, updated_at, photos, payload")
+				.eq("user_id", user.id)
+				.order("updated_at", { ascending: false });
+
+			if (error) {
+				console.error("중개사 매물 목록 조회 실패:", error);
+				listEl.innerHTML = '<div class="admin-empty">등록 매물을 불러오지 못했습니다.</div>';
+				return;
+			}
+
+			const rows = Array.isArray(data) ? data : [];
+			if (!rows.length) {
+				if (bulkBar) bulkBar.hidden = true;
+				listEl.classList.remove("broker-listing-list");
+				listEl.innerHTML = '<div class="admin-empty">아직 등록한 매물이 없습니다.</div>';
+				return;
+			}
+
+			if (bulkBar) bulkBar.hidden = false;
+			listEl.classList.add("broker-listing-list");
+			window.realjejuBrokerListingRowsById = new Map(rows.map((row) => [String(row.id || ""), row]));
+			// PATCH 2.326: 제목 표시줄을 먼저 렌더링하고 주소는 제목 아래에 배치
+			listEl.innerHTML = `
+				<div class="broker-listing-head" aria-hidden="true">
+					<div class="broker-listing-select-cell"><input type="checkbox" class="broker-listing-check" id="brokerListingSelectAllChk" aria-label="매물 전체 선택" /></div>
+					<div>사진</div>
+					<div>매물유형</div>
+					<div>상태</div>
+					<div>등록날짜</div>
+					<div>매물번호</div>
+					<div>제목</div>
+					<div>가격</div>
+					<div>수정</div>
+					<div>블로그복사</div>
+				</div>
+			` + rows.map((row) => {
+				const deals = Array.isArray(row.deal_types) && row.deal_types.length ? row.deal_types.map(getBrokerDealLabel).join(", ") : "-";
+				const created = formatBrokerListingDate(row.created_at);
+				const listingNo = getBrokerListingNo(row);
+				const price = getBrokerListingPrice(row);
+				return `
+					<div class="broker-listing-row" data-listing-id="${escapeAdminHtml(row.id)}">
+						<div class="broker-listing-select-cell"><input type="checkbox" class="broker-listing-check broker-listing-select-check" data-broker-listing-select="${escapeAdminHtml(row.id)}" aria-label="매물 선택" /></div>
+						<div class="broker-listing-thumb">${getBrokerListingThumbHtml(row)}</div>
+						<div class="broker-listing-type">[${escapeAdminHtml(row.property_type_label || "-")}] ${escapeAdminHtml(deals)}</div>
+						<div><span class="broker-listing-status ${escapeAdminHtml(row.status || "draft")}">${escapeAdminHtml(getBrokerListingStatusLabel(row.status))}</span></div>
+						<div class="broker-listing-meta">${escapeAdminHtml(created)}</div>
+						<div class="broker-listing-no">${escapeAdminHtml(listingNo)}</div>
+						<div class="broker-listing-title-cell">
+							<div class="broker-listing-title">${escapeAdminHtml(row.title || "제목 없음")}</div>
+							<div class="broker-listing-address">${escapeAdminHtml(row.public_address || "-")}</div>
+						</div>
+						<div class="broker-listing-price">${escapeAdminHtml(price)}</div>
+						<div class="broker-listing-actions">
+							<button type="button" class="broker-listing-edit-btn" data-broker-listing-edit="${escapeAdminHtml(row.id)}">수정</button>
+							<button type="button" class="broker-listing-blog-copy-btn" data-broker-listing-blog-copy="${escapeAdminHtml(row.id)}">블로그복사</button>
+						</div>
+					</div>
+				`;
+			}).join("");
+		} catch (err) {
+			console.error("중개사 매물 목록 오류:", err);
+			listEl.innerHTML = '<div class="admin-empty">등록 매물 처리 중 오류가 발생했습니다.</div>';
+		}
+	}
+
+	function getSelectedBrokerListingIds()
+	{
+		return Array.from(document.querySelectorAll(".broker-listing-select-check"))
+			.filter((input) => input.checked)
+			.map((input) => input.getAttribute("data-broker-listing-select"))
+			.filter(Boolean);
+	}
+
+	// PATCH 2.321: 중개사 홈의 수정 버튼은 기존 매물을 같은 등록 폼으로 불러와 수정 모드로 연다
+	async function openBrokerListingEdit(listingId)
+	{
+		const id = String(listingId || "").trim();
+		if (!id) return;
+		const user = currentRealjejuAuthUser;
+		const client = getRealjejuSupabaseClient();
+		if (!user || !user.id || !client) {
+			openAuthErrorModal("로그인과 Supabase 연결 상태를 확인하세요.", "매물 수정", null);
+			return;
+		}
+
+		try {
+			const { data, error } = await client
+				.from("property_listings")
+				.select("*")
+				.eq("id", id)
+				.eq("user_id", user.id)
+				.maybeSingle();
+			if (error || !data) {
+				console.error("매물 수정 데이터 조회 실패:", error);
+				openAuthErrorModal("매물 정보를 불러오지 못했습니다.", "매물 수정", null);
+				return;
+			}
+
+			closeBrokerHomePage();
+			closeAdminPage();
+			document.body.classList.add("property-register-page-open");
+			const page = document.getElementById("propertyRegisterPage");
+			if (page) page.setAttribute("aria-hidden", "false");
+			fillBrokerListingEditForm(data);
+			if (typeof scrollPropertyRegisterToTop === "function") scrollPropertyRegisterToTop();
+		}
+		catch (err) {
+			console.error("매물 수정 열기 오류:", err);
+			openAuthErrorModal("매물 수정 화면을 열지 못했습니다.", "매물 수정", null);
+		}
+	}
+
+	// PATCH 2.316: 기존 상단 [중개사 홈] 메뉴와 저장 완료 후 이동을 같은 화면으로 연결
+	async function openBrokerHomePage(currentListingId)
+	{
+		closeGlobalAccountDropdown();
+		closePropertyRegisterPage();
+		closeAdminPage();
+		document.body.classList.add("broker-home-page-open");
+		const brokerHomePanel = document.getElementById("brokerHomePanel");
+		if (brokerHomePanel) brokerHomePanel.setAttribute("aria-hidden", "false");
+		document.querySelectorAll(".topbar-menu-item").forEach((btn) => {
+			btn.classList.toggle("active", String(btn.textContent || "").trim() === "중개사 홈");
+		});
+		await loadBrokerListings(currentListingId || window.REALJEJU_LAST_SAVED_LISTING_ID || "");
+	}
+
 	async function updateAdminApplicationStatus(agencyId, status)
 	{
 		if (!agencyId || !status) return;
@@ -23182,10 +24450,65 @@ function applyLoggedInAccountUI(user, profile)
 			return;
 		}
 
+		const brokerListingEditBtn = e.target.closest("[data-broker-listing-edit]");
+		if (brokerListingEditBtn) {
+			e.preventDefault();
+			e.stopPropagation();
+			openBrokerListingEdit(brokerListingEditBtn.dataset.brokerListingEdit);
+			return;
+		}
+
+		const brokerListingBlogCopyBtn = e.target.closest("[data-broker-listing-blog-copy]");
+		if (brokerListingBlogCopyBtn) {
+			e.preventDefault();
+			e.stopPropagation();
+			copyBrokerListingBlogText(brokerListingBlogCopyBtn.dataset.brokerListingBlogCopy);
+			return;
+		}
+
+		const brokerSelectAllChk = e.target.closest("#brokerListingSelectAllChk");
+		if (brokerSelectAllChk) {
+			document.querySelectorAll(".broker-listing-select-check").forEach((input) => {
+				input.checked = true;
+			});
+			// PATCH 2.334: 최상단 체크박스는 클릭 시 자신도 체크된 채로 전체 선택만 수행
+			brokerSelectAllChk.checked = true;
+			brokerSelectAllChk.indeterminate = false;
+			return;
+		}
+
+		const brokerListingSelectChk = e.target.closest(".broker-listing-select-check");
+		if (brokerListingSelectChk) {
+			// PATCH 2.334: 개별 체크박스는 최상단 전체 선택 체크박스를 변경하지 않음
+			return;
+		}
+
+		const brokerBulkBtn = e.target.closest("[data-broker-listing-bulk]");
+		if (brokerBulkBtn) {
+			e.preventDefault();
+			e.stopPropagation();
+			const selectedIds = getSelectedBrokerListingIds();
+			if (!selectedIds.length) {
+				openAuthErrorModal("선택한 매물이 없습니다.", "중개사 홈", null);
+				return;
+			}
+			openAuthErrorModal(`선택한 매물 ${selectedIds.length}개를 처리할 준비가 되었습니다.`, "중개사 홈", null);
+			return;
+		}
+
+		const brokerHomeMenuBtn = e.target.closest(".topbar-menu-item");
+		if (brokerHomeMenuBtn && brokerHomeMenuBtn.textContent.trim() === "중개사 홈") {
+			e.preventDefault();
+			e.stopPropagation();
+			openBrokerHomePage();
+			return;
+		}
+
 		const adminMenuBtn = e.target.closest(".topbar-menu-item");
 		if (adminMenuBtn && adminMenuBtn.textContent.trim() === "관리자 페이지") {
 			e.preventDefault();
 			e.stopPropagation();
+			closeBrokerHomePage();
 			closePropertyRegisterPage();
 			openAdminPage();
 			return;
@@ -23195,12 +24518,14 @@ function applyLoggedInAccountUI(user, profile)
 		if (propertyRegisterMenuBtn && propertyRegisterMenuBtn.textContent.trim() === "매물 등록") {
 			e.preventDefault();
 			e.stopPropagation();
+			closeBrokerHomePage();
 			openPropertyRegisterPage();
 			return;
 		}
 
 		const topbarMenuBtn = e.target.closest(".topbar-menu-item");
 		if (topbarMenuBtn && topbarMenuBtn.textContent.trim() !== "관리자 페이지" && topbarMenuBtn.textContent.trim() !== "매물 등록") {
+			closeBrokerHomePage();
 			closeAdminPage();
 			closePropertyRegisterPage();
 		}
@@ -23217,6 +24542,7 @@ function applyLoggedInAccountUI(user, profile)
 	window.openAuthConfirmModal = openAuthConfirmModal;
 	window.closeAuthErrorModal = closeAuthErrorModal;
 	window.openAdminPage = openAdminPage;
+	window.openBrokerHomePage = openBrokerHomePage;
 	window.openPropertyRegisterPage = openPropertyRegisterPage;
 	window.closePropertyRegisterPage = closePropertyRegisterPage;
 	window.loadAdminApplications = loadAdminApplications;
@@ -24375,6 +25701,12 @@ document.addEventListener("DOMContentLoaded", function () {
 (function bindPropertyListingSave()
 {
 	const TABLE_NAME = "property_listings";
+	// PATCH 2.312: 매물 사진은 등록 전 1920px JPEG로 리사이즈한 뒤 Storage에 저장
+	const PROPERTY_PHOTOS_BUCKET = "property-photos";
+	const PROPERTY_PHOTO_MAX_EDGE = 1920;
+	const PROPERTY_PHOTO_JPEG_QUALITY = 0.86;
+	// PATCH 2.316: 저장 완료 모달 확인 전까지 중복 저장 요청을 차단
+	let propertyListingSaveInFlight = false;
 
 	function $(id)
 	{
@@ -24421,6 +25753,136 @@ document.addEventListener("DOMContentLoaded", function () {
 		return select.options[select.selectedIndex]?.textContent?.trim() || "";
 	}
 
+	// PATCH 2.322: 수정 화면 복원을 위해 현재 매물등록 폼의 실제 입력 상태를 payload에 함께 저장
+	function collectPropertyRegisterFormState()
+	{
+		const page = $("propertyRegisterPage");
+		const state = { inputs: {}, checks: {}, radios: {}, selects: {} };
+		if (!page) return state;
+		page.querySelectorAll("input, textarea, select").forEach((el) => {
+			if (!el.id && !el.name) return;
+			if (el.type === "file" || el.type === "button" || el.type === "submit") return;
+			if (el.type === "radio") {
+				if (el.name && el.checked) state.radios[el.name] = el.value;
+				return;
+			}
+			if (el.type === "checkbox") {
+				if (el.id) state.checks[el.id] = !!el.checked;
+				return;
+			}
+			if (el.tagName === "SELECT") {
+				if (el.id) state.selects[el.id] = el.value || "";
+				return;
+			}
+			if (el.id) state.inputs[el.id] = el.value || "";
+		});
+		return state;
+	}
+
+	// PATCH 2.312: DB에서 ID를 받지 않고 프론트에서 매물 UUID를 먼저 확정
+	function createListingId()
+	{
+		if (window.crypto && typeof window.crypto.randomUUID === "function") return window.crypto.randomUUID();
+		const bytes = new Uint8Array(16);
+		window.crypto.getRandomValues(bytes);
+		bytes[6] = (bytes[6] & 0x0f) | 0x40;
+		bytes[8] = (bytes[8] & 0x3f) | 0x80;
+		const hex = Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0")).join("");
+		return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
+	}
+
+	// PATCH 2.312: 사진 파일을 canvas에서 긴 변 1920px 기준 JPEG로 변환
+	function resizeListingPhotoFile(file)
+	{
+		return new Promise((resolve, reject) => {
+			const img = new Image();
+			const objectUrl = URL.createObjectURL(file);
+			img.onload = () => {
+				try {
+					const sourceWidth = img.naturalWidth || img.width;
+					const sourceHeight = img.naturalHeight || img.height;
+					if (!sourceWidth || !sourceHeight) throw new Error("이미지 크기를 확인할 수 없습니다.");
+					const scale = Math.min(1, PROPERTY_PHOTO_MAX_EDGE / Math.max(sourceWidth, sourceHeight));
+					const targetWidth = Math.max(1, Math.round(sourceWidth * scale));
+					const targetHeight = Math.max(1, Math.round(sourceHeight * scale));
+					const canvas = document.createElement("canvas");
+					canvas.width = targetWidth;
+					canvas.height = targetHeight;
+					const ctx = canvas.getContext("2d");
+					if (!ctx) throw new Error("이미지 변환을 준비할 수 없습니다.");
+					ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
+					canvas.toBlob((blob) => {
+						URL.revokeObjectURL(objectUrl);
+						if (!blob) {
+							reject(new Error("이미지 변환에 실패했습니다."));
+							return;
+						}
+						resolve({
+							blob,
+							width: targetWidth,
+							height: targetHeight,
+							originalName: file.name || "photo",
+							originalSize: file.size || 0
+						});
+					}, "image/jpeg", PROPERTY_PHOTO_JPEG_QUALITY);
+				}
+				catch (err) {
+					URL.revokeObjectURL(objectUrl);
+					reject(err);
+				}
+			};
+			img.onerror = () => {
+				URL.revokeObjectURL(objectUrl);
+				reject(new Error("이미지를 읽을 수 없습니다."));
+			};
+			img.src = objectUrl;
+		});
+	}
+
+	// PATCH 2.312: DB 저장 성공 후 user_id/listing_id 폴더에 사진 업로드
+	async function uploadListingPhotos(client, userId, listingId)
+	{
+		const files = Array.isArray(window.realjejuPropertyPhotoFiles) ? window.realjejuPropertyPhotoFiles : [];
+		if (!files.length) return { photos: [], failedCount: 0 };
+		const bucket = client.storage.from(PROPERTY_PHOTOS_BUCKET);
+		const photos = [];
+		let failedCount = 0;
+
+		for (let i = 0; i < files.length; i += 1) {
+			const order = i + 1;
+			try {
+				const resized = await resizeListingPhotoFile(files[i]);
+				const fileName = `photo-${String(order).padStart(3, "0")}.jpg`;
+				const path = `${userId}/${listingId}/${fileName}`;
+				const { error } = await bucket.upload(path, resized.blob, {
+					cacheControl: "31536000",
+					contentType: "image/jpeg",
+					upsert: true
+				});
+				if (error) throw error;
+				const publicData = bucket.getPublicUrl(path);
+				photos.push({
+					path,
+					url: publicData?.data?.publicUrl || "",
+					name: fileName,
+					order,
+					width: resized.width,
+					height: resized.height,
+					size: resized.blob.size,
+					mime_type: "image/jpeg",
+					original_name: resized.originalName,
+					original_size: resized.originalSize
+				});
+			}
+			catch (err) {
+				failedCount += 1;
+				console.warn("매물 사진 업로드 실패:", err);
+			}
+		}
+
+		return { photos, failedCount };
+	}
+
 	function collectPricePayload()
 	{
 		return {
@@ -24450,8 +25912,13 @@ document.addEventListener("DOMContentLoaded", function () {
 		const addressInput = $("propertyAddressInput");
 		const dealTypes = checkedValues(".property-deal-check");
 		const title = value("propertyLocationSummaryInput") || selectedOptionText("propertyTypeSelect") || "신규 매물";
-		const lat = Number(addressInput?.dataset.lat || "");
-		const lng = Number(addressInput?.dataset.lng || "");
+		const rawLat = addressInput?.dataset.lat;
+		const rawLng = addressInput?.dataset.lng;
+		const lat = rawLat === undefined || rawLat === "" ? null : Number(rawLat);
+		const lng = rawLng === undefined || rawLng === "" ? null : Number(rawLng);
+		// PATCH 2.323: 기타 부과 관리비는 부과기준 라디오가 비어 있지 않게 기본값을 함께 저장
+		const maintenanceType = document.querySelector("#propertyMaintenanceCard .maintenance-tab.active")?.getAttribute("data-maintenance-type") || "";
+		const maintenanceDetailType = radioValue("maintenanceDetailType") || (maintenanceType === "extra" ? "common_area_usage" : "");
 
 		return {
 			status,
@@ -24468,6 +25935,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			lng: Number.isFinite(lng) ? lng : null,
 			payload: {
 				version: APP_VERSION,
+				form_state: collectPropertyRegisterFormState(),
 				building_use: value("buildingUseSelect"),
 				dong: value("propertyDongInput"),
 				ho: value("propertyHoInput"),
@@ -24512,12 +25980,14 @@ document.addEventListener("DOMContentLoaded", function () {
 					whole_building: checked("propertyWholeBuildingCheck")
 				},
 				maintenance: {
-					type: document.querySelector("#propertyMaintenanceCard .maintenance-tab.active")?.getAttribute("data-maintenance-type") || "",
+					type: maintenanceType,
 					no_fee_value: value("maintenanceNoneValue"),
 					no_fee_reason: value("maintenanceNoneReason"),
 					under_100k_or_unprovided: checked("maintenanceUnder100kChk"),
 					fixed_base: radioValue("maintenanceFixedBase"),
 					extra_base: radioValue("maintenanceExtraBase"),
+					detail_type: maintenanceDetailType,
+					unknown_reason: radioValue("maintenanceUnknownReason"),
 					fixed_total_won: numberValue("maintenanceFixedTotalInput"),
 					total_won: numberValue("maintenanceTotalInput"),
 					common_manwon: numberValue("maintenanceCommonInput"),
@@ -24528,7 +25998,21 @@ document.addEventListener("DOMContentLoaded", function () {
 					include_heating: checked("maintenanceFixedIncludeHeatingChk") || checked("maintenanceIncludeHeatingChk"),
 					include_internet: checked("maintenanceFixedIncludeInternetChk") || checked("maintenanceIncludeInternetChk"),
 					include_tv: checked("maintenanceFixedIncludeTvChk") || checked("maintenanceIncludeTvChk"),
-					include_etc: checked("maintenanceFixedIncludeEtcChk") || checked("maintenanceIncludeEtcChk")
+					include_etc: checked("maintenanceFixedIncludeEtcChk") || checked("maintenanceIncludeEtcChk"),
+					electric_type: radioValue("maintenanceElectricType"),
+					water_type: radioValue("maintenanceWaterType"),
+					gas_type: radioValue("maintenanceGasType"),
+					heating_type: radioValue("maintenanceHeatingType"),
+					internet_type: radioValue("maintenanceInternetType"),
+					tv_type: radioValue("maintenanceTvType"),
+					etc_type: radioValue("maintenanceEtcType"),
+					electric_manwon: numberValue("maintenanceElectricInput"),
+					water_manwon: numberValue("maintenanceWaterInput"),
+					gas_manwon: numberValue("maintenanceGasInput"),
+					heating_manwon: numberValue("maintenanceHeatingInput"),
+					internet_manwon: numberValue("maintenanceInternetInput"),
+					tv_manwon: numberValue("maintenanceTvInput"),
+					etc_manwon: numberValue("maintenanceEtcInput")
 				},
 				facilities: {
 					furniture_built_in: checked("furnitureBuiltInChk"),
@@ -24556,8 +26040,90 @@ document.addEventListener("DOMContentLoaded", function () {
 		};
 	}
 
+	// PATCH 2.314: 화면에 보이는 빨간 * 라벨은 저장 전 필수 입력으로 공통 검증
+	function isVisibleRequiredElement(el)
+	{
+		if (!el) return false;
+		if (el.closest(".is-hidden")) return false;
+		let node = el;
+		while (node && node !== document.body) {
+			if (node instanceof HTMLElement) {
+				const style = window.getComputedStyle(node);
+				if (style.display === "none" || style.visibility === "hidden") return false;
+			}
+			node = node.parentElement;
+		}
+		return !!(el.offsetParent || el.getClientRects().length);
+	}
+
+	function getRequiredLabelText(label)
+	{
+		const clone = label.cloneNode(true);
+		clone.querySelectorAll(".property-required").forEach((mark) => mark.remove());
+		return String(clone.textContent || "").replace(/\s+/g, " ").trim() + "*";
+	}
+
+	function getRequiredFieldRow(label)
+	{
+		return label.closest(".property-form-row, .property-info-row, .maintenance-form-row, .property-price-row, .property-detail-row, .property-agency-row, .property-registrant-form-row, .property-premium-field") || label.parentElement;
+	}
+
+	function getRequiredFieldTarget(row)
+	{
+		if (!row) return null;
+		return row.querySelector("button[data-register-dropdown-trigger], input:not([type='hidden']):not(:disabled), select:not(:disabled), textarea:not(:disabled)");
+	}
+
+	function hasRequiredFieldValue(row)
+	{
+		if (!row || !isVisibleRequiredElement(row)) return true;
+		if (row.classList.contains("property-room-row") && checked("propertyRoomBathNotApplicableChk")) return true;
+		if (row.querySelector("#propertyMoveInDateInput") && (checked("propertyMoveInNowChk") || checked("propertyMoveInNegotiableChk"))) return true;
+		const controls = Array.from(row.querySelectorAll("input:not([type='hidden']):not(:disabled), select:not(:disabled), textarea:not(:disabled)"))
+			.filter((control) => isVisibleRequiredElement(control) || control.classList.contains("property-register-native-select"));
+		if (!controls.length) return true;
+		const radios = controls.filter((control) => control.type === "radio");
+		if (radios.length) return radios.some((control) => control.checked);
+		const checks = controls.filter((control) => control.type === "checkbox");
+		const textControls = controls.filter((control) => control.type !== "checkbox");
+		if (checks.length && !textControls.length) return checks.some((control) => control.checked);
+		if (row.querySelector(".property-area-pair")) {
+			return textControls.some((control) => String(control.value || "").trim() !== "");
+		}
+		return textControls.every((control) => String(control.value || "").trim() !== "");
+	}
+
+	function validateVisibleRequiredFields()
+	{
+		const page = $("propertyRegisterPage");
+		if (!page) return null;
+		const missing = [];
+		const seenRows = new Set();
+		page.querySelectorAll(".property-form-label .property-required, .property-form-label.property-required").forEach((requiredMark) => {
+			const label = requiredMark.closest(".property-form-label");
+			if (!label || !isVisibleRequiredElement(label)) return;
+			const row = getRequiredFieldRow(label);
+			if (!row || seenRows.has(row) || !isVisibleRequiredElement(row)) return;
+			seenRows.add(row);
+			if (hasRequiredFieldValue(row)) return;
+			missing.push({
+				label: getRequiredLabelText(label),
+				target: getRequiredFieldTarget(row)
+			});
+		});
+		if (!missing.length) return null;
+		return {
+			message: "필수 입력 항목이 비어 있습니다.\n[항목]\n" + missing.map((item) => item.label).join("\n"),
+			target: missing[0].target
+		};
+	}
+
 	function validateListing(payload, status)
 	{
+		if (status === "published") {
+			const requiredValidation = validateVisibleRequiredFields();
+			if (requiredValidation) return requiredValidation;
+		}
 		if (!payload.property_type) return { message: "매물 종류를 선택하세요.", target: $("propertyTypeSelect") };
 		if (!payload.address1) return { message: "주소를 입력하세요.", target: $("propertyAddressInput") };
 		if (status === "published" && (!payload.deal_types || !payload.deal_types.length)) {
@@ -24586,7 +26152,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	async function saveListing(status)
 	{
-		const client = typeof getRealjejuSupabaseClient === "function" ? getRealjejuSupabaseClient() : null;
+		if (propertyListingSaveInFlight) return;
+		// PATCH 2.313: 저장 스크립트는 전역 Supabase 클라이언트 팩토리를 명시적으로 사용
+		const client = typeof window.getRealjejuSupabaseClient === "function" ? window.getRealjejuSupabaseClient() : null;
 		if (!client) {
 			openAuthErrorModal("Supabase 연결 설정을 확인하세요.", "매물 등록", null);
 			return;
@@ -24608,21 +26176,52 @@ document.addEventListener("DOMContentLoaded", function () {
 
 		const submitBtn = $("propertySubmitBtn");
 		const draftBtn = $("propertyDraftSaveBtn");
+		const setSaveButtonsDisabled = (disabled) => {
+			[submitBtn, draftBtn].forEach((btn) => { if (btn) btn.disabled = disabled; });
+		};
+		propertyListingSaveInFlight = true;
 		[submitBtn, draftBtn].forEach((btn) => { if (btn) btn.disabled = true; });
+		let keepButtonsLockedUntilConfirm = false;
 
 		try {
+			const page = $("propertyRegisterPage");
+			const existingListingId = page?.dataset.listingId || "";
+			const listingId = existingListingId || createListingId();
 			const row = {
 				...payload,
+				id: listingId,
 				user_id: user.id,
 				agency_id: window.realjejuCurrentBrokerOffice?.id || null,
 				updated_at: new Date().toISOString()
 			};
 
-			const { data, error } = await client
-				.from(TABLE_NAME)
-				.insert(row)
-				.select("id")
-				.single();
+			let error = null;
+			// PATCH 2.315: 이미 저장된 작성 화면은 새 매물을 만들지 않고 같은 row를 수정
+			if (existingListingId) {
+				const updateRow = { ...row };
+				delete updateRow.id;
+				delete updateRow.user_id;
+				const updateResult = await client
+					.from(TABLE_NAME)
+					.update(updateRow)
+					.eq("id", existingListingId)
+					.eq("user_id", user.id);
+				error = updateResult.error;
+			} else {
+				const insertResult = await client
+					.from(TABLE_NAME)
+					.insert(row);
+				error = insertResult.error;
+			}
+
+			// PATCH 2.312: UUID 충돌은 극히 드물지만 DB primary key 오류면 한 번만 새 ID로 재시도
+			if (!existingListingId && error && (String(error.code || "") === "23505" || /duplicate key/i.test(String(error.message || "")))) {
+				row.id = createListingId();
+				const retryResult = await client
+					.from(TABLE_NAME)
+					.insert(row);
+				error = retryResult.error;
+			}
 
 			if (error) {
 				console.error("매물 저장 실패:", error);
@@ -24630,16 +26229,62 @@ document.addEventListener("DOMContentLoaded", function () {
 				return;
 			}
 
-			openAuthErrorModal(status === "draft" ? "임시저장되었습니다." : "매물이 등록되었습니다.", "매물 등록 완료", null);
-			window.REALJEJU_LAST_SAVED_LISTING_ID = data?.id || "";
+			const savedListingId = row.id;
+			const uploadResult = await uploadListingPhotos(client, user.id, savedListingId);
+			const hasSelectedPhotoFiles = Array.isArray(window.realjejuPropertyPhotoFiles) && window.realjejuPropertyPhotoFiles.length > 0;
+			// PATCH 2.321: 기존 매물 수정 시 새 사진을 고르지 않았다면 기존 DB 사진 목록을 보존
+			if (uploadResult.photos.length || (!existingListingId && !hasSelectedPhotoFiles)) {
+				const { error: photoUpdateError } = await client
+					.from(TABLE_NAME)
+					.update({ photos: uploadResult.photos })
+					.eq("id", savedListingId)
+					.eq("user_id", user.id);
+				if (photoUpdateError) {
+					console.error("매물 사진 정보 저장 실패:", photoUpdateError);
+					openAuthErrorModal("매물은 저장됐지만 사진 정보 저장에 실패했습니다.", "매물 등록", null);
+					return;
+				}
+			}
+
+			let completeMessage = existingListingId ? (status === "draft" ? "임시저장 내용이 수정되었습니다." : "매물이 수정되었습니다.") : (status === "draft" ? "임시저장되었습니다." : "매물이 등록되었습니다.");
+			if (uploadResult.failedCount > 0) completeMessage += `\n사진 ${uploadResult.failedCount}장은 업로드되지 않았습니다.`;
+			window.REALJEJU_LAST_SAVED_LISTING_ID = savedListingId;
+			if (page) page.dataset.listingId = savedListingId;
+			keepButtonsLockedUntilConfirm = true;
+			// PATCH 2.322: 수정 저장 완료 문구는 등록 완료와 구분해 보여줌
+			openAuthErrorModal(completeMessage, existingListingId ? "매물 수정 완료" : "매물 등록 완료", null, () => {
+				propertyListingSaveInFlight = false;
+				setSaveButtonsDisabled(false);
+				if (typeof window.openBrokerHomePage === "function") window.openBrokerHomePage(savedListingId);
+			});
 		}
 		catch (err) {
 			console.error("매물 저장 오류:", err);
 			openAuthErrorModal("매물 저장 중 오류가 발생했습니다.", "매물 등록", null);
 		}
 		finally {
-			[submitBtn, draftBtn].forEach((btn) => { if (btn) btn.disabled = false; });
+			if (!keepButtonsLockedUntilConfirm) {
+				propertyListingSaveInFlight = false;
+				setSaveButtonsDisabled(false);
+			}
 		}
+	}
+
+	// PATCH 2.329: 수정 모드의 왼쪽 하단 버튼은 임시저장이 아니라 취소로 동작
+	function isPropertyListingEditMode()
+	{
+		const page = $("propertyRegisterPage");
+		return !!(page && page.dataset.listingId);
+	}
+
+	function cancelPropertyListingEdit()
+	{
+		if (propertyListingSaveInFlight) return;
+		if (typeof window.openBrokerHomePage === "function") {
+			window.openBrokerHomePage("");
+			return;
+		}
+		if (typeof window.closePropertyRegisterPage === "function") window.closePropertyRegisterPage();
 	}
 
 	function bind()
@@ -24652,7 +26297,13 @@ document.addEventListener("DOMContentLoaded", function () {
 		}
 		if (draftBtn && draftBtn.dataset.listingSaveBound !== "1") {
 			draftBtn.dataset.listingSaveBound = "1";
-			draftBtn.addEventListener("click", () => saveListing("draft"));
+			draftBtn.addEventListener("click", () => {
+				if (isPropertyListingEditMode()) {
+					cancelPropertyListingEdit();
+					return;
+				}
+				saveListing("draft");
+			});
 		}
 	}
 
@@ -25170,8 +26821,12 @@ document.addEventListener("DOMContentLoaded", function () {
 		if (typeof updatePropertyInfoFieldsByType === "function") updatePropertyInfoFieldsByType();
 		syncQuickImportTotalCountRowsVisibility(parsed);
 		setCheck("propertyRoomBathNotApplicableChk", false);
+		// PATCH 2.299: 간편입력마다 이전 방/욕실 값을 먼저 비우고 0/0이면 해당없음으로 동기화
+		clearInput("propertyRoomCountInput");
+		clearInput("propertyBathCountInput");
 		setInput("propertyRoomCountInput", parsed.roomCount);
 		setInput("propertyBathCountInput", parsed.bathCount);
+		if (typeof window.realjejuSyncPropertyRoomBathZeroState === "function") window.realjejuSyncPropertyRoomBathZeroState();
 		setInput("propertyTotalFloorInput", parsed.totalFloor);
 		// PATCH 2.243: 해당층/총층이 숫자이면 해당층 입력에 넣고, 문자 층급만 라디오로 처리
 		if (/^\d+$/.test(String(parsed.floorLevel || ""))) {
@@ -25426,7 +27081,12 @@ document.addEventListener("DOMContentLoaded", function () {
 			if (typeof closeAdminPage === "function") closeAdminPage();
 		} catch (error) {}
 
-		document.body.classList.remove("property-register-page-open", "admin-page-open");
+		// PATCH 2.316: 상단 홈 이동 시 기존 중개사 홈 패널도 함께 닫는다
+		try {
+			if (typeof closeBrokerHomePage === "function") closeBrokerHomePage();
+		} catch (error) {}
+
+		document.body.classList.remove("property-register-page-open", "admin-page-open", "broker-home-page-open");
 
 		const propertyRegisterPage = document.getElementById("propertyRegisterPage");
 		if (propertyRegisterPage) {
@@ -25446,6 +27106,13 @@ document.addEventListener("DOMContentLoaded", function () {
 			adminPagePanel.setAttribute("aria-hidden", "true");
 			adminPagePanel.style.display = "";
 			adminPagePanel.classList.remove("open", "active", "is-open");
+		}
+
+		const brokerHomePanel = document.getElementById("brokerHomePanel");
+		if (brokerHomePanel) {
+			brokerHomePanel.setAttribute("aria-hidden", "true");
+			brokerHomePanel.style.display = "";
+			brokerHomePanel.classList.remove("open", "active", "is-open");
 		}
 
 		const authModal = document.getElementById("authModal");
@@ -25663,6 +27330,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	let addressLocationBounds = null;
 	let isAddressRectangleDragging = false;
 	let addressRectangleDragStartLatLng = null;
+	const quickAddressFallbackCenter = { lat: 33.3617, lng: 126.5292 };
 
 	// PATCH 2.262: 매물등록 새 글 시작 시 주소 지도와 좌표 상태를 완전히 비움
 	function resetPropertyAddressLocationState(){
@@ -25712,17 +27380,66 @@ document.addEventListener("DOMContentLoaded", function () {
 		};
 	}
 
+	// PATCH 2.318: 간편입력 주소 검색 실패 시에도 주소값과 지도 영역은 먼저 열어 둔다
+	function applyAddressInputDataset(address)
+	{
+		if (!addressInput) return;
+		const addressRoad = address.roadAddress || "";
+		const addressJibun = address.jibunAddress || addressRoad || "";
+		const address1 = addressJibun || addressRoad || "";
+		const publicAddress = address1;
+		addressInput.value = address1;
+		addressInput.dataset.address1 = address1;
+		addressInput.dataset.address2 = "";
+		addressInput.dataset.publicAddress = publicAddress;
+		addressInput.dataset.privateAddress = "";
+		addressInput.dataset.hideDetailJibun = "0";
+		addressInput.dataset.roadAddress = addressRoad;
+		addressInput.dataset.jibunAddress = addressJibun;
+		addressInput.dataset.zonecode = address.zonecode || "";
+		addressInput.dataset.detailAddress = "";
+		if (address.lat && address.lng && !address.isFallbackCenter) {
+			addressInput.dataset.lat = address.lat;
+			addressInput.dataset.lng = address.lng;
+		} else {
+			delete addressInput.dataset.lat;
+			delete addressInput.dataset.lng;
+		}
+		if (mainDetailEl) mainDetailEl.textContent = "";
+		addressWrap?.classList.remove("has-detail-address");
+	}
+
+	function markQuickAddressFallbackMap()
+	{
+		if (locationHelp) locationHelp.textContent = "주소 좌표를 찾지 못했습니다. 위치 직접검색으로 지도를 이동해 주세요.";
+	}
+
 	function buildPropertyAddressSearchQueries(keyword){
 		const q = String(keyword || "").trim().replace(/\s+/g, " ");
 		if (!q) return [];
-		const compactRoad = q.replace(/([가-힣]+로)\s*(\d)/g, "$1 $2");
-		const base = q === compactRoad ? [q] : [q, compactRoad];
-		const prefixes = ["", "제주 ", "제주시 ", "제주특별자치도 제주시 ", "제주특별자치도 "];
+		// PATCH 2.318: 제주시/서귀포시 주소 모두 카카오 주소검색 후보에 안정적으로 포함
+		const compactRoad = q
+			.replace(/^제주도\s+/, "제주특별자치도 ")
+			.replace(/^제주\s+/, "제주특별자치도 ")
+			.replace(/([가-힣]+로)\s*(\d)/g, "$1 $2");
+		const jejuDoAlias = compactRoad.replace(/^제주특별자치도\s+/, "제주도 ");
+		const base = Array.from(new Set([q, compactRoad, jejuDoAlias].filter(Boolean)));
+		const alreadyHasCity = /(?:제주시|서귀포시)/.test(compactRoad);
+		const prefixes = alreadyHasCity
+			? ["", "제주특별자치도 ", "제주도 "]
+			: ["", "제주 ", "제주시 ", "서귀포시 ", "제주특별자치도 제주시 ", "제주특별자치도 서귀포시 ", "제주특별자치도 "];
 		const queries = [];
 		prefixes.forEach(prefix => {
 			base.forEach(value => {
 				const next = `${prefix}${value}`.trim();
-				if (next && !queries.includes(next)) queries.push(next);
+				const cleaned = next
+					.replace(/제주특별자치도\s+제주특별자치도\s+/g, "제주특별자치도 ")
+					.replace(/제주도\s+제주도\s+/g, "제주도 ")
+					.replace(/제주특별자치도\s+제주도\s+/g, "제주특별자치도 ")
+					.replace(/제주도\s+제주특별자치도\s+/g, "제주특별자치도 ")
+					.replace(/\s+/g, " ")
+					.trim();
+				if (cleaned && !queries.includes(cleaned)) queries.push(cleaned);
 			});
 		});
 		return queries;
@@ -25795,6 +27512,10 @@ document.addEventListener("DOMContentLoaded", function () {
 		addressLocationCenter = new kakao.maps.LatLng(centerLat, centerLng);
 		selectedAddress.lat = centerLat;
 		selectedAddress.lng = centerLng;
+		if (addressInput) {
+			addressInput.dataset.lat = centerLat;
+			addressInput.dataset.lng = centerLng;
+		}
 		addressLocationRectangle?.setBounds(createKakaoBounds(addressLocationBounds));
 		setAddressLocationDataset(getAddressLocationMode());
 	}
@@ -25850,6 +27571,10 @@ document.addEventListener("DOMContentLoaded", function () {
 				addressLocationCenter = addressLocationMarker.getPosition();
 				selectedAddress.lat = addressLocationCenter.getLat();
 				selectedAddress.lng = addressLocationCenter.getLng();
+				if (addressInput) {
+					addressInput.dataset.lat = selectedAddress.lat;
+					addressInput.dataset.lng = selectedAddress.lng;
+				}
 				setAddressLocationDataset(getAddressLocationMode());
 			});
 			kakao.maps.event.addListener(addressLocationMap, "mousedown", (mouseEvent) => {
@@ -26039,6 +27764,10 @@ document.addEventListener("DOMContentLoaded", function () {
 		addressLocationCenter = nextCenter;
 		selectedAddress.lat = found.lat;
 		selectedAddress.lng = found.lng;
+		if (addressInput) {
+			addressInput.dataset.lat = found.lat;
+			addressInput.dataset.lng = found.lng;
+		}
 		addressLocationMap.setCenter(nextCenter);
 		const mode = getAddressLocationMode();
 		if (mode === "marker") {
@@ -26052,7 +27781,21 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	async function applyQuickAddressToLocationMap(query){
 		const value = String(query || "").trim();
-		if (!value || !window.kakao || !kakao.maps || !kakao.maps.services) return false;
+		if (!value) return false;
+		selectedAddress = {
+			roadAddress: "",
+			jibunAddress: value,
+			zonecode: "",
+			lat: quickAddressFallbackCenter.lat,
+			lng: quickAddressFallbackCenter.lng,
+			isFallbackCenter: true
+		};
+		applyAddressInputDataset(selectedAddress);
+		if (window.kakao && kakao.maps) {
+			renderAddressLocationMap();
+			markQuickAddressFallbackMap();
+		}
+		if (!window.kakao || !kakao.maps || !kakao.maps.services) return false;
 		let found = null;
 		const queries = buildPropertyAddressSearchQueries(value);
 		for (const q of queries) {
@@ -26074,25 +27817,12 @@ document.addEventListener("DOMContentLoaded", function () {
 		if (!found || !found.lat || !found.lng) return false;
 
 		selectedAddress = found;
+		applyAddressInputDataset(selectedAddress);
+		renderAddressLocationMap();
 		const addressRoad = found.roadAddress || "";
 		const addressJibun = found.jibunAddress || addressRoad || value;
 		const address1 = addressJibun || addressRoad || value;
 		const publicAddress = address1;
-		addressInput.value = address1;
-		addressInput.dataset.address1 = address1;
-		addressInput.dataset.address2 = "";
-		addressInput.dataset.publicAddress = publicAddress;
-		addressInput.dataset.privateAddress = "";
-		addressInput.dataset.hideDetailJibun = "0";
-		addressInput.dataset.roadAddress = addressRoad;
-		addressInput.dataset.jibunAddress = addressJibun;
-		addressInput.dataset.zonecode = found.zonecode || "";
-		addressInput.dataset.detailAddress = "";
-		addressInput.dataset.lat = found.lat || "";
-		addressInput.dataset.lng = found.lng || "";
-		if (mainDetailEl) mainDetailEl.textContent = "";
-		addressWrap?.classList.remove("has-detail-address");
-		renderAddressLocationMap();
 		window.REALJEJU_PROPERTY_ADDRESS = {
 			address1,
 			address2: "",
@@ -26106,6 +27836,74 @@ document.addEventListener("DOMContentLoaded", function () {
 			zonecode: found.zonecode || "",
 			lat: found.lat || "",
 			lng: found.lng || "",
+			locationDisplayType: getAddressLocationMode(),
+			locationBounds: addressLocationBounds
+		};
+		return true;
+	}
+
+	// PATCH 2.322: 중개사 홈 수정 진입 시 저장된 주소와 좌표로 지도 영역을 즉시 복원
+	function restorePropertyAddressLocation(saved)
+	{
+		const data = saved && typeof saved === "object" ? saved : {};
+		const addressRoad = data.addressRoad || data.roadAddress || "";
+		const addressJibun = data.addressJibun || data.jibunAddress || data.address1 || data.addressDisplay || data.publicAddress || data.public_address || "";
+		const address1 = data.address1 || addressJibun || addressRoad || "";
+		const address2 = data.address2 || data.addressDetail || "";
+		const publicAddress = data.publicAddress || data.public_address || data.addressDisplay || address1;
+		const rawLat = data.lat;
+		const rawLng = data.lng;
+		const lat = rawLat === undefined || rawLat === "" ? NaN : Number(rawLat);
+		const lng = rawLng === undefined || rawLng === "" ? NaN : Number(rawLng);
+		if (!address1 && (!Number.isFinite(lat) || !Number.isFinite(lng))) return false;
+		selectedAddress = {
+			roadAddress: addressRoad || address1,
+			jibunAddress: addressJibun || address1,
+			zonecode: data.zonecode || "",
+			lat: Number.isFinite(lat) ? lat : quickAddressFallbackCenter.lat,
+			lng: Number.isFinite(lng) ? lng : quickAddressFallbackCenter.lng,
+			isFallbackCenter: !(Number.isFinite(lat) && Number.isFinite(lng))
+		};
+		if (addressInput) {
+			addressInput.value = address1 || publicAddress;
+			addressInput.dataset.address1 = address1;
+			addressInput.dataset.address2 = address2;
+			addressInput.dataset.publicAddress = publicAddress;
+			addressInput.dataset.privateAddress = address2;
+			addressInput.dataset.hideDetailJibun = data.hideDetailJibun ? "1" : "0";
+			addressInput.dataset.roadAddress = addressRoad;
+			addressInput.dataset.jibunAddress = addressJibun || address1;
+			addressInput.dataset.zonecode = data.zonecode || "";
+			addressInput.dataset.detailAddress = address2;
+			if (Number.isFinite(lat) && Number.isFinite(lng)) {
+				addressInput.dataset.lat = lat;
+				addressInput.dataset.lng = lng;
+			}
+			addressInput.dispatchEvent(new Event("input", { bubbles: true }));
+			addressInput.dispatchEvent(new Event("change", { bubbles: true }));
+		}
+		const mode = data.locationDisplayType || data.location_display_type || "marker";
+		const modeRadio = locationModeRadios.find((radio) => radio.value === mode);
+		if (modeRadio) modeRadio.checked = true;
+		if (mainDetailEl) mainDetailEl.textContent = address2 ? `[${address2}]` : "";
+		addressWrap?.classList.toggle("has-detail-address", !!address2);
+		if (window.kakao && kakao.maps) {
+			renderAddressLocationMap();
+			if (selectedAddress.isFallbackCenter) markQuickAddressFallbackMap();
+		}
+		window.REALJEJU_PROPERTY_ADDRESS = {
+			address1,
+			address2,
+			addressRoad,
+			addressJibun: addressJibun || address1,
+			addressDetail: address2,
+			addressDisplay: publicAddress,
+			publicAddress,
+			privateAddress: address2,
+			hideDetailJibun: !!data.hideDetailJibun,
+			zonecode: data.zonecode || "",
+			lat: Number.isFinite(lat) ? lat : "",
+			lng: Number.isFinite(lng) ? lng : "",
 			locationDisplayType: getAddressLocationMode(),
 			locationBounds: addressLocationBounds
 		};
@@ -26258,6 +28056,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	updateDetailHideRow();
 	window.realjejuResetPropertyAddressLocation = resetPropertyAddressLocationState;
 	window.realjejuApplyQuickAddressToLocationMap = applyQuickAddressToLocationMap;
+	window.realjejuRestorePropertyAddressLocation = restorePropertyAddressLocation;
 	editBtn?.addEventListener("click", showSearchScreen);
 	confirmBtn?.addEventListener("click", confirmAddress);
 })();
