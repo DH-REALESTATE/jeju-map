@@ -1,20 +1,27 @@
-/* REALJEJU property-register.css - split from realjeju_2.361(3).html */
+/* REALJEJU property-register.css - stable split from realjeju_2.361(3).html / Ver 2.366 */
 
-/* 프로필 사진: 겉 네모 박스 제거 + 이미지만 원형 */
-.auth-modal.profile-page-mode .auth-myinfo-photo-box
+.auth-profile-photo-preview,
+.auth-myinfo-photo
+{
+	width: 84px;
+	height: 84px;
+	border-radius: 50%;
+	object-fit: cover;
+	background: #e5e7eb;
+	border: 2px solid #e5e7eb;
+	flex: 0 0 auto;
+}
+
+.auth-modal.profile-page-mode .auth-myinfo-photo,
+.auth-modal.profile-page-mode .auth-profile-photo-preview
 {
 	width: var(--profile-page-photo-size) !important;
 	height: var(--profile-page-photo-size) !important;
-	margin: 0 auto 30px !important;
-	padding: 0 !important;
-	background: var(--profile-page-photo-bg) !important;
-	border: var(--profile-page-photo-border) !important;
 	border-radius: var(--profile-page-photo-radius) !important;
-	box-shadow: var(--profile-page-photo-shadow) !important;
-	overflow: hidden !important;
-	display: flex !important;
-	align-items: center !important;
-	justify-content: center !important;
+	object-fit: cover !important;
+	background: #e5e7eb !important;
+	border: 0 !important;
+	box-shadow: none !important;
 }
 
 /* 개인정보 설정 페이지 내부 안내문 / 프로필 사진 영역 / 회원유형 네모 강제 */
@@ -772,27 +779,6 @@ body.property-register-page-open .property-register-bottom-bar
 	cursor: not-allowed;
 }
 
-/* PATCH 2.320: 사진 드래그 중에도 업로드 박스 배경과 테두리 색은 기본값 유지 */
-.property-upload-box.is-dragover
-{
-	border-color: #e2e7ee;
-	background: #ffffff;
-	color: #a8b0bc;
-}
-
-/* PATCH 2.309: 사진 장수 표시는 업로드 박스 밖 우측 상단에 배치 */
-.property-photo-count
-{
-	display: block;
-	margin-bottom: 8px;
-	text-align: right;
-	color: #6b7280;
-	font-size: 14px;
-	font-weight: 500;
-	line-height: 1;
-	letter-spacing: -0.12px;
-}
-
 /* PATCH 2.305: 사진이 있으면 업로드 안내 문구를 숨기고 썸네일만 표시 */
 .property-upload-box.has-photo-preview .property-upload-guide
 {
@@ -809,10 +795,67 @@ body.property-register-page-open .property-register-bottom-bar
 	margin-top: 8px;
 }
 
+.property-upload-box.has-photo-preview
+{
+	justify-content: flex-start;
+}
+
 /* PATCH 2.319: 사진이 있으면 썸네일 상단 여백도 좌/우/하단과 같은 박스 패딩만 사용 */
 .property-upload-box.has-photo-preview .property-photo-preview-grid
 {
 	margin-top: 0;
+}
+
+.property-photo-preview-grid.is-hidden
+{
+	display: none;
+}
+
+.property-photo-preview-item
+{
+	position: relative;
+	aspect-ratio: 4 / 3;
+	border: 1px solid #d7dee8;
+	background: #f8fafc;
+	overflow: hidden;
+	cursor: grab;
+}
+
+.property-photo-preview-item.is-dragging
+{
+	opacity: 0.46;
+	cursor: grabbing;
+}
+
+.property-photo-preview-item.is-drop-target
+{
+	border-color: #4A7EDC;
+	box-shadow: 0 0 0 2px rgba(74, 126, 220, 0.18) inset;
+}
+
+.property-photo-preview-item img
+{
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+}
+
+.property-photo-preview-name
+{
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	padding: 6px 8px;
+	background: rgba(17, 24, 39, 0.68);
+	color: #ffffff;
+	font-size: 12px;
+	font-weight: 600;
+	letter-spacing: -0.1px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .property-facility-card .property-check-option input
@@ -954,6 +997,23 @@ body:not(.property-register-page-open) #propertyRegisterBottomBar
 	font-weight: 800 !important;
 	letter-spacing: -0.16px !important;
 	box-shadow: none !important;
+}
+
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-photo-preview
+{
+	width: 64px !important;
+	height: 64px !important;
+	border-radius: 50% !important;
+	border: 1px solid #e5e7eb !important;
+	background: #f3f4f6 !important;
+	box-shadow: none !important;
+}
+
+/* ===== PATCH: 프로필 이미지 크기 통일 (내 정보 기준 84px) ===== */
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-photo-preview
+{
+    width: 84px !important;
+    height: 84px !important;
 }
 
 /* ===== PATCH 2.152: 매물 주소 모달 전역 변수 기반 통합 CSS ===== */

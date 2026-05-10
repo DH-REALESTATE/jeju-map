@@ -1,4 +1,4 @@
-/* REALJEJU base.css - split from realjeju_2.361(3).html */
+/* REALJEJU base.css - stable split from realjeju_2.361(3).html / Ver 2.366 */
 
 *
 {
@@ -2241,7 +2241,7 @@ body.sidebar-list-collapsed .sidebar-list-panel
 	background: #fff;
 }
 
-/* Ver 2.358 표시: 하단바 왼쪽 고정 */
+/* Ver 2.366 표시: 하단바 왼쪽 고정 */
 .sub-version-fixed
 {
 	position: absolute !important;
@@ -3564,18 +3564,6 @@ body.sidebar-list-collapsed .sidebar-list-panel
 	gap: 14px;
 }
 
-.auth-profile-photo-preview,
-.auth-myinfo-photo
-{
-	width: 84px;
-	height: 84px;
-	border-radius: 50%;
-	object-fit: cover;
-	background: #e5e7eb;
-	border: 2px solid #e5e7eb;
-	flex: 0 0 auto;
-}
-
 .auth-profile-photo-select-btn
 {
 	height: 44px;
@@ -4476,16 +4464,21 @@ html, body
 	text-overflow: ellipsis !important;
 }
 
-.auth-modal.profile-page-mode .auth-myinfo-photo,
-.auth-modal.profile-page-mode .auth-profile-photo-preview
+/* 프로필 사진: 겉 네모 박스 제거 + 이미지만 원형 */
+.auth-modal.profile-page-mode .auth-myinfo-photo-box
 {
 	width: var(--profile-page-photo-size) !important;
 	height: var(--profile-page-photo-size) !important;
+	margin: 0 auto 30px !important;
+	padding: 0 !important;
+	background: var(--profile-page-photo-bg) !important;
+	border: var(--profile-page-photo-border) !important;
 	border-radius: var(--profile-page-photo-radius) !important;
-	object-fit: cover !important;
-	background: #e5e7eb !important;
-	border: 0 !important;
-	box-shadow: none !important;
+	box-shadow: var(--profile-page-photo-shadow) !important;
+	overflow: hidden !important;
+	display: flex !important;
+	align-items: center !important;
+	justify-content: center !important;
 }
 
 /* 개인정보 수정 입력창 */
@@ -5752,50 +5745,31 @@ html, body
 	box-sizing: border-box;
 }
 
+/* PATCH 2.320: 사진 드래그 중에도 업로드 박스 배경과 테두리 색은 기본값 유지 */
+.property-upload-box.is-dragover
+{
+	border-color: #e2e7ee;
+	background: #ffffff;
+	color: #a8b0bc;
+}
+
 .property-upload-box i
 {
 	font-size: 22px;
 	color: #d1d7df;
 }
 
-.property-upload-box.has-photo-preview
+/* PATCH 2.309: 사진 장수 표시는 업로드 박스 밖 우측 상단에 배치 */
+.property-photo-count
 {
-	justify-content: flex-start;
-}
-
-.property-photo-preview-grid.is-hidden
-{
-	display: none;
-}
-
-.property-photo-preview-item
-{
-	position: relative;
-	aspect-ratio: 4 / 3;
-	border: 1px solid #d7dee8;
-	background: #f8fafc;
-	overflow: hidden;
-	cursor: grab;
-}
-
-.property-photo-preview-item.is-dragging
-{
-	opacity: 0.46;
-	cursor: grabbing;
-}
-
-.property-photo-preview-item.is-drop-target
-{
-	border-color: #4A7EDC;
-	box-shadow: 0 0 0 2px rgba(74, 126, 220, 0.18) inset;
-}
-
-.property-photo-preview-item img
-{
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
 	display: block;
+	margin-bottom: 8px;
+	text-align: right;
+	color: #6b7280;
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 1;
+	letter-spacing: -0.12px;
 }
 
 .property-photo-remove-btn
@@ -5821,23 +5795,6 @@ html, body
 	background: #ffffff;
 	border-color: #4A7EDC;
 	color: #4A7EDC;
-}
-
-.property-photo-preview-name
-{
-	position: absolute;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	padding: 6px 8px;
-	background: rgba(17, 24, 39, 0.68);
-	color: #ffffff;
-	font-size: 12px;
-	font-weight: 600;
-	letter-spacing: -0.1px;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
 }
 
 /* PATCH 2.307: 파일 선택 버튼은 드래그 박스 아래에 분리 배치 */
@@ -6966,16 +6923,6 @@ body[data-property-type="factory_warehouse"] #propertyMaintenanceCard
 	justify-content: flex-start !important;
 }
 
-.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-photo-preview
-{
-	width: 64px !important;
-	height: 64px !important;
-	border-radius: 50% !important;
-	border: 1px solid #e5e7eb !important;
-	background: #f3f4f6 !important;
-	box-shadow: none !important;
-}
-
 .auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-photo-select-btn
 {
 	height: 42px !important;
@@ -7057,13 +7004,6 @@ body[data-property-type="factory_warehouse"] #propertyMaintenanceCard
 		grid-template-columns: 1fr !important;
 		gap: 8px !important;
 	}
-}
-
-/* ===== PATCH: 프로필 이미지 크기 통일 (내 정보 기준 84px) ===== */
-.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-photo-preview
-{
-    width: 84px !important;
-    height: 84px !important;
 }
 
 /* ===== PATCH: 개인정보 동의 UI 정리 ===== */
