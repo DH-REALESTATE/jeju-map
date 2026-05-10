@@ -1,0 +1,1640 @@
+/* REALJEJU broker.css - split from realjeju_2.361(3).html */
+
+.auth-modal.profile-page-mode .auth-profile-setup-screen,
+.auth-modal.profile-page-mode .auth-myinfo-screen,
+.auth-modal.profile-page-mode .auth-broker-office-screen
+{
+	width: min(680px, calc(100vw - 40px));
+	margin: 0 auto;
+}
+
+/* ===== PATCH 1.928: my info view + broker office menu/page ===== */
+.auth-myinfo-screen, .auth-broker-office-screen
+{
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+}
+
+.auth-myinfo-edit-btn,
+.auth-myinfo-broker-btn
+{
+	width: 100%;
+	height: 44px;
+	border: 1px solid #e5e7eb;
+	border-radius: 4px;
+	background: #ffffff;
+	color: #111827;
+	font-size: 14px;
+	font-weight: 800;
+	letter-spacing: -0.1px;
+	cursor: pointer;
+}
+
+.auth-myinfo-broker-btn
+{
+	background: #3B82F6;
+	border-color: #3B82F6;
+	color: #ffffff;
+}
+
+.broker-office-inline-field
+{
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.broker-office-inline-field .auth-modal-input
+{
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+.broker-office-inline-btn
+{
+	flex: 0 0 auto;
+	height: 58px;
+	padding: 0 16px;
+	border: 0;
+	border-radius: 4px;
+	background: #3B82F6;
+	color: #ffffff;
+	font-size: 16px;
+	font-weight: 900;
+	letter-spacing: -0.1px;
+	white-space: nowrap;
+	cursor: pointer;
+}
+
+.auth-broker-office-screen .auth-modal-form
+{
+	gap: 14px;
+}
+
+/* ===== PATCH 1.928: broker office full page application layout ===== */
+.auth-modal.profile-page-mode .auth-broker-office-screen
+{
+	width: min(1120px, calc(100vw - 80px));
+	margin: 0 auto;
+	
+	/* 중개사무소 회원가입 신청 - 오른쪽 끝에 스크롤바 생기는 현상 제거 */
+	overflow: hidden !important;
+}
+
+.broker-apply-page
+{
+	display: grid;
+	grid-template-columns: minmax(380px, 0.92fr) minmax(470px, 1.08fr);
+	gap: 72px;
+	align-items: start;
+	width: 100%;
+	padding: 0 0 28px;
+}
+
+.broker-apply-left
+{
+	padding-top: 4px;
+}
+
+.broker-apply-title
+{
+	margin: 0 0 46px;
+	font-size: 40px;
+	font-weight: 900;
+	line-height: 1.18;
+	letter-spacing: -1.2px;
+	color: #111827;
+}
+
+.broker-apply-guide-card
+{
+	width: 430px;
+	max-width: 100%;
+	padding: 22px 24px 20px;
+	border-radius: 0;
+	border: 1px solid #d6d6d6;
+	background: #f3f3f3;
+	color: #111827;
+}
+
+.broker-apply-guide-card p
+{
+	margin: 0 0 18px;
+	font-size: 16px;
+	font-weight: 600;
+	line-height: 1.45;
+	letter-spacing: -0.25px;
+	word-break: keep-all;
+}
+
+.broker-apply-guide-card p:last-of-type
+{
+	margin-bottom: 8px;
+}
+
+.broker-apply-guide-btn
+{
+	height: 40px;
+	padding: 0 16px;
+	border: 1px solid #d1d5db;
+	border-radius: 5px;
+	background: #ffffff;
+	color: #1f2937;
+	font-size: 14px;
+	font-weight: 700;
+	letter-spacing: -0.2px;
+	cursor: pointer;
+}
+
+.broker-apply-form
+{
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	padding-top: 0;
+}
+
+.broker-apply-field
+{
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.broker-apply-label
+{
+	font-size: 18px;
+	font-weight: 800;
+	line-height: 1.2;
+	letter-spacing: -0.4px;
+	color: #111827;
+}
+
+.broker-apply-label span
+{
+	font-weight: 600;
+	color: #6b7280;
+}
+
+.broker-apply-input,
+.broker-apply-select
+{
+	width: 100%;
+	height: 46px;
+	border: 2px solid #d8d8d8;
+	border-radius: 8px;
+	background: #ffffff;
+	color: #111827;
+	padding: 0 16px;
+	font-size: 15px;
+	font-weight: 600;
+	letter-spacing: -0.15px;
+	outline: none;
+	box-shadow: none;
+}
+
+.broker-apply-input::placeholder
+{
+	color: #6b7280;
+	font-weight: 600;
+}
+
+.broker-apply-search-btn
+{
+	position: absolute;
+	right: 6px;
+	bottom: 6px;
+	height: 30px;
+	padding: 0 12px;
+	border: 0;
+	border-radius: 4px;
+	background: #1B6FA4;
+	color: #ffffff;
+	font-size: 13px;
+	font-weight: 700;
+	letter-spacing: -0.1px;
+	cursor: pointer;
+}
+
+.broker-apply-search-btn + *
+{
+	margin-top: 0;
+}
+
+.broker-apply-hidden-fields
+{
+	display: none !important;
+}
+
+.broker-apply-email-row
+{
+	display: grid;
+	grid-template-columns: 1fr 22px 1fr;
+	gap: 8px;
+	align-items: center;
+}
+
+.broker-apply-at
+{
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 16px;
+	font-weight: 700;
+	color: #111827;
+	line-height: 1;
+}
+
+.broker-apply-select
+{
+	appearance: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	background-image: linear-gradient(45deg, transparent 50%, #9ca3af 50%), linear-gradient(135deg, #9ca3af 50%, transparent 50%);
+	background-position: calc(100% - 16px) 17px, calc(100% - 11px) 17px;
+	background-size: 5px 5px, 5px 5px;
+	background-repeat: no-repeat;
+}
+
+.broker-apply-terms
+{
+	margin-top: 160px;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	height: 46px;
+	padding: 0 12px;
+	border: 1px solid #e5e7eb;
+	border-radius: 5px;
+	background: #ffffff;
+	color: #111827;
+	font-size: 14px;
+	font-weight: 600;
+	letter-spacing: -0.15px;
+	cursor: pointer;
+	user-select: none;
+}
+
+.broker-apply-terms input
+{
+	position: absolute;
+	opacity: 0;
+	pointer-events: none;
+}
+
+.broker-apply-checkmark
+{
+	width: 14px;
+	height: 14px;
+	border: 1px solid #fb923c;
+	border-radius: 3px;
+	background: #ffffff;
+	flex: 0 0 auto;
+}
+
+.broker-apply-terms input:checked + .broker-apply-checkmark
+{
+	background: #fb923c;
+	box-shadow: inset 0 0 0 3px #ffffff;
+}
+
+.broker-apply-terms i
+{
+	margin-left: auto;
+	font-size: 15px;
+	color: #111827;
+}
+
+.broker-apply-submit
+{
+	width: 100%;
+	height: 58px;
+	margin-top: 14px;
+	border: 0;
+	border-radius: 10px;
+	background: #1f79ae;
+	color: #ffffff;
+	font-size: 20px;
+	font-weight: 800;
+	letter-spacing: -0.4px;
+	cursor: pointer;
+}
+
+@media (max-width: 980px)
+{
+	.auth-modal.profile-page-mode .auth-broker-office-screen
+	{
+		width: min(680px, calc(100vw - 40px));
+	}
+
+	.broker-apply-page
+	{
+		grid-template-columns: 1fr;
+		gap: 34px;
+	}
+
+	.broker-apply-title
+	{
+		margin-bottom: 28px;
+		font-size: 34px;
+	}
+
+	.broker-apply-terms
+	{
+		margin-top: 22px;
+	}
+}
+
+.auth-modal.profile-page-mode .auth-broker-office-screen
+{
+	width: min(1080px, calc(100vw - 80px)) !important;
+	margin-left: auto !important;
+	margin-right: auto !important;
+}
+
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-page
+{
+	grid-template-columns: minmax(320px, 0.85fr) minmax(440px, 1fr) !important;
+	gap: 42px !important;
+	align-items: start !important;
+	justify-content: center !important;
+	max-width: 1080px !important;
+	margin: 0 auto !important;
+	padding: 0 0 28px !important;
+}
+
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-form
+{
+	padding: 30px 32px 34px !important;
+	background: #ffffff !important;
+	border: 1px solid #e5e7eb !important;
+	border-radius: 18px !important;
+	box-shadow: 0 18px 50px rgba(15, 23, 42, 0.10) !important;
+	gap: 15px !important;
+}
+
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-field
+{
+	gap: 7px !important;
+}
+
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-label
+{
+	font-size: 14px !important;
+	font-weight: 900 !important;
+	color: #334155 !important;
+	letter-spacing: -0.15px !important;
+}
+
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-input,
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-select
+{
+	height: 52px !important;
+	border: 1px solid #dbe3ec !important;
+	border-radius: 12px !important;
+	background: #f8fafc !important;
+	color: #111827 !important;
+	padding: 0 16px !important;
+	font-size: 15px !important;
+	font-weight: 800 !important;
+}
+
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-input:focus,
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-select:focus
+{
+	border-color: #1B6FA4 !important;
+	background: #ffffff !important;
+	box-shadow: 0 0 0 3px rgba(27, 111, 164, 0.10) !important;
+}
+
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-submit
+{
+	height: 56px !important;
+	margin-top: 12px !important;
+	border-radius: 10px !important;
+	background: #1B6FA4 !important;
+	font-size: 18px !important;
+	font-weight: 900 !important;
+	box-shadow: 0 10px 22px rgba(27, 111, 164, 0.22) !important;
+}
+
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-title
+{
+	margin: 0 0 28px !important;
+	font-size: 36px !important;
+	line-height: 1.18 !important;
+	letter-spacing: -1px !important;
+}
+
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-guide-card
+{
+	border-radius: 18px !important;
+	border: 1px solid #e5e7eb !important;
+	background: #ffffff !important;
+	box-shadow: 0 12px 32px rgba(15, 23, 42, 0.06) !important;
+}
+
+@media (max-width: 980px)
+{
+	.auth-modal.profile-page-mode .auth-modal-dialog
+	{
+		padding: 28px 18px 36px !important;
+	}
+
+	.auth-modal.profile-page-mode .auth-profile-setup-screen,
+	.auth-modal.profile-page-mode .auth-myinfo-screen
+	{
+		width: min(500px, calc(100vw - 28px)) !important;
+		padding: 30px 24px 34px !important;
+	}
+
+	.auth-modal.profile-page-mode .auth-broker-office-screen
+	{
+		width: min(680px, calc(100vw - 28px)) !important;
+	}
+
+	.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-page
+	{
+		grid-template-columns: 1fr !important;
+		gap: 24px !important;
+	}
+
+	.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-form
+	{
+		padding: 26px 22px 30px !important;
+	}
+}
+
+.auth-modal.profile-page-mode .auth-profile-setup-screen,
+.auth-modal.profile-page-mode .auth-myinfo-screen,
+.auth-modal.profile-page-mode .broker-apply-form
+{
+	position: relative !important;
+}
+
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-form
+{
+	padding-top: 54px !important;
+}
+
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-guide-card p
+{
+	display: grid !important;
+	grid-template-columns: 12px 1fr !important;
+	column-gap: 6px !important;
+	align-items: start !important;
+	text-align: left !important;
+	padding-left: 0 !important;
+	text-indent: 0 !important;
+	line-height: 1.62 !important;
+	word-break: keep-all !important;
+}
+
+.broker-guide-dot
+{
+	display: block;
+	line-height: inherit;
+}
+
+.broker-guide-text
+{
+	display: block;
+	min-width: 0;
+	
+	font-size: 15px !important;
+	font-weight: 300 !important;
+}
+
+/* 중개사무소 신청 화면은 기존 구조 보호 */
+.auth-modal.profile-page-mode .auth-broker-office-screen
+{
+	margin: 0 auto;
+}
+
+/* ===== PATCH: 중개사무소 신청 페이지 네모 처리 ===== */
+.auth-modal.broker-office-mode .auth-modal-dialog,
+.auth-modal.broker-office-mode .auth-modal-input,
+.auth-modal.broker-office-mode .auth-modal-submit,
+.auth-modal.broker-office-mode button
+{
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+
+/* ===== PATCH: 중개사무소 신청 / 개인정보 설정 남은 라운드 완전 제거 ===== */
+
+/* 중개사무소 신청 페이지 전체 네모 강제 */
+.auth-modal.broker-office-mode *,
+.auth-modal.profile-page-mode .auth-broker-office-screen,
+.auth-modal.profile-page-mode .auth-broker-office-screen *,
+.auth-modal.profile-page-mode .broker-apply-page,
+.auth-modal.profile-page-mode .broker-apply-page *,
+.auth-modal.profile-page-mode .broker-apply-guide-card,
+.auth-modal.profile-page-mode .broker-apply-guide-card *,
+.auth-modal.profile-page-mode .broker-office-inline-field,
+.auth-modal.profile-page-mode .broker-office-inline-field *,
+.auth-modal.profile-page-mode [id^="brokerOffice"],
+.auth-modal.profile-page-mode [id^="brokerOffice"] *,
+.auth-modal.profile-page-mode [id^="brokerOwner"],
+.auth-modal.profile-page-mode [id^="brokerOwner"] *,
+.auth-modal.profile-page-mode [id^="brokerLicense"],
+.auth-modal.profile-page-mode [id^="brokerLicense"] *
+{
+	border-radius: 0 !important;
+	box-shadow: none !important;
+}
+
+/* ===== PATCH: 중개사무소 신청 페이지 라운드 완전 제거 ===== */
+.auth-modal.profile-page-mode .auth-broker-office-screen,
+.auth-modal.profile-page-mode .auth-broker-office-screen *,
+.auth-modal.profile-page-mode .broker-apply-page,
+.auth-modal.profile-page-mode .broker-apply-page *,
+.auth-modal.profile-page-mode .broker-apply-left,
+.auth-modal.profile-page-mode .broker-apply-left *,
+.auth-modal.profile-page-mode .broker-apply-guide-card,
+.auth-modal.profile-page-mode .broker-apply-guide-card *,
+.auth-modal.profile-page-mode .broker-apply-right,
+.auth-modal.profile-page-mode .broker-apply-right *,
+.auth-modal.profile-page-mode .broker-apply-form-card,
+.auth-modal.profile-page-mode .broker-apply-form-card *,
+.auth-modal.profile-page-mode .auth-broker-office-screen .auth-modal-form,
+.auth-modal.profile-page-mode .auth-broker-office-screen .auth-modal-form *,
+.auth-modal.profile-page-mode .auth-broker-office-screen .auth-modal-field,
+.auth-modal.profile-page-mode .auth-broker-office-screen .auth-modal-field *,
+.auth-modal.profile-page-mode .auth-broker-office-screen input,
+.auth-modal.profile-page-mode .auth-broker-office-screen textarea,
+.auth-modal.profile-page-mode .auth-broker-office-screen select,
+.auth-modal.profile-page-mode .auth-broker-office-screen button,
+.auth-modal.profile-page-mode .auth-broker-office-screen .auth-modal-input,
+.auth-modal.profile-page-mode .auth-broker-office-screen .auth-modal-submit,
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-office-inline-btn,
+.auth-modal.profile-page-mode .auth-broker-office-screen .auth-card-close
+{
+	border-radius: 0 !important;
+	box-shadow: none !important;
+}
+
+/* 중개사무소 신청 페이지 카드/입력창 배경 박스도 네모 고정 */
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-guide-card,
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-right,
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-form-card,
+.auth-modal.profile-page-mode .auth-broker-office-screen .auth-modal-input,
+.auth-modal.profile-page-mode .auth-broker-office-screen input
+{
+	border-radius: 0 !important;
+}
+
+/* ===== PATCH: 중개사무소 신청 오른쪽 입력칸 네모 최종 고정 ===== */
+#authBrokerOfficeScreen input,
+#authBrokerOfficeScreen textarea,
+#authBrokerOfficeScreen select,
+#authBrokerOfficeScreen .auth-modal-input,
+#authBrokerOfficeScreen .broker-office-inline-field input,
+#authBrokerOfficeScreen .broker-apply-right input,
+#authBrokerOfficeScreen .broker-apply-right textarea,
+#authBrokerOfficeScreen .broker-apply-right select,
+#authBrokerOfficeScreen .broker-apply-right .auth-modal-input,
+#authBrokerOfficeScreen .auth-modal-field input,
+#authBrokerOfficeScreen .auth-modal-field textarea,
+#authBrokerOfficeScreen .auth-modal-field select
+{
+	border-radius: 0 !important;
+	-webkit-border-radius: 0 !important;
+	-moz-border-radius: 0 !important;
+	box-shadow: none !important;
+	appearance: none !important;
+	-webkit-appearance: none !important;
+}
+
+/* ===== PATCH: 내정보/개인정보/중개사무소 버튼 단일 관리 + 신청 박스 네모 ===== */
+:root
+{
+	--profile-common-button-width: 100%;
+	--profile-common-button-height: 54px;
+	--profile-common-button-margin-top: 24px;
+	--profile-common-button-bg: #1B6FA4;
+	--profile-common-button-color: #ffffff;
+	--profile-common-button-border: 1px solid #1B6FA4;
+	--profile-common-button-radius: 0;
+	--profile-common-button-shadow: none;
+	--profile-common-button-font-family: var(--profile-page-text-font-family, var(--font-ui));
+	--profile-common-button-font-size: var(--profile-page-text-font-size, 17px);
+	--profile-common-button-font-weight: 700;
+	--profile-common-button-letter-spacing: -0.18px;
+}
+
+/* 오른쪽 중개사무소 신청 전체 박스 네모 */
+.auth-modal.profile-page-mode .auth-broker-office-screen,
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-page,
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-right,
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-form-card,
+.auth-modal.profile-page-mode .auth-broker-office-screen .auth-modal-dialog
+{
+	border-radius: 0 !important;
+	box-shadow: none !important;
+}
+
+/* 내정보 / 개인정보 설정 / 중개사무소 가입신청 버튼 디자인 한 군데에서 통일 */
+.auth-modal.profile-page-mode .auth-myinfo-screen .auth-modal-submit,
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-modal-submit,
+.auth-modal.profile-page-mode .auth-broker-office-screen .auth-modal-submit,
+.auth-modal.profile-page-mode .auth-broker-office-screen button[type="submit"],
+.auth-modal.profile-page-mode .broker-apply-page .auth-modal-submit,
+.auth-modal.profile-page-mode .broker-apply-page button[type="submit"]
+{
+	width: var(--profile-common-button-width) !important;
+	height: var(--profile-common-button-height) !important;
+	margin-top: var(--profile-common-button-margin-top) !important;
+	background: var(--profile-common-button-bg) !important;
+	color: var(--profile-common-button-color) !important;
+	border: var(--profile-common-button-border) !important;
+	border-radius: var(--profile-common-button-radius) !important;
+	box-shadow: var(--profile-common-button-shadow) !important;
+	font-family: var(--profile-common-button-font-family) !important;
+	font-size: var(--profile-common-button-font-size) !important;
+	font-weight: var(--profile-common-button-font-weight) !important;
+	letter-spacing: var(--profile-common-button-letter-spacing) !important;
+	line-height: 1 !important;
+}
+
+/* hover/focus/active 때도 임의 그림자/라운드 금지 */
+.auth-modal.profile-page-mode .auth-myinfo-screen .auth-modal-submit:hover,
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-modal-submit:hover,
+.auth-modal.profile-page-mode .auth-broker-office-screen .auth-modal-submit:hover,
+.auth-modal.profile-page-mode .auth-broker-office-screen button[type="submit"]:hover,
+.auth-modal.profile-page-mode .broker-apply-page .auth-modal-submit:hover,
+.auth-modal.profile-page-mode .broker-apply-page button[type="submit"]:hover,
+.auth-modal.profile-page-mode .auth-myinfo-screen .auth-modal-submit:focus,
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-modal-submit:focus,
+.auth-modal.profile-page-mode .auth-broker-office-screen .auth-modal-submit:focus,
+.auth-modal.profile-page-mode .auth-broker-office-screen button[type="submit"]:focus,
+.auth-modal.profile-page-mode .broker-apply-page .auth-modal-submit:focus,
+.auth-modal.profile-page-mode .broker-apply-page button[type="submit"]:focus,
+.auth-modal.profile-page-mode .auth-myinfo-screen .auth-modal-submit:active,
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-modal-submit:active,
+.auth-modal.profile-page-mode .auth-broker-office-screen .auth-modal-submit:active,
+.auth-modal.profile-page-mode .auth-broker-office-screen button[type="submit"]:active,
+.auth-modal.profile-page-mode .broker-apply-page .auth-modal-submit:active,
+.auth-modal.profile-page-mode .broker-apply-page button[type="submit"]:active
+{
+	background: var(--profile-common-button-bg) !important;
+	color: var(--profile-common-button-color) !important;
+	border: var(--profile-common-button-border) !important;
+	border-radius: var(--profile-common-button-radius) !important;
+	box-shadow: var(--profile-common-button-shadow) !important;
+}
+
+/* 중개사무소 신청 페이지 입력/카드 네모 재고정 */
+#authBrokerOfficeScreen,
+#authBrokerOfficeScreen *,
+#authBrokerOfficeScreen input,
+#authBrokerOfficeScreen textarea,
+#authBrokerOfficeScreen select,
+#authBrokerOfficeScreen button
+{
+	border-radius: 0 !important;
+	box-shadow: none !important;
+}
+
+/* ===== PATCH: 중개사무소 신청 닫기 X 버튼만 기존 원형 효과 복원 ===== */
+#authBrokerOfficeScreen .auth-card-close,
+#authBrokerOfficeScreen .auth-modal-close
+{
+	border-radius: 50% !important;
+}
+
+body.admin-page-open .admin-page-panel,
+body.broker-home-page-open .broker-home-panel
+{
+	display: block;
+}
+
+body.admin-page-open .sub-topbar,
+body.admin-page-open .sidebar,
+body.admin-page-open .resizer,
+body.admin-page-open .map-wrap,
+body.broker-home-page-open .sub-topbar,
+body.broker-home-page-open .sidebar,
+body.broker-home-page-open .resizer,
+body.broker-home-page-open .map-wrap
+{
+	display: none !important;
+}
+
+/* PATCH 2.316: 중개사 홈에서 본인이 올린 매물을 관리 목록으로 표시 */
+.broker-home-panel
+{
+	position: absolute;
+	inset: var(--global-topbar-height) 0 0 0;
+	z-index: 9990;
+	display: none;
+	background: #f4f7fb;
+	color: #111827;
+	overflow: auto;
+	padding: 18px 18px 18px;
+}
+
+/* PATCH 2.337: 중개사 홈 상단 안내/사용건수/필터 영역은 전역 변수로 간격 조정 */
+:root
+{
+	--broker-home-top-gap: 14px;
+	--broker-home-filter-gap: 14px;
+	--broker-home-overview-filter-gap: 18px;
+	--broker-home-overview-right-width: 330px;
+}
+
+.broker-home-overview
+{
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) var(--broker-home-overview-right-width);
+	gap: var(--broker-home-top-gap);
+	/* PATCH 2.347: 오른쪽 광고판 높이를 왼쪽 안내+사용건수 영역 높이에 맞춘다 */
+	align-items: stretch;
+	margin: 0 0 var(--broker-home-overview-filter-gap);
+}
+
+.broker-home-main
+{
+	display: grid;
+	gap: var(--broker-home-top-gap);
+	min-width: 0;
+}
+
+.broker-home-law-notice
+{
+	display: grid;
+	grid-template-columns: 44px minmax(0, 1fr);
+	align-items: center;
+	gap: 14px;
+	min-height: 92px;
+	padding: 18px 24px;
+	background: #fff9dd;
+	color: #111827;
+}
+
+.broker-home-law-icon
+{
+	font-size: 34px;
+	color: #ef3b23;
+	text-align: center;
+}
+
+.broker-home-law-lines
+{
+	display: grid;
+	/* PATCH 2.351: 법정 고시 안내 두 줄의 위아래 간격을 왼쪽 여백 기준으로 줄임 */
+	gap: 4px;
+	font-size: 15px;
+	font-weight: 600;
+	line-height: 1.45;
+	letter-spacing: -0.16px;
+}
+
+.broker-home-law-lines strong
+{
+	color: #ef3b23;
+	font-weight: 700;
+}
+
+.broker-home-usage
+{
+	display: grid;
+	/* PATCH 2.351: 사용건수 박스는 3칸 구성으로 확장 */
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 34px;
+	/* PATCH 2.348: 매물 사용건수 박스 상하 여백을 같은 값으로 맞추고 외곽선은 연하게 조정 */
+	padding: 20px 24px;
+	border: 1px solid rgba(74, 126, 220, 0.38);
+	background: #ffffff;
+}
+
+.broker-home-usage-title
+{
+	font-size: 15px;
+	font-weight: 700;
+	color: #111827;
+	letter-spacing: -0.14px;
+}
+
+.broker-home-usage-title span
+{
+	color: #64748b;
+}
+
+.broker-home-usage-help
+{
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 18px;
+	height: 18px;
+	margin-left: 4px;
+	border-radius: 50%;
+	background: #35c66b;
+	color: #ffffff;
+	font-size: 12px;
+	font-weight: 800;
+	/* PATCH 2.352: 도움말 아이콘은 일반 커서를 쓰고 원 안의 물음표는 흰색으로 고정 */
+	cursor: default;
+}
+
+.broker-home-usage-title .broker-home-usage-help
+{
+	color: #ffffff;
+}
+
+.broker-home-usage-help::after
+{
+	content: attr(data-help);
+	position: absolute;
+	left: 50%;
+	top: calc(100% + 10px);
+	z-index: 30;
+	display: none;
+	width: 300px;
+	padding: 14px 16px;
+	border: 1px solid #d8dee8;
+	background: #ffffff;
+	box-shadow: 0 12px 28px rgba(15, 23, 42, 0.14);
+	color: #334155;
+	font-size: 13px;
+	font-weight: 400;
+	line-height: 1.55;
+	letter-spacing: -0.1px;
+	white-space: pre-line;
+	transform: translateX(-50%);
+}
+
+.broker-home-usage-help:hover::after,
+.broker-home-usage-help:focus::after
+{
+	display: block;
+}
+
+.broker-home-usage-track
+{
+	height: 10px;
+	margin: 10px 0 8px;
+	border-radius: 999px;
+	background: #e5e7eb;
+	overflow: hidden;
+}
+
+.broker-home-usage-fill
+{
+	height: 100%;
+	width: 0%;
+	border-radius: 999px;
+	background: #4A7EDC;
+}
+
+.broker-home-usage-meta
+{
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	font-size: 16px;
+	font-weight: 400;
+	color: #111827;
+}
+
+.broker-home-usage-meta strong
+{
+	color: #ef3b23;
+	font-size: 18px;
+	font-weight: 700;
+}
+
+.broker-home-ad
+{
+	position: relative;
+	align-self: stretch;
+	min-height: 0;
+	height: 100%;
+	padding: 22px 22px 20px;
+	border: 1px solid #e5e7eb;
+	background: #ffffff;
+	overflow: hidden;
+}
+
+.broker-home-ad[data-ad-mode="benefit"]
+{
+	background: #dff5ff;
+}
+
+.broker-home-ad-close
+{
+	position: absolute;
+	top: 14px;
+	right: 14px;
+	width: 26px;
+	height: 26px;
+	border: 0;
+	background: transparent;
+	color: #64748b;
+	font-size: 20px;
+	font-weight: 300;
+	cursor: pointer;
+}
+
+.broker-home-ad-title
+{
+	margin: 0 0 18px;
+	font-size: 18px;
+	font-weight: 700;
+	line-height: 1.45;
+	letter-spacing: -0.2px;
+	color: #111827;
+}
+
+.broker-home-ad-card
+{
+	width: 190px;
+	min-height: 74px;
+	margin: 0 auto 18px;
+	padding: 12px 14px;
+	border-radius: 8px;
+	background: #ffffff;
+	box-shadow: 0 10px 22px rgba(15, 23, 42, 0.12);
+}
+
+.broker-home-ad-card-title
+{
+	font-size: 13px;
+	font-weight: 700;
+	color: #111827;
+}
+
+.broker-home-ad-card-meta
+{
+	margin-top: 8px;
+	font-size: 12px;
+	font-weight: 400;
+	color: #64748b;
+}
+
+.broker-home-ad-cta
+{
+	width: 100%;
+	height: 40px;
+	border: 0;
+	background: #ff6600;
+	color: #ffffff;
+	font-size: 15px;
+	font-weight: 700;
+	cursor: pointer;
+}
+
+.broker-home-ad[data-ad-mode="benefit"] .broker-home-ad-cta
+{
+	background: #242d3a;
+}
+
+.broker-home-filterbar
+{
+	display: flex;
+	align-items: center;
+	gap: var(--broker-home-filter-gap);
+	width: 100%;
+	/* PATCH 2.350: 거래중/거래완료 필터 줄 위아래 여백을 같은 값으로 맞춤 */
+	margin: 0 0 var(--broker-home-overview-filter-gap);
+	padding: 0;
+}
+
+.broker-home-filter-item
+{
+	position: relative;
+}
+
+.broker-home-filter-btn
+{
+	height: 38px;
+	padding: 0 14px;
+	border: 1px solid #dbe4ee;
+	border-radius: 100px;
+	background: #ffffff;
+	color: var(--subbar-menu-color);
+	font-family: var(--subbar-menu-font-family);
+	font-size: var(--subbar-menu-font-size);
+	font-weight: var(--subbar-menu-font-weight);
+	letter-spacing: var(--subbar-menu-letter-spacing);
+	cursor: pointer;
+}
+
+.broker-home-filter-btn.active
+{
+	border-color: #d8dee8;
+	background: #ffffff;
+	font-weight: 600;
+}
+
+.broker-home-filter-menu
+{
+	position: absolute;
+	top: calc(100% + 8px);
+	left: 0;
+	right: auto;
+	z-index: 9999;
+	display: none;
+	min-width: 240px;
+	max-height: min(620px, calc(100vh - 120px));
+	overflow-y: auto;
+	padding: 8px;
+	border: 1px solid #e2e8f0;
+	background: rgba(255,255,255,0.98);
+	box-shadow: 0 18px 34px rgba(15, 41, 66, 0.14);
+	backdrop-filter: blur(10px);
+	flex-direction: column;
+	gap: 2px;
+}
+
+.broker-home-filter-menu.open
+{
+	display: flex;
+}
+
+.broker-home-filter-option
+{
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	width: 100%;
+	min-height: 36px;
+	padding: 0 10px;
+	border: 0;
+	background: transparent;
+	color: var(--subbar-item-color);
+	font-family: var(--subbar-item-font-family);
+	font-size: var(--subbar-item-font-size);
+	font-weight: var(--subbar-item-font-weight);
+	text-align: left;
+	letter-spacing: var(--subbar-item-letter-spacing);
+	cursor: pointer;
+	user-select: none;
+}
+
+.broker-home-filter-option:hover,
+.broker-home-filter-option.active
+{
+	background: #f8fafc;
+}
+
+.broker-home-filter-option input
+{
+	width: 16px;
+	height: 16px;
+	margin: 0;
+	accent-color: #2563eb;
+	cursor: pointer;
+	flex: 0 0 auto;
+}
+
+.broker-home-filter-option span
+{
+	line-height: 1.2;
+}
+
+.broker-home-filter-reset-row
+{
+	margin-top: 6px;
+	padding-top: 8px;
+	border-top: 1px solid #e5e7eb;
+}
+
+.broker-home-filter-reset-btn
+{
+	width: 100%;
+	min-height: 36px;
+	border: 0;
+	border-radius: 100px;
+	background: #f8fafc;
+	color: var(--subbar-item-color);
+	font-family: var(--subbar-item-font-family);
+	font-size: var(--subbar-item-font-size);
+	font-weight: var(--subbar-item-font-weight);
+	letter-spacing: var(--subbar-item-letter-spacing);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+	cursor: pointer;
+}
+
+.broker-home-filter-reset-btn:hover
+{
+	background: #eef2f7;
+	color: #1f2937;
+}
+
+.broker-home-filter-reset-btn i
+{
+	font-size: 12px;
+	line-height: 1;
+}
+
+.broker-home-filter-divider
+{
+	width: 1px;
+	height: 26px;
+	background: #d8dee8;
+}
+
+.broker-home-filter-spacer
+{
+	flex: 1 1 auto;
+	min-width: 16px;
+}
+
+/* PATCH 2.338: 중개사 홈 목록은 체크박스 없이 행별 관리 메뉴로 처리 */
+.broker-listing-list
+{
+	display: grid;
+	gap: 0;
+	border: 1px solid #d8dee8;
+	background: #ffffff;
+}
+
+/* 중개사 홈 - 버튼 좌우 간격 */
+/* 
+grid-template-columns: 104px 110px 78px 112px 118px minmax(220px, 1fr) 118px 76px 106px 48px;
+여기서:
+76px = 수정 버튼 칸
+106px = 블로그복사 버튼 칸
+48px = 점 3개 메뉴
+*/
+.broker-listing-row
+{
+	display: grid;
+	//grid-template-columns: 104px 110px 78px 112px 118px minmax(220px, 1fr) 118px 76px 106px 48px;
+	grid-template-columns: 104px 110px 78px 112px 118px minmax(220px, 1fr) 118px 62px 102px 48px;
+	column-gap: 12px;
+	row-gap: 8px;
+	align-items: center;
+	padding: 14px 16px;
+	border-bottom: 1px solid #e5e7eb;
+	background: #ffffff;
+}
+
+.broker-listing-head
+{
+	display: grid;
+	//grid-template-columns: 104px 110px 78px 112px 118px minmax(220px, 1fr) 118px 76px 106px 48px;
+	grid-template-columns: 104px 110px 78px 112px 118px minmax(220px, 1fr) 118px 62px 102px 48px;
+	column-gap: 12px;
+	align-items: center;
+	text-align: center;
+	padding: 12px 16px;
+	border-bottom: 1px solid #e5e7eb;
+	background: #ffffff;
+	color: #8b95a1;
+	/* PATCH 2.346: 중개사 홈 목록 헤더 색상은 유지하고 크기만 14px로 조정 */
+	font-size: 14px;
+	font-weight: 350;
+	letter-spacing: -0.08px;
+}
+
+.broker-listing-head > div:nth-child(2),
+.broker-listing-head > div:nth-child(5),
+.broker-listing-head > div:nth-child(6),
+.broker-listing-head > div:nth-child(7)
+{
+	text-align: left;
+}
+
+.broker-listing-row > div:nth-child(3),
+.broker-listing-row > div:nth-child(4)
+{
+	text-align: center;
+}
+
+.broker-listing-row:last-child
+{
+	border-bottom: 0;
+}
+
+.broker-listing-thumb
+{
+	width: 104px;
+	aspect-ratio: 4 / 3;
+	border: 1px solid #d8dee8;
+	background: #f8fafc;
+	overflow: hidden;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: #94a3b8;
+	font-size: 12px;
+	font-weight: 400;
+	letter-spacing: -0.1px;
+}
+
+.broker-listing-thumb img
+{
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+}
+
+.broker-listing-type
+{
+	/* PATCH 2.326: 중개사 홈 목록 텍스트를 요청대로 전부 400 웨이트로 통일 */
+	font-size: 14px;
+	font-weight: 400;
+	color: #2563eb;
+	line-height: 1.45;
+	letter-spacing: -0.18px;
+}
+
+.broker-listing-address
+{
+	margin-top: 5px;
+	/* PATCH 2.327: 제목 아래 주소는 제목보다 작되 읽기 쉽게 14px로 조정 */
+	font-size: 14px;
+	font-weight: 400;
+	color: #64748b;
+	line-height: 1.45;
+	letter-spacing: -0.1px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.broker-listing-title-cell
+{
+	min-width: 0;
+}
+
+.broker-listing-title
+{
+	font-size: 16px;
+	font-weight: 550;
+	color: #111827;
+	letter-spacing: -0.22px;
+	line-height: 1.42;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.broker-listing-meta
+{
+	font-size: 14px;
+	font-weight: 400;
+	color: #475569;
+	line-height: 1.45;
+	letter-spacing: -0.1px;
+}
+
+.broker-listing-status
+{
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 58px;
+	height: 28px;
+	border: 1px solid #d8dee8;
+	background: #f8fafc;
+	color: #334155;
+	font-size: 14px;
+	font-weight: 400;
+}
+
+.broker-listing-status.published
+{
+	border-color: #2563eb;
+	color: #2563eb;
+	background: #eff6ff;
+}
+
+.broker-listing-no
+{
+	font-size: 14px;
+	font-weight: 400;
+	color: #334155;
+	letter-spacing: -0.1px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+/* 중개사 홈 가격 금액 */
+.broker-listing-price
+{
+	color: #ef3b23;
+	font-size: 15px;
+	/* PATCH 2.336: 중개사 홈 가격 금액만 50 더 두껍게 조정 */
+	font-weight: 800;
+	letter-spacing: -0.18px;
+	text-align: left;
+	white-space: nowrap;
+}
+
+.broker-listing-actions
+{
+	display: contents;
+}
+
+.broker-listing-edit-btn,
+.broker-listing-blog-copy-btn
+{
+	height: 34px;
+	border: 0;
+	/* PATCH 2.354: 수정/블로그복사 버튼을 매물유형 필터처럼 둥근 pill 형태로 맞춤 */
+	border-radius: 999px;
+	/* PATCH 2.341: 중개사 홈 수정 버튼은 리얼제주 기본 파란색으로 표시 */
+	background: #4A7EDC;
+	color: #ffffff;
+	font-size: 14px;
+	font-weight: 400;
+	letter-spacing: -0.12px;
+	cursor: pointer;
+}
+
+.broker-listing-blog-copy-btn
+{
+	background: #22c55e;
+}
+
+.broker-listing-edit-btn:hover
+{
+	background: #3f6fc7;
+}
+
+.broker-listing-blog-copy-btn:hover
+{
+	background: #16a34a;
+}
+
+.broker-listing-menu-cell
+{
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.broker-listing-menu-btn
+{
+	width: 34px;
+	height: 34px;
+	border: 0;
+	background: transparent;
+	color: #475569;
+	font-size: 24px;
+	font-weight: 400;
+	line-height: 1;
+	cursor: pointer;
+}
+
+.broker-listing-menu-btn:hover
+{
+	background: #f1f5f9;
+}
+
+.broker-listing-more-menu
+{
+	position: absolute;
+	top: 38px;
+	right: 0;
+	z-index: 20;
+	display: none;
+	min-width: 154px;
+	padding: 8px;
+	border: 1px solid #e5e7eb;
+	background: #ffffff;
+	box-shadow: 0 12px 28px rgba(15, 23, 42, 0.14);
+}
+
+.broker-listing-more-menu.open
+{
+	display: grid;
+	gap: 2px;
+}
+
+.broker-listing-menu-item
+{
+	width: 100%;
+	height: 34px;
+	border: 0;
+	background: transparent;
+	color: #111827;
+	/* PATCH 2.341: 내정보 드롭다운과 관리 드롭다운 글자 크기를 15px로 통일 */
+	font-size: 15px;
+	font-weight: 400;
+	text-align: left;
+	letter-spacing: -0.08px;
+	cursor: pointer;
+}
+
+.broker-listing-menu-item:hover
+{
+	background: #f8fafc;
+}
+
+.broker-listing-menu-item.danger
+{
+	color: #ef3b23;
+}
+
+@media (max-width: 900px)
+{
+	.admin-application-card
+	{
+		grid-template-columns: 1fr;
+		align-items: stretch;
+	}
+	.admin-application-actions
+	{
+		justify-content: flex-start;
+	}
+	.broker-listing-row
+	{
+		grid-template-columns: 96px minmax(0, 1fr) 44px;
+	}
+	.broker-listing-head
+	{
+		display: none;
+	}
+	.broker-listing-price,
+	.broker-listing-actions
+	{
+		grid-column: 2;
+		text-align: left;
+	}
+	.broker-listing-actions
+	{
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 8px;
+	}
+	.broker-home-overview
+	{
+		grid-template-columns: 1fr;
+	}
+}
+
+/* ===== PATCH: 중개사무소 신청 상태별 드롭다운 문구 ===== */
+#brokerOfficeMenuItem.is-pending
+{
+	color: #1B6FA4 !important;
+	cursor: default !important;
+	opacity: 1 !important;
+}
+
+.auth-modal.profile-page-mode .auth-myinfo-screen .auth-profile-action-row > button,
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-action-row > button,
+.auth-modal.profile-page-mode .auth-broker-office-screen .auth-modal-submit,
+.auth-modal.profile-page-mode .auth-broker-office-screen button[type="submit"],
+.auth-modal.profile-page-mode .broker-apply-page .auth-modal-submit,
+.auth-modal.profile-page-mode .broker-apply-page button[type="submit"]
+{
+	width: 100% !important;
+	min-width: 0 !important;
+	height: var(--profile-page-button-height) !important;
+	min-height: var(--profile-page-button-height) !important;
+	margin: 0 !important;
+	padding: 0 16px !important;
+	border-radius: var(--profile-page-button-radius) !important;
+	box-shadow: var(--profile-page-button-shadow) !important;
+	font-size: var(--profile-page-button-font-size) !important;
+	font-weight: var(--profile-page-button-font-weight) !important;
+	letter-spacing: var(--profile-page-button-letter-spacing) !important;
+	line-height: 1 !important;
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	box-sizing: border-box !important;
+	cursor: pointer !important;
+}
+
+.auth-modal.profile-page-mode .auth-myinfo-screen .auth-modal-submit,
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-modal-submit,
+.auth-modal.profile-page-mode .auth-broker-office-screen .auth-modal-submit,
+.auth-modal.profile-page-mode .auth-broker-office-screen button[type="submit"],
+.auth-modal.profile-page-mode .broker-apply-page .auth-modal-submit,
+.auth-modal.profile-page-mode .broker-apply-page button[type="submit"],
+.auth-modal.profile-page-mode #authBrokerOfficeInfoScreen #brokerOfficeInfoEditBtn
+{
+	background: var(--profile-page-primary-button-bg) !important;
+	color: var(--profile-page-primary-button-color) !important;
+	border: var(--profile-page-primary-button-border) !important;
+}
+
+.auth-modal.profile-page-mode .auth-myinfo-screen .auth-profile-action-row > button:hover,
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-action-row > button:hover,
+.auth-modal.profile-page-mode .auth-broker-office-screen .auth-modal-submit:hover,
+.auth-modal.profile-page-mode .auth-broker-office-screen button[type="submit"]:hover,
+.auth-modal.profile-page-mode .broker-apply-page .auth-modal-submit:hover,
+.auth-modal.profile-page-mode .broker-apply-page button[type="submit"]:hover,
+.auth-modal.profile-page-mode .auth-myinfo-screen .auth-profile-action-row > button:focus,
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-action-row > button:focus,
+.auth-modal.profile-page-mode .auth-broker-office-screen .auth-modal-submit:focus,
+.auth-modal.profile-page-mode .auth-broker-office-screen button[type="submit"]:focus,
+.auth-modal.profile-page-mode .broker-apply-page .auth-modal-submit:focus,
+.auth-modal.profile-page-mode .broker-apply-page button[type="submit"]:focus,
+.auth-modal.profile-page-mode .auth-myinfo-screen .auth-profile-action-row > button:active,
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-action-row > button:active,
+.auth-modal.profile-page-mode .auth-broker-office-screen .auth-modal-submit:active,
+.auth-modal.profile-page-mode .auth-broker-office-screen button[type="submit"]:active,
+.auth-modal.profile-page-mode .broker-apply-page .auth-modal-submit:active,
+.auth-modal.profile-page-mode .broker-apply-page button[type="submit"]:active
+{
+	border-radius: var(--profile-page-button-radius) !important;
+	box-shadow: var(--profile-page-button-shadow) !important;
+}
+
+/* ===== PATCH: 매물 등록 - 중개사무소 설정 ===== */
+.property-agency-card
+{
+	min-height: 0;
+}
+
+/* ===== PATCH: 매물 등록 input 높이 단일 관리 ===== */
+.property-register-page input[type="text"],
+.property-register-page input[type="tel"],
+.property-register-page input[type="number"],
+.property-register-page input[type="email"],
+.property-register-page input[type="url"],
+.property-register-page input[type="date"],
+.property-register-page select,
+.property-register-input,
+.property-register-select,
+.property-detail-input,
+.property-registrant-input,
+.broker-apply-input
+{
+	height: var(--property-register-input-height) !important;
+	min-height: var(--property-register-input-height) !important;
+	box-sizing: border-box;
+}
+
+/* ===== PATCH: 매물 정보 층 정보 / 중개사무소 메모 정렬 ===== */
+.property-info-row.property-floor-row > .property-form-label
+{
+	padding-top: 0;
+	height: 32px;
+	min-height: 32px;
+	display: flex;
+	align-items: center;
+	line-height: 1.2;
+}
+
+/* PATCH 2.216: 중개사무소 메모 라벨은 글자수 카운터를 빼고 textarea 높이만 기준으로 중앙 정렬 */
+.property-agency-row
+{
+	align-items: flex-start !important;
+}
+
+/* ===== PATCH: 중개사무소 가입신청 버튼 신청중 비활성화 ===== */
+.auth-modal.profile-page-mode #myInfoBrokerOfficeBtn.is-disabled,
+.auth-modal.profile-page-mode #myInfoBrokerOfficeBtn:disabled
+{
+	background: #e5e7eb !important;
+	color: #9ca3af !important;
+	border: 1px solid #e5e7eb !important;
+	cursor: not-allowed !important;
+	box-shadow: none !important;
+	pointer-events: none !important;
+}
+
+/* ===== PATCH: 주요 실행 버튼 4종 파랑 통일 ===== */
+/* 내 정보 [수정] */
+.auth-modal.profile-page-mode #myInfoEditProfileBtn,
+/* 개인정보 설정 [저장] */
+.auth-modal.profile-page-mode #authProfileSaveBtn,
+/* 중개사무소 가입신청 */
+.auth-modal.profile-page-mode #myInfoBrokerOfficeBtn:not(:disabled):not(.is-disabled),
+/* 매물 등록하기 */
+#propertySubmitBtn
+{
+	background: #4A7EDC !important;
+	color: #ffffff !important;
+	border: 1px solid #4A7EDC !important;
+	box-shadow: none !important;
+}
+
+/* ===== PATCH 2.134: 개인정보 수정 전화번호 초기값 + 저장 버튼 파랑 최종 고정 ===== */
+.auth-modal.profile-page-mode #myInfoBrokerOfficeBtn:not(:disabled):not(.is-disabled):not(.is-pending),
+.auth-modal.profile-page-mode .auth-myinfo-screen #myInfoBrokerOfficeBtn:not(:disabled):not(.is-disabled):not(.is-pending),
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-submit,
+#authBrokerOfficeScreen .broker-apply-submit
+{
+	background: #4A7EDC !important;
+	color: #ffffff !important;
+	border: 1px solid #4A7EDC !important;
+	box-shadow: none !important;
+}
+
+.auth-modal.profile-page-mode #myInfoBrokerOfficeBtn:not(:disabled):not(.is-disabled):not(.is-pending):hover,
+.auth-modal.profile-page-mode .auth-myinfo-screen #myInfoBrokerOfficeBtn:not(:disabled):not(.is-disabled):not(.is-pending):hover,
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-submit:hover,
+#authBrokerOfficeScreen .broker-apply-submit:hover
+{
+	background: #3F6FCC !important;
+	border-color: #3F6FCC !important;
+	color: #ffffff !important;
+}
