@@ -1,21 +1,22 @@
-# REALJEJU split build
+# REALJEJU Ver 2.366 stable split
 
 Source: `realjeju_2.361(3).html`
 
-## Files
-- `index.html`: HTML only, loads split CSS/JS files.
-- `css/base.css`: global/common styles.
-- `css/map.css`: map/roadview/marker related styles.
-- `css/detail.css`: property detail panel styles.
-- `css/property-register.css`: property registration/address/photo styles.
-- `css/broker.css`: broker home/agency related styles.
-- `css/admin.css`: admin page styles.
-- `js/app.js`: common/global bootstrap logic.
-- `js/map.js`: map/roadview/marker related logic.
-- `js/property-detail.js`: detail panel/listing view logic.
-- `js/property-register.js`: property register/photo/address/upload logic.
-- `js/broker-home.js`: broker home/agency/listing management logic.
-- `js/admin.js`: admin/application/approval logic.
+## Important
+This build prioritizes runtime stability. The full original JavaScript execution order is preserved in:
 
-## Note
-This is an actual code split. The original inline CSS and JavaScript were extracted and distributed into feature files by selector/function keywords.
+- `js/app.js`
+
+CSS is actually split into:
+
+- `css/base.css`
+- `css/map.css`
+- `css/detail.css`
+- `css/property-register.css`
+- `css/broker.css`
+- `css/admin.css`
+
+The feature JS files exist as future split targets but are not loaded by `index.html`, because moving JS functions without a dependency graph broke Kakao map initialization.
+
+## Version
+Visible version strings were normalized to `Ver 2.366` where detectable.
