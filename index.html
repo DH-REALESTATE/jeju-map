@@ -12,7 +12,7 @@
 		<meta property="og:url" content="https://your-domain.example/" />
 		<meta property="og:image" content="https://your-domain.example/og-image.jpg" />
 		<link rel="icon" href="favicon_realjeju_blue.png">
-		<link rel="stylesheet" href="css/base_2.980.css">
+		<link rel="stylesheet" href="css/base_3.001.css">
 
 </head>
 	<body class="sidebar-list-collapsed">
@@ -106,12 +106,114 @@
 		<div class="admin-page-head">
 			<div>
 				<h1 class="admin-page-title">관리자 페이지</h1>
-				<p class="admin-page-desc">중개사무소 가입 신청을 확인하고 상태를 변경합니다.</p>
+				<p class="admin-page-desc">공지사항, 가입 신청, 쿠폰, 매물, 회원, 1:1 문의를 관리합니다.</p>
 			</div>
-			<button type="button" class="admin-refresh-btn" id="adminApplicationsRefreshBtn">새로고침</button>
 		</div>
+		<nav class="admin-page-tabs" aria-label="관리자 메뉴">
+			<button type="button" class="admin-page-tab active" data-admin-tab="notices">공지사항</button>
+			<button type="button" class="admin-page-tab" data-admin-tab="broker-applications">중개사무소 가입 신청</button>
+			<button type="button" class="admin-page-tab" data-admin-tab="coupons">쿠폰 관리</button>
+			<button type="button" class="admin-page-tab" data-admin-tab="listings">매물 관리</button>
+			<button type="button" class="admin-page-tab" data-admin-tab="users">회원 관리</button>
+			<button type="button" class="admin-page-tab" data-admin-tab="inquiries">1:1 문의내역</button>
+		</nav>
+		<div class="admin-page-tab-panel active" data-admin-tab-panel="notices">
+		<div class="admin-notice-manager" id="adminNoticeManager">
+			<div class="admin-notice-head">
+				<div>
+					<h2 class="admin-notice-title">공지사항 관리</h2>
+					<p class="admin-notice-desc">관리자만 작성/수정/삭제할 수 있고, 공개 상태의 공지만 사용자에게 노출됩니다.</p>
+				</div>
+			</div>
+			<form class="admin-notice-form" id="adminNoticeForm">
+				<input type="hidden" id="adminNoticeIdInput" />
+				<div class="admin-notice-form-grid">
+					<label class="admin-notice-field">
+						<span>분류</span>
+						<div class="admin-notice-category-dropdown property-form-control property-select-wrap property-register-dropdown" data-register-dropdown>
+							<select class="property-register-select property-register-native-select" id="adminNoticeCategoryInput" tabindex="-1" aria-hidden="true">
+								<option value="공지">공지</option>
+								<option value="중요">중요</option>
+								<option value="안내">안내</option>
+								<option value="업데이트">업데이트</option>
+								<option value="점검">점검</option>
+							</select>
+							<button type="button" class="property-register-dropdown-trigger" data-register-dropdown-trigger aria-haspopup="listbox" aria-expanded="false">
+								<span data-register-dropdown-label>공지</span>
+								<i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+							</button>
+							<div class="property-register-dropdown-menu" data-register-dropdown-menu role="listbox">
+								<button type="button" class="property-register-dropdown-option" data-value="공지" role="option">공지</button>
+								<button type="button" class="property-register-dropdown-option" data-value="중요" role="option">중요</button>
+								<button type="button" class="property-register-dropdown-option" data-value="안내" role="option">안내</button>
+								<button type="button" class="property-register-dropdown-option" data-value="업데이트" role="option">업데이트</button>
+								<button type="button" class="property-register-dropdown-option" data-value="점검" role="option">점검</button>
+							</div>
+						</div>
+					</label>
+					<label class="admin-notice-field admin-notice-field-title">
+						<span>제목</span>
+						<input type="text" id="adminNoticeTitleInput" maxlength="80" autocomplete="off" />
+					</label>
+				</div>
+				<label class="admin-notice-field">
+					<span>내용</span>
+					<textarea id="adminNoticeContentInput" maxlength="2000"></textarea>
+				</label>
+				<div class="admin-notice-options">
+					<label><input type="checkbox" id="adminNoticePinnedInput" /> 상단 고정</label>
+					<label><input type="checkbox" id="adminNoticeVisibleInput" checked /> 공개</label>
+				</div>
+				<div class="admin-notice-actions">
+					<p class="admin-notice-status" id="adminNoticeStatus" aria-live="polite"></p>
+					<button type="button" class="my-suite-inquiry-secondary" id="adminNoticeCancelBtn">취소</button>
+					<button type="submit" class="my-suite-inquiry-primary">저장</button>
+				</div>
+			</form>
+			<div class="admin-notice-list-head">
+				<h3 class="admin-notice-list-title">공지사항 목록</h3>
+				<span class="admin-notice-list-count" id="adminNoticeListCount">0건</span>
+			</div>
+			<div class="admin-notice-list" id="adminNoticeList">
+				<div class="admin-empty">공지사항을 불러오세요.</div>
+			</div>
+		</div>
+		</div>
+		<div class="admin-page-tab-panel" data-admin-tab-panel="broker-applications">
 		<div class="admin-application-list" id="adminApplicationsList">
 			<div class="admin-empty">신청 목록을 불러오세요.</div>
+		</div>
+		</div>
+		<div class="admin-page-tab-panel" data-admin-tab-panel="coupons">
+			<div class="admin-empty">쿠폰 관리 기능을 준비중입니다. 쿠폰 코드, 할인 금액, 사용기간, 사용 여부를 관리하는 영역입니다.</div>
+		</div>
+		<div class="admin-page-tab-panel" data-admin-tab-panel="listings">
+			<div class="admin-empty">매물 관리 기능을 준비중입니다. 전체 매물 조회, 숨김, 삭제, 신고 매물 확인을 관리하는 영역입니다.</div>
+		</div>
+		<div class="admin-page-tab-panel" data-admin-tab-panel="users">
+			<div class="admin-empty">회원 관리 기능을 준비중입니다. 회원 검색, 회원유형, 이용권, 상태를 관리하는 영역입니다.</div>
+		</div>
+		<div class="admin-page-tab-panel" data-admin-tab-panel="inquiries">
+			<div class="admin-inquiry-list" id="adminInquiryList">
+				<div class="admin-empty">1:1 문의내역을 불러오세요.</div>
+			</div>
+		</div>
+	</section>
+	<section class="notice-page-panel" id="noticePagePanel" aria-hidden="true">
+		<div class="notice-page-inner">
+			<div class="notice-page-head">
+				<div>
+					<h1 class="notice-page-title">공지사항</h1>
+					<p class="notice-page-desc">리얼제주 이용 안내와 업데이트 소식을 확인할 수 있습니다.</p>
+				</div>
+				<button type="button" class="notice-admin-manage-btn" id="noticeAdminManageBtn" hidden>공지 관리</button>
+			</div>
+			<div class="notice-list" id="noticeList" aria-label="공지사항 목록">
+				<div class="notice-empty">공지사항을 불러오는 중입니다.</div>
+			</div>
+			<footer class="notice-page-footer" aria-label="리얼제주 저작권">
+				<div class="notice-page-copy">© REALJEJU.APP</div>
+			</footer>
 		</div>
 	</section>
 	<!-- PATCH 2.316: 중개사 홈은 등록한 매물 관리 목록을 보여주는 전용 패널 -->
@@ -1510,8 +1612,8 @@
 		<div class="sub-topbar">
 			<div class="sub-topbar-inner">
 				<!-- PATCH 2.828: 하단 버전 링크를 현재 배포 파일로 갱신 -->
-				<a class="sub-version-fixed" href="realjeju_2.980.html" download="realjeju_2.980.html" title="realjeju_2.980.html 다운로드">
-					Ver 2.980
+				<a class="sub-version-fixed" href="realjeju_3.001.html" download="realjeju_3.001.html" title="realjeju_3.001.html 다운로드">
+					Ver 3.001
 				</a>
 				<div class="sub-topbar-left">
 					<strong id="listInfoText">
@@ -2809,7 +2911,7 @@
 	</div>
 </div>
 
-<script src="js/app_2.980.js"></script>
+<script src="js/app_3.001.js"></script>
 <script>
 (function () {
 	var labels = {
