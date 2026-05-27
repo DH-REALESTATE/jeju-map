@@ -12,7 +12,7 @@
 		<meta property="og:url" content="https://your-domain.example/" />
 		<meta property="og:image" content="https://your-domain.example/og-image.jpg" />
 		<link rel="icon" href="favicon_realjeju_blue.png">
-		<link rel="stylesheet" href="css/base_3.001.css">
+		<link rel="stylesheet" href="css/base_3.095.css">
 
 </head>
 	<body class="sidebar-list-collapsed">
@@ -179,8 +179,15 @@
 			</div>
 		</div>
 		</div>
-		<div class="admin-page-tab-panel" data-admin-tab-panel="broker-applications">
-		<div class="admin-application-list" id="adminApplicationsList">
+			<div class="admin-page-tab-panel" data-admin-tab-panel="broker-applications">
+			<div class="my-suite-favorites-filterbar admin-applications-filterbar">
+				<button type="button" class="broker-home-filter-btn active" data-admin-application-view="new">가입 신청 <span id="adminApplicationsNewCount">0</span></button>
+				<button type="button" class="broker-home-filter-btn" data-admin-application-view="active">승인 완료 <span id="adminApplicationsActiveCount">0</span></button>
+				<button type="button" class="broker-home-filter-btn" data-admin-application-view="pending">승인 대기 <span id="adminApplicationsPendingCount">0</span></button>
+				<button type="button" class="broker-home-filter-btn" data-admin-application-view="rejected">승인 거부 <span id="adminApplicationsRejectedCount">0</span></button>
+				<button type="button" class="broker-home-filter-btn" data-admin-application-view="deleted">휴지통 <span id="adminApplicationsDeletedCount">0</span></button>
+			</div>
+			<div class="admin-application-list" id="adminApplicationsList">
 			<div class="admin-empty">신청 목록을 불러오세요.</div>
 		</div>
 		</div>
@@ -188,16 +195,66 @@
 			<div class="admin-empty">쿠폰 관리 기능을 준비중입니다. 쿠폰 코드, 할인 금액, 사용기간, 사용 여부를 관리하는 영역입니다.</div>
 		</div>
 		<div class="admin-page-tab-panel" data-admin-tab-panel="listings">
-			<div class="admin-empty">매물 관리 기능을 준비중입니다. 전체 매물 조회, 숨김, 삭제, 신고 매물 확인을 관리하는 영역입니다.</div>
-		</div>
-		<div class="admin-page-tab-panel" data-admin-tab-panel="users">
-			<div class="admin-empty">회원 관리 기능을 준비중입니다. 회원 검색, 회원유형, 이용권, 상태를 관리하는 영역입니다.</div>
-		</div>
-		<div class="admin-page-tab-panel" data-admin-tab-panel="inquiries">
-			<div class="admin-inquiry-list" id="adminInquiryList">
-				<div class="admin-empty">1:1 문의내역을 불러오세요.</div>
+			<div class="admin-listings-content">
+				<div class="my-suite-favorites-filterbar admin-listings-filterbar">
+					<button type="button" class="broker-home-filter-btn active" data-admin-listing-view="all">전체 매물 <span id="adminListingsAllCount">0</span></button>
+					<button type="button" class="broker-home-filter-btn" data-admin-listing-view="reported">신고 매물 <span id="adminListingsReportedCount">0</span></button>
+					<button type="button" class="broker-home-filter-btn" data-admin-listing-view="hidden">숨김 <span id="adminListingsHiddenCount">0</span></button>
+					<button type="button" class="broker-home-filter-btn" data-admin-listing-view="deleted">휴지통 <span id="adminListingsDeletedCount">0</span></button>
+				</div>
+				<div class="broker-listing-shell admin-listings-shell">
+					<div class="broker-listing-list admin-listings-list" id="adminListingsList">
+						<div class="admin-empty">매물을 불러오세요.</div>
+					</div>
+				</div>
 			</div>
 		</div>
+		<div class="admin-page-tab-panel" data-admin-tab-panel="users">
+			<div class="admin-users-content">
+				<div class="my-suite-favorites-filterbar admin-users-filterbar">
+					<button type="button" class="broker-home-filter-btn active" data-admin-user-view="all">전체 회원 <span id="adminUsersAllCount">0</span></button>
+					<button type="button" class="broker-home-filter-btn" data-admin-user-view="broker">중개회원 <span id="adminUsersBrokerCount">0</span></button>
+					<button type="button" class="broker-home-filter-btn" data-admin-user-view="incomplete">미완료 <span id="adminUsersIncompleteCount">0</span></button>
+					<button type="button" class="broker-home-filter-btn" data-admin-user-view="admin">관리자 <span id="adminUsersAdminCount">0</span></button>
+				</div>
+				<div class="broker-listing-shell admin-users-shell">
+					<div class="broker-listing-list admin-users-list" id="adminUsersList">
+						<div class="admin-empty">회원을 불러오세요.</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="admin-page-tab-panel" data-admin-tab-panel="inquiries">
+			<div class="admin-inquiries-content">
+				<div class="my-suite-favorites-filterbar admin-inquiries-filterbar">
+					<button type="button" class="broker-home-filter-btn active" data-admin-inquiry-view="pending">답변 대기 <span id="adminInquiriesPendingCount">0</span></button>
+					<button type="button" class="broker-home-filter-btn" data-admin-inquiry-view="answered">답변 완료 <span id="adminInquiriesAnsweredCount">0</span></button>
+					<button type="button" class="broker-home-filter-btn" data-admin-inquiry-view="deleted">휴지통 <span id="adminInquiriesDeletedCount">0</span></button>
+				</div>
+				<div class="admin-inquiry-list" id="adminInquiryList">
+					<div class="admin-empty">1:1 문의내역을 불러오세요.</div>
+				</div>
+			</div>
+		</div>
+		<footer class="my-suite-company-footer admin-page-company-footer" aria-label="리얼제주 사업자 정보">
+			<div class="my-suite-company-name">리얼제주(REALJEJU.APP)</div>
+			<div class="my-suite-company-grid">
+				<p><span>(주)디에이치홀딩스부동산중개법인</span><span>대표이사ㆍ공인중개사 : 김대홍</span></p>
+				<p><span>주소 : 제주특별자치도 제주시 노형로 356, 5층(노형동)</span><span>중개사무소 등록번호 : 50110-2023-00022</span><span>사업자등록번호 : 203-88-00816</span></p>
+				<p><span>통신판매업 신고번호 : 2023-제주노형-0091</span><span>고객센터 전화 : 064-745-0531</span><span>고객센터 이메일 : dh_realestate@naver.com</span></p>
+				<p><span>호스팅서비스 제공자 : Vercel / SupaBase</span><span>개인정보보호책임자 : 김대홍</span></p>
+			</div>
+			<div class="my-suite-company-links" aria-label="리얼제주 정책 링크">
+				<button type="button" class="my-suite-company-link auth-terms-open" data-terms-key="service">이용약관</button>
+				<span aria-hidden="true">|</span>
+				<button type="button" class="my-suite-company-link auth-terms-open" data-terms-key="privacy">개인정보처리방침</button>
+				<span aria-hidden="true">|</span>
+				<button type="button" class="my-suite-company-link auth-terms-open" data-terms-key="location">위치기반 서비스 이용약관</button>
+				<span aria-hidden="true">|</span>
+				<button type="button" class="my-suite-company-link auth-terms-open" data-terms-key="refund">환불 및 취소 정책</button>
+			</div>
+			<div class="my-suite-company-copyright">Copyright © <span>REALJEJU.APP</span> All rights reserved</div>
+		</footer>
 	</section>
 	<section class="notice-page-panel" id="noticePagePanel" aria-hidden="true">
 		<div class="notice-page-inner">
@@ -1612,8 +1669,8 @@
 		<div class="sub-topbar">
 			<div class="sub-topbar-inner">
 				<!-- PATCH 2.828: 하단 버전 링크를 현재 배포 파일로 갱신 -->
-				<a class="sub-version-fixed" href="realjeju_3.001.html" download="realjeju_3.001.html" title="realjeju_3.001.html 다운로드">
-					Ver 3.001
+				<a class="sub-version-fixed" href="realjeju_3.095.html" download="realjeju_3.095.html" title="realjeju_3.095.html 다운로드">
+					Ver 3.095
 				</a>
 				<div class="sub-topbar-left">
 					<strong id="listInfoText">
@@ -1904,29 +1961,32 @@
 						</div>
 						<div class="detail-top-actions">
 							<button type="button" class="detail-icon-btn" id="detailShareBtn" aria-label="공유하기" title="공유하기">
-								<i class="fa-solid fa-arrow-up-from-bracket">
-								</i>
+								<i class="fa-solid fa-arrow-up-from-bracket" aria-hidden="true"></i>
 							</button>
 							<button type="button" class="detail-icon-btn detail-close-btn" id="detailCloseBtn" aria-label="종료" title="종료">
-								<i class="fa-solid fa-xmark">
-								</i>
+								<i class="fa-solid fa-xmark" aria-hidden="true"></i>
 							</button>
-							<div class="detail-share-menu" id="detailShareMenu">
-								<button type="button" class="detail-share-option" id="detailNativeShareBtn" onclick="shareDetailNative(event)">
-									<i class="fa-solid fa-arrow-up-from-bracket">
-									</i>
-									기기 공유
-								</button>
-								<button type="button" class="detail-share-option" id="detailSmsShareBtn" onclick="shareDetailSms(event)">
-									<i class="fa-solid fa-comment-sms">
-									</i>
-									문자 공유
-								</button>
-								<button type="button" class="detail-share-option" id="detailShareCopyBtn" onclick="shareDetailCopy(event)">
-									<i class="fa-solid fa-link">
-									</i>
-									링크 복사
-								</button>
+							<div class="detail-share-menu" id="detailShareMenu" role="dialog" aria-modal="false" aria-label="공유하기">
+								<div class="detail-share-head">
+									<strong>공유하기 <span class="detail-share-feedback" id="detailShareFeedback"></span></strong>
+									<button type="button" class="detail-share-close" id="detailShareCloseBtn" aria-label="닫기" onclick="closeDetailShareMenu(event)">
+										<i class="fa-solid fa-xmark" aria-hidden="true"></i>
+									</button>
+								</div>
+								<div class="detail-share-options">
+									<button type="button" class="detail-share-option kakao" id="detailKakaoShareBtn" onclick="shareDetailKakao(event)">
+										<span class="detail-share-option-icon">
+											<i class="fa-solid fa-comment" aria-hidden="true"></i>
+										</span>
+										<span>카카오톡</span>
+									</button>
+									<button type="button" class="detail-share-option copy" id="detailShareCopyBtn" onclick="shareDetailCopy(event)">
+										<span class="detail-share-option-icon">
+											<i class="fa-regular fa-copy" aria-hidden="true"></i>
+										</span>
+										<span>링크 복사</span>
+									</button>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -2024,7 +2084,7 @@
 									</span>
 								</div>
 							</div>
-							<div id="detailInfoList">
+							<div id="detailInfoListTop">
 							</div>
 							<div class="detail-desc-card" id="detailDescCard">
 								<div class="detail-desc-title" id="detailDescTitle">
@@ -2032,6 +2092,8 @@
 								</div>
 								<div class="detail-desc" id="detailDesc">
 								</div>
+							</div>
+							<div id="detailInfoList">
 							</div>
 							<div class="detail-action-box">
 								<div class="detail-phone" id="detailPhone">
@@ -2074,10 +2136,10 @@
 										<div class="detail-agent-regno" id="detailAgentRegNo">
 										</div>
 										<div class="detail-agent-cta-row">
-											<button type="button" class="detail-agent-cta-btn kakao" id="detailRoadviewBtn">
+											<button type="button" class="detail-agent-cta-btn kakao" id="detailRoadviewBtn" aria-label="카톡상담" style="display:none;">
 												<i class="fa-solid fa-comment">
 												</i>
-												카톡문의
+												카톡상담
 											</button>
 											<button type="button" class="detail-agent-cta-btn phone" id="detailCallBtn">
 												<i class="fa-solid fa-phone">
@@ -2088,6 +2150,11 @@
 									</div>
 								</div>
 							</div>
+							<div class="detail-similar-card" id="detailSimilarCard" style="display:none;">
+								<div class="detail-similar-title">비슷한 조건의 매물 더보기</div>
+								<div class="detail-similar-grid" id="detailSimilarGrid"></div>
+							</div>
+							<div class="detail-panel-copy">© REALJEJU.APP</div>
 						</div>
 					</div>
 				</div>
@@ -2272,18 +2339,20 @@
 <div class="detail-image-lightbox" id="detailImageLightbox">
 	<div class="detail-image-lightbox-stage" id="detailImageLightboxStage">
 		<button type="button" class="detail-image-lightbox-nav prev" id="detailImageLightboxPrev">
-			<span aria-hidden="true">‹</span>
+			<i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
 		</button>
 		<button type="button" class="detail-image-lightbox-nav next" id="detailImageLightboxNext">
-			<span aria-hidden="true">›</span>
+			<i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
 		</button>
 		<button type="button" class="detail-image-lightbox-close" id="detailImageLightboxClose">
-			<span aria-hidden="true">×</span>
+			<i class="fa-solid fa-xmark" aria-hidden="true"></i>
 		</button>
+		<div class="detail-image-lightbox-count" id="detailImageLightboxCount"></div>
 		<img id="detailImageLightboxImg" src="" alt="매물 사진 확대">
 	</div>
 </div>
 <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=b7db2d3c35122f3ec33c88ea6d3195fb&libraries=services,clusterer&autoload=false"></script>
+<script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.5/kakao.min.js" crossorigin="anonymous"></script>
 
 <div class="auth-modal" id="authModal" aria-hidden="true">
 	<div class="auth-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
@@ -2911,7 +2980,7 @@
 	</div>
 </div>
 
-<script src="js/app_3.001.js"></script>
+<script src="js/app_3.095.js"></script>
 <script>
 (function () {
 	var labels = {
