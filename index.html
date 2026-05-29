@@ -22,7 +22,7 @@
 				transition: none;
 			}
 		</style>
-			<link rel="stylesheet" href="css/base_3.214.css">
+			<link rel="stylesheet" href="css/base_3.219.css">
 
 </head>
 	<body class="sidebar-list-collapsed">
@@ -1666,7 +1666,7 @@
 			<div class="sub-topbar-inner">
 				<!-- PATCH 2.828: 하단 버전 링크를 현재 배포 파일로 갱신 -->
 				<a class="sub-version-fixed" href="realjeju_3.202.html" download="realjeju_3.202.html" title="realjeju_3.202.html 다운로드">
-					Ver 3.214
+					Ver 3.219
 				</a>
 				<div class="sub-topbar-left">
 					<strong id="listInfoText">
@@ -1826,6 +1826,16 @@
 									<input type="radio" name="dealMethodFilter" value="direct" />
 									<span>개인직거래 매물</span>
 								</label>
+							</div>
+						</div>
+						<div class="extra-filter-dropdown price-filter-dropdown" id="priceFilterDropdown">
+							<button type="button" class="extra-filter-trigger price-filter-trigger" id="priceFilterTrigger" aria-expanded="false">
+								<span id="priceFilterLabel">가격</span>
+								<i class="fa-solid fa-chevron-down"></i>
+							</button>
+							<div class="extra-filter-menu price-filter-menu" id="priceFilterMenu">
+								<div class="price-filter-message" id="priceFilterMessage">거래 유형을 선택해 주세요.</div>
+								<div id="priceFilterOptions"></div>
 							</div>
 						</div>
 						
@@ -2980,7 +2990,7 @@
 	</div>
 </div>
 
-<script src="js/app_3.214.js"></script>
+<script src="js/app_3.219.js"></script>
 <script>
 (function () {
 	var labels = {
