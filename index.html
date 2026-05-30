@@ -22,7 +22,7 @@
 				transition: none;
 			}
 		</style>
-			<link rel="stylesheet" href="css/base_3.219.css">
+			<link rel="stylesheet" href="css/base_3.225.css">
 
 </head>
 	<body class="sidebar-list-collapsed">
@@ -295,7 +295,7 @@
 					<div class="broker-home-usage-item">
 						<div class="broker-home-usage-title">하루 재등록 사용건수 <span class="broker-home-usage-help" tabindex="0" data-help="매물을 현재날짜로 갱신하여 신규 등록하는 기능입니다.&#10;단, 기존 매물은 재등록 시 삭제됩니다.&#10;&#10;재등록 이용건수는 매일 갱신됩니다.">?</span></div>
 						<div class="broker-home-usage-track"><div class="broker-home-usage-fill" id="brokerRelistUsageFill"></div></div>
-						<div class="broker-home-usage-meta"><span><strong id="brokerRelistUsageCount">0</strong>건 사용중</span><span><strong>50</strong>건</span></div>
+						<div class="broker-home-usage-meta"><span><strong id="brokerRelistUsageCount">0</strong>건 사용중</span><span><strong id="brokerRelistUsageLimit">50</strong>건</span></div>
 					</div>
 				</div>
 			</div>
@@ -332,6 +332,7 @@
 				<div class="broker-home-filter-menu" id="brokerDealTypeFilterMenu"></div>
 			</div>
 			<div class="broker-home-filter-divider"></div>
+			<button type="button" class="broker-home-filter-btn" id="brokerBulkRefreshBtn">전체갱신</button>
 			<button type="button" class="broker-home-filter-btn">임시저장</button>
 			<button type="button" class="broker-home-filter-btn">엑셀변환</button>
 			<div class="broker-home-filter-spacer" aria-hidden="true"></div>
@@ -715,10 +716,18 @@
 									<button type="button" class="property-register-dropdown-option" data-value="land" role="option">토지</button>
 								</div>
 					</div>
-					<label class="property-listing-no-inline-label" for="propertyListingNoInput">
-						<span>매물 번호</span>
-						<input type="text" class="property-register-input property-listing-no-inline-input" id="propertyListingNoInput" placeholder="예: 디-229" maxlength="30" />
-					</label>
+					<div class="property-listing-no-inline" id="propertyListingNoInline">
+						<span class="property-listing-no-inline-title">매물번호</span>
+						<label class="property-listing-no-mode-option">
+							<input type="radio" name="propertyListingNoMode" value="auto" checked />
+							<span>자동</span>
+						</label>
+						<label class="property-listing-no-mode-option">
+							<input type="radio" name="propertyListingNoMode" value="manual" />
+							<span>수동</span>
+						</label>
+						<input type="text" class="property-register-input property-listing-no-inline-input" id="propertyListingNoInput" placeholder="10166031" maxlength="30" readonly />
+					</div>
 				</div>
 
 				<div class="property-form-row">
@@ -1666,7 +1675,7 @@
 			<div class="sub-topbar-inner">
 				<!-- PATCH 2.828: 하단 버전 링크를 현재 배포 파일로 갱신 -->
 				<a class="sub-version-fixed" href="realjeju_3.202.html" download="realjeju_3.202.html" title="realjeju_3.202.html 다운로드">
-					Ver 3.219
+					Ver 3.225
 				</a>
 				<div class="sub-topbar-left">
 					<strong id="listInfoText">
@@ -1805,6 +1814,16 @@
 								</div>
 							</div>
 						</div>
+						<div class="extra-filter-dropdown price-filter-dropdown" id="priceFilterDropdown">
+							<button type="button" class="extra-filter-trigger price-filter-trigger" id="priceFilterTrigger" aria-expanded="false">
+								<span id="priceFilterLabel">가격</span>
+								<i class="fa-solid fa-chevron-down"></i>
+							</button>
+							<div class="extra-filter-menu price-filter-menu" id="priceFilterMenu">
+								<div class="price-filter-message" id="priceFilterMessage">거래 유형을 선택해 주세요.</div>
+								<div id="priceFilterOptions"></div>
+							</div>
+						</div>
 						<div class="extra-filter-dropdown deal-method-filter-dropdown" id="dealMethodFilterDropdown">
 							<button type="button" class="extra-filter-trigger deal-method-filter-trigger" id="dealMethodFilterTrigger" aria-expanded="false">
 								<span id="dealMethodFilterLabel">
@@ -1828,17 +1847,6 @@
 								</label>
 							</div>
 						</div>
-						<div class="extra-filter-dropdown price-filter-dropdown" id="priceFilterDropdown">
-							<button type="button" class="extra-filter-trigger price-filter-trigger" id="priceFilterTrigger" aria-expanded="false">
-								<span id="priceFilterLabel">가격</span>
-								<i class="fa-solid fa-chevron-down"></i>
-							</button>
-							<div class="extra-filter-menu price-filter-menu" id="priceFilterMenu">
-								<div class="price-filter-message" id="priceFilterMessage">거래 유형을 선택해 주세요.</div>
-								<div id="priceFilterOptions"></div>
-							</div>
-						</div>
-						
 <!-- ===== 사용승인일 필터 ===== -->
 <div class="extra-filter-dropdown approval-year-filter-dropdown" id="approvalYearFilterDropdown">
 	<button type="button" class="extra-filter-trigger approval-year-filter-trigger" id="approvalYearFilterTrigger" aria-expanded="false">
@@ -2990,7 +2998,7 @@
 	</div>
 </div>
 
-<script src="js/app_3.219.js"></script>
+<script src="js/app_3.225.js"></script>
 <script>
 (function () {
 	var labels = {
