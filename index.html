@@ -22,7 +22,7 @@
 				transition: none;
 			}
 		</style>
-			<link rel="stylesheet" href="css/base_3.225.css">
+			<link rel="stylesheet" href="css/base_3.236.css">
 
 </head>
 	<body class="sidebar-list-collapsed">
@@ -38,8 +38,6 @@
 				</div>
 				<nav class="global-topbar-menu" id="topbarMenu" aria-label="상단 메뉴">
 					<button type="button" class="topbar-menu-item active">부동산 홈</button>
-					<span class="topbar-menu-free-wrap"><button type="button" class="topbar-menu-item">매물 등록</button><span class="badge-free">무료</span></span>
-					<button type="button" class="topbar-menu-item">관심매물</button>
 					<button type="button" class="topbar-menu-item">공지사항</button>
 				</nav>
 				<div class="global-topbar-right">
@@ -292,13 +290,13 @@
 						<div class="broker-home-usage-track"><div class="broker-home-usage-fill" id="brokerPremiumUsageFill"></div></div>
 						<div class="broker-home-usage-meta"><span><strong id="brokerPremiumUsageCount">0</strong>건 사용중</span><span><strong>50</strong>건</span></div>
 					</div>
-					<div class="broker-home-usage-item">
-						<div class="broker-home-usage-title">하루 재등록 사용건수 <span class="broker-home-usage-help" tabindex="0" data-help="매물을 현재날짜로 갱신하여 신규 등록하는 기능입니다.&#10;단, 기존 매물은 재등록 시 삭제됩니다.&#10;&#10;재등록 이용건수는 매일 갱신됩니다.">?</span></div>
-						<div class="broker-home-usage-track"><div class="broker-home-usage-fill" id="brokerRelistUsageFill"></div></div>
-						<div class="broker-home-usage-meta"><span><strong id="brokerRelistUsageCount">0</strong>건 사용중</span><span><strong id="brokerRelistUsageLimit">50</strong>건</span></div>
+						<div class="broker-home-usage-item">
+							<div class="broker-home-usage-title">하루 재등록 사용건수 <span class="broker-home-usage-help" tabindex="0" data-help="매물을 현재날짜로 갱신하여 신규 등록하는 기능입니다.&#10;단, 기존 매물은 재등록 시 삭제됩니다.&#10;&#10;재등록 이용건수는 매일 갱신됩니다.">?</span></div>
+							<div class="broker-home-usage-track"><div class="broker-home-usage-fill" id="brokerRelistUsageFill"></div></div>
+							<div class="broker-home-usage-meta"><span><strong id="brokerRelistUsageCount">0</strong>건 사용중</span><span><strong id="brokerRelistUsageLimit">50</strong>건</span></div>
+						</div>
 					</div>
 				</div>
-			</div>
 			<div class="broker-home-ad broker-home-payment-guide" id="brokerHomeAd" data-ad-mode="payment">
 				<h2 class="broker-home-ad-title" id="brokerHomeAdTitle">매물 등록 한도를 늘리고<br>광고 노출 기능을 이용해 보세요</h2>
 				<div class="broker-home-payment-card">
@@ -327,14 +325,14 @@
 				<button type="button" class="broker-home-filter-btn" id="brokerPropertyTypeFilterBtn" data-broker-home-filter-menu="property">매물 유형 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
 				<div class="broker-home-filter-menu" id="brokerPropertyTypeFilterMenu"></div>
 			</div>
-			<div class="broker-home-filter-item">
-				<button type="button" class="broker-home-filter-btn" id="brokerDealTypeFilterBtn" data-broker-home-filter-menu="deal">거래 유형 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
-				<div class="broker-home-filter-menu" id="brokerDealTypeFilterMenu"></div>
-			</div>
-			<div class="broker-home-filter-divider"></div>
-			<button type="button" class="broker-home-filter-btn" id="brokerBulkRefreshBtn">전체갱신</button>
-			<button type="button" class="broker-home-filter-btn">임시저장</button>
-			<button type="button" class="broker-home-filter-btn">엑셀변환</button>
+				<div class="broker-home-filter-item">
+					<button type="button" class="broker-home-filter-btn" id="brokerDealTypeFilterBtn" data-broker-home-filter-menu="deal">거래 유형 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
+					<div class="broker-home-filter-menu" id="brokerDealTypeFilterMenu"></div>
+				</div>
+				<div class="broker-home-filter-divider"></div>
+				<button type="button" class="broker-home-filter-btn" id="brokerBulkRefreshBtn">전체갱신</button>
+				<button type="button" class="broker-home-filter-btn">임시저장</button>
+				<button type="button" class="broker-home-filter-btn">엑셀변환</button>
 			<div class="broker-home-filter-spacer" aria-hidden="true"></div>
 			<div class="broker-home-filter-item">
 				<button type="button" class="broker-home-filter-btn" data-broker-home-status-filter="deleted">휴지통 <span id="brokerDeletedCount">0</span></button>
@@ -1675,7 +1673,7 @@
 			<div class="sub-topbar-inner">
 				<!-- PATCH 2.828: 하단 버전 링크를 현재 배포 파일로 갱신 -->
 				<a class="sub-version-fixed" href="realjeju_3.202.html" download="realjeju_3.202.html" title="realjeju_3.202.html 다운로드">
-					Ver 3.225
+					Ver 3.236
 				</a>
 				<div class="sub-topbar-left">
 					<strong id="listInfoText">
@@ -2998,7 +2996,7 @@
 	</div>
 </div>
 
-<script src="js/app_3.225.js"></script>
+<script src="js/app_3.236.js"></script>
 <script>
 (function () {
 	var labels = {
