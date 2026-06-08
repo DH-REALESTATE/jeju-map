@@ -22,7 +22,7 @@
 				transition: none;
 			}
 		</style>
-			<link rel="stylesheet" href="css/base_3.273.css">
+			<link rel="stylesheet" href="css/base_3.284.css">
 
 </head>
 	<body class="sidebar-list-collapsed">
@@ -1672,8 +1672,8 @@
 		<div class="sub-topbar">
 			<div class="sub-topbar-inner">
 				<!-- PATCH 2.828: 하단 버전 링크를 현재 배포 파일로 갱신 -->
-				<a class="sub-version-fixed" href="realjeju_3.273.html" download="realjeju_3.273.html" title="realjeju_3.273.html 다운로드">
-					Ver 3.273
+				<a class="sub-version-fixed" href="realjeju_3.284.html" download="realjeju_3.284.html" title="realjeju_3.284.html 다운로드">
+					Ver 3.284
 				</a>
 				<div class="sub-topbar-left">
 					<strong id="listInfoText">
@@ -1945,6 +1945,32 @@
 								</label>
 								<div class="extra-filter-reset-row">
 									<button type="button" class="extra-filter-reset-btn" id="extraFilterResetBtn">
+										<i class="fa-solid fa-rotate-right" aria-hidden="true">
+										</i>
+										<span>
+											초기화
+										</span>
+									</button>
+								</div>
+							</div>
+						</div>
+						<div class="extra-filter-dropdown location-analysis-dropdown" id="locationAnalysisDropdown">
+							<button type="button" class="extra-filter-trigger location-analysis-trigger" id="locationAnalysisTrigger" aria-expanded="false">
+								<span id="locationAnalysisLabel">
+									입지분석
+								</span>
+								<i class="fa-solid fa-chevron-down">
+								</i>
+							</button>
+							<div class="extra-filter-menu location-analysis-menu" id="locationAnalysisMenu">
+								<label class="extra-filter-option location-analysis-option">
+									<input type="checkbox" id="lifeSafetyOverlayCheck" />
+									<span>
+										생활안전 참고지표
+									</span>
+								</label>
+								<div class="extra-filter-reset-row">
+									<button type="button" class="extra-filter-reset-btn" id="locationAnalysisResetBtn">
 										<i class="fa-solid fa-rotate-right" aria-hidden="true">
 										</i>
 										<span>
@@ -2351,6 +2377,37 @@
 						㎡
 					</button>
 				</div>
+			</div>
+		</div>
+		<div class="life-safety-legend" id="lifeSafetyLegend" aria-hidden="true">
+			<div class="life-safety-legend-title">
+				생활안전 참고지표
+			</div>
+			<div class="life-safety-legend-scope">
+				현재 노형동ㆍ연동 우선 제공
+			</div>
+			<div class="life-safety-legend-row">
+				<span class="life-safety-legend-swatch level-1"></span>
+				<span>낮음</span>
+			</div>
+			<div class="life-safety-legend-row">
+				<span class="life-safety-legend-swatch level-2"></span>
+				<span>보통</span>
+			</div>
+			<div class="life-safety-legend-row">
+				<span class="life-safety-legend-swatch level-3"></span>
+				<span>주의</span>
+			</div>
+			<div class="life-safety-legend-row">
+				<span class="life-safety-legend-swatch level-4"></span>
+				<span>높음</span>
+			</div>
+			<div class="life-safety-legend-row">
+				<span class="life-safety-legend-swatch level-5"></span>
+				<span>매우 높음</span>
+			</div>
+			<div class="life-safety-legend-note">
+				값이 높을수록 주의도 높음
 			</div>
 		</div>
 	</main>
@@ -2999,7 +3056,7 @@
 	</div>
 </div>
 
-<script src="js/app_3.273.js"></script>
+<script src="js/app_3.284.js"></script>
 <script>
 (function () {
 	var labels = {
