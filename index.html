@@ -22,7 +22,7 @@
 				transition: none;
 			}
 		</style>
-			<link rel="stylesheet" href="css/base_3.313.css">
+			<link rel="stylesheet" href="css/base_3.320.css">
 
 </head>
 	<body class="sidebar-list-collapsed">
@@ -351,6 +351,7 @@
 		<div class="payment-page-inner">
 			<div class="payment-tabs" role="tablist" aria-label="이용권 결제 메뉴">
 				<button type="button" class="payment-tab active" data-payment-tab="plans" role="tab" aria-selected="true">이용권 구매</button>
+				<button type="button" class="payment-tab" data-payment-tab="coupons" role="tab" aria-selected="false">쿠폰함</button>
 				<button type="button" class="payment-tab" data-payment-tab="history" role="tab" aria-selected="false">결제 내역</button>
 			</div>
 
@@ -400,6 +401,29 @@
 						<button type="button" class="payment-extra-item">상단 노출권 <strong>22,000원</strong></button>
 					</div>
 					<p class="payment-ready-note">토스페이먼츠 연동 전까지는 테스트 결제 UI로 표시됩니다.</p>
+				</div>
+			</div>
+
+			<div class="payment-tab-panel" id="paymentCouponsPanel" data-payment-panel="coupons">
+				<div class="payment-coupon-card-wrap">
+					<article class="payment-coupon-card">
+						<div class="payment-coupon-kind">30일 이용권</div>
+						<h2>베이직 플랜 30일 이용권</h2>
+						<p>일반매물 100건과 중개사홈을 30일 동안 이용할 수 있습니다.</p>
+						<button type="button" class="payment-coupon-use-btn" data-coupon-plan="starter">사용하기</button>
+					</article>
+					<article class="payment-coupon-card">
+						<div class="payment-coupon-kind">30일 이용권</div>
+						<h2>프리미엄 플랜 30일 이용권</h2>
+						<p>일반매물 300건, 하루 재등록 50건, 프리미엄 매물 20건을 이용할 수 있습니다.</p>
+						<button type="button" class="payment-coupon-use-btn" data-coupon-plan="premium">사용하기</button>
+					</article>
+					<article class="payment-coupon-card">
+						<div class="payment-coupon-kind">30일 이용권</div>
+						<h2>프로 플랜 30일 이용권</h2>
+						<p>일반매물 500건, 하루 재등록 100건, 프리미엄 매물 50건을 이용할 수 있습니다.</p>
+						<button type="button" class="payment-coupon-use-btn" data-coupon-plan="pro">사용하기</button>
+					</article>
 				</div>
 			</div>
 
@@ -1310,7 +1334,7 @@
 					<div class="maintenance-form-row maintenance-input-row maintenance-fixed-detail-row">
 						<label class="property-form-label">공용<span class="property-required">*</span></label>
 						<div class="maintenance-form-field">
-							<div class="property-unit-input"><input type="text" class="property-register-input" id="maintenanceCommonInput" placeholder="0" /><span class="property-unit-label">만원</span></div>
+							<div class="property-unit-input"><input type="text" class="property-register-input" id="maintenanceCommonInput" placeholder="0" /><span class="property-unit-label">원</span></div>
 						</div>
 					</div>
 
@@ -1319,7 +1343,7 @@
 						<div class="maintenance-form-field maintenance-fee-field">
 							<label class="property-radio-option"><input type="radio" name="maintenanceElectricType" value="usage" checked /><span>쓴 만큼</span></label>
 							<label class="property-radio-option"><input type="radio" name="maintenanceElectricType" value="fixed" /><span>정액</span></label>
-							<div class="property-unit-input"><input type="text" class="property-register-input" id="maintenanceElectricInput" placeholder="0" disabled /><span class="property-unit-label">만원</span></div>
+							<div class="property-unit-input"><input type="text" class="property-register-input" id="maintenanceElectricInput" placeholder="0" disabled /><span class="property-unit-label">원</span></div>
 						</div>
 					</div>
 
@@ -1328,7 +1352,7 @@
 						<div class="maintenance-form-field maintenance-fee-field">
 							<label class="property-radio-option"><input type="radio" name="maintenanceWaterType" value="usage" checked /><span>쓴 만큼</span></label>
 							<label class="property-radio-option"><input type="radio" name="maintenanceWaterType" value="fixed" /><span>정액</span></label>
-							<div class="property-unit-input"><input type="text" class="property-register-input" id="maintenanceWaterInput" placeholder="0" disabled /><span class="property-unit-label">만원</span></div>
+							<div class="property-unit-input"><input type="text" class="property-register-input" id="maintenanceWaterInput" placeholder="0" disabled /><span class="property-unit-label">원</span></div>
 						</div>
 					</div>
 
@@ -1337,7 +1361,7 @@
 						<div class="maintenance-form-field maintenance-fee-field">
 							<label class="property-radio-option"><input type="radio" name="maintenanceGasType" value="usage" checked /><span>쓴 만큼</span></label>
 							<label class="property-radio-option"><input type="radio" name="maintenanceGasType" value="fixed" /><span>정액</span></label>
-							<div class="property-unit-input"><input type="text" class="property-register-input" id="maintenanceGasInput" placeholder="0" disabled /><span class="property-unit-label">만원</span></div>
+							<div class="property-unit-input"><input type="text" class="property-register-input" id="maintenanceGasInput" placeholder="0" disabled /><span class="property-unit-label">원</span></div>
 						</div>
 					</div>
 
@@ -1346,7 +1370,7 @@
 						<div class="maintenance-form-field maintenance-fee-field">
 							<label class="property-radio-option"><input type="radio" name="maintenanceHeatingType" value="usage" checked /><span>쓴 만큼</span></label>
 							<label class="property-radio-option"><input type="radio" name="maintenanceHeatingType" value="fixed" /><span>정액</span></label>
-							<div class="property-unit-input"><input type="text" class="property-register-input" id="maintenanceHeatingInput" placeholder="0" disabled /><span class="property-unit-label">만원</span></div>
+							<div class="property-unit-input"><input type="text" class="property-register-input" id="maintenanceHeatingInput" placeholder="0" disabled /><span class="property-unit-label">원</span></div>
 						</div>
 					</div>
 
@@ -1355,7 +1379,7 @@
 						<div class="maintenance-form-field maintenance-fee-field">
 							<label class="property-radio-option"><input type="radio" name="maintenanceInternetType" value="usage" checked /><span>쓴 만큼</span></label>
 							<label class="property-radio-option"><input type="radio" name="maintenanceInternetType" value="fixed" /><span>정액</span></label>
-							<div class="property-unit-input"><input type="text" class="property-register-input" id="maintenanceInternetInput" placeholder="0" disabled /><span class="property-unit-label">만원</span></div>
+							<div class="property-unit-input"><input type="text" class="property-register-input" id="maintenanceInternetInput" placeholder="0" disabled /><span class="property-unit-label">원</span></div>
 						</div>
 					</div>
 
@@ -1364,7 +1388,7 @@
 						<div class="maintenance-form-field maintenance-fee-field">
 							<label class="property-radio-option"><input type="radio" name="maintenanceTvType" value="usage" checked /><span>쓴 만큼</span></label>
 							<label class="property-radio-option"><input type="radio" name="maintenanceTvType" value="fixed" /><span>정액</span></label>
-							<div class="property-unit-input"><input type="text" class="property-register-input" id="maintenanceTvInput" placeholder="0" disabled /><span class="property-unit-label">만원</span></div>
+							<div class="property-unit-input"><input type="text" class="property-register-input" id="maintenanceTvInput" placeholder="0" disabled /><span class="property-unit-label">원</span></div>
 						</div>
 					</div>
 
@@ -1374,7 +1398,7 @@
 							<label class="property-radio-option"><input type="radio" name="maintenanceEtcType" value="none" checked /><span>없음</span></label>
 							<label class="property-radio-option"><input type="radio" name="maintenanceEtcType" value="usage" /><span>쓴 만큼</span></label>
 							<label class="property-radio-option"><input type="radio" name="maintenanceEtcType" value="fixed" /><span>정액</span></label>
-							<div class="property-unit-input"><input type="text" class="property-register-input" id="maintenanceEtcInput" placeholder="0" disabled /><span class="property-unit-label">만원</span></div>
+							<div class="property-unit-input"><input type="text" class="property-register-input" id="maintenanceEtcInput" placeholder="0" disabled /><span class="property-unit-label">원</span></div>
 						</div>
 					</div>
 				</div>
@@ -1498,6 +1522,14 @@
 						<input type="file" id="propertyPhotoUploadInput" accept="image/*" multiple hidden />
 						<!-- PATCH 2.307: 파일 선택 버튼은 드래그 박스 하단에 별도 표시 -->
 						<button type="button" class="property-photo-select-btn" id="propertyPhotoSelectBtn"><i class="fa-regular fa-image" aria-hidden="true"></i>파일 선택</button>
+					</div>
+				</div>
+
+				<div class="property-detail-row property-watermark-row">
+					<label class="property-form-label">워터마크 적용</label>
+					<div class="property-form-control property-watermark-control">
+						<label class="property-radio-option"><input type="radio" name="propertyWatermarkEnabled" value="yes" checked /><span>예</span></label>
+						<label class="property-radio-option"><input type="radio" name="propertyWatermarkEnabled" value="no" /><span>아니오</span></label>
 					</div>
 				</div>
 
@@ -1658,8 +1690,8 @@
 		<div class="sub-topbar">
 			<div class="sub-topbar-inner">
 				<!-- PATCH 2.828: 하단 버전 링크를 현재 배포 파일로 갱신 -->
-				<a class="sub-version-fixed" href="realjeju_3.313.html" download="realjeju_3.313.html" title="realjeju_3.313.html 다운로드">
-					Ver 3.313
+				<a class="sub-version-fixed" href="realjeju_3.320.html" download="realjeju_3.320.html" title="realjeju_3.320.html 다운로드">
+					Ver 3.320
 				</a>
 				<div class="sub-topbar-left">
 					<strong id="listInfoText">
@@ -2018,6 +2050,7 @@
 						<div class="detail-hero" id="detailHero">
 							<div class="detail-hero-slides" id="detailHeroSlides">
 							</div>
+							<div class="detail-hero-watermark" id="detailHeroWatermark" aria-hidden="true"></div>
 							<button type="button" class="detail-hero-nav prev" id="detailHeroPrevBtn">
 								<i class="fa-solid fa-angle-left">
 								</i>
@@ -3045,7 +3078,7 @@
 	</div>
 </div>
 
-<script src="js/app_3.313.js"></script>
+<script src="js/app_3.320.js"></script>
 <script>
 (function () {
 	var labels = {
