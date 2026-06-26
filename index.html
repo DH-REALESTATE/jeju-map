@@ -22,39 +22,29 @@
 				transition: none;
 			}
 		</style>
-			<link rel="stylesheet" href="css/base_3.322.css">
+				<link rel="stylesheet" href="css/base_3.805.css?v=3.805">
 
 </head>
-	<body class="sidebar-list-collapsed">
+	<body class="sidebar-list-collapsed realjeju-side-nav-enabled">
 		<header class="global-topbar">
 			<div class="global-topbar-inner">
 				<div class="global-topbar-left">
 					<div class="global-brand" id="appVersionText">
 						<!-- <i class="fa-solid fa-location-dot" aria-hidden="true"> </i> -->
-						<span class="brand-name">
-							REALJEJU.APP
-						</span>
+						<span class="brand-name">REALJEJU.APP</span>
 					</div>
 				</div>
-				<nav class="global-topbar-menu" id="topbarMenu" aria-label="상단 메뉴">
-					<button type="button" class="topbar-menu-item active">부동산 홈</button>
-					<button type="button" class="topbar-menu-item">공지사항</button>
-				</nav>
-				<div class="global-topbar-right">
-					<button type="button" class="global-auth-trigger" id="detailAuthTrigger" data-auth-state="logged-out">
-						<span>
-							회원가입
-						</span>
-						<span class="auth-dot">
-							·
-						</span>
-						<span>
-							로그인
-						</span>
+					<nav class="global-topbar-menu" id="topbarMenu" aria-label="상단 필터"></nav>
+					<div class="global-topbar-page-title" id="globalTopbarPageTitle" aria-hidden="true">
+						<span class="global-topbar-page-title-admin">관리자 페이지</span>
+						<span class="global-topbar-page-title-my-suite">마이페이지</span>
+						<span class="global-topbar-page-title-broker" hidden></span>
+					</div>
+					<div class="global-topbar-right">
+						<button type="button" class="global-auth-trigger version-only" id="detailAuthTrigger" data-auth-state="logged-out">
+					<span class="topbar-version-text">Ver 3.805</span>
 					</button>
 					<div class="global-account-dropdown" id="globalAccountDropdown" aria-hidden="true">
-						<button type="button" class="global-account-menu-item" data-account-action="favorites">관심매물</button>
-						<div class="global-account-divider"></div>
 						<button type="button" class="global-account-menu-item" data-account-action="inquiries">1:1 문의내역</button>
 						<div class="global-account-divider"></div>
 						<button type="button" class="global-account-menu-item" data-account-action="reports">허위매물 신고</button>
@@ -67,18 +57,72 @@
 							<button type="button" class="global-account-menu-item" id="brokerOfficeMenuItem" data-account-action="broker-office">중개사무소 가입 신청</button>
 							<div class="global-account-divider"></div>
 						</div>
-						<button type="button" class="global-account-menu-item" data-account-action="withdraw">회원탈퇴</button>
-						<div class="global-account-divider"></div>
 						<button type="button" class="global-account-menu-item" data-account-action="logout">로그아웃</button>
 					</div>
 				</div>
 			</div>
 		</header>
+		<aside class="realjeju-side-nav" id="realjejuSideNav" aria-label="주요 메뉴">
+			<nav class="realjeju-side-nav-menu">
+				<button type="button" class="realjeju-side-nav-item active" data-side-nav-action="home">
+					<i class="fa-solid fa-house" aria-hidden="true"></i>
+					<span>부동산 홈</span>
+				</button>
+				<button type="button" class="realjeju-side-nav-item" data-side-nav-action="favorites">
+					<i class="fa-solid fa-heart" aria-hidden="true"></i>
+					<span>관심 부동산</span>
+				</button>
+				<button type="button" class="realjeju-side-nav-item" data-side-nav-action="presale">
+					<i class="fa-solid fa-building" aria-hidden="true"></i>
+					<span>분양</span>
+				</button>
+				<button type="button" class="realjeju-side-nav-item" data-side-nav-action="broker-home" hidden>
+					<i class="fa-solid fa-user-gear" aria-hidden="true"></i>
+					<span>중개사 홈</span>
+				</button>
+				<button type="button" class="realjeju-side-register-btn" data-side-nav-action="register" hidden>
+					<i class="fa-solid fa-plus" aria-hidden="true"></i>
+					<span>매물 등록</span>
+				</button>
+			</nav>
+			<div class="realjeju-side-nav-line" aria-hidden="true"></div>
+			<div class="realjeju-side-account-wrap" aria-label="계정 메뉴">
+				<button type="button" class="realjeju-side-account" id="realjejuSideAccountTrigger">
+					<span class="realjeju-side-account-badge" id="realjejuSideAccountBadge" hidden>리얼<br>제주</span>
+					<img class="realjeju-side-account-image" id="realjejuSideAccountImage" src="" alt="" hidden>
+					<span class="realjeju-side-account-name" id="realjejuSideAccountName">로그인 · 회원가입</span>
+					<i class="fa-solid fa-chevron-down realjeju-side-account-arrow" aria-hidden="true"></i>
+				</button>
+				<div class="realjeju-side-account-menu" id="realjejuSideAccountMenu" aria-hidden="true">
+					<button type="button" class="realjeju-side-account-menu-item global-account-menu-item" data-account-action="myinfo">내 정보</button>
+					<button type="button" class="realjeju-side-account-menu-item global-account-menu-item" data-account-action="broker-office">중개사무소 정보</button>
+					<button type="button" class="realjeju-side-account-menu-item global-account-menu-item" data-account-action="payment">이용권 결제</button>
+					<button type="button" class="realjeju-side-account-menu-item global-account-menu-item" data-account-action="inquiries">1:1 문의내역</button>
+					<div class="realjeju-side-account-menu-line" aria-hidden="true"></div>
+					<button type="button" class="realjeju-side-account-menu-item global-account-menu-item" data-account-action="logout">로그아웃</button>
+				</div>
+			</div>
+			<div class="realjeju-side-nav-line" aria-hidden="true"></div>
+			<div class="realjeju-side-recent" aria-label="최근 조회">
+				<div class="realjeju-side-recent-title">최근 조회</div>
+				<div class="realjeju-side-recent-empty">최근 조회한 매물이 없습니다.</div>
+			</div>
+			<div class="realjeju-side-nav-line realjeju-side-nav-bottom-line" aria-hidden="true"></div>
+			<nav class="realjeju-side-nav-menu realjeju-side-nav-bottom" aria-label="계정 메뉴">
+				<button type="button" class="realjeju-side-nav-item" data-side-nav-action="admin" hidden>
+					<i class="fa-solid fa-gear" aria-hidden="true"></i>
+					<span>관리자 페이지</span>
+				</button>
+				<button type="button" class="realjeju-side-nav-item" data-side-nav-action="notice">
+					<i class="fa-solid fa-bullhorn" aria-hidden="true"></i>
+					<span>공지사항</span>
+				</button>
+			</nav>
+		</aside>
 	<section class="my-suite-panel" id="mySuitePanel" aria-hidden="true">
 		<div class="my-suite-inner">
-			<h1 class="my-suite-title">마이페이지</h1>
 			<nav class="my-suite-tabs" aria-label="마이페이지 메뉴">
-				<button type="button" class="my-suite-tab" data-my-suite-tab="favorites">관심매물</button>
+				<button type="button" class="my-suite-tab" data-my-suite-tab="favorites">관심 부동산</button>
 				<button type="button" class="my-suite-tab" data-my-suite-tab="inquiries">1:1 문의내역</button>
 				<button type="button" class="my-suite-tab" data-my-suite-tab="reports">허위매물 신고</button>
 				<button type="button" class="my-suite-tab" data-my-suite-tab="payment">이용권 결제</button>
@@ -86,8 +130,8 @@
 				<button type="button" class="my-suite-tab" data-my-suite-tab="broker-office">중개사 정보</button>
 			</nav>
 			<div class="my-suite-content" id="mySuiteContent">
-				<h2 class="my-suite-content-title" id="mySuiteContentTitle">관심매물</h2>
-				<p class="my-suite-content-desc" id="mySuiteContentDesc">관심매물을 한 곳에서 확인할 수 있도록 준비중입니다.</p>
+				<h2 class="my-suite-content-title" id="mySuiteContentTitle">관심 부동산</h2>
+				<p class="my-suite-content-desc" id="mySuiteContentDesc">관심 부동산을 한 곳에서 확인할 수 있도록 준비중입니다.</p>
 			</div>
 			<footer class="my-suite-company-footer" aria-label="리얼제주 사업자 정보">
 				<div class="my-suite-company-name">리얼제주(REALJEJU.APP)</div>
@@ -283,15 +327,15 @@
 					<div class="broker-home-usage-item">
 						<div class="broker-home-usage-title">매물 사용건수 <span>(유료 매물광고는 제외)</span></div>
 						<div class="broker-home-usage-track"><div class="broker-home-usage-fill" id="brokerUsageFill"></div></div>
-						<div class="broker-home-usage-meta"><span><strong id="brokerUsageCount">0</strong>건 사용중</span><span><strong>100</strong>건</span></div>
+							<div class="broker-home-usage-meta"><span><strong id="brokerUsageCount">0</strong>건 사용중</span><span><strong id="brokerUsageLimit">100</strong>건</span></div>
 					</div>
 					<div class="broker-home-usage-item">
 						<div class="broker-home-usage-title">프리미엄 매물 사용건수</div>
 						<div class="broker-home-usage-track"><div class="broker-home-usage-fill" id="brokerPremiumUsageFill"></div></div>
-						<div class="broker-home-usage-meta"><span><strong id="brokerPremiumUsageCount">0</strong>건 사용중</span><span><strong>50</strong>건</span></div>
+							<div class="broker-home-usage-meta"><span><strong id="brokerPremiumUsageCount">0</strong>건 사용중</span><span><strong id="brokerPremiumUsageLimit">0</strong>건</span></div>
 					</div>
 						<div class="broker-home-usage-item">
-							<div class="broker-home-usage-title">하루 재등록 사용건수 <span class="broker-home-usage-help" tabindex="0" data-help="매물을 현재날짜로 갱신하여 신규 등록하는 기능입니다.&#10;단, 기존 매물은 재등록 시 삭제됩니다.&#10;&#10;재등록 이용건수는 매일 갱신됩니다.">?</span></div>
+							<div class="broker-home-usage-title">하루 재등록 사용건수 <span class="broker-home-usage-help" tabindex="0">?</span><span class="broker-home-usage-help-panel" role="tooltip">매물을 현재날짜로 갱신하여 신규 등록하는 기능입니다.<br>단, 기존 매물은 재등록 시 삭제됩니다.<br>재등록 이용건수는 매일 갱신됩니다.</span></div>
 							<div class="broker-home-usage-track"><div class="broker-home-usage-fill" id="brokerRelistUsageFill"></div></div>
 							<div class="broker-home-usage-meta"><span><strong id="brokerRelistUsageCount">0</strong>건 사용중</span><span><strong id="brokerRelistUsageLimit">50</strong>건</span></div>
 						</div>
@@ -310,7 +354,6 @@
 			</div>
 		</div>
 		<!-- PATCH 2.344: 필터 메뉴는 한 줄 전체 폭을 사용하고 휴지통은 오른쪽 끝에 배치 -->
-		<h1 class="broker-home-list-title">중개사 매물</h1>
 		<div class="broker-home-filterbar">
 			<div class="broker-home-filter-item">
 				<button type="button" class="broker-home-filter-btn active" data-broker-home-status-filter="trading">거래중 <span id="brokerTradingCount">0</span></button>
@@ -366,8 +409,8 @@
 							<li>하루 재등록 20건</li>
 							<li>중개사홈 사용</li>
 						</ul>
-						<button type="button" class="payment-plan-btn is-secondary is-current" data-plan="starter" disabled aria-disabled="true">현재 플랜</button>
-						<p class="payment-plan-period">이용 가능 기간 2026.05.12 ~ 2026.06.11</p>
+							<button type="button" class="payment-plan-btn" data-plan="starter" aria-disabled="false">이용권 선택</button>
+							<p class="payment-plan-period is-expired">만료된 이용권 2026.05.12 ~ 2026.06.11</p>
 					</article>
 					<article class="payment-plan-card featured">
 						<div class="payment-plan-badge">추천</div>
@@ -514,9 +557,13 @@
 					<button type="button" class="myinfo-page-secondary" id="myInfoPagePasswordChangeBtn">비밀번호 변경</button>
 					<button type="button" class="myinfo-page-primary" id="myInfoPageEditProfileBtn">수정</button>
 					<button type="button" class="myinfo-page-secondary" id="myInfoPageBrokerOfficeBtn" style="display:none;">중개사무소 정보</button>
-					<button type="button" class="myinfo-page-secondary myinfo-page-danger" id="myInfoPageWithdrawBtn">회원탈퇴</button>
 				</div>
 			</div>
+			<p class="myinfo-page-danger-zone">
+				<span class="myinfo-page-danger-mark">※</span>
+				<button type="button" class="myinfo-page-danger-link" id="myInfoPageWithdrawBtn">회원탈퇴</button>
+				<span class="myinfo-page-danger-desc">- 리얼제주 회원을 탈퇴합니다.</span>
+			</p>
 		</div>
 				<footer class="myinfo-company-info myinfo-company-info-full" aria-label="리얼제주 사업자 정보">
 					<div class="myinfo-company-nav" aria-label="리얼제주 하단 메뉴">
@@ -686,42 +733,44 @@
 				<h2 class="property-register-section-title">기본 정보</h2>
 
 				<div class="property-form-row property-type-listing-no-row">
-					<label class="property-form-label" for="propertyTypeSelect">매물 종류<span class="property-required">*</span></label>
+					<label class="property-form-label" for="propertyTypeSelect">매물 유형<span class="property-required">*</span></label>
 					<div class="property-form-control property-select-wrap property-register-dropdown property-type-dropdown" data-register-dropdown>
 								<select class="property-register-select property-register-native-select" id="propertyTypeSelect" tabindex="-1" aria-hidden="true">
-									<option value="">매물 종류 선택</option>
+									<option value="">매물 유형 선택</option>
 									<option value="apartment">아파트</option>
-									<option value="officetel">오피스텔</option>
-									<option value="room">원룸 / 투룸</option>
-									<option value="villa">빌라</option>
-									<option value="house">단독주택</option>
-									<option value="multi_family_house">다가구주택</option>
-									<option value="store">상가</option>
-									<option value="office">사무실</option>
-									<option value="building">건물</option>
-									<option value="factory_warehouse">공장 / 창고</option>
-									<option value="hotel">호텔</option>
-									<option value="pension">펜션</option>
-									<option value="land">토지</option>
+										<option value="officetel">오피스텔</option>
+										<option value="room">원룸 / 투룸</option>
+										<option value="living_accommodation">생활형숙박시설</option>
+										<option value="villa">빌라</option>
+										<option value="house">단독주택</option>
+										<option value="multi_family_house">다가구주택</option>
+										<option value="store">상가</option>
+										<option value="office">사무실</option>
+										<option value="building">건물</option>
+										<option value="factory_warehouse">공장 / 창고</option>
+										<option value="hotel">호텔</option>
+										<option value="pension">펜션</option>
+										<option value="land">토지</option>
 								</select>
 								<button type="button" class="property-register-dropdown-trigger" data-register-dropdown-trigger aria-haspopup="listbox" aria-expanded="false">
-									<span data-register-dropdown-label>매물 종류 선택</span>
+									<span data-register-dropdown-label>매물 유형 선택</span>
 									<i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
 								</button>
 								<div class="property-register-dropdown-menu" data-register-dropdown-menu role="listbox">
 									<button type="button" class="property-register-dropdown-option" data-value="apartment" role="option">아파트</button>
-									<button type="button" class="property-register-dropdown-option" data-value="officetel" role="option">오피스텔</button>
-									<button type="button" class="property-register-dropdown-option" data-value="room" role="option">원룸 / 투룸</button>
-									<button type="button" class="property-register-dropdown-option" data-value="villa" role="option">빌라</button>
-									<button type="button" class="property-register-dropdown-option" data-value="house" role="option">단독주택</button>
-									<button type="button" class="property-register-dropdown-option" data-value="multi_family_house" role="option">다가구주택</button>
-									<button type="button" class="property-register-dropdown-option" data-value="store" role="option">상가</button>
-									<button type="button" class="property-register-dropdown-option" data-value="office" role="option">사무실</button>
-									<button type="button" class="property-register-dropdown-option" data-value="building" role="option">건물</button>
-									<button type="button" class="property-register-dropdown-option" data-value="factory_warehouse" role="option">공장 / 창고</button>
-									<button type="button" class="property-register-dropdown-option" data-value="hotel" role="option">호텔</button>
-									<button type="button" class="property-register-dropdown-option" data-value="pension" role="option">펜션</button>
-									<button type="button" class="property-register-dropdown-option" data-value="land" role="option">토지</button>
+										<button type="button" class="property-register-dropdown-option" data-value="officetel" role="option">오피스텔</button>
+										<button type="button" class="property-register-dropdown-option" data-value="room" role="option">원룸 / 투룸</button>
+										<button type="button" class="property-register-dropdown-option" data-value="living_accommodation" role="option">생활형숙박시설</button>
+										<button type="button" class="property-register-dropdown-option" data-value="villa" role="option">빌라</button>
+										<button type="button" class="property-register-dropdown-option" data-value="house" role="option">단독주택</button>
+										<button type="button" class="property-register-dropdown-option" data-value="multi_family_house" role="option">다가구주택</button>
+										<button type="button" class="property-register-dropdown-option" data-value="store" role="option">상가</button>
+										<button type="button" class="property-register-dropdown-option" data-value="office" role="option">사무실</button>
+										<button type="button" class="property-register-dropdown-option" data-value="building" role="option">건물</button>
+										<button type="button" class="property-register-dropdown-option" data-value="factory_warehouse" role="option">공장 / 창고</button>
+										<button type="button" class="property-register-dropdown-option" data-value="hotel" role="option">호텔</button>
+										<button type="button" class="property-register-dropdown-option" data-value="pension" role="option">펜션</button>
+										<button type="button" class="property-register-dropdown-option" data-value="land" role="option">토지</button>
 								</div>
 					</div>
 					<div class="property-listing-no-inline" id="propertyListingNoInline">
@@ -1690,8 +1739,8 @@
 		<div class="sub-topbar">
 			<div class="sub-topbar-inner">
 				<!-- PATCH 2.828: 하단 버전 링크를 현재 배포 파일로 갱신 -->
-				<a class="sub-version-fixed" href="realjeju_3.320.html" download="realjeju_3.320.html" title="realjeju_3.320.html 다운로드">
-					Ver 3.322
+				<a class="sub-version-fixed" href="realjeju_3.805.html" download="realjeju_3.805.html" title="realjeju_3.805.html 다운로드">
+											Ver 3.805
 				</a>
 				<div class="sub-topbar-left">
 					<strong id="listInfoText">
@@ -1703,166 +1752,816 @@
 				</div>
 				<div class="sub-topbar-right">
 					<div class="map-filter-bar">
+						<div class="extra-filter-dropdown map-region-filter-dropdown" id="mapRegionFilterDropdown">
+							<button type="button" class="extra-filter-trigger map-region-filter-trigger" id="mapRegionFilterTrigger" aria-expanded="false">
+								<i class="fa-solid fa-location-dot map-region-trigger-icon" aria-hidden="true"></i>
+								<span id="mapRegionFilterLabel">현재 위치</span>
+								<i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+							</button>
+							<div class="extra-filter-menu map-region-filter-menu" id="mapRegionFilterMenu">
+								<p class="map-region-filter-value" id="mapRegionFilterValue" hidden>지도 중심 주소를 불러오는 중입니다.</p>
+								<div class="map-region-panel" id="mapRegionPanel">
+									<div class="map-region-loading">지도 중심 주소를 불러오는 중입니다.</div>
+								</div>
+							</div>
+						</div>
+						<div class="extra-filter-dropdown all-filter-dropdown" id="allFilterDropdown">
+							<button type="button" class="extra-filter-trigger all-filter-trigger" id="allFilterTrigger" aria-expanded="false">
+								<i class="fa-solid fa-sliders" aria-hidden="true"></i>
+								<span>전체</span>
+								<i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+							</button>
+							<div class="extra-filter-menu all-filter-menu" id="allFilterMenu">
+								<div class="all-filter-head">
+								<button type="button" class="all-filter-reset" id="allFilterResetBtn">
+									<i class="fa-solid fa-rotate-right" aria-hidden="true"></i>
+									<span>초기화</span>
+								</button>
+								<strong class="all-filter-title">전체<span class="all-filter-help" tabindex="0" role="button" aria-expanded="false"><span aria-hidden="true">?</span></span><span class="all-filter-help-panel" role="tooltip"><span class="all-filter-help-title">상세내용</span><span class="all-filter-help-list"><span>• 원하는 조건의 매물만 지도와 목록에서 볼 수 있습니다.</span><span>• 전용면적 기준은 전용면적 정보가 있는 매물에만 적용됩니다.</span><span>• 토지 면적은 주택·상가 면적과 별도로 검색됩니다.</span><span>• 매물 유형에 따라 일부 조건은 적용되지 않을 수 있습니다.</span><span>• 상단 초기화 버튼은 하단에 선택된 모든 항목을 초기화 합니다.</span></span><a class="all-filter-help-link" href="#" aria-label="필터 자세히 보기">자세히 보기</a><button type="button" class="all-filter-help-close" aria-label="도움말 닫기"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></span></strong>
+								<button type="button" class="all-filter-close" id="allFilterCloseBtn" aria-label="닫기">
+									<i class="fa-solid fa-xmark" aria-hidden="true"></i>
+								</button>
+								</div>
+								<div class="all-filter-body" id="allFilterBody">
+									<section class="all-filter-section all-filter-fixed-section open" data-all-filter-section="deal">
+										<div class="all-filter-section-content">
+											<div class="all-filter-deal-grid">
+												<label class="extra-filter-option deal-filter-option deal-filter-tile all-filter-tile">
+													<input type="checkbox" data-all-filter-deal="매매" data-value="매매" checked />
+													<span>매매</span>
+												</label>
+												<label class="extra-filter-option deal-filter-option deal-filter-tile all-filter-tile">
+													<input type="checkbox" data-all-filter-deal="전세" data-value="전세" />
+													<span>전세</span>
+												</label>
+												<label class="extra-filter-option deal-filter-option deal-filter-tile all-filter-tile">
+													<input type="checkbox" data-all-filter-deal="월세" data-value="월세" checked />
+													<span>월세</span>
+												</label>
+												<label class="extra-filter-option deal-filter-option deal-filter-tile all-filter-tile">
+													<input type="checkbox" data-all-filter-deal="년세" data-value="년세" />
+													<span>년세</span>
+												</label>
+											</div>
+										</div>
+									</section>
+									<section class="all-filter-section all-filter-fixed-section open" data-all-filter-section="type">
+										<div class="all-filter-section-content">
+											<div class="all-filter-type-wrap" data-all-filter-type-wrap>
+												<section class="type-filter-section">
+													<div class="type-filter-grid">
+														<label class="extra-filter-option type-filter-option type-filter-tile all-filter-tile">
+															<input type="checkbox" data-all-filter-type="아파트" data-value="아파트" checked />
+															<span>아파트</span>
+														</label>
+														<label class="extra-filter-option type-filter-option type-filter-tile all-filter-tile">
+															<input type="checkbox" data-all-filter-type="오피스텔" data-value="오피스텔" />
+															<span>오피스텔</span>
+														</label>
+														<label class="extra-filter-option type-filter-option type-filter-tile all-filter-tile">
+															<input type="checkbox" data-all-filter-type="원룸 / 투룸" data-value="원룸 / 투룸" />
+															<span>원룸 / 투룸</span>
+														</label>
+														<label class="extra-filter-option type-filter-option type-filter-tile all-filter-tile">
+															<input type="checkbox" data-all-filter-type="빌라" data-value="빌라" />
+															<span>빌라</span>
+														</label>
+														<label class="extra-filter-option type-filter-option type-filter-tile all-filter-tile">
+															<input type="checkbox" data-all-filter-type="단독주택" data-value="단독주택" />
+															<span>단독주택</span>
+														</label>
+														<label class="extra-filter-option type-filter-option type-filter-tile all-filter-tile">
+															<input type="checkbox" data-all-filter-type="다가구주택" data-value="다가구주택" />
+															<span>다가구주택</span>
+														</label>
+														<label class="extra-filter-option type-filter-option type-filter-tile all-filter-tile">
+															<input type="checkbox" data-all-filter-type="호텔" data-value="호텔" />
+															<span>호텔</span>
+														</label>
+														<label class="extra-filter-option type-filter-option type-filter-tile all-filter-tile">
+															<input type="checkbox" data-all-filter-type="펜션" data-value="펜션" />
+															<span>펜션</span>
+														</label>
+													</div>
+												</section>
+												<section class="type-filter-section all-filter-commercial-section" data-all-filter-commercial-section>
+													<h3 class="type-filter-section-title">상가·업무·토지</h3>
+													<div class="type-filter-grid">
+														<label class="extra-filter-option type-filter-option type-filter-tile all-filter-tile">
+															<input type="checkbox" data-all-filter-type="상가" data-value="상가" />
+															<span>상가</span>
+														</label>
+														<label class="extra-filter-option type-filter-option type-filter-tile all-filter-tile">
+															<input type="checkbox" data-all-filter-type="사무실" data-value="사무실" />
+															<span>사무실</span>
+														</label>
+														<label class="extra-filter-option type-filter-option type-filter-tile all-filter-tile">
+															<input type="checkbox" data-all-filter-type="건물" data-value="건물" />
+															<span>건물</span>
+														</label>
+														<label class="extra-filter-option type-filter-option type-filter-tile all-filter-tile">
+															<input type="checkbox" data-all-filter-type="토지" data-value="토지" />
+															<span>토지</span>
+														</label>
+														<label class="extra-filter-option type-filter-option type-filter-tile all-filter-tile">
+															<input type="checkbox" data-all-filter-type="공장 / 창고" data-value="공장 / 창고" />
+															<span>공장 / 창고</span>
+														</label>
+														<label class="extra-filter-option type-filter-option type-filter-tile all-filter-tile">
+															<input type="checkbox" data-all-filter-type="생활형숙박시설" data-value="생활형숙박시설" />
+															<span>생활형숙박시설</span>
+														</label>
+													</div>
+												</section>
+												<button type="button" class="all-filter-type-more" data-all-filter-type-more>
+													<span>접기</span>
+													<i class="fa-solid fa-chevron-up" aria-hidden="true"></i>
+												</button>
+											</div>
+										</div>
+									</section>
+									<section class="all-filter-section open" data-all-filter-section="price">
+										<button type="button" class="all-filter-section-head" data-all-filter-toggle="price">
+											<span>가격</span>
+											<i class="fa-solid fa-chevron-up" aria-hidden="true"></i>
+										</button>
+										<div class="all-filter-section-content">
+											<div class="all-price-filter-options" id="allPriceFilterOptions"></div>
+										</div>
+									</section>
+									<section class="all-filter-section open" data-all-filter-section="area">
+										<button type="button" class="all-filter-section-head" data-all-filter-toggle="area">
+											<span>면적</span>
+											<i class="fa-solid fa-chevron-up" aria-hidden="true"></i>
+										</button>
+										<div class="all-filter-section-content">
+											<div class="all-area-filter-options" id="allAreaFilterOptions">
+												<div class="area-filter-summary-row">
+													<strong class="area-filter-summary" data-all-area-filter-summary>전체</strong>
+													<button type="button" class="area-filter-icon-btn area-filter-manual-btn" data-all-area-filter-manual aria-label="면적 직접 입력">
+														<i class="fa-solid fa-pen" aria-hidden="true"></i>
+													</button>
+													<button type="button" class="area-filter-unit-btn" data-all-area-filter-unit aria-label="면적 단위 전환">
+														<i class="fa-solid fa-arrows-rotate" aria-hidden="true"></i>
+														<span data-all-area-filter-unit-text>평</span>
+													</button>
+													<button type="button" class="area-filter-icon-btn area-filter-reset-btn" data-all-area-filter-reset aria-label="면적 초기화" hidden>
+														<i class="fa-solid fa-rotate-right" aria-hidden="true"></i>
+													</button>
+												</div>
+												<div class="area-filter-slider-wrap">
+													<div class="area-filter-slider-rail" data-all-area-filter-rail>
+														<div class="area-filter-slider-fill" data-all-area-filter-fill></div>
+														<input type="range" class="area-filter-range area-filter-range-min" data-all-area-filter-range="min" min="0" max="165" step="1" value="0" aria-label="최소 면적" />
+														<input type="range" class="area-filter-range area-filter-range-max" data-all-area-filter-range="max" min="0" max="165" step="1" value="165" aria-label="최대 면적" />
+													</div>
+													<div class="area-filter-scale" data-all-area-filter-scale>
+														<span>최소</span>
+														<span>33㎡</span>
+														<span>66㎡</span>
+														<span>99㎡</span>
+														<span>132㎡</span>
+														<span>최대</span>
+													</div>
+												</div>
+												<div class="area-filter-target-options">
+													<label class="area-filter-exclusive-option">
+														<input type="checkbox" data-all-area-filter-mode="exclusive" checked />
+														<span>전용면적 기준으로 찾기</span>
+													</label>
+													<label class="area-filter-exclusive-option">
+														<input type="checkbox" data-all-area-filter-mode="land" />
+														<span>토지</span>
+													</label>
+												</div>
+											</div>
+										</div>
+									</section>
+									<section class="all-filter-section open" data-all-filter-section="room">
+										<button type="button" class="all-filter-section-head" data-all-filter-toggle="room">
+											<span>방/욕실</span>
+											<i class="fa-solid fa-chevron-up" aria-hidden="true"></i>
+										</button>
+										<div class="all-filter-section-content">
+											<div class="all-room-bath-filter-options" id="allRoomBathFilterOptions">
+												<section class="floor-direction-filter-section room-bath-filter-section">
+													<h4 class="floor-direction-filter-section-title room-bath-filter-section-title">방 개수</h4>
+													<div class="floor-direction-filter-chip-grid room-bath-filter-chip-grid">
+														<label class="floor-direction-filter-chip room-bath-filter-chip">
+															<input type="checkbox" data-all-room-filter value="1" />
+															<span>1개</span>
+														</label>
+														<label class="floor-direction-filter-chip room-bath-filter-chip">
+															<input type="checkbox" data-all-room-filter value="2" />
+															<span>2개</span>
+														</label>
+														<label class="floor-direction-filter-chip room-bath-filter-chip">
+															<input type="checkbox" data-all-room-filter value="3" />
+															<span>3개</span>
+														</label>
+														<label class="floor-direction-filter-chip room-bath-filter-chip">
+															<input type="checkbox" data-all-room-filter value="4plus" />
+															<span>4개 이상</span>
+														</label>
+													</div>
+												</section>
+												<section class="floor-direction-filter-section room-bath-filter-section">
+													<h4 class="floor-direction-filter-section-title room-bath-filter-section-title">욕실 개수</h4>
+													<div class="floor-direction-filter-chip-grid room-bath-filter-chip-grid">
+														<label class="floor-direction-filter-chip room-bath-filter-chip">
+															<input type="checkbox" data-all-bath-filter value="1" />
+															<span>1개</span>
+														</label>
+														<label class="floor-direction-filter-chip room-bath-filter-chip">
+															<input type="checkbox" data-all-bath-filter value="2" />
+															<span>2개</span>
+														</label>
+														<label class="floor-direction-filter-chip room-bath-filter-chip">
+															<input type="checkbox" data-all-bath-filter value="3" />
+															<span>3개</span>
+														</label>
+														<label class="floor-direction-filter-chip room-bath-filter-chip">
+															<input type="checkbox" data-all-bath-filter value="4plus" />
+															<span>4개 이상</span>
+														</label>
+													</div>
+												</section>
+												<div class="extra-filter-reset-row floor-direction-filter-reset-row room-bath-filter-reset-row">
+													<button type="button" class="extra-filter-reset-btn floor-direction-filter-reset-btn room-bath-filter-reset-btn" data-all-room-bath-reset>
+														<i class="fa-solid fa-rotate-right" aria-hidden="true"></i>
+														<span>초기화</span>
+													</button>
+												</div>
+											</div>
+										</div>
+									</section>
+									<section class="all-filter-section open" data-all-filter-section="floor">
+										<button type="button" class="all-filter-section-head" data-all-filter-toggle="floor">
+											<span>층/방향</span>
+											<i class="fa-solid fa-chevron-up" aria-hidden="true"></i>
+										</button>
+										<div class="all-filter-section-content">
+											<div class="all-floor-direction-filter-options" id="allFloorDirectionFilterOptions">
+												<section class="floor-direction-filter-section">
+													<h4 class="floor-direction-filter-section-title">층</h4>
+													<div class="floor-direction-filter-chip-grid floor-direction-filter-floor-grid">
+														<label class="floor-direction-filter-chip">
+															<input type="checkbox" data-all-floor-filter value="first" />
+															<span>1층</span>
+														</label>
+														<label class="floor-direction-filter-chip">
+															<input type="checkbox" data-all-floor-filter value="low" />
+															<span>저층</span>
+														</label>
+														<label class="floor-direction-filter-chip">
+															<input type="checkbox" data-all-floor-filter value="middle" />
+															<span>중층</span>
+														</label>
+														<label class="floor-direction-filter-chip">
+															<input type="checkbox" data-all-floor-filter value="high" />
+															<span>고층</span>
+														</label>
+													</div>
+												</section>
+												<section class="floor-direction-filter-section">
+													<h4 class="floor-direction-filter-section-title">방향</h4>
+													<div class="floor-direction-filter-chip-grid floor-direction-filter-direction-grid">
+														<label class="floor-direction-filter-chip">
+															<input type="checkbox" data-all-direction-filter value="east" />
+															<span>동향</span>
+														</label>
+														<label class="floor-direction-filter-chip">
+															<input type="checkbox" data-all-direction-filter value="west" />
+															<span>서향</span>
+														</label>
+														<label class="floor-direction-filter-chip">
+															<input type="checkbox" data-all-direction-filter value="south" />
+															<span>남향</span>
+														</label>
+														<label class="floor-direction-filter-chip">
+															<input type="checkbox" data-all-direction-filter value="north" />
+															<span>북향</span>
+														</label>
+														<label class="floor-direction-filter-chip">
+															<input type="checkbox" data-all-direction-filter value="southeast" />
+															<span>남동향</span>
+														</label>
+														<label class="floor-direction-filter-chip">
+															<input type="checkbox" data-all-direction-filter value="southwest" />
+															<span>남서향</span>
+														</label>
+														<label class="floor-direction-filter-chip">
+															<input type="checkbox" data-all-direction-filter value="northeast" />
+															<span>북동향</span>
+														</label>
+														<label class="floor-direction-filter-chip">
+															<input type="checkbox" data-all-direction-filter value="northwest" />
+															<span>북서향</span>
+														</label>
+													</div>
+												</section>
+												<div class="extra-filter-reset-row floor-direction-filter-reset-row">
+													<button type="button" class="extra-filter-reset-btn floor-direction-filter-reset-btn" data-all-floor-direction-reset>
+														<i class="fa-solid fa-rotate-right" aria-hidden="true"></i>
+														<span>초기화</span>
+													</button>
+												</div>
+											</div>
+										</div>
+									</section>
+									<section class="all-filter-section open" data-all-filter-section="approval">
+										<button type="button" class="all-filter-section-head" data-all-filter-toggle="approval">
+											<span>사용승인일</span>
+											<i class="fa-solid fa-chevron-up" aria-hidden="true"></i>
+										</button>
+										<div class="all-filter-section-content">
+											<div class="all-approval-year-filter-options" id="allApprovalYearFilterOptions">
+												<div class="approval-year-filter-summary-row">
+													<strong class="approval-year-filter-summary" data-all-approval-year-summary>전체</strong>
+													<button type="button" class="approval-year-filter-icon-btn approval-year-filter-reset-btn" data-all-approval-year-reset aria-label="사용승인일 초기화" hidden>
+														<i class="fa-solid fa-rotate-right" aria-hidden="true"></i>
+													</button>
+												</div>
+												<div class="approval-year-filter-slider-wrap">
+													<div class="approval-year-filter-slider-rail" data-all-approval-year-rail>
+														<div class="approval-year-filter-slider-fill" data-all-approval-year-fill></div>
+														<input type="range" class="approval-year-filter-range approval-year-filter-range-min" data-all-approval-year-range="min" min="0" max="25" step="1" value="0" aria-label="최소 사용승인 연식" />
+														<input type="range" class="approval-year-filter-range approval-year-filter-range-max" data-all-approval-year-range="max" min="0" max="25" step="1" value="25" aria-label="최대 사용승인 연식" />
+													</div>
+													<div class="approval-year-filter-scale">
+														<span>최소</span>
+														<span>5년</span>
+														<span>10년</span>
+														<span>15년</span>
+														<span>20년</span>
+														<span>최대</span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</section>
+									<section class="all-filter-section open" data-all-filter-section="extra">
+										<button type="button" class="all-filter-section-head" data-all-filter-toggle="extra">
+											<span>기타조건</span>
+											<i class="fa-solid fa-chevron-up" aria-hidden="true"></i>
+										</button>
+										<div class="all-filter-section-content">
+											<div class="all-extra-filter-options" id="allExtraFilterOptions">
+												<section class="type-filter-section">
+													<div class="type-filter-grid extra-condition-filter-grid">
+														<label class="extra-filter-option type-filter-option type-filter-tile extra-condition-filter-tile all-filter-tile">
+															<input type="checkbox" data-all-extra-filter="immediate" />
+															<span>즉시입주</span>
+														</label>
+														<label class="extra-filter-option type-filter-option type-filter-tile extra-condition-filter-tile all-filter-tile">
+															<input type="checkbox" data-all-extra-filter="negotiable" />
+															<span>협의입주</span>
+														</label>
+														<label class="extra-filter-option type-filter-option type-filter-tile extra-condition-filter-tile all-filter-tile">
+															<input type="checkbox" data-all-extra-filter="parking" />
+															<span>주차 가능</span>
+														</label>
+														<label class="extra-filter-option type-filter-option type-filter-tile extra-condition-filter-tile all-filter-tile">
+															<input type="checkbox" data-all-extra-filter="elevator" />
+															<span>엘레베이터</span>
+														</label>
+														<label class="extra-filter-option type-filter-option type-filter-tile extra-condition-filter-tile all-filter-tile">
+															<input type="checkbox" data-all-extra-filter="veranda" />
+															<span>베란다</span>
+														</label>
+														<label class="extra-filter-option type-filter-option type-filter-tile extra-condition-filter-tile all-filter-tile">
+															<input type="checkbox" data-all-extra-filter="duplex" />
+															<span>복층형</span>
+														</label>
+													</div>
+												</section>
+												<section class="type-filter-section">
+													<h3 class="type-filter-section-title">특수조건</h3>
+													<div class="type-filter-grid extra-condition-filter-grid">
+														<label class="extra-filter-option type-filter-option type-filter-tile extra-condition-filter-tile all-filter-tile">
+															<input type="checkbox" data-all-extra-filter="fullOption" />
+															<span>풀옵션</span>
+														</label>
+														<label class="extra-filter-option type-filter-option type-filter-tile extra-condition-filter-tile all-filter-tile">
+															<input type="checkbox" data-all-extra-filter="oceanView" />
+															<span>오션뷰</span>
+														</label>
+														<label class="extra-filter-option type-filter-option type-filter-tile extra-condition-filter-tile all-filter-tile">
+															<input type="checkbox" data-all-extra-filter="pet" />
+															<span>반려동물가능</span>
+														</label>
+													</div>
+												</section>
+												<div class="extra-filter-reset-row">
+													<button type="button" class="extra-filter-reset-btn" data-all-extra-reset>
+														<i class="fa-solid fa-rotate-right" aria-hidden="true"></i>
+														<span>초기화</span>
+													</button>
+												</div>
+											</div>
+										</div>
+									</section>
+								</div>
+							</div>
+						</div>
 						<div class="sub-address-search" id="subAddressSearch">
 							<form class="sub-address-search-form" id="subAddressSearchForm" autocomplete="off">
 								<button type="submit" class="sub-address-search-icon" aria-label="주소 검색">
-									<i class="fa-solid fa-location-dot"></i>
+									<i class="fa-solid fa-magnifying-glass"></i>
 								</button>
 								<input type="search" class="sub-address-search-input" id="subAddressSearchInput" placeholder="주소지 검색" />
 							</form>
 							<div class="sub-address-search-status" id="subAddressSearchStatus" aria-live="polite"></div>
 						</div>
-						<div class="extra-filter-dropdown type-filter-dropdown" id="typeFilterDropdown">
-							<button type="button" class="extra-filter-trigger type-filter-trigger" id="typeFilterTrigger" aria-expanded="false">
-								<span id="typeFilterLabel">
-									매물 종류
-								</span>
-								<i class="fa-solid fa-chevron-down">
-								</i>
-							</button>
-							<div class="extra-filter-menu type-filter-menu" id="typeFilterMenu">
-								<div id="typeButtons">
-									<!--
-									<label class="extra-filter-option type-filter-option">
-										<input type="checkbox" data-value="all" />
-										<span>전체</span>
-									</label>
-									-->
-									<label class="extra-filter-option type-filter-option">
-										<input type="checkbox" data-value="아파트" />
-										<span>아파트</span>
-									</label>
-									<label class="extra-filter-option type-filter-option">
-										<input type="checkbox" data-value="오피스텔" />
-										<span>오피스텔</span>
-									</label>
-									<label class="extra-filter-option type-filter-option">
-										<input type="checkbox" data-value="원룸 / 투룸" />
-										<span>원룸 / 투룸</span>
-									</label>
-									<label class="extra-filter-option type-filter-option">
-										<input type="checkbox" data-value="빌라" />
-										<span>빌라</span>
-									</label>
-									<label class="extra-filter-option type-filter-option">
-										<input type="checkbox" data-value="단독주택" />
-										<span>단독주택</span>
-									</label>
-									<label class="extra-filter-option type-filter-option">
-										<input type="checkbox" data-value="다가구주택" />
-										<span>다가구주택</span>
-									</label>
-									<label class="extra-filter-option type-filter-option">
-										<input type="checkbox" data-value="상가" />
-										<span>상가</span>
-									</label>
-									<label class="extra-filter-option type-filter-option">
-										<input type="checkbox" data-value="사무실" />
-										<span>사무실</span>
-									</label>
-									<label class="extra-filter-option type-filter-option">
-										<input type="checkbox" data-value="건물" />
-										<span>건물</span>
-									</label>
-									<label class="extra-filter-option type-filter-option">
-										<input type="checkbox" data-value="공장 / 창고" />
-										<span>공장 / 창고</span>
-									</label>
-									<label class="extra-filter-option type-filter-option">
-										<input type="checkbox" data-value="호텔" />
-										<span>호텔</span>
-									</label>
-									<label class="extra-filter-option type-filter-option">
-										<input type="checkbox" data-value="펜션" />
-										<span>펜션</span>
-									</label>
-									<label class="extra-filter-option type-filter-option">
-										<input type="checkbox" data-value="토지" />
-										<span>토지</span>
-									</label>
-								</div>
-								<div class="extra-filter-reset-row">
-									<button type="button" class="extra-filter-reset-btn" id="typeFilterResetBtn">
-										<i class="fa-solid fa-rotate-left"></i>
-										초기화
-									</button>
-								</div>
-							</div>
-						</div>
-						<div class="extra-filter-dropdown deal-filter-dropdown" id="dealFilterDropdown">
-							<button type="button" class="extra-filter-trigger deal-filter-trigger" id="dealFilterTrigger" aria-expanded="false">
-								<span id="dealFilterLabel">
-									거래 유형
+							<div class="extra-filter-dropdown deal-filter-dropdown" id="dealFilterDropdown">
+								<button type="button" class="extra-filter-trigger deal-filter-trigger" id="dealFilterTrigger" aria-expanded="false">
+									<span id="dealFilterLabel">
+										거래 유형
 								</span>
 								<i class="fa-solid fa-chevron-down">
 								</i>
 							</button>
 							<div class="extra-filter-menu deal-filter-menu" id="dealFilterMenu">
 								<div id="dealButtons">
-									<!--
-									<label class="extra-filter-option deal-filter-option">
-										<input type="checkbox" data-value="all" />
-										<span>전체</span>
-									-->
-									</label>
-									<label class="extra-filter-option deal-filter-option">
-										<input type="checkbox" data-value="매매" />
+									<h3 class="deal-filter-section-title">거래유형</h3>
+									<div class="deal-filter-grid">
+									<label class="extra-filter-option deal-filter-option deal-filter-tile">
+										<input type="checkbox" data-value="매매" checked />
 										<span>매매</span>
 									</label>
-									<label class="extra-filter-option deal-filter-option">
+									<label class="extra-filter-option deal-filter-option deal-filter-tile">
 										<input type="checkbox" data-value="전세" />
 										<span>전세</span>
 									</label>
-									<label class="extra-filter-option deal-filter-option">
+									<label class="extra-filter-option deal-filter-option deal-filter-tile">
+										<input type="checkbox" data-value="월세" checked />
+										<span>월세</span>
+									</label>
+									<label class="extra-filter-option deal-filter-option deal-filter-tile">
 										<input type="checkbox" data-value="년세" />
 										<span>년세</span>
 									</label>
-									<label class="extra-filter-option deal-filter-option">
-										<input type="checkbox" data-value="월세" />
-										<span>월세</span>
-									</label>
+									</div>
 								</div>
 								<div class="extra-filter-reset-row">
 									<button type="button" class="extra-filter-reset-btn" id="dealFilterResetBtn">
-										<i class="fa-solid fa-rotate-left"></i>
-										초기화
+										<i class="fa-solid fa-rotate-right" aria-hidden="true"></i>
+										<span>초기화</span>
 									</button>
+									</div>
 								</div>
 							</div>
-						</div>
-						<div class="extra-filter-dropdown price-filter-dropdown" id="priceFilterDropdown">
-							<button type="button" class="extra-filter-trigger price-filter-trigger" id="priceFilterTrigger" aria-expanded="false">
-								<span id="priceFilterLabel">가격</span>
-								<i class="fa-solid fa-chevron-down"></i>
-							</button>
-							<div class="extra-filter-menu price-filter-menu" id="priceFilterMenu">
-								<div class="price-filter-message" id="priceFilterMessage">거래 유형을 선택해 주세요.</div>
-								<div id="priceFilterOptions"></div>
+							<div class="extra-filter-dropdown type-filter-dropdown" id="typeFilterDropdown">
+								<button type="button" class="extra-filter-trigger type-filter-trigger" id="typeFilterTrigger" aria-expanded="false">
+									<span id="typeFilterLabel">
+										매물 유형
+									</span>
+									<i class="fa-solid fa-chevron-down">
+									</i>
+								</button>
+								<div class="extra-filter-menu type-filter-menu" id="typeFilterMenu">
+									<div id="typeButtons">
+										<section class="type-filter-section">
+											<h3 class="type-filter-section-title">매물유형</h3>
+												<div class="type-filter-grid">
+													<label class="extra-filter-option type-filter-option type-filter-tile">
+														<input type="checkbox" data-value="아파트" checked />
+														<span>아파트</span>
+													</label>
+														<label class="extra-filter-option type-filter-option type-filter-tile">
+															<input type="checkbox" data-value="오피스텔" />
+															<span>오피스텔</span>
+														</label>
+														<label class="extra-filter-option type-filter-option type-filter-tile">
+															<input type="checkbox" data-value="원룸 / 투룸" />
+															<span>원룸 / 투룸</span>
+														</label>
+														<label class="extra-filter-option type-filter-option type-filter-tile">
+															<input type="checkbox" data-value="빌라" />
+															<span>빌라</span>
+														</label>
+														<label class="extra-filter-option type-filter-option type-filter-tile">
+															<input type="checkbox" data-value="단독주택" />
+															<span>단독주택</span>
+														</label>
+														<label class="extra-filter-option type-filter-option type-filter-tile">
+															<input type="checkbox" data-value="다가구주택" />
+															<span>다가구주택</span>
+														</label>
+														<label class="extra-filter-option type-filter-option type-filter-tile">
+															<input type="checkbox" data-value="호텔" />
+													<span>호텔</span>
+												</label>
+												<label class="extra-filter-option type-filter-option type-filter-tile">
+													<input type="checkbox" data-value="펜션" />
+													<span>펜션</span>
+												</label>
+											</div>
+										</section>
+										<section class="type-filter-section">
+											<h3 class="type-filter-section-title">상가·업무·토지</h3>
+											<div class="type-filter-grid">
+												<label class="extra-filter-option type-filter-option type-filter-tile">
+													<input type="checkbox" data-value="상가" />
+													<span>상가</span>
+												</label>
+												<label class="extra-filter-option type-filter-option type-filter-tile">
+													<input type="checkbox" data-value="사무실" />
+													<span>사무실</span>
+												</label>
+												<label class="extra-filter-option type-filter-option type-filter-tile">
+													<input type="checkbox" data-value="건물" />
+													<span>건물</span>
+												</label>
+												<label class="extra-filter-option type-filter-option type-filter-tile">
+													<input type="checkbox" data-value="토지" />
+													<span>토지</span>
+												</label>
+													<label class="extra-filter-option type-filter-option type-filter-tile">
+														<input type="checkbox" data-value="공장 / 창고" />
+														<span>공장 / 창고</span>
+													</label>
+													<label class="extra-filter-option type-filter-option type-filter-tile">
+														<input type="checkbox" data-value="생활형숙박시설" />
+														<span>생활형숙박시설</span>
+													</label>
+												</div>
+										</section>
+									</div>
+									<div class="extra-filter-reset-row">
+										<button type="button" class="extra-filter-reset-btn" id="typeFilterResetBtn">
+											<i class="fa-solid fa-rotate-right" aria-hidden="true"></i>
+											<span>초기화</span>
+										</button>
+									</div>
+								</div>
 							</div>
-						</div>
-						<div class="extra-filter-dropdown deal-method-filter-dropdown" id="dealMethodFilterDropdown">
-							<button type="button" class="extra-filter-trigger deal-method-filter-trigger" id="dealMethodFilterTrigger" aria-expanded="false">
-								<span id="dealMethodFilterLabel">
-									거래 방식
-								</span>
-								<i class="fa-solid fa-chevron-down">
-								</i>
-							</button>
-							<div class="extra-filter-menu deal-method-filter-menu" id="dealMethodFilterMenu">
-								<label class="extra-filter-option deal-method-filter-option">
-									<input type="radio" name="dealMethodFilter" value="all" checked />
-									<span>전체</span>
-								</label>
-								<label class="extra-filter-option deal-method-filter-option">
-									<input type="radio" name="dealMethodFilter" value="broker" />
-									<span>공인중개사 매물</span>
-								</label>
-								<label class="extra-filter-option deal-method-filter-option">
-									<input type="radio" name="dealMethodFilter" value="direct" />
-									<span>개인직거래 매물</span>
-								</label>
+							<div class="extra-filter-dropdown price-filter-dropdown" id="priceFilterDropdown">
+								<button type="button" class="extra-filter-trigger price-filter-trigger" id="priceFilterTrigger" aria-expanded="false">
+									<span id="priceFilterLabel">가격</span>
+									<i class="fa-solid fa-chevron-down"></i>
+								</button>
+								<div class="extra-filter-menu price-filter-menu" id="priceFilterMenu">
+									<div id="priceFilterOptions"></div>
+								</div>
 							</div>
-						</div>
+							<div class="price-filter-manual-modal" id="priceFilterManualModal" aria-hidden="true">
+								<div class="price-filter-manual-backdrop" id="priceFilterManualBackdrop"></div>
+								<div class="price-filter-manual-dialog" role="dialog" aria-modal="true" aria-labelledby="priceFilterManualTitle">
+									<div class="price-filter-manual-head">
+										<span></span>
+										<h3 id="priceFilterManualTitle">매매가</h3>
+										<button type="button" class="price-filter-manual-close" id="priceFilterManualCloseBtn" aria-label="닫기">
+											<i class="fa-solid fa-xmark" aria-hidden="true"></i>
+										</button>
+									</div>
+									<div class="price-filter-manual-fields">
+										<label class="price-filter-manual-field">
+											<input type="text" id="priceFilterManualMinInput" inputmode="numeric" placeholder="최소" />
+											<button type="button" class="price-filter-manual-clear" data-price-filter-clear="min" aria-label="최소 금액 지우기">
+												<i class="fa-solid fa-xmark" aria-hidden="true"></i>
+											</button>
+											<span class="price-filter-manual-unit">만</span>
+										</label>
+										<span class="price-filter-manual-separator">~</span>
+										<label class="price-filter-manual-field">
+											<input type="text" id="priceFilterManualMaxInput" inputmode="numeric" placeholder="최대" />
+											<button type="button" class="price-filter-manual-clear" data-price-filter-clear="max" aria-label="최대 금액 지우기">
+												<i class="fa-solid fa-xmark" aria-hidden="true"></i>
+											</button>
+											<span class="price-filter-manual-unit">만</span>
+										</label>
+									</div>
+									<div class="price-filter-manual-hints">
+										<span id="priceFilterManualMinHint"></span>
+										<span></span>
+										<span id="priceFilterManualMaxHint"></span>
+									</div>
+									<button type="button" class="price-filter-manual-apply" id="priceFilterManualApplyBtn">적용</button>
+								</div>
+							</div>
+	<!-- ===== 면적 필터 ===== -->
+<div class="extra-filter-dropdown area-filter-dropdown" id="areaFilterDropdown">
+	<button type="button" class="extra-filter-trigger area-filter-trigger" id="areaFilterTrigger" aria-expanded="false">
+		<span id="areaFilterLabel">면적</span>
+		<i class="fa-solid fa-chevron-down"></i>
+	</button>
+
+	<div class="extra-filter-menu area-filter-menu" id="areaFilterMenu">
+		<h3 class="area-filter-title">면적</h3>
+		<div class="area-filter-summary-row">
+			<strong class="area-filter-summary" id="areaFilterSummaryText">전체</strong>
+			<button type="button" class="area-filter-icon-btn area-filter-manual-btn" id="areaFilterManualBtn" aria-label="면적 직접 입력">
+				<i class="fa-solid fa-pen" aria-hidden="true"></i>
+			</button>
+			<button type="button" class="area-filter-unit-btn" id="areaFilterUnitToggleBtn" aria-label="면적 단위 전환">
+				<i class="fa-solid fa-arrows-rotate" aria-hidden="true"></i>
+				<span id="areaFilterUnitToggleText">평</span>
+			</button>
+			<button type="button" class="area-filter-icon-btn area-filter-reset-btn" id="areaFilterResetBtn" aria-label="면적 초기화" hidden>
+				<i class="fa-solid fa-rotate-right" aria-hidden="true"></i>
+			</button>
+		</div>
+		<div class="area-filter-slider-wrap">
+			<div class="area-filter-slider-rail" id="areaFilterSliderRail">
+				<div class="area-filter-slider-fill" id="areaFilterSliderFill"></div>
+				<input type="range" class="area-filter-range area-filter-range-min" id="areaFilterMinRange" min="0" max="165" step="1" value="0" aria-label="최소 면적" />
+				<input type="range" class="area-filter-range area-filter-range-max" id="areaFilterMaxRange" min="0" max="165" step="1" value="165" aria-label="최대 면적" />
+			</div>
+			<div class="area-filter-scale" id="areaFilterScale">
+				<span>최소</span>
+				<span>33㎡</span>
+				<span>66㎡</span>
+				<span>99㎡</span>
+				<span>132㎡</span>
+				<span>최대</span>
+			</div>
+		</div>
+		<div class="area-filter-target-options">
+			<label class="area-filter-exclusive-option">
+				<input type="checkbox" id="areaFilterExclusiveChk" checked />
+				<span>전용면적 기준으로 찾기</span>
+			</label>
+			<label class="area-filter-exclusive-option">
+				<input type="checkbox" id="areaFilterLandChk" />
+				<span>토지</span>
+			</label>
+		</div>
+	</div>
+</div>
+
+<div class="area-filter-manual-modal" id="areaFilterManualModal" aria-hidden="true">
+	<div class="area-filter-manual-backdrop" id="areaFilterManualBackdrop"></div>
+	<div class="area-filter-manual-dialog" role="dialog" aria-modal="true" aria-labelledby="areaFilterManualTitle">
+		<div class="area-filter-manual-head">
+			<button type="button" class="area-filter-unit-btn area-filter-manual-unit-btn" id="areaFilterManualUnitToggleBtn" aria-label="면적 단위 전환">
+				<i class="fa-solid fa-arrows-rotate" aria-hidden="true"></i>
+				<span id="areaFilterManualUnitToggleText">평</span>
+			</button>
+			<h3 id="areaFilterManualTitle">면적</h3>
+			<button type="button" class="area-filter-manual-close" id="areaFilterManualCloseBtn" aria-label="닫기">
+				<i class="fa-solid fa-xmark" aria-hidden="true"></i>
+			</button>
+		</div>
+		<div class="area-filter-manual-fields">
+			<label class="area-filter-manual-field">
+				<input type="number" id="areaFilterManualMinInput" inputmode="decimal" min="0" placeholder="최소" />
+				<button type="button" class="area-filter-manual-clear" data-area-filter-clear="min" aria-label="최소 면적 지우기">
+					<i class="fa-solid fa-xmark" aria-hidden="true"></i>
+				</button>
+				<span class="area-filter-manual-unit" data-area-filter-manual-unit>㎡</span>
+			</label>
+			<span class="area-filter-manual-separator">~</span>
+			<label class="area-filter-manual-field">
+				<input type="number" id="areaFilterManualMaxInput" inputmode="decimal" min="0" placeholder="최대" />
+				<button type="button" class="area-filter-manual-clear" data-area-filter-clear="max" aria-label="최대 면적 지우기">
+					<i class="fa-solid fa-xmark" aria-hidden="true"></i>
+				</button>
+				<span class="area-filter-manual-unit" data-area-filter-manual-unit>㎡</span>
+			</label>
+		</div>
+		<div class="area-filter-manual-errors">
+			<span id="areaFilterManualMinError"></span>
+			<span></span>
+			<span id="areaFilterManualMaxError"></span>
+		</div>
+		<button type="button" class="area-filter-manual-apply" id="areaFilterManualApplyBtn">적용</button>
+	</div>
+</div>
+<!-- ===== 방/욕실 필터 ===== -->
+<div class="extra-filter-dropdown room-bath-filter-dropdown" id="roomBathFilterDropdown">
+	<button type="button" class="extra-filter-trigger room-bath-filter-trigger" id="roomBathFilterTrigger" aria-expanded="false">
+		<span id="roomBathFilterLabel">방/욕실</span>
+		<i class="fa-solid fa-chevron-down"></i>
+	</button>
+
+	<div class="extra-filter-menu floor-direction-filter-menu room-bath-filter-menu" id="roomBathFilterMenu">
+		<h3 class="floor-direction-filter-title room-bath-filter-title">방/욕실</h3>
+		<section class="floor-direction-filter-section room-bath-filter-section">
+			<h4 class="floor-direction-filter-section-title room-bath-filter-section-title">방 개수</h4>
+			<div class="floor-direction-filter-chip-grid room-bath-filter-chip-grid">
+				<label class="floor-direction-filter-chip room-bath-filter-chip">
+					<input type="checkbox" name="roomBathRoom" value="1" />
+					<span>1개</span>
+				</label>
+				<label class="floor-direction-filter-chip room-bath-filter-chip">
+					<input type="checkbox" name="roomBathRoom" value="2" />
+					<span>2개</span>
+				</label>
+				<label class="floor-direction-filter-chip room-bath-filter-chip">
+					<input type="checkbox" name="roomBathRoom" value="3" />
+					<span>3개</span>
+				</label>
+				<label class="floor-direction-filter-chip room-bath-filter-chip">
+					<input type="checkbox" name="roomBathRoom" value="4plus" />
+					<span>4개 이상</span>
+				</label>
+			</div>
+		</section>
+		<section class="floor-direction-filter-section room-bath-filter-section">
+			<h4 class="floor-direction-filter-section-title room-bath-filter-section-title">욕실 개수</h4>
+			<div class="floor-direction-filter-chip-grid room-bath-filter-chip-grid">
+				<label class="floor-direction-filter-chip room-bath-filter-chip">
+					<input type="checkbox" name="roomBathBath" value="1" />
+					<span>1개</span>
+				</label>
+				<label class="floor-direction-filter-chip room-bath-filter-chip">
+					<input type="checkbox" name="roomBathBath" value="2" />
+					<span>2개</span>
+				</label>
+				<label class="floor-direction-filter-chip room-bath-filter-chip">
+					<input type="checkbox" name="roomBathBath" value="3" />
+					<span>3개</span>
+				</label>
+				<label class="floor-direction-filter-chip room-bath-filter-chip">
+					<input type="checkbox" name="roomBathBath" value="4plus" />
+					<span>4개 이상</span>
+				</label>
+			</div>
+		</section>
+		<div class="extra-filter-reset-row floor-direction-filter-reset-row room-bath-filter-reset-row">
+			<button type="button" class="extra-filter-reset-btn floor-direction-filter-reset-btn room-bath-filter-reset-btn" id="roomBathFilterResetBtn">
+				<i class="fa-solid fa-rotate-right" aria-hidden="true"></i>
+				<span>초기화</span>
+			</button>
+		</div>
+	</div>
+</div>
+<!-- ===== 층/방향 필터 ===== -->
+<div class="extra-filter-dropdown floor-direction-filter-dropdown" id="floorDirectionFilterDropdown">
+	<button type="button" class="extra-filter-trigger floor-direction-filter-trigger" id="floorDirectionFilterTrigger" aria-expanded="false">
+		<span id="floorDirectionFilterLabel">층/방향</span>
+		<i class="fa-solid fa-chevron-down"></i>
+	</button>
+
+	<div class="extra-filter-menu floor-direction-filter-menu" id="floorDirectionFilterMenu">
+		<h3 class="floor-direction-filter-title">층/방향</h3>
+		<section class="floor-direction-filter-section">
+			<h4 class="floor-direction-filter-section-title">층</h4>
+			<div class="floor-direction-filter-chip-grid floor-direction-filter-floor-grid">
+				<label class="floor-direction-filter-chip">
+					<input type="checkbox" name="floorDirectionFloor" value="first" />
+					<span>1층</span>
+				</label>
+				<label class="floor-direction-filter-chip">
+					<input type="checkbox" name="floorDirectionFloor" value="low" />
+					<span>저층</span>
+				</label>
+				<label class="floor-direction-filter-chip">
+					<input type="checkbox" name="floorDirectionFloor" value="middle" />
+					<span>중층</span>
+				</label>
+				<label class="floor-direction-filter-chip">
+					<input type="checkbox" name="floorDirectionFloor" value="high" />
+					<span>고층</span>
+				</label>
+			</div>
+		</section>
+		<section class="floor-direction-filter-section">
+			<h4 class="floor-direction-filter-section-title">방향</h4>
+			<div class="floor-direction-filter-chip-grid floor-direction-filter-direction-grid">
+				<label class="floor-direction-filter-chip">
+					<input type="checkbox" name="floorDirectionDirection" value="east" />
+					<span>동향</span>
+				</label>
+				<label class="floor-direction-filter-chip">
+					<input type="checkbox" name="floorDirectionDirection" value="west" />
+					<span>서향</span>
+				</label>
+				<label class="floor-direction-filter-chip">
+					<input type="checkbox" name="floorDirectionDirection" value="south" />
+					<span>남향</span>
+				</label>
+				<label class="floor-direction-filter-chip">
+					<input type="checkbox" name="floorDirectionDirection" value="north" />
+					<span>북향</span>
+				</label>
+				<label class="floor-direction-filter-chip">
+					<input type="checkbox" name="floorDirectionDirection" value="southeast" />
+					<span>남동향</span>
+				</label>
+				<label class="floor-direction-filter-chip">
+					<input type="checkbox" name="floorDirectionDirection" value="southwest" />
+					<span>남서향</span>
+				</label>
+				<label class="floor-direction-filter-chip">
+					<input type="checkbox" name="floorDirectionDirection" value="northeast" />
+					<span>북동향</span>
+				</label>
+				<label class="floor-direction-filter-chip">
+					<input type="checkbox" name="floorDirectionDirection" value="northwest" />
+					<span>북서향</span>
+				</label>
+			</div>
+		</section>
+		<div class="extra-filter-reset-row floor-direction-filter-reset-row">
+			<button type="button" class="extra-filter-reset-btn floor-direction-filter-reset-btn" id="floorDirectionFilterResetBtn">
+				<i class="fa-solid fa-rotate-right" aria-hidden="true"></i>
+				<span>초기화</span>
+			</button>
+		</div>
+	</div>
+</div>
 <!-- ===== 사용승인일 필터 ===== -->
 <div class="extra-filter-dropdown approval-year-filter-dropdown" id="approvalYearFilterDropdown">
 	<button type="button" class="extra-filter-trigger approval-year-filter-trigger" id="approvalYearFilterTrigger" aria-expanded="false">
@@ -1871,96 +2570,88 @@
 	</button>
 
 	<div class="extra-filter-menu approval-year-filter-menu" id="approvalYearFilterMenu">
-		<label class="extra-filter-option approval-year-filter-option">
-			<input type="radio" name="approvalYear" value="all" checked />
-			<span>전체</span>
-		</label>
-		<label class="extra-filter-option approval-year-filter-option">
-			<input type="radio" name="approvalYear" value="1" />
-			<span>1년 이내 신축</span>
-		</label>
-		<label class="extra-filter-option approval-year-filter-option">
-			<input type="radio" name="approvalYear" value="5" />
-			<span>5년 이내</span>
-		</label>
-		<label class="extra-filter-option approval-year-filter-option">
-			<input type="radio" name="approvalYear" value="10" />
-			<span>10년 이내</span>
-		</label>
-		<label class="extra-filter-option approval-year-filter-option">
-			<input type="radio" name="approvalYear" value="15" />
-			<span>15년 이내</span>
-		</label>
-		<label class="extra-filter-option approval-year-filter-option">
-			<input type="radio" name="approvalYear" value="old" />
-			<span>15년 이상</span>
-		</label>
+		<h3 class="approval-year-filter-title">사용승인일</h3>
+		<div class="approval-year-filter-summary-row">
+			<strong class="approval-year-filter-summary" id="approvalYearFilterSummaryText">전체</strong>
+			<button type="button" class="approval-year-filter-icon-btn approval-year-filter-reset-btn" id="approvalYearFilterResetBtn" aria-label="사용승인일 초기화" hidden>
+				<i class="fa-solid fa-rotate-right" aria-hidden="true"></i>
+			</button>
+		</div>
+		<div class="approval-year-filter-slider-wrap">
+			<div class="approval-year-filter-slider-rail">
+				<div class="approval-year-filter-slider-fill" id="approvalYearFilterSliderFill"></div>
+				<input type="range" class="approval-year-filter-range approval-year-filter-range-min" id="approvalYearFilterMinRange" min="0" max="25" step="1" value="0" aria-label="최소 사용승인 연식" />
+				<input type="range" class="approval-year-filter-range approval-year-filter-range-max" id="approvalYearFilterMaxRange" min="0" max="25" step="1" value="25" aria-label="최대 사용승인 연식" />
+			</div>
+			<div class="approval-year-filter-scale" id="approvalYearFilterScale">
+				<span>최소</span>
+				<span>5년</span>
+				<span>10년</span>
+				<span>15년</span>
+				<span>20년</span>
+				<span>최대</span>
+			</div>
+		</div>
 	</div>
 </div>
 
-<div class="extra-filter-dropdown" id="extraFilterDropdown">
-							<button type="button" class="extra-filter-trigger" id="extraFilterTrigger" aria-expanded="false">
+<div class="extra-filter-dropdown extra-condition-filter-dropdown" id="extraFilterDropdown">
+							<button type="button" class="extra-filter-trigger extra-condition-filter-trigger" id="extraFilterTrigger" aria-expanded="false">
 								<span id="extraFilterLabel">
-									기타 조건
+									기타조건
 								</span>
 								<i class="fa-solid fa-chevron-down">
 								</i>
 							</button>
-							<div class="extra-filter-menu" id="extraFilterMenu">
-								<label class="extra-filter-option">
-									<input type="checkbox" id="extraImmediateMoveInChk" />
-									<span>
-										즉시입주
-									</span>
-								</label>
-								<label class="extra-filter-option">
-									<input type="checkbox" id="extraParkingChk" />
-									<span>
-										주차 가능
-									</span>
-								</label>
-								<label class="extra-filter-option">
-									<input type="checkbox" id="extraPetChk" />
-									<span>
-										반려동물 가능
-									</span>
-								</label>
-								<label class="extra-filter-option">
-									<input type="checkbox" id="extraCityGasChk" />
-									<span>
-										도시가스
-									</span>
-								</label>
-								<label class="extra-filter-option">
-									<input type="checkbox" id="extraDuplexChk" />
-									<span>
-										복층형
-									</span>
-								</label>
-								<label class="extra-filter-option">
-									<input type="checkbox" id="extraVerandaChk" />
-									<span>
-										베란다
-									</span>
-								</label>
-								<label class="extra-filter-option">
-									<input type="checkbox" id="extraElevatorChk" />
-									<span>
-										엘리베이터
-									</span>
-								</label>
-								<label class="extra-filter-option">
-									<input type="checkbox" id="extraFullOptionChk" />
-									<span>
-										풀옵션
-									</span>
-								</label>
-								<label class="extra-filter-option">
-									<input type="checkbox" id="extraOceanViewChk" />
-									<span>
-										오션뷰
-									</span>
-								</label>
+							<div class="extra-filter-menu type-filter-menu extra-condition-filter-menu" id="extraFilterMenu">
+								<div id="extraButtons">
+									<section class="type-filter-section">
+										<h3 class="type-filter-section-title">기타조건</h3>
+										<div class="type-filter-grid extra-condition-filter-grid">
+											<label class="extra-filter-option type-filter-option type-filter-tile extra-condition-filter-tile">
+												<input type="checkbox" id="extraImmediateMoveInChk" />
+												<span>즉시입주</span>
+											</label>
+											<label class="extra-filter-option type-filter-option type-filter-tile extra-condition-filter-tile">
+												<input type="checkbox" id="extraNegotiableMoveInChk" />
+												<span>협의입주</span>
+											</label>
+											<label class="extra-filter-option type-filter-option type-filter-tile extra-condition-filter-tile">
+												<input type="checkbox" id="extraParkingChk" />
+												<span>주차 가능</span>
+											</label>
+											<label class="extra-filter-option type-filter-option type-filter-tile extra-condition-filter-tile">
+												<input type="checkbox" id="extraElevatorChk" />
+												<span>엘레베이터</span>
+											</label>
+											<label class="extra-filter-option type-filter-option type-filter-tile extra-condition-filter-tile">
+												<input type="checkbox" id="extraVerandaChk" />
+												<span>베란다</span>
+											</label>
+											<label class="extra-filter-option type-filter-option type-filter-tile extra-condition-filter-tile">
+												<input type="checkbox" id="extraDuplexChk" />
+												<span>복층형</span>
+											</label>
+										</div>
+									</section>
+									<section class="type-filter-section">
+										<h3 class="type-filter-section-title">특수조건</h3>
+										<div class="type-filter-grid extra-condition-filter-grid">
+											<label class="extra-filter-option type-filter-option type-filter-tile extra-condition-filter-tile">
+												<input type="checkbox" id="extraFullOptionChk" />
+												<span>풀옵션</span>
+											</label>
+											<label class="extra-filter-option type-filter-option type-filter-tile extra-condition-filter-tile">
+												<input type="checkbox" id="extraOceanViewChk" />
+												<span>오션뷰</span>
+											</label>
+											<label class="extra-filter-option type-filter-option type-filter-tile extra-condition-filter-tile">
+												<input type="checkbox" id="extraPetChk" />
+												<span>반려동물가능</span>
+											</label>
+										</div>
+									</section>
+								</div>
 								<div class="extra-filter-reset-row">
 									<button type="button" class="extra-filter-reset-btn" id="extraFilterResetBtn">
 										<i class="fa-solid fa-rotate-right" aria-hidden="true">
@@ -1975,7 +2666,7 @@
 						<div class="extra-filter-dropdown location-analysis-dropdown" id="locationAnalysisDropdown">
 							<button type="button" class="extra-filter-trigger location-analysis-trigger" id="locationAnalysisTrigger" aria-expanded="false">
 								<span id="locationAnalysisLabel">
-									입지분석
+										전체
 								</span>
 								<i class="fa-solid fa-chevron-down">
 								</i>
@@ -2007,6 +2698,17 @@
 	<aside class="sidebar" id="sidebar">
 		<div class="sidebar-inner">
 			<div class="sidebar-list-panel">
+				<div class="sidebar-list-header">
+					<strong>매물 목록</strong>
+					<div class="sidebar-list-actions">
+						<button type="button" class="sidebar-list-share-btn" id="sidebarListShareBtn" aria-label="중개사 매물 공유하기" title="공유하기" hidden>
+							<i class="fa-solid fa-arrow-up-from-bracket" aria-hidden="true"></i>
+						</button>
+					</div>
+					<button type="button" class="sidebar-list-close-btn" id="sidebarListCloseBtn" aria-label="매물 목록 닫기" title="매물 목록 닫기">
+						<i class="fa-solid fa-xmark" aria-hidden="true"></i>
+					</button>
+				</div>
 				<div class="property-list" id="propertyList">
 				</div>
 			</div>
@@ -2176,7 +2878,10 @@
 								</div>
 							</div>
 							<div class="detail-agent-card" id="detailAgentCard">
-								<div class="detail-agent-section-title">공인중개사</div>
+								<div class="detail-agent-card-head">
+									<div class="detail-agent-section-title">공인중개사</div>
+									<button type="button" class="detail-agent-more-btn" id="detailAgentMoreBtn" hidden>더 보기</button>
+								</div>
 								<div class="detail-agent-top">
 									<div class="detail-agent-avatar" id="detailAgentAvatar">
 										담당
@@ -2221,14 +2926,74 @@
 				</div>
 			</div>
 		</div>
-	</aside>
-	<button type="button" class="map-panel-toggle" id="mapPanelToggle" aria-label="패널 접기" aria-expanded="true" title="패널 접기">
+		</aside>
+		<aside class="education-facility-detail-panel" id="educationFacilityDetailPanel" aria-hidden="true">
+			<div class="education-facility-detail-head">
+				<strong id="educationFacilityDetailCategory">유치원·어린이집</strong>
+				<button type="button" class="education-facility-detail-close" id="educationFacilityDetailCloseBtn" aria-label="교육시설 상세 닫기" title="닫기">
+					<i class="fa-solid fa-xmark" aria-hidden="true"></i>
+				</button>
+			</div>
+			<div class="education-facility-detail-scroll">
+				<section class="education-facility-detail-hero">
+					<h2 id="educationFacilityDetailName">교육시설</h2>
+					<p id="educationFacilityDetailAddress"></p>
+					<p id="educationFacilityDetailMeta"></p>
+					<div class="education-facility-detail-actions" id="educationFacilityDetailActions"></div>
+				</section>
+				<section class="education-facility-detail-section" id="educationFacilityDetailBasicSection">
+					<h3>기본 정보</h3>
+					<dl id="educationFacilityDetailBasicRows"></dl>
+				</section>
+				<section class="education-facility-detail-section" id="educationFacilityDetailStatusSection">
+					<h3>현황</h3>
+					<div class="education-facility-detail-stats" id="educationFacilityDetailStats"></div>
+					<dl id="educationFacilityDetailStatusRows"></dl>
+				</section>
+				<section class="education-facility-detail-section education-facility-school-section" id="educationFacilityDetailStudentStaffSection">
+					<div class="education-facility-detail-section-title-row">
+						<h3>학생·교직원 현황</h3>
+						<span id="educationFacilityDetailStudentStaffYear"></span>
+					</div>
+					<div class="education-facility-school-tabs" aria-hidden="true">
+						<span class="active">학생수</span>
+						<span>교직원</span>
+					</div>
+					<div class="education-facility-grade-chart" id="educationFacilityDetailGradeChart"></div>
+					<dl id="educationFacilityDetailStudentStaffRows"></dl>
+				</section>
+				<section class="education-facility-detail-section education-facility-school-section" id="educationFacilityDetailAfterSchoolSection">
+					<div class="education-facility-detail-section-title-row">
+						<h3>방과후 프로그램</h3>
+						<span id="educationFacilityDetailAfterSchoolYear"></span>
+					</div>
+					<dl id="educationFacilityDetailAfterSchoolRows"></dl>
+				</section>
+				<section class="education-facility-detail-section education-facility-school-section" id="educationFacilityDetailMealSection">
+					<div class="education-facility-detail-section-title-row">
+						<h3>급식 현황</h3>
+						<span id="educationFacilityDetailMealYear"></span>
+					</div>
+					<dl id="educationFacilityDetailMealRows"></dl>
+				</section>
+				<section class="education-facility-detail-section education-facility-school-section" id="educationFacilityDetailLibrarySection">
+					<div class="education-facility-detail-section-title-row">
+						<h3>도서관</h3>
+						<span id="educationFacilityDetailLibraryYear"></span>
+					</div>
+					<dl id="educationFacilityDetailLibraryRows"></dl>
+				</section>
+			</div>
+		</aside>
+		<button type="button" class="map-panel-toggle" id="mapPanelToggle" aria-label="패널 접기" aria-expanded="true" title="패널 접기">
 		<i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
 	</button>
 	<div class="resizer" id="resizer" aria-label="패널 크기 조절">
 	</div>
 	<main class="map-wrap">
 		<div id="map">
+		</div>
+		<div class="map-center-region-label" id="mapCenterRegionLabel" aria-live="polite" hidden>
 		</div>
 		<div class="map-zoom-stack" aria-label="지도 확대 축소 및 현위치">
 			<div class="map-zoom-group" aria-label="지도 확대 축소">
@@ -2375,30 +3140,84 @@
 				</label>
 			</div>
 		</div>
-		<div class="map-side-tools">
-			<div class="map-tool-group" id="mapTypeToolGroup">
-				<button type="button" class="map-tool-btn active" data-map-type="roadmap" id="mapTypeRoadBtn" onclick="window.setMapTypeMode && window.setMapTypeMode('roadmap')">
-					일반
-				</button>
-				<button type="button" class="map-tool-btn" data-map-type="satellite" id="mapTypeSatelliteBtn" onclick="window.setMapTypeMode && window.setMapTypeMode('satellite')">
-					위성
-				</button>
-				<button type="button" class="map-tool-btn" data-map-type="cadastral" id="mapTypeCadastralBtn" onclick="window.setMapTypeMode && window.setMapTypeMode('cadastral')">
-					지적
-				</button>
-				<button type="button" class="map-tool-btn" id="mapRoadviewBtn" onclick="window.toggleMapRoadviewOverlay && window.toggleMapRoadviewOverlay()" aria-pressed="false">
-					로드뷰
+		<div class="map-side-tools" id="mapSideTools">
+			<div class="map-tool-group map-primary-tool-group">
+				<button type="button" class="map-tool-btn map-property-toggle-btn active" id="mapPropertyToggleBtn" onclick="window.toggleMapPropertyPanels && window.toggleMapPropertyPanels()" aria-pressed="true" aria-label="매물 숨기기" title="매물 숨기기">
+					<span class="map-tool-label">매물</span>
 				</button>
 			</div>
-			<div class="map-tool-group" id="areaUnitToolGroup">
-				<div class="map-unit-split">
-					<button type="button" class="map-unit-half-btn" data-area-unit="py" id="areaUnitPyBtn" onclick="setGlobalAreaUnit('py')">
-						평
+			<div class="map-tool-group map-unit-tool-group" id="areaUnitToolGroup">
+				<button type="button" class="map-tool-btn map-area-unit-toggle-btn" id="areaUnitToggleBtn" data-area-unit-global-toggle aria-label="면적 단위 전환" title="평 / ㎡">
+					<span class="map-unit-cycle-icon" aria-hidden="true">
+						<svg class="map-unit-cycle-svg" viewBox="0 0 32 32" focusable="false" aria-hidden="true">
+							<path class="map-unit-cycle-arc top" d="M27.0 9.8A11.6 11.6 0 0 0 5.0 13.0" />
+							<path class="map-unit-cycle-arc bottom" d="M5.0 22.2A11.6 11.6 0 0 0 27.0 19.0" />
+							<g class="map-unit-cycle-head top">
+								<line x1="8.2" y1="10.4" x2="4.8" y2="13.0" />
+								<line x1="3.8" y1="8.8" x2="4.8" y2="13.0" />
+							</g>
+							<g class="map-unit-cycle-head bottom">
+								<line x1="23.6" y1="21.2" x2="27.2" y2="19.0" />
+								<line x1="28.6" y1="22.9" x2="27.2" y2="19.0" />
+							</g>
+						</svg>
+						<span class="map-unit-cycle-label" id="areaUnitToggleLabel">평</span>
+					</span>
+				</button>
+			</div>
+			<div class="map-tool-group map-location-tool-group" aria-label="입지 도구">
+				<button type="button" class="map-tool-btn" id="mapEducationToolBtn" aria-label="교육" title="교육">
+					<span class="map-tool-icon"><i class="fa-solid fa-graduation-cap" aria-hidden="true"></i></span>
+					<span class="map-tool-label">교육</span>
+				</button>
+				<button type="button" class="map-tool-btn" id="mapConvenienceToolBtn" aria-label="편의" title="편의">
+					<span class="map-tool-icon"><i class="fa-solid fa-heart" aria-hidden="true"></i></span>
+					<span class="map-tool-label">편의</span>
+				</button>
+				<button type="button" class="map-tool-btn" id="mapDevelopmentToolBtn" aria-label="개발" title="개발">
+					<span class="map-tool-icon"><i class="fa-solid fa-road-barrier" aria-hidden="true"></i></span>
+					<span class="map-tool-label">개발</span>
+				</button>
+				<button type="button" class="map-tool-btn" id="mapBrokerToolBtn" aria-label="중개" title="중개">
+					<span class="map-tool-icon"><i class="fa-solid fa-user-tie" aria-hidden="true"></i></span>
+					<span class="map-tool-label">중개</span>
+				</button>
+			</div>
+			<div class="map-tool-group map-map-tool-group" aria-label="지도 도구">
+				<button type="button" class="map-tool-btn" id="mapRoadviewBtn" onclick="window.toggleMapRoadviewOverlay && window.toggleMapRoadviewOverlay()" aria-pressed="false" aria-label="거리뷰" title="거리뷰">
+					<span class="map-tool-icon"><i class="fa-solid fa-map-marker-alt" aria-hidden="true"></i></span>
+					<span class="map-tool-label">거리뷰</span>
+				</button>
+				<button type="button" class="map-tool-btn" id="mapTypeMenuBtn" onclick="event.stopPropagation(); window.toggleMapTypePopover && window.toggleMapTypePopover()" aria-expanded="false" aria-controls="mapTypePopover" aria-label="지도 유형" title="지도">
+					<span class="map-tool-icon"><i class="fa-solid fa-layer-group" aria-hidden="true"></i></span>
+					<span class="map-tool-label">지도</span>
+				</button>
+				<button type="button" class="map-tool-btn" id="mapDistanceToolBtn" onclick="event.preventDefault(); event.stopPropagation(); window.toggleDistanceMeasureTool && window.toggleDistanceMeasureTool();" aria-label="거리재기" title="거리재기">
+					<span class="map-tool-icon"><i class="fa-solid fa-ruler" aria-hidden="true"></i></span>
+					<span class="map-tool-label">거리재기</span>
+				</button>
+			</div>
+			<div class="map-type-popover" id="mapTypePopover" aria-hidden="true">
+				<div class="map-type-card-row" aria-label="지도 유형 선택">
+					<button type="button" class="map-type-option map-type-card active" data-map-type="roadmap" id="mapTypeRoadBtn" onclick="window.setMapTypeMode && window.setMapTypeMode('roadmap')">
+						<span class="map-type-thumb roadmap" aria-hidden="true"></span>
+						<span class="map-type-label">일반</span>
 					</button>
-					<button type="button" class="map-unit-half-btn active" data-area-unit="m2" id="areaUnitM2Btn" onclick="setGlobalAreaUnit('m2')">
-						㎡
+					<button type="button" class="map-type-option map-type-card" data-map-type="satellite" id="mapTypeSatelliteBtn" onclick="window.setMapTypeMode && window.setMapTypeMode('satellite')">
+						<span class="map-type-thumb satellite" aria-hidden="true"></span>
+						<span class="map-type-label">위성</span>
+					</button>
+					<button type="button" class="map-type-option map-type-card" data-map-type="terrain" id="mapTypeTerrainBtn" onclick="window.setMapTypeMode && window.setMapTypeMode('terrain')">
+						<span class="map-type-thumb terrain" aria-hidden="true"></span>
+						<span class="map-type-label">지형</span>
 					</button>
 				</div>
+				<div class="map-type-divider"></div>
+				<button type="button" class="map-type-cadastral-toggle" id="mapTypeCadastralBtn" onclick="event.stopPropagation(); window.toggleMapCadastralOverlay && window.toggleMapCadastralOverlay()" aria-pressed="false">
+					<span class="map-type-cadastral-icon"><i class="fa-solid fa-draw-polygon" aria-hidden="true"></i></span>
+					<span class="map-type-cadastral-label">지적편집도</span>
+					<span class="map-type-switch" aria-hidden="true"></span>
+				</button>
 			</div>
 		</div>
 		<div class="life-safety-legend" id="lifeSafetyLegend" aria-hidden="true">
@@ -2406,7 +3225,7 @@
 				생활안전 참고지표
 			</div>
 			<div class="life-safety-legend-scope">
-				현재 노형동ㆍ연동 우선 제공
+				노형ㆍ연동
 			</div>
 			<div class="life-safety-legend-row">
 				<span class="life-safety-legend-swatch level-1"></span>
@@ -3078,11 +3897,11 @@
 	</div>
 </div>
 
-<script src="js/app_3.322.js"></script>
+	<script src="js/app_3.805.js?v=3.805"></script>
 <script>
 (function () {
 	var labels = {
-		favorites: ["관심매물", "관심매물을 한 곳에서 확인할 수 있도록 준비중입니다."],
+		favorites: ["관심 부동산", "관심 부동산을 한 곳에서 확인할 수 있도록 준비중입니다."],
 		inquiries: ["1:1 문의내역", "문의하신 내용을 한 곳에서 확인할 수 있도록 준비중입니다."],
 		reports: ["허위매물 신고", "허위매물 신고내역을 한 곳에서 확인할 수 있도록 준비중입니다."],
 		payment: ["이용권 결제", "이용권 결제와 결제내역을 이곳에서 확인할 수 있도록 준비중입니다."],
@@ -3146,6 +3965,69 @@
 		e.preventDefault();
 		openMySuiteFallback(tab.getAttribute("data-my-suite-tab"));
 	});
+})();
+</script>
+
+
+<script>
+(function () {
+	function syncMapPropertyButtonFallback() {
+		var btn = document.getElementById("mapPropertyToggleBtn");
+		if (!btn) return;
+		var isVisible = !document.body.classList.contains("map-properties-hidden");
+		btn.classList.toggle("active", isVisible);
+		btn.setAttribute("aria-pressed", isVisible ? "true" : "false");
+		btn.setAttribute("aria-label", isVisible ? "매물 숨기기" : "매물 보이기");
+		btn.title = isVisible ? "매물 숨기기" : "매물 보이기";
+	}
+	if (typeof window.toggleMapPropertyPanels !== "function") {
+		window.toggleMapPropertyPanels = function () {
+			var shouldHide = !document.body.classList.contains("map-properties-hidden");
+			document.body.classList.toggle("map-properties-hidden", shouldHide);
+			syncMapPropertyButtonFallback();
+			setTimeout(function () {
+				if (window.kakao && window.kakao.maps && window.realjejuMap && typeof window.realjejuMap.relayout === "function") {
+					window.realjejuMap.relayout();
+				}
+			}, 60);
+		};
+	}
+	if (typeof window.toggleMapTypePopover !== "function") {
+		window.toggleMapTypePopover = function () {
+			var popover = document.getElementById("mapTypePopover");
+			var btn = document.getElementById("mapTypeMenuBtn");
+			if (!popover) return;
+			var open = !popover.classList.contains("open");
+			popover.classList.toggle("open", open);
+			popover.setAttribute("aria-hidden", open ? "false" : "true");
+			if (btn) {
+				btn.classList.toggle("active", open);
+				btn.setAttribute("aria-expanded", open ? "true" : "false");
+			}
+		};
+		document.addEventListener("click", function (event) {
+			var popover = document.getElementById("mapTypePopover");
+			var btn = document.getElementById("mapTypeMenuBtn");
+			if (!popover || !popover.classList.contains("open")) return;
+			if (popover.contains(event.target) || (btn && btn.contains(event.target))) return;
+			popover.classList.remove("open");
+			popover.setAttribute("aria-hidden", "true");
+			if (btn) {
+				btn.classList.remove("active");
+				btn.setAttribute("aria-expanded", "false");
+			}
+		});
+	}
+	if (typeof window.toggleGlobalAreaUnit !== "function") {
+		window.toggleGlobalAreaUnit = function () {
+			var label = document.getElementById("areaUnitToggleLabel");
+			var btn = document.getElementById("areaUnitToggleBtn");
+			var next = label && label.textContent.trim() === "㎡" ? "평" : "㎡";
+			if (label) label.textContent = next;
+
+		};
+	}
+	syncMapPropertyButtonFallback();
 })();
 </script>
 
