@@ -22,7 +22,7 @@
 				transition: none;
 			}
 		</style>
-				<link rel="stylesheet" href="css/base_3.819.css?v=3.819">
+				<link rel="stylesheet" href="css/base_3.874.css?v=3.874">
 
 </head>
 	<body class="sidebar-list-collapsed realjeju-side-nav-enabled">
@@ -41,9 +41,10 @@
 						<span class="global-topbar-page-title-broker" hidden></span>
 					</div>
 					<div class="global-topbar-right">
+						<!-- PATCH 3.874: 상단 배너 버전 텍스트를 현재 배포 버전과 일치시킵니다. -->
 						<button type="button" class="global-auth-trigger version-only" id="detailAuthTrigger" data-auth-state="logged-out">
-					<span class="topbar-version-text">Ver 3.819</span>
-					</button>
+							<span class="topbar-version-text">Ver 3.874</span>
+						</button>
 					<div class="global-account-dropdown" id="globalAccountDropdown" aria-hidden="true">
 						<button type="button" class="global-account-menu-item" data-account-action="inquiries">1:1 문의내역</button>
 						<div class="global-account-divider"></div>
@@ -105,7 +106,8 @@
 			<div class="realjeju-side-nav-line" aria-hidden="true"></div>
 			<div class="realjeju-side-recent" aria-label="최근 조회">
 				<div class="realjeju-side-recent-title">최근 조회</div>
-				<div class="realjeju-side-recent-empty">최근 조회한 매물이 없습니다.</div>
+				<div class="realjeju-side-recent-empty" id="realjejuSideRecentEmpty">최근 조회한 매물이 없습니다.</div>
+				<div class="realjeju-side-recent-list" id="realjejuSideRecentList" aria-live="polite"></div>
 			</div>
 			<div class="realjeju-side-nav-line realjeju-side-nav-bottom-line" aria-hidden="true"></div>
 			<nav class="realjeju-side-nav-menu realjeju-side-nav-bottom" aria-label="계정 메뉴">
@@ -1738,10 +1740,10 @@
 
 		<div class="sub-topbar">
 			<div class="sub-topbar-inner">
-				<!-- PATCH 2.828: 하단 버전 링크를 현재 배포 파일로 갱신 -->
-				<a class="sub-version-fixed" href="realjeju_3.819.html" download="realjeju_3.819.html" title="realjeju_3.819.html 다운로드">
-											Ver 3.819
-				</a>
+					<!-- PATCH 3.874: 하단 버전 링크도 현재 배포 파일명으로 갱신합니다. -->
+					<a class="sub-version-fixed" href="realjeju_3.874.html" download="realjeju_3.874.html" title="realjeju_3.874.html 다운로드">
+						Ver 3.874
+					</a>
 				<div class="sub-topbar-left">
 					<strong id="listInfoText">
 						총 0개 매물
@@ -2426,6 +2428,266 @@
 			<span id="areaFilterManualMaxError"></span>
 		</div>
 		<button type="button" class="area-filter-manual-apply" id="areaFilterManualApplyBtn">적용</button>
+	</div>
+</div>
+<!-- ===== 지목 필터 ===== -->
+<div class="extra-filter-dropdown land-type-filter-dropdown" id="landTypeFilterDropdown">
+	<button type="button" class="extra-filter-trigger land-type-filter-trigger" id="landTypeFilterTrigger" aria-expanded="false">
+		<span id="landTypeFilterLabel">지목</span>
+		<i class="fa-solid fa-chevron-down"></i>
+	</button>
+
+	<div class="extra-filter-menu floor-direction-filter-menu land-type-filter-menu" id="landTypeFilterMenu">
+		<h3 class="floor-direction-filter-title land-type-filter-title">지목</h3>
+		<section class="floor-direction-filter-section land-type-filter-section">
+			<div class="type-filter-grid extra-condition-filter-grid land-type-filter-grid">
+				<label class="type-filter-option type-filter-tile extra-condition-filter-tile land-type-filter-tile">
+					<input type="checkbox" name="landTypeFilter" value="대" />
+					<span>대(垈)</span>
+				</label>
+				<label class="type-filter-option type-filter-tile extra-condition-filter-tile land-type-filter-tile">
+					<input type="checkbox" name="landTypeFilter" value="임야" />
+					<span>임야</span>
+				</label>
+				<label class="type-filter-option type-filter-tile extra-condition-filter-tile land-type-filter-tile">
+					<input type="checkbox" name="landTypeFilter" value="공장용지" />
+					<span>공장용지</span>
+				</label>
+				<label class="type-filter-option type-filter-tile extra-condition-filter-tile land-type-filter-tile">
+					<input type="checkbox" name="landTypeFilter" value="주차장" />
+					<span>주차장</span>
+				</label>
+				<label class="type-filter-option type-filter-tile extra-condition-filter-tile land-type-filter-tile">
+					<input type="checkbox" name="landTypeFilter" value="잡종지" />
+					<span>잡종지</span>
+				</label>
+				<label class="type-filter-option type-filter-tile extra-condition-filter-tile land-type-filter-tile">
+					<input type="checkbox" name="landTypeFilter" value="창고용지" />
+					<span>창고용지</span>
+				</label>
+				<label class="type-filter-option type-filter-tile extra-condition-filter-tile land-type-filter-tile">
+					<input type="checkbox" name="landTypeFilter" value="유지" />
+					<span>유지(溜池)</span>
+				</label>
+				<label class="type-filter-option type-filter-tile extra-condition-filter-tile land-type-filter-tile">
+					<input type="checkbox" name="landTypeFilter" value="목장용지" />
+					<span>목장용지</span>
+				</label>
+				<label class="type-filter-option type-filter-tile extra-condition-filter-tile land-type-filter-tile">
+					<input type="checkbox" name="landTypeFilter" value="제방" />
+					<span>제방(堤防)</span>
+				</label>
+				<label class="type-filter-option type-filter-tile extra-condition-filter-tile land-type-filter-tile">
+					<input type="checkbox" name="landTypeFilter" value="구거" />
+					<span>구거(溝渠)</span>
+				</label>
+				<label class="type-filter-option type-filter-tile extra-condition-filter-tile land-type-filter-tile">
+					<input type="checkbox" name="landTypeFilter" value="양어장" />
+					<span>양어장</span>
+				</label>
+				<label class="type-filter-option type-filter-tile extra-condition-filter-tile land-type-filter-tile">
+					<input type="checkbox" name="landTypeFilter" value="주유소용지" />
+					<span>주유소용지</span>
+				</label>
+				<label class="type-filter-option type-filter-tile extra-condition-filter-tile land-type-filter-tile">
+					<input type="checkbox" name="landTypeFilter" value="묘지" />
+					<span>묘지</span>
+				</label>
+				<label class="type-filter-option type-filter-tile extra-condition-filter-tile land-type-filter-tile">
+					<input type="checkbox" name="landTypeFilter" value="체육용지" />
+					<span>체육용지</span>
+				</label>
+				<label class="type-filter-option type-filter-tile extra-condition-filter-tile land-type-filter-tile">
+					<input type="checkbox" name="landTypeFilter" value="사적지" />
+					<span>사적지</span>
+				</label>
+				<label class="type-filter-option type-filter-tile extra-condition-filter-tile land-type-filter-tile">
+					<input type="checkbox" name="landTypeFilter" value="광천지" />
+					<span>광천지</span>
+				</label>
+				<label class="type-filter-option type-filter-tile extra-condition-filter-tile land-type-filter-tile">
+					<input type="checkbox" name="landTypeFilter" value="공원" />
+					<span>공원</span>
+				</label>
+				<label class="type-filter-option type-filter-tile extra-condition-filter-tile land-type-filter-tile">
+					<input type="checkbox" name="landTypeFilter" value="철도용지" />
+					<span>철도용지</span>
+				</label>
+				<label class="type-filter-option type-filter-tile extra-condition-filter-tile land-type-filter-tile">
+					<input type="checkbox" name="landTypeFilter" value="유원지" />
+					<span>유원지</span>
+				</label>
+				<label class="type-filter-option type-filter-tile extra-condition-filter-tile land-type-filter-tile">
+					<input type="checkbox" name="landTypeFilter" value="종교용지" />
+					<span>종교용지</span>
+				</label>
+				<label class="type-filter-option type-filter-tile extra-condition-filter-tile land-type-filter-tile">
+					<input type="checkbox" name="landTypeFilter" value="하천" />
+					<span>하천</span>
+				</label>
+				<label class="type-filter-option type-filter-tile extra-condition-filter-tile land-type-filter-tile">
+					<input type="checkbox" name="landTypeFilter" value="도로" />
+					<span>도로</span>
+				</label>
+				<label class="type-filter-option type-filter-tile extra-condition-filter-tile land-type-filter-tile">
+					<input type="checkbox" name="landTypeFilter" value="염전" />
+					<span>염전</span>
+				</label>
+				<label class="type-filter-option type-filter-tile extra-condition-filter-tile land-type-filter-tile">
+					<input type="checkbox" name="landTypeFilter" value="학교용지" />
+					<span>학교용지</span>
+				</label>
+				<label class="type-filter-option type-filter-tile extra-condition-filter-tile land-type-filter-tile">
+					<input type="checkbox" name="landTypeFilter" value="수도용지" />
+					<span>수도용지</span>
+				</label>
+			</div>
+		</section>
+		<section class="floor-direction-filter-section land-type-filter-section">
+			<h4 class="floor-direction-filter-section-title land-type-filter-section-title">농지</h4>
+			<div class="type-filter-grid extra-condition-filter-grid land-type-filter-grid land-type-farm-grid">
+				<label class="type-filter-option type-filter-tile extra-condition-filter-tile land-type-filter-tile">
+					<input type="checkbox" name="landTypeFilter" value="전" />
+					<span>전</span>
+				</label>
+				<label class="type-filter-option type-filter-tile extra-condition-filter-tile land-type-filter-tile">
+					<input type="checkbox" name="landTypeFilter" value="답" />
+					<span>답</span>
+				</label>
+				<label class="type-filter-option type-filter-tile extra-condition-filter-tile land-type-filter-tile">
+					<input type="checkbox" name="landTypeFilter" value="과수원" />
+					<span>과수원</span>
+				</label>
+			</div>
+		</section>
+		<div class="extra-filter-reset-row floor-direction-filter-reset-row land-type-filter-reset-row">
+			<button type="button" class="extra-filter-reset-btn floor-direction-filter-reset-btn land-type-filter-reset-btn" id="landTypeFilterResetBtn">초기화</button>
+		</div>
+	</div>
+</div>
+<!-- ===== 용도지역 필터 ===== -->
+<div class="extra-filter-dropdown land-use-zone-filter-dropdown" id="landUseZoneFilterDropdown">
+	<button type="button" class="extra-filter-trigger land-use-zone-filter-trigger" id="landUseZoneFilterTrigger" aria-expanded="false">
+		<span id="landUseZoneFilterLabel">용도지역</span>
+		<i class="fa-solid fa-chevron-down"></i>
+	</button>
+
+	<div class="extra-filter-menu floor-direction-filter-menu land-use-zone-filter-menu" id="landUseZoneFilterMenu">
+		<h3 class="floor-direction-filter-title land-use-zone-filter-title">용도지역</h3>
+		<div class="land-use-zone-filter-scroll">
+		<section class="floor-direction-filter-section land-use-zone-filter-section">
+			<h4 class="floor-direction-filter-section-title land-use-zone-filter-section-title">주거지역</h4>
+			<div class="type-filter-grid extra-condition-filter-grid land-use-zone-filter-grid">
+				<label class="type-filter-option type-filter-tile extra-condition-filter-tile land-use-zone-filter-tile">
+					<input type="checkbox" name="landUseZoneFilter" value="제1종 전용주거지역" />
+					<span>제1종전용</span>
+				</label>
+				<label class="type-filter-option type-filter-tile extra-condition-filter-tile land-use-zone-filter-tile">
+					<input type="checkbox" name="landUseZoneFilter" value="제2종 전용주거지역" />
+					<span>제2종전용</span>
+				</label>
+				<label class="type-filter-option type-filter-tile extra-condition-filter-tile land-use-zone-filter-tile">
+					<input type="checkbox" name="landUseZoneFilter" value="제1종 일반주거지역" />
+					<span>제1종일반</span>
+				</label>
+				<label class="type-filter-option type-filter-tile extra-condition-filter-tile land-use-zone-filter-tile">
+					<input type="checkbox" name="landUseZoneFilter" value="제2종 일반주거지역" />
+					<span>제2종일반</span>
+				</label>
+				<label class="type-filter-option type-filter-tile extra-condition-filter-tile land-use-zone-filter-tile">
+					<input type="checkbox" name="landUseZoneFilter" value="제3종 일반주거지역" />
+					<span>제3종일반</span>
+				</label>
+				<label class="type-filter-option type-filter-tile extra-condition-filter-tile land-use-zone-filter-tile">
+					<input type="checkbox" name="landUseZoneFilter" value="준주거지역" />
+					<span>준주거</span>
+				</label>
+			</div>
+		</section>
+		<section class="floor-direction-filter-section land-use-zone-filter-section">
+			<h4 class="floor-direction-filter-section-title land-use-zone-filter-section-title">상업지역</h4>
+			<div class="type-filter-grid extra-condition-filter-grid land-use-zone-filter-grid">
+				<label class="type-filter-option type-filter-tile extra-condition-filter-tile land-use-zone-filter-tile">
+					<input type="checkbox" name="landUseZoneFilter" value="중심상업지역" />
+					<span>중심상업</span>
+				</label>
+				<label class="type-filter-option type-filter-tile extra-condition-filter-tile land-use-zone-filter-tile">
+					<input type="checkbox" name="landUseZoneFilter" value="일반상업지역" />
+					<span>일반상업</span>
+				</label>
+				<label class="type-filter-option type-filter-tile extra-condition-filter-tile land-use-zone-filter-tile">
+					<input type="checkbox" name="landUseZoneFilter" value="근린상업지역" />
+					<span>근린상업</span>
+				</label>
+				<label class="type-filter-option type-filter-tile extra-condition-filter-tile land-use-zone-filter-tile">
+					<input type="checkbox" name="landUseZoneFilter" value="유통상업지역" />
+					<span>유통상업</span>
+				</label>
+			</div>
+		</section>
+		<section class="floor-direction-filter-section land-use-zone-filter-section">
+			<h4 class="floor-direction-filter-section-title land-use-zone-filter-section-title">공업지역</h4>
+			<div class="type-filter-grid extra-condition-filter-grid land-use-zone-filter-grid">
+				<label class="type-filter-option type-filter-tile extra-condition-filter-tile land-use-zone-filter-tile">
+					<input type="checkbox" name="landUseZoneFilter" value="전용공업지역" />
+					<span>전용공업</span>
+				</label>
+				<label class="type-filter-option type-filter-tile extra-condition-filter-tile land-use-zone-filter-tile">
+					<input type="checkbox" name="landUseZoneFilter" value="일반공업지역" />
+					<span>일반공업</span>
+				</label>
+				<label class="type-filter-option type-filter-tile extra-condition-filter-tile land-use-zone-filter-tile">
+					<input type="checkbox" name="landUseZoneFilter" value="준공업지역" />
+					<span>준공업</span>
+				</label>
+			</div>
+		</section>
+		<section class="floor-direction-filter-section land-use-zone-filter-section">
+			<h4 class="floor-direction-filter-section-title land-use-zone-filter-section-title">녹지/관리지역</h4>
+			<div class="type-filter-grid extra-condition-filter-grid land-use-zone-filter-grid">
+				<label class="type-filter-option type-filter-tile extra-condition-filter-tile land-use-zone-filter-tile">
+					<input type="checkbox" name="landUseZoneFilter" value="보전녹지지역" />
+					<span>보전녹지</span>
+				</label>
+				<label class="type-filter-option type-filter-tile extra-condition-filter-tile land-use-zone-filter-tile">
+					<input type="checkbox" name="landUseZoneFilter" value="생산녹지지역" />
+					<span>생산녹지</span>
+				</label>
+				<label class="type-filter-option type-filter-tile extra-condition-filter-tile land-use-zone-filter-tile">
+					<input type="checkbox" name="landUseZoneFilter" value="자연녹지지역" />
+					<span>자연녹지</span>
+				</label>
+				<label class="type-filter-option type-filter-tile extra-condition-filter-tile land-use-zone-filter-tile">
+					<input type="checkbox" name="landUseZoneFilter" value="보전관리지역" />
+					<span>보전관리</span>
+				</label>
+				<label class="type-filter-option type-filter-tile extra-condition-filter-tile land-use-zone-filter-tile">
+					<input type="checkbox" name="landUseZoneFilter" value="생산관리지역" />
+					<span>생산관리</span>
+				</label>
+				<label class="type-filter-option type-filter-tile extra-condition-filter-tile land-use-zone-filter-tile">
+					<input type="checkbox" name="landUseZoneFilter" value="계획관리지역" />
+					<span>계획관리</span>
+				</label>
+				<label class="type-filter-option type-filter-tile extra-condition-filter-tile land-use-zone-filter-tile">
+					<input type="checkbox" name="landUseZoneFilter" value="자연환경보전지역" />
+					<span>자연환경보전</span>
+				</label>
+			</div>
+		</section>
+		<section class="floor-direction-filter-section land-use-zone-filter-section">
+			<h4 class="floor-direction-filter-section-title land-use-zone-filter-section-title">농지</h4>
+			<div class="type-filter-grid extra-condition-filter-grid land-use-zone-filter-grid">
+				<label class="type-filter-option type-filter-tile extra-condition-filter-tile land-use-zone-filter-tile">
+					<input type="checkbox" name="landUseZoneFilter" value="농림지역" />
+					<span>농림지역</span>
+				</label>
+			</div>
+		</section>
+		</div>
+		<div class="extra-filter-reset-row floor-direction-filter-reset-row land-use-zone-filter-reset-row">
+			<button type="button" class="extra-filter-reset-btn floor-direction-filter-reset-btn land-use-zone-filter-reset-btn" id="landUseZoneFilterResetBtn">초기화</button>
+		</div>
 	</div>
 </div>
 <!-- ===== 방/욕실 필터 ===== -->
@@ -3897,7 +4159,7 @@
 	</div>
 </div>
 
-		<script src="js/app_3.819.js?v=3.819"></script>
+		<script src="js/app_3.874.js?v=3.874"></script>
 <script>
 (function () {
 	var labels = {
