@@ -10079,6 +10079,7 @@ body.realjeju-side-nav-enabled:not(.admin-page-open):not(.broker-home-page-open)
 {
 	background: transparent;
 	color: #111827;
+	font-weight: 820;
 }
 
 .realjeju-side-nav-item.active
@@ -10468,6 +10469,13 @@ body.realjeju-side-nav-enabled:not(.admin-page-open):not(.broker-home-page-open)
 	text-align: left;
 	cursor: pointer;
 	box-shadow: none;
+}
+
+.realjeju-side-register-btn:hover,
+.realjeju-side-register-btn.active,
+.realjeju-side-register-btn.is-open
+{
+	font-weight: 820;
 }
 
 .realjeju-side-register-btn i
