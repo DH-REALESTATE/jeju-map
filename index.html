@@ -22,7 +22,7 @@
 				transition: none;
 			}
 		</style>
-				<link rel="stylesheet" href="css/base_3.883.css?v=3.883">
+				<link rel="stylesheet" href="css/base_3.892.css?v=3.892">
 
 </head>
 	<body class="sidebar-list-collapsed realjeju-side-nav-enabled">
@@ -41,9 +41,9 @@
 						<span class="global-topbar-page-title-broker" hidden></span>
 					</div>
 					<div class="global-topbar-right">
-						<!-- PATCH 3.883: 상단 배너 버전 텍스트를 현재 배포 버전과 일치시킵니다. -->
+						<!-- PATCH 3.892: 상단 배너 버전 텍스트를 현재 배포 버전과 일치시킵니다. -->
 						<button type="button" class="global-auth-trigger version-only" id="detailAuthTrigger" data-auth-state="logged-out">
-							<span class="topbar-version-text">Ver 3.883</span>
+							<span class="topbar-version-text">Ver 3.892</span>
 						</button>
 					<div class="global-account-dropdown" id="globalAccountDropdown" aria-hidden="true">
 						<button type="button" class="global-account-menu-item" data-account-action="inquiries">1:1 문의내역</button>
@@ -368,11 +368,23 @@
 			</div>
 			<div class="broker-home-filter-item">
 				<button type="button" class="broker-home-filter-btn" id="brokerPropertyTypeFilterBtn" data-broker-home-filter-menu="property">매물 유형 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
-				<div class="broker-home-filter-menu" id="brokerPropertyTypeFilterMenu"></div>
+				<div class="broker-home-filter-menu extra-filter-menu type-filter-menu broker-home-map-style-menu" id="brokerPropertyTypeFilterMenu"></div>
 			</div>
 				<div class="broker-home-filter-item">
-					<button type="button" class="broker-home-filter-btn" id="brokerDealTypeFilterBtn" data-broker-home-filter-menu="deal">거래 유형 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
-					<div class="broker-home-filter-menu" id="brokerDealTypeFilterMenu"></div>
+					<button type="button" class="broker-home-filter-btn" id="brokerPriceTypeFilterBtn" data-broker-home-filter-menu="deal">가격 유형 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
+					<div class="broker-home-filter-menu extra-filter-menu deal-filter-menu broker-home-price-type-menu broker-home-map-style-menu" id="brokerPriceTypeFilterMenu"></div>
+				</div>
+				<div class="broker-home-filter-item">
+					<button type="button" class="broker-home-filter-btn" id="brokerAreaFilterBtn" data-broker-home-filter-menu="area">면적 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
+					<div class="broker-home-filter-menu extra-filter-menu area-filter-menu broker-home-area-menu broker-home-map-style-menu" id="brokerAreaFilterMenu"></div>
+				</div>
+				<div class="broker-home-filter-item">
+					<button type="button" class="broker-home-filter-btn" id="brokerLandTypeFilterBtn" data-broker-home-filter-menu="landType">지목 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
+					<div class="broker-home-filter-menu extra-filter-menu type-filter-menu broker-home-land-type-menu broker-home-map-style-menu" id="brokerLandTypeFilterMenu"></div>
+				</div>
+				<div class="broker-home-filter-item">
+					<button type="button" class="broker-home-filter-btn" id="brokerLandUseZoneFilterBtn" data-broker-home-filter-menu="landUseZone">용도지역 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
+					<div class="broker-home-filter-menu extra-filter-menu type-filter-menu broker-home-land-use-zone-menu broker-home-map-style-menu" id="brokerLandUseZoneFilterMenu"></div>
 				</div>
 				<div class="broker-home-filter-divider"></div>
 				<button type="button" class="broker-home-filter-btn" id="brokerBulkRefreshBtn">전체갱신</button>
@@ -1740,9 +1752,9 @@
 
 		<div class="sub-topbar">
 			<div class="sub-topbar-inner">
-					<!-- PATCH 3.883: 하단 버전 링크도 현재 배포 파일명으로 갱신합니다. -->
-					<a class="sub-version-fixed" href="realjeju_3.883.html" download="realjeju_3.883.html" title="realjeju_3.883.html 다운로드">
-						Ver 3.883
+					<!-- PATCH 3.892: 하단 버전 링크도 현재 배포 파일명으로 갱신합니다. -->
+					<a class="sub-version-fixed" href="#" data-version-download="realjeju_3.892.html" title="realjeju_3.892.html 다운로드">
+						Ver 3.892
 					</a>
 				<div class="sub-topbar-left">
 					<strong id="listInfoText">
@@ -2178,7 +2190,7 @@
 							<div class="extra-filter-dropdown deal-filter-dropdown" id="dealFilterDropdown">
 								<button type="button" class="extra-filter-trigger deal-filter-trigger" id="dealFilterTrigger" aria-expanded="false">
 									<span id="dealFilterLabel">
-										거래 유형
+										가격 유형
 								</span>
 								<i class="fa-solid fa-chevron-down">
 								</i>
@@ -4154,7 +4166,7 @@
 	</div>
 </div>
 
-		<script src="js/app_3.883.js?v=3.883"></script>
+		<script src="js/app_3.892.js?v=3.892"></script>
 <script>
 (function () {
 	var labels = {
