@@ -1837,6 +1837,7 @@ document.addEventListener("click", function(event) {
 {
 	let sideAccountOfficeLookupUserId = "";
 	let sideAccountOfficeLookupPromise = null;
+	let sideNavKnownAdminUserId = "";
 
 	function getSideNav()
 	{
@@ -1877,6 +1878,13 @@ document.addEventListener("click", function(event) {
 		});
 	}
 
+	function hasVisibleSideNavAction(action)
+	{
+		const sideNav = getSideNav();
+		if (!sideNav) return false;
+		return Array.from(sideNav.querySelectorAll(`[data-side-nav-action="${action}"]`)).some((btn) => btn && !btn.hidden && btn.getAttribute("aria-hidden") !== "true");
+	}
+
 	function getSideAccountOfficeName(row)
 	{
 		return String(row && (row.office_name || row.company_name || row.name) || "").trim();
@@ -1906,9 +1914,20 @@ document.addEventListener("click", function(event) {
 		const user = window.realjejuCurrentAuthUser || null;
 		const profile = window.realjejuCurrentProfile || null;
 		const brokerOffice = window.realjejuCurrentBrokerOffice || null;
-		const isLoggedIn = !!(user && user.id);
+		const userId = String(user && user.id || "").trim();
+		const isLoggedIn = !!userId;
 		const canUseBrokerHome = isLoggedIn && isSideAccountApprovedOffice(brokerOffice);
-		const canUseAdmin = isLoggedIn && (window.realjejuCurrentIsAdmin === true || isSideNavAdminProfile(profile));
+		const adminWasVisible = isLoggedIn && hasVisibleSideNavAction("admin");
+		let canUseAdmin = isLoggedIn && (window.realjejuCurrentIsAdmin === true || isSideNavAdminProfile(profile));
+		if (!isLoggedIn) {
+			sideNavKnownAdminUserId = "";
+		} else if (canUseAdmin) {
+			sideNavKnownAdminUserId = userId;
+		} else if (sideNavKnownAdminUserId === userId || adminWasVisible) {
+			canUseAdmin = true;
+			sideNavKnownAdminUserId = userId;
+			window.realjejuCurrentIsAdmin = true;
+		}
 		setSideNavActionHidden("broker-home", !canUseBrokerHome);
 		setSideNavActionHidden("register", !canUseBrokerHome);
 		setSideNavActionHidden("admin", !canUseAdmin);
@@ -16863,6 +16882,7 @@ function setRealjejuActiveSession(user, profile = null, options = {})
 	const nextId = getRealjejuSessionUserId(user);
 	const accountChanged = !!(previousId && nextId && previousId !== nextId);
 	const canPreserveBrokerOffice = !!(user && !accountChanged && options.forceReset !== true);
+	const canPreserveAdminFlag = !!(user && !accountChanged && options.forceReset !== true && window.realjejuCurrentIsAdmin === true);
 	const preservedBrokerOffice = canPreserveBrokerOffice ? (window.realjejuCurrentBrokerOffice || null) : null;
 	const preservedBrokerOfficeName = canPreserveBrokerOffice ? String(window.realjejuCurrentBrokerOfficeName || (preservedBrokerOffice && preservedBrokerOffice.office_name) || "").trim() : "";
 	if (accountChanged || options.forceReset === true) {
@@ -16881,7 +16901,8 @@ function setRealjejuActiveSession(user, profile = null, options = {})
 	window.realjejuCurrentProfile = profile || null;
 	window.realjejuCurrentBrokerOffice = preservedBrokerOffice;
 	window.realjejuCurrentBrokerOfficeName = preservedBrokerOfficeName;
-	window.realjejuCurrentIsAdmin = typeof isAdminUser === "function" ? isAdminUser(user, profile || null) : false;
+	const resolvedIsAdmin = typeof isAdminUser === "function" ? isAdminUser(user, profile || null) : false;
+	window.realjejuCurrentIsAdmin = resolvedIsAdmin || canPreserveAdminFlag;
 	try {
 		currentRealjejuProfileCompleted = !!(profile && profile.profile_completed === true && profile.name && profile.phone);
 	} catch (err) {}
