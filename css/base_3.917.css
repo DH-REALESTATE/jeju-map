@@ -32012,6 +32012,53 @@ body.admin-page-open .admin-inquiries-filterbar
 	margin-bottom: 20px;
 }
 
+@media (max-width: 900px)
+{
+	body.admin-page-open .admin-application-card
+	{
+		grid-template-columns: minmax(0, 1fr) !important;
+		align-items: stretch;
+		gap: 12px;
+		padding: 14px;
+		overflow: visible;
+	}
+
+	body.admin-page-open .admin-application-card > *
+	{
+		min-width: 0;
+	}
+
+	body.admin-page-open .admin-application-contact,
+	body.admin-page-open .admin-application-status-block
+	{
+		margin-left: 0;
+	}
+
+	body.admin-page-open .admin-application-status-block
+	{
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 10px;
+	}
+
+	body.admin-page-open .admin-application-actions
+	{
+		display: grid;
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		justify-content: stretch;
+		width: 100%;
+		gap: 6px;
+	}
+
+	body.admin-page-open .admin-status-btn
+	{
+		width: 100%;
+		min-width: 0;
+		padding: 0 4px;
+	}
+}
+
 
 
 .broker-office-map-marker
@@ -32268,8 +32315,8 @@ body.admin-page-open .admin-inquiries-filterbar
 
 .education-facility-map-marker[data-category="kindergarten"] .education-facility-map-marker-icon
 {
-	border-color: #f28b32;
-	color: #f28b32;
+	border-color: #22C55E;
+	color: #22C55E;
 }
 
 .education-facility-map-marker[data-category="daycare"] .education-facility-map-marker-icon
@@ -32277,8 +32324,8 @@ body.admin-page-open .admin-inquiries-filterbar
 	width: 28px;
 	height: 28px;
 	border-width: 1.6px;
-	border-color: #f2a3b3;
-	color: #f48fa4;
+	border-color: #34D399;
+	color: #34D399;
 }
 
 .education-facility-map-marker-icon i
@@ -32950,32 +32997,47 @@ body.sidebar-list-collapsed .education-facility-detail-panel
 
 .education-facility-filter-option.active[data-category="kindergarten"]
 {
-	border-color: #f28b32;
+	border-color: #22C55E;
 }
 
 .education-facility-filter-option.active[data-category="daycare"]
 {
-	border-color: #f2a3b3;
+	border-color: #34D399;
 }
 
 .education-facility-filter-option.active[data-category="kindergarten"] i
 {
-	color: #f28b32;
+	color: #22C55E;
 }
 
 .education-facility-filter-option.active[data-category="daycare"] i
 {
-	color: #f48fa4;
+	color: #34D399;
 }
 
 .education-facility-filter-option.active[data-category="academy"]
 {
-	border-color: #8d7f7b;
+	border-color: #14B8A6;
 }
 
 .education-facility-filter-option.active[data-category="academy"] i
 {
-	color: #8d7f7b;
+	color: #14B8A6;
+}
+
+.education-facility-filter-option.active[data-category="elementary"]
+{
+	border-color: #10B981;
+}
+
+.education-facility-filter-option.active[data-category="middle"]
+{
+	border-color: #0EA5E9;
+}
+
+.education-facility-filter-option.active[data-category="high"]
+{
+	border-color: #6366F1;
 }
 
 .education-facility-filter-clear
@@ -33291,10 +33353,94 @@ body.sidebar-list-collapsed .education-facility-detail-panel
 	color: #a8783a;
 }
 
+.education-facility-filter-option.active[data-category="elementary"] .education-facility-filter-school-mark
+{
+	color: #10B981;
+}
+
+.education-facility-filter-option.active[data-category="middle"] .education-facility-filter-school-mark
+{
+	color: #0EA5E9;
+}
+
+.education-facility-filter-option.active[data-category="high"] .education-facility-filter-school-mark
+{
+	color: #6366F1;
+}
+
 .education-facility-filter-option.active .education-facility-filter-school-mark-label
 {
 	color: #8a5a24;
 	box-shadow: 0 0 0 1px rgba(138,90,36,0.28), 0 1px 2px rgba(0,0,0,0.14);
+}
+
+.education-facility-filter-option.active[data-category="elementary"] .education-facility-filter-school-mark-label
+{
+	color: #047857;
+	box-shadow: 0 0 0 1px rgba(16,185,129,0.28), 0 1px 2px rgba(0,0,0,0.14);
+}
+
+.education-facility-filter-option.active[data-category="middle"] .education-facility-filter-school-mark-label
+{
+	color: #0369A1;
+	box-shadow: 0 0 0 1px rgba(14,165,233,0.28), 0 1px 2px rgba(0,0,0,0.14);
+}
+
+.education-facility-filter-option.active[data-category="high"] .education-facility-filter-school-mark-label
+{
+	color: #4338CA;
+	box-shadow: 0 0 0 1px rgba(99,102,241,0.28), 0 1px 2px rgba(0,0,0,0.14);
+}
+
+.education-facility-filter-option[data-category="elementary"] .education-facility-filter-school-mark,
+.education-facility-filter-option[data-category="middle"] .education-facility-filter-school-mark,
+.education-facility-filter-option[data-category="high"] .education-facility-filter-school-mark
+{
+	width: 28px;
+	height: 25px;
+}
+
+.education-facility-filter-option[data-category="elementary"] .education-facility-filter-school-mark i,
+.education-facility-filter-option[data-category="middle"] .education-facility-filter-school-mark i,
+.education-facility-filter-option[data-category="high"] .education-facility-filter-school-mark i
+{
+	display: none;
+}
+
+.education-facility-filter-option[data-category="elementary"] .education-facility-filter-school-mark-label,
+.education-facility-filter-option[data-category="middle"] .education-facility-filter-school-mark-label,
+.education-facility-filter-option[data-category="high"] .education-facility-filter-school-mark-label
+{
+	position: static;
+	width: 25px;
+	height: 25px;
+	transform: none;
+	color: #ffffff;
+	font-size: 13px !important;
+	font-weight: 850 !important;
+	box-shadow: 0 2px 5px rgba(15, 23, 42, 0.18);
+}
+
+.education-facility-filter-option[data-category="elementary"] .education-facility-filter-school-mark-label
+{
+	background: #10B981;
+}
+
+.education-facility-filter-option[data-category="middle"] .education-facility-filter-school-mark-label
+{
+	background: #0EA5E9;
+}
+
+.education-facility-filter-option[data-category="high"] .education-facility-filter-school-mark-label
+{
+	background: #6366F1;
+}
+
+.education-facility-filter-option.active[data-category="elementary"] .education-facility-filter-school-mark-label,
+.education-facility-filter-option.active[data-category="middle"] .education-facility-filter-school-mark-label,
+.education-facility-filter-option.active[data-category="high"] .education-facility-filter-school-mark-label
+{
+	color: #ffffff;
 }
 
 
@@ -33381,7 +33527,7 @@ body.sidebar-list-collapsed .education-facility-detail-panel
 .education-facility-map-marker[data-category="kindergarten"] .education-facility-map-marker-icon,
 .education-facility-map-marker[data-category="academy"] .education-facility-map-marker-icon
 {
-	filter: none;
+	filter: drop-shadow(0 2px 5px rgba(15, 23, 42, 0.18));
 }
 
 
@@ -33392,7 +33538,7 @@ body.sidebar-list-collapsed .education-facility-detail-panel
 	border: 0;
 	border-radius: 0;
 	background: transparent;
-	color: #f28b32;
+	color: #22C55E;
 	filter: none;
 }
 
@@ -33414,7 +33560,7 @@ body.sidebar-list-collapsed .education-facility-detail-panel
 	height: 28px;
 	border: 0;
 	background: transparent;
-	color: #f28b32;
+	color: #22C55E;
 }
 
 .education-facility-map-marker[data-category="kindergarten"] .kindergarten-smile-marker svg
@@ -33429,8 +33575,8 @@ body.sidebar-list-collapsed .education-facility-detail-panel
 {
 	width: 28px;
 	height: 28px;
-	border: 2px solid #ffffff;
-	background: #f48fa4;
+	border: 0;
+	background: #34D399;
 	color: #ffffff;
 	filter: none;
 }
@@ -33443,8 +33589,8 @@ body.sidebar-list-collapsed .education-facility-detail-panel
 
 .education-facility-map-marker[data-category="kindergarten"] .kindergarten-smile-marker svg > circle:first-child
 {
-	stroke: #ffffff;
-	stroke-width: 2;
+	stroke: transparent;
+	stroke-width: 0;
 }
 
 
@@ -33452,18 +33598,129 @@ body.sidebar-list-collapsed .education-facility-detail-panel
 {
 	width: 28px;
 	height: 28px;
-	border: 2px solid #ffffff;
+	border: 0;
 	border-radius: 50%;
-	background: #8a7d78;
-	color: #ffffff;
+	background: #ffffff;
+	color: #14B8A6;
 	filter: none;
 }
 
 .education-facility-map-marker[data-category="academy"] .education-facility-map-marker-icon i
 {
 	font-size: 16px;
-	color: #ffffff;
+	color: #14B8A6;
 	-webkit-text-stroke: 0;
+}
+
+.education-facility-map-marker[data-category="elementary"] .education-facility-map-marker-icon
+{
+	color: #10B981;
+}
+
+.education-facility-map-marker[data-category="middle"] .education-facility-map-marker-icon
+{
+	color: #0EA5E9;
+}
+
+.education-facility-map-marker[data-category="high"] .education-facility-map-marker-icon
+{
+	color: #6366F1;
+}
+
+.education-facility-map-marker[data-category="elementary"] .education-facility-map-marker-label
+{
+	background: #10B981;
+}
+
+.education-facility-map-marker[data-category="middle"] .education-facility-map-marker-label
+{
+	background: #0EA5E9;
+}
+
+.education-facility-map-marker[data-category="high"] .education-facility-map-marker-label
+{
+	background: #6366F1;
+}
+
+.education-facility-map-marker[data-category="elementary"] .education-facility-map-marker-icon,
+.education-facility-map-marker[data-category="middle"] .education-facility-map-marker-icon,
+.education-facility-map-marker[data-category="high"] .education-facility-map-marker-icon
+{
+	width: 28px;
+	height: 28px;
+	border: 0;
+	border-radius: 50%;
+	color: #ffffff;
+	filter: drop-shadow(0 2px 5px rgba(15, 23, 42, 0.18));
+}
+
+.education-facility-map-marker[data-category="elementary"] .education-facility-map-marker-icon
+{
+	background: #10B981;
+}
+
+.education-facility-map-marker[data-category="middle"] .education-facility-map-marker-icon
+{
+	background: #0EA5E9;
+}
+
+.education-facility-map-marker[data-category="high"] .education-facility-map-marker-icon
+{
+	background: #6366F1;
+}
+
+.education-facility-map-marker[data-category="elementary"] .education-facility-map-marker-icon i,
+.education-facility-map-marker[data-category="middle"] .education-facility-map-marker-icon i,
+.education-facility-map-marker[data-category="high"] .education-facility-map-marker-icon i
+{
+	display: none;
+}
+
+.education-facility-map-marker[data-category="elementary"] .education-facility-map-marker-label,
+.education-facility-map-marker[data-category="middle"] .education-facility-map-marker-label,
+.education-facility-map-marker[data-category="high"] .education-facility-map-marker-label
+{
+	position: static;
+	width: 28px;
+	height: 28px;
+	background: transparent;
+	color: #ffffff;
+	font-size: 14px;
+	font-weight: 850;
+	transform: none;
+	box-shadow: none;
+}
+
+.education-facility-map-marker[data-category="elementary"] .education-facility-map-marker-icon,
+.education-facility-map-marker[data-category="middle"] .education-facility-map-marker-icon,
+.education-facility-map-marker[data-category="high"] .education-facility-map-marker-icon,
+.education-facility-map-marker[data-category="daycare"] .education-facility-map-marker-icon,
+.education-facility-map-marker[data-category="kindergarten"] .education-facility-map-marker-icon,
+.education-facility-map-marker[data-category="academy"] .education-facility-map-marker-icon
+{
+	width: 28px;
+	height: 28px;
+	border: 0;
+	border-radius: 50%;
+	filter: none;
+	box-shadow:
+		0 0 0 0.5px rgba(255,255,255,0.96),
+		0 2px 5px rgba(15, 23, 42, 0.18);
+}
+
+.education-facility-map-marker[data-category="academy"] .education-facility-map-marker-icon
+{
+	background: #ffffff;
+	color: #14B8A6;
+	box-shadow:
+		0 0 0 1px rgba(20,184,166,0.92),
+		0 0 0 2px rgba(255,255,255,0.92),
+		0 2px 5px rgba(15, 23, 42, 0.18);
+}
+
+.education-facility-map-marker[data-category="academy"] .education-facility-map-marker-icon i
+{
+	color: #14B8A6;
 }
 
 /* PATCH 3.525: 매물/거래/기타조건 필터 최종 스타일 정리 */
@@ -35366,12 +35623,39 @@ body.detail-dropdown-suppress .global-topbar-menu.has-map-filters .deal-method-f
 	outline: none;
 }
 
-/* PATCH 3.729: thin dark outline for daycare, kindergarten, and academy map marker icons only. */
+/* PATCH 3.917: clean ring and shadow for daycare, kindergarten, and academy map marker icons. */
 .education-facility-map-marker[data-category="daycare"] .education-facility-map-marker-icon,
 .education-facility-map-marker[data-category="kindergarten"] .education-facility-map-marker-icon,
 .education-facility-map-marker[data-category="academy"] .education-facility-map-marker-icon
 {
-	filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.65));
+	filter: none;
+	box-shadow:
+		0 0 0 0.5px rgba(255,255,255,0.96),
+		0 2px 5px rgba(15, 23, 42, 0.18);
+}
+
+.education-facility-map-marker[data-category="academy"] .education-facility-map-marker-icon
+{
+	background: #ffffff;
+	color: #14B8A6;
+	box-shadow:
+		0 0 0 1px rgba(20,184,166,0.92),
+		0 0 0 2px rgba(255,255,255,0.92),
+		0 2px 5px rgba(15, 23, 42, 0.18);
+}
+
+.education-facility-map-marker[data-category="academy"] .education-facility-map-marker-icon i
+{
+	color: #14B8A6;
+}
+
+.education-facility-map-marker[data-category="kindergarten"] .kindergarten-smile-marker,
+.education-facility-map-marker[data-category="kindergarten"] .kindergarten-smile-marker svg
+{
+	display: block;
+	width: 28px;
+	height: 28px;
+	overflow: visible;
 }
 
 /* PATCH 3.729: align unavailable city notice to the region option grid left edge. */
