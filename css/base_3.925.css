@@ -7355,7 +7355,7 @@ body.broker-home-page-open .map-wrap
 :root
 {
 	--broker-home-top-gap: 14px;
-	--broker-home-filter-gap: 14px;
+	--broker-home-filter-gap: 12px;
 	--broker-home-overview-filter-gap: 18px;
 	--broker-home-overview-right-width: 330px;
 }
@@ -41493,4 +41493,21 @@ body > .map-filter-floating-menu.land-use-zone-filter-menu
 	width: 410px !important;
 	min-width: 410px !important;
 	max-width: min(410px, calc(100vw - 48px)) !important;
+}
+
+/* 2026-07-01: keep broker home filter buttons on one line. */
+.broker-home-filterbar,
+.admin-listings-filterbar,
+.my-suite-favorites-filterbar
+{
+	flex-wrap: nowrap !important;
+}
+
+.broker-home-filter-btn,
+.broker-home-filter-btn span,
+.broker-home-filter-btn i
+{
+	white-space: nowrap !important;
+	word-break: keep-all !important;
+	flex-shrink: 0 !important;
 }
