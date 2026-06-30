@@ -130,7 +130,7 @@
 {
 	position: fixed;
 	top: 0;
-	right: var(--rj-detail-panel-width, 410px);
+	right: var(--rj-detail-panel-width, 420px);
 	bottom: 0;
 	left: 0;
 	width: auto;
@@ -3603,7 +3603,7 @@ body.detail-image-lightbox-open .education-facility-filter-panel
 	--line:#edf1f5;
 	--text:#111827;
 	--brand:#4F46E5;
-	--sidebar-list-width:410px;
+	--sidebar-list-width:430px;
 	--detail-panel-width: var(--rj-detail-panel-width);
 	--sidebar-current-width:var(--sidebar-list-width);
 	--radius-main: 0px;
@@ -7891,7 +7891,7 @@ body.broker-home-page-open .map-wrap
 	display: grid;
 	grid-template-columns: repeat(3, minmax(0, 1fr));
 	gap: 8px;
-	min-width: 410px;
+	min-width: 420px;
 }
 
 .broker-home-price-type-grid,
@@ -7904,7 +7904,7 @@ body.broker-home-page-open .map-wrap
 .broker-home-land-use-zone-grid
 {
 	grid-template-columns: repeat(4, minmax(0, 1fr));
-	min-width: 410px;
+	min-width: 420px;
 }
 
 .broker-home-filter-tile
@@ -28790,14 +28790,14 @@ body.broker-office-edit-page-open #authBrokerOfficeScreen:not(.auth-screen-hidde
 	--topbar-logo-stop-x: 130px;
 	--topbar-type-width: 950px;
 	--topbar-auth-gap: 0px;
-	--sidebar-list-width: 410px;
+	--sidebar-list-width: 430px;
 	--detail-panel-width: var(--rj-detail-panel-width);
-	--rj-detail-panel-width: 410px;
+	--rj-detail-panel-width: 430px;
 	--rj-detail-panel-gap: 8px;
 	--rj-detail-panel-edge: 16px;
 	--rj-list-panel-gap: 16px;
 	--rj-panel-toggle-collapsed-overlap: 28px;
-	--rj-panel-header-height: 50px;
+	--rj-panel-header-height: 56px;
 	--rj-detail-panel-right-safe: 56px;
 	--sidebar-current-width: var(--sidebar-list-width);
 	--realjeju-side-nav-width: 176px;
@@ -30410,7 +30410,7 @@ body.broker-office-edit-page-open .global-topbar-menu.has-map-filters
 .global-topbar-menu.has-map-filters .map-region-filter-menu
 {
 	/* PATCH 3.850: 주소/현재 위치 드롭다운 하단이 리스트 영역과 동일한 여백을 갖도록 하단 여백 추가 */
-	width: 410px;
+	width: 420px;
 	max-width: calc(100vw - 48px);
 	max-height: min(760px, calc(100vh - 125px - var(--rj-detail-panel-edge, 16px)));
 	padding: 0 0 var(--rj-detail-panel-edge, 16px) 0;
@@ -30957,7 +30957,7 @@ body.broker-office-edit-page-open .global-topbar-menu.has-map-filters
 .global-topbar-menu.has-map-filters .all-filter-menu,
 body > .map-filter-floating-menu.all-filter-menu
 {
-	width: 410px;
+	width: 420px;
 	max-height: min(760px, calc(100vh - 125px - var(--rj-detail-panel-edge, 16px)));
 	/* PATCH 3.851/3.862: "전체" 드롭다운 하단도 목록 여백과 동일하게 맞춥니다. */
 	padding: 0 0 var(--rj-detail-panel-edge, 16px) 0 !important;
@@ -31844,7 +31844,7 @@ body.realjeju-filters-in-topbar:not(.admin-page-open):not(.broker-home-page-open
 
 body.realjeju-filters-in-topbar:not(.sidebar-list-collapsed):not(.map-detail-panel-active):not(.detail-page-panel-open):not(.shared-detail-mode):not(.admin-page-open):not(.broker-home-page-open):not(.property-register-page-open):not(.my-suite-page-open):not(.notice-page-open):not(.auth-page-open):not(.payment-page-open):not(.myinfo-page-open):not(.profile-edit-page-open):not(.broker-office-info-page-open):not(.broker-office-edit-page-open) .global-topbar-menu.has-map-filters
 {
-	left: calc(var(--realjeju-side-nav-width, 0px) + var(--rj-list-panel-gap, 16px) + var(--sidebar-list-width, 410px) + 16px);
+	left: calc(var(--realjeju-side-nav-width, 0px) + var(--rj-list-panel-gap, 16px) + var(--sidebar-list-width, 420px) + 16px);
 }
 
 body.realjeju-filters-in-topbar.map-filterbar-detail-hidden:not(.admin-page-open):not(.broker-home-page-open):not(.property-register-page-open):not(.my-suite-page-open):not(.notice-page-open):not(.auth-page-open):not(.payment-page-open):not(.myinfo-page-open):not(.profile-edit-page-open):not(.broker-office-info-page-open):not(.broker-office-edit-page-open) .global-topbar-menu.has-map-filters
@@ -31889,9 +31889,9 @@ body.roadview-split-open > .map-filter-floating-menu
 .global-topbar-menu.has-map-filters .land-type-filter-menu,
 .land-type-filter-menu
 {
-	width: 410px !important;
-	min-width: 410px !important;
-	max-width: min(410px, calc(100vw - 48px)) !important;
+	width: 420px !important;
+	min-width: 420px !important;
+	max-width: min(420px, calc(100vw - 48px)) !important;
 }
 
 .global-topbar-menu.has-map-filters .land-type-filter-grid,
@@ -32770,11 +32770,11 @@ body.admin-page-open .admin-inquiries-filterbar
 	position: fixed;
 	top: calc(var(--global-topbar-height, 65px) + var(--rj-detail-panel-edge, 16px));
 	bottom: var(--rj-detail-panel-edge, 16px);
-	left: calc(var(--realjeju-side-nav-width, 0px) + var(--rj-list-panel-gap, 16px) + var(--sidebar-list-width, 410px) + var(--rj-detail-panel-gap, 8px));
+	left: calc(var(--realjeju-side-nav-width, 0px) + var(--rj-list-panel-gap, 16px) + var(--sidebar-list-width, 420px) + var(--rj-detail-panel-gap, 8px));
 	z-index: 1600;
 	display: flex;
 	flex-direction: column;
-	width: min(410px, calc(100vw - var(--realjeju-side-nav-width, 0px) - var(--rj-list-panel-gap, 16px) - var(--sidebar-list-width, 410px) - var(--rj-detail-panel-gap, 8px) - 24px));
+	width: min(420px, calc(100vw - var(--realjeju-side-nav-width, 0px) - var(--rj-list-panel-gap, 16px) - var(--sidebar-list-width, 420px) - var(--rj-detail-panel-gap, 8px) - 24px));
 	min-width: 320px;
 	overflow: hidden;
 	border: 1px solid var(--realjeju-panel-line-color, #e5e7eb);
@@ -32791,7 +32791,7 @@ body.admin-page-open .admin-inquiries-filterbar
 body.sidebar-list-collapsed .education-facility-detail-panel
 {
 	left: calc(var(--realjeju-side-nav-width, 0px) + var(--rj-list-panel-gap, 16px));
-	width: min(410px, calc(100vw - var(--realjeju-side-nav-width, 0px) - var(--rj-list-panel-gap, 16px) - 24px));
+	width: min(420px, calc(100vw - var(--realjeju-side-nav-width, 0px) - var(--rj-list-panel-gap, 16px) - 24px));
 }
 
 .education-facility-detail-panel.open
@@ -34039,9 +34039,9 @@ body.sidebar-list-collapsed .education-facility-detail-panel
 /* PATCH 3.525: 매물/거래/기타조건 필터 최종 스타일 정리 */
 .type-filter-menu
 {
-	width: 410px;
-	min-width: 410px;
-	max-width: min(410px, calc(100vw - 48px));
+	width: 420px;
+	min-width: 420px;
+	max-width: min(420px, calc(100vw - 48px));
 	padding: 22px 24px 24px;
 	border: 0;
 	border-radius: 20px;
@@ -34052,9 +34052,9 @@ body.sidebar-list-collapsed .education-facility-detail-panel
 
 .deal-filter-menu
 {
-	width: 410px;
-	min-width: 410px;
-	max-width: min(410px, calc(100vw - 48px));
+	width: 420px;
+	min-width: 420px;
+	max-width: min(420px, calc(100vw - 48px));
 	padding: 22px 24px 24px;
 	border: 0;
 	border-radius: 20px;
@@ -34222,9 +34222,9 @@ body.sidebar-list-collapsed .education-facility-detail-panel
 
 .extra-condition-filter-menu
 {
-	width: 410px;
-	min-width: 410px;
-	max-width: min(410px, calc(100vw - 48px));
+	width: 420px;
+	min-width: 420px;
+	max-width: min(420px, calc(100vw - 48px));
 	padding: 22px 24px 24px;
 	border-radius: 20px;
 	gap: 16px;
@@ -34249,9 +34249,9 @@ body.sidebar-list-collapsed .education-facility-detail-panel
 .floor-direction-filter-menu,
 .room-bath-filter-menu
 {
-	width: 410px;
-	min-width: 410px;
-	max-width: min(410px, calc(100vw - 48px));
+	width: 420px;
+	min-width: 420px;
+	max-width: min(420px, calc(100vw - 48px));
 	padding: 22px 24px 24px;
 	border: 0;
 	border-radius: 20px;
@@ -34392,9 +34392,9 @@ body.sidebar-list-collapsed .education-facility-detail-panel
 /* PATCH 3.431: 면적 범위 필터 */
 .area-filter-menu
 {
-	width: 410px;
-	min-width: 410px;
-	max-width: min(410px, calc(100vw - 48px));
+	width: 420px;
+	min-width: 420px;
+	max-width: min(420px, calc(100vw - 48px));
 	padding: 22px 24px 30px;
 	border: 0;
 	border-radius: 20px;
@@ -34961,9 +34961,9 @@ body.sidebar-list-collapsed .education-facility-detail-panel
 /* PATCH 3.432: 사용승인일 범위 필터 */
 .approval-year-filter-menu
 {
-	width: 410px;
-	min-width: 410px;
-	max-width: min(410px, calc(100vw - 48px));
+	width: 420px;
+	min-width: 420px;
+	max-width: min(420px, calc(100vw - 48px));
 	padding: 22px 24px 30px;
 	border: 0;
 	border-radius: 20px;
@@ -35215,9 +35215,9 @@ body.filter-track-default *
 /* PATCH 3.503: 가격 필터 임시 정적 표시 */
 .price-filter-menu
 {
-	width: 410px;
-	min-width: 410px;
-	max-width: min(410px, calc(100vw - 48px));
+	width: 420px;
+	min-width: 420px;
+	max-width: min(420px, calc(100vw - 48px));
 	padding: 22px 24px 30px;
 	border: 0;
 	border-radius: 20px;
@@ -35769,8 +35769,8 @@ body.map-region-detail-next-to-menu .sidebar-detail-panel
 	top: var(--map-region-detail-top, var(--rj-detail-panel-edge, 16px)) !important;
 	bottom: var(--rj-detail-panel-edge, 16px) !important;
 	left: var(--map-region-detail-left, calc(var(--sidebar-list-width) + var(--rj-detail-panel-gap))) !important;
-	width: min(var(--rj-detail-panel-width, 410px), var(--map-region-detail-max-width, 410px)) !important;
-	max-width: var(--map-region-detail-max-width, 410px) !important;
+	width: min(var(--rj-detail-panel-width, 420px), var(--map-region-detail-max-width, 420px)) !important;
+	max-width: var(--map-region-detail-max-width, 420px) !important;
 	z-index: 2147483050 !important;
 }
 
@@ -35781,7 +35781,7 @@ body.map-region-detail-next-to-menu .sidebar-detail-panel
 	top: var(--rj-detail-panel-edge, 16px) !important;
 	bottom: var(--rj-detail-panel-edge, 16px) !important;
 	left: calc(var(--sidebar-list-width) + var(--rj-detail-panel-gap)) !important;
-	width: var(--rj-detail-panel-width, 410px) !important;
+	width: var(--rj-detail-panel-width, 420px) !important;
 	max-width: calc(100vw - var(--sidebar-list-width) - var(--rj-detail-panel-right-safe)) !important;
 	z-index: 180 !important;
 }
@@ -38017,7 +38017,7 @@ body.realjeju-filters-in-topbar .global-topbar-menu.has-map-filters .map-filter-
 /* PATCH 3.770: keep the top filter bar outside the listing panel, with only an 18px gap from the panel edge. */
 body.realjeju-filters-in-topbar:not(.sidebar-list-collapsed) .global-topbar-menu.has-map-filters
 {
-	left: calc(var(--realjeju-side-nav-width, 0px) + var(--rj-list-panel-gap, 0px) + var(--sidebar-list-width, 410px) + 18px) !important;
+	left: calc(var(--realjeju-side-nav-width, 0px) + var(--rj-list-panel-gap, 0px) + var(--sidebar-list-width, 420px) + 18px) !important;
 	right: calc(var(--map-side-tools-right, 16px) + var(--map-control-box-size, 44px) + 18px) !important;
 	width: auto !important;
 	max-width: none !important;
@@ -38055,7 +38055,7 @@ body.realjeju-filters-in-topbar.map-panels-collapsed .global-topbar-menu.has-map
 
 body.realjeju-filters-in-topbar:not(.sidebar-list-collapsed):not(.map-panels-collapsed) .global-topbar-menu.has-map-filters
 {
-	left: calc(var(--realjeju-side-nav-width, 320px) + var(--rj-list-panel-gap, 0px) + var(--sidebar-list-width, 410px) + 18px) !important;
+	left: calc(var(--realjeju-side-nav-width, 320px) + var(--rj-list-panel-gap, 0px) + var(--sidebar-list-width, 420px) + 18px) !important;
 	right: calc(var(--map-side-tools-right, 16px) + var(--map-control-box-size, 44px) + 18px) !important;
 	width: auto !important;
 	max-width: none !important;
@@ -38423,7 +38423,7 @@ body.direct-detail-list-mode .sidebar-list-panel
 body.realjeju-side-nav-enabled.realjeju-filters-in-topbar.map-detail-panel-active:not(.map-panels-collapsed) .global-topbar-menu.has-map-filters,
 body.direct-detail-list-mode.realjeju-side-nav-enabled.realjeju-filters-in-topbar:not(.map-panels-collapsed) .global-topbar-menu.has-map-filters
 {
-	left: calc(var(--map-filter-visible-panel-right, calc(var(--realjeju-side-nav-width, 170px) + var(--rj-list-panel-gap, 16px) + var(--sidebar-list-width, 410px) + var(--rj-detail-panel-gap, 8px) + var(--rj-detail-panel-width, 410px))) + 18px) !important;
+	left: calc(var(--map-filter-visible-panel-right, calc(var(--realjeju-side-nav-width, 170px) + var(--rj-list-panel-gap, 16px) + var(--sidebar-list-width, 420px) + var(--rj-detail-panel-gap, 8px) + var(--rj-detail-panel-width, 420px))) + 18px) !important;
 	right: calc(var(--map-side-tools-right, 16px) + var(--map-control-box-size, 44px) + 18px) !important;
 	width: auto !important;
 	max-width: none !important;
@@ -38521,7 +38521,7 @@ body.realjeju-filters-in-topbar .global-topbar-menu.has-map-filters.has-right-sc
 body.recent-shared-detail-mode.realjeju-filters-in-topbar:not(.sidebar-list-collapsed) .global-topbar-menu.has-map-filters,
 body.list-shared-detail-mode.realjeju-filters-in-topbar:not(.sidebar-list-collapsed) .global-topbar-menu.has-map-filters
 {
-	left: calc(var(--realjeju-side-nav-width, 0px) + var(--rj-list-panel-gap, 0px) + var(--sidebar-list-width, 410px) + 18px) !important;
+	left: calc(var(--realjeju-side-nav-width, 0px) + var(--rj-list-panel-gap, 0px) + var(--sidebar-list-width, 420px) + 18px) !important;
 	right: calc(var(--map-side-tools-right, 16px) + var(--map-control-box-size, 44px) + 18px) !important;
 	width: auto !important;
 	max-width: none !important;
@@ -38692,9 +38692,9 @@ body > .map-filter-floating-menu.map-region-filter-menu,
 body > .map-filter-floating-menu.all-filter-menu
 {
 	box-sizing: border-box !important;
-	width: 410px !important;
-	min-width: 410px !important;
-	max-width: min(410px, calc(100vw - 48px)) !important;
+	width: 420px !important;
+	min-width: 420px !important;
+	max-width: min(420px, calc(100vw - 48px)) !important;
 	border-radius: 20px !important;
 }
 
@@ -38906,9 +38906,9 @@ body.roadview-split-open > .map-filter-floating-menu
 .global-topbar-menu.has-map-filters .land-type-filter-menu,
 .land-type-filter-menu
 {
-	width: 410px !important;
-	min-width: 410px !important;
-	max-width: min(410px, calc(100vw - 48px)) !important;
+	width: 420px !important;
+	min-width: 420px !important;
+	max-width: min(420px, calc(100vw - 48px)) !important;
 	max-height: min(680px, calc(100vh - 150px));
 	overflow-y: auto;
 	padding-bottom: 24px !important;
@@ -38927,9 +38927,9 @@ body.roadview-split-open > .map-filter-floating-menu
 .global-topbar-menu.has-map-filters .land-use-zone-filter-menu,
 .land-use-zone-filter-menu
 {
-	width: 410px !important;
-	min-width: 410px !important;
-	max-width: min(410px, calc(100vw - 48px)) !important;
+	width: 420px !important;
+	min-width: 420px !important;
+	max-width: min(420px, calc(100vw - 48px)) !important;
 	max-height: min(680px, calc(100vh - 150px));
 	overflow-y: auto;
 	padding-bottom: 24px !important;
@@ -40683,6 +40683,40 @@ body.realjeju-side-nav-enabled:not(.admin-page-open):not(.my-suite-page-open):no
 	line-height: 1;
 }
 
+/* 2026-07-01: inquiry form actions match my-info action buttons and keep all buttons white. */
+.my-suite-panel .my-suite-content.my-suite-inquiries-content .my-suite-inquiry-head .my-suite-inquiry-primary,
+.my-suite-panel .my-suite-content.my-suite-inquiries-content .my-suite-inquiry-head .my-suite-inquiry-secondary,
+.my-suite-panel .my-suite-content.my-suite-inquiries-content .my-suite-inquiry-form .my-suite-inquiry-primary,
+.my-suite-panel .my-suite-content.my-suite-inquiries-content .my-suite-inquiry-form .my-suite-inquiry-secondary,
+.my-suite-panel .my-suite-content.my-suite-inquiries-content .my-suite-inquiry-bottom-actions .my-suite-inquiry-primary,
+.my-suite-panel .my-suite-content.my-suite-inquiries-content .my-suite-inquiry-bottom-actions .my-suite-inquiry-secondary
+{
+	width: auto;
+	min-width: 0;
+	height: 34px;
+	padding: 0 14px;
+	border: 1px solid #dbe3ee;
+	border-radius: 999px !important;
+	background: #ffffff;
+	color: #334155;
+	font-size: 13.5px;
+	font-weight: 700;
+	line-height: 1;
+	box-shadow: none;
+}
+
+.my-suite-panel .my-suite-content.my-suite-inquiries-content .my-suite-inquiry-head .my-suite-inquiry-primary:hover,
+.my-suite-panel .my-suite-content.my-suite-inquiries-content .my-suite-inquiry-head .my-suite-inquiry-secondary:hover,
+.my-suite-panel .my-suite-content.my-suite-inquiries-content .my-suite-inquiry-form .my-suite-inquiry-primary:hover,
+.my-suite-panel .my-suite-content.my-suite-inquiries-content .my-suite-inquiry-form .my-suite-inquiry-secondary:hover,
+.my-suite-panel .my-suite-content.my-suite-inquiries-content .my-suite-inquiry-bottom-actions .my-suite-inquiry-primary:hover,
+.my-suite-panel .my-suite-content.my-suite-inquiries-content .my-suite-inquiry-bottom-actions .my-suite-inquiry-secondary:hover
+{
+	border-color: #d1d5db;
+	background: #f3f4f6;
+	color: #111827;
+}
+
 /* 2026-06-30: match admin page menu buttons to the mypage pill tab style. */
 body.admin-page-open .admin-page-tabs
 {
@@ -41199,4 +41233,264 @@ body.operator-page-open .operator-application-card .admin-status-btn
 		height: 38px !important;
 		padding: 0 12px !important;
 	}
+}
+
+/* 2026-07-01: match listing/detail panel radius to the address/current-location dropdown box. */
+body.realjeju-side-nav-enabled:not(.admin-page-open):not(.broker-home-page-open):not(.property-register-page-open):not(.my-suite-page-open):not(.notice-page-open):not(.auth-page-open):not(.payment-page-open):not(.myinfo-page-open):not(.profile-edit-page-open):not(.broker-office-info-page-open):not(.broker-office-edit-page-open) .sidebar-list-panel,
+body.realjeju-side-nav-enabled:not(.admin-page-open):not(.broker-home-page-open):not(.property-register-page-open):not(.my-suite-page-open):not(.notice-page-open):not(.auth-page-open):not(.payment-page-open):not(.myinfo-page-open):not(.profile-edit-page-open):not(.broker-office-info-page-open):not(.broker-office-edit-page-open) .sidebar-detail-panel
+{
+	border: 0 !important;
+	border-radius: 20px !important;
+	overflow: hidden !important;
+	box-shadow: 0 12px 34px rgba(15, 23, 42, 0.14), 0 3px 10px rgba(15, 23, 42, 0.08) !important;
+}
+
+body.realjeju-side-nav-enabled:not(.admin-page-open):not(.broker-home-page-open):not(.property-register-page-open):not(.my-suite-page-open):not(.notice-page-open):not(.auth-page-open):not(.payment-page-open):not(.myinfo-page-open):not(.profile-edit-page-open):not(.broker-office-info-page-open):not(.broker-office-edit-page-open) .sidebar-detail-panel .detail-panel-inner
+{
+	border-radius: inherit;
+	overflow: hidden;
+}
+
+/* 2026-07-01: align listing/detail panel title text size. */
+body.realjeju-side-nav-enabled:not(.admin-page-open):not(.broker-home-page-open):not(.property-register-page-open):not(.my-suite-page-open):not(.notice-page-open):not(.auth-page-open):not(.payment-page-open):not(.myinfo-page-open):not(.profile-edit-page-open):not(.broker-office-info-page-open):not(.broker-office-edit-page-open) .sidebar-list-header,
+body.realjeju-side-nav-enabled:not(.admin-page-open):not(.broker-home-page-open):not(.property-register-page-open):not(.my-suite-page-open):not(.notice-page-open):not(.auth-page-open):not(.payment-page-open):not(.myinfo-page-open):not(.profile-edit-page-open):not(.broker-office-info-page-open):not(.broker-office-edit-page-open) .sidebar-detail-panel .detail-topbar-id
+{
+	font-size: 18px !important;
+}
+
+/* 2026-07-01: keep panel topbar icons visually aligned with the 18px title. */
+body.realjeju-side-nav-enabled:not(.admin-page-open):not(.broker-home-page-open):not(.property-register-page-open):not(.my-suite-page-open):not(.notice-page-open):not(.auth-page-open):not(.payment-page-open):not(.myinfo-page-open):not(.profile-edit-page-open):not(.broker-office-info-page-open):not(.broker-office-edit-page-open) #sidebarDetailPanel .detail-top-actions
+{
+	flex: 0 0 auto !important;
+	width: auto !important;
+	min-width: 0 !important;
+	gap: 4px !important;
+}
+
+body.realjeju-side-nav-enabled:not(.admin-page-open):not(.broker-home-page-open):not(.property-register-page-open):not(.my-suite-page-open):not(.notice-page-open):not(.auth-page-open):not(.payment-page-open):not(.myinfo-page-open):not(.profile-edit-page-open):not(.broker-office-info-page-open):not(.broker-office-edit-page-open) #sidebarDetailPanel .detail-icon-btn,
+body.realjeju-side-nav-enabled:not(.admin-page-open):not(.broker-home-page-open):not(.property-register-page-open):not(.my-suite-page-open):not(.notice-page-open):not(.auth-page-open):not(.payment-page-open):not(.myinfo-page-open):not(.profile-edit-page-open):not(.broker-office-info-page-open):not(.broker-office-edit-page-open) #sidebarDetailPanel .detail-close-btn
+{
+	width: 38px !important;
+	min-width: 38px !important;
+	height: 38px !important;
+	flex: 0 0 38px !important;
+	padding: 0 !important;
+	font-size: 26px !important;
+}
+
+body.realjeju-side-nav-enabled:not(.admin-page-open):not(.broker-home-page-open):not(.property-register-page-open):not(.my-suite-page-open):not(.notice-page-open):not(.auth-page-open):not(.payment-page-open):not(.myinfo-page-open):not(.profile-edit-page-open):not(.broker-office-info-page-open):not(.broker-office-edit-page-open) #sidebarDetailPanel .detail-icon-btn i,
+body.realjeju-side-nav-enabled:not(.admin-page-open):not(.broker-home-page-open):not(.property-register-page-open):not(.my-suite-page-open):not(.notice-page-open):not(.auth-page-open):not(.payment-page-open):not(.myinfo-page-open):not(.profile-edit-page-open):not(.broker-office-info-page-open):not(.broker-office-edit-page-open) #sidebarDetailPanel .detail-close-btn i
+{
+	width: 26px !important;
+	height: 26px !important;
+	font-size: 26px !important;
+	line-height: 1 !important;
+}
+
+body.realjeju-side-nav-enabled:not(.admin-page-open):not(.broker-home-page-open):not(.property-register-page-open):not(.my-suite-page-open):not(.notice-page-open):not(.auth-page-open):not(.payment-page-open):not(.myinfo-page-open):not(.profile-edit-page-open):not(.broker-office-info-page-open):not(.broker-office-edit-page-open) .sidebar-list-close-btn,
+body.realjeju-side-nav-enabled:not(.admin-page-open):not(.broker-home-page-open):not(.property-register-page-open):not(.my-suite-page-open):not(.notice-page-open):not(.auth-page-open):not(.payment-page-open):not(.myinfo-page-open):not(.profile-edit-page-open):not(.broker-office-info-page-open):not(.broker-office-edit-page-open) .sidebar-list-share-btn
+{
+	min-width: 38px !important;
+	width: 38px !important;
+	height: 38px !important;
+	padding: 0 !important;
+	font-size: 26px !important;
+}
+
+body.realjeju-side-nav-enabled:not(.admin-page-open):not(.broker-home-page-open):not(.property-register-page-open):not(.my-suite-page-open):not(.notice-page-open):not(.auth-page-open):not(.payment-page-open):not(.myinfo-page-open):not(.profile-edit-page-open):not(.broker-office-info-page-open):not(.broker-office-edit-page-open) .sidebar-list-close-btn i,
+body.realjeju-side-nav-enabled:not(.admin-page-open):not(.broker-home-page-open):not(.property-register-page-open):not(.my-suite-page-open):not(.notice-page-open):not(.auth-page-open):not(.payment-page-open):not(.myinfo-page-open):not(.profile-edit-page-open):not(.broker-office-info-page-open):not(.broker-office-edit-page-open) .sidebar-list-share-btn i
+{
+	width: 26px !important;
+	height: 26px !important;
+	font-size: 26px !important;
+	line-height: 1 !important;
+}
+
+body.realjeju-side-nav-enabled:not(.admin-page-open):not(.broker-home-page-open):not(.property-register-page-open):not(.my-suite-page-open):not(.notice-page-open):not(.auth-page-open):not(.payment-page-open):not(.myinfo-page-open):not(.profile-edit-page-open):not(.broker-office-info-page-open):not(.broker-office-edit-page-open) #sidebarDetailPanel #detailShareBtn i,
+body.realjeju-side-nav-enabled:not(.admin-page-open):not(.broker-home-page-open):not(.property-register-page-open):not(.my-suite-page-open):not(.notice-page-open):not(.auth-page-open):not(.payment-page-open):not(.myinfo-page-open):not(.profile-edit-page-open):not(.broker-office-info-page-open):not(.broker-office-edit-page-open) .sidebar-list-share-btn i
+{
+	width: 22px !important;
+	height: 22px !important;
+	font-size: 22px !important;
+}
+
+body.realjeju-side-nav-enabled:not(.admin-page-open):not(.broker-home-page-open):not(.property-register-page-open):not(.my-suite-page-open):not(.notice-page-open):not(.auth-page-open):not(.payment-page-open):not(.myinfo-page-open):not(.profile-edit-page-open):not(.broker-office-info-page-open):not(.broker-office-edit-page-open) #sidebarDetailPanel #detailShareBtn
+{
+	position: relative !important;
+}
+
+body.realjeju-side-nav-enabled:not(.admin-page-open):not(.broker-home-page-open):not(.property-register-page-open):not(.my-suite-page-open):not(.notice-page-open):not(.auth-page-open):not(.payment-page-open):not(.myinfo-page-open):not(.profile-edit-page-open):not(.broker-office-info-page-open):not(.broker-office-edit-page-open) #sidebarDetailPanel #detailShareBtn i
+{
+	display: none !important;
+}
+
+body.realjeju-side-nav-enabled:not(.admin-page-open):not(.broker-home-page-open):not(.property-register-page-open):not(.my-suite-page-open):not(.notice-page-open):not(.auth-page-open):not(.payment-page-open):not(.myinfo-page-open):not(.profile-edit-page-open):not(.broker-office-info-page-open):not(.broker-office-edit-page-open) #sidebarDetailPanel #detailShareBtn::before
+{
+	content: "" !important;
+	position: absolute !important;
+	left: 50% !important;
+	top: 20px !important;
+	display: block !important;
+	width: 18px !important;
+	height: 10px !important;
+	border: 2px solid currentColor !important;
+	border-top: 0 !important;
+	border-radius: 0 0 5px 5px !important;
+	background: transparent !important;
+	transform: translateX(-50%) !important;
+}
+
+body.realjeju-side-nav-enabled:not(.admin-page-open):not(.broker-home-page-open):not(.property-register-page-open):not(.my-suite-page-open):not(.notice-page-open):not(.auth-page-open):not(.payment-page-open):not(.myinfo-page-open):not(.profile-edit-page-open):not(.broker-office-info-page-open):not(.broker-office-edit-page-open) #sidebarDetailPanel #detailShareBtn::after
+{
+	content: "" !important;
+	position: absolute !important;
+	left: 50% !important;
+	top: 7px !important;
+	display: block !important;
+	width: 18px !important;
+	height: 20px !important;
+	background:
+		linear-gradient(currentColor, currentColor) center 4px / 2px 16px no-repeat,
+		linear-gradient(45deg, transparent calc(50% - 1px), currentColor 0 calc(50% + 1px), transparent 0) left 1px top 1px / 9px 9px no-repeat,
+		linear-gradient(-45deg, transparent calc(50% - 1px), currentColor 0 calc(50% + 1px), transparent 0) right 1px top 1px / 9px 9px no-repeat !important;
+	transform: translateX(-50%) !important;
+}
+
+body.realjeju-side-nav-enabled:not(.admin-page-open):not(.broker-home-page-open):not(.property-register-page-open):not(.my-suite-page-open):not(.notice-page-open):not(.auth-page-open):not(.payment-page-open):not(.myinfo-page-open):not(.profile-edit-page-open):not(.broker-office-info-page-open):not(.broker-office-edit-page-open) #sidebarDetailPanel #detailShareBtn::before
+{
+	content: "" !important;
+	position: absolute !important;
+	left: 50% !important;
+	top: 50% !important;
+	display: block !important;
+	width: 24px !important;
+	height: 24px !important;
+	border: 0 !important;
+	border-radius: 0 !important;
+	background: currentColor !important;
+	transform: translate(-50%, -50%) !important;
+	-webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='1.8'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M21%2015v4a2%202%200%200%201-2%202H5a2%202%200%200%201-2-2v-4'/%3E%3Cpath%20d='M12%203v13'/%3E%3Cpath%20d='m7%208%205-5%205%205'/%3E%3C/svg%3E") center / contain no-repeat !important;
+	mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='1.8'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M21%2015v4a2%202%200%200%201-2%202H5a2%202%200%200%201-2-2v-4'/%3E%3Cpath%20d='M12%203v13'/%3E%3Cpath%20d='m7%208%205-5%205%205'/%3E%3C/svg%3E") center / contain no-repeat !important;
+}
+
+body.realjeju-side-nav-enabled:not(.admin-page-open):not(.broker-home-page-open):not(.property-register-page-open):not(.my-suite-page-open):not(.notice-page-open):not(.auth-page-open):not(.payment-page-open):not(.myinfo-page-open):not(.profile-edit-page-open):not(.broker-office-info-page-open):not(.broker-office-edit-page-open) #sidebarDetailPanel #detailShareBtn::after
+{
+	content: none !important;
+	display: none !important;
+	background: none !important;
+}
+
+body.realjeju-side-nav-enabled:not(.admin-page-open):not(.broker-home-page-open):not(.property-register-page-open):not(.my-suite-page-open):not(.notice-page-open):not(.auth-page-open):not(.payment-page-open):not(.myinfo-page-open):not(.profile-edit-page-open):not(.broker-office-info-page-open):not(.broker-office-edit-page-open) #sidebarDetailPanel #detailCloseBtn,
+body.realjeju-side-nav-enabled:not(.admin-page-open):not(.broker-home-page-open):not(.property-register-page-open):not(.my-suite-page-open):not(.notice-page-open):not(.auth-page-open):not(.payment-page-open):not(.myinfo-page-open):not(.profile-edit-page-open):not(.broker-office-info-page-open):not(.broker-office-edit-page-open) .sidebar-list-close-btn
+{
+	position: absolute !important;
+}
+
+body.realjeju-side-nav-enabled:not(.admin-page-open):not(.broker-home-page-open):not(.property-register-page-open):not(.my-suite-page-open):not(.notice-page-open):not(.auth-page-open):not(.payment-page-open):not(.myinfo-page-open):not(.profile-edit-page-open):not(.broker-office-info-page-open):not(.broker-office-edit-page-open) #sidebarDetailPanel #detailCloseBtn
+{
+	position: relative !important;
+}
+
+body.realjeju-side-nav-enabled:not(.admin-page-open):not(.broker-home-page-open):not(.property-register-page-open):not(.my-suite-page-open):not(.notice-page-open):not(.auth-page-open):not(.payment-page-open):not(.myinfo-page-open):not(.profile-edit-page-open):not(.broker-office-info-page-open):not(.broker-office-edit-page-open) #sidebarDetailPanel #detailCloseBtn i,
+body.realjeju-side-nav-enabled:not(.admin-page-open):not(.broker-home-page-open):not(.property-register-page-open):not(.my-suite-page-open):not(.notice-page-open):not(.auth-page-open):not(.payment-page-open):not(.myinfo-page-open):not(.profile-edit-page-open):not(.broker-office-info-page-open):not(.broker-office-edit-page-open) .sidebar-list-close-btn i
+{
+	display: none !important;
+}
+
+body.realjeju-side-nav-enabled:not(.admin-page-open):not(.broker-home-page-open):not(.property-register-page-open):not(.my-suite-page-open):not(.notice-page-open):not(.auth-page-open):not(.payment-page-open):not(.myinfo-page-open):not(.profile-edit-page-open):not(.broker-office-info-page-open):not(.broker-office-edit-page-open) #sidebarDetailPanel #detailCloseBtn::before,
+body.realjeju-side-nav-enabled:not(.admin-page-open):not(.broker-home-page-open):not(.property-register-page-open):not(.my-suite-page-open):not(.notice-page-open):not(.auth-page-open):not(.payment-page-open):not(.myinfo-page-open):not(.profile-edit-page-open):not(.broker-office-info-page-open):not(.broker-office-edit-page-open) #sidebarDetailPanel #detailCloseBtn::after,
+body.realjeju-side-nav-enabled:not(.admin-page-open):not(.broker-home-page-open):not(.property-register-page-open):not(.my-suite-page-open):not(.notice-page-open):not(.auth-page-open):not(.payment-page-open):not(.myinfo-page-open):not(.profile-edit-page-open):not(.broker-office-info-page-open):not(.broker-office-edit-page-open) .sidebar-list-close-btn::before,
+body.realjeju-side-nav-enabled:not(.admin-page-open):not(.broker-home-page-open):not(.property-register-page-open):not(.my-suite-page-open):not(.notice-page-open):not(.auth-page-open):not(.payment-page-open):not(.myinfo-page-open):not(.profile-edit-page-open):not(.broker-office-info-page-open):not(.broker-office-edit-page-open) .sidebar-list-close-btn::after
+{
+	content: "" !important;
+	position: absolute !important;
+	left: 50% !important;
+	top: 50% !important;
+	display: block !important;
+	width: 24px !important;
+	height: 2px !important;
+	border-radius: 999px !important;
+	background: currentColor !important;
+	transform-origin: center !important;
+}
+
+body.realjeju-side-nav-enabled:not(.admin-page-open):not(.broker-home-page-open):not(.property-register-page-open):not(.my-suite-page-open):not(.notice-page-open):not(.auth-page-open):not(.payment-page-open):not(.myinfo-page-open):not(.profile-edit-page-open):not(.broker-office-info-page-open):not(.broker-office-edit-page-open) #sidebarDetailPanel #detailCloseBtn::before,
+body.realjeju-side-nav-enabled:not(.admin-page-open):not(.broker-home-page-open):not(.property-register-page-open):not(.my-suite-page-open):not(.notice-page-open):not(.auth-page-open):not(.payment-page-open):not(.myinfo-page-open):not(.profile-edit-page-open):not(.broker-office-info-page-open):not(.broker-office-edit-page-open) .sidebar-list-close-btn::before
+{
+	transform: translate(-50%, -50%) rotate(45deg) !important;
+}
+
+body.realjeju-side-nav-enabled:not(.admin-page-open):not(.broker-home-page-open):not(.property-register-page-open):not(.my-suite-page-open):not(.notice-page-open):not(.auth-page-open):not(.payment-page-open):not(.myinfo-page-open):not(.profile-edit-page-open):not(.broker-office-info-page-open):not(.broker-office-edit-page-open) #sidebarDetailPanel #detailCloseBtn::after,
+body.realjeju-side-nav-enabled:not(.admin-page-open):not(.broker-home-page-open):not(.property-register-page-open):not(.my-suite-page-open):not(.notice-page-open):not(.auth-page-open):not(.payment-page-open):not(.myinfo-page-open):not(.profile-edit-page-open):not(.broker-office-info-page-open):not(.broker-office-edit-page-open) .sidebar-list-close-btn::after
+{
+	transform: translate(-50%, -50%) rotate(-45deg) !important;
+}
+
+/* 2026-07-01: match education facility panels to listing/detail panel shape. */
+.education-facility-detail-panel,
+.education-facility-filter-panel:not(.convenience-facility-filter-panel):not(.development-facility-filter-panel):not(.broker-office-filter-panel)
+{
+	border: 0 !important;
+	border-radius: 20px !important;
+	overflow: hidden !important;
+	box-shadow: 0 12px 34px rgba(15, 23, 42, 0.14), 0 3px 10px rgba(15, 23, 42, 0.08) !important;
+}
+
+.education-facility-detail-action
+{
+	border-radius: 999px !important;
+	padding: 0 14px !important;
+}
+
+/* 2026-07-01: side-floating information panels use 430px. */
+.education-facility-detail-panel
+{
+	width: min(430px, calc(100vw - var(--realjeju-side-nav-width, 0px) - var(--rj-list-panel-gap, 16px) - var(--sidebar-list-width, 430px) - var(--rj-detail-panel-gap, 8px) - 24px)) !important;
+}
+
+body.sidebar-list-collapsed .education-facility-detail-panel
+{
+	width: min(430px, calc(100vw - var(--realjeju-side-nav-width, 0px) - var(--rj-list-panel-gap, 16px) - 24px)) !important;
+}
+
+body.map-region-detail-next-to-menu .sidebar-detail-panel
+{
+	width: var(--rj-detail-panel-width, 430px) !important;
+	max-width: calc(100vw - var(--sidebar-list-width, 430px) - var(--rj-detail-panel-right-safe, 56px)) !important;
+}
+
+/* 2026-07-01: keep top filterbar dropdown boxes at 410px while side panels use 430px. */
+.global-topbar-menu.has-map-filters .map-region-filter-menu,
+.global-topbar-menu.has-map-filters .all-filter-menu,
+.global-topbar-menu.has-map-filters .extra-filter-menu,
+.global-topbar-menu.has-map-filters .type-filter-menu,
+.global-topbar-menu.has-map-filters .deal-filter-menu,
+.global-topbar-menu.has-map-filters .deal-method-filter-menu,
+.global-topbar-menu.has-map-filters .price-filter-menu,
+.global-topbar-menu.has-map-filters .area-filter-menu,
+.global-topbar-menu.has-map-filters .room-bath-filter-menu,
+.global-topbar-menu.has-map-filters .floor-direction-filter-menu,
+.global-topbar-menu.has-map-filters .approval-year-filter-menu,
+.global-topbar-menu.has-map-filters .extra-condition-filter-menu,
+.global-topbar-menu.has-map-filters .land-type-filter-menu,
+.global-topbar-menu.has-map-filters .land-use-zone-filter-menu,
+body > .map-filter-floating-menu.map-region-filter-menu,
+body > .map-filter-floating-menu.all-filter-menu,
+body > .map-filter-floating-menu.extra-filter-menu,
+body > .map-filter-floating-menu.type-filter-menu,
+body > .map-filter-floating-menu.deal-filter-menu,
+body > .map-filter-floating-menu.deal-method-filter-menu,
+body > .map-filter-floating-menu.price-filter-menu,
+body > .map-filter-floating-menu.area-filter-menu,
+body > .map-filter-floating-menu.room-bath-filter-menu,
+body > .map-filter-floating-menu.floor-direction-filter-menu,
+body > .map-filter-floating-menu.approval-year-filter-menu,
+body > .map-filter-floating-menu.extra-condition-filter-menu,
+body > .map-filter-floating-menu.land-type-filter-menu,
+body > .map-filter-floating-menu.land-use-zone-filter-menu
+{
+	box-sizing: border-box !important;
+	width: 410px !important;
+	min-width: 410px !important;
+	max-width: min(410px, calc(100vw - 48px)) !important;
 }
