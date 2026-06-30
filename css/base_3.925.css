@@ -38873,58 +38873,6 @@ body > .map-filter-floating-menu.all-filter-menu .all-filter-extra-footer .extra
 	text-shadow: none !important;
 }
 
-/* 2026-07-01: 상단 필터바 버튼 글자는 상태와 상관없이 블랙 계열로 고정한다. */
-body.realjeju-filters-in-topbar .global-topbar-menu.has-map-filters .map-region-filter-trigger,
-body.realjeju-filters-in-topbar .global-topbar-menu.has-map-filters .map-region-filter-trigger span,
-body.realjeju-filters-in-topbar .global-topbar-menu.has-map-filters .all-filter-trigger,
-body.realjeju-filters-in-topbar .global-topbar-menu.has-map-filters .all-filter-trigger span,
-body.realjeju-filters-in-topbar .global-topbar-menu.has-map-filters .extra-filter-trigger,
-body.realjeju-filters-in-topbar .global-topbar-menu.has-map-filters .extra-filter-trigger span,
-body.realjeju-filters-in-topbar .global-topbar-menu.has-map-filters .type-filter-trigger,
-body.realjeju-filters-in-topbar .global-topbar-menu.has-map-filters .type-filter-trigger span,
-body.realjeju-filters-in-topbar .global-topbar-menu.has-map-filters .type-filter-trigger #typeFilterLabel,
-body.realjeju-filters-in-topbar .global-topbar-menu.has-map-filters .deal-filter-trigger,
-body.realjeju-filters-in-topbar .global-topbar-menu.has-map-filters .deal-filter-trigger span,
-body.realjeju-filters-in-topbar .global-topbar-menu.has-map-filters .deal-filter-trigger #dealFilterLabel,
-body.realjeju-filters-in-topbar .global-topbar-menu.has-map-filters .deal-method-filter-trigger,
-body.realjeju-filters-in-topbar .global-topbar-menu.has-map-filters .deal-method-filter-trigger span,
-body.realjeju-filters-in-topbar .global-topbar-menu.has-map-filters .price-filter-trigger,
-body.realjeju-filters-in-topbar .global-topbar-menu.has-map-filters .price-filter-trigger span,
-body.realjeju-filters-in-topbar .global-topbar-menu.has-map-filters .area-filter-trigger,
-body.realjeju-filters-in-topbar .global-topbar-menu.has-map-filters .area-filter-trigger span,
-body.realjeju-filters-in-topbar .global-topbar-menu.has-map-filters .room-bath-filter-trigger,
-body.realjeju-filters-in-topbar .global-topbar-menu.has-map-filters .room-bath-filter-trigger span,
-body.realjeju-filters-in-topbar .global-topbar-menu.has-map-filters .floor-direction-filter-trigger,
-body.realjeju-filters-in-topbar .global-topbar-menu.has-map-filters .floor-direction-filter-trigger span,
-body.realjeju-filters-in-topbar .global-topbar-menu.has-map-filters .approval-year-filter-trigger,
-body.realjeju-filters-in-topbar .global-topbar-menu.has-map-filters .approval-year-filter-trigger span,
-body.realjeju-filters-in-topbar .global-topbar-menu.has-map-filters .extra-condition-filter-trigger,
-body.realjeju-filters-in-topbar .global-topbar-menu.has-map-filters .extra-condition-filter-trigger span,
-body.realjeju-filters-in-topbar .global-topbar-menu.has-map-filters .location-analysis-trigger,
-body.realjeju-filters-in-topbar .global-topbar-menu.has-map-filters .location-analysis-trigger span,
-body.realjeju-filters-in-topbar .global-topbar-menu.has-map-filters .land-type-filter-trigger,
-body.realjeju-filters-in-topbar .global-topbar-menu.has-map-filters .land-type-filter-trigger span
-{
-	color: #111827 !important;
-}
-
-body.realjeju-filters-in-topbar .global-topbar-menu.has-map-filters .extra-filter-dropdown.has-active:not(.open) .extra-filter-trigger,
-body.realjeju-filters-in-topbar .global-topbar-menu.has-map-filters .type-filter-dropdown.has-active:not(.open) .type-filter-trigger,
-body.realjeju-filters-in-topbar .global-topbar-menu.has-map-filters .deal-filter-dropdown.has-active:not(.open) .deal-filter-trigger,
-body.realjeju-filters-in-topbar .global-topbar-menu.has-map-filters .deal-method-filter-dropdown.has-active:not(.open) .deal-method-filter-trigger,
-body.realjeju-filters-in-topbar .global-topbar-menu.has-map-filters .price-filter-dropdown.has-active:not(.open) .price-filter-trigger,
-body.realjeju-filters-in-topbar .global-topbar-menu.has-map-filters .area-filter-dropdown.has-active:not(.open) .area-filter-trigger,
-body.realjeju-filters-in-topbar .global-topbar-menu.has-map-filters .room-bath-filter-dropdown.has-active:not(.open) .room-bath-filter-trigger,
-body.realjeju-filters-in-topbar .global-topbar-menu.has-map-filters .floor-direction-filter-dropdown.has-active:not(.open) .floor-direction-filter-trigger,
-body.realjeju-filters-in-topbar .global-topbar-menu.has-map-filters .approval-year-filter-dropdown.has-active:not(.open) .approval-year-filter-trigger,
-body.realjeju-filters-in-topbar .global-topbar-menu.has-map-filters .extra-condition-filter-dropdown.has-active:not(.open) .extra-condition-filter-trigger,
-body.realjeju-filters-in-topbar .global-topbar-menu.has-map-filters .land-type-filter-dropdown.has-active:not(.open) .land-type-filter-trigger
-{
-	background: #f1f5f9 !important;
-	border-color: #d8e2ef !important;
-	color: #111827 !important;
-}
-
 /* PATCH 3.862: hide only filter controls over roadview, keep the top address search visible. */
 body.roadview-detail-left-open #topbarMenu.global-topbar-menu.has-map-filters,
 body.roadview-split-open #topbarMenu.global-topbar-menu.has-map-filters,
