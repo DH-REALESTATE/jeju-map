@@ -27490,8 +27490,10 @@ startRealjejuApp();
 	function isOperatorProfileValue(profile)
 	{
 		const data = profile || {};
-		const role = String(data.role || data.app_role || data.user_role || data.role_request || "").trim().toLowerCase();
-		return ["operator", "operations", "운영자"].includes(role) || data.is_operator === true || data.operator === true;
+		const roles = [data.role, data.app_role, data.user_role, data.role_request]
+			.map((value) => String(value || "").trim().toLowerCase())
+			.filter(Boolean);
+		return roles.some((role) => ["operator", "operations", "운영자"].includes(role)) || data.is_operator === true || data.operator === true;
 	}
 
 	function isAdminUser(user, profile = window.realjejuCurrentProfile)
@@ -28026,7 +28028,16 @@ function applyLoggedInAccountUI(user, profile, options = {})
 		if (phoneInput) phoneInput.value = profile && profile.phone ? formatRealjejuPhoneInputValue(profile.phone) : "";
 		setValueById("profileEditPageEmailInput", (user && user.email) || (profile && profile.email) || "");
 		const roleSelect = document.getElementById("profileEditPageRoleSelect");
-		if (roleSelect) roleSelect.value = profile && profile.role_request ? profile.role_request : "user";
+		if (roleSelect) {
+			const operatorOption = roleSelect.querySelector('option[value="operator"]');
+			const currentIsOperator = isOperatorUser(user, profile || null);
+			if (currentIsOperator && !operatorOption) {
+				roleSelect.appendChild(new Option("운영자", "operator"));
+			} else if (!currentIsOperator && operatorOption) {
+				operatorOption.remove();
+			}
+			roleSelect.value = currentIsOperator ? "operator" : (profile && profile.role_request ? profile.role_request : "user");
+		}
 		const privacyCheck = document.getElementById("profileEditPagePrivacyCheck");
 		if (privacyCheck) privacyCheck.checked = false;
 		authProfilePhotoFile = null;
@@ -30108,6 +30119,9 @@ function applyLoggedInAccountUI(user, profile, options = {})
 				const user = userData && userData.user ? userData.user : null;
 				if (!user || !user.id) return openAuthErrorModal("로그인 정보를 확인하지 못했습니다. 다시 로그인해 주세요.", "내 정보 수정", nameInput);
 				if (!isRealjejuActiveSessionUser(user)) return openAuthErrorModal("로그인 계정이 변경되었습니다. 다시 시도해 주세요.", "내 정보 수정", nameInput);
+				const currentProfile = window.realjejuCurrentProfile || {};
+				const currentIsOperator = isOperatorUser(user, currentProfile);
+				const safeRole = currentIsOperator ? "operator" : (["user", "agent", "agent_sub", "agent_staff", "corporation"].includes(role) ? role : "user");
 				const now = new Date().toISOString();
 				const uploadedProfileImage = await uploadAuthProfilePhotoIfNeeded(client, user.id);
 				if (!isRealjejuActiveSessionUser(user)) return openAuthErrorModal("로그인 계정이 변경되었습니다. 다시 시도해 주세요.", "내 정보 수정", nameInput);
@@ -30116,7 +30130,7 @@ function applyLoggedInAccountUI(user, profile, options = {})
 					email: user.email || "",
 					name: name,
 					phone: phone,
-					role_request: role,
+					role_request: safeRole,
 					profile_completed: true,
 					privacy_agreed_at: now,
 					updated_at: now
@@ -32916,8 +32930,10 @@ let adminListingPage = 1;
 		function getAdminUserRoleLabel(row)
 		{
 			if (isAdminProfileRow(row)) return "관리자";
-			const roleValue = String(row && (row.role_request || row.role || row.user_role || row.app_role || "").toString().trim().toLowerCase());
-			if (roleValue === "operator" || roleValue === "operations" || roleValue === "운영자" || row?.is_operator === true || row?.operator === true) return "운영자";
+			const roleValues = [row?.role_request, row?.role, row?.user_role, row?.app_role]
+				.map((value) => String(value || "").trim().toLowerCase())
+				.filter(Boolean);
+			if (roleValues.some((roleValue) => roleValue === "operator" || roleValue === "operations" || roleValue === "운영자") || row?.is_operator === true || row?.operator === true) return "운영자";
 			return isAdminUserApprovedBroker(row) ? getRoleLabel(row.role_request || row.role || "user") : "일반회원";
 		}
 
