@@ -15299,10 +15299,25 @@ function getBrokerOfficeListingCount(office)
 	return Math.max(0, Number(stats && stats.total) || 0);
 }
 
+function isUsableBrokerOfficeProfileImageUrl(url)
+{
+	const text = String(url || "").trim();
+	if (!text) return false;
+	const lower = text.toLowerCase();
+	if (
+		lower.includes("placeholder")
+		|| lower.includes("default-avatar")
+		|| lower.includes("default_profile")
+		|| lower.includes("default-profile")
+	) return false;
+	if (lower.startsWith("data:image/svg+xml") && (lower.includes("e5e7eb") || lower.includes("%23e5e7eb")) && (lower.includes("9ca3af") || lower.includes("%239ca3af"))) return false;
+	return true;
+}
+
 function getBrokerOfficeListingProfileImage(office)
 {
 	const directImage = String(office && office.profileImage || "").trim();
-	if (directImage) return toRemotePath(directImage);
+	if (isUsableBrokerOfficeProfileImageUrl(directImage)) return toRemotePath(directImage);
 	const sourceItems = Array.isArray(state.all) && state.all.length
 		? state.all
 		: (Array.isArray(state.filtered) ? state.filtered : []);
@@ -15319,7 +15334,7 @@ function getBrokerOfficeListingProfileImage(office)
 			|| registrant.agentImage
 			|| ""
 		).trim();
-		if (image) return toRemotePath(image);
+		if (isUsableBrokerOfficeProfileImageUrl(image)) return toRemotePath(image);
 	}
 	return "";
 }
@@ -15345,6 +15360,21 @@ function buildBrokerOfficeMarkerBadgeHtml(offices)
 		+ '</span><span class="broker-office-map-marker-count">매물 '
 		+ count.toLocaleString("ko-KR")
 		+ '</span></span>';
+}
+
+function attachBrokerOfficeMarkerImageFallback(root)
+{
+	if (!root || typeof root.querySelectorAll !== "function") return;
+	root.querySelectorAll(".broker-office-map-marker-photo").forEach((img) => {
+		if (img.__realjejuBrokerImageFallbackBound) return;
+		img.__realjejuBrokerImageFallbackBound = true;
+		img.addEventListener("error", () => {
+			const icon = img.closest(".broker-office-map-marker-icon");
+			const marker = img.closest(".broker-office-map-marker");
+			if (marker) marker.classList.remove("has-profile-image");
+			if (icon) icon.innerHTML = '<i class="fa-solid fa-user-tie" aria-hidden="true"></i>';
+		}, { once: true });
+	});
 }
 
 const BROKER_OFFICE_ROW_BUTTON_WIDTH = 52;
@@ -15378,6 +15408,7 @@ function createBrokerOfficeRowOverlay(office, offices)
 			+ '</strong></span><small>'
 			+ escapeHtml(item.address || office.address || "")
 			+ '</small></span>';
+		attachBrokerOfficeMarkerImageFallback(button);
 		button.setAttribute("aria-label", String(item.officeName || "") + " " + String(item.address || office.address || ""));
 		button.addEventListener("click", async (event) => {
 			event.preventDefault();
@@ -15435,6 +15466,7 @@ function createBrokerOfficeOverlay(office)
 		+ '</span><small>'
 		+ escapeHtml(office.address)
 		+ '</small></span>';
+	attachBrokerOfficeMarkerImageFallback(el);
 	el.setAttribute("aria-label", offices.map(item => item.officeName).join(", ") + " " + office.address);
 	el.addEventListener("click", async (event) => {
 		event.preventDefault();
