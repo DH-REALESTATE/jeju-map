@@ -17801,7 +17801,7 @@ let mySuiteFavoriteDealFilter = createDefaultDealFilterSet();
 let mySuiteFavoriteAreaRange = { min: 0, max: AREA_FILTER_MAX_M2, exclusive: true, land: false, unit: "m2" };
 let mySuiteFavoriteLandTypeFilter = new Set();
 let mySuiteFavoriteLandUseZoneFilter = new Set();
-const MY_SUITE_FAVORITES_PER_PAGE = 30;
+const MY_SUITE_FAVORITES_PER_PAGE = 50;
 let mySuiteFavoritePage = 1;
 let realjejuFavoriteUserId = "";
 let realjejuFavoriteListingIds = new Set();
@@ -32359,9 +32359,9 @@ let adminUserRowsCache = null;
 let adminUserLoadPromise = null;
 let adminUserAgencyStatusByUserId = new Map();
 let adminUserAgencyStatusByEmail = new Map();
-const BROKER_LISTINGS_PER_PAGE = 30;
+const BROKER_LISTINGS_PER_PAGE = 50;
 let brokerListingPage = 1;
-const ADMIN_LISTINGS_PER_PAGE = 30;
+const ADMIN_LISTINGS_PER_PAGE = 50;
 let adminListingPage = 1;
 
 	function getNoticeSchemaHelp()
