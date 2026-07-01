@@ -22,7 +22,7 @@
 				transition: none;
 			}
 		</style>
-				<link rel="stylesheet" href="css/base_3.927.css">
+				<link rel="stylesheet" href="css/base_3.928.css">
 
 </head>
 	<body class="sidebar-list-collapsed realjeju-side-nav-enabled">
@@ -65,7 +65,7 @@
 					<div class="global-topbar-right">
 						<!-- PATCH 3.918: 상단 배너 버전 텍스트를 현재 배포 버전과 일치시킵니다. -->
 						<button type="button" class="global-auth-trigger version-only" id="detailAuthTrigger" data-auth-state="logged-out">
-							<span class="topbar-version-text">Ver 3.927</span>
+							<span class="topbar-version-text">Ver 3.928</span>
 						</button>
 					<div class="global-account-dropdown" id="globalAccountDropdown" aria-hidden="true">
 						<button type="button" class="global-account-menu-item" data-account-action="inquiries">1:1 문의내역</button>
@@ -777,6 +777,23 @@
 				<div class="property-register-top-actions">
 					<button type="button" class="property-register-top-btn" id="loadExistingPropertyBtn">기존 매물 불러오기</button>
 					<button type="button" class="property-register-top-btn" id="quickPropertyRegisterBtn">간편 매물 등록</button>
+				</div>
+			</div>
+			<div class="property-register-card property-brokerage-card">
+				<div class="property-form-row">
+					<label class="property-form-label">중개유형</label>
+					<div class="property-form-control">
+						<div class="property-deal-checks property-brokerage-checks">
+							<label class="property-deal-option property-brokerage-option" for="propertyExclusiveListingCheck">
+								<input type="checkbox" id="propertyExclusiveListingCheck" />
+								전속매물
+							</label>
+							<label class="property-deal-option property-brokerage-option" for="propertyCoBrokerCheck">
+								<input type="checkbox" id="propertyCoBrokerCheck" />
+								공동중개 가능
+							</label>
+						</div>
+					</div>
 				</div>
 			</div>
 			<div class="property-register-card">
@@ -1789,8 +1806,8 @@
 		<div class="sub-topbar">
 			<div class="sub-topbar-inner">
 					<!-- PATCH 3.918: 하단 버전 링크도 현재 배포 파일명으로 갱신합니다. -->
-					<a class="sub-version-fixed" href="#" data-version-download="realjeju_3.927.html" title="realjeju_3.927.html 다운로드">
-						Ver 3.927
+					<a class="sub-version-fixed" href="#" data-version-download="realjeju_3.928.html" title="realjeju_3.928.html 다운로드">
+						Ver 3.928
 					</a>
 				<div class="sub-topbar-left">
 					<strong id="listInfoText">
@@ -3090,6 +3107,8 @@
 								<div class="detail-summary-top">
 									<div class="detail-summary-type-badge" id="detailSummaryTypeBadge">
 									</div>
+									<div class="detail-summary-broker-flags" id="detailSummaryBrokerFlags">
+									</div>
 								</div>
 								<div class="detail-summary-price-row">
 									<div class="detail-summary-deal-badge" id="detailSummaryDealBadge">
@@ -4202,7 +4221,7 @@
 	</div>
 </div>
 
-		<script src="js/app_3.927.js"></script>
+		<script src="js/app_3.928.js"></script>
 <script>
 (function () {
 	var labels = {
