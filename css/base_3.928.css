@@ -33765,6 +33765,54 @@ body.sidebar-list-collapsed .education-facility-detail-panel
 	color: #2563eb;
 }
 
+.convenience-facility-filter-panel .large-mart-filter-option.active
+{
+	border-color: #f97316;
+	background: #ffffff;
+	color: #111827;
+}
+
+.convenience-facility-filter-panel .large-mart-filter-option.active i
+{
+	color: #f97316;
+}
+
+.convenience-facility-filter-panel .convenience-store-filter-option.active
+{
+	border-color: #16a34a;
+	background: #ffffff;
+	color: #111827;
+}
+
+.convenience-facility-filter-panel .convenience-store-filter-option.active i
+{
+	color: #16a34a;
+}
+
+.convenience-facility-filter-panel .bank-filter-option.active
+{
+	border-color: #4f46e5;
+	background: #ffffff;
+	color: #111827;
+}
+
+.convenience-facility-filter-panel .bank-filter-option.active i
+{
+	color: #4f46e5;
+}
+
+.convenience-facility-filter-panel .public-office-filter-option.active
+{
+	border-color: #64748b;
+	background: #ffffff;
+	color: #111827;
+}
+
+.convenience-facility-filter-panel .public-office-filter-option.active i
+{
+	color: #64748b;
+}
+
 .education-facility-map-marker[data-category="public-parking"] .education-facility-map-marker-icon,
 .education-facility-map-marker[data-category="public-parking"] .public-parking-marker-icon
 {
@@ -41922,7 +41970,11 @@ body > .map-filter-floating-menu.land-use-zone-filter-menu
 	max-height: 18px !important;
 }
 
-.education-facility-map-marker[data-category="public-parking"]
+.education-facility-map-marker[data-category="public-parking"],
+.education-facility-map-marker[data-category="large-mart"],
+.education-facility-map-marker[data-category="convenience-store"],
+.education-facility-map-marker[data-category="bank"],
+.education-facility-map-marker[data-category="public-office"]
 {
 	width: 28px !important;
 	height: 28px !important;
@@ -41972,6 +42024,93 @@ body > .map-filter-floating-menu.land-use-zone-filter-menu
 	box-shadow: 0 2px 6px rgba(15, 23, 42, 0.18) !important;
 }
 
+.education-facility-map-marker[data-category="large-mart"] .education-facility-map-marker-icon,
+.education-facility-map-marker[data-category="large-mart"] .large-mart-marker-icon
+{
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	width: 28px !important;
+	height: 28px !important;
+	min-width: 28px !important;
+	min-height: 28px !important;
+	max-width: 28px !important;
+	max-height: 28px !important;
+	box-sizing: border-box !important;
+	border: 1px solid #ffffff !important;
+	border-radius: 8px !important;
+	background: rgba(249, 115, 22, 0.82) !important;
+	color: #ffffff !important;
+	filter: none !important;
+	box-shadow: 0 2px 6px rgba(15, 23, 42, 0.18) !important;
+}
+
+.education-facility-map-marker[data-category="large-mart"] .education-facility-map-marker-icon i,
+.education-facility-map-marker[data-category="large-mart"] .large-mart-marker-icon i
+{
+	display: block !important;
+	color: #ffffff !important;
+	font-size: 14px !important;
+	line-height: 1 !important;
+	-webkit-text-stroke: 0 !important;
+}
+
+.education-facility-map-marker[data-category="convenience-store"] .education-facility-map-marker-icon,
+.education-facility-map-marker[data-category="convenience-store"] .convenience-store-marker-icon,
+.education-facility-map-marker[data-category="bank"] .education-facility-map-marker-icon,
+.education-facility-map-marker[data-category="bank"] .bank-marker-icon,
+.education-facility-map-marker[data-category="public-office"] .education-facility-map-marker-icon,
+.education-facility-map-marker[data-category="public-office"] .public-office-marker-icon
+{
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	width: 28px !important;
+	height: 28px !important;
+	min-width: 28px !important;
+	min-height: 28px !important;
+	max-width: 28px !important;
+	max-height: 28px !important;
+	box-sizing: border-box !important;
+	border: 1px solid #ffffff !important;
+	border-radius: 8px !important;
+	color: #ffffff !important;
+	filter: none !important;
+	box-shadow: 0 2px 6px rgba(15, 23, 42, 0.18) !important;
+}
+
+.education-facility-map-marker[data-category="convenience-store"] .education-facility-map-marker-icon,
+.education-facility-map-marker[data-category="convenience-store"] .convenience-store-marker-icon
+{
+	background: rgba(22, 163, 74, 0.82) !important;
+}
+
+.education-facility-map-marker[data-category="bank"] .education-facility-map-marker-icon,
+.education-facility-map-marker[data-category="bank"] .bank-marker-icon
+{
+	background: rgba(79, 70, 229, 0.82) !important;
+}
+
+.education-facility-map-marker[data-category="public-office"] .education-facility-map-marker-icon,
+.education-facility-map-marker[data-category="public-office"] .public-office-marker-icon
+{
+	background: rgba(100, 116, 139, 0.84) !important;
+}
+
+.education-facility-map-marker[data-category="convenience-store"] .education-facility-map-marker-icon i,
+.education-facility-map-marker[data-category="convenience-store"] .convenience-store-marker-icon i,
+.education-facility-map-marker[data-category="bank"] .education-facility-map-marker-icon i,
+.education-facility-map-marker[data-category="bank"] .bank-marker-icon i,
+.education-facility-map-marker[data-category="public-office"] .education-facility-map-marker-icon i,
+.education-facility-map-marker[data-category="public-office"] .public-office-marker-icon i
+{
+	display: block !important;
+	color: #ffffff !important;
+	font-size: 14px !important;
+	line-height: 1 !important;
+	-webkit-text-stroke: 0 !important;
+}
+
 .education-facility-map-marker:not(.selected)[data-category="academy"] .education-facility-map-marker-icon
 {
 	background: rgba(8,145,178,0.78) !important;
@@ -41999,6 +42138,42 @@ body > .map-filter-floating-menu.land-use-zone-filter-menu
 .education-facility-map-marker[data-category="public-parking"]:focus-visible .education-facility-map-marker-icon
 {
 	background: rgba(37, 99, 235, 0.86) !important;
+	border-color: #ffffff !important;
+	border-radius: 8px !important;
+	color: #ffffff !important;
+}
+
+.education-facility-map-marker[data-category="large-mart"]:hover .education-facility-map-marker-icon,
+.education-facility-map-marker[data-category="large-mart"]:focus-visible .education-facility-map-marker-icon
+{
+	background: rgba(234, 88, 12, 0.92) !important;
+	border-color: #ffffff !important;
+	border-radius: 8px !important;
+	color: #ffffff !important;
+}
+
+.education-facility-map-marker[data-category="convenience-store"]:hover .education-facility-map-marker-icon,
+.education-facility-map-marker[data-category="convenience-store"]:focus-visible .education-facility-map-marker-icon
+{
+	background: rgba(21, 128, 61, 0.92) !important;
+	border-color: #ffffff !important;
+	border-radius: 8px !important;
+	color: #ffffff !important;
+}
+
+.education-facility-map-marker[data-category="bank"]:hover .education-facility-map-marker-icon,
+.education-facility-map-marker[data-category="bank"]:focus-visible .education-facility-map-marker-icon
+{
+	background: rgba(67, 56, 202, 0.92) !important;
+	border-color: #ffffff !important;
+	border-radius: 8px !important;
+	color: #ffffff !important;
+}
+
+.education-facility-map-marker[data-category="public-office"]:hover .education-facility-map-marker-icon,
+.education-facility-map-marker[data-category="public-office"]:focus-visible .education-facility-map-marker-icon
+{
+	background: rgba(71, 85, 105, 0.94) !important;
 	border-color: #ffffff !important;
 	border-radius: 8px !important;
 	color: #ffffff !important;
