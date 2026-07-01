@@ -1937,7 +1937,8 @@ document.addEventListener("click", function(event) {
 		const brokerOffice = window.realjejuCurrentBrokerOffice || null;
 		const userId = String(user && user.id || "").trim();
 		const isLoggedIn = !!userId;
-		const canUseBrokerHome = isLoggedIn && isSideAccountApprovedOffice(brokerOffice);
+		const canUseBrokerRole = isLoggedIn && typeof isRealjejuPrimaryBrokerHomeRole === "function" && isRealjejuPrimaryBrokerHomeRole(profile && profile.role_request);
+		const canUseBrokerHome = canUseBrokerRole || (isLoggedIn && isSideAccountApprovedOffice(brokerOffice));
 		const adminWasVisible = isLoggedIn && hasVisibleSideNavAction("admin");
 		const operatorWasVisible = isLoggedIn && hasVisibleSideNavAction("operator");
 		let canUseAdmin = isLoggedIn && (window.realjejuCurrentIsAdmin === true || isSideNavAdminProfile(profile));
@@ -2950,6 +2951,12 @@ function isRealjejuBrokerRole(role)
 	return REALJEJU_BROKER_ROLE_VALUES.has(String(role || "").trim());
 }
 
+function isRealjejuPrimaryBrokerHomeRole(role)
+{
+	const value = String(role || "").trim().toLowerCase();
+	return value === "agent" || value === "corporation" || value === "대표 공인중개사" || value === "법인";
+}
+
 function getBrokerOfficeRowStatus(row)
 {
 	const raw = String(row && row.status ? row.status : "").trim();
@@ -2963,19 +2970,23 @@ function getBrokerOfficeRowStatus(row)
 	return compact;
 }
 
-function isBrokerOfficeRowOwnedByUser(row, user)
+function isBrokerOfficeRowOwnedByUser(row, user, profile = null)
 {
 	if (!row || !user || !user.id) return false;
 	const rowUserId = String(row.user_id || "").trim();
-	return !!rowUserId && rowUserId === String(user.id);
+	if (rowUserId && rowUserId === String(user.id)) return true;
+	const rowEmail = String(row.email || "").trim().toLowerCase();
+	const userEmail = String(user.email || "").trim().toLowerCase();
+	const profileEmail = String(profile && profile.email || "").trim().toLowerCase();
+	return !!rowEmail && (rowEmail === userEmail || rowEmail === profileEmail);
 }
 
-function pickCurrentRealjejuBrokerOffice(rows, user)
+function pickCurrentRealjejuBrokerOffice(rows, user, profile = null)
 {
 	const visibleRows = (Array.isArray(rows) ? rows : []).filter((row) => {
 		if (!row || row.deleted_at) return false;
 		if (getBrokerOfficeRowStatus(row) === "deleted") return false;
-		return isBrokerOfficeRowOwnedByUser(row, user);
+		return isBrokerOfficeRowOwnedByUser(row, user, profile);
 	});
 	return visibleRows.find((row) => getBrokerOfficeRowStatus(row) === "active")
 		|| visibleRows.find((row) => row && (row.owner_name || row.office_reg_no || row.office_address))
@@ -3015,8 +3026,7 @@ const brokerOfficeRowsInflight = new Map();
 async function fetchSharedBrokerOfficeRows(client, user, profile)
 {
 	if (!client || !user || !user.id) return [];
-	// agencies.email is not guaranteed in every REALJEJU schema, so use user_id only to avoid PostgREST 400s.
-	const email = "";
+	const email = getBrokerOfficeLookupEmail(user, profile);
 	const cacheKey = `${String(user.id)}|${email}`;
 	const cached = brokerOfficeRowsCache.get(cacheKey);
 	if (cached && Date.now() - cached.time < BROKER_OFFICE_LOOKUP_CACHE_MS) return cached.rows;
@@ -3038,9 +3048,24 @@ async function fetchSharedBrokerOfficeRows(client, user, profile)
 		} catch (err) {
 			console.warn("중개사무소 user_id 조회 실패:", err);
 		}
+		if (email) {
+			try {
+				const { data, error } = await client
+					.from("agencies")
+					.select("*")
+					.eq("email", email)
+					.order("updated_at", { ascending: false })
+					.order("created_at", { ascending: false })
+					.limit(10);
+				if (error) throw error;
+				emailRows = Array.isArray(data) ? data : [];
+			} catch (err) {
+				console.warn("중개사무소 email 조회 실패:", err);
+			}
+		}
 
 			const safeEmailRows = emailRows.filter((row) => {
-				if (isBrokerOfficeRowOwnedByUser(row, user)) return true;
+				if (isBrokerOfficeRowOwnedByUser(row, user, profile)) return true;
 				if (String(row && row.user_id || "").trim()) return false;
 				return getBrokerOfficeRowStatus(row) !== "active";
 			});
@@ -15138,7 +15163,7 @@ function normalizeAgencyBrokerOfficeSeedRow(row)
 {
 	if (!row || row.deleted_at) return null;
 	const status = getBrokerOfficeRowStatus(row);
-	if (status === "deleted" || status === "rejected") return null;
+	if (status !== "active") return null;
 	const officeName = String(row.office_name || "").trim();
 	const address = String(row.office_address || row.address || row.office_addr || "").trim();
 	const normalizedPosition = normalizeJejuLatLngPair(
@@ -15248,11 +15273,18 @@ async function fetchBrokerOfficeMapRows(options = {})
 		console.warn("중개사무소 지도 표시 조회 실패:", error);
 		return [];
 	}
+	const agencyRows = await fetchBrokerOfficeSeedRowsFromAgencies(client);
+	const activeAgencyIds = new Set(agencyRows.map(office => normalizeItemId(office && office.agencyId)).filter(Boolean));
+	const activeUserIds = new Set(agencyRows.map(office => normalizeItemId(office && office.userId)).filter(Boolean));
 	const locationRows = (Array.isArray(data) ? data : []).map(row => {
 		const office = normalizeBrokerOfficeMapRow(row, { requireCoordinates: false });
 		return office ? { ...office, sourceTable: "broker_office_locations" } : null;
-	}).filter(Boolean);
-	const agencyRows = await fetchBrokerOfficeSeedRowsFromAgencies(client);
+	}).filter(office => {
+		if (!office) return false;
+		const agencyId = normalizeItemId(office.agencyId || "");
+		const userId = normalizeItemId(office.userId || "");
+		return (agencyId && activeAgencyIds.has(agencyId)) || (userId && activeUserIds.has(userId));
+	});
 	const rows = await enrichBrokerOfficeRowsWithProfileImages(client, mergeBrokerOfficeMapRows(locationRows, agencyRows));
 	state.brokerOfficeRows = rows;
 	return rows;
@@ -15261,28 +15293,31 @@ async function fetchBrokerOfficeMapRows(options = {})
 async function enrichBrokerOfficeRowsWithProfileImages(client, rows)
 {
 	const sourceRows = Array.isArray(rows) ? rows : [];
-	const missingProfileUserIds = [...new Set(sourceRows
-		.filter(office => office && !String(office.profileImage || "").trim())
+	const profileUserIds = [...new Set(sourceRows
+		.filter(office => office)
 		.map(office => normalizeItemId(office.userId))
 		.filter(Boolean))];
-	if (!client || !missingProfileUserIds.length) return sourceRows;
+	if (!client || !profileUserIds.length) return sourceRows;
 	try {
 		const { data, error } = await client
 			.from("profiles")
-			.select("id, profile_image")
-			.in("id", missingProfileUserIds);
+			.select("id, profile_image, role_request")
+			.in("id", profileUserIds);
 		if (error) {
 			console.warn("중개사 지도 프로필 사진 조회 실패:", error);
 			return sourceRows;
 		}
-		const profileImageByUserId = new Map((Array.isArray(data) ? data : []).map(profile => [
+		const profileByUserId = new Map((Array.isArray(data) ? data : []).map(profile => [
 			normalizeItemId(profile && profile.id),
-			String(profile && profile.profile_image || "").trim()
+			profile || {}
 		]));
 		return sourceRows.map(office => {
-			const image = profileImageByUserId.get(normalizeItemId(office && office.userId)) || "";
-			return image ? { ...office, profileImage: image } : office;
-		});
+			const userId = normalizeItemId(office && office.userId);
+			const profile = userId ? profileByUserId.get(userId) : null;
+			if (userId && profile && !isBrokerRoleValue(profile.role_request)) return null;
+			const image = String(profile && profile.profile_image || "").trim();
+			return image && !String(office && office.profileImage || "").trim() ? { ...office, profileImage: image } : office;
+		}).filter(Boolean);
 	} catch (error) {
 		console.warn("중개사 지도 프로필 사진 조회 오류:", error);
 		return sourceRows;
@@ -28239,6 +28274,11 @@ startRealjejuApp();
 		return isRealjejuBrokerRole(role);
 	}
 
+	function isPrimaryBrokerHomeRoleValue(role)
+	{
+		return isRealjejuPrimaryBrokerHomeRole(role);
+	}
+
 	const REALJEJU_BROKER_OFFICE_APPLY_ROLE_MESSAGE = "내 정보에서 회원유형을 중개사 또는 법인으로\n변경한 뒤 신청해 주세요.";
 	const REALJEJU_BROKER_OFFICE_EDIT_ROLE_MESSAGE = "내 정보에서 회원유형을 중개사 또는 법인으로\n변경한 뒤 신청해 주세요.";
 
@@ -28310,21 +28350,25 @@ startRealjejuApp();
 		return (Array.isArray(rows) ? rows : []).filter((row) => row && !isDeletedBrokerOfficeRow(row));
 	}
 
-	function isBrokerOfficeOwnedByUser(row, user)
+	function isBrokerOfficeOwnedByUser(row, user, profile = null)
 	{
 		if (!row || !user || !user.id) return false;
 		const rowUserId = String(row.user_id || "").trim();
-		return !!rowUserId && rowUserId === String(user.id);
+		if (rowUserId && rowUserId === String(user.id)) return true;
+		const rowEmail = String(row.email || "").trim().toLowerCase();
+		const userEmail = String(user.email || "").trim().toLowerCase();
+		const profileEmail = String(profile && profile.email || "").trim().toLowerCase();
+		return !!rowEmail && (rowEmail === userEmail || rowEmail === profileEmail);
 	}
 
-	function getOwnedBrokerOfficeRows(rows, user)
+	function getOwnedBrokerOfficeRows(rows, user, profile = null)
 	{
-		return getVisibleBrokerOfficeRows(rows).filter((row) => isBrokerOfficeOwnedByUser(row, user));
+		return getVisibleBrokerOfficeRows(rows).filter((row) => isBrokerOfficeOwnedByUser(row, user, profile));
 	}
 
-	function pickApprovedBrokerOffice(rows, user)
+	function pickApprovedBrokerOffice(rows, user, profile = null)
 	{
-		return getOwnedBrokerOfficeRows(rows, user).find((row) => getBrokerOfficeRowStatus(row) === "active") || null;
+		return getOwnedBrokerOfficeRows(rows, user, profile).find((row) => getBrokerOfficeRowStatus(row) === "active") || null;
 	}
 
 	function isApprovedBrokerOffice(row)
@@ -28332,9 +28376,9 @@ startRealjejuApp();
 		return !!(row && !isDeletedBrokerOfficeRow(row) && getBrokerOfficeRowStatus(row) === "active");
 	}
 
-	function pickCurrentBrokerOffice(rows, user)
+	function pickCurrentBrokerOffice(rows, user, profile = null)
 	{
-		const visibleRows = getOwnedBrokerOfficeRows(rows, user);
+		const visibleRows = getOwnedBrokerOfficeRows(rows, user, profile);
 		return visibleRows.find((row) => getBrokerOfficeRowStatus(row) === "active")
 			|| visibleRows.find((row) => row && (row.owner_name || row.office_reg_no || row.office_address))
 			|| visibleRows[0]
@@ -28360,8 +28404,8 @@ startRealjejuApp();
 			const officeRows = await fetchMySuiteBrokerOfficeRows(client, user, profile || null);
 			if (!isRealjejuActiveSessionUser(user)) return;
 
-			const brokerOffice = pickApprovedBrokerOffice(officeRows, user)
-				|| (isApprovedBrokerOffice(window.realjejuCurrentBrokerOffice) && isBrokerOfficeOwnedByUser(window.realjejuCurrentBrokerOffice, user) ? window.realjejuCurrentBrokerOffice : null);
+			const brokerOffice = pickApprovedBrokerOffice(officeRows, user, profile || null)
+				|| (isApprovedBrokerOffice(window.realjejuCurrentBrokerOffice) && isBrokerOfficeOwnedByUser(window.realjejuCurrentBrokerOffice, user, profile || null) ? window.realjejuCurrentBrokerOffice : null);
 			const isActiveOffice = !!brokerOffice;
 			if (isActiveOffice && brokerOffice.office_name) {
 				window.realjejuCurrentBrokerOffice = {
@@ -28396,7 +28440,7 @@ startRealjejuApp();
 		try {
 			const profile = window.realjejuCurrentProfile || null;
 			const rows = await fetchMySuiteBrokerOfficeRows(client, user, profile);
-			return pickCurrentBrokerOffice(rows, user);
+			return pickCurrentBrokerOffice(rows, user, profile || null);
 		} catch (err) {
 			console.warn("중개사무소 신청 상태 확인 실패:", err);
 			return isApprovedBrokerOffice(window.realjejuCurrentBrokerOffice) ? window.realjejuCurrentBrokerOffice : null;
@@ -28711,7 +28755,9 @@ function applyLoggedInAccountUI(user, profile, options = {})
 		const currentIsAdmin = isAdminUser(user, profile || null);
 		const currentIsOperator = !currentIsAdmin && isOperatorUser(user, profile || null);
 		const skipBrokerRefresh = !!(options && options.skipBrokerRefresh);
-		const hasCachedApprovedBrokerOffice = isApprovedBrokerOffice(window.realjejuCurrentBrokerOffice) && isBrokerOfficeOwnedByUser(window.realjejuCurrentBrokerOffice, user);
+		const hasPrimaryBrokerHomeRole = isPrimaryBrokerHomeRoleValue(profile && profile.role_request);
+		const hasCachedApprovedBrokerOffice = isApprovedBrokerOffice(window.realjejuCurrentBrokerOffice) && isBrokerOfficeOwnedByUser(window.realjejuCurrentBrokerOffice, user, profile || null);
+		const canShowBrokerHomeMenu = hasPrimaryBrokerHomeRole || hasCachedApprovedBrokerOffice;
 		if (!realjejuFavoriteLoaded || realjejuFavoriteUserId !== normalizeItemId(user.id)) {
 			loadFavoriteListingStateFromServer();
 		}
@@ -28721,9 +28767,9 @@ function applyLoggedInAccountUI(user, profile, options = {})
 		const isCompleted = !!(profile && profile.profile_completed === true && profile.name && profile.phone);
 		currentRealjejuProfileCompleted = isCompleted;
 		if (currentIsAdmin) {
-			renderAdminTopbarMenu(hasCachedApprovedBrokerOffice);
+			renderAdminTopbarMenu(canShowBrokerHomeMenu);
 		} else {
-			renderTopbarMenu(hasCachedApprovedBrokerOffice);
+			renderTopbarMenu(canShowBrokerHomeMenu);
 			if (document.body.classList.contains("admin-page-open")) {
 				closeAdminPage();
 				if (typeof window.realjejuGoHome === "function") setTimeout(window.realjejuGoHome, 0);
@@ -28813,7 +28859,7 @@ function applyLoggedInAccountUI(user, profile, options = {})
 		if (isBrokerRoleValue(profile && profile.role_request)) {
 			try {
 				const officeRows = await fetchMySuiteBrokerOfficeRows(client, user, profile || null);
-				brokerOffice = pickCurrentBrokerOffice(officeRows, user);
+				brokerOffice = pickCurrentBrokerOffice(officeRows, user, profile || null);
 			} catch (err) {
 				brokerOffice = null;
 			}
@@ -28842,7 +28888,8 @@ function applyLoggedInAccountUI(user, profile, options = {})
 			console.warn("중개사 홈 프로필 확인 실패:", err);
 		}
 		if (!isRealjejuActiveSessionUser(user)) return { allowed: false, user: null, profile: null, brokerOffice: null };
-		if (!isBrokerRoleValue(profile && profile.role_request)) {
+		const hasPrimaryBrokerHomeRole = isPrimaryBrokerHomeRoleValue(profile && profile.role_request);
+		if (!hasPrimaryBrokerHomeRole) {
 			window.realjejuCurrentBrokerOffice = null;
 			window.realjejuCurrentBrokerOfficeName = "";
 			renderTopbarMenu(false, isAdminUser(user, profile || null));
@@ -28852,19 +28899,21 @@ function applyLoggedInAccountUI(user, profile, options = {})
 			try {
 				const officeRows = await fetchMySuiteBrokerOfficeRows(client, user, profile || null);
 				if (!isRealjejuActiveSessionUser(user)) return { allowed: false, user: null, profile: null, brokerOffice: null };
-				brokerOffice = pickApprovedBrokerOffice(officeRows, user);
+				brokerOffice = pickApprovedBrokerOffice(officeRows, user, profile || null);
 			} catch (err) {
 				console.warn("중개사 홈 승인 사무소 확인 실패:", err);
 			}
 			if (!brokerOffice && isApprovedBrokerOffice(window.realjejuCurrentBrokerOffice)) {
 				const cachedOffice = window.realjejuCurrentBrokerOffice;
-				if (isBrokerOfficeOwnedByUser(cachedOffice, user)) brokerOffice = cachedOffice;
+				if (isBrokerOfficeOwnedByUser(cachedOffice, user, profile || null)) brokerOffice = cachedOffice;
 			}
-		const allowed = isApprovedBrokerOffice(brokerOffice);
+		const allowed = hasPrimaryBrokerHomeRole || isApprovedBrokerOffice(brokerOffice);
 		if (allowed) {
 			setRealjejuActiveSession(user, profile || null);
-			window.realjejuCurrentBrokerOffice = brokerOffice;
-			window.realjejuCurrentBrokerOfficeName = String(brokerOffice && brokerOffice.office_name || "").trim();
+			if (brokerOffice) {
+				window.realjejuCurrentBrokerOffice = brokerOffice;
+				window.realjejuCurrentBrokerOfficeName = String(brokerOffice && brokerOffice.office_name || "").trim();
+			}
 			renderTopbarMenu(true, isAdminUser(user, profile || null));
 			if (typeof window.realjejuSyncSideNavAccount === "function") window.realjejuSyncSideNavAccount();
 		} else {
@@ -28880,11 +28929,11 @@ function applyLoggedInAccountUI(user, profile, options = {})
 	{
 		const access = await fetchApprovedBrokerAccess();
 		if (!access.user) {
-			openAuthErrorModal("매물 등록은 승인 완료된 개업 공인중개사 또는\n중개법인만 가능합니다.", "매물 등록", null, typeof openAuthModal === "function" ? openAuthModal : null);
+			openAuthErrorModal("매물 등록은 대표 공인중개사 또는\n법인 회원만 가능합니다.", "매물 등록", null, typeof openAuthModal === "function" ? openAuthModal : null);
 			return null;
 		}
 		if (!access.allowed) {
-			openAuthErrorModal("매물 등록은 승인 완료된 개업 공인중개사 또는\n중개법인만 가능합니다.", "매물 등록", null);
+			openAuthErrorModal("매물 등록은 대표 공인중개사 또는\n법인 회원만 가능합니다.", "매물 등록", null);
 			return null;
 		}
 		return access;
@@ -29169,7 +29218,7 @@ function applyLoggedInAccountUI(user, profile, options = {})
 				return;
 			}
 			const completed = !!(profile && profile.profile_completed === true && profile.name && profile.phone);
-			const canUseBrokerHome = isBrokerRoleValue(profile && profile.role_request) && isApprovedBrokerOffice(brokerOffice);
+			const canUseBrokerHome = isPrimaryBrokerHomeRoleValue(profile && profile.role_request) || isApprovedBrokerOffice(brokerOffice);
 			if (isAdminUser(user, profile || null)) {
 				renderAdminTopbarMenu(canUseBrokerHome);
 			} else {
@@ -33861,6 +33910,7 @@ let adminListingPage = 1;
 			const visibleRows = list.filter((row) => !isAdminUserWithdrawn(row));
 			if (adminUserView === "broker") return visibleRows.filter(isAdminUserApprovedBroker);
 			if (adminUserView === "admin") return visibleRows.filter(isAdminProfileRow);
+			if (adminUserView === "operator") return visibleRows.filter(isAdminUserOperatorRole);
 			if (adminUserView === "incomplete") return visibleRows.filter(isAdminUserIncomplete);
 			return visibleRows;
 		}
@@ -33876,6 +33926,7 @@ let adminListingPage = 1;
 			setText("adminUsersAllCount", visibleRows.length);
 			setText("adminUsersBrokerCount", visibleRows.filter(isAdminUserApprovedBroker).length);
 			setText("adminUsersAdminCount", visibleRows.filter(isAdminProfileRow).length);
+			setText("adminUsersOperatorCount", visibleRows.filter(isAdminUserOperatorRole).length);
 			setText("adminUsersIncompleteCount", visibleRows.filter(isAdminUserIncomplete).length);
 			setText("adminUsersDeletedCount", list.filter(isAdminUserWithdrawn).length);
 		document.querySelectorAll("[data-admin-user-view]").forEach((btn) => {
@@ -33963,12 +34014,34 @@ let adminListingPage = 1;
 
 		function getAdminUserRoleLabel(row)
 		{
-			if (isAdminProfileRow(row)) return "관리자";
+			return getAdminUserRoleLabels(row).join("\n");
+		}
+
+		function isAdminUserOperatorRole(row)
+		{
 			const roleValues = [row?.role_request, row?.role, row?.user_role, row?.app_role]
 				.map((value) => String(value || "").trim().toLowerCase())
 				.filter(Boolean);
-			if (roleValues.some((roleValue) => roleValue === "operator" || roleValue === "operations" || roleValue === "운영자") || row?.is_operator === true || row?.operator === true) return "운영자";
-			return isAdminUserApprovedBroker(row) ? getRoleLabel(row.role_request || row.role || "user") : "일반회원";
+			return roleValues.some((roleValue) => roleValue === "operator" || roleValue === "operations" || roleValue === "운영자")
+				|| row?.is_operator === true
+				|| row?.operator === true;
+		}
+
+		function getAdminUserRoleLabels(row)
+		{
+			if (isAdminProfileRow(row)) return ["관리자"];
+			const labels = [];
+			if (isBrokerRoleValue(row?.role_request)) labels.push(getRoleLabel(row.role_request));
+			else if (isAdminUserApprovedBroker(row)) labels.push(getRoleLabel(row.role_request || row.role || "user"));
+			if (isAdminUserOperatorRole(row)) labels.push("운영자");
+			return labels.length ? Array.from(new Set(labels)) : ["일반회원"];
+		}
+
+		function getAdminUserRoleHtml(row)
+		{
+			return getAdminUserRoleLabels(row)
+				.map((label) => `<span>${escapeAdminHtml(label)}</span>`)
+				.join("");
 		}
 
 	function isAdminUserWithdrawn(row)
@@ -34041,7 +34114,7 @@ let adminListingPage = 1;
 					<div class="admin-user-cell admin-user-name">${escapeAdminHtml(name)}</div>
 					<div class="admin-user-cell admin-user-email">${escapeAdminHtml(email)}</div>
 					<div class="admin-user-cell admin-user-phone">${escapeAdminHtml(phone)}</div>
-					<div class="admin-user-cell">${escapeAdminHtml(roleLabel)}</div>
+					<div class="admin-user-cell admin-user-role">${getAdminUserRoleHtml(row)}</div>
 					<div class="admin-user-cell admin-user-pass">${escapeAdminHtml(passLabel)}</div>
 					<div class="admin-user-cell"><span class="broker-listing-status admin-user-profile-state ${escapeAdminHtml(stateClass)}">${escapeAdminHtml(profileState)}</span></div>
 					<div class="broker-listing-menu-cell">
@@ -36759,7 +36832,7 @@ let adminListingPage = 1;
 		const access = await fetchApprovedBrokerAccess();
 		if (!access.allowed) {
 			updateBrokerHomeSummary([]);
-			listEl.innerHTML = '<div class="admin-empty">승인 완료된 중개사무소만 중개사 홈을 사용할 수 있습니다.</div>';
+			listEl.innerHTML = '<div class="admin-empty">대표 공인중개사 또는 법인 회원만 중개사 홈을 사용할 수 있습니다.</div>';
 			document.body.classList.remove("broker-home-page-open");
 			const brokerHomePanel = document.getElementById("brokerHomePanel");
 			if (brokerHomePanel) brokerHomePanel.setAttribute("aria-hidden", "true");
@@ -37017,7 +37090,7 @@ let adminListingPage = 1;
 			document.body.classList.remove("broker-home-page-open");
 			const brokerHomePanel = document.getElementById("brokerHomePanel");
 			if (brokerHomePanel) brokerHomePanel.setAttribute("aria-hidden", "true");
-			openAuthErrorModal("중개사무소 승인 상태를 확인할 수 없습니다.\n승인 완료된 중개사무소만 중개사 홈을 사용할 수 있습니다.", "중개사 홈", null);
+			openAuthErrorModal("대표 공인중개사 또는 법인 회원만\n중개사 홈을 사용할 수 있습니다.", "중개사 홈", null);
 			return;
 		}
 		document.body.classList.add("broker-home-page-open");
@@ -39871,7 +39944,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			const { data: userData, error: userError } = await client.auth.getUser();
 			const user = userData && userData.user ? userData.user : null;
 			if (userError || !user) {
-				openAuthErrorModal("매물 등록은 승인 완료된 개업 공인중개사 또는\n중개법인만 가능합니다.", "매물 등록", null, typeof openAuthModal === "function" ? openAuthModal : null);
+				openAuthErrorModal("매물 등록은 대표 공인중개사 또는\n법인 회원만 가능합니다.", "매물 등록", null, typeof openAuthModal === "function" ? openAuthModal : null);
 				return;
 			}
 
