@@ -4133,6 +4133,22 @@ const state = {
 	publicParkingOverlays: [],
 	publicParkingOverlayMap: new Map(),
 	publicParkingRows: [],
+	isLargeMartVisible: false,
+	largeMartOverlays: [],
+	largeMartOverlayMap: new Map(),
+	largeMartRows: [],
+	isConvenienceStoreVisible: false,
+	convenienceStoreOverlays: [],
+	convenienceStoreOverlayMap: new Map(),
+	convenienceStoreRows: [],
+	isBankVisible: false,
+	bankOverlays: [],
+	bankOverlayMap: new Map(),
+	bankRows: [],
+	isPublicOfficeVisible: false,
+	publicOfficeOverlays: [],
+	publicOfficeOverlayMap: new Map(),
+	publicOfficeRows: [],
 	educationFacilityOverlays: [],
 	educationFacilityOverlayMap: new Map(),
 	educationFacilityRows: null,
@@ -4154,6 +4170,7 @@ const FACILITY_OVERLAY_Z_INDEX_BASE = 2400;
 const FACILITY_OVERLAY_Z_INDEX_TOP = 3600;
 const FACILITY_OVERLAY_Z_INDEX_HOVER = 99999;
 const FACILITY_MAP_VISIBLE_LEVEL = 6;
+const LARGE_MART_MAP_VISIBLE_LEVEL = 9;
 const FACILITY_VIEWPORT_DEBOUNCE_MS = 160;
 const FACILITY_BOUNDS_PADDING_RATIO = 0.12;
 const BROKER_SPECIALTY_MIN_LISTINGS = 3;
@@ -4220,6 +4237,18 @@ function syncFacilityOverlayZIndexes()
 		if (overlay && typeof overlay.setZIndex === "function") overlay.setZIndex(getFacilityOverlayZIndex("education"));
 	});
 	(state.publicParkingOverlays || []).forEach((overlay) => {
+		if (overlay && typeof overlay.setZIndex === "function") overlay.setZIndex(getFacilityOverlayZIndex("convenience"));
+	});
+	(state.largeMartOverlays || []).forEach((overlay) => {
+		if (overlay && typeof overlay.setZIndex === "function") overlay.setZIndex(getFacilityOverlayZIndex("convenience"));
+	});
+	(state.convenienceStoreOverlays || []).forEach((overlay) => {
+		if (overlay && typeof overlay.setZIndex === "function") overlay.setZIndex(getFacilityOverlayZIndex("convenience"));
+	});
+	(state.bankOverlays || []).forEach((overlay) => {
+		if (overlay && typeof overlay.setZIndex === "function") overlay.setZIndex(getFacilityOverlayZIndex("convenience"));
+	});
+	(state.publicOfficeOverlays || []).forEach((overlay) => {
 		if (overlay && typeof overlay.setZIndex === "function") overlay.setZIndex(getFacilityOverlayZIndex("convenience"));
 	});
 }
@@ -4612,6 +4641,10 @@ async function renderVisibleFacilityOverlaysForViewport()
 	if (isLifeSafetyOverlayVisible) await renderLifeSafetyOverlay();
 	if (state.isEducationFacilitiesVisible) await syncEducationFacilityOverlaysForMapLevel();
 	if (state.isPublicParkingVisible) await renderPublicParkingOverlays();
+	if (state.isLargeMartVisible) await renderLargeMartOverlays();
+	if (state.isConvenienceStoreVisible) await renderConvenienceStoreOverlays();
+	if (state.isBankVisible) await renderBankOverlays();
+	if (state.isPublicOfficeVisible) await renderPublicOfficeOverlays();
 	if (state.isBrokerOfficesVisible) await renderBrokerOfficeOverlays();
 }
 
@@ -16438,7 +16471,7 @@ function ensureEducationFacilityMapTooltipLayer()
 	educationFacilityMapTooltipLayer.addEventListener("mouseenter", cancelEducationFacilityMapTooltipHide);
 	educationFacilityMapTooltipLayer.addEventListener("mouseleave", scheduleEducationFacilityMapTooltipHide);
 	educationFacilityMapTooltipLayer.addEventListener("click", (event) => {
-		const roadviewBtn = event.target && event.target.closest ? event.target.closest("[data-public-parking-roadview]") : null;
+		const roadviewBtn = event.target && event.target.closest ? event.target.closest("[data-public-parking-roadview], [data-large-mart-roadview], [data-convenience-place-roadview]") : null;
 		if (!roadviewBtn) return;
 		event.preventDefault();
 		event.stopPropagation();
@@ -16457,10 +16490,16 @@ function showEducationFacilityMapTooltip(anchor, row)
 	cancelEducationFacilityMapTooltipHide();
 	const phone = String(row.phone || "").trim();
 	const isPublicParking = row.category === "public-parking";
+	const isLargeMart = row.category === "large-mart";
+	const isConveniencePlace = row.category === "convenience-store" || row.category === "bank" || row.category === "public-office";
 	const lat = Number(row.lat);
 	const lng = Number(row.lng);
-	const roadviewButton = isPublicParking && Number.isFinite(lat) && Number.isFinite(lng)
-		? '<button type="button" class="education-facility-map-tooltip-roadview" data-public-parking-roadview data-lat="'
+	const canShowRoadview = (isPublicParking || isLargeMart || isConveniencePlace) && Number.isFinite(lat) && Number.isFinite(lng);
+	const roadviewAttribute = isLargeMart ? "data-large-mart-roadview" : (isConveniencePlace ? "data-convenience-place-roadview" : "data-public-parking-roadview");
+	const roadviewButton = canShowRoadview
+		? '<button type="button" class="education-facility-map-tooltip-roadview" '
+			+ roadviewAttribute
+			+ ' data-lat="'
 			+ escapeHtml(String(lat))
 			+ '" data-lng="'
 			+ escapeHtml(String(lng))
@@ -17403,6 +17442,444 @@ async function setPublicParkingVisible(visible)
 	updateConvenienceToolActiveState();
 }
 
+function clearLargeMartOverlays()
+{
+	const overlays = state.largeMartOverlayMap instanceof Map
+		? Array.from(state.largeMartOverlayMap.values())
+		: (state.largeMartOverlays || []);
+	overlays.forEach((overlay) => {
+		if (overlay && typeof overlay.setMap === "function") overlay.setMap(null);
+	});
+	state.largeMartOverlays = [];
+	state.largeMartOverlayMap = new Map();
+	state.largeMartRows = [];
+}
+
+function getLargeMartOverlayKey(row)
+{
+	if (!row) return "";
+	return ["large-mart", normalizeItemId(row.id || row.name || ""), row.lat, row.lng].join(":");
+}
+
+function normalizeLargeMartPlace(place)
+{
+	if (!place) return null;
+	const lat = Number(place.y);
+	const lng = Number(place.x);
+	if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
+	return {
+		id: String(place.id || `${place.place_name || ""}-${place.x || ""}-${place.y || ""}`).trim(),
+		category: "large-mart",
+		name: String(place.place_name || "대형마트").trim(),
+		address: String(place.road_address_name || place.address_name || "").trim(),
+		phone: String(place.phone || "").trim(),
+		placeUrl: String(place.place_url || "").trim(),
+		lat,
+		lng
+	};
+}
+
+function searchLargeMartPlaces()
+{
+	return new Promise((resolve) => {
+		if (!state.map || !window.kakao || !kakao.maps || !kakao.maps.services || !kakao.maps.services.Places) {
+			resolve([]);
+			return;
+		}
+		const places = new kakao.maps.services.Places();
+		const bounds = typeof state.map.getBounds === "function" ? state.map.getBounds() : null;
+		const options = bounds ? { bounds } : {};
+		const rows = [];
+		const seen = new Set();
+		const callback = (result, status, pagination) => {
+			if (status !== kakao.maps.services.Status.OK || !Array.isArray(result)) {
+				resolve(rows);
+				return;
+			}
+			result.forEach((place) => {
+				const row = normalizeLargeMartPlace(place);
+				if (!row) return;
+				const key = getLargeMartOverlayKey(row);
+				if (seen.has(key)) return;
+				seen.add(key);
+				rows.push(row);
+			});
+			if (pagination && pagination.hasNextPage && pagination.current < 3) {
+				pagination.nextPage();
+				return;
+			}
+			resolve(rows);
+		};
+		try {
+			if (typeof places.categorySearch === "function") {
+				places.categorySearch("MT1", callback, options);
+			} else {
+				places.keywordSearch("대형마트", callback, options);
+			}
+		} catch (err) {
+			console.warn("대형마트 검색 실패:", err);
+			resolve(rows);
+		}
+	});
+}
+
+function getLargeMartMarkerHtml()
+{
+	return '<span class="education-facility-map-marker-icon large-mart-marker-icon" aria-hidden="true"><i class="fa-solid fa-cart-shopping"></i></span>';
+}
+
+function createLargeMartOverlay(row)
+{
+	const el = document.createElement("button");
+	el.type = "button";
+	el.className = "education-facility-map-marker large-mart-map-marker";
+	el.dataset.category = "large-mart";
+	const overlayKey = getLargeMartOverlayKey(row);
+	el.dataset.largeMartOverlayKey = overlayKey;
+	el.innerHTML = getLargeMartMarkerHtml() + '<span class="education-facility-map-marker-tooltip"><strong>'
+		+ escapeHtml(row.name)
+		+ '</strong><small>'
+		+ escapeHtml(row.address || "주소 정보 없음")
+		+ '</small>'
+		+ (row.phone ? '<small>' + escapeHtml(row.phone) + '</small>' : '')
+		+ '</span>';
+	el.setAttribute("aria-label", row.name + " " + (row.address || ""));
+	const overlay = new kakao.maps.CustomOverlay({
+		position: new kakao.maps.LatLng(row.lat, row.lng),
+		content: el,
+		xAnchor: 0.5,
+		yAnchor: 0.5,
+		zIndex: getFacilityOverlayZIndex("convenience")
+	});
+	overlay.__realjejuMarkerElement = el;
+	const showTooltip = () => {
+		overlay.setZIndex(FACILITY_OVERLAY_Z_INDEX_HOVER);
+		showEducationFacilityMapTooltip(el, row);
+	};
+	const hideTooltip = () => {
+		overlay.setZIndex(getFacilityOverlayZIndex("convenience"));
+		scheduleEducationFacilityMapTooltipHide();
+	};
+	el.addEventListener("mouseenter", showTooltip);
+	el.addEventListener("focus", showTooltip);
+	el.addEventListener("mouseleave", hideTooltip);
+	el.addEventListener("blur", hideTooltip);
+	el.addEventListener("click", (event) => {
+		event.preventDefault();
+		event.stopPropagation();
+		showTooltip();
+	});
+	return overlay;
+}
+
+async function renderLargeMartOverlays()
+{
+	if (!state.isLargeMartVisible || !state.map || !window.kakao || !kakao.maps) {
+		clearLargeMartOverlays();
+		return;
+	}
+	const mapLevel = getFacilityMapLevel();
+	if (!Number.isFinite(mapLevel) || mapLevel > LARGE_MART_MAP_VISIBLE_LEVEL) {
+		clearLargeMartOverlays();
+		return;
+	}
+	const rows = await searchLargeMartPlaces();
+	state.largeMartRows = rows;
+	const previous = state.largeMartOverlayMap instanceof Map ? state.largeMartOverlayMap : new Map();
+	const next = new Map();
+	const overlays = [];
+	rows.forEach((row) => {
+		const key = getLargeMartOverlayKey(row);
+		let overlay = previous.get(key);
+		if (!overlay) overlay = createLargeMartOverlay(row);
+		if (overlay && typeof overlay.setMap === "function") overlay.setMap(state.map);
+		if (overlay && typeof overlay.setZIndex === "function") overlay.setZIndex(getFacilityOverlayZIndex("convenience"));
+		next.set(key, overlay);
+		overlays.push(overlay);
+	});
+	previous.forEach((overlay, key) => {
+		if (!next.has(key) && overlay && typeof overlay.setMap === "function") overlay.setMap(null);
+	});
+	state.largeMartOverlayMap = next;
+	state.largeMartOverlays = overlays;
+	syncFacilityOverlayZIndexes();
+}
+
+async function setLargeMartVisible(visible)
+{
+	state.isLargeMartVisible = !!visible;
+	if (!state.isLargeMartVisible) {
+		clearLargeMartOverlays();
+		hideEducationFacilityMapTooltip();
+		updateConvenienceToolActiveState();
+		return;
+	}
+	bringFacilityOverlayLayerToFront("convenience");
+	await renderLargeMartOverlays();
+	updateConvenienceToolActiveState();
+}
+
+const CONVENIENCE_CATEGORY_PLACE_CONFIGS = {
+	"convenience-store": {
+		stateVisibleKey: "isConvenienceStoreVisible",
+		overlaysKey: "convenienceStoreOverlays",
+		overlayMapKey: "convenienceStoreOverlayMap",
+		rowsKey: "convenienceStoreRows",
+		categoryGroupCode: "CS2",
+		label: "편의점",
+		icon: "fa-store",
+		markerClass: "convenience-store-marker-icon",
+		visibleLevel: FACILITY_MAP_VISIBLE_LEVEL
+	},
+	bank: {
+		stateVisibleKey: "isBankVisible",
+		overlaysKey: "bankOverlays",
+		overlayMapKey: "bankOverlayMap",
+		rowsKey: "bankRows",
+		categoryGroupCode: "BK9",
+		label: "은행",
+		icon: "fa-piggy-bank",
+		markerClass: "bank-marker-icon",
+		visibleLevel: LARGE_MART_MAP_VISIBLE_LEVEL
+	},
+	"public-office": {
+		stateVisibleKey: "isPublicOfficeVisible",
+		overlaysKey: "publicOfficeOverlays",
+		overlayMapKey: "publicOfficeOverlayMap",
+		rowsKey: "publicOfficeRows",
+		categoryGroupCode: "PO3",
+		label: "공공기관",
+		icon: "fa-building-circle-check",
+		markerClass: "public-office-marker-icon",
+		visibleLevel: LARGE_MART_MAP_VISIBLE_LEVEL
+	}
+};
+
+function getConvenienceCategoryPlaceConfig(category)
+{
+	return CONVENIENCE_CATEGORY_PLACE_CONFIGS[category] || null;
+}
+
+function clearConvenienceCategoryPlaceOverlays(category)
+{
+	const config = getConvenienceCategoryPlaceConfig(category);
+	if (!config) return;
+	const overlays = state[config.overlayMapKey] instanceof Map
+		? Array.from(state[config.overlayMapKey].values())
+		: (state[config.overlaysKey] || []);
+	overlays.forEach((overlay) => {
+		if (overlay && typeof overlay.setMap === "function") overlay.setMap(null);
+	});
+	state[config.overlaysKey] = [];
+	state[config.overlayMapKey] = new Map();
+	state[config.rowsKey] = [];
+}
+
+function getConvenienceCategoryPlaceOverlayKey(row)
+{
+	if (!row) return "";
+	return [row.category || "convenience-place", normalizeItemId(row.id || row.name || ""), row.lat, row.lng].join(":");
+}
+
+function normalizeConvenienceCategoryPlace(place, config)
+{
+	if (!place || !config) return null;
+	const lat = Number(place.y);
+	const lng = Number(place.x);
+	if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
+	return {
+		id: String(place.id || `${place.place_name || ""}-${place.x || ""}-${place.y || ""}`).trim(),
+		category: Object.keys(CONVENIENCE_CATEGORY_PLACE_CONFIGS).find(key => CONVENIENCE_CATEGORY_PLACE_CONFIGS[key] === config) || "",
+		name: String(place.place_name || config.label || "편의시설").trim(),
+		address: String(place.road_address_name || place.address_name || "").trim(),
+		phone: String(place.phone || "").trim(),
+		placeUrl: String(place.place_url || "").trim(),
+		lat,
+		lng
+	};
+}
+
+function searchConvenienceCategoryPlaces(category)
+{
+	const config = getConvenienceCategoryPlaceConfig(category);
+	return new Promise((resolve) => {
+		if (!config || !state.map || !window.kakao || !kakao.maps || !kakao.maps.services || !kakao.maps.services.Places) {
+			resolve([]);
+			return;
+		}
+		const places = new kakao.maps.services.Places();
+		const bounds = typeof state.map.getBounds === "function" ? state.map.getBounds() : null;
+		const options = bounds ? { bounds } : {};
+		const rows = [];
+		const seen = new Set();
+		const callback = (result, status, pagination) => {
+			if (status !== kakao.maps.services.Status.OK || !Array.isArray(result)) {
+				resolve(rows);
+				return;
+			}
+			result.forEach((place) => {
+				const row = normalizeConvenienceCategoryPlace(place, config);
+				if (!row) return;
+				const key = getConvenienceCategoryPlaceOverlayKey(row);
+				if (seen.has(key)) return;
+				seen.add(key);
+				rows.push(row);
+			});
+			if (pagination && pagination.hasNextPage && pagination.current < 3) {
+				pagination.nextPage();
+				return;
+			}
+			resolve(rows);
+		};
+		try {
+			if (typeof places.categorySearch === "function") {
+				places.categorySearch(config.categoryGroupCode, callback, options);
+			} else {
+				places.keywordSearch(config.label, callback, options);
+			}
+		} catch (err) {
+			console.warn(config.label + " 검색 실패:", err);
+			resolve(rows);
+		}
+	});
+}
+
+function getConvenienceCategoryMarkerHtml(config)
+{
+	return '<span class="education-facility-map-marker-icon '
+		+ escapeHtml(config.markerClass)
+		+ '" aria-hidden="true"><i class="fa-solid '
+		+ escapeHtml(config.icon)
+		+ '"></i></span>';
+}
+
+function createConvenienceCategoryOverlay(row)
+{
+	const config = getConvenienceCategoryPlaceConfig(row && row.category);
+	if (!config) return null;
+	const el = document.createElement("button");
+	el.type = "button";
+	el.className = "education-facility-map-marker " + row.category + "-map-marker";
+	el.dataset.category = row.category;
+	const overlayKey = getConvenienceCategoryPlaceOverlayKey(row);
+	el.dataset.conveniencePlaceOverlayKey = overlayKey;
+	el.innerHTML = getConvenienceCategoryMarkerHtml(config) + '<span class="education-facility-map-marker-tooltip"><strong>'
+		+ escapeHtml(row.name)
+		+ '</strong><small>'
+		+ escapeHtml(row.address || "주소 정보 없음")
+		+ '</small>'
+		+ (row.phone ? '<small>' + escapeHtml(row.phone) + '</small>' : '')
+		+ '</span>';
+	el.setAttribute("aria-label", row.name + " " + (row.address || ""));
+	const overlay = new kakao.maps.CustomOverlay({
+		position: new kakao.maps.LatLng(row.lat, row.lng),
+		content: el,
+		xAnchor: 0.5,
+		yAnchor: 0.5,
+		zIndex: getFacilityOverlayZIndex("convenience")
+	});
+	overlay.__realjejuMarkerElement = el;
+	const showTooltip = () => {
+		overlay.setZIndex(FACILITY_OVERLAY_Z_INDEX_HOVER);
+		showEducationFacilityMapTooltip(el, row);
+	};
+	const hideTooltip = () => {
+		overlay.setZIndex(getFacilityOverlayZIndex("convenience"));
+		scheduleEducationFacilityMapTooltipHide();
+	};
+	el.addEventListener("mouseenter", showTooltip);
+	el.addEventListener("focus", showTooltip);
+	el.addEventListener("mouseleave", hideTooltip);
+	el.addEventListener("blur", hideTooltip);
+	el.addEventListener("click", (event) => {
+		event.preventDefault();
+		event.stopPropagation();
+		showTooltip();
+	});
+	return overlay;
+}
+
+async function renderConvenienceCategoryPlaceOverlays(category)
+{
+	const config = getConvenienceCategoryPlaceConfig(category);
+	if (!config || !state[config.stateVisibleKey] || !state.map || !window.kakao || !kakao.maps) {
+		clearConvenienceCategoryPlaceOverlays(category);
+		return;
+	}
+	const mapLevel = getFacilityMapLevel();
+	if (!Number.isFinite(mapLevel) || mapLevel > config.visibleLevel) {
+		clearConvenienceCategoryPlaceOverlays(category);
+		return;
+	}
+	const rows = await searchConvenienceCategoryPlaces(category);
+	state[config.rowsKey] = rows;
+	const previous = state[config.overlayMapKey] instanceof Map ? state[config.overlayMapKey] : new Map();
+	const next = new Map();
+	const overlays = [];
+	rows.forEach((row) => {
+		const key = getConvenienceCategoryPlaceOverlayKey(row);
+		let overlay = previous.get(key);
+		if (!overlay) overlay = createConvenienceCategoryOverlay(row);
+		if (!overlay) return;
+		if (typeof overlay.setMap === "function") overlay.setMap(state.map);
+		if (typeof overlay.setZIndex === "function") overlay.setZIndex(getFacilityOverlayZIndex("convenience"));
+		next.set(key, overlay);
+		overlays.push(overlay);
+	});
+	previous.forEach((overlay, key) => {
+		if (!next.has(key) && overlay && typeof overlay.setMap === "function") overlay.setMap(null);
+	});
+	state[config.overlayMapKey] = next;
+	state[config.overlaysKey] = overlays;
+	syncFacilityOverlayZIndexes();
+}
+
+async function setConvenienceCategoryPlaceVisible(category, visible)
+{
+	const config = getConvenienceCategoryPlaceConfig(category);
+	if (!config) return;
+	state[config.stateVisibleKey] = !!visible;
+	if (!state[config.stateVisibleKey]) {
+		clearConvenienceCategoryPlaceOverlays(category);
+		hideEducationFacilityMapTooltip();
+		updateConvenienceToolActiveState();
+		return;
+	}
+	bringFacilityOverlayLayerToFront("convenience");
+	await renderConvenienceCategoryPlaceOverlays(category);
+	updateConvenienceToolActiveState();
+}
+
+async function renderConvenienceStoreOverlays()
+{
+	await renderConvenienceCategoryPlaceOverlays("convenience-store");
+}
+
+async function renderBankOverlays()
+{
+	await renderConvenienceCategoryPlaceOverlays("bank");
+}
+
+async function renderPublicOfficeOverlays()
+{
+	await renderConvenienceCategoryPlaceOverlays("public-office");
+}
+
+async function setConvenienceStoreVisible(visible)
+{
+	await setConvenienceCategoryPlaceVisible("convenience-store", visible);
+}
+
+async function setBankVisible(visible)
+{
+	await setConvenienceCategoryPlaceVisible("bank", visible);
+}
+
+async function setPublicOfficeVisible(visible)
+{
+	await setConvenienceCategoryPlaceVisible("public-office", visible);
+}
+
 
 function isConvenienceFacilityFilterPanelOpen()
 {
@@ -17486,6 +17963,10 @@ function ensureConvenienceFacilityFilterPanel()
 			if (isLifeSafetyOverlayVisible) await setLifeSafetyOverlayVisible(false);
 			else syncLocationAnalysisUI();
 			if (state.isPublicParkingVisible) await setPublicParkingVisible(false);
+			if (state.isLargeMartVisible) await setLargeMartVisible(false);
+			if (state.isConvenienceStoreVisible) await setConvenienceStoreVisible(false);
+			if (state.isBankVisible) await setBankVisible(false);
+			if (state.isPublicOfficeVisible) await setPublicOfficeVisible(false);
 			renderConvenienceFacilityFilterPanel();
 			updateConvenienceToolActiveState();
 			return;
@@ -17504,6 +17985,30 @@ function ensureConvenienceFacilityFilterPanel()
 		}
 		if (option.dataset.convenienceOption === "public-parking") {
 			await setPublicParkingVisible(!state.isPublicParkingVisible);
+			renderConvenienceFacilityFilterPanel();
+			updateConvenienceToolActiveState();
+			return;
+		}
+		if (option.dataset.convenienceOption === "large-mart") {
+			await setLargeMartVisible(!state.isLargeMartVisible);
+			renderConvenienceFacilityFilterPanel();
+			updateConvenienceToolActiveState();
+			return;
+		}
+		if (option.dataset.convenienceOption === "convenience-store") {
+			await setConvenienceStoreVisible(!state.isConvenienceStoreVisible);
+			renderConvenienceFacilityFilterPanel();
+			updateConvenienceToolActiveState();
+			return;
+		}
+		if (option.dataset.convenienceOption === "bank") {
+			await setBankVisible(!state.isBankVisible);
+			renderConvenienceFacilityFilterPanel();
+			updateConvenienceToolActiveState();
+			return;
+		}
+		if (option.dataset.convenienceOption === "public-office") {
+			await setPublicOfficeVisible(!state.isPublicOfficeVisible);
 			renderConvenienceFacilityFilterPanel();
 			updateConvenienceToolActiveState();
 		}
@@ -17539,8 +18044,12 @@ function renderConvenienceFacilityPlaceholder(index)
 function renderConvenienceFacilityFilterPanel()
 {
 	const panel = ensureConvenienceFacilityFilterPanel();
-	const canClearConvenienceSelection = isLifeSafetyOverlayVisible || state.isPublicParkingVisible;
+	const canClearConvenienceSelection = isLifeSafetyOverlayVisible || state.isPublicParkingVisible || state.isLargeMartVisible || state.isConvenienceStoreVisible || state.isBankVisible || state.isPublicOfficeVisible;
 	const publicParkingOption = { key: "public-parking", label: "공영주차장", icon: "fa-square-parking", active: state.isPublicParkingVisible };
+	const largeMartOption = { key: "large-mart", label: "대형마트", icon: "fa-cart-shopping", active: state.isLargeMartVisible };
+	const convenienceStoreOption = { key: "convenience-store", label: "편의점", icon: "fa-store", active: state.isConvenienceStoreVisible };
+	const bankOption = { key: "bank", label: "은행", icon: "fa-piggy-bank", active: state.isBankVisible };
+	const publicOfficeOption = { key: "public-office", label: "공공기관", icon: "fa-building-circle-check", active: state.isPublicOfficeVisible };
 	const lifeSafetyOption = { key: "life-safety", label: "생활안전 지표", icon: "fa-shield-heart", active: isLifeSafetyOverlayVisible || isLifeSafetyRegionFilterExpanded };
 	const publicParkingButton = '<button type="button" class="education-facility-filter-option convenience-facility-filter-option public-parking-filter-option '
 		+ (publicParkingOption.active ? 'active' : '')
@@ -17550,6 +18059,42 @@ function renderConvenienceFacilityFilterPanel()
 		+ escapeHtml(publicParkingOption.icon)
 		+ '" aria-hidden="true"></i><span>'
 		+ escapeHtml(publicParkingOption.label)
+		+ '</span></button>';
+	const largeMartButton = '<button type="button" class="education-facility-filter-option convenience-facility-filter-option large-mart-filter-option '
+		+ (largeMartOption.active ? 'active' : '')
+		+ '" data-convenience-option="'
+		+ escapeHtml(largeMartOption.key)
+		+ '"><i class="fa-solid '
+		+ escapeHtml(largeMartOption.icon)
+		+ '" aria-hidden="true"></i><span>'
+		+ escapeHtml(largeMartOption.label)
+		+ '</span></button>';
+	const convenienceStoreButton = '<button type="button" class="education-facility-filter-option convenience-facility-filter-option convenience-store-filter-option '
+		+ (convenienceStoreOption.active ? 'active' : '')
+		+ '" data-convenience-option="'
+		+ escapeHtml(convenienceStoreOption.key)
+		+ '"><i class="fa-solid '
+		+ escapeHtml(convenienceStoreOption.icon)
+		+ '" aria-hidden="true"></i><span>'
+		+ escapeHtml(convenienceStoreOption.label)
+		+ '</span></button>';
+	const bankButton = '<button type="button" class="education-facility-filter-option convenience-facility-filter-option bank-filter-option '
+		+ (bankOption.active ? 'active' : '')
+		+ '" data-convenience-option="'
+		+ escapeHtml(bankOption.key)
+		+ '"><i class="fa-solid '
+		+ escapeHtml(bankOption.icon)
+		+ '" aria-hidden="true"></i><span>'
+		+ escapeHtml(bankOption.label)
+		+ '</span></button>';
+	const publicOfficeButton = '<button type="button" class="education-facility-filter-option convenience-facility-filter-option public-office-filter-option '
+		+ (publicOfficeOption.active ? 'active' : '')
+		+ '" data-convenience-option="'
+		+ escapeHtml(publicOfficeOption.key)
+		+ '"><i class="fa-solid '
+		+ escapeHtml(publicOfficeOption.icon)
+		+ '" aria-hidden="true"></i><span>'
+		+ escapeHtml(publicOfficeOption.label)
 		+ '</span></button>';
 	const lifeSafetyButton = '<button type="button" class="education-facility-filter-option convenience-facility-filter-option '
 		+ (lifeSafetyOption.active ? 'active' : '')
@@ -17562,18 +18107,18 @@ function renderConvenienceFacilityFilterPanel()
 		+ '</span></button>';
 	panel.innerHTML = '<div class="education-facility-filter-grid">'
 		+ publicParkingButton
+		+ bankButton
+		+ convenienceStoreButton
+		+ largeMartButton
+		+ publicOfficeButton
 		+ lifeSafetyButton
 		+ renderLifeSafetyRegionFilterMarkup()
-		+ renderConvenienceFacilityPlaceholder(2)
-		+ renderConvenienceFacilityPlaceholder(3)
-		+ renderConvenienceFacilityPlaceholder(4)
-		+ renderConvenienceFacilityPlaceholder(5)
 		+ '</div>'
 		+ '<button type="button" class="education-facility-filter-clear '
 		+ (!canClearConvenienceSelection ? 'is-disabled' : '')
 		+ '" data-convenience-clear '
 		+ (!canClearConvenienceSelection ? 'disabled aria-disabled="true"' : '')
-		+ '>전체 선택해제</button><div class="education-facility-filter-radius">지도 레벨 6단계까지만 표시</div>';
+		+ '>전체 선택해제</button><div class="education-facility-filter-radius">레벨 : 공영주차장·편의점·생활안전 6단계<br>대형마트·은행·공공기관 9단계</div>';
 	positionConvenienceFacilityFilterPanel();
 }
 
@@ -17596,7 +18141,7 @@ function updateConvenienceToolActiveState()
 	if (!mapConvenienceToolBtn) return;
 	const isConfiguring = isConvenienceFacilityFilterPanelOpen();
 	mapConvenienceToolBtn.classList.toggle("configuring", isConfiguring);
-	mapConvenienceToolBtn.classList.toggle("active", !isConfiguring && (isLifeSafetyOverlayVisible || state.isPublicParkingVisible));
+	mapConvenienceToolBtn.classList.toggle("active", !isConfiguring && (isLifeSafetyOverlayVisible || state.isPublicParkingVisible || state.isLargeMartVisible || state.isConvenienceStoreVisible || state.isBankVisible || state.isPublicOfficeVisible));
 }
 
 
