@@ -11167,6 +11167,20 @@ body.realjeju-side-nav-enabled:not(.admin-page-open):not(.broker-home-page-open)
 	font-weight: 550;
 }
 
+.admin-users-list .admin-user-role
+{
+	flex-direction: column;
+	gap: 2px;
+	white-space: normal;
+	line-height: 1.35;
+}
+
+.admin-users-list .admin-user-role span
+{
+	display: block;
+	white-space: nowrap;
+}
+
 .admin-user-thumb .broker-listing-thumb
 {
 	border-radius: 999px;
