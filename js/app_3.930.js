@@ -3704,7 +3704,7 @@ let favoriteCountMap = {};
 let inquiryCountMap = {};
 let sidebarAgentEngagementSeq = 0;
 let detailEngagementCountSeq = 0;
-let engagementCountRpcDisabled = true;
+let engagementCountRpcDisabled = false;
 const mapListingOwnerCache = {
 	profilesByUserId: new Map(),
 	agenciesById: new Map(),
@@ -3892,6 +3892,99 @@ function getDetailFavoriteCount(item)
 	const mappedCount = Number(favoriteCountMap[getViewCountKey(key)]);
 	if (Number.isFinite(mappedCount)) return mappedCount;
 	return getDetailCountValue(item, ["favoriteCount", "favorite_count", "wishCount", "wish_count"]);
+}
+
+function getFavoriteCountRelatedKeys(listingId)
+{
+	const sourceKey = getViewCountKey(listingId);
+	const keys = new Set();
+	if (sourceKey) keys.add(sourceKey);
+	const addItemKeys = (item) => {
+		if (!item || typeof item !== "object") return;
+		const itemKey = getViewCountKey(getItemViewKey(item));
+		const listingKey = getViewCountKey(getListingViewKey(item));
+		if (itemKey) keys.add(itemKey);
+		if (listingKey) keys.add(listingKey);
+	};
+	const matchesSource = (item) => {
+		if (!sourceKey || !item || typeof item !== "object") return false;
+		const itemKeys = [
+			getItemViewKey(item),
+			getListingViewKey(item),
+			item.id,
+			item.listingNo,
+			item.listing_no,
+			item.payload && item.payload.listing_no,
+			item.payload && item.payload.listingNo
+		].map(getViewCountKey).filter(Boolean);
+		return itemKeys.includes(sourceKey);
+	};
+	if (currentDetailItem && matchesSource(currentDetailItem)) addItemKeys(currentDetailItem);
+	[state.all, state.filtered, state.leftListItems].forEach((items) => {
+		(Array.isArray(items) ? items : []).forEach((item) => {
+			if (matchesSource(item)) addItemKeys(item);
+		});
+	});
+	return [...keys].filter(Boolean);
+}
+
+function setFavoriteCountForRelatedKeys(listingId, count)
+{
+	const normalizedCount = Math.max(0, Number.isFinite(Number(count)) ? Number(count) : 0);
+	const keys = getFavoriteCountRelatedKeys(listingId);
+	keys.forEach((key) => {
+		favoriteCountMap[key] = normalizedCount;
+		detailEngagementFetchedAtMap.set(key, Date.now());
+	});
+	if (currentDetailItem) {
+		const detailKeys = getFavoriteCountRelatedKeys(getItemViewKey(currentDetailItem));
+		if (detailKeys.some((key) => keys.includes(key))) renderDetailSummaryMeta(currentDetailItem);
+	}
+}
+
+function applyFavoriteCountChange(listingId, shouldFavorite, wasFavorite)
+{
+	const keys = getFavoriteCountRelatedKeys(listingId);
+	if (!keys.length || shouldFavorite === wasFavorite) return;
+	const currentCount = keys.map((key) => Number(favoriteCountMap[key])).find(Number.isFinite);
+	const detailKey = currentDetailItem ? getViewCountKey(getItemViewKey(currentDetailItem)) : "";
+	const detailListingKey = currentDetailItem ? getViewCountKey(getListingViewKey(currentDetailItem)) : "";
+	const fallbackCount = currentDetailItem && (keys.includes(detailKey) || keys.includes(detailListingKey))
+		? getDetailCountValue(currentDetailItem, ["favoriteCount", "favorite_count", "wishCount", "wish_count"])
+		: 0;
+	const baseCount = Number.isFinite(currentCount) ? currentCount : fallbackCount;
+	setFavoriteCountForRelatedKeys(listingId, baseCount + (shouldFavorite ? 1 : -1));
+}
+
+async function syncFavoriteCountFromStoredDb(client, listingId)
+{
+	const key = getViewCountKey(listingId);
+	if (!client || !key) return false;
+	try {
+		if (typeof client.rpc === "function") {
+			try {
+				await client.rpc("refresh_property_engagement_count_for_listing", { p_listing_id: key });
+			} catch (refreshError) {
+				if (!isMissingRpcError(refreshError)) console.warn("관심수 저장 카운트 갱신 실패:", refreshError);
+			}
+			const { data, error } = await client.rpc("get_property_engagement_counts", {
+				p_listing_ids: [key]
+			});
+			if (error) throw error;
+			const row = Array.isArray(data) ? data[0] : null;
+			const favoriteCount = Number(row && row.favorites);
+			const storedId = getViewCountKey(row && row.listing_id) || key;
+			if (Number.isFinite(favoriteCount)) {
+				setFavoriteCountForRelatedKeys(key, favoriteCount);
+				setFavoriteCountForRelatedKeys(storedId, favoriteCount);
+				return true;
+			}
+		}
+	} catch (error) {
+		if (isMissingRpcError(error)) return false;
+		console.warn("관심수 저장 카운트 불러오기 실패:", error);
+	}
+	return false;
 }
 
 function getDetailInquiryCount(item)
@@ -4090,6 +4183,23 @@ async function refreshDetailEngagementCounts(item)
 			}
 		}
 
+		try {
+			const { data, error } = await client
+				.from("property_engagement_counts")
+				.select("listing_id, views, favorites, inquiries")
+				.eq("listing_id", key)
+				.maybeSingle();
+			if (error) throw error;
+			const storedViews = Number(data && data.views);
+			const storedFavorites = Number(data && data.favorites);
+			const storedInquiries = Number(data && data.inquiries);
+			if (Number.isFinite(storedViews)) viewMap[viewKey] = storedViews;
+			if (Number.isFinite(storedFavorites)) favoriteCountMap[key] = storedFavorites;
+			if (Number.isFinite(storedInquiries)) inquiryCountMap[key] = storedInquiries;
+		} catch (favoriteError) {
+			console.warn("상세 저장 카운트 불러오기 실패:", favoriteError);
+		}
+
 		if (DETAIL_INQUIRY_COUNT_ENABLED) {
 			try {
 				const { data, error } = await client
@@ -4174,6 +4284,7 @@ const state = {
 	publicOfficeOverlays: [],
 	publicOfficeOverlayMap: new Map(),
 	publicOfficeRows: [],
+	convenienceCategoryRenderSeq: {},
 	educationFacilityOverlays: [],
 	educationFacilityOverlayMap: new Map(),
 	educationFacilityRows: null,
@@ -11355,7 +11466,33 @@ function getListingLocationBounds(row)
 	);
 }
 
-function getListingDisplayPosition(row)
+function isLikelyHallasanFallbackPosition(latValue, lngValue)
+{
+	const lat = Number(latValue);
+	const lng = Number(lngValue);
+	return Number.isFinite(lat)
+		&& Number.isFinite(lng)
+		&& Math.abs(lat - 33.3617) < 0.0005
+		&& Math.abs(lng - 126.5292) < 0.0005;
+}
+
+function getAgencyListingFallbackPosition(row, agenciesById = new Map(), agenciesByUserId = new Map(), agenciesByOfficeName = new Map())
+{
+	if (!row || typeof row !== "object") return null;
+	const payload = row.payload && typeof row.payload === "object" ? row.payload : {};
+	const registrant = payload.registrant && typeof payload.registrant === "object" ? payload.registrant : {};
+	const savedOfficeName = String(registrant.office_name || "").trim();
+	const agency = agenciesById.get(String(row.agency_id || ""))
+		|| agenciesByUserId.get(String(row.user_id || ""))
+		|| agenciesByOfficeName.get(savedOfficeName)
+		|| {};
+	return normalizeJejuLatLngPair(
+		agency.lat ?? agency.latitude ?? agency.office_lat,
+		agency.lng ?? agency.longitude ?? agency.office_lng
+	);
+}
+
+function getListingDisplayPosition(row, fallbackPosition = null)
 {
 	const payload = row?.payload && typeof row.payload === "object" ? row.payload : {};
 	const address = payload.address && typeof payload.address === "object" ? payload.address : {};
@@ -11367,9 +11504,12 @@ function getListingDisplayPosition(row)
 		[payload.latitude, payload.longitude]
 	];
 	for (const [lat, lng] of candidates) {
+		if (isLikelyHallasanFallbackPosition(lat, lng)) continue;
 		const normalized = normalizeJejuLatLngPair(lat, lng);
 		if (normalized) return normalized;
 	}
+	const normalizedFallback = fallbackPosition && normalizeJejuLatLngPair(fallbackPosition.lat, fallbackPosition.lng);
+	if (normalizedFallback) return normalizedFallback;
 	const bounds = getListingLocationBounds(row);
 	if (bounds) {
 		return {
@@ -11402,10 +11542,11 @@ function mapPropertyListingRowToMapItem(row, profilesByUserId = new Map(), agenc
 	const images = photos.map(photo => photo?.url || photo?.publicUrl || "").filter(Boolean);
 	const dealTypes = Array.isArray(row.deal_types) ? row.deal_types : [];
 	const primaryDeal = dealTypes[0] || "";
-	const displayPosition = getListingDisplayPosition(row);
+	const agency = agenciesById.get(String(row.agency_id || "")) || agenciesByUserId.get(String(row.user_id || "")) || agenciesByOfficeName.get(savedOfficeName) || {};
+	const fallbackPosition = getAgencyListingFallbackPosition(row, agenciesById, agenciesByUserId, agenciesByOfficeName);
+	const displayPosition = getListingDisplayPosition(row, fallbackPosition);
 	const lat = displayPosition ? displayPosition.lat : Number(row.lat);
 	const lng = displayPosition ? displayPosition.lng : Number(row.lng);
-	const agency = agenciesById.get(String(row.agency_id || "")) || agenciesByUserId.get(String(row.user_id || "")) || agenciesByOfficeName.get(savedOfficeName) || {};
 	const listingProfile = profilesByUserId.get(String(row.user_id || "")) || {};
 	const agencyProfile = profilesByUserId.get(String(agency.user_id || "")) || {};
 	const profile = { ...agencyProfile, ...listingProfile };
@@ -11512,8 +11653,8 @@ function mapPropertyListingRowToMapItem(row, profilesByUserId = new Map(), agenc
 		image: images[0] || "",
 		images,
 		link: "#",
-		date: row.created_at || row.updated_at || "",
-		dateLabel: row.created_at || row.updated_at || "",
+		date: payload.last_relisted_at || row.created_at || row.updated_at || "",
+		dateLabel: payload.last_relisted_at || row.created_at || row.updated_at || "",
 		createdAt: row.created_at || "",
 		updatedAt: row.updated_at || "",
 		agentName,
@@ -11552,7 +11693,7 @@ function buildMarkerPricePayload(dealType, priceValue)
 	return {};
 }
 
-function mapPropertyListingMarkerRowToMapItem(row)
+function mapPropertyListingMarkerRowToMapItem(row, profilesByUserId = new Map(), agenciesById = new Map(), agenciesByUserId = new Map(), agenciesByOfficeName = new Map())
 {
 	const dealTypes = Array.isArray(row?.deal_types) ? row.deal_types : [];
 	const primaryDeal = String(row?.deal_type || dealTypes[0] || "").trim();
@@ -11574,7 +11715,8 @@ function mapPropertyListingMarkerRowToMapItem(row)
 	const brokerStatus = String(row?.broker_status || "").trim().toLowerCase();
 	const markerArea = row?.area || row?.area_text || getMapListingArea({ ...row, payload });
 	const markerSource = { ...row, payload };
-	const markerPosition = getListingDisplayPosition(markerSource);
+	const markerFallbackPosition = getAgencyListingFallbackPosition(markerSource, agenciesById, agenciesByUserId, agenciesByOfficeName);
+	const markerPosition = getListingDisplayPosition(markerSource, markerFallbackPosition);
 	const markerBounds = getListingLocationBounds(markerSource);
 
 	return normalizeProperty({
@@ -11602,8 +11744,8 @@ function mapPropertyListingMarkerRowToMapItem(row)
 		image: "",
 		images: [],
 		link: "#",
-		date: row?.created_at || row?.updated_at || "",
-		dateLabel: row?.created_at || row?.updated_at || "",
+		date: payload.last_relisted_at || row?.created_at || row?.updated_at || "",
+		dateLabel: payload.last_relisted_at || row?.created_at || row?.updated_at || "",
 		createdAt: row?.created_at || "",
 		updatedAt: row?.updated_at || "",
 		agentName: "",
@@ -11965,15 +12107,26 @@ async function runLoadProperties()
 		if (!client) throw new Error("Supabase 클라이언트를 초기화하지 못했습니다.");
 
 			const rows = await fetchMapListingMarkerRows(client);
+			const ownerData = await loadMapListingOwnerData(client, rows);
 			const normalized = rows
-				.filter(row => {
+				.map(row => ({
+					row,
+					item: mapPropertyListingMarkerRowToMapItem(
+						row,
+						ownerData.profilesByUserId,
+						ownerData.agenciesById,
+						ownerData.agenciesByUserId,
+						ownerData.agenciesByOfficeName
+					)
+				}))
+				.filter(({ row, item }) => {
 					const effectiveStatus = String(row?.broker_status || "").trim().toLowerCase();
 					return !["closed", "hidden", "archive", "deleted"].includes(effectiveStatus)
 						&& !row?.deleted_at
-						&& !!getListingDisplayPosition(row);
+						&& Number.isFinite(item.lat)
+						&& Number.isFinite(item.lng);
 				})
-			.map(row => mapPropertyListingMarkerRowToMapItem(row))
-			.filter(item => Number.isFinite(item.lat) && Number.isFinite(item.lng));
+				.map(({ item }) => item);
 
 		state.all = [...normalized].sort((a, b) => getSortDateValue(b) - getSortDateValue(a));
 		syncSortLabelUI();
@@ -17790,6 +17943,10 @@ function clearConvenienceCategoryPlaceOverlays(category)
 {
 	const config = getConvenienceCategoryPlaceConfig(category);
 	if (!config) return;
+	if (!state.convenienceCategoryRenderSeq || typeof state.convenienceCategoryRenderSeq !== "object") {
+		state.convenienceCategoryRenderSeq = {};
+	}
+	state.convenienceCategoryRenderSeq[category] = (Number(state.convenienceCategoryRenderSeq[category]) || 0) + 1;
 	const overlays = state[config.overlayMapKey] instanceof Map
 		? Array.from(state[config.overlayMapKey].values())
 		: (state[config.overlaysKey] || []);
@@ -17937,7 +18094,19 @@ async function renderConvenienceCategoryPlaceOverlays(category)
 		clearConvenienceCategoryPlaceOverlays(category);
 		return;
 	}
+	if (!state.convenienceCategoryRenderSeq || typeof state.convenienceCategoryRenderSeq !== "object") {
+		state.convenienceCategoryRenderSeq = {};
+	}
+	const renderSeq = (Number(state.convenienceCategoryRenderSeq[category]) || 0) + 1;
+	state.convenienceCategoryRenderSeq[category] = renderSeq;
 	const rows = await searchConvenienceCategoryPlaces(category);
+	if (renderSeq !== state.convenienceCategoryRenderSeq[category]) return;
+	if (!state[config.stateVisibleKey]) return;
+	const latestMapLevel = getFacilityMapLevel();
+	if (!Number.isFinite(latestMapLevel) || latestMapLevel > config.visibleLevel) {
+		clearConvenienceCategoryPlaceOverlays(category);
+		return;
+	}
 	state[config.rowsKey] = rows;
 	const previous = state[config.overlayMapKey] instanceof Map ? state[config.overlayMapKey] : new Map();
 	const next = new Map();
@@ -19420,6 +19589,7 @@ async function setFavoriteListing(id, shouldFavorite)
 	if (!realjejuFavoriteLoaded || realjejuFavoriteUserId !== context.userId) await loadFavoriteListingStateFromServer();
 	const favorites = getFavoriteListingSet();
 	const trash = getFavoriteTrashSet();
+	const wasFavorite = favorites.has(listingId);
 	if (shouldFavorite) favorites.add(listingId);
 	else favorites.delete(listingId);
 	if (shouldFavorite) trash.delete(listingId);
@@ -19446,6 +19616,8 @@ async function setFavoriteListing(id, shouldFavorite)
 				.eq("listing_id", listingId);
 			if (error) throw error;
 		}
+		applyFavoriteCountChange(listingId, favorites.has(listingId), wasFavorite);
+		void syncFavoriteCountFromStoredDb(context.client, listingId);
 		return favorites.has(listingId);
 	} catch (err) {
 		console.warn("관심매물 저장 실패:", err);
@@ -34714,10 +34886,11 @@ let adminListingPage = 1;
 		return `${yy}.${mm}.${dd}`;
 	}
 
-	// PATCH 3.928: 등록날짜 칸은 수정/갱신일이 아니라 최초 등록일 기준으로 고정한다.
+	// 수정일(updated_at)은 제외하고, 재등록 갱신일이 있으면 그 날짜를 등록날짜 칸에 우선 표시한다.
 	function getBrokerListingDisplayDate(row)
 	{
-		return formatBrokerListingDate(row?.created_at || row?.updated_at);
+		const payload = row && row.payload && typeof row.payload === "object" ? row.payload : {};
+		return formatBrokerListingDate(payload.last_relisted_at || row?.created_at || row?.updated_at);
 	}
 
 	// [ARCHIVE] PATCH 2.353: 현재날짜 갱신 사용건수는 payload 안에 날짜별로 누적해 오늘치만 합산한다
@@ -34966,9 +35139,13 @@ let adminListingPage = 1;
 		}
 
 		if (nextAction === "refresh") {
+			const row = Array.isArray(adminListingRowsCache)
+				? adminListingRowsCache.find((item) => String(item?.id || "") === id)
+				: null;
+			const payload = row && row.payload && typeof row.payload === "object" ? { ...row.payload } : {};
 			const { error } = await client
 				.from("property_listings")
-				.update({ updated_at: nowIso })
+				.update({ updated_at: nowIso, payload: { ...payload, last_relisted_at: nowIso } })
 				.eq("id", id);
 			if (error) throw error;
 			return;
@@ -35028,6 +35205,12 @@ let adminListingPage = 1;
 		}
 
 		try {
+			if (nextAction === "refresh") {
+				await updateAdminListingRowActionDirect(client, id, nextAction);
+				await loadAdminListings({ force: true, silent: true });
+				if (typeof window.realjejuReloadMapListings === "function") window.realjejuReloadMapListings();
+				return;
+			}
 			const { error } = await client.rpc("admin_update_property_listing", {
 				p_listing_id: id,
 				p_action: nextAction
