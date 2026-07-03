@@ -22,7 +22,7 @@
 				transition: none;
 			}
 		</style>
-					<link rel="stylesheet" href="css/base_3.978.css?v=20260703-admin-menu-dot-align-3789">
+					<link rel="stylesheet" href="css/base_3.997.css?v=20260703-oiljang-area-labels-exact-3997">
 
 </head>
 	<body class="sidebar-list-collapsed realjeju-side-nav-enabled">
@@ -69,7 +69,7 @@
 					<div class="global-topbar-right">
 						<!-- PATCH 3.918: 상단 배너 버전 텍스트를 현재 배포 버전과 일치시킵니다. -->
 						<button type="button" class="global-auth-trigger version-only" id="detailAuthTrigger" data-auth-state="logged-out">
-						<span class="topbar-version-text">Ver 3.978</span>
+						<span class="topbar-version-text">Ver 3.997</span>
 						</button>
 					<div class="global-account-dropdown" id="globalAccountDropdown" aria-hidden="true">
 						<button type="button" class="global-account-menu-item" data-account-action="inquiries">1:1 문의내역</button>
@@ -269,7 +269,7 @@
 		<div class="admin-page-tab-panel" data-admin-tab-panel="listings">
 			<div class="admin-listings-content">
 				<div class="my-suite-favorites-filterbar admin-listings-filterbar">
-					<button type="button" class="broker-home-filter-btn active" data-admin-listing-view="all">전체 매물 <span id="adminListingsAllCount">0</span></button>
+					<button type="button" class="broker-home-filter-btn active" data-admin-listing-view="all">전체 <span id="adminListingsAllCount">0</span></button>
 					<button type="button" class="broker-home-filter-btn" data-admin-listing-view="reported">신고 매물 <span id="adminListingsReportedCount">0</span></button>
 					<button type="button" class="broker-home-filter-btn" data-admin-listing-view="closed">거래완료 <span id="adminListingsClosedCount">0</span></button>
 					<button type="button" class="broker-home-filter-btn" data-admin-listing-view="hidden">숨김 <span id="adminListingsHiddenCount">0</span></button>
@@ -421,7 +421,7 @@
 				</div>
 				<div class="broker-home-filter-item">
 					<button type="button" class="broker-home-filter-btn" id="brokerLandTypeFilterBtn" data-broker-home-filter-menu="landType">지목 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
-					<div class="broker-home-filter-menu extra-filter-menu type-filter-menu broker-home-land-type-menu broker-home-map-style-menu" id="brokerLandTypeFilterMenu"></div>
+					<div class="broker-home-filter-menu extra-filter-menu type-filter-menu land-type-filter-menu broker-home-land-type-menu broker-home-map-style-menu" id="brokerLandTypeFilterMenu"></div>
 				</div>
 				<div class="broker-home-filter-item">
 					<button type="button" class="broker-home-filter-btn" id="brokerLandUseZoneFilterBtn" data-broker-home-filter-menu="landUseZone">용도지역 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
@@ -1034,6 +1034,19 @@
 					<label class="property-form-label" for="landRoadInput">도로조건</label>
 					<div class="property-form-control">
 						<input type="text" class="property-register-input" id="landRoadInput" placeholder="예: 2차선 접함" autocomplete="off" />
+					</div>
+				</div>
+
+				<div class="property-form-row property-land-extra-row" id="landExtraConditionsRow" style="display:none;">
+					<label class="property-form-label">기타조건</label>
+					<div class="property-form-control">
+						<div class="property-check-row property-land-extra-checks">
+							<label class="property-check-option"><input type="checkbox" id="landNationalUseChk" /> 국토이용</label>
+							<label class="property-check-option"><input type="checkbox" id="landUrbanPlanningChk" /> 도시계획</label>
+							<label class="property-check-option"><input type="checkbox" id="landBuildingPermitChk" /> 건축허가</label>
+							<label class="property-check-option"><input type="checkbox" id="landTransactionPermitChk" /> 토지거래허가</label>
+						</div>
+						<p class="property-land-extra-guide">해당하는 경우 체크</p>
 					</div>
 				</div>
 			</div>
@@ -1808,8 +1821,8 @@
 		<div class="sub-topbar">
 			<div class="sub-topbar-inner">
 					<!-- PATCH 3.918: 하단 버전 링크도 현재 배포 파일명으로 갱신합니다. -->
-						<a class="sub-version-fixed" href="#" data-version-download="realjeju_3.978.html" title="realjeju_3.978.html 다운로드">
-							Ver 3.978
+						<a class="sub-version-fixed" href="#" data-version-download="realjeju_3.997.html" title="realjeju_3.997.html 다운로드">
+							Ver 3.997
 						</a>
 				<div class="sub-topbar-left">
 					<strong id="listInfoText">
@@ -4226,7 +4239,7 @@
 	</div>
 </div>
 
-		<script src="js/app_3.978.js?v=20260703-admin-menu-dot-align-3789"></script>
+		<script src="js/app_3.997.js?v=20260703-oiljang-area-labels-exact-3997"></script>
 <script>
 (function () {
 	var labels = {
