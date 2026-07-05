@@ -1,5 +1,20 @@
 <!DOCTYPE html>
 <html lang="ko">
+	<!--
+		REALJEJU HTML 구조 / Ver 4.119
+		파일은 단일 HTML을 유지하고, 실제 배치 순서대로 큰 화면 단위만 주석으로 구분한다.
+		0. Head / 공통 메타
+		1. 상단바 / 전역 메뉴
+		2. 관심 부동산 / 마이페이지
+		3. 관리자 페이지 / 운영자 권한
+		4. 중개사 홈
+		5. 결제 / 이용권
+		6. 매물 등록 / 수정
+		7. 왼쪽 목록 / 상세 패널 / 사진 확대
+		8. 부동산 홈 / 지도 / 필터
+		9. 인증 / 내정보 / 중개사무소 신청
+		10. 전역 모달 / 스크립트
+	-->
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -22,7 +37,7 @@
 				transition: none;
 			}
 		</style>
-						<link rel="stylesheet" href="css/base_4.114.css?v=20260705-detail-lru-cache-4114">
+						<link rel="stylesheet" href="css/base_4.119.css?v=20260705-broker-tooltip-padding-4119">
 
 </head>
 	<body class="sidebar-list-collapsed realjeju-side-nav-enabled">
@@ -69,7 +84,7 @@
 					<div class="global-topbar-right">
 						<!-- PATCH 3.918: 상단 배너 버전 텍스트를 현재 배포 버전과 일치시킵니다. -->
 						<button type="button" class="global-auth-trigger version-only" id="detailAuthTrigger" data-auth-state="logged-out">
-							<span class="topbar-version-text">Ver 4.114</span>
+							<span class="topbar-version-text">Ver 4.119</span>
 						</button>
 					<div class="global-account-dropdown" id="globalAccountDropdown" aria-hidden="true">
 						<button type="button" class="global-account-menu-item" data-account-action="inquiries">1:1 문의내역</button>
@@ -147,6 +162,7 @@
 				</button>
 			</nav>
 		</aside>
+	<!-- 2. 관심 부동산 / 마이페이지 -->
 	<section class="my-suite-panel" id="mySuitePanel" aria-hidden="true">
 		<div class="my-suite-inner">
 			<div class="my-suite-content" id="mySuiteContent">
@@ -174,6 +190,7 @@
 			</footer>
 		</div>
 	</section>
+	<!-- 3. 관리자 페이지 / 운영자 권한 -->
 	<section class="admin-page-panel" id="adminPagePanel" aria-hidden="true">
 		<div class="admin-page-head">
 			<div>
@@ -335,6 +352,7 @@
 			<div class="admin-page-simple-copy">© REALJEJU.APP</div>
 		</footer>
 	</section>
+	<!-- 7-1. 운영자 페이지 -->
 	<section class="admin-page-panel operator-page-panel" id="operatorPagePanel" aria-hidden="true">
 		<div class="admin-page-head">
 			<div>
@@ -375,6 +393,7 @@
 		</div>
 	</section>
 	<!-- PATCH 2.316: 중개사 홈은 등록한 매물 관리 목록을 보여주는 전용 패널 -->
+	<!-- 4. 중개사 홈 -->
 	<section class="broker-home-panel" id="brokerHomePanel" aria-hidden="true">
 		<!-- PATCH 2.337: 중개사 홈 상단 안내, 사용건수, 광고, 필터 메뉴 구성 -->
 		<div class="broker-home-overview">
@@ -465,6 +484,7 @@
 			</div>
 		</footer>
 	</section>
+	<!-- 5. 결제 / 이용권 -->
 	<section class="payment-page-panel" id="paymentPagePanel" aria-hidden="true">
 		<div class="payment-page-inner">
 			<div class="payment-tabs" role="tablist" aria-label="이용권 결제 메뉴">
@@ -796,6 +816,7 @@
 			</footer>
 	</section>
 
+	<!-- 6. 매물 등록 / 수정 -->
 	<section class="property-register-page" id="propertyRegisterPage" aria-hidden="true">
 		<div class="property-register-inner">
 			<div class="property-register-head">
@@ -1918,8 +1939,8 @@
 		<div class="sub-topbar">
 			<div class="sub-topbar-inner">
 					<!-- PATCH 3.918: 하단 버전 링크도 현재 배포 파일명으로 갱신합니다. -->
-									<a class="sub-version-fixed" href="#" data-version-download="realjeju_4.114.html" title="realjeju_4.114.html 다운로드">
-									Ver 4.114
+									<a class="sub-version-fixed" href="#" data-version-download="realjeju_4.119.html" title="realjeju_4.119.html 다운로드">
+									Ver 4.119
 						</a>
 				<div class="sub-topbar-left">
 					<strong id="listInfoText">
@@ -3135,6 +3156,7 @@
 		</div>
 	</div>
 <div class="app">
+	<!-- 7. 왼쪽 목록 / 상세 패널 -->
 	<aside class="sidebar" id="sidebar">
 		<div class="sidebar-inner">
 			<div class="sidebar-list-panel">
@@ -3436,6 +3458,7 @@
 	<div class="resizer" id="resizer" aria-label="패널 크기 조절">
 	</div>
 	<main class="map-wrap">
+		<!-- 8. 부동산 홈 / 지도 -->
 		<div id="map">
 		</div>
 		<div class="map-center-region-label" id="mapCenterRegionLabel" aria-live="polite" hidden>
@@ -3731,6 +3754,7 @@
 <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=b7db2d3c35122f3ec33c88ea6d3195fb&libraries=services,clusterer&autoload=false"></script>
 <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.5/kakao.min.js" crossorigin="anonymous"></script>
 
+<!-- 9. 인증 / 내정보 / 중개사무소 신청 -->
 <div class="auth-modal" id="authModal" aria-hidden="true">
 	<div class="auth-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
 		<!--
@@ -4360,7 +4384,7 @@
 	</div>
 </div>
 
-				<script src="js/app_4.114.js?v=20260705-detail-lru-cache-4114"></script>
+				<script src="js/app_4.119.js?v=20260705-broker-tooltip-padding-4119"></script>
 <script>
 (function () {
 	var labels = {
