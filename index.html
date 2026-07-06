@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 	<!--
-		REALJEJU HTML 구조 / Ver 4.119
+		REALJEJU HTML 구조 / Ver 4.174
 		파일은 단일 HTML을 유지하고, 실제 배치 순서대로 큰 화면 단위만 주석으로 구분한다.
 		0. Head / 공통 메타
 		1. 상단바 / 전역 메뉴
@@ -37,7 +37,7 @@
 				transition: none;
 			}
 		</style>
-						<link rel="stylesheet" href="css/base_4.119.css?v=20260705-broker-tooltip-padding-4119">
+						<link rel="stylesheet" href="css/base_4.174.css?v=20260706-topbar-search-mode-4174">
 
 </head>
 	<body class="sidebar-list-collapsed realjeju-side-nav-enabled">
@@ -51,15 +51,50 @@
 					<button type="button" class="global-topbar-my-suite-link" id="globalTopbarMySuiteLink" data-global-my-suite-link><span>마이페이지</span><span class="global-topbar-my-suite-arrow" aria-hidden="true">&gt;</span></button>
 				</div>
 					<nav class="global-topbar-menu" id="topbarMenu" aria-label="상단 필터"></nav>
+					<nav class="global-category-menu" id="globalCategoryMenu" aria-label="상단 카테고리">
+						<button type="button" class="global-category-item is-active" data-global-category="realestate" aria-current="page">
+							<i class="fa-solid fa-house" aria-hidden="true"></i>
+							<span>부동산</span>
+						</button>
+						<button type="button" class="global-category-item" data-global-category="local-business">
+							<i class="fa-solid fa-store" aria-hidden="true"></i>
+							<span>동네업체</span>
+						</button>
+						<button type="button" class="global-category-item" data-global-category="part-time">
+							<i class="fa-solid fa-user-clock" aria-hidden="true"></i>
+							<span>알바</span>
+						</button>
+						<button type="button" class="global-category-item" data-global-category="used-market">
+							<i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
+							<span>중고거래</span>
+						</button>
+						<button type="button" class="global-category-item" data-global-category="car">
+							<i class="fa-solid fa-car-rear" aria-hidden="true"></i>
+							<span>자동차</span>
+						</button>
+						<button type="button" class="global-category-item" data-global-category="meetup">
+							<i class="fa-solid fa-users" aria-hidden="true"></i>
+							<span>모임</span>
+						</button>
+					</nav>
 					<div class="admin-listing-topbar-search" id="adminListingTopbarSearch" aria-label="관리자 매물 검색">
 						<i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
 						<input type="search" id="adminListingTopbarSearchInput" autocomplete="off" placeholder="매물 검색" aria-label="매물 검색" />
+					</div>
+					<div class="admin-listing-topbar-search my-suite-favorites-topbar-search" id="mySuiteFavoritesTopbarSearch" aria-label="관심 부동산 매물 검색">
+						<i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+						<input type="search" id="mySuiteFavoritesTopbarSearchInput" autocomplete="off" placeholder="매물 검색" aria-label="매물 검색" />
+					</div>
+					<div class="admin-listing-topbar-search presale-topbar-search" id="presaleTopbarSearch" aria-label="분양 검색">
+						<i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+						<input type="search" id="presaleTopbarSearchInput" autocomplete="off" placeholder="분양 검색" aria-label="분양 검색" />
 					</div>
 					<div class="global-topbar-page-title" id="globalTopbarPageTitle" aria-hidden="true">
 						<span class="global-topbar-page-title-admin">관리자 페이지 &gt;</span>
 						<span class="global-topbar-page-title-operator">운영자 페이지 &gt;</span>
 						<span class="global-topbar-page-title-my-suite">마이페이지</span>
 						<span class="global-topbar-page-title-broker">중개사 홈</span>
+						<span class="global-topbar-page-title-presale">분양</span>
 						<span class="global-topbar-page-title-notice">공지사항</span>
 					</div>
 					<nav class="admin-page-tabs global-topbar-admin-tabs" aria-label="관리자 메뉴">
@@ -84,8 +119,21 @@
 					<div class="global-topbar-right">
 						<!-- PATCH 3.918: 상단 배너 버전 텍스트를 현재 배포 버전과 일치시킵니다. -->
 						<button type="button" class="global-auth-trigger version-only" id="detailAuthTrigger" data-auth-state="logged-out">
-							<span class="topbar-version-text">Ver 4.119</span>
+							<span class="topbar-version-text">Ver 4.174</span>
 						</button>
+						<button type="button" class="global-topbar-icon-btn global-topbar-more-btn" id="globalTopbarMoreBtn" aria-label="전체메뉴" aria-expanded="false" aria-controls="globalTopbarMoreMenu">
+							<span class="topbar-nine-dot-grid" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
+						</button>
+						<div class="global-topbar-more-menu" id="globalTopbarMoreMenu" aria-hidden="true">
+							<button type="button" class="global-more-menu-item" data-global-more-action="company">회사소개</button>
+							<div class="global-more-menu-divider" aria-hidden="true"></div>
+							<button type="button" class="global-more-menu-item auth-terms-open" data-terms-key="service">이용약관</button>
+							<button type="button" class="global-more-menu-item auth-terms-open" data-terms-key="privacy">개인정보처리방침</button>
+							<button type="button" class="global-more-menu-item auth-terms-open" data-terms-key="location">위치기반 서비스 이용약관</button>
+							<button type="button" class="global-more-menu-item auth-terms-open" data-terms-key="refund">환불 및 취소 정책</button>
+							<div class="global-more-menu-divider" aria-hidden="true"></div>
+							<button type="button" class="global-more-menu-item" data-global-more-action="customer-center">고객센터</button>
+						</div>
 					<div class="global-account-dropdown" id="globalAccountDropdown" aria-hidden="true">
 						<button type="button" class="global-account-menu-item" data-account-action="inquiries">1:1 문의내역</button>
 						<div class="global-account-divider"></div>
@@ -161,6 +209,18 @@
 					<span>공지사항</span>
 				</button>
 			</nav>
+		</aside>
+		<aside class="global-category-side-panel" id="globalCategorySidePanel" aria-hidden="true">
+			<div class="global-category-side-head">
+				<div class="global-category-side-title">
+					<i class="fa-solid fa-store" id="globalCategorySideIcon" aria-hidden="true"></i>
+					<span id="globalCategorySideTitle">동네업체</span>
+				</div>
+				<button type="button" class="global-category-side-close" id="globalCategorySideCloseBtn" aria-label="카테고리 메뉴 닫기">
+					<i class="fa-solid fa-xmark" aria-hidden="true"></i>
+				</button>
+			</div>
+			<div class="global-category-side-body" id="globalCategorySideBody"></div>
 		</aside>
 	<!-- 2. 관심 부동산 / 마이페이지 -->
 	<section class="my-suite-panel" id="mySuitePanel" aria-hidden="true">
@@ -1939,8 +1999,8 @@
 		<div class="sub-topbar">
 			<div class="sub-topbar-inner">
 					<!-- PATCH 3.918: 하단 버전 링크도 현재 배포 파일명으로 갱신합니다. -->
-									<a class="sub-version-fixed" href="#" data-version-download="realjeju_4.119.html" title="realjeju_4.119.html 다운로드">
-									Ver 4.119
+									<a class="sub-version-fixed" href="#" data-version-download="realjeju_4.174.html" title="realjeju_4.174.html 다운로드">
+									Ver 4.174
 						</a>
 				<div class="sub-topbar-left">
 					<strong id="listInfoText">
@@ -4384,7 +4444,7 @@
 	</div>
 </div>
 
-				<script src="js/app_4.119.js?v=20260705-broker-tooltip-padding-4119"></script>
+				<script src="js/app_4.174.js?v=20260706-topbar-search-mode-4174"></script>
 <script>
 (function () {
 	var labels = {
