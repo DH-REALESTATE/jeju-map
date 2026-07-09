@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="520" viewBox="0 0 920 520" role="img" aria-labelledby="title desc">
+	<title id="title">REALJEJU.APP map interface visual</title>
+	<desc id="desc">A map interface style visual with filter controls, road lines, property clusters, and service tools.</desc>
+	<defs>
+		<filter id="softShadow" x="-20%" y="-20%" width="140%" height="160%">
+			<feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#0f172a" flood-opacity=".16"/>
+		</filter>
+		<filter id="markerShadow" x="-40%" y="-40%" width="180%" height="180%">
+			<feDropShadow dx="0" dy="6" stdDeviation="5" flood-color="#1e3a8a" flood-opacity=".22"/>
+		</filter>
+		<linearGradient id="sea" x1="0" y1="0" x2="1" y2="1">
+			<stop offset="0" stop-color="#9ed8eb"/>
+			<stop offset="1" stop-color="#dff4fb"/>
+		</linearGradient>
+		<linearGradient id="mapBg" x1="0" y1="0" x2="1" y2="1">
+			<stop offset="0" stop-color="#fbfcfd"/>
+			<stop offset="1" stop-color="#f2f7f4"/>
+		</linearGradient>
+		<linearGradient id="markerBlue" x1="0" y1="0" x2="1" y2="1">
+			<stop offset="0" stop-color="#3b82f6"/>
+			<stop offset="1" stop-color="#1d4ed8"/>
+		</linearGradient>
+	</defs>
+	<rect width="920" height="520" rx="26" fill="#ffffff"/>
+	<rect x="1" y="1" width="918" height="518" rx="25" fill="url(#mapBg)" stroke="#dbe6f2"/>
+	<path d="M0 0H168C126 78 95 154 76 229C53 319 48 414 63 520H0Z" fill="url(#sea)"/>
+	<path d="M0 136C39 124 82 121 128 127" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" opacity=".85"/>
+	<path d="M0 174C44 158 88 153 133 161" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" opacity=".75"/>
+	<path d="M117 0C104 41 94 86 86 136C72 226 72 300 89 388C96 424 103 468 107 520" fill="none" stroke="#c2d9ce" stroke-width="3" opacity=".7"/>
+	<g opacity=".92">
+		<path d="M38 411C196 365 345 352 486 371C625 389 755 360 920 294" fill="none" stroke="#f6d56d" stroke-width="14" stroke-linecap="round"/>
+		<path d="M37 411C197 367 345 354 486 373C625 391 756 362 920 296" fill="none" stroke="#eab308" stroke-width="3" stroke-linecap="round"/>
+		<path d="M75 221C214 205 326 209 438 238C575 274 702 268 920 210" fill="none" stroke="#f6d56d" stroke-width="13" stroke-linecap="round"/>
+		<path d="M75 221C214 207 326 211 438 240C575 276 702 270 920 212" fill="none" stroke="#eab308" stroke-width="3" stroke-linecap="round"/>
+		<path d="M275 0C310 71 335 150 349 236C365 335 385 428 421 520" fill="none" stroke="#f6d56d" stroke-width="12" stroke-linecap="round"/>
+		<path d="M277 0C312 71 337 150 351 236C367 335 387 428 423 520" fill="none" stroke="#eab308" stroke-width="3" stroke-linecap="round"/>
+	</g>
+	<g opacity=".9" stroke-linecap="round">
+		<path d="M159 0C147 71 148 149 162 233C177 322 174 419 153 520" fill="none" stroke="#52c2e9" stroke-width="7"/>
+		<path d="M527 0C492 79 486 153 510 223C542 318 538 415 501 520" fill="none" stroke="#52c2e9" stroke-width="7"/>
+		<path d="M744 0C711 78 698 168 707 271C715 359 702 442 665 520" fill="none" stroke="#52c2e9" stroke-width="7"/>
+		<path d="M121 298C259 262 408 253 568 271C690 284 808 268 920 223" fill="none" stroke="#52c2e9" stroke-width="7"/>
+		<path d="M190 125C305 112 434 124 578 158C708 189 822 190 920 161" fill="none" stroke="#52c2e9" stroke-width="7"/>
+		<path d="M58 477C201 422 347 402 496 418C628 432 769 407 920 335" fill="none" stroke="#52c2e9" stroke-width="7"/>
+	</g>
+	<g opacity=".76" stroke="#d7dee8" stroke-width="2" stroke-linecap="round">
+		<path d="M193 35H521M188 73H626M180 111H489M184 151H650M175 193H590M167 335H473M185 458H558"/>
+		<path d="M219 23V188M259 13V202M303 25V191M411 2V235M455 14V239M602 31V281M646 21V271M818 34V239"/>
+		<path d="M234 257H406M209 289H525M222 323H476M536 336H785M548 379H807M572 424H840"/>
+		<path d="M698 74L873 28M680 121L920 61M668 169L894 125M662 253L920 187"/>
+	</g>
+	<g opacity=".86">
+		<rect x="232" y="52" width="58" height="38" rx="8" fill="#ffffff" stroke="#dbe3ef"/>
+		<rect x="372" y="91" width="72" height="44" rx="10" fill="#ffffff" stroke="#dbe3ef"/>
+		<rect x="613" y="95" width="72" height="46" rx="10" fill="#ffffff" stroke="#dbe3ef"/>
+		<rect x="715" y="303" width="82" height="50" rx="10" fill="#ffffff" stroke="#dbe3ef"/>
+		<rect x="303" y="348" width="88" height="54" rx="10" fill="#ffffff" stroke="#dbe3ef"/>
+		<rect x="502" y="442" width="76" height="44" rx="10" fill="#ffffff" stroke="#dbe3ef"/>
+		<rect x="791" y="81" width="68" height="42" rx="10" fill="#ffffff" stroke="#dbe3ef"/>
+	</g>
+	<g filter="url(#softShadow)">
+		<rect x="28" y="20" width="142" height="46" rx="23" fill="#ffffff"/>
+		<rect x="182" y="20" width="104" height="46" rx="23" fill="#ffffff"/>
+		<rect x="298" y="20" width="128" height="46" rx="23" fill="#111827"/>
+		<rect x="438" y="20" width="138" height="46" rx="23" fill="#111827"/>
+		<rect x="588" y="20" width="86" height="46" rx="23" fill="#ffffff"/>
+		<rect x="686" y="20" width="86" height="46" rx="23" fill="#ffffff"/>
+		<rect x="784" y="20" width="108" height="46" rx="23" fill="#ffffff"/>
+	</g>
+	<g font-family="Arial, sans-serif" font-size="16" font-weight="700">
+		<circle cx="55" cy="43" r="7" fill="#64748b"/>
+		<text x="75" y="49" fill="#1f2937">Jeju-si</text>
+		<text x="218" y="49" text-anchor="middle" fill="#1f2937">All</text>
+		<text x="362" y="49" text-anchor="middle" fill="#ffffff">Sale +2</text>
+		<text x="507" y="49" text-anchor="middle" fill="#ffffff">Apt +6</text>
+		<text x="631" y="49" text-anchor="middle" fill="#1f2937">Price</text>
+		<text x="729" y="49" text-anchor="middle" fill="#1f2937">Area</text>
+		<text x="838" y="49" text-anchor="middle" fill="#1f2937">Options</text>
+	</g>
+	<g font-family="Arial, sans-serif" font-size="19" font-weight="900" fill="#ffffff" text-anchor="middle" filter="url(#markerShadow)">
+		<g><circle cx="124" cy="230" r="25" fill="url(#markerBlue)"/><text x="124" y="237">1</text></g>
+		<g><circle cx="245" cy="298" r="25" fill="url(#markerBlue)"/><text x="245" y="305">2</text></g>
+		<g><circle cx="341" cy="218" r="25" fill="url(#markerBlue)"/><text x="341" y="225">1</text></g>
+		<g><circle cx="409" cy="347" r="28" fill="url(#markerBlue)"/><text x="409" y="354">13</text></g>
+		<g><circle cx="519" cy="255" r="25" fill="url(#markerBlue)"/><text x="519" y="262">4</text></g>
+		<g><circle cx="607" cy="166" r="25" fill="url(#markerBlue)"/><text x="607" y="173">2</text></g>
+		<g><circle cx="653" cy="290" r="25" fill="url(#markerBlue)"/><text x="653" y="297">5</text></g>
+		<g><circle cx="735" cy="155" r="25" fill="url(#markerBlue)"/><text x="735" y="162">3</text></g>
+		<g><circle cx="789" cy="259" r="25" fill="url(#markerBlue)"/><text x="789" y="266">1</text></g>
+		<g><circle cx="842" cy="387" r="25" fill="url(#markerBlue)"/><text x="842" y="394">4</text></g>
+		<g><circle cx="315" cy="462" r="25" fill="url(#markerBlue)"/><text x="315" y="469">2</text></g>
+		<g><circle cx="693" cy="444" r="25" fill="url(#markerBlue)"/><text x="693" y="451">1</text></g>
+	</g>
+	<g filter="url(#softShadow)">
+		<rect x="852" y="92" width="44" height="220" rx="16" fill="#ffffff"/>
+		<rect x="852" y="338" width="44" height="106" rx="16" fill="#ffffff"/>
+		<circle cx="874" cy="121" r="11" fill="#111827"/>
+		<path d="M864 160h20M864 203h20M864 246h20M864 381h20M864 421h20" stroke="#111827" stroke-width="4" stroke-linecap="round"/>
+		<circle cx="874" cy="287" r="10" fill="#2563eb"/>
+	</g>
+	<g font-family="Arial, sans-serif" font-size="16" font-weight="800" fill="#334155">
+		<text x="191" y="191">Airport</text>
+		<text x="441" y="309">City Hall</text>
+		<text x="638" y="358">Market</text>
+		<text x="734" y="238">Local Info</text>
+	</g>
+</svg>
