@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 	<!--
-		REALJEJU HTML 구조 / Ver 4.279
+		REALJEJU HTML 구조 / Ver 4.535
 		파일은 단일 HTML을 유지하고, 실제 배치 순서대로 큰 화면 단위만 주석으로 구분한다.
 		0. Head / 공통 메타
 		1. 상단바 / 전역 메뉴
@@ -37,10 +37,10 @@
 				transition: none;
 			}
 		</style>
-						<link rel="stylesheet" href="css/base_4.279.css?v=20260707-property-badge-return-4279">
+						<link rel="stylesheet" href="css/base_4.535.css?v=20260710-terms-company-name-4535">
 
 </head>
-	<body class="sidebar-list-collapsed realjeju-side-nav-enabled">
+	<body class="sidebar-list-collapsed realjeju-side-nav-enabled main-landing-page-open">
 		<header class="global-topbar">
 			<div class="global-topbar-inner">
 				<div class="global-topbar-left">
@@ -52,7 +52,7 @@
 				</div>
 					<nav class="global-topbar-menu" id="topbarMenu" aria-label="상단 필터"></nav>
 					<nav class="global-category-menu" id="globalCategoryMenu" aria-label="상단 카테고리">
-						<button type="button" class="global-category-item is-active" data-global-category="realestate" aria-current="page">
+						<button type="button" class="global-category-item" data-global-category="realestate">
 							<i class="fa-solid fa-house" aria-hidden="true"></i>
 							<span>부동산</span>
 						</button>
@@ -119,7 +119,7 @@
 					<div class="global-topbar-right">
 						<!-- PATCH 3.918: 상단 배너 버전 텍스트를 현재 배포 버전과 일치시킵니다. -->
 						<button type="button" class="global-auth-trigger version-only" id="detailAuthTrigger" data-auth-state="logged-out">
-							<span class="topbar-version-text">Ver 4.279</span>
+							<span class="topbar-version-text">Ver 4.535</span>
 						</button>
 						<button type="button" class="global-topbar-icon-btn global-topbar-more-btn" id="globalTopbarMoreBtn" aria-label="전체메뉴" aria-expanded="false" aria-controls="globalTopbarMoreMenu">
 							<span class="topbar-nine-dot-grid" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
@@ -152,6 +152,143 @@
 				</div>
 			</div>
 		</header>
+		<section class="main-landing-page" id="mainLandingPage" aria-label="리얼제주 메인">
+			<div class="main-landing-inner">
+				<div class="main-landing-hero">
+					<div class="main-landing-copy">
+						<p class="main-landing-kicker">제주 생활 지도 포털</p>
+						<h1 class="main-landing-title">제주 부동산과 생활 정보를 한 곳에서</h1>
+						<p class="main-landing-desc">동네, 주소, 매물번호로 찾고 부동산부터 알바, 동네업체까지 바로 확인하세요.</p>
+						<form class="main-landing-search" id="mainLandingSearchForm">
+							<i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+							<input type="search" id="mainLandingSearchInput" autocomplete="off" placeholder="동네, 주소, 매물번호 검색" aria-label="동네, 주소, 매물번호 검색" />
+							<button type="submit">검색</button>
+						</form>
+						<div class="main-landing-actions" aria-label="메인 바로가기">
+							<button type="button" class="main-landing-primary" data-main-landing-action="map">지도에서 보기</button>
+							<button type="button" class="main-landing-secondary" data-main-landing-action="list">매물 목록 보기</button>
+						</div>
+					</div>
+					<div class="main-landing-visual" aria-hidden="true">
+						<div class="main-landing-map-card">
+							<div class="main-landing-map-toolbar">
+								<span><i class="fa-solid fa-location-dot" aria-hidden="true"></i> 제주 전지역</span>
+								<span>매매ㆍ전세</span>
+							</div>
+							<div class="main-landing-map-water"></div>
+							<span class="main-landing-map-pin pin-a">12</span>
+							<span class="main-landing-map-pin pin-b">5</span>
+							<span class="main-landing-map-pin pin-c">8</span>
+							<span class="main-landing-map-dot dot-a"></span>
+							<span class="main-landing-map-dot dot-b"></span>
+							<span class="main-landing-map-dot dot-c"></span>
+							<span class="main-landing-map-dot dot-d"></span>
+							<span class="main-landing-map-road road-a"></span>
+							<span class="main-landing-map-road road-b"></span>
+							<span class="main-landing-map-road road-c"></span>
+							<span class="main-landing-map-road road-d"></span>
+							<span class="main-landing-map-label label-a">노형동</span>
+							<span class="main-landing-map-label label-b">애월읍</span>
+							<span class="main-landing-map-label label-c">서귀포</span>
+							<div class="main-landing-map-listing">
+								<span class="main-landing-map-listing-badge">상가</span>
+								<strong>노형오거리 인근 1층</strong>
+								<span>매매 5억 7,000</span>
+							</div>
+							<div class="main-landing-map-zoom">
+								<span>+</span>
+								<span>-</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<section class="main-landing-simple-section" aria-label="리얼제주 주요 서비스">
+					<div class="main-landing-simple-grid">
+						<button type="button" class="main-landing-simple-card is-large" data-main-landing-action="map">
+							<span class="main-landing-simple-title">부동산 홈</span>
+							<span class="main-landing-simple-desc">제주 전지역 매물을<br>지도에서 한눈에 확인</span>
+							<i class="fa-solid fa-map-location-dot" aria-hidden="true"></i>
+						</button>
+						<button type="button" class="main-landing-simple-card is-large" data-main-landing-category="part-time">
+							<span class="main-landing-simple-title">알바</span>
+							<span class="main-landing-simple-desc">동네별 구인공고와<br>지원 정보를 빠르게 확인</span>
+							<i class="fa-solid fa-user-clock" aria-hidden="true"></i>
+						</button>
+						<button type="button" class="main-landing-simple-card is-wide" data-main-landing-category="local-business">
+							<span class="main-landing-simple-title">동네업체</span>
+							<span class="main-landing-simple-desc">우리동네 업체 정보</span>
+							<i class="fa-solid fa-store" aria-hidden="true"></i>
+						</button>
+						<button type="button" class="main-landing-simple-card is-wide" data-main-landing-category="used-market">
+							<span class="main-landing-simple-title">중고거래</span>
+							<span class="main-landing-simple-desc">가까운 생활 거래</span>
+							<i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
+						</button>
+						<button type="button" class="main-landing-simple-card is-wide" data-main-landing-action="notice">
+							<span class="main-landing-simple-title">공지사항</span>
+							<span class="main-landing-simple-desc">서비스 안내 확인</span>
+							<i class="fa-solid fa-bullhorn" aria-hidden="true"></i>
+						</button>
+					</div>
+					<button type="button" class="main-landing-simple-banner" data-main-landing-action="map">
+						<span>
+							<strong>우리동네 한눈에 보기</strong>
+							<em>매물과 생활 정보를 지도에서 확인하세요.</em>
+						</span>
+						<small>지도에서 보기</small>
+					</button>
+				</section>
+				<section class="main-landing-bottom-ad" aria-label="리얼제주 광고 문의">
+					<div>
+						<strong>제주도 대표 프롭테크 서비스</strong>
+						<span>리얼제주의 광고를 지금 이용해보세요.</span>
+					</div>
+					<a href="tel:0647450531">광고문의 : 064-745-0531</a>
+				</section>
+				<div class="main-landing-preview-row" aria-label="리얼제주 주요 정보">
+					<button type="button" class="main-landing-preview" data-main-landing-action="map">
+						<span>부동산</span>
+						<strong>제주 전지역 매물을 지도에서 확인</strong>
+					</button>
+					<button type="button" class="main-landing-preview" data-main-landing-category="part-time">
+						<span>알바</span>
+						<strong>동네별 공고를 카드형 목록으로 확인</strong>
+					</button>
+					<button type="button" class="main-landing-preview" data-main-landing-action="notice">
+						<span>공지사항</span>
+						<strong>서비스 안내와 업데이트 확인</strong>
+					</button>
+				</div>
+				<footer class="main-landing-footer" aria-label="리얼제주 사업자 정보">
+					<div class="main-landing-footer-line" aria-hidden="true"></div>
+					<div class="main-landing-footer-name">리얼제주(REALJEJU.APP)</div>
+					<div class="main-landing-footer-info">
+						<span>(주)디에이치인베스트먼트</span>
+						<span>대표 : 김대홍</span>
+						<span>사업자등록번호 : 534-87-01667</span>
+						<span>통신판매업 신고번호 : 2026-제주노형-발급준비중</span>
+					</div>
+					<div class="main-landing-footer-info">
+						<span>주소 : 제주특별자치도 제주시 노형로 356, 5층</span>
+						<span>고객센터 전화 : 064-745-0531</span>
+						<span>고객센터 이메일 : dh_realestate@naver.com</span>
+						<span>호스팅서비스 제공자 : Vercel / SupaBase</span>
+					</div>
+					<div class="main-landing-footer-links" aria-label="리얼제주 정책 링크">
+						<button type="button" class="main-landing-footer-link" data-global-more-action="company">회사소개</button>
+						<span aria-hidden="true">|</span>
+						<button type="button" class="main-landing-footer-link auth-terms-open" data-terms-key="service">이용약관</button>
+						<span aria-hidden="true">|</span>
+						<button type="button" class="main-landing-footer-link auth-terms-open" data-terms-key="privacy">개인정보처리방침</button>
+						<span aria-hidden="true">|</span>
+						<button type="button" class="main-landing-footer-link auth-terms-open" data-terms-key="location">위치기반 서비스 이용약관</button>
+						<span aria-hidden="true">|</span>
+						<button type="button" class="main-landing-footer-link auth-terms-open" data-terms-key="listing-policy">매물관리 규정</button>
+					</div>
+					<div class="main-landing-footer-copy">Copyright © REALJEJU.APP. All Rights Reserved.</div>
+				</footer>
+			</div>
+		</section>
 		<aside class="realjeju-side-nav" id="realjejuSideNav" aria-label="주요 메뉴">
 			<nav class="realjeju-side-nav-menu">
 				<button type="button" class="realjeju-side-nav-item active" data-side-nav-action="home">
@@ -252,38 +389,61 @@
 						<h1 class="part-time-page-title">알바</h1>
 						<p class="part-time-page-count" id="partTimeResultCount">전체 0건</p>
 					</div>
-					<div class="part-time-view-toggle" aria-label="알바 보기 방식">
-						<button type="button" class="active" data-part-time-view="card">
-							<i class="fa-solid fa-grip" aria-hidden="true"></i>
-						</button>
-						<button type="button" data-part-time-view="map">
-							<i class="fa-solid fa-map-location-dot" aria-hidden="true"></i>
+					<div class="part-time-board-actions">
+						<div class="part-time-view-toggle" aria-label="알바 보기 방식">
+							<button type="button" class="active" data-part-time-view="card">
+								<i class="fa-solid fa-grip" aria-hidden="true"></i>
+							</button>
+							<button type="button" data-part-time-view="map">
+								<i class="fa-solid fa-map-location-dot" aria-hidden="true"></i>
+							</button>
+						</div>
+						<button type="button" class="part-time-trash-btn" id="partTimeTrashBtn" aria-label="휴지통" title="휴지통">
+							<i class="fa-regular fa-trash-can" aria-hidden="true"></i>
+							<span>휴지통</span>
 						</button>
 					</div>
 				</div>
 				<div class="part-time-content-row">
 					<aside class="part-time-ad-slot" aria-label="알바 광고">
-						<button type="button" class="part-time-ad-card">
-							<span class="part-time-ad-badge">AD</span>
-							<span class="part-time-ad-visual" aria-hidden="true">
-								<span class="part-time-ad-copy-main">아이스 벌룬팬츠</span>
-								<span class="part-time-ad-copy-sub">찰랑찰랑 가볍고 시원한 핏</span>
-								<span class="part-time-ad-brand-mark">Tony us</span>
-							</span>
-							<span class="part-time-ad-body">
-								<strong>아이스팬츠 1+1 행사중 <b class="part-time-ad-nowrap">3만원대</b></strong>
-								<span>찰랑찰랑 가벼운 소재와 편안한 벌룬핏</span>
-								<em>토니어스</em>
-								<span class="part-time-ad-cta">더 알아보기</span>
-							</span>
+						<button type="button" class="part-time-square-ad-card" aria-label="알바 4대3 광고">
+							<span class="part-time-square-ad-badge">AD</span>
 						</button>
 						<button type="button" class="part-time-square-ad-card" aria-label="알바 4대3 광고">
-							<span>AD</span>
+							<span class="part-time-square-ad-badge">AD</span>
 						</button>
 					</aside>
 					<div class="part-time-card-grid" id="partTimeCardGrid" aria-live="polite"></div>
 				</div>
 			</div>
+			<footer class="main-landing-footer part-time-page-footer" aria-label="리얼제주 사업자 정보">
+				<div class="main-landing-footer-line" aria-hidden="true"></div>
+				<div class="main-landing-footer-name">리얼제주(REALJEJU.APP)</div>
+				<div class="main-landing-footer-info">
+					<span>(주)디에이치인베스트먼트</span>
+					<span>대표 : 김대홍</span>
+					<span>사업자등록번호 : 534-87-01667</span>
+					<span>통신판매업 신고번호 : 2026-제주노형-발급준비중</span>
+				</div>
+				<div class="main-landing-footer-info">
+					<span>주소 : 제주특별자치도 제주시 노형로 356, 5층</span>
+					<span>고객센터 전화 : 064-745-0531</span>
+					<span>고객센터 이메일 : dh_realestate@naver.com</span>
+					<span>호스팅서비스 제공자 : Vercel / SupaBase</span>
+				</div>
+				<div class="main-landing-footer-links" aria-label="리얼제주 정책 링크">
+					<button type="button" class="main-landing-footer-link" data-global-more-action="company">회사소개</button>
+					<span aria-hidden="true">|</span>
+					<button type="button" class="main-landing-footer-link auth-terms-open" data-terms-key="service">이용약관</button>
+					<span aria-hidden="true">|</span>
+					<button type="button" class="main-landing-footer-link auth-terms-open" data-terms-key="privacy">개인정보처리방침</button>
+					<span aria-hidden="true">|</span>
+					<button type="button" class="main-landing-footer-link auth-terms-open" data-terms-key="location">위치기반 서비스 이용약관</button>
+					<span aria-hidden="true">|</span>
+					<button type="button" class="main-landing-footer-link auth-terms-open" data-terms-key="listing-policy">매물관리 규정</button>
+				</div>
+				<div class="main-landing-footer-copy">Copyright © REALJEJU.APP. All Rights Reserved.</div>
+			</footer>
 		</section>
 		<div class="part-time-detail-dim" id="partTimeDetailDim" aria-hidden="true"></div>
 		<aside class="part-time-detail-panel" id="partTimeDetailPanel" aria-hidden="true" aria-label="알바 공고 상세">
@@ -322,6 +482,23 @@
 						<label class="property-form-label" for="partTimeCompanyInput">업체명<span class="property-required">*</span></label>
 						<div class="property-form-control">
 							<input type="text" class="property-register-input" id="partTimeCompanyInput" maxlength="40" placeholder="업체명을 입력하세요" autocomplete="off" />
+						</div>
+					</div>
+					<div class="property-form-row">
+						<label class="property-form-label" for="partTimeImageInput">상단 이미지</label>
+						<div class="property-form-control">
+							<label class="property-upload-box part-time-image-upload-box" id="partTimeImageUploader" for="partTimeImageInput">
+								<i class="fa-regular fa-image property-upload-guide" aria-hidden="true"></i>
+								<span class="property-upload-guide">이미지를 드래그하거나 클릭해 업로드하기</span>
+								<div class="property-photo-preview-grid part-time-image-preview is-hidden" id="partTimeImagePreview" aria-label="공고 이미지 미리보기"></div>
+							</label>
+							<input type="file" id="partTimeImageInput" accept="image/*" hidden />
+							<input type="hidden" id="partTimeImageUrlInput" />
+							<div class="part-time-image-actions">
+								<label class="property-photo-select-btn part-time-image-select-btn" for="partTimeImageInput"><i class="fa-regular fa-image" aria-hidden="true"></i>파일 선택</label>
+								<button type="button" class="property-photo-select-btn part-time-image-remove-btn" id="partTimeImageRemoveBtn">삭제</button>
+							</div>
+							<p class="part-time-image-help">2:1 박스에 원본 비율로 표시, 200x100 이하 저장</p>
 						</div>
 					</div>
 					<div class="property-form-row">
@@ -365,9 +542,10 @@
 							<span class="property-address-main-detail" id="partTimeAddressMainDetail" aria-hidden="true"></span>
 						</div>
 					</div>
-					<div class="property-form-row part-time-address-detail-row" hidden>
+					<div class="property-form-row part-time-address-detail-row" id="partTimeAddressDetailRow" hidden>
 						<label class="property-form-label" for="partTimeAddressInput">상세 주소</label>
 						<div class="property-form-control">
+							<div class="part-time-address-detail-display" id="partTimeAddressDetailText" aria-live="polite"></div>
 							<input type="hidden" id="partTimeAddressInput" />
 						</div>
 					</div>
@@ -383,6 +561,7 @@
 									<option value="시급">시급</option>
 									<option value="일급">일급</option>
 									<option value="월급">월급</option>
+									<option value="연봉">연봉</option>
 									<option value="건별">건별</option>
 								</select>
 								<button type="button" class="property-register-dropdown-trigger" data-register-dropdown-trigger aria-haspopup="listbox" aria-expanded="false">
@@ -393,6 +572,7 @@
 									<button type="button" class="property-register-dropdown-option" data-value="시급" role="option">시급</button>
 									<button type="button" class="property-register-dropdown-option" data-value="일급" role="option">일급</button>
 									<button type="button" class="property-register-dropdown-option" data-value="월급" role="option">월급</button>
+									<button type="button" class="property-register-dropdown-option" data-value="연봉" role="option">연봉</button>
 									<button type="button" class="property-register-dropdown-option" data-value="건별" role="option">건별</button>
 								</div>
 							</div>
@@ -534,9 +714,9 @@
 			<footer class="my-suite-company-footer" aria-label="리얼제주 사업자 정보">
 				<div class="my-suite-company-name">리얼제주(REALJEJU.APP)</div>
 				<div class="my-suite-company-grid">
-					<p><span>(주)디에이치홀딩스부동산중개법인</span><span>대표이사ㆍ공인중개사 : 김대홍</span></p>
-					<p><span>주소 : 제주특별자치도 제주시 노형로 356, 5층(노형동)</span><span>중개사무소 등록번호 : 50110-2023-00022</span><span>사업자등록번호 : 203-88-00816</span></p>
-					<p><span>통신판매업 신고번호 : 2023-제주노형-0091</span><span>고객센터 전화 : 064-745-0531</span><span>고객센터 이메일 : dh_realestate@naver.com</span></p>
+					<p><span>(주)디에이치인베스트먼트</span><span>대표 : 김대홍</span></p>
+					<p><span>주소 : 제주특별자치도 제주시 노형로 356, 5층(노형동)</span><span>사업자등록번호 : 534-87-01667</span></p>
+					<p><span>통신판매업 신고번호 : 2026-제주노형-발급준비중</span><span>고객센터 전화 : 064-745-0531</span><span>고객센터 이메일 : dh_realestate@naver.com</span></p>
 					<p><span>호스팅서비스 제공자 : Vercel / SupaBase</span><span>개인정보보호책임자 : 김대홍</span></p>
 				</div>
 				<div class="my-suite-company-links" aria-label="리얼제주 정책 링크">
@@ -951,11 +1131,10 @@
 			<footer class="payment-company-info">
 				<div class="payment-company-name">리얼제주(REALJEJU.APP)</div>
 				<div class="payment-company-grid">
-					<span>(주)디에이치홀딩스부동산중개법인</span>
-					<span>대표이사ㆍ공인중개사 : 김대홍</span>
-					<span>사업자등록번호 : 203-88-00816</span>
-					<span>통신판매업 신고번호 : 2023-제주노형-0091</span>
-					<span>중개사무소 등록번호 : 50110-2023-00022</span>
+					<span>(주)디에이치인베스트먼트</span>
+					<span>대표 : 김대홍</span>
+					<span>사업자등록번호 : 534-87-01667</span>
+					<span>통신판매업 신고번호 : 2026-제주노형-발급준비중</span>
 					<span>호스팅서비스 제공자 : Vercel</span>
 					<span>주소 : 제주특별자치도 제주시 노형로 356, 5층</span>
 					<span>고객센터 전화 : 064-745-0531</span>
@@ -1035,9 +1214,9 @@
 				<div class="myinfo-company-body">
 					<div class="myinfo-company-name">리얼제주(REALJEJU.APP)</div>
 					<div class="myinfo-company-grid">
-						<p><span>(주)디에이치홀딩스부동산중개법인</span><span>대표이사ㆍ공인중개사 : 김대홍</span></p>
-						<p><span>사업자등록번호 : 203-88-00816</span><span>주소 : 제주특별자치도 제주시 노형로 356, 5층</span></p>
-						<p><span>중개사무소 등록번호 : 50110-2023-00022</span><span>통신판매업 신고번호 : 2023-제주노형-0091</span></p>
+						<p><span>(주)디에이치인베스트먼트</span><span>대표 : 김대홍</span></p>
+						<p><span>사업자등록번호 : 534-87-01667</span><span>주소 : 제주특별자치도 제주시 노형로 356, 5층</span></p>
+						<p><span>통신판매업 신고번호 : 2026-제주노형-발급준비중</span></p>
 						<p><span>고객센터 : 064-745-0531</span><span>이메일 : dh_realestate@naver.com</span><span>운영시간 : 오전 10시 - 오후 18시</span><span>개인정보보호책임자 : 김대홍</span></p>
 						<p class="myinfo-company-hosting"><span>호스팅서비스 제공자 : Vercel / SupaBase</span></p>
 						<p class="myinfo-company-notice">리얼제주는 부동산 매물 정보 제공 플랫폼이며, 매물 정보와 거래 조건은 해당 중개사무소 또는 거래 당사자에게 확인해 주세요.</p>
@@ -1099,11 +1278,10 @@
 			<footer class="myinfo-company-info">
 				<div class="myinfo-company-name">리얼제주(REALJEJU.APP)</div>
 				<div class="myinfo-company-grid">
-					<span>(주)디에이치홀딩스부동산중개법인</span>
-					<span>대표이사ㆍ공인중개사 : 김대홍</span>
-					<span>사업자등록번호 : 203-88-00816</span>
-					<span>통신판매업 신고번호 : 2023-제주노형-0091</span>
-					<span>중개사무소 등록번호 : 50110-2023-00022</span>
+					<span>(주)디에이치인베스트먼트</span>
+					<span>대표 : 김대홍</span>
+					<span>사업자등록번호 : 534-87-01667</span>
+					<span>통신판매업 신고번호 : 2026-제주노형-발급준비중</span>
 					<span>호스팅서비스 제공자 : Vercel</span>
 					<span>주소 : 제주특별자치도 제주시 노형로 356, 5층</span>
 					<span>고객센터 전화 : 064-745-0531</span>
@@ -1147,7 +1325,7 @@
 			<footer class="myinfo-company-info">
 				<div class="myinfo-company-name">리얼제주(REALJEJU.APP)</div>
 				<div class="myinfo-company-grid">
-					<span>(주)디에이치홀딩스부동산중개법인</span><span>대표이사ㆍ공인중개사 : 김대홍</span><span>사업자등록번호 : 203-88-00816</span><span>통신판매업 신고번호 : 2023-제주노형-0091</span><span>중개사무소 등록번호 : 50110-2023-00022</span><span>호스팅서비스 제공자 : Vercel</span><span>주소 : 제주특별자치도 제주시 노형로 356, 5층</span><span>고객센터 전화 : 064-745-0531</span><span>고객센터 이메일 : dh_realestate@naver.com</span><span>운영시간 : 오전 10시 - 오후 18시</span><span>개인정보보호책임자 : 김대홍</span>
+					<span>(주)디에이치인베스트먼트</span><span>대표 : 김대홍</span><span>사업자등록번호 : 534-87-01667</span><span>통신판매업 신고번호 : 2026-제주노형-발급준비중</span><span>호스팅서비스 제공자 : Vercel</span><span>주소 : 제주특별자치도 제주시 노형로 356, 5층</span><span>고객센터 전화 : 064-745-0531</span><span>고객센터 이메일 : dh_realestate@naver.com</span><span>운영시간 : 오전 10시 - 오후 18시</span><span>개인정보보호책임자 : 김대홍</span>
 				</div>
 				<div class="myinfo-company-links" aria-label="리얼제주 정책 링크"><button type="button" class="myinfo-company-link auth-terms-open" data-terms-key="service">이용약관</button><span aria-hidden="true">|</span><button type="button" class="myinfo-company-link auth-terms-open" data-terms-key="privacy">개인정보처리방침</button><span aria-hidden="true">|</span><button type="button" class="myinfo-company-link auth-terms-open" data-terms-key="location">위치기반 서비스 이용약관</button>
 					<span aria-hidden="true">|</span>
@@ -1171,7 +1349,7 @@
 		</div>
 			<footer class="myinfo-company-info">
 				<div class="myinfo-company-name">리얼제주(REALJEJU.APP)</div>
-				<div class="myinfo-company-grid"><span>(주)디에이치홀딩스부동산중개법인</span><span>대표이사ㆍ공인중개사 : 김대홍</span><span>사업자등록번호 : 203-88-00816</span><span>통신판매업 신고번호 : 2023-제주노형-0091</span><span>중개사무소 등록번호 : 50110-2023-00022</span><span>호스팅서비스 제공자 : Vercel</span><span>주소 : 제주특별자치도 제주시 노형로 356, 5층</span><span>고객센터 전화 : 064-745-0531</span><span>고객센터 이메일 : dh_realestate@naver.com</span><span>운영시간 : 오전 10시 - 오후 18시</span><span>개인정보보호책임자 : 김대홍</span></div>
+				<div class="myinfo-company-grid"><span>(주)디에이치인베스트먼트</span><span>대표 : 김대홍</span><span>사업자등록번호 : 534-87-01667</span><span>통신판매업 신고번호 : 2026-제주노형-발급준비중</span><span>호스팅서비스 제공자 : Vercel</span><span>주소 : 제주특별자치도 제주시 노형로 356, 5층</span><span>고객센터 전화 : 064-745-0531</span><span>고객센터 이메일 : dh_realestate@naver.com</span><span>운영시간 : 오전 10시 - 오후 18시</span><span>개인정보보호책임자 : 김대홍</span></div>
 				<div class="myinfo-company-links" aria-label="리얼제주 정책 링크"><button type="button" class="myinfo-company-link auth-terms-open" data-terms-key="service">이용약관</button><span aria-hidden="true">|</span><button type="button" class="myinfo-company-link auth-terms-open" data-terms-key="privacy">개인정보처리방침</button><span aria-hidden="true">|</span><button type="button" class="myinfo-company-link auth-terms-open" data-terms-key="location">위치기반 서비스 이용약관</button>
 					<span aria-hidden="true">|</span>
 					<button type="button" class="myinfo-company-link auth-terms-open" data-terms-key="refund">환불 및 취소 정책</button></div>
@@ -2301,8 +2479,8 @@
 		<div class="sub-topbar">
 			<div class="sub-topbar-inner">
 					<!-- PATCH 3.918: 하단 버전 링크도 현재 배포 파일명으로 갱신합니다. -->
-										<a class="sub-version-fixed" href="#" data-version-download="realjeju_4.279.html" title="realjeju_4.279.html 다운로드">
-										Ver 4.279
+										<a class="sub-version-fixed" href="#" data-version-download="realjeju_4.532.html" title="realjeju_4.532.html 다운로드">
+										Ver 4.535
 						</a>
 				<div class="sub-topbar-left">
 					<strong id="listInfoText">
@@ -4301,11 +4479,10 @@
 				<footer class="profile-company-info" aria-label="리얼제주 사업자 정보">
 					<div class="profile-company-name">리얼제주(REALJEJU.APP)</div>
 					<div class="profile-company-grid">
-						<span>(주)디에이치홀딩스부동산중개법인</span>
-						<span>대표이사ㆍ공인중개사 : 김대홍</span>
-						<span>사업자등록번호 : 203-88-00816</span>
-						<span>통신판매업 신고번호 : 2023-제주노형-0091</span>
-						<span>중개사무소 등록번호 : 50110-2023-00022</span>
+						<span>(주)디에이치인베스트먼트</span>
+						<span>대표 : 김대홍</span>
+						<span>사업자등록번호 : 534-87-01667</span>
+						<span>통신판매업 신고번호 : 2026-제주노형-발급준비중</span>
 						<span>호스팅서비스 제공자 : Vercel</span>
 						<span>주소 : 제주특별자치도 제주시 노형로 356, 5층</span>
 						<span>고객센터 전화 : 064-745-0531</span>
@@ -4379,11 +4556,10 @@
 				<footer class="profile-company-info" aria-label="리얼제주 사업자 정보">
 					<div class="profile-company-name">리얼제주(REALJEJU.APP)</div>
 					<div class="profile-company-grid">
-						<span>(주)디에이치홀딩스부동산중개법인</span>
-						<span>대표이사ㆍ공인중개사 : 김대홍</span>
-						<span>사업자등록번호 : 203-88-00816</span>
-						<span>통신판매업 신고번호 : 2023-제주노형-0091</span>
-						<span>중개사무소 등록번호 : 50110-2023-00022</span>
+						<span>(주)디에이치인베스트먼트</span>
+						<span>대표 : 김대홍</span>
+						<span>사업자등록번호 : 534-87-01667</span>
+						<span>통신판매업 신고번호 : 2026-제주노형-발급준비중</span>
 						<span>호스팅서비스 제공자 : Vercel</span>
 						<span>주소 : 제주특별자치도 제주시 노형로 356, 5층</span>
 						<span>고객센터 전화 : 064-745-0531</span>
@@ -4459,11 +4635,10 @@
 		<footer class="profile-company-info broker-office-info-page-footer" aria-label="리얼제주 사업자 정보">
 			<div class="profile-company-name">리얼제주(REALJEJU.APP)</div>
 			<div class="profile-company-grid">
-				<span>(주)디에이치홀딩스부동산중개법인</span>
-				<span>대표이사ㆍ공인중개사 : 김대홍</span>
-				<span>사업자등록번호 : 203-88-00816</span>
-				<span>통신판매업 신고번호 : 2023-제주노형-0091</span>
-				<span>중개사무소 등록번호 : 50110-2023-00022</span>
+				<span>(주)디에이치인베스트먼트</span>
+				<span>대표 : 김대홍</span>
+				<span>사업자등록번호 : 534-87-01667</span>
+				<span>통신판매업 신고번호 : 2026-제주노형-발급준비중</span>
 				<span>호스팅서비스 제공자 : Vercel</span>
 				<span>주소 : 제주특별자치도 제주시 노형로 356, 5층</span>
 				<span>고객센터 전화 : 064-745-0531</span>
@@ -4537,11 +4712,10 @@
 				<footer class="profile-company-info broker-profile-company-info" aria-label="리얼제주 사업자 정보">
 					<div class="profile-company-name">리얼제주(REALJEJU.APP)</div>
 					<div class="profile-company-grid">
-						<span>(주)디에이치홀딩스부동산중개법인</span>
-						<span>대표이사ㆍ공인중개사 : 김대홍</span>
-						<span>사업자등록번호 : 203-88-00816</span>
-						<span>통신판매업 신고번호 : 2023-제주노형-0091</span>
-						<span>중개사무소 등록번호 : 50110-2023-00022</span>
+						<span>(주)디에이치인베스트먼트</span>
+						<span>대표 : 김대홍</span>
+						<span>사업자등록번호 : 534-87-01667</span>
+						<span>통신판매업 신고번호 : 2026-제주노형-발급준비중</span>
 						<span>호스팅서비스 제공자 : Vercel</span>
 						<span>주소 : 제주특별자치도 제주시 노형로 356, 5층</span>
 						<span>고객센터 전화 : 064-745-0531</span>
@@ -4692,9 +4866,9 @@
 	<footer class="profile-company-info auth-profile-common-footer myinfo-company-info" aria-label="리얼제주 사업자 정보" hidden>
 		<div class="profile-company-name myinfo-company-name">리얼제주(REALJEJU.APP)</div>
 		<div class="profile-company-grid myinfo-company-grid auth-login-company-grid">
-			<p><span>(주)디에이치홀딩스부동산중개법인</span><span>대표이사ㆍ공인중개사 : 김대홍</span></p>
-			<p><span>주소 : 제주특별자치도 제주시 노형로 356, 5층(노형동)</span><span>중개사무소 등록번호 : 50110-2023-00022</span><span>사업자등록번호 : 203-88-00816</span></p>
-			<p><span>통신판매업 신고번호 : 2023-제주노형-0091</span><span>고객센터 전화 : 064-745-0531</span><span>고객센터 이메일 : dh_realestate@naver.com</span></p>
+			<p><span>(주)디에이치인베스트먼트</span><span>대표 : 김대홍</span></p>
+			<p><span>주소 : 제주특별자치도 제주시 노형로 356, 5층(노형동)</span><span>사업자등록번호 : 534-87-01667</span></p>
+			<p><span>통신판매업 신고번호 : 2026-제주노형-발급준비중</span><span>고객센터 전화 : 064-745-0531</span><span>고객센터 이메일 : dh_realestate@naver.com</span></p>
 			<p><span>호스팅서비스 제공자 : Vercel / SupaBase</span><span>개인정보보호책임자 : 김대홍</span></p>
 		</div>
 		<div class="profile-company-links myinfo-company-links" aria-label="리얼제주 정책 링크">
@@ -4728,6 +4902,101 @@
 		</div>
 	</div>
 </div>
+<div id="companyFullPage" class="company-full-page" aria-hidden="true">
+	<div class="company-full-header">
+		<div class="company-full-title">회사소개</div>
+		<button type="button" class="company-full-close" id="companyFullClose" aria-label="닫기">×</button>
+	</div>
+	<div class="company-full-body" id="companyFullBody">
+		<section class="company-full-hero" aria-labelledby="companyFullMainTitle">
+			<div class="company-full-hero-copy">
+				<p class="company-full-kicker">리얼제주(REALJEJU.APP)</p>
+				<h1 class="company-full-main-title" id="companyFullMainTitle">제주의 생활과 부동산 정보를 한 곳에!</h1>
+				<p class="company-full-lead">리얼제주는 제주 지역의 부동산 매물, 동네업체, 생활 정보, 구인 공고를 지도 중심으로 연결하는<br>지역 기반 프롭테크 서비스입니다.</p>
+			</div>
+			<figure class="company-full-hero-visual">
+				<img src="img/company_intro_map_4.505.svg" alt="제주 지도 위에 매물과 생활 정보를 연결한 리얼제주 서비스 이미지" loading="lazy" decoding="async">
+			</figure>
+		</section>
+		<section class="company-full-section" aria-label="리얼제주 소개">
+			<div class="company-full-grid">
+				<article class="company-full-card">
+					<span class="company-full-card-icon"><i class="fa-solid fa-map-location-dot" aria-hidden="true"></i></span>
+					<span class="company-full-card-label">Service</span>
+					<h2>지도 기반 정보 탐색</h2>
+					<p>매물과 주변 생활 정보를 함께 확인할 수 있도록 지도 화면을 중심으로 서비스를 구성합니다.</p>
+				</article>
+				<article class="company-full-card">
+					<span class="company-full-card-icon"><i class="fa-solid fa-location-dot" aria-hidden="true"></i></span>
+					<span class="company-full-card-label">Local</span>
+					<h2>제주 지역 중심</h2>
+					<p>제주 생활권에 맞춰 부동산, 동네업체, 알바 정보를 하나의 흐름 안에서 탐색할 수 있게 만듭니다.</p>
+				</article>
+				<article class="company-full-card">
+					<span class="company-full-card-icon"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i></span>
+					<span class="company-full-card-label">Trust</span>
+					<h2>확인 가능한 정보</h2>
+					<p>중개사무소와 매물 관리 기준을 바탕으로 이용자가 필요한 정보를 빠르게 비교할 수 있도록 돕습니다.</p>
+				</article>
+			</div>
+		</section>
+		<section class="company-full-section company-full-note" aria-label="서비스 운영 기준">
+			<p>제주 생활과 부동산 정보를<br>더 쉽게 연결합니다.</p>
+			<button type="button" class="company-full-home-link" data-main-landing-action="map">리얼제주 부동산 홈 &gt;</button>
+		</section>
+		<section class="company-full-section company-full-split" aria-label="운영 정보">
+			<div>
+				<h2>운영사 정보</h2>
+				<p>(주)디에이치인베스트먼트는 리얼제주 서비스를 통해<br>제주 지역의 부동산 정보 접근성을 높이고,<br>지역 생활 정보를 더 쉽게 연결하는 것을 목표로 합니다.<br><br>리얼제주는 제주 지역 이용자가 필요한 정보를<br>지도에서 쉽게 찾고 비교할 수 있도록 서비스를 운영합니다.</p>
+			</div>
+			<div class="company-full-info-list">
+				<p><strong>서비스명</strong><span>리얼제주(REALJEJU.APP)</span></p>
+				<p><strong>운영사</strong><span>(주)디에이치인베스트먼트</span></p>
+				<p><strong>사업자번호</strong><span>534-87-01667</span></p>
+				<p><strong>대표</strong><span>김대홍</span></p>
+				<p><strong>주소</strong><span>제주특별자치도 제주시 노형로 356, 5층</span></p>
+				<p><strong>고객센터</strong><span>064-745-0531</span></p>
+			</div>
+		</section>
+		<section class="company-full-section company-full-contact" aria-label="문의 및 제휴">
+			<div>
+				<h2>문의 및 제휴</h2>
+				<p>리얼제주 서비스 이용, 광고, 제휴 문의는 고객센터로 연락해 주세요.</p>
+			</div>
+			<a href="tel:0647450531">고객센터 064-745-0531</a>
+		</section>
+		<div class="company-full-footer-shell">
+			<footer class="main-landing-footer company-full-main-footer" aria-label="리얼제주 사업자 정보">
+				<div class="main-landing-footer-line" aria-hidden="true"></div>
+				<div class="main-landing-footer-name">리얼제주(REALJEJU.APP)</div>
+				<div class="main-landing-footer-info">
+					<span>(주)디에이치인베스트먼트</span>
+					<span>대표 : 김대홍</span>
+					<span>사업자등록번호 : 534-87-01667</span>
+					<span>통신판매업 신고번호 : 2026-제주노형-발급준비중</span>
+				</div>
+				<div class="main-landing-footer-info">
+					<span>주소 : 제주특별자치도 제주시 노형로 356, 5층</span>
+					<span>고객센터 전화 : 064-745-0531</span>
+					<span>고객센터 이메일 : dh_realestate@naver.com</span>
+					<span>호스팅서비스 제공자 : Vercel / SupaBase</span>
+				</div>
+				<div class="main-landing-footer-links" aria-label="리얼제주 정책 링크">
+					<button type="button" class="main-landing-footer-link" data-global-more-action="company">회사소개</button>
+					<span aria-hidden="true">|</span>
+					<button type="button" class="main-landing-footer-link auth-terms-open" data-terms-key="service">이용약관</button>
+					<span aria-hidden="true">|</span>
+					<button type="button" class="main-landing-footer-link auth-terms-open" data-terms-key="privacy">개인정보처리방침</button>
+					<span aria-hidden="true">|</span>
+					<button type="button" class="main-landing-footer-link auth-terms-open" data-terms-key="location">위치기반 서비스 이용약관</button>
+					<span aria-hidden="true">|</span>
+					<button type="button" class="main-landing-footer-link auth-terms-open" data-terms-key="listing-policy">매물관리 규정</button>
+				</div>
+				<div class="main-landing-footer-copy">Copyright © REALJEJU.APP. All Rights Reserved.</div>
+			</footer>
+		</div>
+	</div>
+</div>
 <div id="termsFullPage" class="terms-full-page" aria-hidden="true">
 	<div class="terms-full-header">
 		<div class="terms-full-title" id="termsFullHeaderTitle">
@@ -4743,10 +5012,40 @@
 		</h1>
 		<div id="termsFullContent">
 		</div>
+		<div class="terms-full-footer-shell">
+			<footer class="main-landing-footer terms-full-main-footer" aria-label="리얼제주 사업자 정보">
+				<div class="main-landing-footer-line" aria-hidden="true"></div>
+				<div class="main-landing-footer-name">리얼제주(REALJEJU.APP)</div>
+				<div class="main-landing-footer-info">
+					<span>(주)디에이치인베스트먼트</span>
+					<span>대표 : 김대홍</span>
+					<span>사업자등록번호 : 534-87-01667</span>
+					<span>통신판매업 신고번호 : 2026-제주노형-발급준비중</span>
+				</div>
+				<div class="main-landing-footer-info">
+					<span>주소 : 제주특별자치도 제주시 노형로 356, 5층</span>
+					<span>고객센터 전화 : 064-745-0531</span>
+					<span>고객센터 이메일 : dh_realestate@naver.com</span>
+					<span>호스팅서비스 제공자 : Vercel / SupaBase</span>
+				</div>
+				<div class="main-landing-footer-links" aria-label="리얼제주 정책 링크">
+					<button type="button" class="main-landing-footer-link" data-global-more-action="company">회사소개</button>
+					<span aria-hidden="true">|</span>
+					<button type="button" class="main-landing-footer-link auth-terms-open" data-terms-key="service">이용약관</button>
+					<span aria-hidden="true">|</span>
+					<button type="button" class="main-landing-footer-link auth-terms-open" data-terms-key="privacy">개인정보처리방침</button>
+					<span aria-hidden="true">|</span>
+					<button type="button" class="main-landing-footer-link auth-terms-open" data-terms-key="location">위치기반 서비스 이용약관</button>
+					<span aria-hidden="true">|</span>
+					<button type="button" class="main-landing-footer-link auth-terms-open" data-terms-key="listing-policy">매물관리 규정</button>
+				</div>
+				<div class="main-landing-footer-copy">Copyright © REALJEJU.APP. All Rights Reserved.</div>
+			</footer>
+		</div>
 	</div>
 </div>
 
-					<script src="js/app_4.279.js?v=20260707-property-badge-return-4279"></script>
+					<script src="js/app_4.535.js?v=20260710-terms-company-name-4535"></script>
 <script>
 (function () {
 	var labels = {
