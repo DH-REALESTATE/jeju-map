@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 	<!--
-		REALJEJU HTML 구조 / Ver 4.584
+		REALJEJU HTML 구조 / Ver 4.598
 		파일은 단일 HTML을 유지하고, 실제 배치 순서대로 큰 화면 단위만 주석으로 구분한다.
 		0. Head / 공통 메타
 		1. 상단바 / 전역 메뉴
@@ -37,7 +37,7 @@
 				transition: none;
 			}
 		</style>
-						<link rel="stylesheet" href="css/base_4.584.css?v=20260711-empty-deal-filter-matches-none-4584">
+						<link rel="stylesheet" href="css/base_4.598.css?v=20260714-admin-boundary-red-4598">
 
 </head>
 	<body class="sidebar-list-collapsed realjeju-side-nav-enabled main-landing-page-open">
@@ -119,7 +119,7 @@
 					<div class="global-topbar-right">
 						<!-- PATCH 3.918: 상단 배너 버전 텍스트를 현재 배포 버전과 일치시킵니다. -->
 						<button type="button" class="global-auth-trigger version-only" id="detailAuthTrigger" data-auth-state="logged-out">
-							<span class="topbar-version-text">Ver 4.584</span>
+							<span class="topbar-version-text">Ver 4.598</span>
 						</button>
 						<button type="button" class="global-topbar-icon-btn global-topbar-more-btn" id="globalTopbarMoreBtn" aria-label="전체메뉴" aria-expanded="false" aria-controls="globalTopbarMoreMenu">
 							<span class="topbar-nine-dot-grid" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
@@ -2479,8 +2479,8 @@
 		<div class="sub-topbar">
 			<div class="sub-topbar-inner">
 					<!-- PATCH 3.918: 하단 버전 링크도 현재 배포 파일명으로 갱신합니다. -->
-										<a class="sub-version-fixed" href="#" data-version-download="realjeju_4.584.html" title="realjeju_4.584.html 다운로드">
-										Ver 4.584
+										<a class="sub-version-fixed" href="#" data-version-download="realjeju_4.598.html" title="realjeju_4.598.html 다운로드">
+										Ver 4.598
 						</a>
 				<div class="sub-topbar-left">
 					<strong id="listInfoText">
@@ -4291,6 +4291,43 @@
 				지역별 운영 기준은 현장 안내를 우선 확인
 			</div>
 		</div>
+		<div class="life-safety-legend factory-restriction-legend" id="factoryRestrictionLegend" aria-hidden="true">
+			<div class="life-safety-legend-title">공장설립제한</div>
+			<div class="life-safety-legend-scope">자료 기준 2021.03.11ㆍ05.27</div>
+			<div class="life-safety-legend-row">
+				<span class="factory-restriction-legend-swatch" aria-hidden="true"></span>
+				<span>제한지역</span>
+			</div>
+			<div class="life-safety-legend-note">최종 허가 여부는 관할기관 확인</div>
+		</div>
+		<div class="life-safety-legend cultural-heritage-protection-legend" id="culturalHeritageProtectionLegend" aria-hidden="true">
+			<div class="life-safety-legend-title">문화재보호구역</div>
+			<div class="life-safety-legend-scope">자료 기준 2025.10.01</div>
+			<div class="life-safety-legend-row">
+				<span class="cultural-heritage-protection-legend-swatch" aria-hidden="true"></span>
+				<span>보호구역</span>
+			</div>
+			<div class="life-safety-legend-note">최종 행위제한ㆍ허가 여부는 관할기관 확인</div>
+		</div>
+		<div class="life-safety-legend livestock-breeding-restriction-legend" id="livestockBreedingRestrictionLegend" aria-hidden="true">
+			<div class="life-safety-legend-title">가축사육제한</div>
+			<div class="life-safety-legend-scope">자료 기준 2026.06.01</div>
+			<div class="life-safety-legend-row">
+				<span class="livestock-breeding-restriction-legend-swatch full" aria-hidden="true"></span>
+				<span>전부제한구역</span>
+			</div>
+			<div class="life-safety-legend-row">
+				<span class="livestock-breeding-restriction-legend-swatch partial" aria-hidden="true"></span>
+				<span>일부ㆍ기타 제한구역</span>
+			</div>
+			<div class="life-safety-legend-note">최종 사육 가능 여부는 관할기관 확인</div>
+		</div>
+		<div class="life-safety-legend national-land-plan-legend" id="nationalLandPlanLegend" aria-hidden="true">
+			<div class="life-safety-legend-title">국토계획</div>
+			<div class="life-safety-legend-scope">자료 기준 2025.10.01</div>
+			<div class="national-land-plan-legend-rows" id="nationalLandPlanLegendRows"></div>
+			<div class="life-safety-legend-note">최종 행위제한ㆍ허가 여부는 관할기관 확인</div>
+		</div>
 	</main>
 </div>
 <div class="detail-image-lightbox" id="detailImageLightbox">
@@ -5062,7 +5099,7 @@
 	</div>
 </div>
 
-					<script src="js/app_4.584.js?v=20260711-empty-deal-filter-matches-none-4584"></script>
+					<script src="js/app_4.598.js?v=20260714-admin-boundary-red-4598"></script>
 <script>
 (function () {
 	var labels = {
