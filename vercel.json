@@ -1,0 +1,17 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "trailingSlash": false,
+  "rewrites": [
+    { "source": "/properties", "destination": "/index.html" },
+    { "source": "/properties/:path*", "destination": "/index.html" },
+    { "source": "/companies", "destination": "/index.html" },
+    { "source": "/jobs", "destination": "/index.html" },
+    { "source": "/used", "destination": "/index.html" },
+    { "source": "/cars", "destination": "/index.html" },
+    { "source": "/meetups", "destination": "/index.html" },
+    { "source": "/notices", "destination": "/index.html" },
+    { "source": "/mypage/:path*", "destination": "/index.html" },
+    { "source": "/admin", "destination": "/index.html" },
+    { "source": "/admin/:path*", "destination": "/index.html" }
+  ]
+}
