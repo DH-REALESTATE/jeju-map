@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 	<!--
-		REALJEJU HTML 구조 / Ver 4.694
+		REALJEJU HTML 구조 / Ver 4.730
 		파일은 단일 HTML을 유지하고, 실제 배치 순서대로 큰 화면 단위만 주석으로 구분한다.
 		0. Head / 공통 메타
 		1. 상단바 / 전역 메뉴
@@ -26,8 +26,33 @@
 		<meta property="og:type" content="website" />
 		<meta property="og:url" content="https://your-domain.example/" />
 		<meta property="og:image" content="https://your-domain.example/og-image.jpg" />
-		<link rel="icon" href="favicon_realjeju_blue.png">
+		<script id="realjeju-initial-route-guard">
+			(function () {
+				var protocol = String(window.location.protocol || "");
+				if (/^https?:$/.test(protocol)) {
+					var base = document.createElement("base");
+					base.href = "/";
+					document.head.appendChild(base);
+				}
+				var pathname = String(window.location.pathname || "/").replace(/\/{2,}/g, "/");
+				window.realjejuInitialRoutePath = pathname.length > 1 ? pathname.replace(/\/+$/, "") : pathname;
+				var params = new URLSearchParams(String(window.location.search || ""));
+				var isVersionDocument = /\/(?:index|realjeju_\d+\.\d+)\.html$/i.test(pathname);
+				var hasDeepLink = params.has("id") || params.has("brokerEdit") || params.get("agentList") === "1";
+				var isLandingRoute = !hasDeepLink && (pathname === "/" || isVersionDocument);
+				if (isLandingRoute) return;
+				document.documentElement.classList.add("realjeju-route-booting");
+				window.realjejuReleaseInitialRouteGuard = function () {
+					document.documentElement.classList.remove("realjeju-route-booting");
+				};
+				window.setTimeout(window.realjejuReleaseInitialRouteGuard, 4000);
+			})();
+		</script>
+		<link rel="icon" href="/favicon_realjeju_blue.png">
 		<style id="realjeju-initial-sidebar-guard">
+			html.realjeju-route-booting body {
+				visibility: hidden !important;
+			}
 			body.sidebar-list-collapsed:not(.detail-page-panel-open) #sidebar {
 				display: none;
 				visibility: hidden;
@@ -37,7 +62,7 @@
 				transition: none;
 			}
 		</style>
-						<link rel="stylesheet" href="css/base_4.694.css?v=20260716-inquiry-common-spacing-4694">
+						<link rel="stylesheet" href="css/base_4.730.css?v=20260716-broker-only-companies-4730">
 
 </head>
 	<body class="sidebar-list-collapsed realjeju-side-nav-enabled main-landing-page-open">
@@ -119,7 +144,7 @@
 					<div class="global-topbar-right" id="globalTopbarRight">
 						<!-- PATCH 3.918: 상단 배너 버전 텍스트를 현재 배포 버전과 일치시킵니다. -->
 						<button type="button" class="global-auth-trigger version-only" id="detailAuthTrigger" data-auth-state="logged-out">
-							<span class="topbar-version-text">Ver 4.694</span>
+							<span class="topbar-version-text">Ver 4.730</span>
 						</button>
 						<nav class="main-landing-auth-links" id="mainLandingAuthLinks" aria-label="로그인 및 회원가입">
 							<button type="button" class="main-landing-auth-link" id="mainLandingLoginBtn">로그인</button>
@@ -386,6 +411,9 @@
 					<span>공지사항</span>
 				</button>
 			</nav>
+			<div class="realjeju-side-admin-version" id="realjejuSideAdminVersion" aria-hidden="true" hidden>
+				<span class="topbar-version-text">Ver 4.730</span>
+			</div>
 		</aside>
 		<aside class="global-category-side-panel" id="globalCategorySidePanel" aria-hidden="true">
 			<div class="global-category-side-head">
@@ -5102,14 +5130,16 @@
 		<div class="terms-full-title" id="termsFullHeaderTitle">
 			서비스 이용약관
 		</div>
-		<button type="button" class="terms-full-close" id="termsFullClose" aria-label="닫기">
-			×
-		</button>
 	</div>
 	<div class="terms-full-body" id="termsFullBody">
-		<h1 class="terms-full-main-title" id="termsFullMainTitle">
-			리얼제주 서비스 이용약관
-		</h1>
+		<div class="terms-full-main-head">
+			<h1 class="terms-full-main-title" id="termsFullMainTitle">
+				리얼제주 서비스 이용약관
+			</h1>
+			<button type="button" class="terms-full-close" id="termsFullClose" aria-label="닫기">
+				×
+			</button>
+		</div>
 		<div id="termsFullContent">
 		</div>
 		<div class="terms-full-footer-shell">
@@ -5145,7 +5175,7 @@
 	</div>
 </div>
 
-					<script src="js/app_4.694.js?v=20260716-inquiry-common-spacing-4694"></script>
+					<script src="js/app_4.730.js?v=20260716-broker-only-companies-4730"></script>
 <script>
 (function () {
 	var labels = {
