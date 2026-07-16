@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 	<!--
-		REALJEJU HTML 구조 / Ver 4.730
+		REALJEJU HTML 구조 / Ver 4.604
 		파일은 단일 HTML을 유지하고, 실제 배치 순서대로 큰 화면 단위만 주석으로 구분한다.
 		0. Head / 공통 메타
 		1. 상단바 / 전역 메뉴
@@ -26,33 +26,8 @@
 		<meta property="og:type" content="website" />
 		<meta property="og:url" content="https://your-domain.example/" />
 		<meta property="og:image" content="https://your-domain.example/og-image.jpg" />
-		<script id="realjeju-initial-route-guard">
-			(function () {
-				var protocol = String(window.location.protocol || "");
-				if (/^https?:$/.test(protocol)) {
-					var base = document.createElement("base");
-					base.href = "/";
-					document.head.appendChild(base);
-				}
-				var pathname = String(window.location.pathname || "/").replace(/\/{2,}/g, "/");
-				window.realjejuInitialRoutePath = pathname.length > 1 ? pathname.replace(/\/+$/, "") : pathname;
-				var params = new URLSearchParams(String(window.location.search || ""));
-				var isVersionDocument = /\/(?:index|realjeju_\d+\.\d+)\.html$/i.test(pathname);
-				var hasDeepLink = params.has("id") || params.has("brokerEdit") || params.get("agentList") === "1";
-				var isLandingRoute = !hasDeepLink && (pathname === "/" || isVersionDocument);
-				if (isLandingRoute) return;
-				document.documentElement.classList.add("realjeju-route-booting");
-				window.realjejuReleaseInitialRouteGuard = function () {
-					document.documentElement.classList.remove("realjeju-route-booting");
-				};
-				window.setTimeout(window.realjejuReleaseInitialRouteGuard, 4000);
-			})();
-		</script>
-		<link rel="icon" href="/favicon_realjeju_blue.png">
+		<link rel="icon" href="favicon_realjeju_blue.png">
 		<style id="realjeju-initial-sidebar-guard">
-			html.realjeju-route-booting body {
-				visibility: hidden !important;
-			}
 			body.sidebar-list-collapsed:not(.detail-page-panel-open) #sidebar {
 				display: none;
 				visibility: hidden;
@@ -62,7 +37,7 @@
 				transition: none;
 			}
 		</style>
-						<link rel="stylesheet" href="css/base_4.730.css?v=20260716-broker-only-companies-4730">
+						<link rel="stylesheet" href="css/base_4.604.css?v=20260714-balanced-font-hierarchy-4604">
 
 </head>
 	<body class="sidebar-list-collapsed realjeju-side-nav-enabled main-landing-page-open">
@@ -141,51 +116,23 @@
 						<button type="button" class="my-suite-tab" data-my-suite-tab="myinfo">내 정보</button>
 						<button type="button" class="my-suite-tab" data-my-suite-tab="broker-office">중개사 정보</button>
 					</nav>
-					<div class="global-topbar-right" id="globalTopbarRight">
+					<div class="global-topbar-right">
 						<!-- PATCH 3.918: 상단 배너 버전 텍스트를 현재 배포 버전과 일치시킵니다. -->
 						<button type="button" class="global-auth-trigger version-only" id="detailAuthTrigger" data-auth-state="logged-out">
-							<span class="topbar-version-text">Ver 4.730</span>
+							<span class="topbar-version-text">Ver 4.604</span>
 						</button>
-						<nav class="main-landing-auth-links" id="mainLandingAuthLinks" aria-label="로그인 및 회원가입">
-							<button type="button" class="main-landing-auth-link" id="mainLandingLoginBtn">로그인</button>
-							<span class="main-landing-auth-separator" aria-hidden="true">·</span>
-							<button type="button" class="main-landing-auth-link" id="mainLandingSignupBtn">회원가입</button>
-						</nav>
-						<button type="button" class="global-topbar-icon-btn topbar-chat-button" id="globalTopbarChatBtn" aria-label="채팅" aria-expanded="false" aria-controls="globalTopbarChatMenu" hidden>
-							<svg class="topbar-custom-chat" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-								<path d="M12 3c-4.97 0-9 3.42-9 7.65 0 1.94.85 3.71 2.27 5.06L3.9 21l4.75-1.87c1.04.34 2.17.52 3.35.52 4.97 0 9-3.42 9-8.1S16.97 3 12 3Z"></path>
-								<circle cx="8" cy="11" r="1.1"></circle>
-								<circle cx="12" cy="11" r="1.1"></circle>
-								<circle cx="16" cy="11" r="1.1"></circle>
-							</svg>
-						</button>
-						<div class="topbar-notification-menu topbar-chat-menu" id="globalTopbarChatMenu" aria-hidden="true" inert>
-							<div class="topbar-notification-title">채팅</div>
-							<div class="topbar-notification-empty">새로운 채팅이 없습니다.</div>
-						</div>
-						<button type="button" class="global-topbar-icon-btn topbar-notification-button" id="globalTopbarNotificationBtn" aria-label="알림" aria-expanded="false" aria-controls="globalTopbarNotificationMenu" hidden>
-							<svg class="topbar-custom-bell" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-								<path d="M3 17.5l1.1-1.1A6 6 0 0 0 6 12V9a6 6 0 0 1 12 0v3a6 6 0 0 0 1.9 4.4l1.1 1.1"></path>
-								<path d="M3 17.5h18"></path>
-								<path d="M8.75 17.5a3.25 3.5 0 0 0 6.5 0"></path>
-							</svg>
-						</button>
-						<div class="topbar-notification-menu" id="globalTopbarNotificationMenu" aria-hidden="true" inert>
-							<div class="topbar-notification-title">알림</div>
-							<div class="topbar-notification-empty">새로운 알림이 없습니다.</div>
-						</div>
-						<button type="button" class="global-topbar-icon-btn global-topbar-more-btn account-launcher-button" id="globalTopbarMoreBtn" aria-label="마이페이지 메뉴" aria-expanded="false" aria-controls="globalTopbarMoreMenu" hidden>
+						<button type="button" class="global-topbar-icon-btn global-topbar-more-btn" id="globalTopbarMoreBtn" aria-label="전체메뉴" aria-expanded="false" aria-controls="globalTopbarMoreMenu">
 							<span class="topbar-nine-dot-grid" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
 						</button>
-						<div class="global-topbar-more-menu account-launcher-menu" id="globalTopbarMoreMenu" aria-hidden="true" inert>
-							<div class="account-launcher-grid">
-								<button type="button" class="account-launcher-item global-account-menu-item" data-account-action="myinfo"><i class="fa-solid fa-user" aria-hidden="true"></i><span>내 정보</span></button>
-								<button type="button" class="account-launcher-item global-account-menu-item" data-account-action="broker-office"><i class="fa-solid fa-building" aria-hidden="true"></i><span>중개사무소 정보</span></button>
-								<button type="button" class="account-launcher-item global-account-menu-item" data-account-action="payment"><i class="fa-solid fa-credit-card" aria-hidden="true"></i><span>이용권 결제</span></button>
-								<button type="button" class="account-launcher-item global-account-menu-item" data-account-action="inquiries"><i class="fa-solid fa-comments" aria-hidden="true"></i><span>1:1 문의내역</span></button>
-							</div>
-							<div class="account-launcher-divider" aria-hidden="true"></div>
-							<button type="button" class="account-launcher-logout global-account-menu-item" data-account-action="logout"><i class="fa-solid fa-arrow-right-from-bracket" aria-hidden="true"></i><span>로그아웃</span></button>
+						<div class="global-topbar-more-menu" id="globalTopbarMoreMenu" aria-hidden="true">
+							<button type="button" class="global-more-menu-item" data-global-more-action="company">회사소개</button>
+							<div class="global-more-menu-divider" aria-hidden="true"></div>
+							<button type="button" class="global-more-menu-item auth-terms-open" data-terms-key="service">이용약관</button>
+							<button type="button" class="global-more-menu-item auth-terms-open" data-terms-key="privacy">개인정보처리방침</button>
+							<button type="button" class="global-more-menu-item auth-terms-open" data-terms-key="location">위치기반 서비스 이용약관</button>
+							<button type="button" class="global-more-menu-item auth-terms-open" data-terms-key="refund">환불 및 취소 정책</button>
+							<div class="global-more-menu-divider" aria-hidden="true"></div>
+							<button type="button" class="global-more-menu-item" data-global-more-action="customer-center">고객센터</button>
 						</div>
 					<div class="global-account-dropdown" id="globalAccountDropdown" aria-hidden="true">
 						<button type="button" class="global-account-menu-item" data-account-action="inquiries">1:1 문의내역</button>
@@ -289,26 +236,14 @@
 							<em>매물과 생활 정보를 지도에서 확인하세요.</em>
 						</span>
 						<small>지도에서 보기</small>
-						<i class="fa-solid fa-map-location-dot" aria-hidden="true"></i>
 					</button>
 				</section>
-				<section class="main-landing-notice-preview" aria-labelledby="mainLandingNoticeTitle">
-					<div class="main-landing-notice-head">
-						<h2 id="mainLandingNoticeTitle">공지사항</h2>
-						<button type="button" class="main-landing-notice-more" data-main-landing-action="notice">
-							<span>더보기</span>
-							<i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
-						</button>
-					</div>
-					<div class="main-landing-notice-list" id="mainLandingNoticeList" aria-live="polite" aria-busy="true">
-						<div class="main-landing-notice-empty">공지사항을 불러오는 중입니다.</div>
-					</div>
-				</section>
-				<section class="main-landing-bottom-ad" aria-label="리얼제주 브랜드 안내">
+				<section class="main-landing-bottom-ad" aria-label="리얼제주 광고 문의">
 					<div>
 						<strong>제주도 대표 프롭테크 서비스</strong>
-						<span>리얼제주에서 광고를 시작해보세요.</span>
+						<span><strong class="main-landing-bottom-ad-bold">리얼제주</strong>의 광고를 지금 이용해보세요.</span>
 					</div>
+					<a href="tel:0647450531">광고문의 : 064-745-0531</a>
 				</section>
 				<div class="main-landing-preview-row" aria-label="리얼제주 주요 정보">
 					<button type="button" class="main-landing-preview" data-main-landing-action="map">
@@ -411,9 +346,6 @@
 					<span>공지사항</span>
 				</button>
 			</nav>
-			<div class="realjeju-side-admin-version" id="realjejuSideAdminVersion" aria-hidden="true" hidden>
-				<span class="topbar-version-text">Ver 4.730</span>
-			</div>
 		</aside>
 		<aside class="global-category-side-panel" id="globalCategorySidePanel" aria-hidden="true">
 			<div class="global-category-side-head">
@@ -1095,13 +1027,8 @@
 		</footer>
 	</section>
 	<!-- 5. 결제 / 이용권 -->
-	<section class="payment-page-panel account-page-panel" id="paymentPagePanel" aria-hidden="true">
-		<div class="payment-page-inner account-page-inner">
-			<div class="myinfo-page-head payment-account-head account-page-head">
-				<h1 class="myinfo-page-title">이용권 결제</h1>
-				<p class="myinfo-page-desc">이용권 구매와 결제 내역을 한 곳에서 관리합니다.</p>
-			</div>
-			<div class="payment-account-card">
+	<section class="payment-page-panel" id="paymentPagePanel" aria-hidden="true">
+		<div class="payment-page-inner">
 			<div class="payment-tabs" role="tablist" aria-label="이용권 결제 메뉴">
 				<button type="button" class="payment-tab active" data-payment-tab="plans" role="tab" aria-selected="true">이용권 구매</button>
 				<button type="button" class="payment-tab" data-payment-tab="coupons" role="tab" aria-selected="false">쿠폰함</button>
@@ -1201,7 +1128,6 @@
 					<button type="button" class="payment-help-btn">1:1 문의하기</button>
 				</div>
 			</div>
-			</div>
 			<footer class="payment-company-info">
 				<div class="payment-company-name">리얼제주(REALJEJU.APP)</div>
 				<div class="payment-company-grid">
@@ -1229,13 +1155,13 @@
 		</div>
 	</section>
 
-	<section class="myinfo-page-panel account-page-panel" id="myInfoPagePanel" aria-hidden="true">
-		<div class="myinfo-page-inner account-page-inner">
-			<div class="myinfo-page-head account-page-head">
+	<section class="myinfo-page-panel" id="myInfoPagePanel" aria-hidden="true">
+		<div class="myinfo-page-inner">
+			<div class="myinfo-page-head">
 				<h1 class="myinfo-page-title">내 정보</h1>
 				<p class="myinfo-page-desc">가입 계정과 중개사무소 정보를 한 곳에서 관리합니다.</p>
 			</div>
-			<div class="myinfo-page-card account-page-card">
+			<div class="myinfo-page-card">
 				<div class="myinfo-page-photo-box">
 					<img src="" alt="프로필 사진" class="myinfo-page-photo" id="myInfoPageProfileImage" />
 				</div>
@@ -1266,6 +1192,7 @@
 				<div class="myinfo-page-actions">
 					<button type="button" class="myinfo-page-secondary" id="myInfoPagePasswordChangeBtn">비밀번호 변경</button>
 					<button type="button" class="myinfo-page-primary" id="myInfoPageEditProfileBtn">수정</button>
+					<button type="button" class="myinfo-page-secondary" id="myInfoPageBrokerOfficeBtn" style="display:none;">중개사무소 정보</button>
 				</div>
 			</div>
 			<p class="myinfo-page-danger-zone">
@@ -1299,13 +1226,13 @@
 			</footer>
 	</section>
 
-	<section class="myinfo-page-panel profile-suite-panel account-page-panel" id="profileEditPagePanel" aria-hidden="true">
-		<div class="myinfo-page-inner account-page-inner">
-			<div class="myinfo-page-head account-page-head">
+	<section class="myinfo-page-panel profile-suite-panel" id="profileEditPagePanel" aria-hidden="true">
+		<div class="myinfo-page-inner">
+			<div class="myinfo-page-head">
 				<h1 class="myinfo-page-title">내 정보 수정</h1>
 				<p class="myinfo-page-desc">가입 계정과 중개사무소 정보를 한 곳에서 관리합니다.</p>
 			</div>
-			<form class="myinfo-page-card account-page-card" id="profileEditPageForm">
+			<form class="myinfo-page-card" id="profileEditPageForm">
 				<div class="myinfo-page-row profile-suite-photo-row">
 					<span class="myinfo-page-label">프로필 사진</span>
 					<div class="profile-suite-photo-control">
@@ -1328,7 +1255,7 @@
 					<label class="myinfo-page-label" for="profileEditPageEmailInput">이메일</label>
 					<input type="email" class="profile-suite-input" id="profileEditPageEmailInput" readonly />
 				</div>
-				<div class="myinfo-page-row profile-suite-member-row">
+				<div class="myinfo-page-row">
 					<label class="myinfo-page-label" for="profileEditPageRoleSelect">회원유형</label>
 					<select class="profile-suite-input" id="profileEditPageRoleSelect">
 						<option value="user">일반회원</option>
@@ -1343,8 +1270,8 @@
 					<span><strong>[필수]</strong> 개인정보 수집 및 이용에 동의합니다.</span>
 				</label>
 				<div class="myinfo-page-actions">
-					<button type="button" class="myinfo-page-secondary" id="profileEditPageCloseBtn">취소</button>
 					<button type="submit" class="myinfo-page-primary" id="profileEditPageSaveBtn">저장</button>
+					<button type="button" class="myinfo-page-secondary" id="profileEditPageCloseBtn">닫기</button>
 				</div>
 			</form>
 		</div>
@@ -1374,13 +1301,13 @@
 			</footer>
 	</section>
 
-	<section class="myinfo-page-panel profile-suite-panel account-page-panel" id="brokerOfficeInfoPagePanel" aria-hidden="true">
-		<div class="myinfo-page-inner account-page-inner">
-			<div class="myinfo-page-head account-page-head">
+	<section class="myinfo-page-panel profile-suite-panel" id="brokerOfficeInfoPagePanel" aria-hidden="true">
+		<div class="myinfo-page-inner">
+			<div class="myinfo-page-head">
 				<h1 class="myinfo-page-title">중개사무소 정보</h1>
 				<p class="myinfo-page-desc">중개사무소 정보를 한 곳에서 관리합니다.</p>
 			</div>
-			<div class="myinfo-page-card account-page-card">
+			<div class="myinfo-page-card">
 				<div class="myinfo-page-row"><span class="myinfo-page-label">중개사무소 명칭</span><span class="myinfo-page-value" id="brokerOfficePageNameValue">-</span></div>
 				<div class="myinfo-page-row"><span class="myinfo-page-label">주소지</span><span class="myinfo-page-value" id="brokerOfficePageAddressValue">-</span></div>
 				<div class="myinfo-page-row"><span class="myinfo-page-label">등록번호</span><span class="myinfo-page-value" id="brokerOfficePageRegNoValue">-</span></div>
@@ -1391,6 +1318,7 @@
 				<div class="myinfo-page-row"><span class="myinfo-page-label">승인상태</span><span class="myinfo-page-value" id="brokerOfficePageStatusValue">-</span></div>
 				<div class="myinfo-page-actions">
 					<button type="button" class="myinfo-page-primary" id="brokerOfficePageEditBtn">수정</button>
+					<button type="button" class="myinfo-page-secondary" id="brokerOfficePageCloseBtn">닫기</button>
 				</div>
 			</div>
 		</div>
@@ -1405,18 +1333,18 @@
 			</footer>
 	</section>
 
-	<section class="myinfo-page-panel profile-suite-panel account-page-panel" id="brokerOfficeEditPagePanel" aria-hidden="true">
-		<div class="myinfo-page-inner account-page-inner">
-			<div class="myinfo-page-head account-page-head"><h1 class="myinfo-page-title">중개사무소 수정</h1><p class="myinfo-page-desc">중개사무소 정보를 한 곳에서 관리합니다.</p></div>
-			<form class="myinfo-page-card account-page-card" id="brokerOfficeEditPageForm">
+	<section class="myinfo-page-panel profile-suite-panel" id="brokerOfficeEditPagePanel" aria-hidden="true">
+		<div class="myinfo-page-inner">
+			<div class="myinfo-page-head"><h1 class="myinfo-page-title">중개사무소 수정</h1><p class="myinfo-page-desc">중개사무소 정보를 한 곳에서 관리합니다.</p></div>
+			<form class="myinfo-page-card" id="brokerOfficeEditPageForm">
 				<div class="myinfo-page-row"><label class="myinfo-page-label" for="brokerOfficeEditPageNameInput">중개사무소 명칭</label><input type="text" class="profile-suite-input" id="brokerOfficeEditPageNameInput" /></div>
 				<div class="myinfo-page-row"><label class="myinfo-page-label" for="brokerOfficeEditPageAddressInput">주소지</label><div class="property-address-wrap broker-office-edit-address-wrap"><input type="text" class="profile-suite-input broker-office-edit-address-input" id="brokerOfficeEditPageAddressInput" placeholder="주소를 입력하세요" autocomplete="off" readonly /><span class="property-address-main-detail" id="brokerOfficeEditPageAddressMainDetail" aria-hidden="true"></span></div></div>
 				<div class="myinfo-page-row"><label class="myinfo-page-label" for="brokerOfficeEditPageRegNoInput">등록번호</label><input type="text" class="profile-suite-input" id="brokerOfficeEditPageRegNoInput" /></div>
 				<div class="myinfo-page-row"><label class="myinfo-page-label" for="brokerOfficeEditPageOwnerInput">대표자명</label><input type="text" class="profile-suite-input" id="brokerOfficeEditPageOwnerInput" /></div>
 				<div class="myinfo-page-row"><label class="myinfo-page-label" for="brokerOfficeEditPagePhoneInput">연락처</label><input type="tel" class="profile-suite-input" id="brokerOfficeEditPagePhoneInput" /></div>
-				<div class="myinfo-page-row"><label class="myinfo-page-label" for="brokerOfficeEditPageEmailInput">이메일</label><input type="email" class="profile-suite-input" id="brokerOfficeEditPageEmailInput" readonly aria-readonly="true" title="로그인 아이디로 사용되어 변경할 수 없습니다." /></div>
+				<div class="myinfo-page-row"><label class="myinfo-page-label" for="brokerOfficeEditPageEmailInput">이메일</label><input type="email" class="profile-suite-input" id="brokerOfficeEditPageEmailInput" /></div>
 				<div class="myinfo-page-row"><label class="myinfo-page-label" for="brokerOfficeEditPageKakaoInput">카카오 오픈 채팅방</label><input type="url" class="profile-suite-input" id="brokerOfficeEditPageKakaoInput" /></div>
-				<div class="myinfo-page-actions"><button type="button" class="myinfo-page-secondary" id="brokerOfficeEditPageCloseBtn">취소</button><button type="submit" class="myinfo-page-primary" id="brokerOfficeEditPageSaveBtn">저장</button></div>
+				<div class="myinfo-page-actions"><button type="submit" class="myinfo-page-primary" id="brokerOfficeEditPageSaveBtn">저장</button><button type="button" class="myinfo-page-secondary" id="brokerOfficeEditPageCloseBtn">닫기</button></div>
 			</form>
 		</div>
 			<footer class="myinfo-company-info">
@@ -2550,6 +2478,10 @@
 
 		<div class="sub-topbar">
 			<div class="sub-topbar-inner">
+					<!-- PATCH 3.918: 하단 버전 링크도 현재 배포 파일명으로 갱신합니다. -->
+										<a class="sub-version-fixed" href="#" data-version-download="realjeju_4.604.html" title="realjeju_4.604.html 다운로드">
+										Ver 4.604
+						</a>
 				<div class="sub-topbar-left">
 					<strong id="listInfoText">
 						총 0개 매물
@@ -4506,12 +4438,6 @@
 			<div class="auth-modal-divider">
 			</div>
 			<form class="auth-modal-form" id="authResetPasswordForm">
-				<div class="auth-modal-field" id="authResetCurrentPasswordField">
-					<label class="auth-modal-field-label" for="authResetCurrentPasswordInput">
-						이전 비밀번호
-					</label>
-					<input type="password" class="auth-modal-input" id="authResetCurrentPasswordInput" placeholder="이전 비밀번호를 입력해주세요." autocomplete="current-password" />
-				</div>
 				<div class="auth-modal-field">
 					<label class="auth-modal-field-label" for="authResetPasswordInput">
 						새 비밀번호
@@ -4865,7 +4791,7 @@
 		</div>
 		<div class="auth-signup-terms-screen auth-screen-hidden" id="authSignupTermsScreen">
 			<h2 class="auth-modal-title">
-				회원가입 · 이용약관 동의
+				이용약관
 			</h2>
 			<div class="auth-modal-divider">
 			</div>
@@ -5130,16 +5056,14 @@
 		<div class="terms-full-title" id="termsFullHeaderTitle">
 			서비스 이용약관
 		</div>
+		<button type="button" class="terms-full-close" id="termsFullClose" aria-label="닫기">
+			×
+		</button>
 	</div>
 	<div class="terms-full-body" id="termsFullBody">
-		<div class="terms-full-main-head">
-			<h1 class="terms-full-main-title" id="termsFullMainTitle">
-				리얼제주 서비스 이용약관
-			</h1>
-			<button type="button" class="terms-full-close" id="termsFullClose" aria-label="닫기">
-				×
-			</button>
-		</div>
+		<h1 class="terms-full-main-title" id="termsFullMainTitle">
+			리얼제주 서비스 이용약관
+		</h1>
 		<div id="termsFullContent">
 		</div>
 		<div class="terms-full-footer-shell">
@@ -5175,7 +5099,7 @@
 	</div>
 </div>
 
-					<script src="js/app_4.730.js?v=20260716-broker-only-companies-4730"></script>
+					<script src="js/app_4.604.js?v=20260714-balanced-font-hierarchy-4604"></script>
 <script>
 (function () {
 	var labels = {
@@ -5227,18 +5151,13 @@
 			dropdown.setAttribute("aria-hidden", "true");
 		}
 	}
-	function openDedicatedMyInfo() {
-		if (typeof window.realjejuOpenDedicatedMyInfo !== "function") return false;
-		window.realjejuOpenDedicatedMyInfo();
-		return true;
-	}
 	window.openMySuiteFallback = openMySuiteFallback;
 	document.addEventListener("click", function (e) {
 		var topbarMySuiteLink = e.target.closest("[data-global-my-suite-link]");
 		if (topbarMySuiteLink) {
 			e.preventDefault();
 			e.stopImmediatePropagation();
-			if (openDedicatedMyInfo()) return;
+			if (document.body && document.body.classList.contains("my-suite-page-open")) return;
 			openMySuiteFallback("myinfo");
 			return;
 		}
@@ -5248,23 +5167,6 @@
 		if (!labels[key]) return;
 		e.preventDefault();
 		e.stopImmediatePropagation();
-		if (key === "myinfo" && openDedicatedMyInfo()) return;
-		if (key === "payment" && typeof window.openPaymentPageFromAccountMenu === "function") {
-			window.openPaymentPageFromAccountMenu();
-			return;
-		}
-		if (key === "broker-office") {
-			if (item.disabled || item.classList.contains("is-pending")) return;
-			if ((item.classList.contains("is-active") || /중개사무소\s*정보/.test(item.textContent || ""))
-				&& typeof window.realjejuOpenBrokerOfficeInfoFromAccountMenu === "function") {
-				window.realjejuOpenBrokerOfficeInfoFromAccountMenu();
-				return;
-			}
-			if (typeof window.openBrokerOfficeFromAccountMenu === "function") {
-				window.openBrokerOfficeFromAccountMenu();
-				return;
-			}
-		}
 		openMySuiteFallback(key);
 	}, true);
 	document.addEventListener("click", function (e) {
