@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 	<!--
-		REALJEJU HTML 구조 / Ver 4.799
+		REALJEJU HTML 구조 / Ver 4.832
 		파일은 단일 HTML을 유지하고, 실제 배치 순서대로 큰 화면 단위만 주석으로 구분한다.
 		0. Head / 공통 메타
 		1. 상단바 / 전역 메뉴
@@ -37,7 +37,72 @@
 				var pathname = String(window.location.pathname || "/").replace(/\/{2,}/g, "/");
 				window.realjejuInitialRoutePath = pathname.length > 1 ? pathname.replace(/\/+$/, "") : pathname;
 				var normalizedPath = String(window.realjejuInitialRoutePath || "/").toLowerCase();
-				var hidesPageScrollbar = normalizedPath === "/jobs" || /^\/mypage(?:\/|$)/.test(normalizedPath);
+				normalizedPath = normalizedPath.replace(
+					/^\/menu_routes(?=\/(?:properties|companies|jobs|used|cars|meetups|notices|mypage|admin)(?:\/|$))/,
+					""
+				);
+				normalizedPath = normalizedPath.replace(
+					/^\/((?:properties|companies|jobs|used|cars|meetups|notices|mypage|admin)(?:\/[^/]+)*)\/index\.html$/,
+					"/$1"
+				);
+				window.realjejuInitialNormalizedRoutePath = normalizedPath;
+				var initialCategoryRoutes = {
+					"/properties": { category: "realestate" },
+					"/companies": { category: "local-business", hideFilterMenu: true },
+					"/jobs": { category: "part-time", documentPage: true },
+					"/used": { category: "used-market", hideFilterMenu: true, emptyMap: true },
+					"/cars": { category: "car", hideFilterMenu: true, emptyMap: true },
+					"/meetups": { category: "meetup", hideFilterMenu: true, emptyMap: true }
+				};
+				window.realjejuInitialCategoryRoute = initialCategoryRoutes[normalizedPath] || null;
+				if (normalizedPath === "/properties" && window.indexedDB) {
+					window.realjejuInitialMapListingsCachePromise = new Promise(function (resolve) {
+						var settled = false;
+						var db = null;
+						function finish(value) {
+							if (settled) return;
+							settled = true;
+							try {
+								if (db) db.close();
+							} catch (error) {}
+							resolve(value || null);
+						}
+						try {
+							var request = window.indexedDB.open("realjeju-map-listings", 1);
+							request.onupgradeneeded = function () {
+								var upgradeDb = request.result;
+								if (!upgradeDb.objectStoreNames.contains("cache")) {
+									upgradeDb.createObjectStore("cache", { keyPath: "key" });
+								}
+							};
+							request.onsuccess = function () {
+								db = request.result;
+								if (settled) {
+									try { db.close(); } catch (error) {}
+									return;
+								}
+								if (!db.objectStoreNames.contains("cache")) {
+									finish(null);
+									return;
+								}
+								try {
+									var transaction = db.transaction("cache", "readonly");
+									var cacheRequest = transaction.objectStore("cache").get("public-map-listings-v1");
+									cacheRequest.onsuccess = function () { finish(cacheRequest.result || null); };
+									cacheRequest.onerror = function () { finish(null); };
+									transaction.onabort = function () { finish(null); };
+								} catch (error) {
+									finish(null);
+								}
+							};
+							request.onerror = function () { finish(null); };
+							request.onblocked = function () { finish(null); };
+						} catch (error) {
+							finish(null);
+						}
+					});
+				}
+				var hidesPageScrollbar = /^\/jobs(?:\/index\.html)?$/.test(normalizedPath) || /^\/mypage(?:\/|$)/.test(normalizedPath);
 				document.documentElement.classList.toggle("realjeju-hide-page-scrollbar", hidesPageScrollbar);
 				var params = new URLSearchParams(String(window.location.search || ""));
 				var isVersionDocument = /\/(?:index|realjeju_\d+\.\d+)\.html$/i.test(pathname);
@@ -49,16 +114,23 @@
 					document.documentElement.classList.remove("realjeju-route-booting");
 				};
 				window.setTimeout(function () {
+					if (normalizedPath === "/properties") return;
 					if (typeof window.realjejuReleaseInitialRouteGuard === "function") {
 						window.realjejuReleaseInitialRouteGuard();
 					}
 				}, 15000);
 			})();
 		</script>
-		<link rel="icon" href="/favicon_realjeju_blue.png">
+		<link rel="icon" type="image/png" sizes="100x100" href="/favicon_realjeju_blue.png?v=20260719-4832">
 		<style id="realjeju-initial-sidebar-guard">
+			html.realjeju-route-booting,
+			html.realjeju-route-booting body {
+				background: #fff;
+			}
 			html.realjeju-route-booting body {
 				visibility: hidden;
+				opacity: 0;
+				pointer-events: none;
 			}
 			body.sidebar-list-collapsed:not(.detail-page-panel-open) #sidebar {
 				display: none;
@@ -69,13 +141,29 @@
 				transition: none;
 			}
 		</style>
-						<link rel="stylesheet" href="/css/base_4.799.css?v=20260718-instructions-baseline-4799">
+						<link rel="stylesheet" href="/css/base_4.832.css?v=20260719-shared-document-topbar-4832">
 
 </head>
 	<body class="sidebar-list-collapsed realjeju-side-nav-enabled main-landing-page-open">
 		<script id="realjeju-initial-body-route-prime">
 			(function () {
-				var path = String(window.realjejuInitialRoutePath || window.location.pathname || "/").toLowerCase().replace(/\/+$/, "") || "/";
+				var path = String(window.realjejuInitialNormalizedRoutePath || window.realjejuInitialRoutePath || window.location.pathname || "/").toLowerCase().replace(/\/+$/, "") || "/";
+				var categoryRoute = window.realjejuInitialCategoryRoute;
+				if (categoryRoute && document.body && document.body.classList) {
+					document.body.classList.remove("main-landing-page-open");
+					document.body.classList.add("sidebar-list-collapsed", "realjeju-side-nav-enabled");
+					document.body.classList.toggle(
+						"global-category-nonrealestate-mode",
+						categoryRoute.category !== "realestate"
+					);
+					document.body.classList.toggle("global-category-hide-filter-menu", !!categoryRoute.hideFilterMenu);
+					document.body.classList.toggle("global-category-empty-map-mode", !!categoryRoute.emptyMap);
+					document.body.classList.toggle("realjeju-document-page-open", !!categoryRoute.documentPage);
+					document.body.classList.toggle("part-time-page-open", categoryRoute.category === "part-time");
+					document.body.dataset.globalCategory = categoryRoute.category;
+					if (categoryRoute.emptyMap) document.body.dataset.globalCategoryEmptyMap = categoryRoute.category;
+					else delete document.body.dataset.globalCategoryEmptyMap;
+				}
 				var accountClasses = {
 					"/mypage": "myinfo-page-open",
 					"/mypage/profile": "myinfo-page-open",
@@ -144,7 +232,7 @@
 						<input type="search" id="presaleTopbarSearchInput" autocomplete="off" placeholder="분양 검색" aria-label="분양 검색" />
 					</div>
 					<div class="global-topbar-page-title" id="globalTopbarPageTitle" aria-hidden="true">
-						<span class="global-topbar-page-title-admin">관리자 페이지 &gt;</span>
+						<span class="global-topbar-page-title-admin" aria-hidden="true"></span>
 						<span class="global-topbar-page-title-operator">운영자 페이지 &gt;</span>
 						<span class="global-topbar-page-title-my-suite">마이페이지</span>
 						<span class="global-topbar-page-title-broker">중개사 홈</span>
@@ -173,7 +261,7 @@
 					<div class="global-topbar-right" id="globalTopbarRight">
 						<!-- PATCH 3.918: 상단 배너 버전 텍스트를 현재 배포 버전과 일치시킵니다. -->
 						<button type="button" class="global-auth-trigger version-only" id="detailAuthTrigger" data-auth-state="logged-out">
-							<span class="topbar-version-text">Ver 4.799</span>
+							<span class="topbar-version-text">Ver 4.832</span>
 						</button>
 						<nav class="main-landing-auth-links" id="mainLandingAuthLinks" aria-label="로그인 및 회원가입">
 							<button type="button" class="main-landing-auth-link" id="mainLandingLoginBtn">로그인</button>
@@ -301,10 +389,10 @@
 							<span class="main-landing-simple-desc">우리동네 업체 정보</span>
 							<i class="fa-solid fa-store" aria-hidden="true"></i>
 						</button>
-						<button type="button" class="main-landing-simple-card is-wide" data-main-landing-category="used-market">
-							<span class="main-landing-simple-title">중고거래</span>
-							<span class="main-landing-simple-desc">가까운 생활 거래</span>
-							<i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
+						<button type="button" class="main-landing-simple-card is-wide" data-main-landing-category="car">
+							<span class="main-landing-simple-title">자동차</span>
+							<span class="main-landing-simple-desc">제주 자동차 정보</span>
+							<i class="fa-solid fa-car-rear" aria-hidden="true"></i>
 						</button>
 						<button type="button" class="main-landing-simple-card is-wide" data-main-landing-action="notice">
 							<span class="main-landing-simple-title">공지사항</span>
@@ -444,7 +532,7 @@
 				</button>
 			</nav>
 			<div class="realjeju-side-admin-version" id="realjejuSideAdminVersion" aria-hidden="true" hidden>
-				<span class="topbar-version-text">Ver 4.799</span>
+				<span class="topbar-version-text">Ver 4.832</span>
 			</div>
 		</aside>
 		<aside class="global-category-side-panel" id="globalCategorySidePanel" aria-hidden="true">
@@ -795,9 +883,13 @@
 		</section>
 		<div class="part-time-register-bottom-bar" id="partTimeRegisterBottomBar">
 			<div class="property-register-bottom-inner">
-				<p class="property-register-legal-notice">
-					공고 등록 시 근로기준법 및 최저임금 등 관련 법령을 준수해야 하며, 허위 공고는 노출이 제한될 수 있습니다.
-				</p>
+				<div class="property-register-legal-notice">
+					<p class="property-register-legal-copy">공고 등록 시 근로기준법 및 최저임금 등 관련 법령을 준수해야 하며, 허위 공고는 노출이 제한될 수 있습니다.</p>
+					<div class="part-time-register-legal-links" aria-label="알바 공고 관련 법령">
+						<a href="https://www.law.go.kr/%EB%B2%95%EB%A0%B9/%EA%B7%BC%EB%A1%9C%EA%B8%B0%EC%A4%80%EB%B2%95" target="_blank" rel="noopener noreferrer">근로기준법</a>
+						<a href="https://www.law.go.kr/%EB%B2%95%EB%A0%B9/%EC%B5%9C%EC%A0%80%EC%9E%84%EA%B8%88%EB%B2%95" target="_blank" rel="noopener noreferrer">최저임금 관련 법령</a>
+					</div>
+				</div>
 				<div class="property-register-bottom-actions">
 					<button type="button" class="property-register-bottom-btn draft" id="partTimeRegisterCancelBtn">취소</button>
 					<button type="button" class="property-register-bottom-btn submit" id="partTimeRegisterSubmitBtn">공고 등록하기</button>
@@ -811,24 +903,10 @@
 				<h2 class="my-suite-content-title" id="mySuiteContentTitle">관심 부동산</h2>
 				<p class="my-suite-content-desc" id="mySuiteContentDesc">관심 부동산을 한 곳에서 확인할 수 있도록 준비중입니다.</p>
 			</div>
-			<footer class="my-suite-company-footer" aria-label="리얼제주 사업자 정보">
-				<div class="my-suite-company-name">리얼제주(REALJEJU.APP)</div>
-				<div class="my-suite-company-grid">
-					<p><span>(주)디에이치인베스트먼트</span><span>대표 : 김대홍</span></p>
-					<p><span>주소 : 제주특별자치도 제주시 노형로 356, 5층(노형동)</span><span>사업자등록번호 : 534-87-01667</span></p>
-					<p><span>통신판매업 신고번호 : 제2026-제주노형-0113호 <a class="biz-comm-lookup-link" href="https://www.ftc.go.kr/bizCommPop.do?wrkr_no=5348701667" target="bizCommPop" onclick="window.open(this.href, 'bizCommPop', 'width=750,height=700,scrollbars=yes,resizable=yes'); return false;" rel="noopener">[사업자 조회]</a></span><span>고객센터 전화 : 064-745-0531</span><span>고객센터 이메일 : dh_realestate@naver.com</span></p>
-					<p><span>호스팅서비스 제공자 : Vercel / SupaBase</span><span>개인정보보호책임자 : 김대홍</span></p>
+			<footer class="broker-home-company-info broker-home-mini-footer realjeju-management-mini-footer" aria-label="리얼제주 저작권">
+				<div class="broker-home-company-inner">
+					<div class="broker-home-mini-copy realjeju-management-mini-copy">© REALJEJU.APP</div>
 				</div>
-				<div class="my-suite-company-links" aria-label="리얼제주 정책 링크">
-					<button type="button" class="my-suite-company-link auth-terms-open" data-terms-key="service">이용약관</button>
-					<span aria-hidden="true">|</span>
-					<button type="button" class="my-suite-company-link auth-terms-open" data-terms-key="privacy">개인정보처리방침</button>
-					<span aria-hidden="true">|</span>
-					<button type="button" class="my-suite-company-link auth-terms-open" data-terms-key="location">위치기반 서비스 이용약관</button>
-					<span aria-hidden="true">|</span>
-					<button type="button" class="my-suite-company-link auth-terms-open" data-terms-key="refund">환불 및 취소 정책</button>
-				</div>
-				<div class="my-suite-company-copyright">Copyright © <span>REALJEJU.APP</span> All rights reserved</div>
 			</footer>
 		</div>
 	</section>
@@ -990,8 +1068,8 @@
 				</div>
 			</div>
 		</div>
-		<footer class="admin-page-simple-footer" aria-label="리얼제주 저작권">
-			<div class="admin-page-simple-copy">© REALJEJU.APP</div>
+		<footer class="admin-page-simple-footer realjeju-management-mini-footer" aria-label="리얼제주 저작권">
+			<div class="admin-page-simple-copy realjeju-management-mini-copy">© REALJEJU.APP</div>
 		</footer>
 	</section>
 	<!-- 7-1. 운영자 페이지 -->
@@ -1120,9 +1198,9 @@
 		<div class="broker-listing-shell" id="brokerListingsList">
 			<div class="admin-empty">등록한 매물을 불러오세요.</div>
 		</div>
-		<footer class="broker-home-company-info broker-home-mini-footer" aria-label="리얼제주 저작권">
+		<footer class="broker-home-company-info broker-home-mini-footer realjeju-management-mini-footer" aria-label="리얼제주 저작권">
 			<div class="broker-home-company-inner">
-				<div class="broker-home-mini-copy">© REALJEJU.APP</div>
+				<div class="broker-home-mini-copy realjeju-management-mini-copy">© REALJEJU.APP</div>
 			</div>
 		</footer>
 	</section>
@@ -1194,7 +1272,7 @@
 					<article class="payment-coupon-card">
 						<div class="payment-coupon-kind">30일 이용권</div>
 						<h2>베이직 플랜 30일 이용권</h2>
-						<p>일반매물 100건과 중개사홈을 30일 동안 이용할 수 있습니다.</p>
+						<p>일반매물 100건과 하루 재등록 20건, 중개사홈을 30일 동안 이용할 수 있습니다.</p>
 						<button type="button" class="payment-coupon-use-btn" data-coupon-plan="starter">사용하기</button>
 					</article>
 					<article class="payment-coupon-card">
@@ -1419,6 +1497,7 @@
 				<div class="myinfo-page-row"><span class="myinfo-page-label">대표자명</span><span class="myinfo-page-value" id="brokerOfficePageOwnerValue">-</span></div>
 				<div class="myinfo-page-row"><span class="myinfo-page-label">연락처</span><span class="myinfo-page-value" id="brokerOfficePagePhoneValue">-</span></div>
 				<div class="myinfo-page-row"><span class="myinfo-page-label">이메일</span><span class="myinfo-page-value" id="brokerOfficePageEmailValue">-</span></div>
+				<div class="myinfo-page-row"><span class="myinfo-page-label">외부공유 아이디</span><span class="myinfo-page-value agency-public-id-display" id="brokerOfficePagePublicIdValue">-</span></div>
 				<div class="myinfo-page-row"><span class="myinfo-page-label">카카오 오픈 채팅방</span><span class="myinfo-page-value" id="brokerOfficePageKakaoValue">-</span></div>
 				<div class="myinfo-page-row"><span class="myinfo-page-label">승인상태</span><span class="myinfo-page-value" id="brokerOfficePageStatusValue">-</span></div>
 				<div class="myinfo-page-actions">
@@ -1447,6 +1526,19 @@
 				<div class="myinfo-page-row"><label class="myinfo-page-label" for="brokerOfficeEditPageOwnerInput">대표자명</label><input type="text" class="profile-suite-input" id="brokerOfficeEditPageOwnerInput" /></div>
 				<div class="myinfo-page-row"><label class="myinfo-page-label" for="brokerOfficeEditPagePhoneInput">연락처</label><input type="tel" class="profile-suite-input" id="brokerOfficeEditPagePhoneInput" /></div>
 				<div class="myinfo-page-row"><label class="myinfo-page-label" for="brokerOfficeEditPageEmailInput">이메일</label><input type="email" class="profile-suite-input" id="brokerOfficeEditPageEmailInput" readonly aria-readonly="true" title="로그인 아이디로 사용되어 변경할 수 없습니다." /></div>
+				<div class="myinfo-page-row agency-public-id-row">
+					<label class="myinfo-page-label" for="brokerOfficeEditPagePublicIdInput">외부공유 아이디</label>
+					<div class="agency-public-id-field" data-agency-public-id-field>
+						<div class="agency-public-id-control">
+							<input type="text" class="profile-suite-input agency-public-id-input" id="brokerOfficeEditPagePublicIdInput" data-agency-public-id-input minlength="4" maxlength="24" inputmode="latin" autocomplete="off" autocapitalize="none" spellcheck="false" aria-describedby="brokerOfficeEditPagePublicIdStatus brokerOfficeEditPagePublicIdPreview" placeholder="영문 소문자, 숫자, 하이픈, 언더바" />
+							<button type="button" class="agency-public-id-check-btn" id="brokerOfficeEditPagePublicIdCheckBtn" data-agency-public-id-check>중복 확인</button>
+						</div>
+						<div class="agency-public-id-meta">
+							<span class="agency-public-id-status" id="brokerOfficeEditPagePublicIdStatus" data-agency-public-id-status aria-live="polite"></span>
+							<span class="agency-public-id-preview" id="brokerOfficeEditPagePublicIdPreview" data-agency-public-id-preview>/properties?agency=ID</span>
+						</div>
+					</div>
+				</div>
 				<div class="myinfo-page-row"><label class="myinfo-page-label" for="brokerOfficeEditPageKakaoInput">카카오 오픈 채팅방</label><input type="url" class="profile-suite-input" id="brokerOfficeEditPageKakaoInput" /></div>
 				<div class="myinfo-page-actions"><button type="button" class="myinfo-page-secondary" id="brokerOfficeEditPageCloseBtn">취소</button><button type="submit" class="myinfo-page-primary" id="brokerOfficeEditPageSaveBtn">저장</button></div>
 			</form>
@@ -2602,6 +2694,209 @@
 								<p class="map-region-filter-value" id="mapRegionFilterValue" hidden>지도 중심 주소를 불러오는 중입니다.</p>
 								<div class="map-region-panel" id="mapRegionPanel">
 									<div class="map-region-loading">지도 중심 주소를 불러오는 중입니다.</div>
+								</div>
+							</div>
+						</div>
+						<div class="presale-map-filter-bar" id="presaleMapFilterBar" aria-label="분양 필터">
+							<div class="extra-filter-dropdown presale-filter-dropdown" id="presaleTypeFilterDropdown" data-presale-filter-dropdown>
+								<button type="button" class="extra-filter-trigger presale-filter-trigger" data-presale-filter-trigger data-base-label="분양유형" aria-expanded="false" aria-controls="presaleTypeFilterMenu">
+									<span data-presale-trigger-label>분양유형</span>
+									<i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+								</button>
+								<div class="extra-filter-menu presale-filter-menu presale-filter-menu-type" id="presaleTypeFilterMenu" data-presale-filter-menu role="dialog" aria-label="분양유형" aria-hidden="true">
+									<strong class="presale-filter-menu-title">분양유형</strong>
+									<div class="presale-filter-option-grid presale-filter-option-grid-type" data-presale-group="type">
+										<button type="button" class="presale-filter-option presale-filter-tile active" data-presale-option data-group="type" data-value="">전체</button>
+										<button type="button" class="presale-filter-option presale-filter-tile" data-presale-option data-group="type" data-value="apartment">아파트</button>
+										<button type="button" class="presale-filter-option presale-filter-tile" data-presale-option data-group="type" data-value="officetel">오피스텔</button>
+										<button type="button" class="presale-filter-option presale-filter-tile" data-presale-option data-group="type" data-value="villa">빌라</button>
+										<button type="button" class="presale-filter-option presale-filter-tile" data-presale-option data-group="type" data-value="urban">도시형생활주택</button>
+										<button type="button" class="presale-filter-option presale-filter-tile" data-presale-option data-group="type" data-value="residence">생활숙박시설</button>
+										<button type="button" class="presale-filter-option presale-filter-tile" data-presale-option data-group="type" data-value="commercial">상가·업무</button>
+									</div>
+								</div>
+							</div>
+
+							<div class="extra-filter-dropdown presale-filter-dropdown" id="presaleStatusFilterDropdown" data-presale-filter-dropdown>
+								<button type="button" class="extra-filter-trigger presale-filter-trigger" data-presale-filter-trigger data-base-label="분양현황" aria-expanded="false" aria-controls="presaleStatusFilterMenu">
+									<span data-presale-trigger-label>분양현황</span>
+									<i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+								</button>
+								<div class="extra-filter-menu presale-filter-menu presale-filter-menu-status" id="presaleStatusFilterMenu" data-presale-filter-menu role="dialog" aria-label="분양현황" aria-hidden="true">
+									<strong class="presale-filter-menu-title">분양현황</strong>
+									<section class="presale-filter-section">
+										<h3>분양 단계</h3>
+										<div class="presale-filter-chip-grid" data-presale-group="stage">
+											<button type="button" class="presale-filter-option presale-filter-chip active" data-presale-option data-group="stage" data-value=""><i class="fa-solid fa-check" aria-hidden="true"></i><span>전체</span></button>
+											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="stage" data-value="sale"><i class="fa-solid fa-check" aria-hidden="true"></i><span>분양중</span></button>
+											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="stage" data-value="subscription"><i class="fa-solid fa-check" aria-hidden="true"></i><span>청약중</span></button>
+											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="stage" data-value="planned"><i class="fa-solid fa-check" aria-hidden="true"></i><span>분양계획</span></button>
+										</div>
+									</section>
+									<section class="presale-filter-section">
+										<h3>분양 일정</h3>
+										<div class="presale-filter-chip-grid presale-filter-chip-grid-wide" data-presale-group="schedule">
+											<button type="button" class="presale-filter-option presale-filter-chip active" data-presale-option data-group="schedule" data-value=""><i class="fa-solid fa-check" aria-hidden="true"></i><span>전체</span></button>
+											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="schedule" data-value="random"><i class="fa-solid fa-check" aria-hidden="true"></i><span>무순위</span></button>
+											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="schedule" data-value="notice"><i class="fa-solid fa-check" aria-hidden="true"></i><span>모집공고</span></button>
+											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="schedule" data-value="special"><i class="fa-solid fa-check" aria-hidden="true"></i><span>특별공급</span></button>
+											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="schedule" data-value="first"><i class="fa-solid fa-check" aria-hidden="true"></i><span>1순위 청약</span></button>
+											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="schedule" data-value="second"><i class="fa-solid fa-check" aria-hidden="true"></i><span>2순위 청약</span></button>
+											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="schedule" data-value="third"><i class="fa-solid fa-check" aria-hidden="true"></i><span>3순위 청약</span></button>
+											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="schedule" data-value="winner"><i class="fa-solid fa-check" aria-hidden="true"></i><span>당첨자 발표</span></button>
+											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="schedule" data-value="contract"><i class="fa-solid fa-check" aria-hidden="true"></i><span>계약기간</span></button>
+											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="schedule" data-value="post-notice"><i class="fa-solid fa-check" aria-hidden="true"></i><span>사후 공고</span></button>
+											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="schedule" data-value="post-apply"><i class="fa-solid fa-check" aria-hidden="true"></i><span>사후 접수</span></button>
+											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="schedule" data-value="post-result"><i class="fa-solid fa-check" aria-hidden="true"></i><span>사후 발표</span></button>
+											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="schedule" data-value="post-contract"><i class="fa-solid fa-check" aria-hidden="true"></i><span>사후 계약</span></button>
+											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="schedule" data-value="other"><i class="fa-solid fa-check" aria-hidden="true"></i><span>기타</span></button>
+										</div>
+									</section>
+								</div>
+							</div>
+
+							<div class="extra-filter-dropdown presale-filter-dropdown" id="presaleFormFilterDropdown" data-presale-filter-dropdown>
+								<button type="button" class="extra-filter-trigger presale-filter-trigger" data-presale-filter-trigger data-base-label="분양형태" aria-expanded="false" aria-controls="presaleFormFilterMenu">
+									<span data-presale-trigger-label>분양형태</span>
+									<i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+								</button>
+								<div class="extra-filter-menu presale-filter-menu presale-filter-menu-form" id="presaleFormFilterMenu" data-presale-filter-menu role="dialog" aria-label="분양형태" aria-hidden="true">
+									<strong class="presale-filter-menu-title">분양형태</strong>
+									<div class="presale-filter-chip-grid" data-presale-group="form">
+										<button type="button" class="presale-filter-option presale-filter-chip active" data-presale-option data-group="form" data-value=""><i class="fa-solid fa-check" aria-hidden="true"></i><span>전체</span></button>
+										<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="form" data-value="rental"><i class="fa-solid fa-check" aria-hidden="true"></i><span>임대분양</span></button>
+										<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="form" data-value="private"><i class="fa-solid fa-check" aria-hidden="true"></i><span>민간분양</span></button>
+										<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="form" data-value="public"><i class="fa-solid fa-check" aria-hidden="true"></i><span>공공분양</span></button>
+										<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="form" data-value="rebuild"><i class="fa-solid fa-check" aria-hidden="true"></i><span>재건축</span></button>
+										<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="form" data-value="redevelop"><i class="fa-solid fa-check" aria-hidden="true"></i><span>재개발</span></button>
+									</div>
+								</div>
+							</div>
+
+							<div class="extra-filter-dropdown presale-filter-dropdown presale-range-filter-dropdown" id="presalePriceFilterDropdown" data-presale-filter-dropdown data-presale-range-dropdown data-range-kind="price" data-range-min="0" data-range-max="25" data-range-step="1">
+								<button type="button" class="extra-filter-trigger presale-filter-trigger" data-presale-filter-trigger data-base-label="분양가/보증금" aria-expanded="false" aria-controls="presalePriceFilterMenu">
+									<span data-presale-trigger-label>분양가/보증금</span>
+									<i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+								</button>
+								<div class="extra-filter-menu presale-filter-menu presale-filter-menu-range" id="presalePriceFilterMenu" data-presale-filter-menu role="dialog" aria-label="분양가 또는 보증금" aria-hidden="true">
+									<strong class="presale-filter-menu-title">분양가/보증금</strong>
+									<div class="presale-range-summary-row">
+										<strong data-presale-range-summary>전체</strong>
+										<button type="button" class="presale-range-manual-toggle" data-presale-manual-toggle aria-label="분양가 직접 입력"><i class="fa-solid fa-pen" aria-hidden="true"></i></button>
+									</div>
+									<div class="presale-dual-range" data-presale-dual-range>
+										<div class="presale-range-track"><span class="presale-range-fill" data-presale-range-fill></span></div>
+										<input type="range" min="0" max="25" step="1" value="0" data-presale-range-min aria-label="최소 분양가" />
+										<input type="range" min="0" max="25" step="1" value="25" data-presale-range-max aria-label="최대 분양가" />
+									</div>
+									<div class="presale-range-ticks" data-presale-range-ticks>
+										<span data-range-value="0">최소</span><span data-range-value="5">5억</span><span data-range-value="10">10억</span><span data-range-value="15">15억</span><span data-range-value="20">20억</span><span data-range-value="25">최대</span>
+									</div>
+									<div class="presale-range-manual-row" data-presale-manual-row hidden>
+										<label>최소<input type="number" min="0" max="25" step="1" value="0" data-presale-manual-min /></label>
+										<label>최대<input type="number" min="0" max="25" step="1" value="25" data-presale-manual-max /></label>
+										<button type="button" data-presale-manual-apply>적용</button>
+									</div>
+								</div>
+							</div>
+
+							<div class="extra-filter-dropdown presale-filter-dropdown presale-range-filter-dropdown" id="presaleAreaFilterDropdown" data-presale-filter-dropdown data-presale-range-dropdown data-range-kind="area" data-range-min="0" data-range-max="165" data-range-step="1" data-area-unit="m2">
+								<button type="button" class="extra-filter-trigger presale-filter-trigger" data-presale-filter-trigger data-base-label="면적" aria-expanded="false" aria-controls="presaleAreaFilterMenu">
+									<span data-presale-trigger-label>면적</span>
+									<i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+								</button>
+								<div class="extra-filter-menu presale-filter-menu presale-filter-menu-range" id="presaleAreaFilterMenu" data-presale-filter-menu role="dialog" aria-label="면적" aria-hidden="true">
+									<strong class="presale-filter-menu-title">면적</strong>
+									<div class="presale-range-summary-row">
+										<strong data-presale-range-summary>전체</strong>
+										<button type="button" class="presale-range-manual-toggle" data-presale-manual-toggle aria-label="면적 직접 입력"><i class="fa-solid fa-pen" aria-hidden="true"></i></button>
+										<button type="button" class="presale-area-unit-toggle" data-presale-area-unit><i class="fa-solid fa-rotate" aria-hidden="true"></i><span>평</span></button>
+									</div>
+									<div class="presale-dual-range" data-presale-dual-range>
+										<div class="presale-range-track"><span class="presale-range-fill" data-presale-range-fill></span></div>
+										<input type="range" min="0" max="165" step="1" value="0" data-presale-range-min aria-label="최소 면적" />
+										<input type="range" min="0" max="165" step="1" value="165" data-presale-range-max aria-label="최대 면적" />
+									</div>
+									<div class="presale-range-ticks" data-presale-range-ticks>
+										<span data-range-value="0">최소</span><span data-range-value="33">33m²</span><span data-range-value="66">66m²</span><span data-range-value="99">99m²</span><span data-range-value="132">132m²</span><span data-range-value="165">최대</span>
+									</div>
+									<div class="presale-range-manual-row" data-presale-manual-row hidden>
+										<label>최소<input type="number" min="0" max="165" step="1" value="0" data-presale-manual-min /></label>
+										<label>최대<input type="number" min="0" max="165" step="1" value="165" data-presale-manual-max /></label>
+										<button type="button" data-presale-manual-apply>적용</button>
+									</div>
+								</div>
+							</div>
+
+							<div class="extra-filter-dropdown presale-filter-dropdown presale-range-filter-dropdown" id="presaleHouseholdsFilterDropdown" data-presale-filter-dropdown data-presale-range-dropdown data-range-kind="households" data-range-min="0" data-range-max="4000" data-range-step="100">
+								<button type="button" class="extra-filter-trigger presale-filter-trigger" data-presale-filter-trigger data-base-label="세대수" aria-expanded="false" aria-controls="presaleHouseholdsFilterMenu">
+									<span data-presale-trigger-label>세대수</span>
+									<i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+								</button>
+								<div class="extra-filter-menu presale-filter-menu presale-filter-menu-range" id="presaleHouseholdsFilterMenu" data-presale-filter-menu role="dialog" aria-label="세대수" aria-hidden="true">
+									<strong class="presale-filter-menu-title">세대수</strong>
+									<div class="presale-range-summary-row"><strong data-presale-range-summary>전체</strong></div>
+									<div class="presale-dual-range" data-presale-dual-range>
+										<div class="presale-range-track"><span class="presale-range-fill" data-presale-range-fill></span></div>
+										<input type="range" min="0" max="4000" step="100" value="0" data-presale-range-min aria-label="최소 세대수" />
+										<input type="range" min="0" max="4000" step="100" value="4000" data-presale-range-max aria-label="최대 세대수" />
+									</div>
+									<div class="presale-range-ticks" data-presale-range-ticks>
+										<span data-range-value="0">최소</span><span data-range-value="1000">1000세대</span><span data-range-value="2000">2000세대</span><span data-range-value="3000">3000세대</span><span data-range-value="4000">최대</span>
+									</div>
+								</div>
+							</div>
+
+							<div class="extra-filter-dropdown presale-filter-dropdown" id="presaleConditionsFilterDropdown" data-presale-filter-dropdown>
+								<button type="button" class="extra-filter-trigger presale-filter-trigger" data-presale-filter-trigger data-base-label="분양조건" aria-expanded="false" aria-controls="presaleConditionsFilterMenu">
+									<span data-presale-trigger-label>분양조건</span>
+									<i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+								</button>
+								<div class="extra-filter-menu presale-filter-menu presale-filter-menu-conditions" id="presaleConditionsFilterMenu" data-presale-filter-menu role="dialog" aria-label="분양조건" aria-hidden="true">
+									<strong class="presale-filter-menu-title">분양조건</strong>
+									<section class="presale-filter-section">
+										<h3>입주예정</h3>
+										<div class="presale-filter-chip-grid" data-presale-group="move-in">
+											<button type="button" class="presale-filter-option presale-filter-chip active" data-presale-option data-group="move-in" data-value=""><i class="fa-solid fa-check" aria-hidden="true"></i><span>전체</span></button>
+											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="move-in" data-value="1"><i class="fa-solid fa-check" aria-hidden="true"></i><span>1년 이내</span></button>
+											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="move-in" data-value="2"><i class="fa-solid fa-check" aria-hidden="true"></i><span>2년 이내</span></button>
+											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="move-in" data-value="3"><i class="fa-solid fa-check" aria-hidden="true"></i><span>3년 이내</span></button>
+										</div>
+									</section>
+									<section class="presale-filter-section">
+										<h3>청약가능통장</h3>
+										<div class="presale-filter-chip-grid" data-presale-group="account">
+											<button type="button" class="presale-filter-option presale-filter-chip active" data-presale-option data-group="account" data-value=""><i class="fa-solid fa-check" aria-hidden="true"></i><span>전체</span></button>
+											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="account" data-value="total"><i class="fa-solid fa-check" aria-hidden="true"></i><span>주택청약종합저축</span></button>
+											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="account" data-value="deposit"><i class="fa-solid fa-check" aria-hidden="true"></i><span>청약예금</span></button>
+											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="account" data-value="installment"><i class="fa-solid fa-check" aria-hidden="true"></i><span>청약부금</span></button>
+											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="account" data-value="saving"><i class="fa-solid fa-check" aria-hidden="true"></i><span>청약저축</span></button>
+											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="account" data-value="other"><i class="fa-solid fa-check" aria-hidden="true"></i><span>기타</span></button>
+										</div>
+									</section>
+									<section class="presale-filter-section">
+										<h3>브랜드</h3>
+										<div class="presale-filter-chip-grid presale-filter-chip-grid-wide" data-presale-group="brand">
+											<button type="button" class="presale-filter-option presale-filter-chip active" data-presale-option data-group="brand" data-value=""><i class="fa-solid fa-check" aria-hidden="true"></i><span>전체</span></button>
+											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="brand" data-value="hillstate"><i class="fa-solid fa-check" aria-hidden="true"></i><span>힐스테이트</span></button>
+											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="brand" data-value="xi"><i class="fa-solid fa-check" aria-hidden="true"></i><span>자이</span></button>
+											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="brand" data-value="castle"><i class="fa-solid fa-check" aria-hidden="true"></i><span>캐슬</span></button>
+											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="brand" data-value="forena"><i class="fa-solid fa-check" aria-hidden="true"></i><span>포레나</span></button>
+											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="brand" data-value="raemian"><i class="fa-solid fa-check" aria-hidden="true"></i><span>래미안</span></button>
+											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="brand" data-value="prugio"><i class="fa-solid fa-check" aria-hidden="true"></i><span>푸르지오</span></button>
+											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="brand" data-value="ipark"><i class="fa-solid fa-check" aria-hidden="true"></i><span>아이파크</span></button>
+											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="brand" data-value="weve"><i class="fa-solid fa-check" aria-hidden="true"></i><span>위브</span></button>
+											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="brand" data-value="landscape"><i class="fa-solid fa-check" aria-hidden="true"></i><span>풍경채</span></button>
+											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="brand" data-value="sk-view"><i class="fa-solid fa-check" aria-hidden="true"></i><span>SK뷰</span></button>
+											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="brand" data-value="skyche"><i class="fa-solid fa-check" aria-hidden="true"></i><span>하늘채</span></button>
+											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="brand" data-value="richeville"><i class="fa-solid fa-check" aria-hidden="true"></i><span>리슈빌</span></button>
+											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="brand" data-value="desian"><i class="fa-solid fa-check" aria-hidden="true"></i><span>데시앙</span></button>
+											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="brand" data-value="verdium"><i class="fa-solid fa-check" aria-hidden="true"></i><span>베르디움</span></button>
+											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="brand" data-value="epyunhan"><i class="fa-solid fa-check" aria-hidden="true"></i><span>e편한세상</span></button>
+											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="brand" data-value="sharp"><i class="fa-solid fa-check" aria-hidden="true"></i><span>더샵</span></button>
+											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="brand" data-value="other"><i class="fa-solid fa-check" aria-hidden="true"></i><span>기타</span></button>
+										</div>
+									</section>
 								</div>
 							</div>
 						</div>
@@ -5207,7 +5502,7 @@
 	</div>
 </div>
 
-					<script src="/js/app_4.799.js?v=20260718-instructions-baseline-4799"></script>
+					<script src="/js/app_4.832.js?v=20260719-shared-document-topbar-4832"></script>
 
 
 <script>
