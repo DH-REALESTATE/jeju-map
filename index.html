@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 	<!--
-		REALJEJU HTML 구조 / Ver 4.838
+		REALJEJU HTML 구조 / Ver 4.842
 		파일은 단일 HTML을 유지하고, 실제 배치 순서대로 큰 화면 단위만 주석으로 구분한다.
 		0. Head / 공통 메타
 		1. 상단바 / 전역 메뉴
@@ -18,14 +18,78 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>
-			REALJEJU.APP
-		</title>
-		<meta property="og:title" id="ogTitleMeta" content="REALJEJU.APP" />
-		<meta property="og:description" id="ogDescriptionMeta" content="REALJEJU.APP" />
+		<title>제주도 부동산 매물 플랫폼 | 리얼제주 REALJEJU.APP</title>
+		<meta name="description" content="리얼제주는 제주도 부동산 매물, 토지, 주택, 상가, 전원주택, 제주시·서귀포시 매물을 지도에서 찾는 제주 부동산 플랫폼입니다." />
+		<meta name="keywords" content="제주도 부동산, 제주 부동산, 제주도 매물, 제주 토지, 제주 주택, 제주 상가, 제주 전원주택, 제주시 부동산, 서귀포시 부동산, 리얼제주" />
+		<meta name="robots" content="index, follow" />
+		<meta name="author" content="리얼제주 REALJEJU.APP" />
+		<link rel="canonical" href="https://realjeju.app/" />
+		<meta property="og:title" id="ogTitleMeta" content="제주도 부동산 매물 플랫폼 | 리얼제주 REALJEJU.APP" />
+		<meta property="og:description" id="ogDescriptionMeta" content="제주도 토지, 주택, 상가, 전원주택과 제주시·서귀포시 부동산 매물을 지도에서 확인하세요." />
 		<meta property="og:type" content="website" />
-		<meta property="og:url" content="https://your-domain.example/" />
-		<meta property="og:image" content="https://your-domain.example/og-image.jpg" />
+		<meta property="og:url" content="https://realjeju.app/" />
+		<meta property="og:image" content="https://realjeju.app/img/landingpage_1.jpg" />
+		<meta property="og:image:alt" content="제주도 주택과 부동산 풍경" />
+		<meta property="og:site_name" content="리얼제주 REALJEJU.APP" />
+		<meta property="og:locale" content="ko_KR" />
+		<meta name="twitter:card" content="summary" />
+		<meta name="twitter:title" content="제주도 부동산 매물 플랫폼 | 리얼제주 REALJEJU.APP" />
+		<meta name="twitter:description" content="제주도 토지, 주택, 상가, 전원주택과 제주시·서귀포시 부동산 매물을 지도에서 확인하세요." />
+		<meta name="twitter:image" content="https://realjeju.app/img/landingpage_1.jpg" />
+		<meta name="theme-color" content="#2563eb" />
+		<script type="application/ld+json">
+			{
+				"@context": "https://schema.org",
+				"@graph": [
+					{
+						"@type": "Organization",
+						"@id": "https://realjeju.app/#organization",
+						"name": "리얼제주",
+						"alternateName": "REALJEJU.APP",
+						"url": "https://realjeju.app/",
+						"email": "dh_realestate@naver.com",
+						"telephone": "+82-64-745-0531",
+						"address": {
+							"@type": "PostalAddress",
+							"addressRegion": "제주특별자치도",
+							"addressLocality": "제주시",
+							"streetAddress": "노형로 356, 5층",
+							"addressCountry": "KR"
+						}
+					},
+					{
+						"@type": "WebSite",
+						"@id": "https://realjeju.app/#website",
+						"name": "리얼제주 REALJEJU.APP",
+						"url": "https://realjeju.app/",
+						"inLanguage": "ko-KR",
+						"publisher": {
+							"@id": "https://realjeju.app/#organization"
+						}
+					},
+					{
+						"@type": "RealEstateAgent",
+						"@id": "https://realjeju.app/#realestate",
+						"name": "리얼제주 부동산",
+						"url": "https://realjeju.app/properties",
+						"areaServed": [
+							"제주특별자치도",
+							"제주시",
+							"서귀포시"
+						],
+						"serviceType": [
+							"제주도 부동산 매물",
+							"제주 토지 매물",
+							"제주 주택 매물",
+							"제주 상가 매물"
+						],
+						"parentOrganization": {
+							"@id": "https://realjeju.app/#organization"
+						}
+					}
+				]
+			}
+		</script>
 		<script id="realjeju-initial-route-guard">
 			(function () {
 				var protocol = String(window.location.protocol || "");
@@ -141,7 +205,7 @@
 				transition: none;
 			}
 		</style>
-						<link rel="stylesheet" href="/css/base_4.838.css?v=20260719-admin-office-anchors-4838">
+						<link rel="stylesheet" href="/css/base_4.842.css?v=20260719-seo-foundation-4842">
 
 </head>
 	<body class="sidebar-list-collapsed realjeju-side-nav-enabled main-landing-page-open">
@@ -261,7 +325,7 @@
 					<div class="global-topbar-right" id="globalTopbarRight">
 						<!-- PATCH 3.918: 상단 배너 버전 텍스트를 현재 배포 버전과 일치시킵니다. -->
 						<button type="button" class="global-auth-trigger version-only" id="detailAuthTrigger" data-auth-state="logged-out">
-							<span class="topbar-version-text">Ver 4.838</span>
+							<span class="topbar-version-text">Ver 4.842</span>
 						</button>
 						<nav class="main-landing-auth-links" id="mainLandingAuthLinks" aria-label="로그인 및 회원가입">
 							<button type="button" class="main-landing-auth-link" id="mainLandingLoginBtn">로그인</button>
@@ -326,9 +390,9 @@
 			<div class="main-landing-inner">
 				<div class="main-landing-hero">
 					<div class="main-landing-copy">
-						<p class="main-landing-kicker">제주 생활 지도 포털</p>
-						<h1 class="main-landing-title">제주 부동산과 생활 정보를 한 곳에서</h1>
-						<p class="main-landing-desc">동네, 주소, 매물번호로 찾고 부동산부터 알바, 동네업체까지 바로 확인하세요.</p>
+						<p class="main-landing-kicker">제주도 부동산 지도 플랫폼</p>
+						<h1 class="main-landing-title">제주도 부동산 매물을 한눈에</h1>
+						<p class="main-landing-desc">토지, 주택, 상가, 전원주택부터 제주시·서귀포시 매물까지 지도에서 바로 확인하세요.</p>
 						<form class="main-landing-search" id="mainLandingSearchForm">
 							<i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
 							<input type="search" id="mainLandingSearchInput" autocomplete="off" placeholder="동네, 주소, 매물번호 검색" aria-label="동네, 주소, 매물번호 검색" />
@@ -376,7 +440,7 @@
 					<div class="main-landing-simple-grid">
 						<button type="button" class="main-landing-simple-card is-large" data-main-landing-action="map">
 							<span class="main-landing-simple-title">부동산 홈</span>
-							<span class="main-landing-simple-desc">제주 전지역 매물을<br>지도에서 한눈에 확인</span>
+							<span class="main-landing-simple-desc">제주도 부동산 매물을<br>지도에서 한눈에 확인</span>
 							<i class="fa-solid fa-map-location-dot" aria-hidden="true"></i>
 						</button>
 						<button type="button" class="main-landing-simple-card is-large" data-main-landing-category="part-time">
@@ -430,7 +494,7 @@
 				<div class="main-landing-preview-row" aria-label="리얼제주 주요 정보">
 					<button type="button" class="main-landing-preview" data-main-landing-action="map">
 						<span>부동산</span>
-						<strong>제주 전지역 매물을 지도에서 확인</strong>
+						<strong>제주도 부동산 매물을 지도에서 확인</strong>
 					</button>
 					<button type="button" class="main-landing-preview" data-main-landing-category="part-time">
 						<span>알바</span>
@@ -532,7 +596,7 @@
 				</button>
 			</nav>
 			<div class="realjeju-side-admin-version" id="realjejuSideAdminVersion" aria-hidden="true" hidden>
-				<span class="topbar-version-text">Ver 4.838</span>
+				<span class="topbar-version-text">Ver 4.842</span>
 			</div>
 		</aside>
 		<aside class="global-category-side-panel" id="globalCategorySidePanel" aria-hidden="true">
@@ -5502,7 +5566,7 @@
 	</div>
 </div>
 
-					<script src="/js/app_4.838.js?v=20260719-admin-office-anchors-4838"></script>
+					<script src="/js/app_4.842.js?v=20260719-seo-foundation-4842"></script>
 
 
 <script>
