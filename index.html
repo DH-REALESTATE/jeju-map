@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 	<!--
-		REALJEJU HTML 구조 / Ver 4.856
+ REALJEJU HTML 구조 / Ver 4.882
 		파일은 단일 HTML을 유지하고, 실제 배치 순서대로 큰 화면 단위만 주석으로 구분한다.
 		0. Head / 공통 메타
 		1. 상단바 / 전역 메뉴
@@ -205,7 +205,7 @@
 				transition: none;
 			}
 		</style>
-						<link rel="stylesheet" href="/css/base_4.856.css?v=20260720-property-photo-reorder-4856">
+	<link rel="stylesheet" href="/css/base_4.882.css?v=20260720-agency-public-id-help-4882">
 
 </head>
 	<body class="sidebar-list-collapsed realjeju-side-nav-enabled main-landing-page-open">
@@ -231,7 +231,7 @@
 				var accountClasses = {
 					"/mypage": "myinfo-page-open",
 					"/mypage/profile": "myinfo-page-open",
-					"/mypage/office": "my-suite-page-open",
+					"/mypage/office": "broker-office-info-page-open",
 					"/mypage/payments": "payment-page-open",
 					"/mypage/inquiries": "account-inquiries-page-open"
 				};
@@ -323,9 +323,7 @@
 						<button type="button" class="my-suite-tab" data-my-suite-tab="broker-office">중개사 정보</button>
 					</nav>
 					<div class="global-topbar-right" id="globalTopbarRight">
-						<!-- PATCH 3.918: 상단 배너 버전 텍스트를 현재 배포 버전과 일치시킵니다. -->
-						<button type="button" class="global-auth-trigger version-only" id="detailAuthTrigger" data-auth-state="logged-out">
-							<span class="topbar-version-text">Ver 4.856</span>
+						<button type="button" class="global-auth-trigger" id="detailAuthTrigger" data-auth-state="logged-out" aria-label="로그인 및 회원가입" hidden aria-hidden="true">
 						</button>
 						<nav class="main-landing-auth-links" id="mainLandingAuthLinks" aria-label="로그인 및 회원가입">
 							<button type="button" class="main-landing-auth-link" id="mainLandingLoginBtn">로그인</button>
@@ -596,7 +594,7 @@
 				</button>
 			</nav>
 			<div class="realjeju-side-admin-version" id="realjejuSideAdminVersion" aria-hidden="true" hidden>
-				<span class="topbar-version-text">Ver 4.856</span>
+				<span class="topbar-version-text">Ver 4.882</span>
 			</div>
 		</aside>
 		<aside class="global-category-side-panel" id="globalCategorySidePanel" aria-hidden="true">
@@ -1448,29 +1446,34 @@
 				<span class="myinfo-page-danger-desc">- 리얼제주 회원을 탈퇴합니다.</span>
 			</p>
 		</div>
-				<footer class="myinfo-company-info myinfo-company-info-full" aria-label="리얼제주 사업자 정보">
-					<div class="myinfo-company-nav" aria-label="리얼제주 하단 메뉴">
-						<button type="button" class="myinfo-company-link auth-terms-open" data-terms-key="service">이용약관</button>
-						<span class="myinfo-company-separator" aria-hidden="true">|</span>
-						<button type="button" class="myinfo-company-link is-strong auth-terms-open" data-terms-key="privacy">개인정보처리방침</button>
-						<span class="myinfo-company-separator" aria-hidden="true">|</span>
-						<button type="button" class="myinfo-company-link auth-terms-open" data-terms-key="location">위치기반 서비스 이용약관</button>
-						<span class="myinfo-company-separator" aria-hidden="true">|</span>
-						<button type="button" class="myinfo-company-link auth-terms-open" data-terms-key="refund">환불 및 취소 정책</button>
+				<footer class="main-landing-footer account-page-common-footer" aria-label="리얼제주 사업자 정보">
+					<div class="main-landing-footer-line" aria-hidden="true"></div>
+					<div class="main-landing-footer-name">리얼제주(REALJEJU.APP)</div>
+					<div class="main-landing-footer-info">
+						<span>상호 : (주)디에이치인베스트먼트</span>
+						<span>대표 : 김대홍</span>
+						<span>사업자등록번호 : 534-87-01667</span>
+						<span>통신판매업 신고번호 : 제2026-제주노형-0113호 <a class="biz-comm-lookup-link" href="https://www.ftc.go.kr/bizCommPop.do?wrkr_no=5348701667" target="bizCommPop" onclick="window.open(this.href, 'bizCommPop', 'width=750,height=700,scrollbars=yes,resizable=yes'); return false;" rel="noopener">[사업자 조회]</a></span>
 					</div>
-				<div class="myinfo-company-body">
-					<div class="myinfo-company-name">리얼제주(REALJEJU.APP)</div>
-					<div class="myinfo-company-grid">
-						<p><span>(주)디에이치인베스트먼트</span><span>대표 : 김대홍</span></p>
-						<p><span>사업자등록번호 : 534-87-01667</span><span>주소 : 제주특별자치도 제주시 노형로 356, 5층</span></p>
-						<p><span>통신판매업 신고번호 : 제2026-제주노형-0113호 <a class="biz-comm-lookup-link" href="https://www.ftc.go.kr/bizCommPop.do?wrkr_no=5348701667" target="bizCommPop" onclick="window.open(this.href, 'bizCommPop', 'width=750,height=700,scrollbars=yes,resizable=yes'); return false;" rel="noopener">[사업자 조회]</a></span></p>
-						<p><span>고객센터 : 064-745-0531</span><span>이메일 : dh_realestate@naver.com</span><span>운영시간 : 오전 10시 - 오후 18시</span><span>개인정보보호책임자 : 김대홍</span></p>
-						<p class="myinfo-company-hosting"><span>호스팅서비스 제공자 : Vercel / SupaBase</span></p>
-						<p class="myinfo-company-notice">리얼제주는 부동산 매물 정보 제공 플랫폼이며, 매물 정보와 거래 조건은 해당 중개사무소 또는 거래 당사자에게 확인해 주세요.</p>
+					<div class="main-landing-footer-info">
+						<span>주소 : 제주특별자치도 제주시 노형로 356, 5층</span>
+						<span>고객센터 전화 : 064-745-0531</span>
+						<span>고객센터 이메일 : dh_realestate@naver.com</span>
+						<span>호스팅서비스 제공자 : Vercel / SupaBase</span>
 					</div>
-					<div class="myinfo-company-copy">Copyright © REALJEJU.APP. All Rights Reserved.</div>
-				</div>
-			</footer>
+					<div class="main-landing-footer-links" aria-label="리얼제주 정책 링크">
+						<button type="button" class="main-landing-footer-link" data-global-more-action="company">회사소개</button>
+						<span aria-hidden="true">|</span>
+						<button type="button" class="main-landing-footer-link auth-terms-open" data-terms-key="service">이용약관</button>
+						<span aria-hidden="true">|</span>
+						<button type="button" class="main-landing-footer-link auth-terms-open" data-terms-key="privacy">개인정보처리방침</button>
+						<span aria-hidden="true">|</span>
+						<button type="button" class="main-landing-footer-link auth-terms-open" data-terms-key="location">위치기반 서비스 이용약관</button>
+						<span aria-hidden="true">|</span>
+						<button type="button" class="main-landing-footer-link auth-terms-open" data-terms-key="listing-policy">매물관리 규정</button>
+					</div>
+					<div class="main-landing-footer-copy">Copyright © REALJEJU.APP. All Rights Reserved.</div>
+				</footer>
 	</section>
 
 	<section class="myinfo-page-panel profile-suite-panel account-page-panel" id="profileEditPagePanel" aria-hidden="true">
@@ -1580,6 +1583,78 @@
 			</footer>
 	</section>
 
+	<section class="myinfo-page-panel profile-suite-panel account-page-panel" id="brokerOfficeApplyPagePanel" aria-hidden="true">
+		<div class="myinfo-page-inner account-page-inner">
+			<div class="myinfo-page-head account-page-head">
+				<h1 class="myinfo-page-title">중개사무소 가입 신청</h1>
+				<p class="myinfo-page-desc">중개사무소 정보를 한 곳에서 관리합니다.</p>
+			</div>
+			<form class="myinfo-page-card account-page-card" id="brokerOfficeApplyForm">
+				<div class="myinfo-page-row">
+					<label class="myinfo-page-label" for="brokerOfficeNameInput">중개사무소 명칭</label>
+					<input type="text" class="profile-suite-input" id="brokerOfficeNameInput" autocomplete="organization" />
+				</div>
+				<div class="myinfo-page-row">
+					<label class="myinfo-page-label" for="brokerOfficeAddressInput">주소지</label>
+					<div class="property-address-wrap broker-apply-address-wrap broker-office-edit-address-wrap">
+						<input type="text" class="profile-suite-input broker-office-edit-address-input" id="brokerOfficeAddressInput" placeholder="주소를 입력하세요" autocomplete="off" readonly />
+						<span class="property-address-main-detail" id="brokerOfficeAddressMainDetail" aria-hidden="true"></span>
+					</div>
+				</div>
+				<div class="myinfo-page-row">
+					<label class="myinfo-page-label" for="brokerLicenseNoInput">등록번호</label>
+					<input type="text" class="profile-suite-input" id="brokerLicenseNoInput" autocomplete="off" />
+				</div>
+				<div class="myinfo-page-row">
+					<label class="myinfo-page-label" for="brokerOwnerNameInput">대표자명</label>
+					<input type="text" class="profile-suite-input" id="brokerOwnerNameInput" autocomplete="name" />
+				</div>
+				<div class="myinfo-page-row">
+					<label class="myinfo-page-label" for="brokerOfficePhoneInput">연락처</label>
+					<input type="tel" class="profile-suite-input" id="brokerOfficePhoneInput" autocomplete="tel" />
+				</div>
+				<div class="myinfo-page-row">
+					<label class="myinfo-page-label" for="brokerOwnerEmailLocalInput">이메일</label>
+					<input type="email" class="profile-suite-input" id="brokerOwnerEmailLocalInput" autocomplete="email" readonly aria-readonly="true" title="로그인 아이디로 사용되어 변경할 수 없습니다." />
+				</div>
+				<div class="myinfo-page-row agency-public-id-row">
+					<label class="myinfo-page-label" for="brokerOfficePublicIdInput">외부공유 아이디</label>
+					<div class="agency-public-id-field" data-agency-public-id-field>
+						<div class="agency-public-id-control">
+							<input type="text" class="profile-suite-input agency-public-id-input" id="brokerOfficePublicIdInput" placeholder="영문 소문자, 숫자, 하이픈, 언더바" autocomplete="off" spellcheck="false" data-agency-public-id-input />
+							<button type="button" class="agency-public-id-check-btn" data-agency-public-id-check>중복 확인</button>
+						</div>
+						<p class="agency-public-id-help">※ 설정한 아이디로 중개사무소 매물 공유 주소가 만들어집니다.</p>
+						<div class="agency-public-id-meta">
+							<span class="agency-public-id-status" aria-live="polite" data-agency-public-id-status></span>
+						</div>
+					</div>
+				</div>
+				<div class="myinfo-page-row">
+					<label class="myinfo-page-label" for="brokerOfficeKakaoInput">카카오 오픈 채팅방</label>
+					<input type="url" class="profile-suite-input" id="brokerOfficeKakaoInput" autocomplete="url" />
+				</div>
+				<div class="broker-apply-hidden-fields" id="brokerOfficeManualNameField" hidden>
+					<input type="text" id="brokerOfficeSearchInput" />
+					<input type="text" id="brokerOfficeAddressDetailInput" />
+					<input type="file" id="brokerOfficeDocumentInput" accept="image/*,.pdf" />
+					<select id="brokerOwnerEmailDomainSelect"><option value=""></option></select>
+				</div>
+				<div class="myinfo-page-actions broker-apply-actions">
+					<button type="button" class="myinfo-page-secondary broker-apply-close-page-btn">취소</button>
+					<button type="submit" class="myinfo-page-primary broker-apply-submit">가입 신청</button>
+				</div>
+			</form>
+		</div>
+			<footer class="myinfo-company-info">
+				<div class="myinfo-company-name">리얼제주(REALJEJU.APP)</div>
+				<div class="myinfo-company-grid"><span>(주)디에이치인베스트먼트</span><span>대표 : 김대홍</span><span>사업자등록번호 : 534-87-01667</span><span>통신판매업 신고번호 : 제2026-제주노형-0113호 <a class="biz-comm-lookup-link" href="https://www.ftc.go.kr/bizCommPop.do?wrkr_no=5348701667" target="bizCommPop" onclick="window.open(this.href, 'bizCommPop', 'width=750,height=700,scrollbars=yes,resizable=yes'); return false;" rel="noopener">[사업자 조회]</a></span><span>호스팅서비스 제공자 : Vercel</span><span>주소 : 제주특별자치도 제주시 노형로 356, 5층</span><span>고객센터 전화 : 064-745-0531</span><span>고객센터 이메일 : dh_realestate@naver.com</span><span>운영시간 : 오전 10시 - 오후 18시</span><span>개인정보보호책임자 : 김대홍</span></div>
+				<div class="myinfo-company-links" aria-label="리얼제주 정책 링크"><button type="button" class="myinfo-company-link auth-terms-open" data-terms-key="service">이용약관</button><span aria-hidden="true">|</span><button type="button" class="myinfo-company-link auth-terms-open" data-terms-key="privacy">개인정보처리방침</button><span aria-hidden="true">|</span><button type="button" class="myinfo-company-link auth-terms-open" data-terms-key="location">위치기반 서비스 이용약관</button>
+					<span aria-hidden="true">|</span>
+					<button type="button" class="myinfo-company-link auth-terms-open" data-terms-key="refund">환불 및 취소 정책</button></div>
+			</footer>
+	</section>
+
 	<section class="myinfo-page-panel profile-suite-panel account-page-panel" id="brokerOfficeEditPagePanel" aria-hidden="true">
 		<div class="myinfo-page-inner account-page-inner">
 			<div class="myinfo-page-head account-page-head"><h1 class="myinfo-page-title">중개사무소 수정</h1><p class="myinfo-page-desc">중개사무소 정보를 한 곳에서 관리합니다.</p></div>
@@ -1594,12 +1669,12 @@
 					<label class="myinfo-page-label" for="brokerOfficeEditPagePublicIdInput">외부공유 아이디</label>
 					<div class="agency-public-id-field" data-agency-public-id-field>
 						<div class="agency-public-id-control">
-							<input type="text" class="profile-suite-input agency-public-id-input" id="brokerOfficeEditPagePublicIdInput" data-agency-public-id-input minlength="4" maxlength="24" inputmode="latin" autocomplete="off" autocapitalize="none" spellcheck="false" aria-describedby="brokerOfficeEditPagePublicIdStatus brokerOfficeEditPagePublicIdPreview" placeholder="영문 소문자, 숫자, 하이픈, 언더바" />
+							<input type="text" class="profile-suite-input agency-public-id-input" id="brokerOfficeEditPagePublicIdInput" data-agency-public-id-input minlength="4" maxlength="24" inputmode="latin" autocomplete="off" autocapitalize="none" spellcheck="false" aria-describedby="brokerOfficeEditPagePublicIdStatus" placeholder="영문 소문자, 숫자, 하이픈, 언더바" />
 							<button type="button" class="agency-public-id-check-btn" id="brokerOfficeEditPagePublicIdCheckBtn" data-agency-public-id-check>중복 확인</button>
 						</div>
+						<p class="agency-public-id-help">※ 설정한 아이디로 중개사무소 매물 공유 주소가 만들어집니다.</p>
 						<div class="agency-public-id-meta">
 							<span class="agency-public-id-status" id="brokerOfficeEditPagePublicIdStatus" data-agency-public-id-status aria-live="polite"></span>
-							<span class="agency-public-id-preview" id="brokerOfficeEditPagePublicIdPreview" data-agency-public-id-preview>/properties?agency=ID</span>
 						</div>
 					</div>
 				</div>
@@ -4924,9 +4999,14 @@
 					</label>
 					<input type="password" class="auth-modal-input" id="authResetPasswordConfirmInput" placeholder="새 비밀번호를 한번 더 입력해주세요." autocomplete="new-password" />
 				</div>
-				<button type="submit" class="auth-modal-submit">
-					비밀번호 변경
-				</button>
+				<div class="auth-reset-password-actions">
+					<button type="button" class="auth-reset-password-cancel" id="authResetPasswordCancelBtn">
+						취소
+					</button>
+					<button type="submit" class="auth-modal-submit">
+						비밀번호 변경
+					</button>
+				</div>
 			</form>
 		</div>
 		<div class="auth-profile-setup-screen auth-screen-hidden" id="authProfileSetupScreen">
@@ -5184,85 +5264,7 @@
 					<button type="button" class="profile-company-link auth-terms-open" data-terms-key="refund">환불 및 취소 정책</button>
 			</div>
 		</footer>
-		<div class="auth-broker-office-screen auth-screen-hidden" id="authBrokerOfficeScreen">
-			<div class="broker-apply-page">
-				<div class="broker-apply-left">
-					<h2 class="broker-apply-title">
-						쉽고 빠른 회원가입을<br>도와드려요
-					</h2>
-					<div class="broker-apply-guide-card">
-						<p><span class="broker-guide-dot">·</span><span class="broker-guide-text">국가 공간 정보 포털의 부동산중개업 정보에 등록된 대표 공인중개사만 회원가입이 가능해요.</span></p>
-						<p><span class="broker-guide-dot">·</span><span class="broker-guide-text">중개사 회원가입 신청 시 업무일 기준 2일 이내 연락드립니다.</span></p>
-						<p><span class="broker-guide-dot">·</span><span class="broker-guide-text">문의사항은 064-745-0531 (평일 오전 10시 ~ 오후 6시)로 연락해 주세요.</span></p>
-					</div>
-				</div>
-				<form class="broker-apply-form" id="brokerOfficeApplyForm">
-					<button type="button" class="auth-card-close broker-card-close" aria-label="닫기" onclick="window.closeAuthModal && window.closeAuthModal()">×</button>
-					<div class="broker-apply-field">
-						<label class="broker-apply-label" for="brokerOfficeNameInput">중개사무소 명칭</label>
-						<input type="text" class="broker-apply-input" id="brokerOfficeNameInput" autocomplete="organization" />
-					</div>
-					<div class="broker-apply-field broker-apply-address-field">
-						<label class="broker-apply-label broker-apply-address-label" for="brokerOfficeAddressInput">주소<span class="property-required">*</span></label>
-						<div class="property-address-wrap broker-apply-address-wrap">
-							<input type="text" class="property-register-input broker-apply-address-input" id="brokerOfficeAddressInput" placeholder="주소를 입력하세요" autocomplete="off" readonly />
-							<span class="property-address-main-detail" id="brokerOfficeAddressMainDetail" aria-hidden="true"></span>
-						</div>
-					</div>
-					<div class="broker-apply-field">
-						<label class="broker-apply-label" for="brokerLicenseNoInput">등록번호</label>
-						<input type="text" class="broker-apply-input" id="brokerLicenseNoInput" autocomplete="off" />
-					</div>
-					<div class="broker-apply-field">
-						<label class="broker-apply-label" for="brokerOwnerNameInput">대표자명</label>
-						<input type="text" class="broker-apply-input" id="brokerOwnerNameInput" autocomplete="name" />
-					</div>
-					<div class="broker-apply-field">
-						<label class="broker-apply-label" for="brokerOfficePhoneInput">연락처</label>
-						<input type="tel" class="broker-apply-input" id="brokerOfficePhoneInput" autocomplete="tel" />
-					</div>
-					<div class="broker-apply-field">
-						<label class="broker-apply-label" for="brokerOwnerEmailLocalInput">이메일</label>
-						<input type="email" class="broker-apply-input" id="brokerOwnerEmailLocalInput" autocomplete="email" />
-					</div>
-					<div class="broker-apply-field">
-						<label class="broker-apply-label" for="brokerOfficeKakaoInput">카카오 오픈 채팅방</label>
-						<input type="url" class="broker-apply-input" id="brokerOfficeKakaoInput" autocomplete="url" />
-					</div>
-					<div class="broker-apply-hidden-fields" id="brokerOfficeManualNameField" style="display:none;">
-						<input type="text" id="brokerOfficeSearchInput" />
-						<input type="text" id="brokerOfficeAddressDetailInput" />
-						<input type="file" id="brokerOfficeDocumentInput" accept="image/*,.pdf" />
-						<select id="brokerOwnerEmailDomainSelect"><option value=""></option></select>
-					</div>
-					<button type="submit" class="broker-apply-submit">중개사무소 회원가입 신청</button>
-				</form>
-				<footer class="profile-company-info broker-profile-company-info" aria-label="리얼제주 사업자 정보">
-					<div class="profile-company-name">리얼제주(REALJEJU.APP)</div>
-					<div class="profile-company-grid">
-						<span>(주)디에이치인베스트먼트</span>
-						<span>대표 : 김대홍</span>
-						<span>사업자등록번호 : 534-87-01667</span>
-						<span>통신판매업 신고번호 : 제2026-제주노형-0113호 <a class="biz-comm-lookup-link" href="https://www.ftc.go.kr/bizCommPop.do?wrkr_no=5348701667" target="bizCommPop" onclick="window.open(this.href, 'bizCommPop', 'width=750,height=700,scrollbars=yes,resizable=yes'); return false;" rel="noopener">[사업자 조회]</a></span>
-						<span>호스팅서비스 제공자 : Vercel</span>
-						<span>주소 : 제주특별자치도 제주시 노형로 356, 5층</span>
-						<span>고객센터 전화 : 064-745-0531</span>
-						<span>고객센터 이메일 : dh_realestate@naver.com</span>
-						<span>운영시간 : 오전 10시 - 오후 18시</span>
-						<span>개인정보보호책임자 : 김대홍</span>
-					</div>
-					<div class="profile-company-links" aria-label="리얼제주 정책 링크">
-						<button type="button" class="profile-company-link auth-terms-open" data-terms-key="service">이용약관</button>
-						<span aria-hidden="true">|</span>
-						<button type="button" class="profile-company-link auth-terms-open" data-terms-key="privacy">개인정보처리방침</button>
-						<span aria-hidden="true">|</span>
-						<button type="button" class="profile-company-link auth-terms-open" data-terms-key="location">위치기반 서비스 이용약관</button>
-					<span aria-hidden="true">|</span>
-					<button type="button" class="profile-company-link auth-terms-open" data-terms-key="refund">환불 및 취소 정책</button>
-					</div>
-				</footer>
-			</div>
-		</div>
+		<div class="auth-broker-office-screen auth-screen-hidden" id="authBrokerOfficeScreen" hidden aria-hidden="true"></div>
 		<div class="auth-signup-terms-screen auth-screen-hidden" id="authSignupTermsScreen">
 			<h2 class="auth-modal-title">
 				회원가입 · 이용약관 동의
@@ -5575,7 +5577,7 @@
 	</div>
 </div>
 
-					<script src="/js/app_4.856.js?v=20260720-property-photo-reorder-4856"></script>
+	<script src="/js/app_4.882.js?v=20260720-agency-public-id-help-4882"></script>
 
 
 <script>
