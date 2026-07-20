@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 	<!--
- REALJEJU HTML 구조 / Ver 4.883
+ REALJEJU HTML 구조 / Ver 4.884
 		파일은 단일 HTML을 유지하고, 실제 배치 순서대로 큰 화면 단위만 주석으로 구분한다.
 		0. Head / 공통 메타
 		1. 상단바 / 전역 메뉴
@@ -205,7 +205,7 @@
 				transition: none;
 			}
 		</style>
-	<link rel="stylesheet" href="/css/base_4.883.css?v=20260720-agency-public-id-info-help-4883">
+	<link rel="stylesheet" href="/css/base_4.884.css?v=20260720-standalone-cover-presale-brand-4884">
 
 </head>
 	<body class="sidebar-list-collapsed realjeju-side-nav-enabled main-landing-page-open">
@@ -235,7 +235,22 @@
 					"/mypage/payments": "payment-page-open",
 					"/mypage/inquiries": "account-inquiries-page-open"
 				};
+				var standaloneCoverPaths = {
+					"/properties/favorites": true,
+					"/properties/broker": true,
+					"/properties/register": true,
+					"/admin": true,
+					"/admin/notices": true,
+					"/admin/inquiries": true,
+					"/admin/coupons": true,
+					"/admin/users": true,
+					"/admin/broker-applications": true,
+					"/admin/properties": true
+				};
 				var accountClass = accountClasses[path];
+				if (document.body && document.body.classList && (accountClass || standaloneCoverPaths[path])) {
+					document.body.classList.add("realjeju-standalone-page-transition-cover");
+				}
 				if (!accountClass || !document.body || !document.body.classList) return;
 				document.body.classList.remove("main-landing-page-open");
 				document.body.classList.add(
@@ -243,6 +258,7 @@
 					"realjeju-side-nav-enabled",
 					"realjeju-document-page-open",
 					"realjeju-account-page-open",
+					"realjeju-standalone-page-transition-cover",
 					accountClass
 				);
 			})();
@@ -594,7 +610,7 @@
 				</button>
 			</nav>
 			<div class="realjeju-side-admin-version" id="realjejuSideAdminVersion" aria-hidden="true" hidden>
-				<span class="topbar-version-text">Ver 4.883</span>
+				<span class="topbar-version-text">Ver 4.884</span>
 			</div>
 		</aside>
 		<aside class="global-category-side-panel" id="globalCategorySidePanel" aria-hidden="true">
@@ -3019,18 +3035,12 @@
 											<button type="button" class="presale-filter-option presale-filter-chip active" data-presale-option data-group="brand" data-value=""><span>전체</span></button>
 											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="brand" data-value="hillstate"><span>힐스테이트</span></button>
 											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="brand" data-value="xi"><span>자이</span></button>
-											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="brand" data-value="castle"><span>캐슬</span></button>
 											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="brand" data-value="forena"><span>포레나</span></button>
 											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="brand" data-value="raemian"><span>래미안</span></button>
 											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="brand" data-value="prugio"><span>푸르지오</span></button>
 											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="brand" data-value="ipark"><span>아이파크</span></button>
 											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="brand" data-value="weve"><span>위브</span></button>
 											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="brand" data-value="landscape"><span>풍경채</span></button>
-											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="brand" data-value="sk-view"><span>SK뷰</span></button>
-											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="brand" data-value="skyche"><span>하늘채</span></button>
-											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="brand" data-value="richeville"><span>리슈빌</span></button>
-											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="brand" data-value="desian"><span>데시앙</span></button>
-											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="brand" data-value="verdium"><span>베르디움</span></button>
 											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="brand" data-value="epyunhan"><span>e편한세상</span></button>
 											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="brand" data-value="sharp"><span>더샵</span></button>
 											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="brand" data-value="other"><span>기타</span></button>
@@ -5577,7 +5587,7 @@
 	</div>
 </div>
 
-	<script src="/js/app_4.883.js?v=20260720-agency-public-id-info-help-4883"></script>
+	<script src="/js/app_4.884.js?v=20260720-standalone-cover-presale-brand-4884"></script>
 
 
 <script>
