@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 	<!--
-		REALJEJU HTML 구조 / Ver 4.847
+		REALJEJU HTML 구조 / Ver 4.856
 		파일은 단일 HTML을 유지하고, 실제 배치 순서대로 큰 화면 단위만 주석으로 구분한다.
 		0. Head / 공통 메타
 		1. 상단바 / 전역 메뉴
@@ -205,7 +205,7 @@
 				transition: none;
 			}
 		</style>
-						<link rel="stylesheet" href="/css/base_4.847.css?v=20260719-local-boundary-levels-4847">
+						<link rel="stylesheet" href="/css/base_4.856.css?v=20260720-property-photo-reorder-4856">
 
 </head>
 	<body class="sidebar-list-collapsed realjeju-side-nav-enabled main-landing-page-open">
@@ -231,7 +231,7 @@
 				var accountClasses = {
 					"/mypage": "myinfo-page-open",
 					"/mypage/profile": "myinfo-page-open",
-					"/mypage/office": "broker-office-info-page-open",
+					"/mypage/office": "my-suite-page-open",
 					"/mypage/payments": "payment-page-open",
 					"/mypage/inquiries": "account-inquiries-page-open"
 				};
@@ -325,7 +325,7 @@
 					<div class="global-topbar-right" id="globalTopbarRight">
 						<!-- PATCH 3.918: 상단 배너 버전 텍스트를 현재 배포 버전과 일치시킵니다. -->
 						<button type="button" class="global-auth-trigger version-only" id="detailAuthTrigger" data-auth-state="logged-out">
-							<span class="topbar-version-text">Ver 4.847</span>
+							<span class="topbar-version-text">Ver 4.856</span>
 						</button>
 						<nav class="main-landing-auth-links" id="mainLandingAuthLinks" aria-label="로그인 및 회원가입">
 							<button type="button" class="main-landing-auth-link" id="mainLandingLoginBtn">로그인</button>
@@ -596,7 +596,7 @@
 				</button>
 			</nav>
 			<div class="realjeju-side-admin-version" id="realjejuSideAdminVersion" aria-hidden="true" hidden>
-				<span class="topbar-version-text">Ver 4.847</span>
+				<span class="topbar-version-text">Ver 4.856</span>
 			</div>
 		</aside>
 		<aside class="global-category-side-panel" id="globalCategorySidePanel" aria-hidden="true">
@@ -2931,7 +2931,7 @@
 										<h3>청약가능통장</h3>
 										<div class="presale-filter-chip-grid" data-presale-group="account">
 											<button type="button" class="presale-filter-option presale-filter-chip active" data-presale-option data-group="account" data-value=""><span>전체</span></button>
-											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="account" data-value="total"><span>주택청약종합저축</span></button>
+											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="account" data-value="total"><span>청약종합저축</span></button>
 											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="account" data-value="deposit"><span>청약예금</span></button>
 											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="account" data-value="installment"><span>청약부금</span></button>
 											<button type="button" class="presale-filter-option presale-filter-chip" data-presale-option data-group="account" data-value="saving"><span>청약저축</span></button>
@@ -4759,6 +4759,15 @@
 			</div>
 			<div class="life-safety-legend-note">최종 허가 여부는 관할기관 확인</div>
 		</div>
+		<div class="life-safety-legend sewer-treatment-area-legend" id="sewerTreatmentAreaLegend" aria-hidden="true">
+			<div class="life-safety-legend-title">하수처리구역</div>
+			<div class="life-safety-legend-scope">제주 하수처리구역 40개</div>
+			<div class="life-safety-legend-row">
+				<span class="sewer-treatment-area-legend-swatch" aria-hidden="true"></span>
+				<span>하수처리구역</span>
+			</div>
+			<div class="life-safety-legend-note">하수처리구역은 건축 검토 시 오수/정화조 조건 확인에 활용됩니다. 필지별 최종 판단은 관할 부서 확인이 필요합니다.</div>
+		</div>
 		<div class="life-safety-legend cultural-heritage-protection-legend" id="culturalHeritageProtectionLegend" aria-hidden="true">
 			<div class="life-safety-legend-title">문화재보호구역</div>
 			<div class="life-safety-legend-scope">자료 기준 2025.10.01</div>
@@ -5566,7 +5575,7 @@
 	</div>
 </div>
 
-					<script src="/js/app_4.847.js?v=20260719-local-boundary-levels-4847"></script>
+					<script src="/js/app_4.856.js?v=20260720-property-photo-reorder-4856"></script>
 
 
 <script>
