@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 	<!--
- REALJEJU HTML 구조 / Ver 4.885
+ REALJEJU HTML 구조 / Ver 4.899
 		파일은 단일 HTML을 유지하고, 실제 배치 순서대로 큰 화면 단위만 주석으로 구분한다.
 		0. Head / 공통 메타
 		1. 상단바 / 전역 메뉴
@@ -205,7 +205,7 @@
 				transition: none;
 			}
 		</style>
-	<link rel="stylesheet" href="/css/base_4.885.css?v=20260720-logged-out-auth-links-4885">
+	<link rel="stylesheet" href="/css/base_4.899.css?v=20260721-profile-photo-scope-4899">
 
 </head>
 	<body class="sidebar-list-collapsed realjeju-side-nav-enabled main-landing-page-open">
@@ -610,7 +610,7 @@
 				</button>
 			</nav>
 			<div class="realjeju-side-admin-version" id="realjejuSideAdminVersion" aria-hidden="true" hidden>
-				<span class="topbar-version-text">Ver 4.885</span>
+				<span class="topbar-version-text">Ver 4.899</span>
 			</div>
 		</aside>
 		<aside class="global-category-side-panel" id="globalCategorySidePanel" aria-hidden="true">
@@ -1193,6 +1193,11 @@
 	<!-- PATCH 2.316: 중개사 홈은 등록한 매물 관리 목록을 보여주는 전용 패널 -->
 	<!-- 4. 중개사 홈 -->
 	<section class="broker-home-panel" id="brokerHomePanel" aria-hidden="true">
+		<div class="broker-home-section-tabs" role="tablist" aria-label="중개사 홈 탭">
+			<button type="button" class="broker-home-tab-btn active" data-broker-home-tab="listings" role="tab" aria-selected="true">매물관리</button>
+			<button type="button" class="broker-home-tab-btn" data-broker-home-tab="contracts" role="tab" aria-selected="false">계약관리</button>
+			<button type="button" class="broker-contract-add-btn" id="brokerContractAddBtn" hidden>계약 추가</button>
+		</div>
 		<!-- PATCH 2.337: 중개사 홈 상단 안내, 사용건수, 광고, 필터 메뉴 구성 -->
 		<div class="broker-home-overview">
 			<div class="broker-home-main">
@@ -1219,6 +1224,11 @@
 							<div class="broker-home-usage-track"><div class="broker-home-usage-fill" id="brokerRelistUsageFill"></div></div>
 							<div class="broker-home-usage-meta"><span><strong id="brokerRelistUsageCount">0</strong>건 사용중</span><span><strong id="brokerRelistUsageLimit">100</strong>건</span></div>
 						</div>
+						<div class="broker-home-usage-item">
+							<div class="broker-home-usage-title">계약서 보관 사용건수</div>
+							<div class="broker-home-usage-track"><div class="broker-home-usage-fill" id="brokerContractUsageFill"></div></div>
+							<div class="broker-home-usage-meta"><span><strong id="brokerContractUsageCount">0</strong>건 보관중</span><span><strong id="brokerContractUsageLimit">500</strong>건</span></div>
+						</div>
 					</div>
 				</div>
 			<div class="broker-home-ad broker-home-payment-guide" id="brokerHomeAd" data-ad-mode="payment">
@@ -1234,7 +1244,7 @@
 			</div>
 		</div>
 		<!-- PATCH 2.344: 필터 메뉴는 한 줄 전체 폭을 사용하고 휴지통은 오른쪽 끝에 배치 -->
-		<div class="broker-home-filterbar">
+		<div class="broker-home-filterbar" id="brokerHomeFilterbar">
 			<div class="broker-home-filter-item">
 				<button type="button" class="broker-home-filter-btn active" data-broker-home-status-filter="trading">거래중 <span id="brokerTradingCount">0</span></button>
 			</div>
@@ -1275,6 +1285,55 @@
 		</div>
 		<div class="broker-listing-shell" id="brokerListingsList">
 			<div class="admin-empty">등록한 매물을 불러오세요.</div>
+		</div>
+		<div class="broker-contracts-shell" id="brokerContractsShell" hidden>
+			<div class="broker-home-filterbar broker-contract-filterbar" id="brokerContractFilterbar" aria-label="계약관리 필터">
+				<div class="broker-home-filter-item">
+					<button type="button" class="broker-home-filter-btn active" data-broker-contract-status-filter="active">계약중</button>
+				</div>
+				<div class="broker-home-filter-item">
+					<button type="button" class="broker-home-filter-btn" data-broker-contract-status-filter="completed">계약완료</button>
+				</div>
+				<div class="broker-home-filter-item">
+					<button type="button" class="broker-home-filter-btn" data-broker-contract-status-filter="canceled">계약해지</button>
+				</div>
+				<div class="broker-home-filter-item">
+					<button type="button" class="broker-home-filter-btn" data-broker-contract-filter="deal">거래유형 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
+				</div>
+				<div class="broker-home-filter-item">
+					<button type="button" class="broker-home-filter-btn" data-broker-contract-filter="contract-date">계약일 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
+				</div>
+				<div class="broker-home-filter-item">
+					<button type="button" class="broker-home-filter-btn" data-broker-contract-filter="balance-date">잔금일 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
+				</div>
+				<div class="broker-home-filter-item">
+					<button type="button" class="broker-home-filter-btn" data-broker-contract-filter="expiry-date">만기일 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
+				</div>
+				<button type="button" class="broker-home-filter-btn" id="brokerContractExcelBtn">엑셀변환</button>
+				<div class="broker-home-filter-spacer" aria-hidden="true"></div>
+				<div class="broker-home-filter-item">
+					<button type="button" class="broker-home-filter-btn" data-broker-contract-status-filter="trash">휴지통</button>
+				</div>
+			</div>
+			<div class="broker-contracts-table" id="brokerContractsTable">
+				<div class="broker-contracts-table-head">
+					<div>계약일</div>
+					<div>만기일</div>
+					<div>중도금1</div>
+					<div>중도금2</div>
+					<div>잔금일</div>
+					<div>거래금액</div>
+					<div>계약서 제목</div>
+					<div>거래유형</div>
+					<div>매도/임대인</div>
+					<div>매도/임대인 전화</div>
+					<div>매수/임차인</div>
+					<div>매수/임차인 전화</div>
+					<div>메모</div>
+					<div>소재지</div>
+				</div>
+				<div class="admin-empty">등록된 계약이 없습니다.</div>
+			</div>
 		</div>
 		<footer class="broker-home-company-info broker-home-mini-footer realjeju-management-mini-footer" aria-label="리얼제주 저작권">
 			<div class="broker-home-company-inner">
@@ -1318,6 +1377,7 @@
 						<ul>
 							<li>일반매물 300건</li>
 							<li>하루 재등록 50건</li>
+							<li>중개사홈 사용</li>
 							<li>프리미엄 매물 20건</li>
 						</ul>
 						<button type="button" class="payment-plan-btn" data-plan="premium">이용권 선택</button>
@@ -1329,6 +1389,7 @@
 						<ul>
 							<li>일반매물 500건</li>
 							<li>하루 재등록 100건</li>
+							<li>중개사홈 사용</li>
 							<li>프리미엄 매물 50건</li>
 						</ul>
 						<button type="button" class="payment-plan-btn" data-plan="pro">이용권 선택</button>
@@ -1356,13 +1417,13 @@
 					<article class="payment-coupon-card">
 						<div class="payment-coupon-kind">30일 이용권</div>
 						<h2>프리미엄 플랜 30일 이용권</h2>
-						<p>일반매물 300건, 하루 재등록 50건, 프리미엄 매물 20건을 이용할 수 있습니다.</p>
+						<p>일반매물 300건, 하루 재등록 50건, 중개사홈, 프리미엄 매물 20건을 이용할 수 있습니다.</p>
 						<button type="button" class="payment-coupon-use-btn" data-coupon-plan="premium">사용하기</button>
 					</article>
 					<article class="payment-coupon-card">
 						<div class="payment-coupon-kind">30일 이용권</div>
 						<h2>프로 플랜 30일 이용권</h2>
-						<p>일반매물 500건, 하루 재등록 100건, 프리미엄 매물 50건을 이용할 수 있습니다.</p>
+						<p>일반매물 500건, 하루 재등록 100건, 중개사홈, 프리미엄 매물 50건을 이용할 수 있습니다.</p>
 						<button type="button" class="payment-coupon-use-btn" data-coupon-plan="pro">사용하기</button>
 					</article>
 				</div>
@@ -1580,7 +1641,13 @@
 				<div class="myinfo-page-row"><span class="myinfo-page-label">대표자명</span><span class="myinfo-page-value" id="brokerOfficePageOwnerValue">-</span></div>
 				<div class="myinfo-page-row"><span class="myinfo-page-label">연락처</span><span class="myinfo-page-value" id="brokerOfficePagePhoneValue">-</span></div>
 				<div class="myinfo-page-row"><span class="myinfo-page-label">이메일</span><span class="myinfo-page-value" id="brokerOfficePageEmailValue">-</span></div>
-				<div class="myinfo-page-row"><span class="myinfo-page-label">외부공유 아이디</span><div class="myinfo-page-value agency-public-id-display" id="brokerOfficePagePublicIdValue">-<p class="agency-public-id-help">※ 설정한 아이디로 중개사무소 매물 공유 주소가 만들어집니다.</p></div></div>
+				<div class="myinfo-page-row agency-public-id-row">
+					<span class="myinfo-page-label">외부공유 아이디</span>
+					<div class="agency-public-id-field">
+						<div class="myinfo-page-value agency-public-id-display" id="brokerOfficePagePublicIdValue">-</div>
+						<p class="agency-public-id-help">※ 설정한 아이디로 중개사무소 매물 공유 주소가 만들어집니다.</p>
+					</div>
+				</div>
 				<div class="myinfo-page-row"><span class="myinfo-page-label">카카오 오픈 채팅방</span><span class="myinfo-page-value" id="brokerOfficePageKakaoValue">-</span></div>
 				<div class="myinfo-page-row"><span class="myinfo-page-label">승인상태</span><span class="myinfo-page-value" id="brokerOfficePageStatusValue">-</span></div>
 				<div class="myinfo-page-actions">
@@ -4885,6 +4952,10 @@
 </div>
 <div class="detail-image-lightbox" id="detailImageLightbox">
 	<div class="detail-image-lightbox-stage" id="detailImageLightboxStage">
+		<div class="detail-image-lightbox-info" aria-live="polite">
+			<div class="detail-image-lightbox-title" id="detailImageLightboxTitle"></div>
+			<div class="detail-image-lightbox-meta" id="detailImageLightboxMeta"></div>
+		</div>
 		<button type="button" class="detail-image-lightbox-nav prev" id="detailImageLightboxPrev">
 			<i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
 		</button>
@@ -4895,7 +4966,8 @@
 			<i class="fa-solid fa-xmark" aria-hidden="true"></i>
 		</button>
 		<div class="detail-image-lightbox-count" id="detailImageLightboxCount"></div>
-		<img id="detailImageLightboxImg" src="" alt="매물 사진 확대">
+		<img id="detailImageLightboxImg" src="" alt="매물 사진 확대" decoding="async" fetchpriority="high">
+		<div class="detail-image-lightbox-thumbnails" id="detailImageLightboxThumbnails" aria-label="매물 사진 썸네일"></div>
 	</div>
 </div>
 <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=b7db2d3c35122f3ec33c88ea6d3195fb&libraries=services,clusterer&autoload=false"></script>
@@ -5587,7 +5659,7 @@
 	</div>
 </div>
 
-	<script src="/js/app_4.885.js?v=20260720-logged-out-auth-links-4885"></script>
+	<script src="/js/app_4.899.js?v=20260721-profile-photo-scope-4899"></script>
 
 
 <script>
