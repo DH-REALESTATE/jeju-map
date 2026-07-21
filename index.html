@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 	<!--
- REALJEJU HTML 구조 / Ver 4.899
+ REALJEJU HTML 구조 / Ver 4.918
 		파일은 단일 HTML을 유지하고, 실제 배치 순서대로 큰 화면 단위만 주석으로 구분한다.
 		0. Head / 공통 메타
 		1. 상단바 / 전역 메뉴
@@ -205,7 +205,7 @@
 				transition: none;
 			}
 		</style>
-	<link rel="stylesheet" href="/css/base_4.899.css?v=20260721-profile-photo-scope-4899">
+	<link rel="stylesheet" href="/css/base_4.918.css?v=20260721-management-version-without-prefix-4918">
 
 </head>
 	<body class="sidebar-list-collapsed realjeju-side-nav-enabled main-landing-page-open">
@@ -610,7 +610,7 @@
 				</button>
 			</nav>
 			<div class="realjeju-side-admin-version" id="realjejuSideAdminVersion" aria-hidden="true" hidden>
-				<span class="topbar-version-text">Ver 4.899</span>
+				<span class="topbar-version-text">4.918</span>
 			</div>
 		</aside>
 		<aside class="global-category-side-panel" id="globalCategorySidePanel" aria-hidden="true">
@@ -1192,7 +1192,7 @@
 	</section>
 	<!-- PATCH 2.316: 중개사 홈은 등록한 매물 관리 목록을 보여주는 전용 패널 -->
 	<!-- 4. 중개사 홈 -->
-	<section class="broker-home-panel" id="brokerHomePanel" aria-hidden="true">
+	<section class="broker-home-panel" id="brokerHomePanel" data-active-tab="listings" aria-hidden="true">
 		<div class="broker-home-section-tabs" role="tablist" aria-label="중개사 홈 탭">
 			<button type="button" class="broker-home-tab-btn active" data-broker-home-tab="listings" role="tab" aria-selected="true">매물관리</button>
 			<button type="button" class="broker-home-tab-btn" data-broker-home-tab="contracts" role="tab" aria-selected="false">계약관리</button>
@@ -1255,6 +1255,9 @@
 				<button type="button" class="broker-home-filter-btn" data-broker-home-status-filter="hidden">숨김 <span id="brokerHiddenCount">0</span></button>
 			</div>
 			<div class="broker-home-filter-item">
+				<button type="button" class="broker-home-filter-btn" data-broker-home-status-filter="draft">임시저장 <span id="brokerDraftCount">0</span></button>
+			</div>
+			<div class="broker-home-filter-item">
 				<button type="button" class="broker-home-filter-btn" id="brokerPropertyTypeFilterBtn" data-broker-home-filter-menu="property">매물 유형 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
 				<div class="broker-home-filter-menu extra-filter-menu type-filter-menu broker-home-map-style-menu" id="brokerPropertyTypeFilterMenu"></div>
 			</div>
@@ -1276,7 +1279,6 @@
 				</div>
 				<div class="broker-home-filter-divider"></div>
 				<button type="button" class="broker-home-filter-btn" id="brokerBulkRefreshBtn">전체갱신</button>
-				<button type="button" class="broker-home-filter-btn">임시저장</button>
 				<button type="button" class="broker-home-filter-btn">엑셀변환</button>
 			<div class="broker-home-filter-spacer" aria-hidden="true"></div>
 			<div class="broker-home-filter-item">
@@ -5659,7 +5661,7 @@
 	</div>
 </div>
 
-	<script src="/js/app_4.899.js?v=20260721-profile-photo-scope-4899"></script>
+	<script src="/js/app_4.918.js?v=20260721-management-version-without-prefix-4918"></script>
 
 
 <script>
