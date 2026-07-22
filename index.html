@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 	<!--
- REALJEJU HTML 구조 / Ver 4.922
+ REALJEJU HTML 구조 / Ver 4.960
 		파일은 단일 HTML을 유지하고, 실제 배치 순서대로 큰 화면 단위만 주석으로 구분한다.
 		0. Head / 공통 메타
 		1. 상단바 / 전역 메뉴
@@ -19,23 +19,23 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>제주도 부동산 매물 플랫폼 | 리얼제주 REALJEJU.APP</title>
-		<meta name="description" content="리얼제주는 제주도 부동산 매물, 토지, 주택, 상가, 전원주택, 제주시·서귀포시 매물을 지도에서 찾는 제주 부동산 플랫폼입니다." />
+		<meta name="description" id="descriptionMeta" content="리얼제주는 제주도 부동산 매물, 토지, 주택, 상가, 전원주택, 제주시·서귀포시 매물을 지도에서 찾는 제주 부동산 플랫폼입니다." />
 		<meta name="keywords" content="제주도 부동산, 제주 부동산, 제주도 매물, 제주 토지, 제주 주택, 제주 상가, 제주 전원주택, 제주시 부동산, 서귀포시 부동산, 리얼제주" />
 		<meta name="robots" content="index, follow" />
 		<meta name="author" content="리얼제주 REALJEJU.APP" />
-		<link rel="canonical" href="https://realjeju.app/" />
+		<link rel="canonical" id="canonicalLink" href="https://제주부동산닷컴.com/" />
 		<meta property="og:title" id="ogTitleMeta" content="제주도 부동산 매물 플랫폼 | 리얼제주 REALJEJU.APP" />
 		<meta property="og:description" id="ogDescriptionMeta" content="제주도 토지, 주택, 상가, 전원주택과 제주시·서귀포시 부동산 매물을 지도에서 확인하세요." />
 		<meta property="og:type" content="website" />
-		<meta property="og:url" content="https://realjeju.app/" />
-		<meta property="og:image" content="https://realjeju.app/img/landingpage_1.jpg" />
+		<meta property="og:url" id="ogUrlMeta" content="https://제주부동산닷컴.com/" />
+		<meta property="og:image" content="https://제주부동산닷컴.com/img/landingpage_1.jpg" />
 		<meta property="og:image:alt" content="제주도 주택과 부동산 풍경" />
 		<meta property="og:site_name" content="리얼제주 REALJEJU.APP" />
 		<meta property="og:locale" content="ko_KR" />
 		<meta name="twitter:card" content="summary" />
 		<meta name="twitter:title" content="제주도 부동산 매물 플랫폼 | 리얼제주 REALJEJU.APP" />
 		<meta name="twitter:description" content="제주도 토지, 주택, 상가, 전원주택과 제주시·서귀포시 부동산 매물을 지도에서 확인하세요." />
-		<meta name="twitter:image" content="https://realjeju.app/img/landingpage_1.jpg" />
+		<meta name="twitter:image" content="https://제주부동산닷컴.com/img/landingpage_1.jpg" />
 		<meta name="theme-color" content="#2563eb" />
 		<script type="application/ld+json">
 			{
@@ -43,10 +43,10 @@
 				"@graph": [
 					{
 						"@type": "Organization",
-						"@id": "https://realjeju.app/#organization",
+						"@id": "https://제주부동산닷컴.com/#organization",
 						"name": "리얼제주",
 						"alternateName": "REALJEJU.APP",
-						"url": "https://realjeju.app/",
+						"url": "https://제주부동산닷컴.com/",
 						"email": "dh_realestate@naver.com",
 						"telephone": "+82-64-745-0531",
 						"address": {
@@ -59,19 +59,45 @@
 					},
 					{
 						"@type": "WebSite",
-						"@id": "https://realjeju.app/#website",
+						"@id": "https://제주부동산닷컴.com/#website",
 						"name": "리얼제주 REALJEJU.APP",
-						"url": "https://realjeju.app/",
+						"url": "https://제주부동산닷컴.com/",
 						"inLanguage": "ko-KR",
 						"publisher": {
-							"@id": "https://realjeju.app/#organization"
-						}
+							"@id": "https://제주부동산닷컴.com/#organization"
+						},
+						"hasPart": [
+							{
+								"@type": "WebPage",
+								"name": "매물 지도검색",
+								"url": "https://제주부동산닷컴.com/properties",
+								"description": "제주도 토지, 주택, 상가, 전원주택 매물을 지도에서 찾는 리얼제주 부동산 홈입니다."
+							},
+							{
+								"@type": "WebPage",
+								"name": "동네업체",
+								"url": "https://제주부동산닷컴.com/companies",
+								"description": "제주 공인중개사무소와 동네 업체 정보를 확인하는 리얼제주 동네업체 페이지입니다."
+							},
+							{
+								"@type": "WebPage",
+								"name": "공지사항",
+								"url": "https://제주부동산닷컴.com/notices",
+								"description": "리얼제주 서비스 안내와 공지사항을 확인하는 페이지입니다."
+							},
+							{
+								"@type": "WebPage",
+								"name": "제주 토지 매물",
+								"url": "https://제주부동산닷컴.com/jeju-land.html",
+								"description": "제주 토지, 농지, 임야, 대지, 전원주택지 매물을 안내하는 검색 최적화 페이지입니다."
+							}
+						]
 					},
 					{
 						"@type": "RealEstateAgent",
-						"@id": "https://realjeju.app/#realestate",
+						"@id": "https://제주부동산닷컴.com/#realestate",
 						"name": "리얼제주 부동산",
-						"url": "https://realjeju.app/properties",
+						"url": "https://제주부동산닷컴.com/properties",
 						"areaServed": [
 							"제주특별자치도",
 							"제주시",
@@ -84,7 +110,7 @@
 							"제주 상가 매물"
 						],
 						"parentOrganization": {
-							"@id": "https://realjeju.app/#organization"
+							"@id": "https://제주부동산닷컴.com/#organization"
 						}
 					}
 				]
@@ -119,53 +145,6 @@
 					"/meetups": { category: "meetup", hideFilterMenu: true, emptyMap: true }
 				};
 				window.realjejuInitialCategoryRoute = initialCategoryRoutes[normalizedPath] || null;
-				if (normalizedPath === "/properties" && window.indexedDB) {
-					window.realjejuInitialMapListingsCachePromise = new Promise(function (resolve) {
-						var settled = false;
-						var db = null;
-						function finish(value) {
-							if (settled) return;
-							settled = true;
-							try {
-								if (db) db.close();
-							} catch (error) {}
-							resolve(value || null);
-						}
-						try {
-							var request = window.indexedDB.open("realjeju-map-listings", 1);
-							request.onupgradeneeded = function () {
-								var upgradeDb = request.result;
-								if (!upgradeDb.objectStoreNames.contains("cache")) {
-									upgradeDb.createObjectStore("cache", { keyPath: "key" });
-								}
-							};
-							request.onsuccess = function () {
-								db = request.result;
-								if (settled) {
-									try { db.close(); } catch (error) {}
-									return;
-								}
-								if (!db.objectStoreNames.contains("cache")) {
-									finish(null);
-									return;
-								}
-								try {
-									var transaction = db.transaction("cache", "readonly");
-									var cacheRequest = transaction.objectStore("cache").get("public-map-listings-v1");
-									cacheRequest.onsuccess = function () { finish(cacheRequest.result || null); };
-									cacheRequest.onerror = function () { finish(null); };
-									transaction.onabort = function () { finish(null); };
-								} catch (error) {
-									finish(null);
-								}
-							};
-							request.onerror = function () { finish(null); };
-							request.onblocked = function () { finish(null); };
-						} catch (error) {
-							finish(null);
-						}
-					});
-				}
 				var hidesPageScrollbar = /^\/jobs(?:\/index\.html)?$/.test(normalizedPath) || /^\/mypage(?:\/|$)/.test(normalizedPath);
 				document.documentElement.classList.toggle("realjeju-hide-page-scrollbar", hidesPageScrollbar);
 				var params = new URLSearchParams(String(window.location.search || ""));
@@ -205,7 +184,7 @@
 				transition: none;
 			}
 		</style>
-	<link rel="stylesheet" href="/css/base_4.922.css?v=20260721-operator-broker-access-4922">
+	<link rel="stylesheet" href="/css/base_4.960.css?v=20260722-favorite-summary-hydration-4960">
 
 </head>
 	<body class="sidebar-list-collapsed realjeju-side-nav-enabled main-landing-page-open">
@@ -610,7 +589,7 @@
 				</button>
 			</nav>
 			<div class="realjeju-side-admin-version" id="realjejuSideAdminVersion" aria-hidden="true" hidden>
-				<span class="topbar-version-text">4.922</span>
+				<span class="topbar-version-text">4.960</span>
 			</div>
 		</aside>
 		<aside class="global-category-side-panel" id="globalCategorySidePanel" aria-hidden="true">
@@ -5661,7 +5640,7 @@
 	</div>
 </div>
 
-	<script src="/js/app_4.922.js?v=20260721-operator-broker-access-4922"></script>
+	<script src="/js/app_4.960.js?v=20260722-favorite-summary-hydration-4960"></script>
 
 
 <script>
