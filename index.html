@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 	<!--
- REALJEJU HTML 구조 / Ver 4.960
+ REALJEJU HTML 구조 / Ver 4.979
 		파일은 단일 HTML을 유지하고, 실제 배치 순서대로 큰 화면 단위만 주석으로 구분한다.
 		0. Head / 공통 메타
 		1. 상단바 / 전역 메뉴
@@ -184,7 +184,7 @@
 				transition: none;
 			}
 		</style>
-	<link rel="stylesheet" href="/css/base_4.960.css?v=20260722-favorite-summary-hydration-4960">
+	<link rel="stylesheet" href="/css/base_4.979.css?v=20260723-broker-profile-photo-4979">
 
 </head>
 	<body class="sidebar-list-collapsed realjeju-side-nav-enabled main-landing-page-open">
@@ -589,7 +589,7 @@
 				</button>
 			</nav>
 			<div class="realjeju-side-admin-version" id="realjejuSideAdminVersion" aria-hidden="true" hidden>
-				<span class="topbar-version-text">4.960</span>
+				<span class="topbar-version-text">4.979</span>
 			</div>
 		</aside>
 		<aside class="global-category-side-panel" id="globalCategorySidePanel" aria-hidden="true">
@@ -1685,7 +1685,7 @@
 					<label class="myinfo-page-label" for="brokerOfficePublicIdInput">외부공유 아이디</label>
 					<div class="agency-public-id-field" data-agency-public-id-field>
 						<div class="agency-public-id-control">
-							<input type="text" class="profile-suite-input agency-public-id-input" id="brokerOfficePublicIdInput" placeholder="영문 소문자, 숫자, 하이픈, 언더바" autocomplete="off" spellcheck="false" data-agency-public-id-input />
+							<input type="text" class="profile-suite-input agency-public-id-input" id="brokerOfficePublicIdInput" placeholder="영문 숫자만 가능합니다." autocomplete="off" spellcheck="false" data-agency-public-id-input />
 							<button type="button" class="agency-public-id-check-btn" data-agency-public-id-check>중복 확인</button>
 						</div>
 						<p class="agency-public-id-help">※ 설정한 아이디로 중개사무소 매물 공유 주소가 만들어집니다.</p>
@@ -1733,7 +1733,7 @@
 					<label class="myinfo-page-label" for="brokerOfficeEditPagePublicIdInput">외부공유 아이디</label>
 					<div class="agency-public-id-field" data-agency-public-id-field>
 						<div class="agency-public-id-control">
-							<input type="text" class="profile-suite-input agency-public-id-input" id="brokerOfficeEditPagePublicIdInput" data-agency-public-id-input minlength="4" maxlength="24" inputmode="latin" autocomplete="off" autocapitalize="none" spellcheck="false" aria-describedby="brokerOfficeEditPagePublicIdStatus" placeholder="영문 소문자, 숫자, 하이픈, 언더바" />
+							<input type="text" class="profile-suite-input agency-public-id-input" id="brokerOfficeEditPagePublicIdInput" data-agency-public-id-input minlength="4" maxlength="24" autocomplete="off" spellcheck="false" aria-describedby="brokerOfficeEditPagePublicIdStatus" placeholder="영문 숫자만 가능합니다." />
 							<button type="button" class="agency-public-id-check-btn" id="brokerOfficeEditPagePublicIdCheckBtn" data-agency-public-id-check>중복 확인</button>
 						</div>
 						<p class="agency-public-id-help">※ 설정한 아이디로 중개사무소 매물 공유 주소가 만들어집니다.</p>
@@ -4453,6 +4453,17 @@
 								</div>
 								<div class="detail-desc" id="detailDesc">
 								</div>
+								<div class="detail-desc-publication" id="detailDescPublication">
+									<div class="detail-desc-publication-meta">
+										<span id="detailDescPublishedDate"></span>
+										<span id="detailDescPublishedDateLabel">최초게재</span>
+										<span class="detail-desc-publication-separator" aria-hidden="true">|</span>
+										<span>중개사 직접 제공</span>
+									</div>
+									<button type="button" class="detail-false-listing-report-btn" id="detailFalseListingReportBtn">
+										허위매물 신고하기
+									</button>
+								</div>
 							</div>
 							<div id="detailInfoList">
 							</div>
@@ -5640,7 +5651,7 @@
 	</div>
 </div>
 
-	<script src="/js/app_4.960.js?v=20260722-favorite-summary-hydration-4960"></script>
+	<script src="/js/app_4.979.js?v=20260723-broker-profile-photo-4979"></script>
 
 
 <script>
