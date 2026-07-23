@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 	<!--
- REALJEJU HTML 구조 / Ver 4.985
+ REALJEJU HTML 구조 / Ver 4.997
 		파일은 단일 HTML을 유지하고, 실제 배치 순서대로 큰 화면 단위만 주석으로 구분한다.
 		0. Head / 공통 메타
 		1. 상단바 / 전역 메뉴
@@ -19,13 +19,13 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>제주도 부동산 플랫폼 | 제주도부동산.닷컴 | 리얼제주</title>
-		<meta name="description" id="descriptionMeta" content="제주도부동산.닷컴은 리얼제주가 운영하는 제주도 부동산 매물 플랫폼입니다. 토지, 주택, 상가, 전원주택과 제주시·서귀포시 매물을 지도에서 확인하세요." />
+		<meta name="description" id="descriptionMeta" content="제주도부동산.닷컴은 제주 토지·주택·상가 매물을 지도에서 찾는 리얼제주 부동산 플랫폼입니다." />
 		<meta name="keywords" content="제주도 부동산, 제주 부동산, 제주도 매물, 제주 토지, 제주 주택, 제주 상가, 제주 전원주택, 제주시 부동산, 서귀포시 부동산, 리얼제주" />
 		<meta name="robots" content="index, follow" />
 		<meta name="author" content="제주도부동산.닷컴 - 리얼제주" />
 		<link rel="canonical" id="canonicalLink" href="https://제주도부동산.닷컴/" />
-		<meta property="og:title" id="ogTitleMeta" content="제주도 부동산 | 제주도부동산.닷컴 - 리얼제주(REALJEJU.APP)" />
-		<meta property="og:description" id="ogDescriptionMeta" content="제주도부동산.닷컴에서 제주도 토지, 주택, 상가, 전원주택과 제주시·서귀포시 부동산 매물을 지도에서 확인하세요." />
+		<meta property="og:title" id="ogTitleMeta" content="제주도 부동산 플랫폼 | 제주도부동산.닷컴 | 리얼제주" />
+		<meta property="og:description" id="ogDescriptionMeta" content="제주도부동산.닷컴은 제주 토지·주택·상가 매물을 지도에서 찾는 리얼제주 부동산 플랫폼입니다." />
 		<meta property="og:type" content="website" />
 		<meta property="og:url" id="ogUrlMeta" content="https://제주도부동산.닷컴/" />
 		<meta property="og:image" content="https://제주도부동산.닷컴/img/landingpage_1.jpg" />
@@ -34,7 +34,7 @@
 		<meta property="og:locale" content="ko_KR" />
 		<meta name="twitter:card" content="summary" />
 		<meta name="twitter:title" content="제주도 부동산 플랫폼 | 제주도부동산.닷컴 | 리얼제주">
-		<meta name="twitter:description" content="제주도부동산.닷컴에서 제주도 토지, 주택, 상가, 전원주택과 제주시·서귀포시 부동산 매물을 지도에서 확인하세요." />
+		<meta name="twitter:description" content="제주도부동산.닷컴은 제주 토지·주택·상가 매물을 지도에서 찾는 리얼제주 부동산 플랫폼입니다." />
 		<meta name="twitter:image" content="https://제주도부동산.닷컴/img/landingpage_1.jpg" />
 		<meta name="theme-color" content="#2563eb" />
 		<script type="application/ld+json">
@@ -184,7 +184,7 @@
 				transition: none;
 			}
 		</style>
-	<link rel="stylesheet" href="/css/base_4.985.css?v=20260723-region-index-4985">
+	<link rel="stylesheet" href="/css/base_4.997.css?v=20260724-photo-sort-clear-all-4997">
 
 </head>
 	<body class="sidebar-list-collapsed realjeju-side-nav-enabled main-landing-page-open">
@@ -589,7 +589,7 @@
 				</button>
 			</nav>
 			<div class="realjeju-side-admin-version" id="realjejuSideAdminVersion" aria-hidden="true" hidden>
-				<span class="topbar-version-text">4.985</span>
+				<span class="topbar-version-text">4.997</span>
 			</div>
 		</aside>
 		<aside class="global-category-side-panel" id="globalCategorySidePanel" aria-hidden="true">
@@ -1051,6 +1051,9 @@
 				<button type="button" class="broker-home-filter-btn" data-admin-application-view="active">승인 완료 <span id="adminApplicationsActiveCount">0</span></button>
 				<button type="button" class="broker-home-filter-btn" data-admin-application-view="pending">승인 대기 <span id="adminApplicationsPendingCount">0</span></button>
 				<button type="button" class="broker-home-filter-btn" data-admin-application-view="rejected">승인 거부 <span id="adminApplicationsRejectedCount">0</span></button>
+				<div class="broker-home-filter-divider" aria-hidden="true"></div>
+				<button type="button" class="broker-home-filter-btn admin-application-sort-btn" data-admin-application-sort="listing" aria-pressed="false">매물 순위 <i class="fa-solid fa-arrow-up" aria-hidden="true"></i></button>
+				<button type="button" class="broker-home-filter-btn admin-application-sort-btn" data-admin-application-sort="created" aria-pressed="false">가입일 <i class="fa-solid fa-arrow-up" aria-hidden="true"></i></button>
 				<button type="button" class="broker-home-filter-btn" data-admin-application-view="deleted">휴지통 <span id="adminApplicationsDeletedCount">0</span></button>
 			</div>
 			<div class="admin-application-list" id="adminApplicationsList">
@@ -2711,8 +2714,11 @@
 							<div class="property-photo-preview-grid is-hidden" id="propertyPhotoPreviewGrid" aria-label="사진 미리보기"></div>
 						</label>
 						<input type="file" id="propertyPhotoUploadInput" accept="image/*" multiple hidden />
-						<!-- PATCH 2.307: 파일 선택 버튼은 드래그 박스 하단에 별도 표시 -->
-						<button type="button" class="property-photo-select-btn" id="propertyPhotoSelectBtn"><i class="fa-regular fa-image" aria-hidden="true"></i>파일 선택</button>
+						<!-- 4.997: 파일 선택과 전체삭제를 같은 사진 작업 영역에 배치 -->
+						<div class="property-photo-actions">
+							<button type="button" class="property-photo-select-btn" id="propertyPhotoSelectBtn"><i class="fa-regular fa-image" aria-hidden="true"></i>파일 선택</button>
+							<button type="button" class="property-photo-clear-btn" id="propertyPhotoClearBtn" disabled>전체삭제</button>
+						</div>
 					</div>
 				</div>
 
@@ -5651,7 +5657,7 @@
 	</div>
 </div>
 
-	<script src="/js/app_4.985.js?v=20260723-region-index-4985"></script>
+	<script src="/js/app_4.997.js?v=20260724-photo-sort-clear-all-4997"></script>
 
 
 <script>
