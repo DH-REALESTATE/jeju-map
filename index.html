@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 	<!--
- REALJEJU HTML 구조 / Ver 5.003
+ REALJEJU HTML 구조 / Ver 5.005
 		파일은 단일 HTML을 유지하고, 실제 배치 순서대로 큰 화면 단위만 주석으로 구분한다.
 		0. Head / 공통 메타
 		1. 상단바 / 전역 메뉴
@@ -184,7 +184,7 @@
 				transition: none;
 			}
 		</style>
-	<link rel="stylesheet" href="/css/base_5.003.css?v=20260724-remove-badge-editor-border-5003">
+	<link rel="stylesheet" href="/css/base_5.005.css?v=20260724-operator-approve-badge-editor-5005">
 
 </head>
 	<body class="sidebar-list-collapsed realjeju-side-nav-enabled main-landing-page-open">
@@ -589,7 +589,7 @@
 				</button>
 			</nav>
 			<div class="realjeju-side-admin-version" id="realjejuSideAdminVersion" aria-hidden="true" hidden>
-				<span class="topbar-version-text">5.003</span>
+				<span class="topbar-version-text">5.005</span>
 			</div>
 		</aside>
 		<aside class="global-category-side-panel" id="globalCategorySidePanel" aria-hidden="true">
@@ -1144,8 +1144,9 @@
 			<div class="my-suite-favorites-filterbar admin-applications-filterbar operator-applications-filterbar">
 				<button type="button" class="broker-home-filter-btn active" data-operator-application-view="new">가입 신청 <span id="operatorApplicationsNewCount">0</span></button>
 				<button type="button" class="broker-home-filter-btn" data-operator-application-view="active">승인 완료 <span id="operatorApplicationsActiveCount">0</span></button>
-				<button type="button" class="broker-home-filter-btn" data-operator-application-view="pending">승인 대기 <span id="operatorApplicationsPendingCount">0</span></button>
-				<button type="button" class="broker-home-filter-btn" data-operator-application-view="rejected">승인 거부 <span id="operatorApplicationsRejectedCount">0</span></button>
+				<div class="broker-home-filter-divider" aria-hidden="true"></div>
+				<button type="button" class="broker-home-filter-btn operator-application-sort-btn" data-operator-application-sort="listing" aria-pressed="false">매물 순위 <i class="fa-solid fa-arrow-up" aria-hidden="true"></i></button>
+				<button type="button" class="broker-home-filter-btn operator-application-sort-btn" data-operator-application-sort="created" aria-pressed="false">가입일 <i class="fa-solid fa-arrow-up" aria-hidden="true"></i></button>
 			</div>
 			<div class="admin-application-list operator-application-list" id="operatorApplicationsList">
 				<div class="admin-empty">신청 목록을 불러오세요.</div>
@@ -5654,7 +5655,7 @@
 	</div>
 </div>
 
-	<script src="/js/app_5.003.js?v=20260724-remove-badge-editor-border-5003"></script>
+	<script src="/js/app_5.005.js?v=20260724-operator-approve-badge-editor-5005"></script>
 
 
 <script>
