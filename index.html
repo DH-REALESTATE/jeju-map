@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 	<!--
- REALJEJU HTML 구조 / Ver 4.997
+ REALJEJU HTML 구조 / Ver 5.003
 		파일은 단일 HTML을 유지하고, 실제 배치 순서대로 큰 화면 단위만 주석으로 구분한다.
 		0. Head / 공통 메타
 		1. 상단바 / 전역 메뉴
@@ -184,7 +184,7 @@
 				transition: none;
 			}
 		</style>
-	<link rel="stylesheet" href="/css/base_4.997.css?v=20260724-photo-sort-clear-all-4997">
+	<link rel="stylesheet" href="/css/base_5.003.css?v=20260724-remove-badge-editor-border-5003">
 
 </head>
 	<body class="sidebar-list-collapsed realjeju-side-nav-enabled main-landing-page-open">
@@ -589,7 +589,7 @@
 				</button>
 			</nav>
 			<div class="realjeju-side-admin-version" id="realjejuSideAdminVersion" aria-hidden="true" hidden>
-				<span class="topbar-version-text">4.997</span>
+				<span class="topbar-version-text">5.003</span>
 			</div>
 		</aside>
 		<aside class="global-category-side-panel" id="globalCategorySidePanel" aria-hidden="true">
@@ -4612,21 +4612,13 @@
 		</div>
 		<div class="map-center-region-label" id="mapCenterRegionLabel" aria-live="polite" hidden>
 		</div>
-		<div class="map-zoom-stack" aria-label="지도 확대 축소 및 현위치">
-			<div class="map-zoom-group" aria-label="지도 확대 축소">
-				<button type="button" class="map-zoom-btn" id="zoomInBtn" aria-label="지도 확대">
-					<i class="fa-solid fa-plus">
-					</i>
-				</button>
-				<button type="button" class="map-zoom-btn" id="zoomOutBtn" aria-label="지도 축소">
-					<i class="fa-solid fa-minus">
-					</i>
+		<!-- 5.001: 설정과 현위치의 기능은 유지하고 사용자가 요청한 두 버튼의 자리만 교환합니다. -->
+		<div class="map-zoom-stack" aria-label="설정">
+			<div class="map-settings-tool-group map-settings-bottom-group" id="mapSettingsToolGroup" aria-label="설정 도구" hidden>
+				<button type="button" class="map-current-btn" id="mapSettingsToolBtn" aria-expanded="false" aria-label="설정">
+					<i class="fa-solid fa-gear" aria-hidden="true"></i>
 				</button>
 			</div>
-			<button type="button" class="map-current-btn" id="currentLocationBtn" aria-label="현위치로 이동" title="현위치로 이동">
-				<i class="fa-solid fa-location-crosshairs">
-				</i>
-			</button>
 		</div>
 		<div class="map-empty-state" id="mapEmptyState">
 			<div class="map-empty-state-desc">
@@ -4827,6 +4819,11 @@
 				<button type="button" class="map-tool-btn" id="mapDistanceToolBtn" onclick="event.preventDefault(); event.stopPropagation(); window.toggleDistanceMeasureTool && window.toggleDistanceMeasureTool();" aria-label="거리재기" title="거리재기">
 					<span class="map-tool-icon"><i class="fa-solid fa-ruler" aria-hidden="true"></i></span>
 					<span class="map-tool-label">거리재기</span>
+				</button>
+			</div>
+			<div class="map-tool-group map-current-tool-group" aria-label="현위치 도구">
+				<button type="button" class="map-tool-btn" id="currentLocationBtn" aria-label="현위치로 이동" title="현위치로 이동">
+					<span class="map-tool-icon"><i class="fa-solid fa-location-crosshairs" aria-hidden="true"></i></span>
 				</button>
 			</div>
 			<div class="map-type-popover" id="mapTypePopover" aria-hidden="true" inert>
@@ -5657,7 +5654,7 @@
 	</div>
 </div>
 
-	<script src="/js/app_4.997.js?v=20260724-photo-sort-clear-all-4997"></script>
+	<script src="/js/app_5.003.js?v=20260724-remove-badge-editor-border-5003"></script>
 
 
 <script>
