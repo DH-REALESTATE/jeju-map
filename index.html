@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 	<!--
- REALJEJU HTML 구조 / Ver 5.018
+REALJEJU HTML 구조 / Ver 5.149
 		파일은 단일 HTML을 유지하고, 실제 배치 순서대로 큰 화면 단위만 주석으로 구분한다.
 		0. Head / 공통 메타
 		1. 상단바 / 전역 메뉴
@@ -184,7 +184,7 @@
 				transition: none;
 			}
 		</style>
-		<link rel="stylesheet" href="/css/base_5.018.css?v=20260725-property-types-initial-all-5018">
+		<link rel="stylesheet" href="/css/base_5.149.css?v=20260729-simple-application-empty-state-5149">
 
 </head>
 	<body class="sidebar-list-collapsed realjeju-side-nav-enabled main-landing-page-open">
@@ -298,17 +298,6 @@
 						<span class="global-topbar-page-title-presale">분양</span>
 						<span class="global-topbar-page-title-notice">공지사항</span>
 					</div>
-					<nav class="admin-page-tabs global-topbar-admin-tabs" aria-label="관리자 메뉴">
-						<button type="button" class="admin-page-tab active" data-admin-tab="notices">공지사항</button>
-						<button type="button" class="admin-page-tab" data-admin-tab="inquiries">1:1 문의내역</button>
-						<button type="button" class="admin-page-tab" data-admin-tab="coupons">쿠폰 관리</button>
-						<button type="button" class="admin-page-tab" data-admin-tab="users">회원 관리</button>
-						<button type="button" class="admin-page-tab" data-admin-tab="broker-applications">중개사무소 가입 신청</button>
-						<button type="button" class="admin-page-tab" data-admin-tab="listings">매물 관리</button>
-					</nav>
-					<nav class="operator-page-tabs global-topbar-operator-tabs" aria-label="운영자 메뉴">
-						<button type="button" class="admin-page-tab active" data-operator-tab="broker-applications">중개사무소 가입 신청</button>
-					</nav>
 					<nav class="my-suite-tabs global-topbar-my-suite-tabs" aria-label="마이페이지 메뉴">
 						<button type="button" class="my-suite-tab" data-my-suite-tab="favorites">관심 부동산</button>
 						<button type="button" class="my-suite-tab" data-my-suite-tab="inquiries">1:1 문의내역</button>
@@ -359,7 +348,10 @@
 								<button type="button" class="account-launcher-item global-account-menu-item" data-account-action="inquiries"><i class="fa-solid fa-comments" aria-hidden="true"></i><span>1:1 문의내역</span></button>
 							</div>
 							<div class="account-launcher-divider" aria-hidden="true"></div>
-							<button type="button" class="account-launcher-logout global-account-menu-item" data-account-action="logout"><i class="fa-solid fa-arrow-right-from-bracket" aria-hidden="true"></i><span>로그아웃</span></button>
+							<div class="account-launcher-actions">
+								<button type="button" class="account-launcher-management global-account-menu-item" id="globalTopbarManagementMenuItem" data-account-action="management" aria-hidden="true" hidden><i class="fa-solid fa-gear" aria-hidden="true"></i><span>관리자 페이지</span></button>
+								<button type="button" class="account-launcher-logout global-account-menu-item" data-account-action="logout"><i class="fa-solid fa-arrow-right-from-bracket" aria-hidden="true"></i><span>로그아웃</span></button>
+							</div>
 						</div>
 					<div class="global-account-dropdown" id="globalAccountDropdown" aria-hidden="true">
 						<button type="button" class="global-account-menu-item" data-account-action="inquiries">1:1 문의내역</button>
@@ -529,7 +521,33 @@
 			</div>
 		</section>
 		<aside class="realjeju-side-nav" id="realjejuSideNav" aria-label="주요 메뉴">
-			<nav class="realjeju-side-nav-menu">
+			<nav class="realjeju-side-nav-menu realjeju-side-admin-tabs" aria-label="관리자 메뉴">
+				<button type="button" class="realjeju-side-nav-item realjeju-side-admin-tab active" data-admin-tab="notices">
+					<i class="fa-solid fa-bullhorn" aria-hidden="true"></i>
+					<span>공지사항</span>
+				</button>
+				<button type="button" class="realjeju-side-nav-item realjeju-side-admin-tab" data-admin-tab="inquiries">
+					<i class="fa-solid fa-comments" aria-hidden="true"></i>
+					<span>1:1 문의내역</span>
+				</button>
+				<button type="button" class="realjeju-side-nav-item realjeju-side-admin-tab" data-admin-tab="coupons">
+					<i class="fa-solid fa-credit-card" aria-hidden="true"></i>
+					<span>쿠폰 관리</span>
+				</button>
+				<button type="button" class="realjeju-side-nav-item realjeju-side-admin-tab" data-admin-tab="users">
+					<i class="fa-solid fa-user-group" aria-hidden="true"></i>
+					<span>회원 관리</span>
+				</button>
+				<button type="button" class="realjeju-side-nav-item realjeju-side-admin-tab" data-admin-tab="broker-applications" aria-label="중개사 가입신청">
+					<i class="fa-solid fa-building" aria-hidden="true"></i>
+					<span>중개사 가입신청</span>
+				</button>
+				<button type="button" class="realjeju-side-nav-item realjeju-side-admin-tab" data-admin-tab="listings">
+					<i class="fa-solid fa-clipboard" aria-hidden="true"></i>
+					<span>매물 관리</span>
+				</button>
+			</nav>
+			<nav class="realjeju-side-nav-menu realjeju-side-primary-menu">
 				<button type="button" class="realjeju-side-nav-item active" data-side-nav-action="home">
 					<i class="fa-solid fa-house" aria-hidden="true"></i>
 					<span>부동산 홈</span>
@@ -589,7 +607,7 @@
 				</button>
 			</nav>
 			<div class="realjeju-side-admin-version" id="realjejuSideAdminVersion" aria-hidden="true" hidden>
-				<span class="topbar-version-text">5.018</span>
+				<span class="topbar-version-text">5.031</span>
 			</div>
 		</aside>
 		<aside class="global-category-side-panel" id="globalCategorySidePanel" aria-hidden="true">
@@ -975,14 +993,6 @@
 				<p class="admin-page-desc">공지사항, 1:1 문의, 쿠폰, 매물, 회원, 가입 신청을 관리합니다.</p>
 			</div>
 		</div>
-		<nav class="admin-page-tabs" aria-label="관리자 메뉴">
-			<button type="button" class="admin-page-tab active" data-admin-tab="notices">공지사항</button>
-			<button type="button" class="admin-page-tab" data-admin-tab="inquiries">1:1 문의내역</button>
-			<button type="button" class="admin-page-tab" data-admin-tab="coupons">쿠폰 관리</button>
-			<button type="button" class="admin-page-tab" data-admin-tab="users">회원 관리</button>
-			<button type="button" class="admin-page-tab" data-admin-tab="broker-applications">중개사무소 가입 신청</button>
-			<button type="button" class="admin-page-tab" data-admin-tab="listings">매물 관리</button>
-		</nav>
 		<div class="admin-page-tab-panel active" data-admin-tab-panel="notices">
 		<div class="admin-notice-manager" id="adminNoticeManager">
 			<div class="admin-notice-head">
@@ -1024,7 +1034,7 @@
 				</div>
 				<label class="admin-notice-field">
 					<span>내용</span>
-					<textarea id="adminNoticeContentInput" maxlength="2000"></textarea>
+					<textarea id="adminNoticeContentInput" maxlength="2000" rows="15"></textarea>
 				</label>
 				<div class="admin-notice-options">
 					<label><input type="checkbox" id="adminNoticePinnedInput" /> 상단 고정</label>
@@ -1061,7 +1071,127 @@
 		</div>
 		</div>
 		<div class="admin-page-tab-panel" data-admin-tab-panel="coupons">
-			<div class="admin-empty">쿠폰 관리 기능을 준비중입니다. 쿠폰 코드, 할인 금액, 사용기간, 사용 여부를 관리하는 영역입니다.</div>
+			<div class="admin-coupon-manager">
+				<section class="admin-coupon-plan-section" aria-label="이용권 쿠폰">
+					<div class="payment-addon-coupon-shop-head">
+						<h2 class="myinfo-page-title">이용권 쿠폰</h2>
+					</div>
+					<section class="payment-coupon-section">
+						<div class="payment-coupon-card-wrap">
+							<article class="payment-coupon-card">
+								<div class="payment-coupon-kind"><span data-admin-coupon-duration-value>30</span>일 이용권</div>
+								<h2>베이직 플랜 <span data-admin-coupon-duration-value>30</span>일 이용권</h2>
+								<p class="payment-coupon-desc">일반매물 100건과 하루 재등록 20건, 중개사홈을 <span data-admin-coupon-duration-value>30</span>일 동안 이용할 수 있습니다.</p>
+								<label class="admin-coupon-duration-field">
+									<span>적용 기간</span>
+									<span class="admin-coupon-duration-control"><input type="number" class="admin-coupon-duration-input" min="1" step="1" value="30" inputmode="numeric" aria-label="베이직 플랜 이용권 적용 기간"><span>일</span></span>
+								</label>
+								<button type="button" class="admin-coupon-issue-btn" data-admin-coupon-plan="starter">쿠폰 발급</button>
+							</article>
+							<article class="payment-coupon-card">
+								<div class="payment-coupon-kind"><span data-admin-coupon-duration-value>30</span>일 이용권</div>
+								<h2>프리미엄 플랜 <span data-admin-coupon-duration-value>30</span>일 이용권</h2>
+								<p class="payment-coupon-desc">일반매물 300건, 하루 재등록 50건, 중개사홈, 프리미엄 매물 20건을 이용할 수 있습니다.</p>
+								<p class="payment-coupon-note">※ 계약서 보관 사용건수 100건</p>
+								<label class="admin-coupon-duration-field">
+									<span>적용 기간</span>
+									<span class="admin-coupon-duration-control"><input type="number" class="admin-coupon-duration-input" min="1" step="1" value="30" inputmode="numeric" aria-label="프리미엄 플랜 이용권 적용 기간"><span>일</span></span>
+								</label>
+								<button type="button" class="admin-coupon-issue-btn" data-admin-coupon-plan="premium">쿠폰 발급</button>
+							</article>
+							<article class="payment-coupon-card">
+								<div class="payment-coupon-kind"><span data-admin-coupon-duration-value>30</span>일 이용권</div>
+								<h2>프로 플랜 <span data-admin-coupon-duration-value>30</span>일 이용권</h2>
+								<p class="payment-coupon-desc">일반매물 500건, 하루 재등록 100건, 중개사홈, 프리미엄 매물 50건을 이용할 수 있습니다.</p>
+								<p class="payment-coupon-note">※ 계약서 보관 사용건수 300건</p>
+								<label class="admin-coupon-duration-field">
+									<span>적용 기간</span>
+									<span class="admin-coupon-duration-control"><input type="number" class="admin-coupon-duration-input" min="1" step="1" value="30" inputmode="numeric" aria-label="프로 플랜 이용권 적용 기간"><span>일</span></span>
+								</label>
+								<button type="button" class="admin-coupon-issue-btn" data-admin-coupon-plan="pro">쿠폰 발급</button>
+							</article>
+						</div>
+					</section>
+				</section>
+
+				<section class="payment-addon-coupon-shop admin-addon-coupon-shop" aria-label="추가상품 쿠폰">
+					<div class="payment-addon-coupon-shop-head">
+						<h2 class="myinfo-page-title">추가상품 쿠폰</h2>
+					</div>
+					<div class="admin-addon-coupon-content">
+						<section class="payment-coupon-section">
+							<div class="payment-coupon-card-wrap">
+								<article class="payment-coupon-card">
+									<div class="payment-coupon-kind">프리미엄</div>
+									<h2>프리미엄 매물 <span data-admin-coupon-count-value>10</span>건</h2>
+									<p class="payment-coupon-desc payment-coupon-premium-desc">일반매물에 설정 할 경우 프리미엄 노출을 보장하며, 프리미엄이 적용 된 매물은 30일 동안 적용 됩니다.</p>
+									<label class="admin-coupon-count-field">
+										<span>적용 건수</span>
+										<span class="admin-coupon-count-control"><input type="number" class="admin-coupon-count-input" min="1" step="1" value="10" inputmode="numeric" aria-label="프리미엄 매물 적용 건수"><span>건</span></span>
+									</label>
+									<button type="button" class="admin-coupon-issue-btn" data-admin-coupon-plan="premium-10">쿠폰 발급</button>
+								</article>
+								<article class="payment-coupon-card">
+									<div class="payment-coupon-kind">오늘 날짜 갱신권</div>
+									<h2>오늘 날짜 갱신권 <span data-admin-coupon-count-value>50</span>건</h2>
+									<p class="payment-coupon-desc">기본 제공되는 하루 갱신 건수에 추가되며, 적용일로부터 30일 동안 매일 적용됩니다.</p>
+									<label class="admin-coupon-count-field">
+										<span>적용 건수</span>
+										<span class="admin-coupon-count-control"><input type="number" class="admin-coupon-count-input" min="1" step="1" value="50" inputmode="numeric" aria-label="오늘 날짜 갱신권 적용 건수"><span>건</span></span>
+									</label>
+									<button type="button" class="admin-coupon-issue-btn" data-admin-coupon-plan="relist-50">쿠폰 발급</button>
+								</article>
+								<article class="payment-coupon-card">
+									<div class="payment-coupon-kind">계약서 보관</div>
+									<h2>계약서 보관 사용건수 <span data-admin-coupon-count-value>100</span>건</h2>
+									<p class="payment-coupon-desc">신규 작성한 계약서를 <span data-admin-coupon-count-value>100</span>건 보관할 수 있습니다.</p>
+									<p class="payment-coupon-desc">수정, 삭제는 카운트를 차감하지 않습니다.</p>
+									<label class="admin-coupon-count-field">
+										<span>적용 건수</span>
+										<span class="admin-coupon-count-control"><input type="number" class="admin-coupon-count-input" min="1" step="1" value="100" inputmode="numeric" aria-label="계약서 보관 적용 건수"><span>건</span></span>
+									</label>
+									<button type="button" class="admin-coupon-issue-btn" data-admin-coupon-plan="storage-100">쿠폰 발급</button>
+								</article>
+							</div>
+						</section>
+					</div>
+				</section>
+			</div>
+			<div class="admin-coupon-recipient-modal" id="adminCouponRecipientModal" aria-hidden="true">
+				<div class="admin-coupon-recipient-dialog" role="dialog" aria-modal="true" aria-labelledby="adminCouponRecipientTitle" aria-describedby="adminCouponRecipientStatus">
+					<h2 id="adminCouponRecipientTitle">쿠폰 발급</h2>
+					<div class="admin-coupon-recipient-divider" aria-hidden="true"></div>
+					<form class="admin-coupon-recipient-form" id="adminCouponRecipientForm">
+						<div class="admin-coupon-recipient-row">
+							<label for="adminCouponRecipientName">이름</label>
+							<span class="admin-coupon-recipient-control">
+								<input type="text" id="adminCouponRecipientName" autocomplete="off" placeholder="이름 입력" />
+								<button type="button" data-admin-coupon-recipient-search="name">검색</button>
+							</span>
+						</div>
+						<div class="admin-coupon-recipient-row">
+							<label for="adminCouponRecipientPhone">전화번호</label>
+							<span class="admin-coupon-recipient-control">
+								<input type="tel" id="adminCouponRecipientPhone" autocomplete="off" inputmode="tel" placeholder="전화번호 입력" />
+								<button type="button" data-admin-coupon-recipient-search="phone">검색</button>
+							</span>
+						</div>
+						<div class="admin-coupon-recipient-row">
+							<label for="adminCouponRecipientOffice">상호</label>
+							<span class="admin-coupon-recipient-control">
+								<input type="text" id="adminCouponRecipientOffice" autocomplete="off" placeholder="상호 입력" />
+								<button type="button" data-admin-coupon-recipient-search="office">검색</button>
+							</span>
+						</div>
+						<div class="admin-coupon-recipient-results" id="adminCouponRecipientResults" role="listbox" aria-label="중개사 검색 결과" hidden></div>
+						<p class="admin-coupon-recipient-status" id="adminCouponRecipientStatus" aria-live="polite">이름, 전화번호, 상호 중 하나를 입력하고 검색하세요.</p>
+						<div class="admin-coupon-recipient-actions">
+							<button type="button" class="admin-coupon-recipient-cancel" id="adminCouponRecipientCancel">취소</button>
+							<button type="submit" class="admin-coupon-recipient-confirm" id="adminCouponRecipientConfirm" disabled>확인</button>
+						</div>
+					</form>
+				</div>
+			</div>
 		</div>
 		<div class="admin-page-tab-panel" data-admin-tab-panel="listings">
 			<div class="admin-listings-content">
@@ -1132,30 +1262,6 @@
 			<div class="admin-page-simple-copy realjeju-management-mini-copy">© REALJEJU.APP</div>
 		</footer>
 	</section>
-	<!-- 7-1. 운영자 페이지 -->
-	<section class="admin-page-panel operator-page-panel" id="operatorPagePanel" aria-hidden="true">
-		<div class="admin-page-head">
-			<div>
-				<h1 class="admin-page-title">운영자 페이지</h1>
-				<p class="admin-page-desc">중개사무소 가입 신청 승인만 처리합니다.</p>
-			</div>
-		</div>
-		<div class="admin-page-tab-panel active" data-operator-tab-panel="broker-applications">
-			<div class="my-suite-favorites-filterbar admin-applications-filterbar operator-applications-filterbar">
-				<button type="button" class="broker-home-filter-btn active" data-operator-application-view="new">가입 신청 <span id="operatorApplicationsNewCount">0</span></button>
-				<button type="button" class="broker-home-filter-btn" data-operator-application-view="active">승인 완료 <span id="operatorApplicationsActiveCount">0</span></button>
-				<div class="broker-home-filter-divider" aria-hidden="true"></div>
-				<button type="button" class="broker-home-filter-btn operator-application-sort-btn" data-operator-application-sort="listing" aria-pressed="false">매물 순위 <i class="fa-solid fa-arrow-up" aria-hidden="true"></i></button>
-				<button type="button" class="broker-home-filter-btn operator-application-sort-btn" data-operator-application-sort="created" aria-pressed="false">가입일 <i class="fa-solid fa-arrow-up" aria-hidden="true"></i></button>
-			</div>
-			<div class="admin-application-list operator-application-list" id="operatorApplicationsList">
-				<div class="admin-empty">신청 목록을 불러오세요.</div>
-			</div>
-		</div>
-		<footer class="admin-page-simple-footer" aria-label="리얼제주 저작권">
-			<div class="admin-page-simple-copy">© REALJEJU.APP</div>
-		</footer>
-	</section>
 	<section class="notice-page-panel" id="noticePagePanel" aria-hidden="true">
 		<div class="notice-page-inner">
 			<div class="notice-page-head">
@@ -1195,22 +1301,22 @@
 					<div class="broker-home-usage-item">
 						<div class="broker-home-usage-title">매물 사용건수 <span>(유료 매물광고는 제외)</span></div>
 						<div class="broker-home-usage-track"><div class="broker-home-usage-fill" id="brokerUsageFill"></div></div>
-							<div class="broker-home-usage-meta"><span><strong id="brokerUsageCount">0</strong>건 사용중</span><span><strong id="brokerUsageLimit">300</strong>건</span></div>
+							<div class="broker-home-usage-meta"><span><strong id="brokerUsageCount">0</strong>건 사용중</span><span><strong id="brokerUsageLimit">0</strong>건</span></div>
 					</div>
 					<div class="broker-home-usage-item">
 						<div class="broker-home-usage-title">프리미엄 매물 사용건수</div>
 						<div class="broker-home-usage-track"><div class="broker-home-usage-fill" id="brokerPremiumUsageFill"></div></div>
-							<div class="broker-home-usage-meta"><span><strong id="brokerPremiumUsageCount">0</strong>건 사용중</span><span><strong id="brokerPremiumUsageLimit">50</strong>건</span></div>
+							<div class="broker-home-usage-meta"><span><strong id="brokerPremiumUsageCount">0</strong>건 사용중</span><span><strong id="brokerPremiumUsageLimit">0</strong>건</span></div>
 					</div>
 						<div class="broker-home-usage-item">
 							<div class="broker-home-usage-title">하루 재등록 사용건수 <span class="broker-home-usage-help" tabindex="0">?</span><span class="broker-home-usage-help-panel" role="tooltip">매물을 현재날짜로 갱신하여 신규 등록하는 기능입니다.<br>단, 기존 매물은 재등록 시 삭제됩니다.<br>재등록 이용건수는 매일 갱신됩니다.</span></div>
 							<div class="broker-home-usage-track"><div class="broker-home-usage-fill" id="brokerRelistUsageFill"></div></div>
-							<div class="broker-home-usage-meta"><span><strong id="brokerRelistUsageCount">0</strong>건 사용중</span><span><strong id="brokerRelistUsageLimit">100</strong>건</span></div>
+							<div class="broker-home-usage-meta"><span><strong id="brokerRelistUsageCount">0</strong>건 사용중</span><span><strong id="brokerRelistUsageLimit">0</strong>건</span></div>
 						</div>
 						<div class="broker-home-usage-item">
 							<div class="broker-home-usage-title">계약서 보관 사용건수</div>
 							<div class="broker-home-usage-track"><div class="broker-home-usage-fill" id="brokerContractUsageFill"></div></div>
-							<div class="broker-home-usage-meta"><span><strong id="brokerContractUsageCount">0</strong>건 보관중</span><span><strong id="brokerContractUsageLimit">500</strong>건</span></div>
+							<div class="broker-home-usage-meta"><span><strong id="brokerContractUsageCount">0</strong>건 보관중</span><span><strong id="brokerContractUsageLimit">0</strong>건</span></div>
 						</div>
 					</div>
 				</div>
@@ -1219,9 +1325,9 @@
 				<div class="broker-home-payment-card">
 					<div class="broker-home-payment-plan">
 						<span>현재 이용권</span>
-						<strong>베이직 플랜</strong>
+						<strong>확인 중</strong>
 					</div>
-					<div class="broker-home-payment-meta">일반매물 300건 · 프리미엄 50건 · 하루 재등록 100건</div>
+					<div class="broker-home-payment-meta">이용권 정보를 불러오는 중입니다.</div>
 				</div>
 				<button type="button" class="broker-home-ad-cta" id="brokerHomeAdCta" data-account-action="payment">이용권 결제하기</button>
 			</div>
@@ -1327,105 +1433,137 @@
 		</footer>
 	</section>
 	<!-- 5. 결제 / 이용권 -->
-	<section class="payment-page-panel account-page-panel" id="paymentPagePanel" aria-hidden="true">
-		<div class="payment-page-inner account-page-inner">
-			<div class="myinfo-page-head payment-account-head account-page-head">
-				<h1 class="myinfo-page-title">이용권 결제</h1>
-				<p class="myinfo-page-desc">이용권 구매와 결제 내역을 한 곳에서 관리합니다.</p>
-			</div>
-			<div class="payment-account-card">
-			<div class="payment-tabs" role="tablist" aria-label="이용권 결제 메뉴">
-				<button type="button" class="payment-tab active" data-payment-tab="plans" role="tab" aria-selected="true">이용권 구매</button>
-				<button type="button" class="payment-tab" data-payment-tab="coupons" role="tab" aria-selected="false">쿠폰함</button>
-				<button type="button" class="payment-tab" data-payment-tab="history" role="tab" aria-selected="false">결제 내역</button>
-			</div>
-
+		<section class="payment-page-panel account-page-panel" id="paymentPagePanel" aria-hidden="true">
+			<div class="payment-page-inner account-page-inner">
+				<div class="myinfo-page-head payment-account-head account-page-head">
+					<div class="payment-tabs-current-row">
+						<div class="payment-tabs" role="tablist" aria-label="이용권 결제 메뉴">
+							<button type="button" class="payment-tab active" data-payment-tab="plans" role="tab" aria-selected="true">이용권 구매</button>
+							<button type="button" class="payment-tab" data-payment-tab="coupons" role="tab" aria-selected="false">쿠폰함</button>
+							<button type="button" class="payment-tab" data-payment-tab="history" role="tab" aria-selected="false">이용 내역</button>
+						</div>
+					</div>
+					<div class="payment-current-plan-card payment-current-plan-summary" data-payment-current-summary>
+						<div class="payment-current-plan-topline">
+							<div class="payment-current-plan-main">
+								<span class="payment-current-label">현재 이용권</span>
+								<div class="payment-current-plan-name-row">
+									<strong data-payment-current-plan-name>이용권 확인 중</strong>
+									<span class="payment-current-status" data-payment-current-status>확인중</span>
+								</div>
+							</div>
+							<div class="payment-current-date-box">
+								<span>플랜 이용기간</span>
+								<strong data-payment-current-period>이용권 정보를 불러오는 중입니다.</strong>
+							</div>
+						</div>
+						<div class="payment-current-limit-list" aria-label="현재 사용 가능 한도">
+							<div data-payment-current-limit-item="listings">
+								<div class="payment-current-limit-value"><span>일반매물</span><strong data-payment-current-limit="listings">0건</strong></div>
+								<div class="payment-current-addon-list" data-payment-current-addons="listings" hidden></div>
+							</div>
+							<div data-payment-current-limit-item="relist">
+								<div class="payment-current-limit-value"><span>하루 재등록</span><strong data-payment-current-limit="relist">0건</strong></div>
+								<div class="payment-current-addon-list" data-payment-current-addons="relist" hidden></div>
+							</div>
+							<div data-payment-current-limit-item="premium">
+								<div class="payment-current-limit-value"><span>프리미엄 매물</span><strong data-payment-current-limit="premium">0건</strong></div>
+								<div class="payment-current-addon-list" data-payment-current-addons="premium" hidden></div>
+							</div>
+							<div data-payment-current-limit-item="contracts">
+								<div class="payment-current-limit-value"><span>계약서 보관</span><strong data-payment-current-limit="contracts">0건</strong></div>
+								<div class="payment-current-addon-list" data-payment-current-addons="contracts" hidden></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="payment-account-card">
 			<div class="payment-tab-panel active" id="paymentPlansPanel" data-payment-panel="plans">
 				<div class="payment-plan-grid">
-					<article class="payment-plan-card">
-						<div class="payment-plan-topline">STARTER</div>
-						<h2>베이직 플랜</h2>
-						<div class="payment-plan-price">11,000원 <span>/ 월 (VAT 포함)</span></div>
-						<ul>
-							<li>일반매물 100건</li>
-							<li>하루 재등록 20건</li>
-							<li>중개사홈 사용</li>
-						</ul>
-							<button type="button" class="payment-plan-btn" data-plan="starter" aria-disabled="false">이용권 선택</button>
-							<p class="payment-plan-period is-expired">만료된 이용권 2026.05.12 ~ 2026.06.11</p>
-					</article>
-					<article class="payment-plan-card featured">
-						<div class="payment-plan-badge">추천</div>
-						<div class="payment-plan-topline">PREMIUM</div>
-						<h2>프리미엄 플랜</h2>
-						<div class="payment-plan-price">33,000원 <span>/ 월 (VAT 포함)</span></div>
-						<ul>
-							<li>일반매물 300건</li>
-							<li>하루 재등록 50건</li>
-							<li>중개사홈 사용</li>
-							<li>프리미엄 매물 20건</li>
-						</ul>
-						<button type="button" class="payment-plan-btn" data-plan="premium">이용권 선택</button>
-					</article>
-					<article class="payment-plan-card">
-						<div class="payment-plan-topline">PRO</div>
-						<h2>프로 플랜</h2>
-						<div class="payment-plan-price">55,000원 <span>/ 월 (VAT 포함)</span></div>
-						<ul>
-							<li>일반매물 500건</li>
-							<li>하루 재등록 100건</li>
-							<li>중개사홈 사용</li>
-							<li>프리미엄 매물 50건</li>
-						</ul>
-						<button type="button" class="payment-plan-btn" data-plan="pro">이용권 선택</button>
-					</article>
-				</div>
-				<div class="payment-extra-box">
-					<h2>추가 상품</h2>
-					<div class="payment-extra-list">
-						<button type="button" class="payment-extra-item">프리미엄 매물 광고 <strong>11,000원</strong></button>
-						<button type="button" class="payment-extra-item">오늘 날짜 갱신권 <strong>5,500원</strong></button>
-						<button type="button" class="payment-extra-item">상단 노출권 <strong>22,000원</strong></button>
-					</div>
-					<p class="payment-ready-note">토스페이먼츠 연동 전까지는 테스트 결제 UI로 표시됩니다.</p>
-				</div>
+	<article class="payment-plan-card">
+	<div class="payment-plan-topline">STARTER</div>
+	<h2>베이직 플랜</h2>
+	<div class="payment-plan-price">11,000원 <span>/ 월 (VAT 포함)</span></div>
+	<ul>
+			<li>중개사홈 30일 이용</li>
+		<li>일반매물 100건</li>
+		<li>하루 재등록 20건</li>
+	</ul>
+	<p class="payment-plan-addon-availability-note">※ 추가상품은 프리미엄 플랜부터 이용 가능합니다.</p>
+	<button type="button" class="payment-plan-btn" data-plan="starter" aria-disabled="false">이용권 선택</button>
+</article>
+	<article class="payment-plan-card featured">
+		<div class="payment-plan-badge">추천</div>
+		<div class="payment-plan-topline">PREMIUM</div>
+		<h2>프리미엄 플랜</h2>
+		<div class="payment-plan-price">33,000원 <span>/ 월 (VAT 포함)</span></div>
+		<ul>
+			<li>중개사홈 30일 이용</li>
+			<li>일반매물 300건</li>
+			<li>하루 재등록 50건</li>
+			<li class="payment-plan-divider" aria-hidden="true"></li>
+			<li>프리미엄 매물 20건</li>
+			<li><strong>계약서 보관 100건</strong></li>
+		</ul>
+		<button type="button" class="payment-plan-btn" data-plan="premium">이용권 선택</button>
+	</article>
+	<article class="payment-plan-card">
+		<div class="payment-plan-topline">PRO</div>
+		<h2>프로 플랜</h2>
+		<div class="payment-plan-price">55,000원 <span>/ 월 (VAT 포함)</span></div>
+		<ul>
+			<li>중개사홈 30일 이용</li>
+			<li>일반매물 500건</li>
+			<li>하루 재등록 100건</li>
+			<li class="payment-plan-divider" aria-hidden="true"></li>
+			<li>프리미엄 매물 50건</li>
+			<li><strong>계약서 보관 300건</strong></li>
+		</ul>
+		<button type="button" class="payment-plan-btn" data-plan="pro">이용권 선택</button>
+	</article>
+</div>
+				
 			</div>
 
 			<div class="payment-tab-panel" id="paymentCouponsPanel" data-payment-panel="coupons">
-				<div class="payment-coupon-card-wrap">
-					<article class="payment-coupon-card">
-						<div class="payment-coupon-kind">30일 이용권</div>
-						<h2>베이직 플랜 30일 이용권</h2>
-						<p>일반매물 100건과 하루 재등록 20건, 중개사홈을 30일 동안 이용할 수 있습니다.</p>
-						<button type="button" class="payment-coupon-use-btn" data-coupon-plan="starter">사용하기</button>
-					</article>
-					<article class="payment-coupon-card">
-						<div class="payment-coupon-kind">30일 이용권</div>
-						<h2>프리미엄 플랜 30일 이용권</h2>
-						<p>일반매물 300건, 하루 재등록 50건, 중개사홈, 프리미엄 매물 20건을 이용할 수 있습니다.</p>
-						<button type="button" class="payment-coupon-use-btn" data-coupon-plan="premium">사용하기</button>
-					</article>
-					<article class="payment-coupon-card">
-						<div class="payment-coupon-kind">30일 이용권</div>
-						<h2>프로 플랜 30일 이용권</h2>
-						<p>일반매물 500건, 하루 재등록 100건, 중개사홈, 프리미엄 매물 50건을 이용할 수 있습니다.</p>
-						<button type="button" class="payment-coupon-use-btn" data-coupon-plan="pro">사용하기</button>
-					</article>
-				</div>
+				<section class="payment-coupon-section">
+					<div class="payment-coupon-card-wrap">
+						<article class="payment-coupon-card">
+							<div class="payment-coupon-kind">30일 이용권</div>
+							<h2>베이직 플랜 30일 이용권</h2>
+							<p class="payment-coupon-desc">일반매물 100건과 하루 재등록 20건, 중개사홈을 30일 동안 이용할 수 있습니다.</p>
+							<button type="button" class="payment-coupon-use-btn" data-coupon-plan="starter">사용하기</button>
+						</article>
+						<article class="payment-coupon-card">
+							<div class="payment-coupon-kind">30일 이용권</div>
+							<h2>프리미엄 플랜 30일 이용권</h2>
+							<p class="payment-coupon-desc">일반매물 300건, 하루 재등록 50건, 중개사홈, 프리미엄 매물 20건을 이용할 수 있습니다.</p>
+							<p class="payment-coupon-note">※ 계약서 보관 사용건수 100건</p>
+							<button type="button" class="payment-coupon-use-btn" data-coupon-plan="premium">사용하기</button>
+						</article>
+						<article class="payment-coupon-card">
+							<div class="payment-coupon-kind">30일 이용권</div>
+							<h2>프로 플랜 30일 이용권</h2>
+							<p class="payment-coupon-desc">일반매물 500건, 하루 재등록 100건, 중개사홈, 프리미엄 매물 50건을 이용할 수 있습니다.</p>
+							<p class="payment-coupon-note">※ 계약서 보관 사용건수 300건</p>
+							<button type="button" class="payment-coupon-use-btn" data-coupon-plan="pro">사용하기</button>
+						</article>
+					</div>
+				</section>
 			</div>
 
 			<div class="payment-tab-panel" id="paymentHistoryPanel" data-payment-panel="history">
 				<div class="payment-history-card">
 					<div class="payment-history-head">
-						<h2>결제 내역</h2>
+						<h2>이용 내역</h2>
 						<button type="button" class="payment-history-refresh">새로고침</button>
 					</div>
 					<table class="payment-history-table">
 						<thead>
-							<tr><th>결제일</th><th>상품명</th><th>금액</th><th>상태</th><th>영수증</th></tr>
+							<tr><th>일자</th><th>상품명</th><th>구분</th><th>금액</th><th>상태</th><th>영수증</th></tr>
 						</thead>
 						<tbody>
-							<tr class="payment-empty-row"><td colspan="5">아직 결제 내역이 없습니다.</td></tr>
+							<tr class="payment-empty-row"><td colspan="6">아직 이용 내역이 없습니다.</td></tr>
 						</tbody>
 					</table>
 				</div>
@@ -1436,6 +1574,50 @@
 				</div>
 			</div>
 			</div>
+			<section class="payment-addon-coupon-shop payment-tab-panel" data-payment-panel="coupons" aria-label="추가상품 쿠폰">
+				<div class="payment-coupon-category-grid">
+					<section class="payment-coupon-section payment-coupon-category-column">
+						<div class="payment-coupon-card-wrap">
+							<article class="payment-coupon-card">
+								<div class="payment-coupon-kind">프리미엄</div>
+								<h2>프리미엄 매물 10건</h2>
+								<p class="payment-coupon-desc payment-coupon-premium-desc">일반매물에 설정 할 경우 프리미엄 노출을 보장하며, 프리미엄이 적용 된 매물은 30일 동안 적용 됩니다.</p>
+								<button type="button" class="payment-coupon-use-btn" data-coupon-plan="premium-10">사용하기</button>
+							</article>
+						</div>
+					</section>
+
+					<section class="payment-coupon-section payment-coupon-category-column">
+						<div class="payment-coupon-card-wrap">
+							<article class="payment-coupon-card">
+								<div class="payment-coupon-kind">오늘 날짜 갱신권</div>
+								<h2>오늘 날짜 갱신권 50건</h2>
+								<p class="payment-coupon-desc">기본 제공되는 하루 갱신 건수에 추가되며, 적용일로부터 30일 동안 매일 적용됩니다.</p>
+								<button type="button" class="payment-coupon-use-btn" data-coupon-plan="relist-50">사용하기</button>
+							</article>
+						</div>
+					</section>
+
+					<section class="payment-coupon-section payment-coupon-category-column">
+						<div class="payment-coupon-card-wrap">
+							<article class="payment-coupon-card">
+								<div class="payment-coupon-kind">계약서 보관</div>
+								<h2>계약서 보관 사용건수 100건</h2>
+								<p class="payment-coupon-desc">신규 작성한 계약서를 100건 보관할 수 있습니다.</p>
+								<p class="payment-coupon-desc">수정, 삭제는 카운트를 차감하지 않습니다.</p>
+								<button type="button" class="payment-coupon-use-btn" data-coupon-plan="storage-100">사용하기</button>
+							</article>
+						</div>
+					</section>
+				</div>
+			</section>
+			<section class="payment-addon-shop payment-addon-shop-temporarily-hidden payment-tab-panel active" data-payment-panel="plans" aria-label="추가상품 구매">
+				<div class="payment-addon-shop-head">
+					<h2 class="myinfo-page-title">추가상품 구매</h2>
+					<p class="myinfo-page-desc">프리미엄·프로 플랜에 필요한 수량만 선택해 추가할 수 있습니다.</p>
+				</div>
+				<p class="payment-addon-shop-preparing">상품을 준비중입니다.</p>
+			</section>
 			<footer class="payment-company-info">
 				<div class="payment-company-name">제주도부동산.닷컴 | 리얼제주(REALJEJU.APP)</div>
 				<div class="payment-company-grid">
@@ -4356,14 +4538,6 @@
 							<div class="detail-hero-slides" id="detailHeroSlides">
 							</div>
 							<div class="detail-hero-watermark" id="detailHeroWatermark" aria-hidden="true"></div>
-							<button type="button" class="detail-hero-nav prev" id="detailHeroPrevBtn">
-								<i class="fa-solid fa-angle-left">
-								</i>
-							</button>
-							<button type="button" class="detail-hero-nav next" id="detailHeroNextBtn">
-								<i class="fa-solid fa-angle-right">
-								</i>
-							</button>
 							<div class="detail-hero-badge" id="detailHeroBadge" style="display:none;">
 							</div>
 							<div class="detail-hero-overlay">
@@ -5655,7 +5829,7 @@
 	</div>
 </div>
 
-	<script src="/js/app_5.018.js?v=20260725-property-types-initial-all-5018"></script>
+		<script src="/js/app_5.149.js?v=20260729-simple-application-empty-state-5149"></script>
 
 
 <script>
