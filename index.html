@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 	<!--
-REALJEJU HTML 구조 / Ver 5.150
+REALJEJU HTML 구조 / Ver 5.161
 		파일은 단일 HTML을 유지하고, 실제 배치 순서대로 큰 화면 단위만 주석으로 구분한다.
 		0. Head / 공통 메타
 		1. 상단바 / 전역 메뉴
@@ -184,7 +184,7 @@ REALJEJU HTML 구조 / Ver 5.150
 				transition: none;
 			}
 		</style>
-		<link rel="stylesheet" href="/css/base_5.150.css?v=20260729-responsive-application-office-column-5150">
+		<link rel="stylesheet" href="/css/base_5.161.css?v=20260730-admin-menu-order-5161">
 
 </head>
 	<body class="sidebar-list-collapsed realjeju-side-nav-enabled main-landing-page-open">
@@ -530,10 +530,6 @@ REALJEJU HTML 구조 / Ver 5.150
 					<i class="fa-solid fa-comments" aria-hidden="true"></i>
 					<span>1:1 문의내역</span>
 				</button>
-				<button type="button" class="realjeju-side-nav-item realjeju-side-admin-tab" data-admin-tab="coupons">
-					<i class="fa-solid fa-credit-card" aria-hidden="true"></i>
-					<span>쿠폰 관리</span>
-				</button>
 				<button type="button" class="realjeju-side-nav-item realjeju-side-admin-tab" data-admin-tab="users">
 					<i class="fa-solid fa-user-group" aria-hidden="true"></i>
 					<span>회원 관리</span>
@@ -545,6 +541,10 @@ REALJEJU HTML 구조 / Ver 5.150
 				<button type="button" class="realjeju-side-nav-item realjeju-side-admin-tab" data-admin-tab="listings">
 					<i class="fa-solid fa-clipboard" aria-hidden="true"></i>
 					<span>매물 관리</span>
+				</button>
+				<button type="button" class="realjeju-side-nav-item realjeju-side-admin-tab" data-admin-tab="coupons">
+					<i class="fa-solid fa-credit-card" aria-hidden="true"></i>
+					<span>쿠폰 관리</span>
 				</button>
 			</nav>
 			<nav class="realjeju-side-nav-menu realjeju-side-primary-menu">
@@ -1071,11 +1071,13 @@ REALJEJU HTML 구조 / Ver 5.150
 		</div>
 		</div>
 		<div class="admin-page-tab-panel" data-admin-tab-panel="coupons">
-			<div class="admin-coupon-manager">
+			<div class="payment-tabs admin-coupon-view-tabs" role="tablist" aria-label="쿠폰 관리 메뉴">
+				<button type="button" class="payment-tab admin-coupon-view-tab active" data-admin-coupon-view="issue" role="tab" aria-selected="true">쿠폰 발급</button>
+				<button type="button" class="payment-tab admin-coupon-view-tab" data-admin-coupon-view="history" role="tab" aria-selected="false">발급 내역</button>
+			</div>
+			<div class="admin-coupon-view-panel active" data-admin-coupon-view-panel="issue">
+				<div class="admin-coupon-manager">
 				<section class="admin-coupon-plan-section" aria-label="이용권 쿠폰">
-					<div class="payment-addon-coupon-shop-head">
-						<h2 class="myinfo-page-title">이용권 쿠폰</h2>
-					</div>
 					<section class="payment-coupon-section">
 						<div class="payment-coupon-card-wrap">
 							<article class="payment-coupon-card">
@@ -1156,6 +1158,30 @@ REALJEJU HTML 구조 / Ver 5.150
 						</section>
 					</div>
 				</section>
+				</div>
+			</div>
+			<div class="admin-coupon-view-panel" data-admin-coupon-view-panel="history">
+				<div class="admin-coupon-history-head">
+					<h2 class="myinfo-page-title">쿠폰 발급 내역</h2>
+					<button type="button" class="admin-coupon-history-refresh" id="adminCouponHistoryRefresh">새로고침</button>
+				</div>
+				<div class="admin-coupon-history-shell">
+					<table class="admin-coupon-history-table">
+						<thead>
+							<tr>
+								<th>발급일</th>
+								<th>쿠폰명</th>
+								<th>기간</th>
+								<th>받은 중개사</th>
+								<th>발급자</th>
+								<th>상태</th>
+							</tr>
+						</thead>
+						<tbody id="adminCouponHistoryBody">
+							<tr class="admin-coupon-history-empty"><td colspan="6">발급 내역을 불러오세요.</td></tr>
+						</tbody>
+					</table>
+				</div>
 			</div>
 			<div class="admin-coupon-recipient-modal" id="adminCouponRecipientModal" aria-hidden="true">
 				<div class="admin-coupon-recipient-dialog" role="dialog" aria-modal="true" aria-labelledby="adminCouponRecipientTitle" aria-describedby="adminCouponRecipientStatus">
@@ -1457,6 +1483,7 @@ REALJEJU HTML 구조 / Ver 5.150
 								<strong data-payment-current-period>이용권 정보를 불러오는 중입니다.</strong>
 							</div>
 						</div>
+						<div class="payment-next-plan-list" data-payment-next-plans hidden></div>
 						<div class="payment-current-limit-list" aria-label="현재 사용 가능 한도">
 							<div data-payment-current-limit-item="listings">
 								<div class="payment-current-limit-value"><span>일반매물</span><strong data-payment-current-limit="listings">0건</strong></div>
@@ -5829,7 +5856,7 @@ REALJEJU HTML 구조 / Ver 5.150
 	</div>
 </div>
 
-		<script src="/js/app_5.150.js?v=20260729-responsive-application-office-column-5150"></script>
+		<script src="/js/app_5.161.js?v=20260730-admin-menu-order-5161"></script>
 
 
 <script>
