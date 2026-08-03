@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 	<!--
-REALJEJU HTML 구조 / Ver 5.206
+REALJEJU HTML 구조 / Ver 5.210
 		파일은 단일 HTML을 유지하고, 실제 배치 순서대로 큰 화면 단위만 주석으로 구분한다.
 		0. Head / 공통 메타
 		1. 상단바 / 전역 메뉴
@@ -184,12 +184,18 @@ REALJEJU HTML 구조 / Ver 5.206
 				transition: none;
 			}
 		</style>
-		<link rel="stylesheet" href="/css/base_5.206.css?v=20260803-playground-park-border-5206">
+		<link rel="stylesheet" href="/css/base_5.210.css?v=20260803-side-nav-filter-follow-overlay-hide-5210">
 
 </head>
 	<body class="sidebar-list-collapsed realjeju-side-nav-enabled main-landing-page-open">
 		<script id="realjeju-initial-body-route-prime">
 			(function () {
+				try {
+					if (window.matchMedia("(min-width: 901px)").matches
+						&& window.localStorage.getItem("realjeju.desktopSideNavCollapsed.v1") === "1") {
+						document.body.classList.add("realjeju-side-nav-collapsed");
+					}
+				} catch (error) {}
 				var path = String(window.realjejuInitialNormalizedRoutePath || window.realjejuInitialRoutePath || window.location.pathname || "/").toLowerCase().replace(/\/+$/, "") || "/";
 				var categoryRoute = window.realjejuInitialCategoryRoute;
 				if (categoryRoute && document.body && document.body.classList) {
@@ -610,6 +616,10 @@ REALJEJU HTML 구조 / Ver 5.206
 				<span class="topbar-version-text">5.031</span>
 			</div>
 		</aside>
+		<button type="button" class="realjeju-side-nav-toggle" id="realjejuSideNavToggle" aria-controls="realjejuSideNav" aria-expanded="true" aria-label="왼쪽 메뉴 접기">
+			<i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+			<span>접기</span>
+		</button>
 		<aside class="global-category-side-panel" id="globalCategorySidePanel" aria-hidden="true">
 			<div class="global-category-side-head">
 				<div class="global-category-side-title">
@@ -5872,7 +5882,7 @@ REALJEJU HTML 구조 / Ver 5.206
 	</div>
 </div>
 
-		<script src="/js/app_5.206.js?v=20260803-playground-park-border-5206"></script>
+		<script src="/js/app_5.210.js?v=20260803-side-nav-filter-follow-overlay-hide-5210"></script>
 
 
 <script>
