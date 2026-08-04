@@ -1,6 +1,11 @@
 const EV_CHARGER_API_URL = "https://apis.data.go.kr/B552584/EvCharger/getChargerInfo";
 const EV_CHARGER_REGION_CODE = "50";
+const EV_CHARGER_REGION_DETAIL_CODES = Object.freeze([
+	{ code: "50110", label: "제주시" },
+	{ code: "50130", label: "서귀포시" }
+]);
 const EV_CHARGER_RESPONSE_CACHE_MS = 90 * 1000;
+const EV_CHARGER_UPSTREAM_TIMEOUT_MS = 50 * 1000;
 
 let cachedResponse = null;
 let cachedAt = 0;
@@ -179,16 +184,17 @@ function buildStationResponse(rows)
 	return Array.from(stationMap.values()).sort((a, b) => a.name.localeCompare(b.name, "ko"));
 }
 
-async function fetchOfficialStations(serviceKey)
+async function fetchOfficialStationsForRegion(serviceKey, region)
 {
 	const requestUrl = new URL(EV_CHARGER_API_URL);
 	requestUrl.searchParams.set("serviceKey", serviceKey);
 	requestUrl.searchParams.set("pageNo", "1");
 	requestUrl.searchParams.set("numOfRows", "9999");
 	requestUrl.searchParams.set("zcode", EV_CHARGER_REGION_CODE);
+	requestUrl.searchParams.set("zscode", region.code);
 	requestUrl.searchParams.set("dataType", "JSON");
 	const controller = new AbortController();
-	const timeoutId = setTimeout(() => controller.abort(), 12000);
+	const timeoutId = setTimeout(() => controller.abort(), EV_CHARGER_UPSTREAM_TIMEOUT_MS);
 	try {
 		const response = await fetch(requestUrl, {
 			headers: { Accept: "application/json, application/xml;q=0.9, text/xml;q=0.8" },
@@ -202,9 +208,50 @@ async function fetchOfficialStations(serviceKey)
 		const stations = buildStationResponse(parsed.rows);
 		if (!stations.length) throw new Error("UPSTREAM_EMPTY_STATIONS");
 		return stations;
+	} catch (error) {
+		const reason = error && error.message ? error.message : (error && error.name ? error.name : "UNKNOWN_ERROR");
+		throw new Error(region.code + "_" + reason);
 	} finally {
 		clearTimeout(timeoutId);
 	}
+}
+
+function mergeOfficialStationLists(stationLists)
+{
+	const stationMap = new Map();
+	(stationLists || []).forEach((stations) => {
+		(stations || []).forEach((station) => {
+			const stationId = normalizeText(station && (station.statId || station.id));
+			if (!stationId || stationMap.has(stationId)) return;
+			stationMap.set(stationId, station);
+		});
+	});
+	return Array.from(stationMap.values()).sort((a, b) => a.name.localeCompare(b.name, "ko"));
+}
+
+async function fetchOfficialStations(serviceKey)
+{
+	const results = await Promise.allSettled(
+		EV_CHARGER_REGION_DETAIL_CODES.map((region) => fetchOfficialStationsForRegion(serviceKey, region))
+	);
+	const stationLists = [];
+	const failures = [];
+	results.forEach((result, index) => {
+		const region = EV_CHARGER_REGION_DETAIL_CODES[index];
+		if (result.status === "fulfilled") {
+			stationLists.push(result.value);
+			return;
+		}
+		failures.push((region && region.label ? region.label : region.code) + ":" + String(result.reason && result.reason.message || "UNKNOWN_ERROR"));
+	});
+	const stations = mergeOfficialStationLists(stationLists);
+	if (!stations.length) {
+		throw new Error("UPSTREAM_ALL_REGIONS_FAILED_" + failures.join("|"));
+	}
+	if (failures.length) {
+		console.warn("전기차 충전소 일부 지역 공식 API 조회 실패:", failures.join(" | "));
+	}
+	return stations;
 }
 
 async function getOfficialStations(serviceKey)
@@ -226,6 +273,7 @@ async function getOfficialStations(serviceKey)
 module.exports = async function handler(req, res)
 {
 	res.setHeader("Content-Type", "application/json; charset=utf-8");
+	res.setHeader("X-Realjeju-Function-Region", String(process.env.VERCEL_REGION || "unknown"));
 	if (req.method !== "GET") {
 		res.setHeader("Allow", "GET");
 		res.status(405).json({ ok: false, code: "METHOD_NOT_ALLOWED" });
@@ -256,6 +304,7 @@ module.exports = async function handler(req, res)
 
 module.exports.__test = {
 	buildStationResponse,
+	mergeOfficialStationLists,
 	parseUpstreamPayload,
 	normalizeServiceKey
 };

@@ -1,6 +1,8 @@
 const VWORLD_WFS_URL = "https://api.vworld.kr/req/wfs";
 const VWORLD_PARCEL_TYPENAME = "lt_c_landinfobasemap";
-const VWORLD_UPSTREAM_TIMEOUT_MS = 7000;
+const VWORLD_UPSTREAM_TIMEOUT_MS = 4200;
+const VWORLD_UPSTREAM_MAX_ATTEMPTS = 3;
+const VWORLD_UPSTREAM_RETRY_DELAY_MS = 180;
 const PARCEL_QUERY_BUFFER_DEGREES = 0.000025;
 const PARCEL_CACHE_TTL_MS = 6 * 60 * 60 * 1000;
 const PARCEL_CACHE_MAX_ENTRIES = 300;
@@ -240,6 +242,39 @@ function saveCachedResponse(key, value)
 	}
 }
 
+function waitForRetry(delayMs)
+{
+	return new Promise(resolve => setTimeout(resolve, delayMs));
+}
+
+function isRetryableUpstreamError(error)
+{
+	const message = String(error && error.message ? error.message : "");
+	return message === "fetch failed"
+		|| (error && error.name === "AbortError")
+		|| /^UPSTREAM_HTTP_(502|503|504)$/.test(message);
+}
+
+async function fetchVworldFeatureCollection(requestUrl)
+{
+	const controller = new AbortController();
+	const timeoutId = setTimeout(() => controller.abort(), VWORLD_UPSTREAM_TIMEOUT_MS);
+	try {
+		const response = await fetch(requestUrl, {
+			headers: {
+				Accept: "application/json, text/javascript;q=0.9",
+				"Accept-Language": "ko-KR,ko;q=0.9",
+				"User-Agent": "REALJEJU-Parcel-Boundary/1.0"
+			},
+			signal: controller.signal
+		});
+		if (!response.ok) throw new Error(`UPSTREAM_HTTP_${response.status}`);
+		return parseVworldPayload(await response.text());
+	} finally {
+		clearTimeout(timeoutId);
+	}
+}
+
 async function fetchParcelBoundary(apiKey, lat, lng)
 {
 	const requestUrl = new URL(VWORLD_WFS_URL);
@@ -255,21 +290,20 @@ async function fetchParcelBoundary(apiKey, lat, lng)
 	requestUrl.searchParams.set("MAXFEATURES", "20");
 	requestUrl.searchParams.set("callback", "parseResponse");
 
-	const controller = new AbortController();
-	const timeoutId = setTimeout(() => controller.abort(), VWORLD_UPSTREAM_TIMEOUT_MS);
-	try {
-		const response = await fetch(requestUrl, {
-			headers: { Accept: "application/json, text/javascript;q=0.9" },
-			signal: controller.signal
-		});
-		if (!response.ok) throw new Error(`UPSTREAM_HTTP_${response.status}`);
-		const featureCollection = parseVworldPayload(await response.text());
-		const feature = chooseParcelFeature(featureCollection, lng, lat);
-		if (!feature) return null;
-		return normalizeParcelResponse(feature);
-	} finally {
-		clearTimeout(timeoutId);
+	let lastError = null;
+	for (let attempt = 1; attempt <= VWORLD_UPSTREAM_MAX_ATTEMPTS; attempt += 1) {
+		try {
+			const featureCollection = await fetchVworldFeatureCollection(requestUrl);
+			const feature = chooseParcelFeature(featureCollection, lng, lat);
+			if (!feature) return null;
+			return normalizeParcelResponse(feature);
+		} catch (error) {
+			lastError = error;
+			if (!isRetryableUpstreamError(error) || attempt >= VWORLD_UPSTREAM_MAX_ATTEMPTS) throw error;
+			await waitForRetry(VWORLD_UPSTREAM_RETRY_DELAY_MS * attempt);
+		}
 	}
+	throw lastError || new Error("VWORLD_UPSTREAM_FAILED");
 }
 
 async function getParcelBoundary(apiKey, lat, lng)
@@ -295,6 +329,7 @@ module.exports = async function handler(req, res)
 {
 	applyCorsHeaders(req, res);
 	res.setHeader("Content-Type", "application/json; charset=utf-8");
+	res.setHeader("X-Realjeju-Function-Region", String(process.env.VERCEL_REGION || "unknown"));
 	if (req.method === "OPTIONS") {
 		res.status(204).end();
 		return;
@@ -346,6 +381,7 @@ module.exports.__test = {
 	buildPointCacheKey,
 	chooseParcelFeature,
 	geometryContainsPoint,
+	isRetryableUpstreamError,
 	isJejuCoordinate,
 	isPointInRing,
 	normalizeFeatureProperties,
