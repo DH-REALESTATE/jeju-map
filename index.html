@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 	<!--
-REALJEJU HTML 구조 / Ver 5.225
+REALJEJU HTML 구조 / Ver 5.241
 		파일은 단일 HTML을 유지하고, 실제 배치 순서대로 큰 화면 단위만 주석으로 구분한다.
 		0. Head / 공통 메타
 		1. 상단바 / 전역 메뉴
@@ -136,6 +136,11 @@ REALJEJU HTML 구조 / Ver 5.225
 					"/$1"
 				);
 				window.realjejuInitialNormalizedRoutePath = normalizedPath;
+				var params = new URLSearchParams(String(window.location.search || ""));
+				var isVersionDocument = /\/(?:index|realjeju_\d+\.\d+)\.html$/i.test(pathname);
+				var hasDeepLink = params.has("id") || params.has("brokerEdit") || params.get("agentList") === "1";
+				var isLandingDocumentPath = pathname === "/" || isVersionDocument;
+				var isExplicitLandingRoute = !hasDeepLink && isLandingDocumentPath && params.get("landing") === "1";
 				var initialCategoryRoutes = {
 					"/properties": { category: "realestate" },
 					"/companies": { category: "local-business", hideFilterMenu: true },
@@ -144,13 +149,13 @@ REALJEJU HTML 구조 / Ver 5.225
 					"/cars": { category: "car", hideFilterMenu: true, emptyMap: true },
 					"/meetups": { category: "meetup", hideFilterMenu: true, emptyMap: true }
 				};
-				window.realjejuInitialCategoryRoute = initialCategoryRoutes[normalizedPath] || null;
+				window.realjejuInitialCategoryRoute = isExplicitLandingRoute
+					? null
+					: (initialCategoryRoutes[normalizedPath]
+						|| (!hasDeepLink && isLandingDocumentPath ? { category: "realestate" } : null));
 				var hidesPageScrollbar = /^\/jobs(?:\/index\.html)?$/.test(normalizedPath) || /^\/mypage(?:\/|$)/.test(normalizedPath);
 				document.documentElement.classList.toggle("realjeju-hide-page-scrollbar", hidesPageScrollbar);
-				var params = new URLSearchParams(String(window.location.search || ""));
-				var isVersionDocument = /\/(?:index|realjeju_\d+\.\d+)\.html$/i.test(pathname);
-				var hasDeepLink = params.has("id") || params.has("brokerEdit") || params.get("agentList") === "1";
-				var isLandingRoute = !hasDeepLink && (pathname === "/" || isVersionDocument);
+				var isLandingRoute = isExplicitLandingRoute;
 				if (isLandingRoute) return;
 				document.documentElement.classList.add("realjeju-route-booting");
 				window.realjejuReleaseInitialRouteGuard = function () {
@@ -184,7 +189,7 @@ REALJEJU HTML 구조 / Ver 5.225
 				transition: none;
 			}
 		</style>
-		<link rel="stylesheet" href="/css/base_5.225.css?v=20260804-admin-broker-profile-coupon-5225">
+		<link rel="stylesheet" href="/css/base_5.241.css?v=20260804-toggle-arrow-light-5241">
 
 </head>
 	<body class="sidebar-list-collapsed realjeju-side-nav-enabled main-landing-page-open">
@@ -5882,7 +5887,7 @@ REALJEJU HTML 구조 / Ver 5.225
 	</div>
 </div>
 
-		<script src="/js/app_5.225.js?v=20260804-admin-broker-profile-coupon-5225"></script>
+		<script src="/js/app_5.241.js?v=20260804-toggle-arrow-light-5241"></script>
 
 
 <script>
