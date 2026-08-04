@@ -1,6 +1,49 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "regions": ["icn1"],
   "trailingSlash": false,
+  "functions": {
+    "api/ev-chargers.js": {
+      "maxDuration": 60,
+      "regions": ["icn1"]
+    },
+    "api/parcel-boundary-by-point.js": {
+      "maxDuration": 15,
+      "regions": ["icn1"]
+    }
+  },
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "realjeju.app" }],
+      "destination": "https://xn--hq1bpbu67bkjdltmojb.xn--mk1bu44c/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "www.realjeju.app" }],
+      "destination": "https://xn--hq1bpbu67bkjdltmojb.xn--mk1bu44c/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "xn--2q1b16p8rcc1k95a.xn--mk1bu44c" }],
+      "destination": "https://xn--hq1bpbu67bkjdltmojb.xn--mk1bu44c/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "www.xn--2q1b16p8rcc1k95a.xn--mk1bu44c" }],
+      "destination": "https://xn--hq1bpbu67bkjdltmojb.xn--mk1bu44c/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "jeju-map.vercel.app" }],
+      "destination": "https://xn--hq1bpbu67bkjdltmojb.xn--mk1bu44c/:path*",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     { "source": "/properties", "destination": "/index.html" },
     { "source": "/properties/:path*", "destination": "/index.html" },
