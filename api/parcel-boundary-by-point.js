@@ -1,5 +1,6 @@
 const VWORLD_WFS_URL = "https://api.vworld.kr/req/wfs";
 const VWORLD_PARCEL_TYPENAME = "lt_c_landinfobasemap";
+const VWORLD_DEFAULT_API_DOMAIN = "https://realjeju.app";
 const VWORLD_UPSTREAM_TIMEOUT_MS = 4200;
 const VWORLD_UPSTREAM_MAX_ATTEMPTS = 3;
 const VWORLD_UPSTREAM_RETRY_DELAY_MS = 180;
@@ -52,6 +53,13 @@ function normalizeApiKey(value)
 	return String(value || "").trim();
 }
 
+function normalizeVworldApiDomain(value)
+{
+	const normalized = String(value || "").trim().replace(/\/$/, "");
+	if (!normalized) return VWORLD_DEFAULT_API_DOMAIN;
+	return /^https?:\/\//i.test(normalized) ? normalized : `https://${normalized}`;
+}
+
 function normalizeCoordinate(value)
 {
 	const number = Number(value);
@@ -73,16 +81,51 @@ function buildPointCacheKey(lat, lng)
 
 function parseVworldPayload(payloadText)
 {
-	const text = String(payloadText || "").trim();
+	const text = String(payloadText || "").replace(/^\uFEFF/, "").trim();
 	if (!text) throw new Error("EMPTY_UPSTREAM_RESPONSE");
 	if (text.startsWith("{") || text.startsWith("[")) return JSON.parse(text);
+	if (text.startsWith("<")) {
+		const serviceException = text.match(/<ServiceException\b([^>]*)>([\s\S]*?)<\/ServiceException>/i);
+		const exceptionText = text.match(/<ExceptionText\b[^>]*>([\s\S]*?)<\/ExceptionText>/i);
+		const attributes = serviceException ? String(serviceException[1] || "") : "";
+		const codeMatch = attributes.match(/\bcode=["']([^"']+)["']/i);
+		const upstreamCode = String(codeMatch ? codeMatch[1] : "XML_ERROR")
+			.trim()
+			.toUpperCase()
+			.replace(/[^A-Z0-9_]+/g, "_");
+		const rawMessage = serviceException ? serviceException[2] : (exceptionText ? exceptionText[1] : "");
+		const upstreamMessage = String(rawMessage || "")
+			.replace(/<[^>]+>/g, " ")
+			.replace(/&lt;/g, "<")
+			.replace(/&gt;/g, ">")
+			.replace(/&quot;/g, '"')
+			.replace(/&#39;|&apos;/g, "'")
+			.replace(/&amp;/g, "&")
+			.replace(/\s+/g, " ")
+			.trim();
+		const error = new Error(`VWORLD_${upstreamCode}${upstreamMessage ? `: ${upstreamMessage}` : ""}`);
+		error.upstreamCode = upstreamCode;
+		throw error;
+	}
 
 	const openingParenthesis = text.indexOf("(");
 	const closingParenthesis = text.lastIndexOf(")");
-	if (openingParenthesis < 1 || closingParenthesis <= openingParenthesis) {
-		throw new Error("INVALID_UPSTREAM_RESPONSE");
+	if (openingParenthesis >= 1 && closingParenthesis > openingParenthesis) {
+		return JSON.parse(text.slice(openingParenthesis + 1, closingParenthesis));
 	}
-	return JSON.parse(text.slice(openingParenthesis + 1, closingParenthesis));
+
+	// 일부 WFS 게이트웨이는 JSON 앞뒤에 짧은 안내 문자열을 붙인다.
+	// 본문 안에 온전한 GeoJSON 객체가 있으면 그 객체만 안전하게 읽는다.
+	const firstObjectBrace = text.indexOf("{");
+	const lastObjectBrace = text.lastIndexOf("}");
+	if (firstObjectBrace >= 0 && lastObjectBrace > firstObjectBrace) {
+		try {
+			return JSON.parse(text.slice(firstObjectBrace, lastObjectBrace + 1));
+		} catch (error) {
+			// 아래 공통 오류로 정리한다.
+		}
+	}
+	throw new Error("INVALID_UPSTREAM_RESPONSE");
 }
 
 function isCoordinatePair(value)
@@ -255,7 +298,7 @@ function isRetryableUpstreamError(error)
 		|| /^UPSTREAM_HTTP_(502|503|504)$/.test(message);
 }
 
-async function fetchVworldFeatureCollection(requestUrl)
+async function fetchVworldFeatureCollection(requestUrl, apiDomain)
 {
 	const controller = new AbortController();
 	const timeoutId = setTimeout(() => controller.abort(), VWORLD_UPSTREAM_TIMEOUT_MS);
@@ -264,36 +307,75 @@ async function fetchVworldFeatureCollection(requestUrl)
 			headers: {
 				Accept: "application/json, text/javascript;q=0.9",
 				"Accept-Language": "ko-KR,ko;q=0.9",
+				Referer: apiDomain,
 				"User-Agent": "REALJEJU-Parcel-Boundary/1.0"
 			},
 			signal: controller.signal
 		});
 		if (!response.ok) throw new Error(`UPSTREAM_HTTP_${response.status}`);
-		return parseVworldPayload(await response.text());
+		const responseText = await response.text();
+		try {
+			return parseVworldPayload(responseText);
+		} catch (error) {
+			if (String(error && error.message ? error.message : "") !== "INVALID_UPSTREAM_RESPONSE") throw error;
+			const contentType = String(response.headers.get("content-type") || "unknown").split(";")[0].trim();
+			const safePreview = String(responseText || "")
+				.replace(/<[^>]*>/g, " ")
+				.replace(/\s+/g, " ")
+				.trim()
+				.slice(0, 120);
+			const invalidResponseError = new Error(
+				`VWORLD_INVALID_RESPONSE (${contentType})${safePreview ? `: ${safePreview}` : ""}`
+			);
+			invalidResponseError.upstreamCode = "INVALID_RESPONSE";
+			throw invalidResponseError;
+		}
 	} finally {
 		clearTimeout(timeoutId);
 	}
 }
 
-async function fetchParcelBoundary(apiKey, lat, lng)
+function buildVworldWfsRequestUrl(apiKey, apiDomain, lat, lng, outputFormat)
 {
 	const requestUrl = new URL(VWORLD_WFS_URL);
 	const buffer = PARCEL_QUERY_BUFFER_DEGREES;
 	requestUrl.searchParams.set("key", apiKey);
+	requestUrl.searchParams.set("domain", apiDomain);
 	requestUrl.searchParams.set("SERVICE", "WFS");
 	requestUrl.searchParams.set("version", "1.1.0");
 	requestUrl.searchParams.set("request", "GetFeature");
 	requestUrl.searchParams.set("TYPENAME", VWORLD_PARCEL_TYPENAME);
-	requestUrl.searchParams.set("OUTPUT", "text/javascript");
+	requestUrl.searchParams.set("OUTPUT", outputFormat);
 	requestUrl.searchParams.set("SRSNAME", "EPSG:4326");
 	requestUrl.searchParams.set("BBOX", [lng - buffer, lat - buffer, lng + buffer, lat + buffer].join(","));
 	requestUrl.searchParams.set("MAXFEATURES", "20");
-	requestUrl.searchParams.set("callback", "parseResponse");
+	if (outputFormat === "text/javascript") requestUrl.searchParams.set("callback", "parseResponse");
+	return requestUrl;
+}
 
+function shouldUseVworldJsonpFallback(error)
+{
+	const message = String(error && error.message ? error.message : "");
+	const upstreamCode = String(error && error.upstreamCode ? error.upstreamCode : "");
+	return message === "INVALID_UPSTREAM_RESPONSE"
+		|| upstreamCode === "INVALID_RESPONSE"
+		|| upstreamCode === "INVALID_PARAMETER_VALUE";
+}
+
+async function fetchParcelBoundary(apiKey, apiDomain, lat, lng)
+{
 	let lastError = null;
 	for (let attempt = 1; attempt <= VWORLD_UPSTREAM_MAX_ATTEMPTS; attempt += 1) {
 		try {
-			const featureCollection = await fetchVworldFeatureCollection(requestUrl);
+			let featureCollection;
+			try {
+				const geoJsonRequestUrl = buildVworldWfsRequestUrl(apiKey, apiDomain, lat, lng, "application/json");
+				featureCollection = await fetchVworldFeatureCollection(geoJsonRequestUrl, apiDomain);
+			} catch (geoJsonError) {
+				if (!shouldUseVworldJsonpFallback(geoJsonError)) throw geoJsonError;
+				const jsonpRequestUrl = buildVworldWfsRequestUrl(apiKey, apiDomain, lat, lng, "text/javascript");
+				featureCollection = await fetchVworldFeatureCollection(jsonpRequestUrl, apiDomain);
+			}
 			const feature = chooseParcelFeature(featureCollection, lng, lat);
 			if (!feature) return null;
 			return normalizeParcelResponse(feature);
@@ -306,14 +388,14 @@ async function fetchParcelBoundary(apiKey, lat, lng)
 	throw lastError || new Error("VWORLD_UPSTREAM_FAILED");
 }
 
-async function getParcelBoundary(apiKey, lat, lng)
+async function getParcelBoundary(apiKey, apiDomain, lat, lng)
 {
 	const key = buildPointCacheKey(lat, lng);
 	const cached = getCachedResponse(key);
 	if (cached) return cached;
 	if (inflightRequests.has(key)) return inflightRequests.get(key);
 
-	const request = fetchParcelBoundary(apiKey, lat, lng)
+	const request = fetchParcelBoundary(apiKey, apiDomain, lat, lng)
 		.then((value) => {
 			if (value) saveCachedResponse(key, value);
 			return value;
@@ -359,9 +441,10 @@ module.exports = async function handler(req, res)
 		res.status(503).json({ ok: false, code: "VWORLD_KEY_NOT_CONFIGURED" });
 		return;
 	}
+	const apiDomain = normalizeVworldApiDomain(process.env.VWORLD_API_DOMAIN);
 
 	try {
-		const parcel = await getParcelBoundary(apiKey, lat, lng);
+		const parcel = await getParcelBoundary(apiKey, apiDomain, lat, lng);
 		if (!parcel) {
 			res.setHeader("Cache-Control", "public, max-age=30, s-maxage=60");
 			res.status(404).json({ ok: false, code: "PARCEL_NOT_FOUND" });
@@ -372,7 +455,11 @@ module.exports = async function handler(req, res)
 	} catch (error) {
 		console.error("필지 경계 공식 API 조회 실패:", error && error.message ? error.message : "UNKNOWN_ERROR");
 		res.setHeader("Cache-Control", "no-store");
-		res.status(502).json({ ok: false, code: "VWORLD_UPSTREAM_FAILED" });
+		const upstreamCode = String(error && error.upstreamCode ? error.upstreamCode : "").trim();
+		res.status(502).json({
+			ok: false,
+			code: upstreamCode ? `VWORLD_${upstreamCode}` : "VWORLD_UPSTREAM_FAILED"
+		});
 	}
 };
 
@@ -384,6 +471,7 @@ module.exports.__test = {
 	isRetryableUpstreamError,
 	isJejuCoordinate,
 	isPointInRing,
+	normalizeVworldApiDomain,
 	normalizeFeatureProperties,
 	parseVworldPayload
 };
