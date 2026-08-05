@@ -15,14 +15,8 @@
   "redirects": [
     {
       "source": "/:path*",
-      "has": [{ "type": "host", "value": "realjeju.app" }],
-      "destination": "https://xn--hq1bpbu67bkjdltmojb.xn--mk1bu44c/:path*",
-      "permanent": true
-    },
-    {
-      "source": "/:path*",
       "has": [{ "type": "host", "value": "www.realjeju.app" }],
-      "destination": "https://xn--hq1bpbu67bkjdltmojb.xn--mk1bu44c/:path*",
+      "destination": "https://realjeju.app/:path*",
       "permanent": true
     },
     {
