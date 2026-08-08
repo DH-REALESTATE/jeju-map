@@ -1,12 +1,25 @@
 const VWORLD_WFS_URL = "https://api.vworld.kr/req/wfs";
+const VWORLD_LAND_CHARACTERISTICS_URL = "https://api.vworld.kr/ned/data/getLandCharacteristics";
+const VWORLD_LAND_POSSESSION_URL = "https://api.vworld.kr/ned/data/getPossessionAttr";
 const VWORLD_PARCEL_TYPENAME = "lt_c_landinfobasemap";
 const VWORLD_DEFAULT_API_DOMAIN = "https://realjeju.app";
 const VWORLD_UPSTREAM_TIMEOUT_MS = 4200;
+const VWORLD_LAND_CHARACTERISTICS_TIMEOUT_MS = 5000;
+const VWORLD_LAND_POSSESSION_TIMEOUT_MS = 5000;
 const VWORLD_UPSTREAM_MAX_ATTEMPTS = 3;
 const VWORLD_UPSTREAM_RETRY_DELAY_MS = 180;
 const PARCEL_QUERY_BUFFER_DEGREES = 0.000025;
 const PARCEL_CACHE_TTL_MS = 6 * 60 * 60 * 1000;
 const PARCEL_CACHE_MAX_ENTRIES = 300;
+const PARCEL_INFORMATION_CACHE_TABLE = "parcel_information_cache";
+const PARCEL_INFORMATION_CACHE_TYPES = Object.freeze([
+  "land_basic",
+  "land_ownership",
+  "land_use_plan",
+  "land_movement",
+  "official_land_price",
+  "individual_house_price"
+]);
 
 const JEJU_QUERY_BOUNDS = Object.freeze({
 	minLng: 125.75,
@@ -77,6 +90,109 @@ function isJejuCoordinate(lat, lng)
 function buildPointCacheKey(lat, lng)
 {
 	return `${Number(lng).toFixed(6)},${Number(lat).toFixed(6)}`;
+}
+
+function getSupabaseAdminConfig()
+{
+  const url = String(
+    process.env.REALJEJU_SUPABASE_URL
+    || process.env.SUPABASE_URL
+    || process.env.NEXT_PUBLIC_SUPABASE_URL
+    || "https://jctovfrcvfosoowribej.supabase.co"
+  ).trim().replace(/\/$/, "");
+  const key = String(
+    process.env.REALJEJU_SUPABASE_SECRET_KEY
+    || process.env.SUPABASE_SECRET_KEY
+    || process.env.SUPABASE_SERVICE_ROLE_KEY
+    || ""
+  ).trim();
+  return url && key ? { url, key } : null;
+}
+
+async function supabaseAdminFetch(path, options)
+{
+  const config = getSupabaseAdminConfig();
+  if (!config) return null;
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 3500);
+  try {
+    return await fetch(config.url + path, {
+      ...(options || {}),
+      headers: {
+        Authorization: `Bearer ${config.key}`,
+        apikey: config.key,
+        ...((options && options.headers) || {})
+      },
+      signal: controller.signal
+    });
+  } catch (error) {
+    console.warn("[parcel permanent cache] request failed:", error && error.message ? error.message : error);
+    return null;
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
+async function loadPermanentBoundary(pointKey)
+{
+  if (!pointKey) return null;
+  const query = new URLSearchParams({
+    select: "payload",
+    data_type: "eq.parcel_boundary",
+    point_key: `eq.${pointKey}`,
+    limit: "1"
+  });
+  const response = await supabaseAdminFetch(`/rest/v1/${PARCEL_INFORMATION_CACHE_TABLE}?${query.toString()}`);
+  if (!response || !response.ok) return null;
+  const rows = await response.json().catch(() => []);
+  return Array.isArray(rows) && rows[0] && rows[0].payload ? rows[0].payload : null;
+}
+
+async function loadPermanentParcelInformation(pnu)
+{
+  const result = new Map();
+  if (!/^\d{19}$/.test(String(pnu || ""))) return result;
+  const query = new URLSearchParams({
+    select: "data_type,payload",
+    pnu: `eq.${pnu}`,
+    data_type: `in.(${PARCEL_INFORMATION_CACHE_TYPES.join(",")})`
+  });
+  const response = await supabaseAdminFetch(`/rest/v1/${PARCEL_INFORMATION_CACHE_TABLE}?${query.toString()}`);
+  if (!response || !response.ok) return result;
+  const rows = await response.json().catch(() => []);
+  for (const row of Array.isArray(rows) ? rows : []) {
+    if (row && row.data_type) result.set(String(row.data_type), row.payload || {});
+  }
+  return result;
+}
+
+async function storePermanentParcelInformation(rows)
+{
+  const validRows = (Array.isArray(rows) ? rows : []).filter((row) =>
+    row && /^\d{19}$/.test(String(row.pnu || "")) && row.data_type && row.payload
+  );
+  if (!validRows.length) return;
+  const response = await supabaseAdminFetch(
+    `/rest/v1/${PARCEL_INFORMATION_CACHE_TABLE}?on_conflict=pnu,data_type`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Prefer: "resolution=merge-duplicates,return=minimal"
+      },
+      body: JSON.stringify(validRows.map((row) => ({
+        pnu: String(row.pnu),
+        data_type: String(row.data_type),
+        point_key: row.point_key ? String(row.point_key) : null,
+        payload: row.payload,
+        source: String(row.source || "vworld"),
+        updated_at: new Date().toISOString()
+      })))
+    }
+  );
+  if (response && !response.ok) {
+    console.warn("[parcel permanent cache] store failed:", response.status);
+  }
 }
 
 function parseVworldPayload(payloadText)
@@ -243,6 +359,36 @@ function normalizeFeatureProperties(properties)
 	};
 }
 
+function calculateGeoJsonAreaM2(geometry)
+{
+	if (!geometry || !Array.isArray(geometry.coordinates)) return null;
+	const polygons = geometry.type === "Polygon"
+		? [geometry.coordinates]
+		: (geometry.type === "MultiPolygon" ? geometry.coordinates : []);
+	if (!polygons.length) return null;
+	const earthRadius = 6378137;
+	const toRadians = (value) => Number(value) * Math.PI / 180;
+	const ringArea = (ring) => {
+		if (!Array.isArray(ring) || ring.length < 3) return 0;
+		let area = 0;
+		for (let index = 0; index < ring.length; index += 1) {
+			const current = ring[index];
+			const next = ring[(index + 1) % ring.length];
+			if (!Array.isArray(current) || !Array.isArray(next)) continue;
+			area += (toRadians(next[0]) - toRadians(current[0]))
+				* (2 + Math.sin(toRadians(current[1])) + Math.sin(toRadians(next[1])));
+		}
+		return Math.abs(area * earthRadius * earthRadius / 2);
+	};
+	const areaM2 = polygons.reduce((total, polygon) => {
+		if (!Array.isArray(polygon) || !polygon.length) return total;
+		const outerArea = ringArea(polygon[0]);
+		const holeArea = polygon.slice(1).reduce((sum, ring) => sum + ringArea(ring), 0);
+		return total + Math.max(0, outerArea - holeArea);
+	}, 0);
+	return Number.isFinite(areaM2) && areaM2 > 0 ? areaM2 : null;
+}
+
 function normalizeParcelResponse(feature)
 {
 	if (!feature || !feature.geometry) return null;
@@ -252,6 +398,7 @@ function normalizeParcelResponse(feature)
 		source: "VWorld LX맵(연속지적도)",
 		pnu: properties.pnu,
 		geometry: feature.geometry,
+		areaM2: calculateGeoJsonAreaM2(feature.geometry),
 		jibun: properties.jibun,
 		jimok: properties.jimok,
 		address: [properties.sidoName, properties.sigunguName, properties.eupmyeondongName, properties.riName, properties.jibun]
@@ -388,6 +535,184 @@ async function fetchParcelBoundary(apiKey, apiDomain, lat, lng)
 	throw lastError || new Error("VWORLD_UPSTREAM_FAILED");
 }
 
+function getLandCharacteristicsContainer(payload)
+{
+	if (!payload || typeof payload !== "object") return null;
+	return payload.landCharacteristicss
+		|| payload.landCharacteristics
+		|| (payload.response && payload.response.body)
+		|| payload;
+}
+
+function getLandCharacteristicsRows(payload)
+{
+	const container = getLandCharacteristicsContainer(payload);
+	if (!container || typeof container !== "object") return [];
+	const items = container.field
+		|| container.fields
+		|| (container.items && container.items.item)
+		|| container.item
+		|| [];
+	return Array.isArray(items) ? items : (items && typeof items === "object" ? [items] : []);
+}
+
+function normalizeLandCharacteristics(payload)
+{
+	const container = getLandCharacteristicsContainer(payload);
+	const resultCode = String(
+		(container && (container.resultCode || container.code))
+		|| payload.resultCode
+		|| ""
+	).trim();
+	if (resultCode && !["0", "00", "SUCCESS"].includes(resultCode.toUpperCase())) {
+		const error = new Error(`VWORLD_LAND_CHARACTERISTICS_${resultCode}`);
+		error.upstreamCode = resultCode;
+		throw error;
+	}
+	const rows = getLandCharacteristicsRows(payload);
+	if (!rows.length) return null;
+	const row = rows.slice().sort((a, b) => {
+		const aKey = `${String(a.stdrYear || "").padStart(4, "0")}${String(a.stdrMt || "").padStart(2, "0")}`;
+		const bKey = `${String(b.stdrYear || "").padStart(4, "0")}${String(b.stdrMt || "").padStart(2, "0")}`;
+		return bKey.localeCompare(aKey);
+	})[0];
+	const secondaryZone = String(row.prposArea2Nm || "").trim();
+	const hasSecondaryZone = secondaryZone && !/^(지정되지\s*않음|미지정|없음|-)$/.test(secondaryZone);
+	const areaM2 = Number(row.lndpclAr);
+	const publishedLandPrice = Number(row.pblntfPclnd);
+	return {
+		pnu: String(row.pnu || "").trim(),
+		legalDongName: String(row.ldCodeNm || "").trim(),
+		jibun: String(row.mnnmSlno || "").trim(),
+		jimok: String(row.lndcgrCodeNm || "").trim(),
+		areaM2: Number.isFinite(areaM2) ? areaM2 : null,
+		landUseZone: [String(row.prposArea1Nm || "").trim(), hasSecondaryZone ? secondaryZone : ""].filter(Boolean).join(", "),
+		landUseSituation: String(row.ladUseSittnNm || "").trim(),
+		terrainHeight: String(row.tpgrphHgCodeNm || "").trim(),
+		terrainShape: String(row.tpgrphFrmCodeNm || "").trim(),
+		roadSide: String(row.roadSideCodeNm || "").trim(),
+		publishedLandPrice: Number.isFinite(publishedLandPrice) ? publishedLandPrice : null,
+		standardYear: String(row.stdrYear || "").trim(),
+		standardMonth: String(row.stdrMt || "").trim(),
+		lastUpdatedAt: String(row.lastUpdtDt || "").trim()
+	};
+}
+
+async function fetchLandCharacteristics(apiKey, apiDomain, pnu)
+{
+	if (!pnu) return null;
+	const requestUrl = new URL(VWORLD_LAND_CHARACTERISTICS_URL);
+	requestUrl.searchParams.set("pnu", pnu);
+	requestUrl.searchParams.set("format", "json");
+	requestUrl.searchParams.set("numOfRows", "100");
+	requestUrl.searchParams.set("pageNo", "1");
+	requestUrl.searchParams.set("key", apiKey);
+	requestUrl.searchParams.set("domain", apiDomain);
+	const controller = new AbortController();
+	const timeoutId = setTimeout(() => controller.abort(), VWORLD_LAND_CHARACTERISTICS_TIMEOUT_MS);
+	try {
+		const response = await fetch(requestUrl, {
+			headers: {
+				Accept: "application/json",
+				Referer: apiDomain,
+				"User-Agent": "REALJEJU-Land-Characteristics/1.0"
+			},
+			signal: controller.signal
+		});
+		if (!response.ok) throw new Error(`UPSTREAM_HTTP_${response.status}`);
+		const responseText = String(await response.text()).replace(/^\uFEFF/, "").trim();
+		if (!responseText) throw new Error("EMPTY_UPSTREAM_RESPONSE");
+		return normalizeLandCharacteristics(JSON.parse(responseText));
+	} finally {
+		clearTimeout(timeoutId);
+	}
+}
+
+function getLandPossessionContainer(payload)
+{
+	if (!payload || typeof payload !== "object") return null;
+	return payload.possessions
+		|| payload.possession
+		|| (payload.response && payload.response.body)
+		|| payload;
+}
+
+function getLandPossessionRows(payload)
+{
+	const container = getLandPossessionContainer(payload);
+	if (!container || typeof container !== "object") return [];
+	const items = container.field
+		|| container.fields
+		|| (container.items && container.items.item)
+		|| container.item
+		|| [];
+	return Array.isArray(items) ? items : (items && typeof items === "object" ? [items] : []);
+}
+
+function normalizeLandPossession(payload)
+{
+	const container = getLandPossessionContainer(payload);
+	const resultCode = String(
+		(container && (container.resultCode || container.code))
+		|| payload.resultCode
+		|| ""
+	).trim();
+	if (resultCode && !["0", "00", "SUCCESS"].includes(resultCode.toUpperCase())) {
+		const error = new Error(`VWORLD_LAND_POSSESSION_${resultCode}`);
+		error.upstreamCode = resultCode;
+		throw error;
+	}
+	const rows = getLandPossessionRows(payload);
+	if (!rows.length) return null;
+	const row = rows.slice().sort((a, b) => {
+		const aKey = `${String(a.ownshipChgDe || "")}|${String(a.stdrYm || "")}|${String(a.lastUpdtDt || "")}`;
+		const bKey = `${String(b.ownshipChgDe || "")}|${String(b.stdrYm || "")}|${String(b.lastUpdtDt || "")}`;
+		return bKey.localeCompare(aKey);
+	})[0];
+	const sharedOwnerCount = Number(row.cnrsPsnCo);
+	return {
+		pnu: String(row.pnu || "").trim(),
+		ownershipType: String(row.posesnSeCodeNm || "").trim(),
+		ownershipTypeCode: String(row.posesnSeCode || "").trim(),
+		ownershipChangeDate: String(row.ownshipChgDe || "").trim(),
+		ownershipChangeCause: String(row.ownshipChgCauseCodeNm || "").trim(),
+		ownershipChangeCauseCode: String(row.ownshipChgCauseCode || "").trim(),
+		sharedOwnerCount: Number.isFinite(sharedOwnerCount) ? sharedOwnerCount : null,
+		standardYearMonth: String(row.stdrYm || "").trim(),
+		lastUpdatedAt: String(row.lastUpdtDt || "").trim()
+	};
+}
+
+async function fetchLandPossession(apiKey, apiDomain, pnu)
+{
+	if (!pnu) return null;
+	const requestUrl = new URL(VWORLD_LAND_POSSESSION_URL);
+	requestUrl.searchParams.set("pnu", pnu);
+	requestUrl.searchParams.set("format", "json");
+	requestUrl.searchParams.set("numOfRows", "100");
+	requestUrl.searchParams.set("pageNo", "1");
+	requestUrl.searchParams.set("key", apiKey);
+	requestUrl.searchParams.set("domain", apiDomain);
+	const controller = new AbortController();
+	const timeoutId = setTimeout(() => controller.abort(), VWORLD_LAND_POSSESSION_TIMEOUT_MS);
+	try {
+		const response = await fetch(requestUrl, {
+			headers: {
+				Accept: "application/json",
+				Referer: apiDomain,
+				"User-Agent": "REALJEJU-Land-Possession/1.0"
+			},
+			signal: controller.signal
+		});
+		if (!response.ok) throw new Error(`UPSTREAM_HTTP_${response.status}`);
+		const responseText = String(await response.text()).replace(/^\uFEFF/, "").trim();
+		if (!responseText) throw new Error("EMPTY_UPSTREAM_RESPONSE");
+		return normalizeLandPossession(JSON.parse(responseText));
+	} finally {
+		clearTimeout(timeoutId);
+	}
+}
+
 async function getParcelBoundary(apiKey, apiDomain, lat, lng)
 {
 	const key = buildPointCacheKey(lat, lng);
@@ -406,6 +731,228 @@ async function getParcelBoundary(apiKey, apiDomain, lat, lng)
 	inflightRequests.set(key, request);
 	return request;
 }
+
+function getVworldAttributeContainer(payload, names) {
+  for (const name of names) {
+    if (payload?.[name] && typeof payload[name] === "object") return payload[name];
+  }
+  return payload?.response?.body || payload?.response || null;
+}
+
+function getVworldAttributeRows(container) {
+  const rawRows =
+    container?.field ||
+    container?.fields ||
+    container?.items?.item ||
+    container?.items ||
+    container?.data ||
+    [];
+  return Array.isArray(rawRows) ? rawRows : rawRows ? [rawRows] : [];
+}
+
+function assertVworldAttributeResult(payload, container, fallbackMessage) {
+  const resultCode = String(
+    container?.resultCode ?? payload?.resultCode ?? payload?.response?.header?.resultCode ?? ""
+  ).trim();
+  if (resultCode && !["0", "00", "000"].includes(resultCode)) {
+    throw new Error(
+      String(
+        container?.resultMsg ||
+        payload?.resultMsg ||
+        payload?.response?.header?.resultMsg ||
+        fallbackMessage
+      )
+    );
+  }
+}
+
+function isNationalPlanningLandUseRecord(districtCode, districtName) {
+  return (
+    /^UQ/i.test(districtCode) ||
+    /용도지역|용도지구|용도구역|녹지지역|주거지역|상업지역|공업지역|관리지역|농림지역|자연환경보전지역|취락지구|개발진흥지구|고도지구|방화지구|방재지구|보호지구|경관지구|복합용도지구|성장관리계획구역|도시지역|토지거래계약에관한허가구역/.test(
+      districtName
+    )
+  );
+}
+
+function normalizeLandUsePlan(payload) {
+  const container = getVworldAttributeContainer(payload, ["landUses", "landUse"]);
+  if (!container) return [];
+  assertVworldAttributeResult(payload, container, "토지이용계획정보 조회에 실패했습니다.");
+  const seen = new Set();
+
+  return getVworldAttributeRows(container).reduce((result, row) => {
+    const relationCode = String(row?.cnflcAt ?? "").trim();
+    const rawRelation = String(row?.cnflcAtNm ?? "").trim();
+    const relationByCode = { "1": "포함", "2": "저촉", "3": "접합" };
+    const relation = relationByCode[relationCode] || (rawRelation === "접함" ? "접합" : rawRelation);
+    const districtCode = String(row?.prposAreaDstrcCode ?? "").trim();
+    const districtName = String(row?.prposAreaDstrcCodeNm ?? "").trim();
+    if (!relation || !districtName) return result;
+    const key = `${relation}|${districtCode}|${districtName}`;
+    if (seen.has(key)) return result;
+    seen.add(key);
+    result.push({
+      relationCode,
+      relation,
+      districtCode,
+      districtName,
+      lawGroup: isNationalPlanningLandUseRecord(districtCode, districtName)
+        ? "national-planning"
+        : "other",
+      registeredAt: String(row?.registDt ?? "").trim(),
+      lastUpdatedAt: String(row?.lastUpdtDt ?? "").trim()
+    });
+    return result;
+  }, []);
+}
+
+function normalizeIndividualLandPrices(payload) {
+  const container = getVworldAttributeContainer(payload, ["indvdLandPrices", "individualLandPrices"]);
+  if (!container) return [];
+  assertVworldAttributeResult(payload, container, "개별공시지가정보 조회에 실패했습니다.");
+  const seen = new Set();
+
+  return getVworldAttributeRows(container)
+    .reduce((result, row) => {
+      const year = String(row?.stdrYear ?? "").trim();
+      const month = String(row?.stdrMt ?? "01").trim().padStart(2, "0");
+      const pricePerSquareMeter = Number(row?.pblntfPclnd ?? 0);
+      if (!/^\d{4}$/.test(year) || !Number.isFinite(pricePerSquareMeter) || pricePerSquareMeter <= 0) {
+        return result;
+      }
+      const key = `${year}.${month}`;
+      if (seen.has(key)) return result;
+      seen.add(key);
+      result.push({
+        year,
+        month,
+        pricePerSquareMeter,
+        announcedAt: String(row?.pblntfDe ?? "").trim(),
+        standardLand: String(row?.stdLandAt ?? "").trim(),
+        lastUpdatedAt: String(row?.lastUpdtDt ?? "").trim()
+      });
+      return result;
+    }, [])
+    .sort((left, right) => Number(`${right.year}${right.month}`) - Number(`${left.year}${left.month}`))
+    .slice(0, 20);
+}
+
+function normalizeIndividualHousingPrices(payload) {
+  const container = getVworldAttributeContainer(payload, ["indvdHousingPrices", "individualHousingPrices"]);
+  if (!container) return [];
+  assertVworldAttributeResult(payload, container, "개별주택가격정보 조회에 실패했습니다.");
+  const seen = new Set();
+
+  return getVworldAttributeRows(container)
+    .reduce((result, row) => {
+      const year = String(row?.stdrYear ?? "").trim();
+      const month = String(row?.stdrMt ?? "01").trim().padStart(2, "0");
+      const housePrice = Number(row?.housePc ?? 0);
+      if (!/^\d{4}$/.test(year) || !Number.isFinite(housePrice) || housePrice <= 0) return result;
+      const key = `${year}.${month}|${String(row?.bildRegstrEsntlNo ?? "").trim()}`;
+      if (seen.has(key)) return result;
+      seen.add(key);
+      const landRegisterAreaM2 = Number(row?.ladRegstrAr);
+      const calculatedLandAreaM2 = Number(row?.calcPlotAr);
+      const totalBuildingAreaM2 = Number(row?.buldAllTotAr);
+      const calculatedBuildingAreaM2 = Number(row?.buldCalcTotAr);
+      result.push({
+        year,
+        month,
+        housePrice,
+        buildingRegisterKey: String(row?.bildRegstrEsntlNo ?? "").trim(),
+        dongCode: String(row?.dongCode ?? "").trim(),
+        landRegisterAreaM2: Number.isFinite(landRegisterAreaM2) ? landRegisterAreaM2 : null,
+        calculatedLandAreaM2: Number.isFinite(calculatedLandAreaM2) ? calculatedLandAreaM2 : null,
+        totalBuildingAreaM2: Number.isFinite(totalBuildingAreaM2) ? totalBuildingAreaM2 : null,
+        calculatedBuildingAreaM2: Number.isFinite(calculatedBuildingAreaM2) ? calculatedBuildingAreaM2 : null,
+        lastUpdatedAt: String(row?.lastUpdtDt ?? "").trim()
+      });
+      return result;
+    }, [])
+    .sort((left, right) => Number(`${right.year}${right.month}`) - Number(`${left.year}${left.month}`))
+    .slice(0, 20);
+}
+
+async function fetchVworldAttributeJson(endpoint, apiKey, apiDomain, pnu) {
+  const query = new URLSearchParams({
+    pnu,
+    format: "json",
+    numOfRows: "1000",
+    pageNo: "1",
+    key: apiKey
+  });
+  if (apiDomain) query.set("domain", apiDomain);
+
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 6000);
+  try {
+    const response = await fetch(`https://api.vworld.kr/ned/data/${endpoint}?${query.toString()}`, {
+      headers: {
+        Accept: "application/json",
+        "User-Agent": "REALJEJU/1.0"
+      },
+      signal: controller.signal
+    });
+    if (!response.ok) throw new Error(`VWorld 속성정보 응답 오류(${response.status})`);
+    return response.json();
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+function normalizeLandMoves(payload) {
+  const container = getVworldAttributeContainer(payload, ["landMoves", "landMove"]);
+  if (!container) return [];
+  assertVworldAttributeResult(payload, container, "토지이동이력정보 조회에 실패했습니다.");
+  const seen = new Set();
+  return getVworldAttributeRows(container).reduce((result, row) => {
+    const movedAt = String(row?.ladMvmnDe ?? "").trim();
+    const reason = String(row?.ladMvmnPrvonshCodeNm ?? "").trim();
+    const reasonCode = String(row?.ladMvmnPrvonshCode ?? "").trim();
+    if (!movedAt && !reason) return result;
+    const key = `${movedAt}|${reasonCode}|${reason}`;
+    if (seen.has(key)) return result;
+    seen.add(key);
+    const areaM2 = Number(row?.lndpclAr);
+    result.push({
+      movedAt,
+      reason,
+      reasonCode,
+      areaM2: Number.isFinite(areaM2) ? areaM2 : null,
+      jimok: String(row?.lndcgrCodeNm ?? "").trim(),
+      erasedAt: String(row?.ladMvmnErsrDe ?? "").trim(),
+      lastUpdatedAt: String(row?.lastUpdtDt ?? "").trim()
+    });
+    return result;
+  }, []).sort((left, right) => String(left.movedAt).localeCompare(String(right.movedAt)));
+}
+
+async function fetchLandUsePlan(apiKey, apiDomain, pnu) {
+  return normalizeLandUsePlan(
+    await fetchVworldAttributeJson("getLandUseAttr", apiKey, apiDomain, pnu)
+  );
+}
+
+async function fetchLandMoves(apiKey, apiDomain, pnu) {
+  return normalizeLandMoves(
+    await fetchVworldAttributeJson("getLandMoveAttr", apiKey, apiDomain, pnu)
+  );
+}
+
+async function fetchIndividualLandPrices(apiKey, apiDomain, pnu) {
+  return normalizeIndividualLandPrices(
+    await fetchVworldAttributeJson("getIndvdLandPriceAttr", apiKey, apiDomain, pnu)
+  );
+}
+
+async function fetchIndividualHousingPrices(apiKey, apiDomain, pnu) {
+  return normalizeIndividualHousingPrices(
+    await fetchVworldAttributeJson("getIndvdHousingPriceAttr", apiKey, apiDomain, pnu)
+  );
+}
+
 
 module.exports = async function handler(req, res)
 {
@@ -444,14 +991,162 @@ module.exports = async function handler(req, res)
 	const apiDomain = normalizeVworldApiDomain(process.env.VWORLD_API_DOMAIN);
 
 	try {
-		const parcel = await getParcelBoundary(apiKey, apiDomain, lat, lng);
+		const pointKey = buildPointCacheKey(lat, lng);
+		let parcel = await loadPermanentBoundary(pointKey);
+		if (!parcel) {
+			parcel = await getParcelBoundary(apiKey, apiDomain, lat, lng);
+			if (parcel && parcel.pnu) {
+				await storePermanentParcelInformation([{
+					pnu: parcel.pnu,
+					data_type: "parcel_boundary",
+					point_key: pointKey,
+					payload: parcel,
+					source: "vworld-wfs"
+				}]);
+			}
+		}
 		if (!parcel) {
 			res.setHeader("Cache-Control", "public, max-age=30, s-maxage=60");
 			res.status(404).json({ ok: false, code: "PARCEL_NOT_FOUND" });
 			return;
 		}
+		let landCharacteristics = null;
+		let landCharacteristicsStatus = "not-found";
+		let landPossession = null;
+		let landPossessionStatus = "not-found";
+		let landUsePlan = [];
+  let landUsePlanStatus = "not-found";
+  let landMoves = [];
+  let landMovesStatus = "not-found";
+  let individualLandPrices = [];
+  let individualLandPricesStatus = "not-found";
+  let individualHousingPrices = [];
+  let individualHousingPricesStatus = "not-found";
+  const permanentCache = await loadPermanentParcelInformation(parcel.pnu);
+  const permanentWrites = [];
+
+  if (permanentCache.has("land_basic")) {
+    const cached = permanentCache.get("land_basic") || {};
+    landCharacteristics = cached.value || null;
+    landCharacteristicsStatus = String(cached.status || (landCharacteristics ? "available" : "not-found"));
+  }
+  if (permanentCache.has("land_ownership")) {
+    const cached = permanentCache.get("land_ownership") || {};
+    landPossession = cached.value || null;
+    landPossessionStatus = String(cached.status || (landPossession ? "available" : "not-found"));
+  }
+  if (permanentCache.has("land_use_plan")) {
+    const cached = permanentCache.get("land_use_plan") || {};
+    landUsePlan = Array.isArray(cached.items) ? cached.items : [];
+    landUsePlanStatus = String(cached.status || (landUsePlan.length ? "ok" : "not-found"));
+  }
+  if (permanentCache.has("land_movement")) {
+    const cached = permanentCache.get("land_movement") || {};
+    landMoves = Array.isArray(cached.items) ? cached.items : [];
+    landMovesStatus = String(cached.status || (landMoves.length ? "ok" : "not-found"));
+  }
+  if (permanentCache.has("official_land_price")) {
+    const cached = permanentCache.get("official_land_price") || {};
+    individualLandPrices = Array.isArray(cached.items) ? cached.items : [];
+    individualLandPricesStatus = String(cached.status || (individualLandPrices.length ? "ok" : "not-found"));
+  }
+  if (permanentCache.has("individual_house_price")) {
+    const cached = permanentCache.get("individual_house_price") || {};
+    individualHousingPrices = Array.isArray(cached.items) ? cached.items : [];
+    individualHousingPricesStatus = String(cached.status || (individualHousingPrices.length ? "ok" : "not-found"));
+  }
+
+  const missingRequests = [];
+  if (!permanentCache.has("land_basic")) missingRequests.push(
+			fetchLandCharacteristics(apiKey, apiDomain, parcel.pnu)
+				.then((value) => {
+					landCharacteristics = value;
+					landCharacteristicsStatus = value ? "available" : "not-found";
+					permanentWrites.push({ pnu: parcel.pnu, data_type: "land_basic", payload: { value, status: landCharacteristicsStatus } });
+				})
+				.catch((landError) => {
+					landCharacteristicsStatus = "unavailable";
+					console.warn("토지특성 공식 API 조회 실패:", landError && landError.message ? landError.message : "UNKNOWN_ERROR");
+				})
+  );
+  if (!permanentCache.has("land_ownership")) missingRequests.push(
+			fetchLandPossession(apiKey, apiDomain, parcel.pnu)
+				.then((value) => {
+					landPossession = value;
+					landPossessionStatus = value ? "available" : "not-found";
+					permanentWrites.push({ pnu: parcel.pnu, data_type: "land_ownership", payload: { value, status: landPossessionStatus } });
+				})
+				.catch((possessionError) => {
+					landPossessionStatus = "unavailable";
+					console.warn("토지소유 공식 API 조회 실패:", possessionError && possessionError.message ? possessionError.message : "UNKNOWN_ERROR");
+				})
+  );
+  if (!permanentCache.has("land_use_plan")) missingRequests.push(
+    fetchLandUsePlan(apiKey, apiDomain, parcel.pnu)
+      .then((result) => {
+        landUsePlan = result;
+        landUsePlanStatus = result.length ? "ok" : "not-found";
+        permanentWrites.push({ pnu: parcel.pnu, data_type: "land_use_plan", payload: { items: result, status: landUsePlanStatus } });
+      })
+      .catch((error) => {
+        console.warn("[parcel-boundary-by-point] land-use-plan lookup failed:", error?.message || error);
+        landUsePlanStatus = "unavailable";
+      })
+  );
+  if (!permanentCache.has("land_movement")) missingRequests.push(
+    fetchLandMoves(apiKey, apiDomain, parcel.pnu)
+      .then((result) => {
+        landMoves = result;
+        landMovesStatus = result.length ? "ok" : "not-found";
+        permanentWrites.push({ pnu: parcel.pnu, data_type: "land_movement", payload: { items: result, status: landMovesStatus } });
+      })
+      .catch((error) => {
+        console.warn("[parcel-boundary-by-point] land-moves lookup failed:", error?.message || error);
+        landMovesStatus = "unavailable";
+      })
+  );
+  if (!permanentCache.has("official_land_price")) missingRequests.push(
+    fetchIndividualLandPrices(apiKey, apiDomain, parcel.pnu)
+      .then((result) => {
+        individualLandPrices = result;
+        individualLandPricesStatus = result.length ? "ok" : "not-found";
+        permanentWrites.push({ pnu: parcel.pnu, data_type: "official_land_price", payload: { items: result, status: individualLandPricesStatus } });
+      })
+      .catch((error) => {
+        console.warn("[parcel-boundary-by-point] land-price lookup failed:", error?.message || error);
+        individualLandPricesStatus = "unavailable";
+      })
+  );
+  if (!permanentCache.has("individual_house_price")) missingRequests.push(
+    fetchIndividualHousingPrices(apiKey, apiDomain, parcel.pnu)
+      .then((result) => {
+        individualHousingPrices = result;
+        individualHousingPricesStatus = result.length ? "ok" : "not-found";
+        permanentWrites.push({ pnu: parcel.pnu, data_type: "individual_house_price", payload: { items: result, status: individualHousingPricesStatus } });
+      })
+      .catch((error) => {
+        console.warn("[parcel-boundary-by-point] housing-price lookup failed:", error?.message || error);
+        individualHousingPricesStatus = "unavailable";
+      })
+  );
+  await Promise.all(missingRequests);
+  await storePermanentParcelInformation(permanentWrites);
 		res.setHeader("Cache-Control", "public, max-age=300, s-maxage=21600, stale-while-revalidate=86400");
-		res.status(200).json(parcel);
+		res.status(200).json({
+			...parcel,
+			landCharacteristics,
+			landCharacteristicsStatus,
+			landPossession,
+			landPossessionStatus,
+      landUsePlan,
+      landUsePlanStatus,
+      landMoves,
+      landMovesStatus,
+      individualLandPrices,
+      individualLandPricesStatus,
+      individualHousingPrices,
+      individualHousingPricesStatus,
+		});
 	} catch (error) {
 		console.error("필지 경계 공식 API 조회 실패:", error && error.message ? error.message : "UNKNOWN_ERROR");
 		res.setHeader("Cache-Control", "no-store");
@@ -464,6 +1159,9 @@ module.exports = async function handler(req, res)
 };
 
 module.exports.__test = {
+  normalizeLandUsePlan,
+  normalizeIndividualLandPrices,
+  normalizeIndividualHousingPrices,
 	getAllowedCorsOrigin,
 	buildPointCacheKey,
 	chooseParcelFeature,
@@ -473,5 +1171,7 @@ module.exports.__test = {
 	isPointInRing,
 	normalizeVworldApiDomain,
 	normalizeFeatureProperties,
+	normalizeLandCharacteristics,
+	normalizeLandPossession,
 	parseVworldPayload
 };
