@@ -1170,7 +1170,7 @@ module.exports = async function handler(req, res)
 		res.status(403).json({ ok: false, code: "WORKER_AUTH_REQUIRED" });
 		return;
 	}
-	const apiKey = refreshRequested ? normalizeApiKey(process.env.VWORLD_API_KEY) : "";
+	const apiKey = normalizeApiKey(process.env.VWORLD_API_KEY);
 	if (refreshRequested && !apiKey) {
 		res.setHeader("Cache-Control", "no-store");
 		res.status(503).json({ ok: false, code: "VWORLD_KEY_NOT_CONFIGURED" });
@@ -1182,9 +1182,9 @@ module.exports = async function handler(req, res)
 		const pointKey = buildPointCacheKey(lat, lng);
 		let parcel = refreshRequested ? null : await loadPermanentBoundary(pointKey, lat, lng);
 		if (!parcel) {
-			if (!refreshRequested) {
+			if (!apiKey) {
 				res.setHeader("Cache-Control", "no-store");
-				res.status(404).json({ ok: false, code: "PARCEL_NOT_CACHED" });
+				res.status(503).json({ ok: false, code: "VWORLD_KEY_NOT_CONFIGURED" });
 				return;
 			}
 			parcel = await getParcelBoundary(apiKey, apiDomain, lat, lng);
@@ -1210,21 +1210,10 @@ module.exports = async function handler(req, res)
   const permanentCache = await loadPermanentParcelInformation(parcel.pnu);
   const permanentWrites = [];
 
-  // A boundary cache row only proves that a polygon was seen before. It does
-  // not mean that this parcel completed the public-data ingestion pipeline.
-  // Interactive requests must therefore require the DB-backed land record;
-  // otherwise old boundary rows can reopen a parcel with browser-composed or
-  // incomplete information. Authenticated refresh workers are the only path
-  // allowed to fill a missing land record from the upstream APIs.
-  if (!refreshRequested && !permanentCache.has(PARCEL_CACHE_TYPE.LAND_BASIC)) {
-    res.setHeader("Cache-Control", "private, no-store, max-age=0, must-revalidate");
-    res.status(404).json({
-      ok: false,
-      code: "PARCEL_DB_NOT_LOADED",
-      pnu: String(parcel.pnu || "")
-    });
-    return;
-  }
+  // Boundary geometry and property datasets are independent. A parcel polygon
+  // must be returned whenever its boundary lookup succeeds, even when
+  // land_basic or every detailed property dataset is still not_loaded.
+  const propertyInformationAvailable = permanentCache.has(PARCEL_CACHE_TYPE.LAND_BASIC);
 
   if (permanentCache.has(PARCEL_CACHE_TYPE.LAND_BASIC)) {
     const cached = permanentCache.get(PARCEL_CACHE_TYPE.LAND_BASIC) || {};
@@ -1344,6 +1333,7 @@ module.exports = async function handler(req, res)
 			return "loaded";
 		};
 		const datasetStates = Object.freeze({
+			boundary: "loaded",
 			land_basic: resolveDatasetState(PARCEL_CACHE_TYPE.LAND_BASIC),
 			ownership: resolveDatasetState(PARCEL_CACHE_TYPE.OWNERSHIP),
 			land_use: resolveDatasetState(PARCEL_CACHE_TYPE.LAND_USE),
@@ -1357,8 +1347,9 @@ module.exports = async function handler(req, res)
 		res.setHeader("Cache-Control", "private, no-store, max-age=0, must-revalidate");
 		res.status(200).json({
 			...parcel,
-			dbContract: "property-dataset-db-only-v1",
+			dbContract: "boundary-independent-property-db-only-v2",
 			dataSource: refreshRequested ? "authorized-public-loader" : "database",
+			propertyInformationAvailable,
 			datasetStates,
 			landCharacteristics,
 			landCharacteristicsStatus,
