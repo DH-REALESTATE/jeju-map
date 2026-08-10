@@ -9,17 +9,34 @@ const VWORLD_LAND_POSSESSION_TIMEOUT_MS = 5000;
 const VWORLD_UPSTREAM_MAX_ATTEMPTS = 3;
 const VWORLD_UPSTREAM_RETRY_DELAY_MS = 180;
 const PARCEL_QUERY_BUFFER_DEGREES = 0.000025;
-const PARCEL_CACHE_TTL_MS = 6 * 60 * 60 * 1000;
+// Interactive parcel lookup is DB-only. Do not retain pre-reset parcel rows in
+// a warm serverless instance after the permanent cache has been purged.
+const PARCEL_CACHE_TTL_MS = 0;
 const PARCEL_CACHE_MAX_ENTRIES = 300;
 const PARCEL_INFORMATION_CACHE_TABLE = "parcel_information_cache";
-const PARCEL_INFORMATION_CACHE_TYPES = Object.freeze([
-  "land_basic",
-  "land_ownership",
-  "land_use_plan",
-  "land_movement",
-  "official_land_price",
-  "individual_house_price"
-]);
+const PARCEL_BOUNDARY_POINT_CACHE_TABLE = "parcel_boundary_point_cache";
+const DAY_MS = 24 * 60 * 60 * 1000;
+const PARCEL_INFORMATION_CACHE_POLICY = Object.freeze({
+  boundary: Object.freeze({ completeTtlMs: 365 * DAY_MS, notFoundTtlMs: 7 * DAY_MS }),
+  land_basic: Object.freeze({ completeTtlMs: 90 * DAY_MS, notFoundTtlMs: 7 * DAY_MS }),
+  ownership: Object.freeze({ completeTtlMs: 7 * DAY_MS, notFoundTtlMs: 7 * DAY_MS }),
+  land_use: Object.freeze({ completeTtlMs: 30 * DAY_MS, notFoundTtlMs: 7 * DAY_MS }),
+  land_movement: Object.freeze({ completeTtlMs: 30 * DAY_MS, notFoundTtlMs: 7 * DAY_MS }),
+  individual_land_prices: Object.freeze({ completeTtlMs: 30 * DAY_MS, notFoundTtlMs: 7 * DAY_MS }),
+  individual_housing_prices: Object.freeze({ completeTtlMs: 30 * DAY_MS, notFoundTtlMs: 7 * DAY_MS })
+});
+const PARCEL_CACHE_TYPE = Object.freeze({
+  BOUNDARY: "boundary",
+  LAND_BASIC: "land_basic",
+  OWNERSHIP: "ownership",
+  LAND_USE: "land_use",
+  LAND_MOVEMENT: "land_movement",
+  INDIVIDUAL_LAND_PRICES: "individual_land_prices",
+  INDIVIDUAL_HOUSING_PRICES: "individual_housing_prices"
+});
+const PARCEL_INFORMATION_CACHE_TYPES = Object.freeze(
+  Object.values(PARCEL_CACHE_TYPE).filter((dataType) => dataType !== PARCEL_CACHE_TYPE.BOUNDARY)
+);
 
 const JEJU_QUERY_BOUNDS = Object.freeze({
 	minLng: 125.75,
@@ -53,6 +70,11 @@ function getAllowedCorsOrigin(req)
 
 function applyCorsHeaders(req, res)
 {
+	// Parcel cache rows can be replaced or removed by the offline loader. A
+	// browser/CDN response cache must never outlive that database state.
+	res.setHeader("Cache-Control", "private, no-store, max-age=0, must-revalidate");
+	res.setHeader("CDN-Cache-Control", "no-store");
+	res.setHeader("Vercel-CDN-Cache-Control", "no-store");
 	const allowedOrigin = getAllowedCorsOrigin(req);
 	if (!allowedOrigin) return;
 	res.setHeader("Access-Control-Allow-Origin", allowedOrigin);
@@ -133,19 +155,121 @@ async function supabaseAdminFetch(path, options)
   }
 }
 
-async function loadPermanentBoundary(pointKey)
+function parcelWorkerAuthorized(req)
+{
+	const expected = String(process.env.REALJEJU_WORKER_SECRET || "").trim();
+	const headerToken = String(req && req.headers && req.headers["x-realjeju-worker-secret"] || "").trim();
+	const bearerToken = String(req && req.headers && req.headers.authorization || "").replace(/^Bearer\s+/i, "").trim();
+	return Boolean(expected) && (headerToken === expected || bearerToken === expected);
+}
+
+function boundaryCoordinateBounds(geometry)
+{
+	const bounds = { minLng: Infinity, maxLng: -Infinity, minLat: Infinity, maxLat: -Infinity };
+	const visit = (value) => {
+		if (!Array.isArray(value)) return;
+		if (value.length >= 2 && Number.isFinite(Number(value[0])) && Number.isFinite(Number(value[1]))) {
+			const lng = Number(value[0]);
+			const lat = Number(value[1]);
+			bounds.minLng = Math.min(bounds.minLng, lng);
+			bounds.maxLng = Math.max(bounds.maxLng, lng);
+			bounds.minLat = Math.min(bounds.minLat, lat);
+			bounds.maxLat = Math.max(bounds.maxLat, lat);
+			return;
+		}
+		value.forEach(visit);
+	};
+	visit(geometry && geometry.coordinates);
+	return Number.isFinite(bounds.minLng) ? bounds : null;
+}
+
+function pointInBoundaryRing(ring, lng, lat)
+{
+	if (!Array.isArray(ring) || ring.length < 3) return false;
+	let inside = false;
+	for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+		const xi = Number(ring[i] && ring[i][0]);
+		const yi = Number(ring[i] && ring[i][1]);
+		const xj = Number(ring[j] && ring[j][0]);
+		const yj = Number(ring[j] && ring[j][1]);
+		if (![xi, yi, xj, yj].every(Number.isFinite)) continue;
+		const intersects = ((yi > lat) !== (yj > lat))
+			&& (lng < ((xj - xi) * (lat - yi)) / ((yj - yi) || Number.EPSILON) + xi);
+		if (intersects) inside = !inside;
+	}
+	return inside;
+}
+
+function cachedBoundaryContainsPoint(parcel, lng, lat)
+{
+	const geometry = parcel && parcel.geometry;
+	if (!geometry || !Array.isArray(geometry.coordinates)) return false;
+	const polygonContains = (polygon) => Array.isArray(polygon)
+		&& pointInBoundaryRing(polygon[0], lng, lat)
+		&& !polygon.slice(1).some((hole) => pointInBoundaryRing(hole, lng, lat));
+	if (geometry.type === "Polygon") return polygonContains(geometry.coordinates);
+	if (geometry.type === "MultiPolygon") return geometry.coordinates.some(polygonContains);
+	return false;
+}
+
+async function loadPermanentBoundary(pointKey, lat, lng)
 {
   if (!pointKey) return null;
   const query = new URLSearchParams({
     select: "payload",
-    data_type: "eq.parcel_boundary",
     point_key: `eq.${pointKey}`,
+    order: "updated_at.desc",
     limit: "1"
   });
-  const response = await supabaseAdminFetch(`/rest/v1/${PARCEL_INFORMATION_CACHE_TABLE}?${query.toString()}`);
+  const response = await supabaseAdminFetch(`/rest/v1/${PARCEL_BOUNDARY_POINT_CACHE_TABLE}?${query.toString()}`);
   if (!response || !response.ok) return null;
   const rows = await response.json().catch(() => []);
-  return Array.isArray(rows) && rows[0] && rows[0].payload ? rows[0].payload : null;
+  const row = Array.isArray(rows) ? rows[0] : null;
+  if (row && row.payload) return row.payload;
+
+  if (!Number.isFinite(Number(lat)) || !Number.isFinite(Number(lng))) return null;
+  const bboxQuery = new URLSearchParams({
+    select: "payload",
+    min_lng: `lte.${Number(lng)}`,
+    max_lng: `gte.${Number(lng)}`,
+    min_lat: `lte.${Number(lat)}`,
+    max_lat: `gte.${Number(lat)}`,
+    order: "updated_at.desc",
+    limit: "20"
+  });
+  const bboxResponse = await supabaseAdminFetch(`/rest/v1/${PARCEL_BOUNDARY_POINT_CACHE_TABLE}?${bboxQuery.toString()}`);
+  if (!bboxResponse || !bboxResponse.ok) return null;
+  const bboxRows = await bboxResponse.json().catch(() => []);
+  const matched = (Array.isArray(bboxRows) ? bboxRows : []).find((candidate) =>
+    candidate && candidate.payload && cachedBoundaryContainsPoint(candidate.payload, Number(lng), Number(lat))
+  );
+  return matched && matched.payload ? matched.payload : null;
+}
+
+async function storePermanentBoundary(pointKey, parcel)
+{
+  if (!pointKey || !parcel || !/^\d{19}$/.test(String(parcel.pnu || ""))) return;
+  const bounds = boundaryCoordinateBounds(parcel.geometry);
+  const row = {
+    point_key: pointKey,
+    pnu: String(parcel.pnu),
+    payload: parcel,
+    min_lng: bounds ? bounds.minLng : null,
+    max_lng: bounds ? bounds.maxLng : null,
+    min_lat: bounds ? bounds.minLat : null,
+    max_lat: bounds ? bounds.maxLat : null,
+    expires_at: new Date(Date.now() + PARCEL_INFORMATION_CACHE_POLICY.boundary.completeTtlMs).toISOString(),
+    updated_at: new Date().toISOString()
+  };
+  const response = await supabaseAdminFetch(
+    `/rest/v1/${PARCEL_BOUNDARY_POINT_CACHE_TABLE}?on_conflict=point_key`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Prefer: "resolution=merge-duplicates,return=minimal" },
+      body: JSON.stringify([row])
+    }
+  );
+  if (response && !response.ok) console.warn("[parcel boundary point cache] store failed:", response.status);
 }
 
 async function loadPermanentParcelInformation(pnu)
@@ -153,7 +277,7 @@ async function loadPermanentParcelInformation(pnu)
   const result = new Map();
   if (!/^\d{19}$/.test(String(pnu || ""))) return result;
   const query = new URLSearchParams({
-    select: "data_type,payload",
+    select: "data_type,payload,cache_status,expires_at",
     pnu: `eq.${pnu}`,
     data_type: `in.(${PARCEL_INFORMATION_CACHE_TYPES.join(",")})`
   });
@@ -161,17 +285,59 @@ async function loadPermanentParcelInformation(pnu)
   if (!response || !response.ok) return result;
   const rows = await response.json().catch(() => []);
   for (const row of Array.isArray(rows) ? rows : []) {
-    if (row && row.data_type) result.set(String(row.data_type), row.payload || {});
+    if (row && row.data_type && isUsablePermanentCacheRow(row)) {
+      result.set(String(row.data_type), row.payload || {});
+    }
   }
   return result;
+}
+
+function normalizePermanentCacheStatus(payload)
+{
+  const status = String(payload && payload.status ? payload.status : "").trim().toLowerCase();
+  if (["not-found", "not_found", "empty", "no_data"].includes(status)) return "not_found";
+  if (/(error|fail|timeout|unavailable|invalid|unauthor)/.test(status)) return null;
+  return "complete";
+}
+
+function getPermanentCacheExpiresAt(dataType, cacheStatus)
+{
+  const policy = PARCEL_INFORMATION_CACHE_POLICY[dataType];
+  if (!policy) return null;
+  const ttlMs = cacheStatus === "not_found" ? policy.notFoundTtlMs : policy.completeTtlMs;
+  return new Date(Date.now() + ttlMs).toISOString();
+}
+
+function isUsablePermanentCacheRow(row)
+{
+  return Boolean(row && row.payload && ["complete", "not_found"].includes(String(row.cache_status || "")));
 }
 
 async function storePermanentParcelInformation(rows)
 {
   const validRows = (Array.isArray(rows) ? rows : []).filter((row) =>
-    row && /^\d{19}$/.test(String(row.pnu || "")) && row.data_type && row.payload
+    row
+      && /^\d{19}$/.test(String(row.pnu || ""))
+      && Object.prototype.hasOwnProperty.call(PARCEL_INFORMATION_CACHE_POLICY, String(row.data_type || ""))
+      && row.payload
   );
   if (!validRows.length) return;
+  const preparedRows = validRows.map((row) => {
+    const dataType = String(row.data_type);
+    const cacheStatus = normalizePermanentCacheStatus(row.payload);
+    if (!cacheStatus) return null;
+    return {
+      pnu: String(row.pnu),
+      data_type: dataType,
+      point_key: row.point_key ? String(row.point_key) : null,
+      payload: row.payload,
+      source: String(row.source || "vworld"),
+      cache_status: cacheStatus,
+      expires_at: getPermanentCacheExpiresAt(dataType, cacheStatus),
+      updated_at: new Date().toISOString()
+    };
+  }).filter(Boolean);
+  if (!preparedRows.length) return;
   const response = await supabaseAdminFetch(
     `/rest/v1/${PARCEL_INFORMATION_CACHE_TABLE}?on_conflict=pnu,data_type`,
     {
@@ -180,14 +346,7 @@ async function storePermanentParcelInformation(rows)
         "Content-Type": "application/json",
         Prefer: "resolution=merge-duplicates,return=minimal"
       },
-      body: JSON.stringify(validRows.map((row) => ({
-        pnu: String(row.pnu),
-        data_type: String(row.data_type),
-        point_key: row.point_key ? String(row.point_key) : null,
-        payload: row.payload,
-        source: String(row.source || "vworld"),
-        updated_at: new Date().toISOString()
-      })))
+      body: JSON.stringify(preparedRows)
     }
   );
   if (response && !response.ok) {
@@ -345,6 +504,11 @@ function chooseParcelFeature(featureCollection, lng, lat)
 	return candidates.sort((a, b) => countGeometryVertices(a.geometry) - countGeometryVertices(b.geometry))[0];
 }
 
+function normalizeParcelDisplayJibun(value)
+{
+	return String(value || "").trim().replace(/(\d)\s*[가-힣]+$/u, "$1").trim();
+}
+
 function normalizeFeatureProperties(properties)
 {
 	const source = properties && typeof properties === "object" ? properties : {};
@@ -354,7 +518,7 @@ function normalizeFeatureProperties(properties)
 		sigunguName: String(source.sgg_nm || source.sigunguName || "").trim(),
 		eupmyeondongName: String(source.emd_nm || source.eupmyeondongName || "").trim(),
 		riName: String(source.ri_nm || source.riName || "").trim(),
-		jibun: String(source.jibun || "").trim(),
+		jibun: normalizeParcelDisplayJibun(source.jibun),
 		jimok: String(source.jimok || "").trim()
 	};
 }
@@ -733,6 +897,7 @@ async function getParcelBoundary(apiKey, apiDomain, lat, lng)
 }
 
 function getVworldAttributeContainer(payload, names) {
+  if (Array.isArray(payload?.__realjejuRows)) return payload;
   for (const name of names) {
     if (payload?.[name] && typeof payload[name] === "object") return payload[name];
   }
@@ -741,6 +906,7 @@ function getVworldAttributeContainer(payload, names) {
 
 function getVworldAttributeRows(container) {
   const rawRows =
+    container?.__realjejuRows ||
     container?.field ||
     container?.fields ||
     container?.items?.item ||
@@ -876,30 +1042,43 @@ function normalizeIndividualHousingPrices(payload) {
 }
 
 async function fetchVworldAttributeJson(endpoint, apiKey, apiDomain, pnu) {
-  const query = new URLSearchParams({
-    pnu,
-    format: "json",
-    numOfRows: "1000",
-    pageNo: "1",
-    key: apiKey
-  });
-  if (apiDomain) query.set("domain", apiDomain);
-
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 6000);
-  try {
-    const response = await fetch(`https://api.vworld.kr/ned/data/${endpoint}?${query.toString()}`, {
-      headers: {
-        Accept: "application/json",
-        "User-Agent": "REALJEJU/1.0"
-      },
-      signal: controller.signal
+  const pageSize = 1000;
+  const allRows = [];
+  let firstPayload = null;
+  for (let pageNo = 1; pageNo <= 100; pageNo += 1) {
+    const query = new URLSearchParams({
+      pnu,
+      format: "json",
+      numOfRows: String(pageSize),
+      pageNo: String(pageNo),
+      key: apiKey
     });
-    if (!response.ok) throw new Error(`VWorld 속성정보 응답 오류(${response.status})`);
-    return response.json();
-  } finally {
-    clearTimeout(timer);
+    if (apiDomain) query.set("domain", apiDomain);
+
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 6000);
+    try {
+      const response = await fetch(`https://api.vworld.kr/ned/data/${endpoint}?${query.toString()}`, {
+        headers: { Accept: "application/json", "User-Agent": "REALJEJU/1.0" },
+        signal: controller.signal
+      });
+      if (!response.ok) throw new Error(`VWorld 속성정보 응답 오류(${response.status})`);
+      const payload = await response.json();
+      if (!firstPayload) firstPayload = payload;
+      const container = getVworldAttributeContainer(payload, [
+        "landUses", "landUse", "landMoves", "landMove", "indvdLandPrices",
+        "individualLandPrices", "indvdHousingPrices", "individualHousingPrices"
+      ]);
+      assertVworldAttributeResult(payload, container, "VWorld 속성정보 조회에 실패했습니다.");
+      const pageRows = getVworldAttributeRows(container);
+      const totalCount = Number(container?.totalCount ?? payload?.totalCount ?? pageRows.length);
+      allRows.push(...pageRows);
+      if (pageRows.length < pageSize || allRows.length >= totalCount) break;
+    } finally {
+      clearTimeout(timer);
+    }
   }
+  return { ...(firstPayload || {}), __realjejuRows: allRows };
 }
 
 function normalizeLandMoves(payload) {
@@ -982,8 +1161,14 @@ module.exports = async function handler(req, res)
 		return;
 	}
 
-	const apiKey = normalizeApiKey(process.env.VWORLD_API_KEY);
-	if (!apiKey) {
+	const refreshRequested = ["1", "true", "yes"].includes(String(req.query && req.query.refresh || "").trim().toLowerCase());
+	if (refreshRequested && !parcelWorkerAuthorized(req)) {
+		res.setHeader("Cache-Control", "no-store");
+		res.status(403).json({ ok: false, code: "WORKER_AUTH_REQUIRED" });
+		return;
+	}
+	const apiKey = refreshRequested ? normalizeApiKey(process.env.VWORLD_API_KEY) : "";
+	if (refreshRequested && !apiKey) {
 		res.setHeader("Cache-Control", "no-store");
 		res.status(503).json({ ok: false, code: "VWORLD_KEY_NOT_CONFIGURED" });
 		return;
@@ -992,18 +1177,15 @@ module.exports = async function handler(req, res)
 
 	try {
 		const pointKey = buildPointCacheKey(lat, lng);
-		let parcel = await loadPermanentBoundary(pointKey);
+		let parcel = refreshRequested ? null : await loadPermanentBoundary(pointKey, lat, lng);
 		if (!parcel) {
-			parcel = await getParcelBoundary(apiKey, apiDomain, lat, lng);
-			if (parcel && parcel.pnu) {
-				await storePermanentParcelInformation([{
-					pnu: parcel.pnu,
-					data_type: "parcel_boundary",
-					point_key: pointKey,
-					payload: parcel,
-					source: "vworld-wfs"
-				}]);
+			if (!refreshRequested) {
+				res.setHeader("Cache-Control", "no-store");
+				res.status(404).json({ ok: false, code: "PARCEL_NOT_CACHED" });
+				return;
 			}
+			parcel = await getParcelBoundary(apiKey, apiDomain, lat, lng);
+			if (parcel && parcel.pnu) await storePermanentBoundary(pointKey, parcel);
 		}
 		if (!parcel) {
 			res.setHeader("Cache-Control", "public, max-age=30, s-maxage=60");
@@ -1011,118 +1193,134 @@ module.exports = async function handler(req, res)
 			return;
 		}
 		let landCharacteristics = null;
-		let landCharacteristicsStatus = "not-found";
+		let landCharacteristicsStatus = "unavailable";
 		let landPossession = null;
-		let landPossessionStatus = "not-found";
+		let landPossessionStatus = "unavailable";
 		let landUsePlan = [];
-  let landUsePlanStatus = "not-found";
+  let landUsePlanStatus = "unavailable";
   let landMoves = [];
-  let landMovesStatus = "not-found";
+  let landMovesStatus = "unavailable";
   let individualLandPrices = [];
-  let individualLandPricesStatus = "not-found";
+  let individualLandPricesStatus = "unavailable";
   let individualHousingPrices = [];
-  let individualHousingPricesStatus = "not-found";
+  let individualHousingPricesStatus = "unavailable";
   const permanentCache = await loadPermanentParcelInformation(parcel.pnu);
   const permanentWrites = [];
 
-  if (permanentCache.has("land_basic")) {
-    const cached = permanentCache.get("land_basic") || {};
+  // A boundary cache row only proves that a polygon was seen before. It does
+  // not mean that this parcel completed the public-data ingestion pipeline.
+  // Interactive requests must therefore require the DB-backed land record;
+  // otherwise old boundary rows can reopen a parcel with browser-composed or
+  // incomplete information. Authenticated refresh workers are the only path
+  // allowed to fill a missing land record from the upstream APIs.
+  if (!refreshRequested && !permanentCache.has(PARCEL_CACHE_TYPE.LAND_BASIC)) {
+    res.setHeader("Cache-Control", "private, no-store, max-age=0, must-revalidate");
+    res.status(404).json({
+      ok: false,
+      code: "PARCEL_DB_NOT_LOADED",
+      pnu: String(parcel.pnu || "")
+    });
+    return;
+  }
+
+  if (permanentCache.has(PARCEL_CACHE_TYPE.LAND_BASIC)) {
+    const cached = permanentCache.get(PARCEL_CACHE_TYPE.LAND_BASIC) || {};
     landCharacteristics = cached.value || null;
     landCharacteristicsStatus = String(cached.status || (landCharacteristics ? "available" : "not-found"));
   }
-  if (permanentCache.has("land_ownership")) {
-    const cached = permanentCache.get("land_ownership") || {};
+  if (permanentCache.has(PARCEL_CACHE_TYPE.OWNERSHIP)) {
+    const cached = permanentCache.get(PARCEL_CACHE_TYPE.OWNERSHIP) || {};
     landPossession = cached.value || null;
     landPossessionStatus = String(cached.status || (landPossession ? "available" : "not-found"));
   }
-  if (permanentCache.has("land_use_plan")) {
-    const cached = permanentCache.get("land_use_plan") || {};
+  if (permanentCache.has(PARCEL_CACHE_TYPE.LAND_USE)) {
+    const cached = permanentCache.get(PARCEL_CACHE_TYPE.LAND_USE) || {};
     landUsePlan = Array.isArray(cached.items) ? cached.items : [];
     landUsePlanStatus = String(cached.status || (landUsePlan.length ? "ok" : "not-found"));
   }
-  if (permanentCache.has("land_movement")) {
-    const cached = permanentCache.get("land_movement") || {};
+  if (permanentCache.has(PARCEL_CACHE_TYPE.LAND_MOVEMENT)) {
+    const cached = permanentCache.get(PARCEL_CACHE_TYPE.LAND_MOVEMENT) || {};
     landMoves = Array.isArray(cached.items) ? cached.items : [];
     landMovesStatus = String(cached.status || (landMoves.length ? "ok" : "not-found"));
   }
-  if (permanentCache.has("official_land_price")) {
-    const cached = permanentCache.get("official_land_price") || {};
+  if (permanentCache.has(PARCEL_CACHE_TYPE.INDIVIDUAL_LAND_PRICES)) {
+    const cached = permanentCache.get(PARCEL_CACHE_TYPE.INDIVIDUAL_LAND_PRICES) || {};
     individualLandPrices = Array.isArray(cached.items) ? cached.items : [];
     individualLandPricesStatus = String(cached.status || (individualLandPrices.length ? "ok" : "not-found"));
   }
-  if (permanentCache.has("individual_house_price")) {
-    const cached = permanentCache.get("individual_house_price") || {};
+  if (permanentCache.has(PARCEL_CACHE_TYPE.INDIVIDUAL_HOUSING_PRICES)) {
+    const cached = permanentCache.get(PARCEL_CACHE_TYPE.INDIVIDUAL_HOUSING_PRICES) || {};
     individualHousingPrices = Array.isArray(cached.items) ? cached.items : [];
     individualHousingPricesStatus = String(cached.status || (individualHousingPrices.length ? "ok" : "not-found"));
   }
 
   const missingRequests = [];
-  if (!permanentCache.has("land_basic")) missingRequests.push(
+  if (refreshRequested) missingRequests.push(
 			fetchLandCharacteristics(apiKey, apiDomain, parcel.pnu)
 				.then((value) => {
 					landCharacteristics = value;
 					landCharacteristicsStatus = value ? "available" : "not-found";
-					permanentWrites.push({ pnu: parcel.pnu, data_type: "land_basic", payload: { value, status: landCharacteristicsStatus } });
+					permanentWrites.push({ pnu: parcel.pnu, data_type: PARCEL_CACHE_TYPE.LAND_BASIC, payload: { value, status: landCharacteristicsStatus } });
 				})
 				.catch((landError) => {
 					landCharacteristicsStatus = "unavailable";
 					console.warn("토지특성 공식 API 조회 실패:", landError && landError.message ? landError.message : "UNKNOWN_ERROR");
 				})
   );
-  if (!permanentCache.has("land_ownership")) missingRequests.push(
+  if (refreshRequested) missingRequests.push(
 			fetchLandPossession(apiKey, apiDomain, parcel.pnu)
 				.then((value) => {
 					landPossession = value;
 					landPossessionStatus = value ? "available" : "not-found";
-					permanentWrites.push({ pnu: parcel.pnu, data_type: "land_ownership", payload: { value, status: landPossessionStatus } });
+					permanentWrites.push({ pnu: parcel.pnu, data_type: PARCEL_CACHE_TYPE.OWNERSHIP, payload: { value, status: landPossessionStatus } });
 				})
 				.catch((possessionError) => {
 					landPossessionStatus = "unavailable";
 					console.warn("토지소유 공식 API 조회 실패:", possessionError && possessionError.message ? possessionError.message : "UNKNOWN_ERROR");
 				})
   );
-  if (!permanentCache.has("land_use_plan")) missingRequests.push(
+  if (refreshRequested) missingRequests.push(
     fetchLandUsePlan(apiKey, apiDomain, parcel.pnu)
       .then((result) => {
         landUsePlan = result;
         landUsePlanStatus = result.length ? "ok" : "not-found";
-        permanentWrites.push({ pnu: parcel.pnu, data_type: "land_use_plan", payload: { items: result, status: landUsePlanStatus } });
+        permanentWrites.push({ pnu: parcel.pnu, data_type: PARCEL_CACHE_TYPE.LAND_USE, payload: { items: result, status: landUsePlanStatus } });
       })
       .catch((error) => {
         console.warn("[parcel-boundary-by-point] land-use-plan lookup failed:", error?.message || error);
         landUsePlanStatus = "unavailable";
       })
   );
-  if (!permanentCache.has("land_movement")) missingRequests.push(
+  if (refreshRequested) missingRequests.push(
     fetchLandMoves(apiKey, apiDomain, parcel.pnu)
       .then((result) => {
         landMoves = result;
         landMovesStatus = result.length ? "ok" : "not-found";
-        permanentWrites.push({ pnu: parcel.pnu, data_type: "land_movement", payload: { items: result, status: landMovesStatus } });
+        permanentWrites.push({ pnu: parcel.pnu, data_type: PARCEL_CACHE_TYPE.LAND_MOVEMENT, payload: { items: result, status: landMovesStatus } });
       })
       .catch((error) => {
         console.warn("[parcel-boundary-by-point] land-moves lookup failed:", error?.message || error);
         landMovesStatus = "unavailable";
       })
   );
-  if (!permanentCache.has("official_land_price")) missingRequests.push(
+  if (refreshRequested) missingRequests.push(
     fetchIndividualLandPrices(apiKey, apiDomain, parcel.pnu)
       .then((result) => {
         individualLandPrices = result;
         individualLandPricesStatus = result.length ? "ok" : "not-found";
-        permanentWrites.push({ pnu: parcel.pnu, data_type: "official_land_price", payload: { items: result, status: individualLandPricesStatus } });
+        permanentWrites.push({ pnu: parcel.pnu, data_type: PARCEL_CACHE_TYPE.INDIVIDUAL_LAND_PRICES, payload: { items: result, status: individualLandPricesStatus } });
       })
       .catch((error) => {
         console.warn("[parcel-boundary-by-point] land-price lookup failed:", error?.message || error);
         individualLandPricesStatus = "unavailable";
       })
   );
-  if (!permanentCache.has("individual_house_price")) missingRequests.push(
+  if (refreshRequested) missingRequests.push(
     fetchIndividualHousingPrices(apiKey, apiDomain, parcel.pnu)
       .then((result) => {
         individualHousingPrices = result;
         individualHousingPricesStatus = result.length ? "ok" : "not-found";
-        permanentWrites.push({ pnu: parcel.pnu, data_type: "individual_house_price", payload: { items: result, status: individualHousingPricesStatus } });
+        permanentWrites.push({ pnu: parcel.pnu, data_type: PARCEL_CACHE_TYPE.INDIVIDUAL_HOUSING_PRICES, payload: { items: result, status: individualHousingPricesStatus } });
       })
       .catch((error) => {
         console.warn("[parcel-boundary-by-point] housing-price lookup failed:", error?.message || error);
@@ -1131,7 +1329,7 @@ module.exports = async function handler(req, res)
   );
   await Promise.all(missingRequests);
   await storePermanentParcelInformation(permanentWrites);
-		res.setHeader("Cache-Control", "public, max-age=300, s-maxage=21600, stale-while-revalidate=86400");
+		res.setHeader("Cache-Control", "private, no-store, max-age=0, must-revalidate, s-maxage=21600, stale-while-revalidate=86400");
 		res.status(200).json({
 			...parcel,
 			landCharacteristics,
