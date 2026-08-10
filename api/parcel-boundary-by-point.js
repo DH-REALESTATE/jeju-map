@@ -32,7 +32,10 @@ const PARCEL_CACHE_TYPE = Object.freeze({
   LAND_USE: "land_use",
   LAND_MOVEMENT: "land_movement",
   INDIVIDUAL_LAND_PRICES: "individual_land_prices",
-  INDIVIDUAL_HOUSING_PRICES: "individual_housing_prices"
+  INDIVIDUAL_HOUSING_PRICES: "individual_housing_prices",
+  BUILDING_REGISTER: "building_register",
+  COMMON_HOUSING_PRICES: "common_housing_prices",
+  APARTMENT_BUSINESSES: "apartment_businesses"
 });
 const PARCEL_INFORMATION_CACHE_TYPES = Object.freeze(
   Object.values(PARCEL_CACHE_TYPE).filter((dataType) => dataType !== PARCEL_CACHE_TYPE.BOUNDARY)
@@ -1329,9 +1332,34 @@ module.exports = async function handler(req, res)
   );
   await Promise.all(missingRequests);
   await storePermanentParcelInformation(permanentWrites);
-		res.setHeader("Cache-Control", "private, no-store, max-age=0, must-revalidate, s-maxage=21600, stale-while-revalidate=86400");
+		permanentWrites.forEach((row) => {
+			if (row && row.data_type) permanentCache.set(row.data_type, row.payload || {});
+		});
+		const resolveDatasetState = (dataType) => {
+			if (!permanentCache.has(dataType)) return "not_loaded";
+			const cached = permanentCache.get(dataType) || {};
+			const status = String(cached.status || "").trim().toLowerCase();
+			if (["not-found", "not_found", "empty", "loaded_empty"].includes(status)) return "loaded_empty";
+			if (["stale", "expired"].includes(status)) return "stale";
+			return "loaded";
+		};
+		const datasetStates = Object.freeze({
+			land_basic: resolveDatasetState(PARCEL_CACHE_TYPE.LAND_BASIC),
+			ownership: resolveDatasetState(PARCEL_CACHE_TYPE.OWNERSHIP),
+			land_use: resolveDatasetState(PARCEL_CACHE_TYPE.LAND_USE),
+			land_movement: resolveDatasetState(PARCEL_CACHE_TYPE.LAND_MOVEMENT),
+			individual_land_prices: resolveDatasetState(PARCEL_CACHE_TYPE.INDIVIDUAL_LAND_PRICES),
+			individual_housing_prices: resolveDatasetState(PARCEL_CACHE_TYPE.INDIVIDUAL_HOUSING_PRICES),
+			building_register: resolveDatasetState(PARCEL_CACHE_TYPE.BUILDING_REGISTER),
+			common_housing_prices: resolveDatasetState(PARCEL_CACHE_TYPE.COMMON_HOUSING_PRICES),
+			apartment_businesses: resolveDatasetState(PARCEL_CACHE_TYPE.APARTMENT_BUSINESSES)
+		});
+		res.setHeader("Cache-Control", "private, no-store, max-age=0, must-revalidate");
 		res.status(200).json({
 			...parcel,
+			dbContract: "property-dataset-db-only-v1",
+			dataSource: refreshRequested ? "authorized-public-loader" : "database",
+			datasetStates,
 			landCharacteristics,
 			landCharacteristicsStatus,
 			landPossession,
