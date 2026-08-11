@@ -1369,7 +1369,9 @@ module.exports = async function handler(req, res)
   // Boundary geometry and property datasets are independent. A parcel polygon
   // must be returned whenever its boundary lookup succeeds, even when
   // land_basic or every detailed property dataset is still not_loaded.
-  const propertyInformationAvailable = permanentCache.has(PARCEL_CACHE_TYPE.LAND_BASIC);
+	  const propertyInformationAvailable = PARCEL_INFORMATION_CACHE_TYPES.some(
+	    (dataType) => permanentCache.has(dataType)
+	  ) || (Array.isArray(offlineLandUsePlan) && offlineLandUsePlan.length > 0);
 
   if (permanentCache.has(PARCEL_CACHE_TYPE.LAND_BASIC)) {
     const cached = permanentCache.get(PARCEL_CACHE_TYPE.LAND_BASIC) || {};
