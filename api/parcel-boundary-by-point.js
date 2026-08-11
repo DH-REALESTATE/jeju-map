@@ -158,12 +158,61 @@ async function supabaseAdminFetch(path, options)
   }
 }
 
+async function loadOfflineLandUsePlan(pnu)
+{
+  const normalizedPnu = String(pnu || "").trim();
+  if (!/^\d{19}$/.test(normalizedPnu)) return null;
+  const response = await supabaseAdminFetch(
+    `/rest/v1/realjeju_land_use_plan_current?select=relation_type,law_name,zone_code,zone_name,source_standard_date,payload&pnu=eq.${encodeURIComponent(normalizedPnu)}&order=id.asc&limit=1000`
+  );
+  if (!response || !response.ok) {
+    if (response) {
+      console.warn("[parcel-boundary-by-point] offline land-use lookup failed:", response.status);
+    }
+    return null;
+  }
+
+  const rows = await response.json().catch(() => []);
+  if (!Array.isArray(rows)) return null;
+  const relationByCode = { "1": "포함", "2": "저촉", "3": "접합" };
+  const seen = new Set();
+  return rows.reduce((items, row) => {
+    const payload = row && row.payload && typeof row.payload === "object" ? row.payload : {};
+    const relationCode = String(payload["저촉여부코드"] || "").trim();
+    const rawRelation = String(row.relation_type || payload["저촉여부"] || "").trim();
+    const relation = relationByCode[relationCode] || (rawRelation === "접함" ? "접합" : rawRelation);
+    const districtCode = String(row.zone_code || payload["용도지역지구코드"] || "").trim();
+    const districtName = String(row.zone_name || payload["용도지역지구명"] || "").trim();
+    if (!relation || !districtName) return items;
+    const key = `${relation}|${districtCode}|${districtName}`;
+    if (seen.has(key)) return items;
+    seen.add(key);
+    items.push({
+      relationCode,
+      relation,
+      districtCode,
+      districtName,
+      lawGroup: isNationalPlanningLandUseRecord(districtCode, districtName)
+        ? "national-planning"
+        : "other",
+      lawName: String(row.law_name || "").trim(),
+      registeredAt: String(payload["등록일자"] || "").trim(),
+      lastUpdatedAt: String(payload["데이터기준일자"] || row.source_standard_date || "").trim()
+    });
+    return items;
+  }, []);
+}
+
 function parcelWorkerAuthorized(req)
 {
 	const expected = String(process.env.REALJEJU_WORKER_SECRET || "").trim();
+	const serviceRoleKey = String(process.env.SUPABASE_SERVICE_ROLE_KEY || "").trim();
 	const headerToken = String(req && req.headers && req.headers["x-realjeju-worker-secret"] || "").trim();
 	const bearerToken = String(req && req.headers && req.headers.authorization || "").replace(/^Bearer\s+/i, "").trim();
-	return Boolean(expected) && (headerToken === expected || bearerToken === expected);
+	return Boolean(
+		(expected && (headerToken === expected || bearerToken === expected))
+		|| (serviceRoleKey && bearerToken === serviceRoleKey)
+	);
 }
 
 function boundaryCoordinateBounds(geometry)
@@ -213,6 +262,70 @@ function cachedBoundaryContainsPoint(parcel, lng, lat)
 	if (geometry.type === "Polygon") return polygonContains(geometry.coordinates);
 	if (geometry.type === "MultiPolygon") return geometry.coordinates.some(polygonContains);
 	return false;
+}
+
+async function loadParcelMasterBoundaryByPnu(pnu)
+{
+  const normalizedPnu = String(pnu || "").trim();
+  if (!/^\d{19}$/.test(normalizedPnu)) return null;
+
+  const response = await supabaseAdminFetch(
+    `/rest/v1/jeju_parcels?select=pnu,lng,lat,source_version&pnu=eq.${encodeURIComponent(normalizedPnu)}&limit=1`
+  );
+  if (!response || !response.ok) return null;
+  const rows = await response.json().catch(() => []);
+  const row = Array.isArray(rows) ? rows[0] : null;
+  if (!row || String(row.pnu || "").trim() !== normalizedPnu) return null;
+
+  const representativeLng = Number(row.lng);
+  const representativeLat = Number(row.lat);
+  return {
+    pnu: normalizedPnu,
+    lng: Number.isFinite(representativeLng) ? representativeLng : null,
+    lat: Number.isFinite(representativeLat) ? representativeLat : null,
+    geometry: null,
+    source: "jeju_parcels",
+    sourceVersion: String(row.source_version || "").trim()
+  };
+}
+
+async function loadParcelMasterBoundary(lat, lng)
+{
+  const response = await supabaseAdminFetch("/rest/v1/rpc/find_jeju_parcel_by_point", {
+    method: "POST",
+    body: JSON.stringify({
+      p_lng: Number(lng),
+      p_lat: Number(lat)
+    })
+  });
+  if (!response || !response.ok) return null;
+  const rows = await response.json().catch(() => []);
+  const row = Array.isArray(rows) ? rows[0] : null;
+  const pnu = String(row && row.pnu || "").trim();
+  if (!pnu || !row || !row.geometry) return null;
+
+  let geometry = row.geometry;
+  if (typeof geometry === "string") {
+    try {
+      geometry = JSON.parse(geometry);
+    } catch (_) {
+      return null;
+    }
+  }
+  if (!geometry || !["Polygon", "MultiPolygon"].includes(String(geometry.type || ""))) {
+    return null;
+  }
+
+  const representativeLng = Number(row.lng);
+  const representativeLat = Number(row.lat);
+  return {
+    pnu,
+    lng: Number.isFinite(representativeLng) ? representativeLng : Number(lng),
+    lat: Number.isFinite(representativeLat) ? representativeLat : Number(lat),
+    geometry,
+    source: "jeju_parcels",
+    sourceVersion: String(row.source_version || "").trim()
+  };
 }
 
 async function loadPermanentBoundary(pointKey, lat, lng)
@@ -1165,7 +1278,18 @@ module.exports = async function handler(req, res)
 	}
 
 	const refreshRequested = ["1", "true", "yes"].includes(String(req.query && req.query.refresh || "").trim().toLowerCase());
+	const requestedPnu = String(req.query && req.query.pnu || "").trim();
 	if (refreshRequested && !parcelWorkerAuthorized(req)) {
+		res.setHeader("Cache-Control", "no-store");
+		res.status(403).json({ ok: false, code: "WORKER_AUTH_REQUIRED" });
+		return;
+	}
+	if (requestedPnu && !/^\d{19}$/.test(requestedPnu)) {
+		res.setHeader("Cache-Control", "no-store");
+		res.status(400).json({ ok: false, code: "INVALID_PNU" });
+		return;
+	}
+	if (requestedPnu && !parcelWorkerAuthorized(req)) {
 		res.setHeader("Cache-Control", "no-store");
 		res.status(403).json({ ok: false, code: "WORKER_AUTH_REQUIRED" });
 		return;
@@ -1179,17 +1303,9 @@ module.exports = async function handler(req, res)
 	const apiDomain = normalizeVworldApiDomain(process.env.VWORLD_API_DOMAIN);
 
 	try {
-		const pointKey = buildPointCacheKey(lat, lng);
-		let parcel = refreshRequested ? null : await loadPermanentBoundary(pointKey, lat, lng);
-		if (!parcel) {
-			if (!apiKey) {
-				res.setHeader("Cache-Control", "no-store");
-				res.status(503).json({ ok: false, code: "VWORLD_KEY_NOT_CONFIGURED" });
-				return;
-			}
-			parcel = await getParcelBoundary(apiKey, apiDomain, lat, lng);
-			if (parcel && parcel.pnu) await storePermanentBoundary(pointKey, parcel);
-		}
+		const parcel = requestedPnu
+			? await loadParcelMasterBoundaryByPnu(requestedPnu)
+			: await loadParcelMasterBoundary(lat, lng);
 		if (!parcel) {
 			res.setHeader("Cache-Control", "public, max-age=30, s-maxage=60");
 			res.status(404).json({ ok: false, code: "PARCEL_NOT_FOUND" });
@@ -1207,8 +1323,11 @@ module.exports = async function handler(req, res)
   let individualLandPricesStatus = "unavailable";
   let individualHousingPrices = [];
   let individualHousingPricesStatus = "unavailable";
-  const permanentCache = await loadPermanentParcelInformation(parcel.pnu);
-  const permanentWrites = [];
+	  const [permanentCache, offlineLandUsePlan] = await Promise.all([
+	    loadPermanentParcelInformation(parcel.pnu),
+	    loadOfflineLandUsePlan(parcel.pnu)
+	  ]);
+	  const permanentWrites = [];
 
   // Boundary geometry and property datasets are independent. A parcel polygon
   // must be returned whenever its boundary lookup succeeds, even when
@@ -1225,11 +1344,19 @@ module.exports = async function handler(req, res)
     landPossession = cached.value || null;
     landPossessionStatus = String(cached.status || (landPossession ? "available" : "not-found"));
   }
-  if (permanentCache.has(PARCEL_CACHE_TYPE.LAND_USE)) {
-    const cached = permanentCache.get(PARCEL_CACHE_TYPE.LAND_USE) || {};
-    landUsePlan = Array.isArray(cached.items) ? cached.items : [];
-    landUsePlanStatus = String(cached.status || (landUsePlan.length ? "ok" : "not-found"));
-  }
+	  if (permanentCache.has(PARCEL_CACHE_TYPE.LAND_USE)) {
+	    const cached = permanentCache.get(PARCEL_CACHE_TYPE.LAND_USE) || {};
+	    landUsePlan = Array.isArray(cached.items) ? cached.items : [];
+	    landUsePlanStatus = String(cached.status || (landUsePlan.length ? "ok" : "not-found"));
+	  }
+	  if (Array.isArray(offlineLandUsePlan)) {
+	    landUsePlan = offlineLandUsePlan;
+	    landUsePlanStatus = landUsePlan.length ? "ok" : "not-found";
+	    permanentCache.set(PARCEL_CACHE_TYPE.LAND_USE, {
+	      items: landUsePlan,
+	      status: landUsePlanStatus
+	    });
+	  }
   if (permanentCache.has(PARCEL_CACHE_TYPE.LAND_MOVEMENT)) {
     const cached = permanentCache.get(PARCEL_CACHE_TYPE.LAND_MOVEMENT) || {};
     landMoves = Array.isArray(cached.items) ? cached.items : [];
@@ -1270,18 +1397,6 @@ module.exports = async function handler(req, res)
 					landPossessionStatus = "unavailable";
 					console.warn("토지소유 공식 API 조회 실패:", possessionError && possessionError.message ? possessionError.message : "UNKNOWN_ERROR");
 				})
-  );
-  if (refreshRequested) missingRequests.push(
-    fetchLandUsePlan(apiKey, apiDomain, parcel.pnu)
-      .then((result) => {
-        landUsePlan = result;
-        landUsePlanStatus = result.length ? "ok" : "not-found";
-        permanentWrites.push({ pnu: parcel.pnu, data_type: PARCEL_CACHE_TYPE.LAND_USE, payload: { items: result, status: landUsePlanStatus } });
-      })
-      .catch((error) => {
-        console.warn("[parcel-boundary-by-point] land-use-plan lookup failed:", error?.message || error);
-        landUsePlanStatus = "unavailable";
-      })
   );
   if (refreshRequested) missingRequests.push(
     fetchLandMoves(apiKey, apiDomain, parcel.pnu)
@@ -1347,7 +1462,7 @@ module.exports = async function handler(req, res)
 		res.setHeader("Cache-Control", "private, no-store, max-age=0, must-revalidate");
 		res.status(200).json({
 			...parcel,
-			dbContract: "boundary-independent-property-db-only-v2",
+			dbContract: "parcel-master-boundary-property-db-only-v3",
 			dataSource: refreshRequested ? "authorized-public-loader" : "database",
 			propertyInformationAvailable,
 			datasetStates,
@@ -1365,12 +1480,12 @@ module.exports = async function handler(req, res)
       individualHousingPricesStatus,
 		});
 	} catch (error) {
-		console.error("필지 경계 공식 API 조회 실패:", error && error.message ? error.message : "UNKNOWN_ERROR");
+		console.error("필지 경계 DB 조회 실패:", error && error.message ? error.message : "UNKNOWN_ERROR");
 		res.setHeader("Cache-Control", "no-store");
 		const upstreamCode = String(error && error.upstreamCode ? error.upstreamCode : "").trim();
 		res.status(502).json({
 			ok: false,
-			code: upstreamCode ? `VWORLD_${upstreamCode}` : "VWORLD_UPSTREAM_FAILED"
+			code: upstreamCode || "PARCEL_DATABASE_LOOKUP_FAILED"
 		});
 	}
 };
