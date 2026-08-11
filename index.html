@@ -189,13 +189,13 @@ REALJEJU HTML 구조 / Ver 5.268
 				transition: none;
 			}
 		</style>
-		<link rel="stylesheet" href="/css/base-foundation_5.423.css?v=20260808-css-module-split-5423">
-		<link rel="stylesheet" href="/css/core-map_5.423.css?v=20260808-css-module-split-5423">
-		<link rel="stylesheet" href="/css/property-info_5.423.css?v=20260808-css-module-split-5423">
-		<link rel="stylesheet" href="/css/workspace-app_5.423.css?v=20260808-css-module-split-5423">
-		<link rel="stylesheet" href="/css/admin-app_5.423.css?v=20260808-css-module-split-5423">
-		<link rel="stylesheet" href="/css/account_5.423.css?v=20260808-css-module-split-5423">
-		<link rel="stylesheet" href="/css/base_5.423.css?v=20260808-css-module-split-5423">
+		<link rel="stylesheet" href="/css/base-foundation_5.600.css?v=20260811-own-address-db-only-5600">
+		<link rel="stylesheet" href="/css/core-map_5.600.css?v=20260811-own-address-db-only-5600">
+		<link rel="stylesheet" href="/css/property-info_5.600.css?v=20260811-own-address-db-only-5600">
+		<link rel="stylesheet" href="/css/workspace-app_5.600.css?v=20260811-own-address-db-only-5600">
+		<link rel="stylesheet" href="/css/admin-app_5.600.css?v=20260811-own-address-db-only-5600">
+		<link rel="stylesheet" href="/css/account_5.600.css?v=20260811-own-address-db-only-5600">
+		<link rel="stylesheet" href="/css/base_5.600.css?v=20260811-own-address-db-only-5600">
 
 </head>
 	<body class="sidebar-list-collapsed realjeju-side-nav-enabled main-landing-page-open">
@@ -624,7 +624,7 @@ REALJEJU HTML 구조 / Ver 5.268
 				</button>
 			</nav>
 			<div class="realjeju-side-admin-version" id="realjejuSideAdminVersion" aria-hidden="true" hidden>
-				<span class="topbar-version-text">5.423</span>
+				<span class="topbar-version-text">5.600</span>
 			</div>
 		</aside>
 		<button type="button" class="realjeju-side-nav-toggle" id="realjejuSideNavToggle" aria-controls="realjejuSideNav" aria-expanded="true" aria-label="왼쪽 메뉴 접기">
@@ -5888,10 +5888,17 @@ REALJEJU HTML 구조 / Ver 5.268
 	</div>
 </div>
 
-		<script src="/js/app_5.423.js?v=20260808-css-module-split-5423"></script>
-<script src="/js/workspace-app_5.423.js?v=20260808-css-module-split-5423"></script>
-<script src="/js/runtime-tail_5.423.js?v=20260808-css-module-split-5423"></script>
-<script src="/js/bootstrap_5.423.js?v=20260808-css-module-split-5423"></script>
+		<script>
+			if (typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")) {
+				window.realjejuParcelBoundaryConfig = Object.assign({}, window.realjejuParcelBoundaryConfig, {
+					endpoint: "https://realjeju.app/api/parcel-boundary-by-point"
+				});
+			}
+		</script>
+		<script src="/js/app_5.600.js?v=20260811-own-address-db-only-5600"></script>
+	<script src="/js/workspace-app_5.600.js?v=20260811-own-address-db-only-5600"></script>
+	<script src="/js/runtime-tail_5.600.js?v=20260811-own-address-db-only-5600"></script>
+	<script src="/js/bootstrap_5.600.js?v=20260811-own-address-db-only-5600"></script>
 
 
 <script>
