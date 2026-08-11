@@ -203,6 +203,43 @@ async function loadOfflineLandUsePlan(pnu)
   }, []);
 }
 
+async function loadParcelMasterBoundaryByPointRpc(lat, lng)
+{
+  const normalizedLat = normalizeCoordinate(lat);
+  const normalizedLng = normalizeCoordinate(lng);
+  if (normalizedLat === null || normalizedLng === null) return null;
+  const response = await supabaseAdminFetch(
+    "/rest/v1/rpc/find_jeju_parcel_by_point",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ p_lng: normalizedLng, p_lat: normalizedLat })
+    }
+  );
+  if (!response || !response.ok) {
+    if (response) {
+      console.warn("[parcel-boundary-by-point] parcel point RPC failed:", response.status);
+    }
+    return null;
+  }
+
+  const rows = await response.json().catch(() => []);
+  const row = Array.isArray(rows) ? rows[0] : null;
+  const pnu = String(row && row.pnu || "").trim();
+  if (!/^\d{19}$/.test(pnu) || !row.geometry) return null;
+  const representativeLng = Number(row.lng);
+  const representativeLat = Number(row.lat);
+  const sourceVersion = String(row.source_version || "").trim();
+  return {
+    pnu,
+    geometry: row.geometry,
+    lng: Number.isFinite(representativeLng) ? representativeLng : normalizedLng,
+    lat: Number.isFinite(representativeLat) ? representativeLat : normalizedLat,
+    sourceVersion,
+    source_version: sourceVersion
+  };
+}
+
 function parcelWorkerAuthorized(req)
 {
 	const expected = String(process.env.REALJEJU_WORKER_SECRET || "").trim();
@@ -1304,8 +1341,8 @@ module.exports = async function handler(req, res)
 
 	try {
 		const parcel = requestedPnu
-			? await loadParcelMasterBoundaryByPnu(requestedPnu)
-			: await loadParcelMasterBoundary(lat, lng);
+				? await loadParcelMasterBoundaryByPnu(requestedPnu)
+				: await loadParcelMasterBoundaryByPointRpc(lat, lng);
 		if (!parcel) {
 			res.setHeader("Cache-Control", "public, max-age=30, s-maxage=60");
 			res.status(404).json({ ok: false, code: "PARCEL_NOT_FOUND" });
