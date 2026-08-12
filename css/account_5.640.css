@@ -1,0 +1,809 @@
+/* REALJEJU 5.436 CSS module: payment, account and authentication
++ * Original cascade order is preserved. Rules are moved, not duplicated.
++ */
+/* ===== MERGED FROM payment_2.712.css ===== */
+/* PATCH 2.362: 이용권 결제 페이지 */
+
+
+
+.payment-page-head{display:flex;justify-content:space-between;gap:24px;align-items:flex-start;margin:0 0 24px;}
+.payment-page-title{margin:0;font-size:30px;line-height:1.25;font-weight:700;letter-spacing:-0.04em;}
+.payment-page-desc{margin:8px 0 0;font-size:15px;color:#64748b;}
+
+.payment-current-label{display:block;margin-bottom:6px;font-size:12px;color:#64748b;font-weight:600;}
+.payment-current-plan-card strong{display:block;font-size:20px;font-weight:700;}
+.payment-current-plan-card em{display:block;margin-top:4px;font-size:13px;color:#2563eb;font-style:normal;font-weight:600;}
+
+.payment-current-date-box span{display:block;margin-bottom:5px;font-size:12px;color:#64748b;font-weight:700;}
+.payment-current-date-box strong{display:block;font-size:14px;font-weight:800;color:#0f172a;letter-spacing:-.02em;}
+.payment-tabs{display:inline-flex;padding:5px;border-radius:14px;background:#e8eef7;margin-bottom:20px;}
+.payment-tab{border:0;background:transparent;border-radius:11px;padding:10px 18px;font-size:14px;font-weight:700;color:#64748b;cursor:pointer;}
+
+.payment-tab-panel{display:none;}
+.payment-tab-panel.active{display:block;}
+.payment-plan-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-bottom:18px;}
+.payment-plan-card{position:relative;padding:26px;border-radius:24px;background:#fff;border:1px solid #dbe5f0;box-shadow:0 14px 34px rgba(15,23,42,.07);}
+.payment-plan-card.featured{border:1px solid #e5e7eb;box-shadow:none;}
+.payment-plan-badge{position:absolute;right:20px;top:18px;padding:5px 10px;border-radius:999px;background:#2563eb;color:#fff;font-size:12px;font-weight:700;}
+.payment-plan-topline{font-size:12px;font-weight:800;color:#2563eb;text-transform:uppercase;letter-spacing:.08em;}
+.payment-plan-card h2{margin:8px 0 14px;font-size:22px;font-weight:800;letter-spacing:-.04em;}
+.payment-plan-price{font-size:30px;font-weight:800;letter-spacing:-.04em;}
+
+.payment-plan-card ul{list-style:none;margin:22px 0;padding:0;display:grid;gap:10px;color:#475573;font-size:14px;}
+.payment-plan-card li:before{content:'✓';margin-right:8px;color:#2563eb;font-weight:800;}
+.payment-plan-btn{width:100%;height:46px;border:0;border-radius:14px;background:#2563eb;color:#fff;font-size:15px;font-weight:800;cursor:pointer;}
+.payment-plan-btn.is-secondary{background:#e8eef7;color:#64748b;cursor:default;}
+
+.payment-extra-box h2,
+.payment-history-card h2,
+.payment-help-card h2{margin:0 0 14px;font-size:18px;font-weight:800;letter-spacing:-.03em;}
+.payment-extra-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;}
+.payment-extra-item{display:flex;justify-content:space-between;align-items:center;border:1px solid #dbe5f0;background:#f8fafc;border-radius:16px;padding:15px 16px;font-size:14px;font-weight:700;cursor:pointer;}
+
+.payment-ready-note{margin:14px 0 0;font-size:13px;color:#64748b;}
+.payment-history-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.payment-history-refresh,
+.payment-help-btn{border:1px solid #cbd5e1;background:#fff;border-radius:12px;padding:9px 14px;font-size:13px;font-weight:700;cursor:pointer;}
+.payment-history-table{width:100%;border-collapse:collapse;font-size:14px;}
+.payment-history-table th{padding:14px 12px;border-bottom:1px solid #e2e8f0;text-align:left;color:#64748b;font-weight:800;background:#f8fafc;}
+
+.payment-empty-row td{text-align:center;color:#94a3b8;}
+
+.payment-help-card p{margin:0 0 14px;color:#64748b;font-size:14px;}
+
+
+
+
+@media (max-width: 900px)
+{
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+}
+
+/* PATCH 2.396: 이용권 결제 페이지 전체 크기 90% 수준으로 축소 */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.payment-history-head{margin-bottom:7px;}
+.payment-history-refresh,
+.payment-help-btn{border-radius:11px;padding:8px 13px;font-size:12px;}
+
+
+
+.payment-help-card{margin-top:14px;}
+.payment-help-card p{margin-bottom:13px;font-size:13px;}
+
+
+
+@media (max-width: 900px)
+{
+	.payment-current-plan-card{
+		margin-top: 14px;
+	}
+
+	
+}
+
+/* PATCH 2.396: 이용권 결제 페이지 그림자 제거 및 추천 플랜 외곽선 완화 */
+.payment-page-panel .payment-current-plan-card,
+.payment-page-panel .payment-tab.active,
+.payment-page-panel .payment-plan-card,
+.payment-page-panel .payment-plan-card.featured,
+.payment-page-panel .payment-extra-box,
+.payment-page-panel .payment-history-card,
+.payment-page-panel .payment-help-card{
+	box-shadow: none;
+}
+
+.payment-page-panel .payment-plan-card.featured{
+	border-width: 1px;
+	border-color: #e5e7eb;
+}
+
+
+
+
+
+/* PATCH 2.396: 이용권 결제 페이지 라운드 비율 중간값 조정 */
+.payment-page-panel .payment-current-plan-card,
+.payment-page-panel .payment-plan-card,
+.payment-page-panel .payment-extra-box,
+.payment-page-panel .payment-history-card,
+.payment-page-panel .payment-help-card{
+	border-radius: 10px;
+}
+
+.payment-page-panel .payment-tabs,
+.payment-page-panel .payment-tab,
+.payment-page-panel .payment-plan-btn,
+.payment-page-panel .payment-extra-item,
+.payment-page-panel .payment-history-refresh,
+.payment-page-panel .payment-help-btn,
+.payment-page-panel .payment-plan-badge{
+	border-radius: 10px;
+}
+
+/* PATCH 2.396: 이용권 결제 하단 회사 정보 구분선 여백 통일 */
+
+
+/* PATCH 2.551: 이용권 결제 페이지 심플/정돈형 디자인 */
+
+
+
+
+
+
+.payment-page-head{
+	align-items: center;
+	gap: 28px;
+	margin: 0 0 26px;
+}
+
+.payment-page-title{
+	font-size: 25px;
+	font-weight: 700;
+	line-height: 1.25;
+}
+
+.payment-page-desc{
+	margin-top: 7px;
+	color: #6b7280;
+	font-size: 14px;
+	line-height: 1.45;
+}
+
+.payment-current-plan-card{
+	min-width: 260px;
+	padding: 18px 20px;
+	border: 1px solid #e5e7eb;
+	border-radius: 8px;
+	background: #ffffff;
+	box-shadow: none;
+}
+
+.payment-current-label{
+	margin-bottom: 7px;
+	color: #6b7280;
+	font-size: 12px;
+	font-weight: 600;
+}
+
+.payment-current-plan-card strong{
+	color: #111827;
+	font-size: 18px;
+	font-weight: 700;
+}
+
+.payment-current-plan-card em{
+	margin-top: 5px;
+	color: #2563eb;
+	font-size: 13px;
+	font-weight: 600;
+}
+
+.payment-current-date-box{
+	margin-top: 15px;
+	padding-top: 14px;
+	border-top: 1px solid #eef2f7;
+}
+
+.payment-current-date-box span{
+	color: #6b7280;
+	font-size: 12px;
+	font-weight: 600;
+}
+
+.payment-current-date-box strong{
+	color: #374151;
+	font-size: 13px;
+	font-weight: 600;
+}
+
+.payment-tabs{
+	margin-bottom: 18px;
+	padding: 0;
+	border: 1px solid #e5e7eb;
+	border-radius: 0;
+	background: #ffffff;
+	overflow: hidden;
+}
+
+.payment-tab{
+	height: 50px;
+	min-width: 132px;
+	padding: 0 22px;
+	border-radius: 0;
+	color: #6b7280;
+	font-size: 15px;
+	font-weight: 600;
+}
+
+.payment-tab.active{
+	background: #2563eb;
+	color: #ffffff;
+	box-shadow: none;
+}
+
+.payment-plan-grid{
+	gap: 12px;
+	margin-bottom: 18px;
+}
+
+.payment-plan-card{
+	display: flex;
+	min-height: 288px;
+	padding: 24px;
+	flex-direction: column;
+	border: 1px solid #e5e7eb;
+	border-radius: 8px;
+	background: #ffffff;
+	box-shadow: none;
+}
+
+.payment-plan-card.featured{
+	border: 1px solid #e5e7eb;
+	background: #ffffff;
+}
+
+.payment-plan-badge{
+	top: 18px;
+	right: 18px;
+	padding: 4px 8px;
+	border-radius: 6px;
+	background: #eff6ff;
+	color: #2563eb;
+	font-size: 12px;
+	font-weight: 700;
+}
+
+.payment-plan-topline{
+	color: #2563eb;
+	font-size: 12px;
+	font-weight: 700;
+	text-transform: none;
+}
+
+.payment-plan-card h2{
+	margin: 8px 0 16px;
+	color: #111827;
+	font-size: 20px;
+	font-weight: 700;
+}
+
+.payment-plan-price{
+	color: #111827;
+	font-size: 30px;
+	font-weight: 800;
+}
+
+.payment-plan-price span{
+	color: #6b7280;
+	font-size: 13px;
+	font-weight: 600;
+}
+
+.payment-plan-card ul{
+	margin: 22px 0 24px;
+	gap: 9px;
+	color: #4b5573;
+	font-size: 13px;
+	line-height: 1.45;
+}
+
+.payment-plan-card li::before{
+	color: #2563eb;
+}
+
+.payment-plan-card li.payment-plan-divider{
+	margin: 8px 0 4px;
+	padding: 0;
+	border-top: 0.5px solid #e5e7eb;
+}
+
+.payment-plan-card li.payment-plan-divider::before{
+	content: none;
+}
+
+.payment-plan-btn{
+	height: 42px;
+	margin-top: auto;
+	border-radius: 8px;
+	background: #2563eb;
+	font-size: 14px;
+	font-weight: 700;
+	box-shadow: none;
+}
+
+.payment-extra-box,
+.payment-history-card,
+.payment-help-card{
+	padding: 22px;
+	border: 1px solid #e5e7eb;
+	border-radius: 8px;
+	background: #ffffff;
+	box-shadow: none;
+}
+
+.payment-extra-box h2,
+.payment-history-card h2,
+.payment-help-card h2{
+	margin-bottom: 14px;
+	color: #111827;
+	font-size: 16px;
+	font-weight: 700;
+}
+
+.payment-extra-list{
+	gap: 10px;
+}
+
+.payment-extra-item{
+	padding: 14px 15px;
+	border: 1px solid #e5e7eb;
+	border-radius: 8px;
+	background: #fafafa;
+	color: #374151;
+	font-size: 13px;
+	font-weight: 600;
+}
+
+.payment-extra-item strong{
+	color: #2563eb;
+	font-weight: 700;
+}
+
+.payment-ready-note{
+	margin-top: 12px;
+	color: #9ca3af;
+	font-size: 12px;
+}
+
+.payment-history-refresh,
+.payment-help-btn{
+	border: 1px solid #d1d5db;
+	border-radius: 8px;
+	background: #ffffff;
+	color: #374151;
+	font-size: 13px;
+	font-weight: 600;
+}
+
+.payment-history-table{
+	font-size: 13px;
+}
+
+.payment-history-table th{
+	padding: 13px 12px;
+	border-bottom: 1px solid #e5e7eb;
+	background: #f9fafb;
+	color: #6b7280;
+	font-weight: 700;
+}
+
+.payment-history-table td{
+	padding: 16px 12px;
+	border-bottom: 1px solid #f0f2f5;
+	color: #4b5573;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@media (max-width: 900px)
+{
+	
+
+	.payment-page-head{
+		align-items: stretch;
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+	}
+
+	.payment-current-plan-card{
+		min-width: 0;
+	}
+
+	.payment-plan-grid,
+.payment-extra-list{
+		grid-template-columns: 1fr;
+	}
+
+	.payment-plan-card{
+		min-height: 0;
+	}
+}
+
+/* PATCH 2.551: 이용권 탭을 내정보 화면 버튼 높이에 맞추되 폭은 조금 축소 */
+.payment-page-panel .payment-tabs{
+	margin-bottom: 18px;
+	padding: 0;
+	border: 1px solid #e5e7eb;
+	border-radius: 12px;
+	background: #ffffff;
+	overflow: hidden;
+}
+
+.payment-page-panel .payment-tab{
+	height: 50px;
+	min-width: 118px;
+	padding: 0 16px;
+	border-radius: 0;
+	border-right: 1px solid #e5e7eb;
+	color: #6b7280;
+	font-size: 15px;
+	font-weight: 600;
+}
+
+.payment-page-panel .payment-tab:last-child{
+	border-right: 0;
+}
+
+.payment-page-panel .payment-tab.active{
+	background: #2563eb;
+	color: #ffffff;
+	box-shadow: none;
+}
+
+/* PATCH 2.551: 이용권 선택 버튼은 양쪽 끝을 완전 pill 형태로 표시 */
+.payment-page-panel .payment-plan-card .payment-plan-btn,
+.payment-page-panel .payment-plan-card .payment-plan-btn.is-secondary{
+	border-radius: 999px;
+}
+
+/* PATCH 2.551: 선택 가능 버튼은 흰색, 현재 플랜 버튼은 회색 비활성으로 표시 */
+.payment-page-panel .payment-plan-card .payment-plan-btn{
+	background: #ffffff;
+	border: 1px solid #d1d5db;
+	color: #111827;
+	box-shadow: none;
+}
+
+.payment-page-panel .payment-plan-card .payment-plan-btn:not(.is-secondary):not(.is-current):hover{
+	border-color: #2563eb;
+	color: #2563eb;
+}
+
+.payment-page-panel .payment-plan-card ul{
+	margin-bottom: 24px;
+}
+
+.payment-page-panel .payment-coupon-note{
+	margin: 12px 0 24px;
+}
+
+.payment-page-panel .payment-plan-card .payment-plan-btn.is-secondary,
+.payment-page-panel .payment-plan-card .payment-plan-btn:disabled{
+	background: #d1d5db;
+	border-color: #d1d5db;
+	color: #ffffff;
+	cursor: default;
+	pointer-events: none;
+}
+
+/* PATCH 2.551: 현재 결제한 이용권 카드에만 파란 테두리 표시 */
+.payment-page-panel .payment-plan-card.featured{
+	border: 1px solid #e5e7eb;
+	box-shadow: none;
+}
+
+
+
+/* PATCH 2.551: 이용권 결제 카드/현재 이용권 카드 그림자 효과 제거 */
+.payment-page-panel .payment-current-plan-card,
+.payment-page-panel .payment-plan-card,
+.payment-page-panel .payment-plan-card.featured,
+.payment-page-panel .payment-plan-card:has(.payment-plan-btn.is-current),
+.payment-page-panel .payment-extra-box,
+.payment-page-panel .payment-history-card,
+.payment-page-panel .payment-help-card,
+.payment-page-panel .payment-tab,
+.payment-page-panel .payment-tab.active{
+	box-shadow: none;
+}
+/* PATCH 2.551: 현재 결제 카드 파란선은 1px만 사용하고 그림자/외곽선 제거 */
+
+
+
+
+
+/* =====================================================
+   7. 내정보 / 중개사무소 신청
+   ===================================================== */
+/* ===== MERGED FROM myinfo_2.712.css ===== */
+/* REALJEJU myinfo overrides / Ver 2.551 */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@media (max-width: 720px)
+{
+	
+
+	
+
+	
+
+	
+
+	
+}
+
+/* REALJEJU profile suite broker pages / Ver 2.551 */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@media (max-width: 720px)
+{
+	
+
+	
+
+	
+
+	
+
+	
+}
+
+
+/* =====================================================
+   8. 인증
+   ===================================================== */
+/* ===== MERGED FROM auth_2.712.css ===== */
+/* REALJEJU auth overrides / Ver 2.551 */
+
+body.auth-page-open #authSignupTermsScreen .auth-terms-list{
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 0;
+	margin: 0 0 24px;
+	padding: 0;
+}
+
+body.auth-page-open #authSignupTermsScreen .auth-terms-item{
+	display: grid;
+	grid-template-columns: 28px minmax(0, 1fr) 20px;
+	align-items: center;
+	column-gap: 10px;
+	width: 100%;
+	min-height: 46px;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	border-bottom: 1px solid #eef2f7;
+	color: #374151;
+	font-size: 14px;
+	font-weight: 600;
+	line-height: 1.35;
+	letter-spacing: 0;
+	box-sizing: border-box;
+}
+
+body.auth-page-open #authSignupTermsScreen .auth-terms-item:last-child{
+	border-bottom: 0;
+}
+
+body.auth-page-open #authSignupTermsScreen .auth-terms-check-zone{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 28px;
+	height: 46px;
+	margin: 0;
+	padding: 0;
+	grid-column: 1;
+}
+
+body.auth-page-open #authSignupTermsScreen .auth-terms-checkbox{
+	width: 20px;
+	height: 20px;
+	margin: 0;
+	border: 1px solid #d1d5db;
+	border-radius: 4px;
+	background: #ffffff;
+	color: transparent;
+	font-size: 14px;
+	font-weight: 700;
+	line-height: 1;
+	box-shadow: none;
+	box-sizing: border-box;
+}
+
+
+
+body.auth-page-open #authSignupTermsScreen .auth-terms-open-zone{
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 20px;
+	align-items: center;
+	gap: 10px;
+	width: 100%;
+	height: 46px;
+	min-height: 46px;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	background: transparent;
+	color: inherit;
+	font: inherit;
+	text-align: left;
+	box-sizing: border-box;
+}
+
+body.auth-page-open #authSignupTermsScreen label.auth-terms-item > .auth-terms-text{
+	grid-column: 2;
+}
+
+body.auth-page-open #authSignupTermsScreen .auth-terms-text{
+	display: block;
+	min-width: 0;
+	margin: 0;
+	padding: 0;
+	line-height: 1.35;
+}
+
+body.auth-page-open #authSignupTermsScreen .auth-terms-highlight{
+	color: #111827;
+	font-size: 14px;
+	font-weight: 700;
+	line-height: 1.35;
+}
+
+body.auth-page-open #authSignupTermsScreen .auth-terms-arrow{
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	width: 20px;
+	height: 46px;
+	margin: 0;
+	color: #9ca3af;
+	font-size: 22px;
+	font-weight: 600;
+	line-height: 1;
+}
+
+
+/* =====================================================
+   9. 이전 기본 / 전역 보정
+   ===================================================== */
