@@ -249,6 +249,58 @@ async function loadOfflineLandBasic(pnu)
   };
 }
 
+async function loadOfflineLandPossession(pnu)
+{
+  const normalizedPnu = String(pnu || "").trim();
+  if (!/^\d{19}$/.test(normalizedPnu)) return null;
+  const response = await supabaseAdminFetch(
+    `/rest/v1/realjeju_land_ownership_current?select=pnu,ownership_code,ownership_name,owner_count,ownership_change_date,ownership_change_reason,source_standard_date&pnu=eq.${encodeURIComponent(normalizedPnu)}&limit=1`
+  );
+  if (!response || !response.ok) {
+    if (response) {
+      console.warn("[parcel-boundary-by-point] offline ownership lookup failed:", response.status);
+    }
+    return null;
+  }
+  const rows = await response.json().catch(() => []);
+  const row = Array.isArray(rows) ? rows[0] : null;
+  if (!row || String(row.pnu || "").trim() !== normalizedPnu) return null;
+  const sharedOwnerCount = Number(row.owner_count);
+  return {
+    pnu: normalizedPnu,
+    ownershipCode: String(row.ownership_code || "").trim(),
+    ownershipType: String(row.ownership_name || "").trim(),
+    sharedOwnerCount: Number.isFinite(sharedOwnerCount) ? sharedOwnerCount : null,
+    ownershipChangeDate: String(row.ownership_change_date || "").trim(),
+    ownershipChangeReason: String(row.ownership_change_reason || "").trim(),
+    lastUpdatedAt: String(row.source_standard_date || "").trim()
+  };
+}
+
+async function loadOfflineLandMoves(pnu)
+{
+  const normalizedPnu = String(pnu || "").trim();
+  if (!/^\d{19}$/.test(normalizedPnu)) return [];
+  const response = await supabaseAdminFetch(
+    `/rest/v1/realjeju_land_movements_current?select=movement_date,movement_reason,movement_reason_code,area_m2,jimok_name,source_standard_date&pnu=eq.${encodeURIComponent(normalizedPnu)}&order=movement_date.desc.nullslast&limit=100`
+  );
+  if (!response || !response.ok) {
+    if (response) {
+      console.warn("[parcel-boundary-by-point] offline land-movement lookup failed:", response.status);
+    }
+    return null;
+  }
+  const rows = await response.json().catch(() => []);
+  return (Array.isArray(rows) ? rows : []).map((row) => ({
+    movedAt: String(row.movement_date || "").trim(),
+    reason: String(row.movement_reason || "").trim(),
+    reasonCode: String(row.movement_reason_code || "").trim(),
+    areaM2: Number.isFinite(Number(row.area_m2)) ? Number(row.area_m2) : null,
+    jimok: String(row.jimok_name || "").trim(),
+    lastUpdatedAt: String(row.source_standard_date || "").trim()
+  }));
+}
+
 async function loadParcelMasterBoundaryByPointRpc(lat, lng)
 {
   const normalizedLat = normalizeCoordinate(lat);
@@ -1406,10 +1458,12 @@ module.exports = async function handler(req, res)
   let individualLandPricesStatus = "unavailable";
   let individualHousingPrices = [];
   let individualHousingPricesStatus = "unavailable";
-	  const [permanentCache, offlineLandUsePlan, offlineLandBasic] = await Promise.all([
+	  const [permanentCache, offlineLandUsePlan, offlineLandBasic, offlineLandPossession, offlineLandMoves] = await Promise.all([
 	    loadPermanentParcelInformation(parcel.pnu),
 	    loadOfflineLandUsePlan(parcel.pnu),
-	    loadOfflineLandBasic(parcel.pnu)
+	    loadOfflineLandBasic(parcel.pnu),
+	    loadOfflineLandPossession(parcel.pnu),
+	    loadOfflineLandMoves(parcel.pnu)
 	  ]);
 	  const permanentWrites = [];
 
@@ -1419,7 +1473,9 @@ module.exports = async function handler(req, res)
 	  const propertyInformationAvailable = PARCEL_INFORMATION_CACHE_TYPES.some(
 	    (dataType) => permanentCache.has(dataType)
 	  ) || (Array.isArray(offlineLandUsePlan) && offlineLandUsePlan.length > 0)
-	    || Boolean(offlineLandBasic);
+	    || Boolean(offlineLandBasic)
+	    || Boolean(offlineLandPossession)
+	    || (Array.isArray(offlineLandMoves) && offlineLandMoves.length > 0);
 
 	  if (permanentCache.has(PARCEL_CACHE_TYPE.LAND_BASIC)) {
 	    const cached = permanentCache.get(PARCEL_CACHE_TYPE.LAND_BASIC) || {};
@@ -1439,6 +1495,14 @@ module.exports = async function handler(req, res)
     landPossession = cached.value || null;
     landPossessionStatus = String(cached.status || (landPossession ? "available" : "not-found"));
   }
+	  if (offlineLandPossession) {
+	    landPossession = offlineLandPossession;
+	    landPossessionStatus = "available";
+	    permanentCache.set(PARCEL_CACHE_TYPE.OWNERSHIP, {
+	      value: landPossession,
+	      status: landPossessionStatus
+	    });
+	  }
 	  if (permanentCache.has(PARCEL_CACHE_TYPE.LAND_USE)) {
 	    const cached = permanentCache.get(PARCEL_CACHE_TYPE.LAND_USE) || {};
 	    landUsePlan = Array.isArray(cached.items) ? cached.items : [];
@@ -1467,6 +1531,14 @@ module.exports = async function handler(req, res)
     landMoves = Array.isArray(cached.items) ? cached.items : [];
     landMovesStatus = String(cached.status || (landMoves.length ? "ok" : "not-found"));
   }
+	  if (Array.isArray(offlineLandMoves)) {
+	    landMoves = offlineLandMoves;
+	    landMovesStatus = landMoves.length ? "ok" : "not-found";
+	    permanentCache.set(PARCEL_CACHE_TYPE.LAND_MOVEMENT, {
+	      items: landMoves,
+	      status: landMovesStatus
+	    });
+	  }
   if (permanentCache.has(PARCEL_CACHE_TYPE.INDIVIDUAL_LAND_PRICES)) {
     const cached = permanentCache.get(PARCEL_CACHE_TYPE.INDIVIDUAL_LAND_PRICES) || {};
     individualLandPrices = Array.isArray(cached.items) ? cached.items : [];
