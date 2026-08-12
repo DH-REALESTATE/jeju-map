@@ -176,7 +176,7 @@ async function loadOfflineLandUsePlan(pnu)
   if (!Array.isArray(rows)) return null;
   const relationByCode = { "1": "포함", "2": "저촉", "3": "접합" };
   const seen = new Set();
-  return rows.reduce((items, row) => {
+  const items = rows.reduce((items, row) => {
     const payload = row && row.payload && typeof row.payload === "object" ? row.payload : {};
     const relationCode = String(payload["저촉여부코드"] || "").trim();
     const rawRelation = String(row.relation_type || payload["저촉여부"] || "").trim();
@@ -201,6 +201,52 @@ async function loadOfflineLandUsePlan(pnu)
     });
     return items;
   }, []);
+  const parcelPayload = rows
+    .map((row) => row && row.payload && typeof row.payload === "object" ? row.payload : null)
+    .find((payload) => payload && (payload["법정동명"] || payload["지번"])) || {};
+  const legalDongName = String(parcelPayload["법정동명"] || "").trim();
+  const jibun = String(parcelPayload["지번"] || "").trim();
+  items.legalDongName = legalDongName;
+  items.jibun = jibun;
+  items.address = [legalDongName, jibun].filter(Boolean).join(" ");
+  return items;
+}
+
+async function loadOfflineLandBasic(pnu)
+{
+  const normalizedPnu = String(pnu || "").trim();
+  if (!/^\d{19}$/.test(normalizedPnu)) return null;
+  const response = await supabaseAdminFetch(
+    `/rest/v1/realjeju_land_characteristics_current?select=pnu,legal_dong_name,jibun,jimok_name,area_m2,land_use_zone_name_1,land_use_situation_name,terrain_height_name,terrain_shape_name,road_side_name,published_land_price,standard_year,standard_month,source_standard_date&pnu=eq.${encodeURIComponent(normalizedPnu)}&limit=1`
+  );
+  if (!response || !response.ok) {
+    if (response) {
+      console.warn("[parcel-boundary-by-point] offline land-basic lookup failed:", response.status);
+    }
+    return null;
+  }
+  const rows = await response.json().catch(() => []);
+  const row = Array.isArray(rows) ? rows[0] : null;
+  if (!row || String(row.pnu || "").trim() !== normalizedPnu) return null;
+  const areaM2 = Number(row.area_m2);
+  const publishedLandPrice = Number(row.published_land_price);
+  const standardMonth = String(row.standard_month || "").padStart(2, "0");
+  return {
+    pnu: normalizedPnu,
+    legalDongName: String(row.legal_dong_name || "").trim(),
+    jibun: String(row.jibun || "").trim(),
+    jimok: String(row.jimok_name || "").trim(),
+    areaM2: Number.isFinite(areaM2) ? areaM2 : null,
+    landUseZone: String(row.land_use_zone_name_1 || "").trim(),
+    landUseSituation: String(row.land_use_situation_name || "").trim(),
+    terrainHeight: String(row.terrain_height_name || "").trim(),
+    terrainShape: String(row.terrain_shape_name || "").trim(),
+    roadSide: String(row.road_side_name || "").trim(),
+    publishedLandPrice: Number.isFinite(publishedLandPrice) ? publishedLandPrice : null,
+    standardYear: String(row.standard_year || "").trim(),
+    standardMonth,
+    lastUpdatedAt: String(row.source_standard_date || "").trim()
+  };
 }
 
 async function loadParcelMasterBoundaryByPointRpc(lat, lng)
@@ -1360,9 +1406,10 @@ module.exports = async function handler(req, res)
   let individualLandPricesStatus = "unavailable";
   let individualHousingPrices = [];
   let individualHousingPricesStatus = "unavailable";
-	  const [permanentCache, offlineLandUsePlan] = await Promise.all([
+	  const [permanentCache, offlineLandUsePlan, offlineLandBasic] = await Promise.all([
 	    loadPermanentParcelInformation(parcel.pnu),
-	    loadOfflineLandUsePlan(parcel.pnu)
+	    loadOfflineLandUsePlan(parcel.pnu),
+	    loadOfflineLandBasic(parcel.pnu)
 	  ]);
 	  const permanentWrites = [];
 
@@ -1371,13 +1418,22 @@ module.exports = async function handler(req, res)
   // land_basic or every detailed property dataset is still not_loaded.
 	  const propertyInformationAvailable = PARCEL_INFORMATION_CACHE_TYPES.some(
 	    (dataType) => permanentCache.has(dataType)
-	  ) || (Array.isArray(offlineLandUsePlan) && offlineLandUsePlan.length > 0);
+	  ) || (Array.isArray(offlineLandUsePlan) && offlineLandUsePlan.length > 0)
+	    || Boolean(offlineLandBasic);
 
-  if (permanentCache.has(PARCEL_CACHE_TYPE.LAND_BASIC)) {
-    const cached = permanentCache.get(PARCEL_CACHE_TYPE.LAND_BASIC) || {};
-    landCharacteristics = cached.value || null;
-    landCharacteristicsStatus = String(cached.status || (landCharacteristics ? "available" : "not-found"));
-  }
+	  if (permanentCache.has(PARCEL_CACHE_TYPE.LAND_BASIC)) {
+	    const cached = permanentCache.get(PARCEL_CACHE_TYPE.LAND_BASIC) || {};
+	    landCharacteristics = cached.value || null;
+	    landCharacteristicsStatus = String(cached.status || (landCharacteristics ? "available" : "not-found"));
+	  }
+	  if (offlineLandBasic) {
+	    landCharacteristics = offlineLandBasic;
+	    landCharacteristicsStatus = "available";
+	    permanentCache.set(PARCEL_CACHE_TYPE.LAND_BASIC, {
+	      value: landCharacteristics,
+	      status: landCharacteristicsStatus
+	    });
+	  }
   if (permanentCache.has(PARCEL_CACHE_TYPE.OWNERSHIP)) {
     const cached = permanentCache.get(PARCEL_CACHE_TYPE.OWNERSHIP) || {};
     landPossession = cached.value || null;
@@ -1391,6 +1447,16 @@ module.exports = async function handler(req, res)
 	  if (Array.isArray(offlineLandUsePlan)) {
 	    landUsePlan = offlineLandUsePlan;
 	    landUsePlanStatus = landUsePlan.length ? "ok" : "not-found";
+	    const offlineAddress = String(offlineLandUsePlan.address || "").trim();
+	    const offlineJibun = String(offlineLandUsePlan.jibun || "").trim();
+	    const offlineLegalDongName = String(offlineLandUsePlan.legalDongName || "").trim();
+	    if (offlineAddress) parcel.address = offlineAddress;
+	    if (offlineJibun) parcel.jibun = offlineJibun;
+	    if (offlineLegalDongName) parcel.legalDongName = offlineLegalDongName;
+	    const includedPlanningZone = landUsePlan.find((item) => (
+	      item && item.lawGroup === "national-planning" && item.relation === "포함"
+	    ));
+	    if (includedPlanningZone) parcel.landUseZone = String(includedPlanningZone.districtName || "").trim();
 	    permanentCache.set(PARCEL_CACHE_TYPE.LAND_USE, {
 	      items: landUsePlan,
 	      status: landUsePlanStatus
