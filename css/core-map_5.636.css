@@ -1158,6 +1158,18 @@ body.payment-page-open .weekly-specialist-broker-panel{
 	line-height: 1.08;
 }
 
+/* 5.636: 일반 지도는 카카오 내부 요소의 손 커서를 덮어 기본 화살표로 고정하고,
+   실제 지도 드래그 이벤트가 진행되는 동안에만 잡은 손 커서를 표시합니다. */
+body:not(.pickaxe-mode-active) #map:not(.distance-measure-active):not(.is-map-dragging),
+body:not(.pickaxe-mode-active) #map:not(.distance-measure-active):not(.is-map-dragging) *{
+	cursor: default !important;
+}
+
+body:not(.pickaxe-mode-active) #map:not(.distance-measure-active).is-map-dragging,
+body:not(.pickaxe-mode-active) #map:not(.distance-measure-active).is-map-dragging *{
+	cursor: grabbing !important;
+}
+
 #map.distance-measure-active,
 body.distance-measure-active #map{
 	cursor: pointer;
@@ -2285,5 +2297,4 @@ body.distance-measure-active .admin-boundary-bottom-pill{
 	flex: 0 0 auto;
 	margin: 0 auto;
 }
-
 

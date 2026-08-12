@@ -1,4 +1,4 @@
-// REALJEJU 5.600 background module loader
+// REALJEJU 5.636 background module loader
 (function initRealjejuModuleLoader(global) {
   "use strict";
   const loadedModules = new Map();
@@ -39,7 +39,7 @@
   global.realjejuModules = Object.freeze({ load: loadScript });
 
   function preloadPropertyInfo() {
-    loadScript("property-info", "/js/property-info_5.600.js?v=20260811-own-address-db-only-5600")
+    loadScript("property-info", "/js/property-info_5.636.js?v=20260812-satellite-label-service-sync-5636")
       .catch((error) => console.error("[realjeju module] property-info load failed", error));
   }
 

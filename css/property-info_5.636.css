@@ -2513,7 +2513,7 @@ body[data-property-type="land"] .property-detail-date-check-row{
 
 
 
-/* 5.600: 건물 탭 마지막 PNU 상가업소정보 */
+/* 5.636: 건물 탭 마지막 PNU 상가업소정보 */
 .parcel-apartment-business-group details{width:100%;}
 .parcel-apartment-business-group summary{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:16px;min-height:58px;padding:0 20px;cursor:pointer;list-style:none;}
 .parcel-apartment-business-group summary::-webkit-details-marker{display:none;}
@@ -2521,7 +2521,7 @@ body[data-property-type="land"] .property-detail-date-check-row{
 .parcel-apartment-business-group summary span::after{width:9px;height:9px;border-right:2px solid #17243a;border-bottom:2px solid #17243a;content:'';transform:translateY(-2px) rotate(45deg);}
 .parcel-apartment-business-group details:not([open]) summary span::after{transform:translateY(2px) rotate(-45deg);}
 .parcel-apartment-business-group summary em{overflow:hidden;color:#5c6370;font-size:15px;font-style:normal;font-weight:600;text-overflow:ellipsis;white-space:nowrap;}
-.parcel-apartment-business-list{border-top:1px solid #e2e5e9;}
+.parcel-apartment-business-list{border-top:0;}
 .parcel-apartment-business-row{padding:14px 20px;border-bottom:1px solid #e2e5e9;}
 .parcel-apartment-business-row:last-child{border-bottom:0;}
 .parcel-apartment-business-main{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:14px;}
@@ -2530,13 +2530,18 @@ body[data-property-type="land"] .property-detail-date-check-row{
 .parcel-apartment-business-category{margin-top:5px;}
 
 
-/* REALJEJU 5.600: 상가업소정보가 접힌 상태에서는 화살표가 위쪽을 가리킵니다. */
+/* REALJEJU 5.636: 상가업소정보가 접힌 상태에서는 화살표가 위쪽을 가리킵니다. */
 .parcel-apartment-business-group details:not([open]) summary span::after {
   transform: translateY(2px) rotate(-135deg) !important;
 }
 
 
-/* REALJEJU 5.600: 상가 업체명은 건축물현황 층수와 같은 굵기를 사용합니다. */
+/* REALJEJU 5.636: 상가 업체명은 건축물현황 층수와 같은 굵기를 사용합니다. */
 .parcel-apartment-business-main strong {
+  font-weight: 800 !important;
+}
+
+/* REALJEJU 5.636: 건물 정보의 상가업소 제목도 다른 구역 제목과 같은 규격을 사용합니다. */
+.parcel-apartment-business-group summary span {
   font-weight: 800 !important;
 }

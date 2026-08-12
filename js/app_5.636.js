@@ -6348,7 +6348,7 @@ const REALJEJU_ROUTE_SEO_META = Object.freeze({
 	}
 });
 // [ARCHIVE] PATCH 3.918: 상단 및 하단 배포 버전 표기를 현재 버전으로 맞춥니다.
-	const APP_VERSION = "5.619";
+	const APP_VERSION = "5.636";
 let realjejuTopbarVersionStatsText = "";
 let realjejuSiteVisitStatsRequested = false;
 let realjejuManagementVersionListingCount = null;
@@ -13220,6 +13220,21 @@ function openParcelLandInfoPanel(feature)
 	document.body.classList.remove("map-panels-collapsed");
 	if (!isReplacingOpenParcelLandInfo) openSidebarList();
 	propertyList.innerHTML = '<article class="parcel-land-info-panel"><header class="parcel-land-info-address">' + escapeParcelLandInfoHtml(address) + '</header><section class="parcel-land-info-section"><h2 class="parcel-land-info-section-title">토지 기본 정보</h2>' + rows.map(([label, value, rawValue]) => buildParcelLandInfoRow(label, value, rawValue)).join("") + '</section>' + (feature.landCharacteristicsStatus === "unavailable" ? '<div class="parcel-land-info-status">토지특성정보 서비스 승인 또는 조회 상태를 확인해 주세요.</div>' : "") + (feature.landPossessionStatus === "unavailable" && !/(?:아파트|연립|다세대|오피스텔|집합)/.test(String(feature.landUseSituation || (feature.landCharacteristics || {}).landUseSituation || "")) ? '<div class="parcel-land-info-status">토지소유정보 서비스 승인 또는 조회 상태를 확인해 주세요.</div>' : "") + buildParcelLandUsePlanSection(feature) + buildParcelLandMoveSection(feature) + buildParcelIndividualLandPriceSection(feature) + '</article>';
+	const parcelLandInfoTitle = propertyList.querySelector(".parcel-land-info-section-title");
+	if (parcelLandInfoTitle) {
+		const parcelLandAreaUnitToggle = document.createElement("button");
+		parcelLandAreaUnitToggle.type = "button";
+		parcelLandAreaUnitToggle.className = "parcel-land-area-unit-toggle";
+		parcelLandAreaUnitToggle.dataset.parcelLandAreaUnitToggle = "";
+		parcelLandAreaUnitToggle.textContent = globalAreaUnit === "py" ? "㎡" : "평";
+		parcelLandAreaUnitToggle.setAttribute("aria-label", parcelLandAreaUnitToggle.textContent + " 단위로 전환");
+		parcelLandAreaUnitToggle.addEventListener("click", (event) => {
+			event.preventDefault();
+			event.stopPropagation();
+			toggleSharedAreaUnit();
+		});
+		parcelLandInfoTitle.appendChild(parcelLandAreaUnitToggle);
+	}
 	propertyList.scrollTop = 0;
 	scheduleParcelBoundaryViewportReveal(feature);
 	if (!isReplacingOpenParcelLandInfo) {
@@ -14172,6 +14187,11 @@ function updateGlobalAreaUnitButtons()
 	if (areaUnitM2Btn) areaUnitM2Btn.classList.toggle("active", globalAreaUnit === "m2");
 	if (areaUnitToggleBtn) areaUnitToggleBtn.classList.remove("active");
 	if (areaUnitToggleLabel) areaUnitToggleLabel.textContent = globalAreaUnit === "py" ? "㎡" : "평";
+	document.querySelectorAll("[data-parcel-land-area-unit-toggle]").forEach((button) => {
+		const nextLabel = globalAreaUnit === "py" ? "㎡" : "평";
+		button.textContent = nextLabel;
+		button.setAttribute("aria-label", nextLabel + " 단위로 전환");
+	});
 }
 
 const MAP_TOOL_POPOVER_Z_INDEX_BACK = 2147483600;
@@ -14290,6 +14310,33 @@ function toggleMapCadastralOverlay()
 	updateMapTypeButtons();
 }
 
+function shouldShowSatelliteLabelsForCurrentService()
+{
+	const category = typeof getCurrentRealjejuGlobalCategoryKey === "function"
+		? getCurrentRealjejuGlobalCategoryKey()
+		: (document.body && document.body.dataset
+			? String(document.body.dataset.globalCategory || "realestate")
+			: "realestate");
+	return typeof isGlobalRealestateCategory === "function"
+		? isGlobalRealestateCategory(category)
+		: category === "realestate";
+}
+
+let satelliteLabelServiceObserver = null;
+
+function observeSatelliteLabelServiceChanges()
+{
+	if (satelliteLabelServiceObserver || !document.body || typeof MutationObserver !== "function") return;
+	satelliteLabelServiceObserver = new MutationObserver((records) => {
+		if (!records.some((record) => record.attributeName === "data-global-category")) return;
+		if (currentMapTypeMode === "satellite") setMapTypeMode("satellite");
+	});
+	satelliteLabelServiceObserver.observe(document.body, {
+		attributes: true,
+		attributeFilter: ["data-global-category"]
+	});
+}
+
 function setMapTypeMode(mode)
 {
 	if (!state.map || !window.kakao || !kakao.maps) return;
@@ -14305,7 +14352,7 @@ function setMapTypeMode(mode)
 
 	if (mode === "satellite") {
 		state.map.setMapTypeId(kakao.maps.MapTypeId.SKYVIEW);
-		if (kakao.maps.MapTypeId.HYBRID) state.map.addOverlayMapTypeId(kakao.maps.MapTypeId.HYBRID);
+		if (shouldShowSatelliteLabelsForCurrentService() && kakao.maps.MapTypeId.HYBRID) state.map.addOverlayMapTypeId(kakao.maps.MapTypeId.HYBRID);
 	} else if (mode === "terrain") {
 		state.map.setMapTypeId(kakao.maps.MapTypeId.ROADMAP);
 		if (kakao.maps.MapTypeId.TERRAIN) state.map.addOverlayMapTypeId(kakao.maps.MapTypeId.TERRAIN);
@@ -28141,9 +28188,14 @@ function initMap()
 	});
 
 	kakao.maps.event.addListener(state.map, "dragstart", () => {
+		mapElement.classList.add("is-map-dragging");
 		state.initialRandomListActive = false;
 		mapViewportIntentSeq += 1;
 		localBusinessMapPureClickTracker.markDragged();
+	});
+
+	kakao.maps.event.addListener(state.map, "dragend", () => {
+		mapElement.classList.remove("is-map-dragging");
 	});
 
 	kakao.maps.event.addListener(state.map, "zoom_changed", () => {
@@ -38217,14 +38269,38 @@ async function searchAddressFromOwnDatabase(query)
   }).filter((item) => Number.isFinite(Number(item.x)) && Number.isFinite(Number(item.y)));
 }
 
-function searchAddressByGeocoder(_geocoder, query)
+function searchAddressByGeocoder(geocoder, query)
 {
-  return searchAddressFromOwnDatabase(query);
+	return new Promise(resolve => {
+		if (!geocoder || typeof geocoder.addressSearch !== "function") {
+			resolve(null);
+			return;
+		}
+		geocoder.addressSearch(query, (result, status) => {
+			if (status === kakao.maps.services.Status.OK && Array.isArray(result) && result.length) {
+				resolve(result[0]);
+				return;
+			}
+			resolve(null);
+		});
+	});
 }
 
-function searchAddressByKeyword(_places, query)
+function searchAddressByKeyword(places, query)
 {
-  return searchAddressFromOwnDatabase(query);
+	return new Promise(resolve => {
+		if (!places || typeof places.keywordSearch !== "function") {
+			resolve(null);
+			return;
+		}
+		places.keywordSearch(query, (result, status) => {
+			if (status === kakao.maps.services.Status.OK && Array.isArray(result) && result.length) {
+				resolve(result[0]);
+				return;
+			}
+			resolve(null);
+		});
+	});
 }
 
 async function handleSubAddressSearch()
@@ -38233,10 +38309,6 @@ async function handleSubAddressSearch()
 	if (!query) {
 		setAddressSearchStatus("검색할 주소지를 입력하세요.", true);
 		if (subAddressSearchInput) subAddressSearchInput.focus();
-		return;
-	}
-	if (!window.kakao || !kakao.maps || !kakao.maps.services) {
-		setAddressSearchStatus("주소 검색 서비스를 불러오지 못했습니다.", true);
 		return;
 	}
 	state.leftListSeq = Number(state.leftListSeq || 0) + 1;
@@ -38256,8 +38328,27 @@ async function handleSubAddressSearch()
 	if (typeof syncSidebarListTitle === "function") syncSidebarListTitle();
 	if (typeof syncSidebarListHeaderActions === "function") syncSidebarListHeaderActions();
 	setAddressSearchStatus("주소를 검색하는 중입니다.");
-	const geocoder = null;
-	const places = null;
+	const ownDatabaseResults = await searchAddressFromOwnDatabase(query);
+	for (const found of ownDatabaseResults) {
+		if (!found || !isParcelBoundaryJejuCoordinate(found.y, found.x)) continue;
+		const searchViewport = focusMapByAddress(found.y, found.x, found.address_name || found.road_address_name || query, {
+			mapLevel: 2,
+			showAddressMarker: false
+		});
+		const parcelOpened = await showParcelBoundaryForSearchLocation(found.y, found.x, {
+			openLandInfoPanel: true,
+			fromAddressSearch: true
+		});
+		searchViewport?.restoreIfCurrent();
+		if (parcelOpened) return;
+	}
+
+	if (!window.kakao || !kakao.maps || !kakao.maps.services) {
+		setAddressSearchStatus("검색 결과가 없습니다.", true);
+		return;
+	}
+	const geocoder = new kakao.maps.services.Geocoder();
+	const places = kakao.maps.services.Places ? new kakao.maps.services.Places() : null;
 	const queries = buildSubAddressSearchQueries(query);
 
 	for (const q of queries) {
@@ -46456,6 +46547,7 @@ async function bootstrap()
 	// 4.924부터는 이전 버전의 전체 매물 IndexedDB 배열을 첫 화면에 적용하지 않는다.
 	const initialPropertyCachePromise = Promise.resolve(false);
 	setMapTypeMode("roadmap");
+	observeSatelliteLabelServiceChanges();
 	await applyInitialMapCenter();
 	initCustomZoomButtons();
 	initEvents();

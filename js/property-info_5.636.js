@@ -1,4 +1,4 @@
-// REALJEJU 5.617 property-info background module
+// REALJEJU 5.636 property-info background module
 // 필지 상세, 실거래가, 공시지가, 건축물대장, 추천 중개사 패널을 한 경계에서 관리합니다.
 /* PATCH 5.295: 필지 상세 통합 화면, 실거래가, 주변 중개사, 건축물대장 */
 (function initParcelPropertyExperience5293()
@@ -676,6 +676,17 @@
       .replace(/-0+(?=\d)/g, "-");
   }
 
+  function parcelJibunFromPnu(value)
+  {
+    const digits = String(value || "").replace(/\D/g, "");
+    if (digits.length !== 19) return "";
+    const mainNumber = Number(digits.slice(11, 15));
+    const subNumber = Number(digits.slice(15, 19));
+    if (!mainNumber) return "";
+    return (digits.slice(10, 11) === "2" ? "산" : "") + String(mainNumber) +
+      (subNumber > 0 ? "-" + String(subNumber) : "");
+  }
+
   function tradeCoordinateKey(row, feature)
   {
     const supplied = String(row && row.coordinateKey || "").trim();
@@ -929,10 +940,11 @@
     return Number.isFinite(date.getTime()) ? date : null;
   }
 
-  function renderParcelTradeGraph(target, rows, range)
+  function renderParcelTradeGraph(target, rows, range, radiusMeters)
   {
     if (!target) return;
     const selectedRange = range === "1y" || range === "all" ? range : "3y";
+    const selectedRadiusMeters = Number(radiusMeters) === 1000 ? 1000 : 500;
     const saleRows = (Array.isArray(rows) ? rows : []).filter(function(row) {
       return String(row && row.dealKind || "sale") === "sale";
     });
@@ -947,12 +959,16 @@
       + '<button type="button" data-parcel-trade-range="3y" class="' + (selectedRange === "3y" ? "is-active" : "") + '">3년간</button>'
       + '<button type="button" data-parcel-trade-range="1y" class="' + (selectedRange === "1y" ? "is-active" : "") + '">1년간</button>'
       + '<button type="button" data-parcel-trade-range="all" class="' + (selectedRange === "all" ? "is-active" : "") + '">전체</button>'
+      + '<span class="parcel-trade-graph-radius-ranges" aria-label="거리 범위">'
+      + '<button type="button" data-parcel-trade-radius="500" class="' + (selectedRadiusMeters === 500 ? "is-active" : "") + '">500m</button>'
+      + '<button type="button" data-parcel-trade-radius="1000" class="' + (selectedRadiusMeters === 1000 ? "is-active" : "") + '">1km</button>'
+      + '</span>'
       + '</div>';
     if (!all.length) {
       target.classList.remove("parcel-property-loading");
       // 주변 유사거래가 없을 때도 별도 그래프 여백을 만들지 않고 공통 빈 상태 규격을 사용합니다.
-      target.classList.add("parcel-property-empty");
-      target.textContent = "표시할 주변 유사거래가 없습니다.";
+      target.classList.remove("parcel-property-empty");
+      target.innerHTML = controls + '<div class="parcel-property-empty">표시할 주변 유사거래가 없습니다.</div>';
       return;
     }
     const anchor = new Date();
@@ -1016,7 +1032,7 @@
       + '<rect data-parcel-nearby-graph-hit x="' + left + '" y="' + top + '" width="' + plotWidth + '" height="' + plotHeight + '" fill="transparent"></rect>'
       + '</svg>';
     target.classList.remove("parcel-property-loading");
-    // 주변 유사거래 목록은 같은 필지가 반복되지 않도록 묶고 최신 3건만 표시합니다.
+    // 주변 유사거래 목록은 같은 필지가 반복되지 않도록 묶고 최신 5건만 표시합니다.
     const recentTradeSeen = new Set();
     const recentTradeRows = filtered
       .slice()
@@ -1031,7 +1047,7 @@
         recentTradeSeen.add(parcelKey);
         return true;
       })
-      .slice(0, 3);
+      .slice(0, 5);
     const recentTradeList = recentTradeRows.length
       ? '<div class="parcel-trade-graph-recent-list">' +
         recentTradeRows.map(function(item) {
@@ -1635,19 +1651,24 @@
   }
 
 
-  async function loadTrades(panel, feature)
+  async function loadTrades(panel, feature, radiusMeters, range)
   {
     const exactTarget = panel.querySelector("[data-parcel-exact-trades]");
     const similarTarget = panel.querySelector("[data-parcel-similar-trades]");
     const graphTarget = panel.querySelector("[data-parcel-trade-chart]");
     const pnu = String(feature.pnu || "");
     if (!pnu || !exactTarget || !graphTarget) return;
+    const selectedRadiusMeters = Number(radiusMeters) === 1000 ? 1000 : 500;
+    const selectedRange = range === "1y" || range === "all" ? range : "3y";
     const isCurrentTask = beginParcelTradeTask(panel);
     try {
-      const sourceJibun = normalizeJibun(feature.jibun || (feature.landCharacteristics || {}).jibun);
+      const sourceJibun = normalizeJibun(
+        feature.jibun || (feature.landCharacteristics || {}).jibun || parcelJibunFromPnu(pnu)
+      );
       const targetUmdName = parcelTradeUmdName(feature);
       const featurePoint = parcelTradeFeaturePoint(feature);
-      let data = getTimedCache(tradeCache, pnu);
+      const tradeCacheKey = pnu + ":" + selectedRadiusMeters;
+      let data = getTimedCache(tradeCache, tradeCacheKey);
       if (!data) {
         // 필지 조회에서는 공공데이터를 호출하지 않고 미리 적재된 Supabase 거래 레코드만 조회합니다.
         data = await settleParcelTradePromise(
@@ -1665,14 +1686,14 @@
             ],
             lat: featurePoint ? featurePoint.lat : null,
             lng: featurePoint ? featurePoint.lng : null,
-            radiusMeters: 500,
+            radiusMeters: selectedRadiusMeters,
             nearbyLimit: 50
           }),
           9000,
           "실거래가 조회 시간이 초과되었습니다."
         );
         if (!isCurrentTask()) return;
-        setTimedCache(tradeCache, pnu, data, TRADE_BROWSER_CACHE_TTL_MS);
+        setTimedCache(tradeCache, tradeCacheKey, data, TRADE_BROWSER_CACHE_TTL_MS);
       }
       if (!isCurrentTask()) return;
       const records = Array.isArray(data.records) ? data.records.slice() : [];
@@ -1709,7 +1730,7 @@
         return jimokMatch && zoneMatch;
       });
       // 공공 원본의 지목ㆍ용도지역 누락만으로 전체 후보가 사라지지 않게
-      // 동일 유형, 전체 매매 후보 순으로 완화합니다. 500m 범위는 서버가 보장합니다.
+      // 동일 유형, 전체 매매 후보 순으로 완화합니다. 선택한 거리 범위는 서버가 보장합니다.
       const graphCandidates = strictCandidates.length
         ? strictCandidates
         : (samePropertyCandidates.length ? samePropertyCandidates : saleCandidates);
@@ -1720,11 +1741,23 @@
       const graphRows = graphCandidates.slice().sort(function(a, b) {
         return String(b.dealDate || "").localeCompare(String(a.dealDate || ""));
       }).slice(0, 24);
-      renderParcelTradeGraph(graphTarget, graphRows, "3y");
+      renderParcelTradeGraph(graphTarget, graphRows, selectedRange, selectedRadiusMeters);
       graphTarget.onclick = function(event) {
-        const button = event.target.closest("[data-parcel-trade-range]");
-        if (!button) return;
-        renderParcelTradeGraph(graphTarget, graphRows, button.getAttribute("data-parcel-trade-range"));
+        const rangeButton = event.target.closest("[data-parcel-trade-range]");
+        if (rangeButton) {
+          renderParcelTradeGraph(graphTarget, graphRows, rangeButton.getAttribute("data-parcel-trade-range"), selectedRadiusMeters);
+          return;
+        }
+        const radiusButton = event.target.closest("[data-parcel-trade-radius]");
+        if (!radiusButton) return;
+        const nextRadiusMeters = Number(radiusButton.getAttribute("data-parcel-trade-radius")) === 1000 ? 1000 : 500;
+        if (nextRadiusMeters === selectedRadiusMeters) return;
+        const activeRangeButton = graphTarget.querySelector("[data-parcel-trade-range].is-active");
+        const nextRange = activeRangeButton ? activeRangeButton.getAttribute("data-parcel-trade-range") : selectedRange;
+        graphTarget.querySelectorAll("[data-parcel-trade-radius]").forEach(function(button) {
+          button.classList.toggle("is-active", Number(button.getAttribute("data-parcel-trade-radius")) === nextRadiusMeters);
+        });
+        loadTrades(panel, feature, nextRadiusMeters, nextRange);
       };
     } catch (error) {
       if (!isCurrentTask()) return;
@@ -2170,9 +2203,10 @@
       const floorArea = areaValue(floor.area);
       return '<div class="parcel-property-info-row parcel-building-floor-row">'
         + '<span class="parcel-building-floor-main"><span class="parcel-building-floor-name">' + esc(floorName) + '</span>'
-        + '<span class="parcel-building-floor-purpose">' + esc(purpose) + '</span>'
+        + '<span class="parcel-building-floor-purpose">' + esc(purpose) + '</span></span>'
+        + '<span class="parcel-building-floor-detail">' + detail
+        + '<span class="parcel-building-floor-detail-separator" aria-hidden="true"> · </span>'
         + '<span class="parcel-building-floor-area">' + floorArea + '</span></span>'
-        + '<span class="parcel-building-floor-detail">' + detail + '</span>'
         + '</div>';
     });
     const visibleRows = rowHtml.slice(0, 5).join("");
@@ -2380,7 +2414,7 @@
   }
 
 
-  /* 5.617: 호별정보 선택기는 전유부의 실제 동/층/호만 계층적으로 사용한다. */
+  /* 5.636: 호별정보 선택기는 전유부의 실제 동/층/호만 계층적으로 사용한다. */
   buildingUnitModel = function(rows, selection)
   {
     const source = Array.isArray(rows) ? rows : [];
@@ -3303,28 +3337,16 @@
         units: [],
         detailsPending: true
       });
-      panel.__parcelBuildingData = basicView;
-      renderBuilding(panel, basicView, 0);
-
       const basicRecords = Array.isArray(basic.records) ? basic.records : [];
-      const basicStable = basic.componentStatuses
-        && isStableBuildingComponentStatus(basic.componentStatuses.title)
-        && isStableBuildingComponentStatus(basic.componentStatuses.recap);
-      if (!basicRecords.length && basicStable) {
-        const noBuilding = Object.assign({}, basicView, {
-          detailsPending: false,
-          detailsComplete: true,
-          componentStatuses: Object.assign({}, basic.componentStatuses, {
-            floors: "skipped",
-            wastewater: "skipped"
-          })
-        });
-        storeStableBuildingPayload(pnu, noBuilding);
-        panel.__parcelBuildingData = noBuilding;
-        renderBuilding(panel, noBuilding, 0);
-        return;
+      panel.__parcelBuildingData = basicView;
+      if (basicRecords.length) {
+        renderBuilding(panel, basicView, 0);
+      } else {
+        target.classList.add("parcel-property-loading");
+        target.textContent = "건축물대장을 불러오는 중입니다.";
       }
 
+      // 표제부가 없어도 층별개요가 저장된 건물이 있으므로 상세 DB 조회를 항상 진행합니다.
       // 기본 표제부는 먼저 보여주고 층별·오수정보는 뒤에서 받아 같은 패널을 갱신합니다.
       const commonHousing = basicRecords.some(function(item) {
         return isCommonHousingBuilding(item, basicRecords);
