@@ -323,7 +323,7 @@ async function loadOfflineLandPossession(pnu)
   const normalizedPnu = String(pnu || "").trim();
   if (!/^\d{19}$/.test(normalizedPnu)) return null;
   const response = await supabaseAdminFetch(
-    `/rest/v1/realjeju_land_ownership_current?select=pnu,ownership_code,ownership_name,owner_count,ownership_change_date,ownership_change_reason,source_standard_date&pnu=eq.${encodeURIComponent(normalizedPnu)}&limit=1`
+    `/rest/v1/realjeju_land_ownership_current?select=pnu,ownership_code,ownership_name,owner_count,ownership_change_date,ownership_change_reason,source_standard_date,payload&pnu=eq.${encodeURIComponent(normalizedPnu)}&limit=1`
   );
   if (!response || !response.ok) {
     if (response) {
@@ -334,7 +334,12 @@ async function loadOfflineLandPossession(pnu)
   const rows = await response.json().catch(() => []);
   const row = Array.isArray(rows) ? rows[0] : null;
   if (!row || String(row.pnu || "").trim() !== normalizedPnu) return null;
+  const payload = row.payload && typeof row.payload === "object" ? row.payload : {};
   const sharedOwnerCount = Number(row.owner_count);
+  const areaM2 = Number(payload.areaM2);
+  const publishedLandPrice = Number(payload.publishedLandPrice);
+  const standardYearMonth = String(payload.standardYearMonth || "").trim();
+  const standardYearMonthParts = standardYearMonth.match(/^(\d{4})[-.]?(\d{1,2})$/);
   return {
     pnu: normalizedPnu,
     ownershipCode: String(row.ownership_code || "").trim(),
@@ -342,6 +347,13 @@ async function loadOfflineLandPossession(pnu)
     sharedOwnerCount: Number.isFinite(sharedOwnerCount) ? sharedOwnerCount : null,
     ownershipChangeDate: String(row.ownership_change_date || "").trim(),
     ownershipChangeReason: String(row.ownership_change_reason || "").trim(),
+    legalDongName: String(payload.legalDongName || "").trim(),
+    jibun: String(payload.jibun || "").trim(),
+    jimok: String(payload.jimok || "").trim(),
+    areaM2: Number.isFinite(areaM2) && areaM2 > 0 ? areaM2 : null,
+    publishedLandPrice: Number.isFinite(publishedLandPrice) && publishedLandPrice > 0 ? publishedLandPrice : null,
+    standardYear: standardYearMonthParts ? standardYearMonthParts[1] : "",
+    standardMonth: standardYearMonthParts ? standardYearMonthParts[2].padStart(2, "0") : "",
     lastUpdatedAt: String(row.source_standard_date || "").trim()
   };
 }
@@ -1261,6 +1273,28 @@ function isNationalPlanningLandUseRecord(districtCode, districtName) {
   );
 }
 
+const PRIMARY_LAND_USE_ZONE_NAMES = new Set([
+  "제1종전용주거지역", "제2종전용주거지역", "제1종일반주거지역", "제2종일반주거지역",
+  "제3종일반주거지역", "준주거지역", "중심상업지역", "일반상업지역", "근린상업지역",
+  "유통상업지역", "전용공업지역", "일반공업지역", "준공업지역", "보전녹지지역",
+  "생산녹지지역", "자연녹지지역", "보전관리지역", "생산관리지역", "계획관리지역",
+  "자연환경보전지역", "농림지역"
+]);
+
+function isPrimaryLandUseZoneName(districtName) {
+  const normalized = String(districtName || "").replace(/\s+/g, "").replace(/\([^)]*\)$/g, "").trim();
+  return PRIMARY_LAND_USE_ZONE_NAMES.has(normalized);
+}
+
+function selectRepresentativeLandUseZone(items) {
+  const includedPlanningZones = (Array.isArray(items) ? items : []).filter((item) => (
+    item && item.lawGroup === "national-planning" && item.relation === "포함"
+  ));
+  return includedPlanningZones.find((item) => isPrimaryLandUseZoneName(item.districtName))
+    || includedPlanningZones[0]
+    || null;
+}
+
 function normalizeLandUsePlan(payload) {
   const container = getVworldAttributeContainer(payload, ["landUses", "landUse"]);
   if (!container) return [];
@@ -1481,6 +1515,7 @@ module.exports = async function handler(req, res)
 		return;
 	}
 
+	const boundaryOnly = ["1", "true", "yes"].includes(String(req.query && req.query.boundaryOnly || "").trim().toLowerCase());
 	const refreshRequested = ["1", "true", "yes"].includes(String(req.query && req.query.refresh || "").trim().toLowerCase());
 	const requestedPnu = String(req.query && req.query.pnu || "").trim();
 	if (refreshRequested && !parcelWorkerAuthorized(req)) {
@@ -1515,6 +1550,18 @@ module.exports = async function handler(req, res)
 			res.status(404).json({ ok: false, code: "PARCEL_NOT_FOUND" });
 			return;
 		}
+		if (boundaryOnly) {
+			res.setHeader("Cache-Control", "public, max-age=300, s-maxage=86400, stale-while-revalidate=604800");
+			res.status(200).json({
+				...parcel,
+				dbContract: "parcel-master-boundary-property-db-only-v4",
+				dataSource: "database",
+				boundaryOnly: true,
+				propertyInformationAvailable: false,
+				datasetStates: { boundary: "loaded" }
+			});
+			return;
+		}
 		let landCharacteristics = null;
 		let landCharacteristicsStatus = "unavailable";
 		let landPossession = null;
@@ -1536,6 +1583,55 @@ module.exports = async function handler(req, res)
 	    loadOfflineIndividualLandPrices(parcel.pnu),
 	    loadOfflineIndividualHousingPrices(parcel.pnu)
 	  ]);
+	  const ownershipLandBasic = offlineLandPossession
+	    && (offlineLandPossession.jimok || Number.isFinite(offlineLandPossession.areaM2))
+	    ? {
+	        pnu: parcel.pnu,
+	        legalDongName: String(offlineLandPossession.legalDongName || "").trim(),
+	        jibun: String(offlineLandPossession.jibun || "").trim(),
+	        jimok: String(offlineLandPossession.jimok || "").trim(),
+	        areaM2: Number.isFinite(offlineLandPossession.areaM2) ? offlineLandPossession.areaM2 : null,
+	        landUseZone: "",
+	        landUseSituation: "",
+	        terrainHeight: "",
+	        terrainShape: "",
+	        roadSide: "",
+	        publishedLandPrice: Number.isFinite(offlineLandPossession.publishedLandPrice)
+	          ? offlineLandPossession.publishedLandPrice
+	          : null,
+	        standardYear: String(offlineLandPossession.standardYear || "").trim(),
+	        standardMonth: String(offlineLandPossession.standardMonth || "").trim(),
+	        lastUpdatedAt: String(offlineLandPossession.lastUpdatedAt || "").trim()
+	      }
+	    : null;
+	  const movementLandBasicSource = Array.isArray(offlineLandMoves)
+	    ? offlineLandMoves.find((item) => item && (
+	        String(item.jimok || "").trim()
+	        || (Number.isFinite(item.areaM2) && item.areaM2 > 0)
+	      ))
+	    : null;
+	  const movementLandBasic = movementLandBasicSource
+	    ? {
+	        pnu: parcel.pnu,
+	        legalDongName: String(parcel.legalDongName || "").trim(),
+	        jibun: String(parcel.jibun || "").trim(),
+	        jimok: String(movementLandBasicSource.jimok || "").trim(),
+	        areaM2: Number.isFinite(movementLandBasicSource.areaM2) && movementLandBasicSource.areaM2 > 0
+	          ? movementLandBasicSource.areaM2
+	          : null,
+	        landUseZone: "",
+	        landUseSituation: "",
+	        terrainHeight: "",
+	        terrainShape: "",
+	        roadSide: "",
+	        publishedLandPrice: null,
+	        standardYear: "",
+	        standardMonth: "",
+	        lastUpdatedAt: String(movementLandBasicSource.lastUpdatedAt || "").trim()
+	      }
+	    : null;
+	  // D195가 없는 도로ㆍ하천ㆍ묘지 등은 같은 PNU의 D161, D157 순서로 공통 보완합니다.
+	  const effectiveOfflineLandBasic = offlineLandBasic || ownershipLandBasic || movementLandBasic;
 	  const permanentWrites = [];
 
   // Boundary geometry and property datasets are independent. A parcel polygon
@@ -1544,7 +1640,7 @@ module.exports = async function handler(req, res)
 	  const propertyInformationAvailable = PARCEL_INFORMATION_CACHE_TYPES.some(
 	    (dataType) => permanentCache.has(dataType)
 	  ) || (Array.isArray(offlineLandUsePlan) && offlineLandUsePlan.length > 0)
-	    || Boolean(offlineLandBasic)
+	    || Boolean(effectiveOfflineLandBasic)
 	    || Boolean(offlineLandPossession)
 	    || (Array.isArray(offlineLandMoves) && offlineLandMoves.length > 0);
 
@@ -1553,9 +1649,19 @@ module.exports = async function handler(req, res)
 	    landCharacteristics = cached.value || null;
 	    landCharacteristicsStatus = String(cached.status || (landCharacteristics ? "available" : "not-found"));
 	  }
-	  if (offlineLandBasic) {
-	    landCharacteristics = offlineLandBasic;
+	  if (effectiveOfflineLandBasic) {
+	    landCharacteristics = effectiveOfflineLandBasic;
 	    landCharacteristicsStatus = "available";
+	    if (effectiveOfflineLandBasic.legalDongName) parcel.legalDongName = effectiveOfflineLandBasic.legalDongName;
+	    if (effectiveOfflineLandBasic.jibun) parcel.jibun = effectiveOfflineLandBasic.jibun;
+	    if (parcel.legalDongName || parcel.jibun) {
+	      parcel.address = [parcel.legalDongName, parcel.jibun].filter(Boolean).join(" ");
+	    }
+	    if (effectiveOfflineLandBasic.jimok) parcel.jimok = effectiveOfflineLandBasic.jimok;
+	    if (Number.isFinite(effectiveOfflineLandBasic.areaM2)) parcel.areaM2 = effectiveOfflineLandBasic.areaM2;
+	    if (isPrimaryLandUseZoneName(effectiveOfflineLandBasic.landUseZone)) {
+	      parcel.landUseZone = String(effectiveOfflineLandBasic.landUseZone || "").trim();
+	    }
 	    permanentCache.set(PARCEL_CACHE_TYPE.LAND_BASIC, {
 	      value: landCharacteristics,
 	      status: landCharacteristicsStatus
@@ -1588,9 +1694,7 @@ module.exports = async function handler(req, res)
 	    if (offlineAddress) parcel.address = offlineAddress;
 	    if (offlineJibun) parcel.jibun = offlineJibun;
 	    if (offlineLegalDongName) parcel.legalDongName = offlineLegalDongName;
-	    const includedPlanningZone = landUsePlan.find((item) => (
-	      item && item.lawGroup === "national-planning" && item.relation === "포함"
-	    ));
+	    const includedPlanningZone = selectRepresentativeLandUseZone(landUsePlan);
 	    if (includedPlanningZone) parcel.landUseZone = String(includedPlanningZone.districtName || "").trim();
 	    permanentCache.set(PARCEL_CACHE_TYPE.LAND_USE, {
 	      items: landUsePlan,
@@ -1726,7 +1830,7 @@ module.exports = async function handler(req, res)
 		res.setHeader("Cache-Control", "private, no-store, max-age=0, must-revalidate");
 		res.status(200).json({
 			...parcel,
-			dbContract: "parcel-master-boundary-property-db-only-v3",
+			dbContract: "parcel-master-boundary-property-db-only-v4",
 			dataSource: refreshRequested ? "authorized-public-loader" : "database",
 			propertyInformationAvailable,
 			datasetStates,
