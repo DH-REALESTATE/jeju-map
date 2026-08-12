@@ -249,6 +249,75 @@ async function loadOfflineLandBasic(pnu)
   };
 }
 
+async function loadOfflineIndividualLandPrices(pnu)
+{
+  const normalizedPnu = String(pnu || "").trim();
+  if (!/^\d{19}$/.test(normalizedPnu)) return null;
+  const response = await supabaseAdminFetch(
+    `/rest/v1/realjeju_land_prices?select=base_year,base_month,official_price_per_m2,announcement_date,standard_land,data_reference_date&pnu=eq.${encodeURIComponent(normalizedPnu)}&order=base_year.desc,base_month.desc&limit=20`
+  );
+  if (!response || !response.ok) {
+    if (response) {
+      console.warn("[parcel-boundary-by-point] offline D151 lookup failed:", response.status);
+    }
+    return null;
+  }
+  const rows = await response.json().catch(() => []);
+  if (!Array.isArray(rows)) return null;
+  return rows.reduce((items, row) => {
+    const year = String(row?.base_year ?? "").trim();
+    const month = String(row?.base_month ?? "1").trim().padStart(2, "0");
+    const pricePerSquareMeter = Number(row?.official_price_per_m2);
+    if (!/^\d{4}$/.test(year) || !Number.isFinite(pricePerSquareMeter) || pricePerSquareMeter <= 0) {
+      return items;
+    }
+    items.push({
+      year,
+      month,
+      pricePerSquareMeter,
+      announcedAt: String(row?.announcement_date || "").trim(),
+      standardLand: row?.standard_land ? "Y" : "N",
+      lastUpdatedAt: String(row?.data_reference_date || "").trim()
+    });
+    return items;
+  }, []);
+}
+
+async function loadOfflineIndividualHousingPrices(pnu)
+{
+  const normalizedPnu = String(pnu || "").trim();
+  if (!/^\d{19}$/.test(normalizedPnu)) return null;
+  const response = await supabaseAdminFetch(
+    `/rest/v1/realjeju_individual_housing_prices?select=base_year,base_month,house_price,building_register_key,dong_code,land_register_area_m2,calculated_land_area_m2,total_building_area_m2,calculated_building_area_m2,data_reference_date&pnu=eq.${encodeURIComponent(normalizedPnu)}&order=base_year.desc,base_month.desc&limit=100`
+  );
+  if (!response || !response.ok) {
+    if (response) console.warn("[parcel-boundary-by-point] offline D169 lookup failed:", response.status);
+    return null;
+  }
+  const rows = await response.json().catch(() => []);
+  if (!Array.isArray(rows)) return null;
+  return rows.reduce((items, row) => {
+    const year = String(row?.base_year ?? "").trim();
+    const month = String(row?.base_month ?? "1").trim().padStart(2, "0");
+    const housePrice = Number(row?.house_price);
+    if (!/^\d{4}$/.test(year) || !Number.isFinite(housePrice) || housePrice <= 0) return items;
+    const numberOrNull = (value) => Number.isFinite(Number(value)) ? Number(value) : null;
+    items.push({
+      year,
+      month,
+      housePrice,
+      buildingRegisterKey: String(row?.building_register_key || "").trim(),
+      dongCode: String(row?.dong_code || "").trim(),
+      landRegisterAreaM2: numberOrNull(row?.land_register_area_m2),
+      calculatedLandAreaM2: numberOrNull(row?.calculated_land_area_m2),
+      totalBuildingAreaM2: numberOrNull(row?.total_building_area_m2),
+      calculatedBuildingAreaM2: numberOrNull(row?.calculated_building_area_m2),
+      lastUpdatedAt: String(row?.data_reference_date || "").trim()
+    });
+    return items;
+  }, []);
+}
+
 async function loadOfflineLandPossession(pnu)
 {
   const normalizedPnu = String(pnu || "").trim();
@@ -1458,12 +1527,14 @@ module.exports = async function handler(req, res)
   let individualLandPricesStatus = "unavailable";
   let individualHousingPrices = [];
   let individualHousingPricesStatus = "unavailable";
-	  const [permanentCache, offlineLandUsePlan, offlineLandBasic, offlineLandPossession, offlineLandMoves] = await Promise.all([
+	  const [permanentCache, offlineLandUsePlan, offlineLandBasic, offlineLandPossession, offlineLandMoves, offlineIndividualLandPrices, offlineIndividualHousingPrices] = await Promise.all([
 	    loadPermanentParcelInformation(parcel.pnu),
 	    loadOfflineLandUsePlan(parcel.pnu),
 	    loadOfflineLandBasic(parcel.pnu),
 	    loadOfflineLandPossession(parcel.pnu),
-	    loadOfflineLandMoves(parcel.pnu)
+	    loadOfflineLandMoves(parcel.pnu),
+	    loadOfflineIndividualLandPrices(parcel.pnu),
+	    loadOfflineIndividualHousingPrices(parcel.pnu)
 	  ]);
 	  const permanentWrites = [];
 
@@ -1539,6 +1610,22 @@ module.exports = async function handler(req, res)
 	      status: landMovesStatus
 	    });
 	  }
+  if (Array.isArray(offlineIndividualLandPrices)) {
+    individualLandPrices = offlineIndividualLandPrices;
+    individualLandPricesStatus = individualLandPrices.length ? "ok" : "not-found";
+    permanentCache.set(PARCEL_CACHE_TYPE.INDIVIDUAL_LAND_PRICES, {
+      items: individualLandPrices,
+      status: individualLandPricesStatus
+    });
+  }
+  if (Array.isArray(offlineIndividualHousingPrices)) {
+    individualHousingPrices = offlineIndividualHousingPrices;
+    individualHousingPricesStatus = individualHousingPrices.length ? "ok" : "not-found";
+    permanentCache.set(PARCEL_CACHE_TYPE.INDIVIDUAL_HOUSING_PRICES, {
+      items: individualHousingPrices,
+      status: individualHousingPricesStatus
+    });
+  }
   if (permanentCache.has(PARCEL_CACHE_TYPE.INDIVIDUAL_LAND_PRICES)) {
     const cached = permanentCache.get(PARCEL_CACHE_TYPE.INDIVIDUAL_LAND_PRICES) || {};
     individualLandPrices = Array.isArray(cached.items) ? cached.items : [];
