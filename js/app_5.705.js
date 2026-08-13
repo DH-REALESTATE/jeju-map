@@ -6348,7 +6348,7 @@ const REALJEJU_ROUTE_SEO_META = Object.freeze({
 	}
 });
 // [ARCHIVE] PATCH 3.918: 상단 및 하단 배포 버전 표기를 현재 버전으로 맞춥니다.
-	const APP_VERSION = "5.685";
+	const APP_VERSION = "5.705";
 let realjejuTopbarVersionStatsText = "";
 let realjejuSiteVisitStatsRequested = false;
 let realjejuManagementVersionListingCount = null;
@@ -13273,7 +13273,7 @@ function openParcelLandInfoPanel(feature)
 	if (!isReplacingOpenParcelLandInfo) openSidebarList();
 	const parcelRoadAddress = String(feature.roadAddress || feature.road_address || "").trim();
 	propertyList.innerHTML = '<article class="parcel-land-info-panel"><header class="parcel-land-info-address"><strong class="parcel-land-info-address-primary">' + escapeParcelLandInfoHtml(address) + '</strong>' + (parcelRoadAddress ? '<span class="parcel-land-info-address-road">' + escapeParcelLandInfoHtml(parcelRoadAddress) + '</span>' : "") + '</header><section class="parcel-land-info-section"><h2 class="parcel-land-info-section-title">토지 기본 정보</h2>' + rows.map(([label, value, rawValue]) => buildParcelLandInfoRow(label, value, rawValue)).join("") + '</section>' + (feature.landCharacteristicsStatus === "unavailable" ? '<div class="parcel-land-info-status">토지특성정보 서비스 승인 또는 조회 상태를 확인해 주세요.</div>' : "") + (feature.landPossessionStatus === "unavailable" && !/(?:아파트|연립|다세대|오피스텔|집합)/.test(String(feature.landUseSituation || (feature.landCharacteristics || {}).landUseSituation || "")) ? '<div class="parcel-land-info-status">토지소유정보 서비스 승인 또는 조회 상태를 확인해 주세요.</div>' : "") + buildParcelLandUsePlanSection(feature) + buildParcelLandMoveSection(feature) + buildParcelIndividualLandPriceSection(feature) + '</article>';
-	// 5.685: 지번주소 바로 아래 도로명주소는 외부 주소 요청 없이 자체 주소 DB의 같은 PNU로 채웁니다.
+	// 5.705: 지번주소 바로 아래 도로명주소는 외부 주소 요청 없이 자체 주소 DB의 같은 PNU로 채웁니다.
 	if (!parcelRoadAddress && address && typeof searchAddressFromOwnDatabase === "function") {
 		const selectedParcelPnu = String(feature.pnu || "").trim();
 		void searchAddressFromOwnDatabase(address).then((results) => {
@@ -15075,7 +15075,7 @@ const PROPERTY_REGION_LABEL_ANCHORS_BY_CODE = new Map([
 	["50130115", [126.461065051869, 33.246121154361]], // 월평동 -> 월평마을회관
 	["50130116", [126.4770063, 33.2379755]], // 강정동 -> 강정마을커뮤니티센터
 	["50130117", [126.4875608, 33.2567492]], // 도순동 -> 대천동 주민센터
-	["50130118", [126.459981108410, 33.256968404691]], // 하원동 -> 하원마을회관
+	["50130118", [126.459981108410, 33.257058404691]], // 하원동 -> 하원마을회관
 	["50130119", [126.410407476954, 33.260849220984]], // 색달동 -> 색달마을회관
 	["50130120", [126.3898802, 33.2592870]], // 상예동 -> 예래동 주민센터
 	["50130121", [126.386023752544, 33.243447162965]], // 하예동 -> 하예1마을회관
@@ -27983,8 +27983,16 @@ function closeDetailPanel(options = {})
 	resetDetailSimilarLazyListings();
 	restoreMapPanelsCollapsedOnHome = false;
 	closeWorkspaceRoadviewWhenDetailPanelCloses();
+	const wasListSharedDetail = document.body.classList.contains("list-shared-detail-mode");
 	const wasSharedLeftDetail = document.body.classList.contains("recent-shared-detail-mode")
-		|| document.body.classList.contains("list-shared-detail-mode");
+		|| wasListSharedDetail;
+	const preserveParcelInfoPanel = !!(
+		wasListSharedDetail
+		&& state
+		&& state.leftListDetailMode === "parcel-land-info"
+		&& propertyList
+		&& propertyList.querySelector(".parcel-land-info-panel")
+	);
 	document.body.classList.remove(
 		"detail-page-panel-open",
 		"map-panels-collapsed",
@@ -28012,10 +28020,20 @@ function closeDetailPanel(options = {})
 	currentDetailItem = null;
 	syncDetailEditButton(null);
 	// 관리 목록의 회색 선택은 상세를 닫아도 유지하고, 목록ㆍ상세 밖의 다음 클릭에서 공통 해제한다.
-	if (state) state.leftListDetailMode = "";
+	if (state && !preserveParcelInfoPanel) state.leftListDetailMode = "";
 	clearDetailUrl({ replace: true });
 	setSharedDetailMode(false);
-	if (wasSharedLeftDetail && state && state.isListOpen !== undefined) {
+	if (preserveParcelInfoPanel) {
+		state.leftListDetailMode = "parcel-land-info";
+		state.leftListTitle = "부동산 정보";
+		state.selectionMode = "parcel-land-info";
+		state.isListOpen = true;
+		document.body.classList.remove("sidebar-list-collapsed", "map-panels-collapsed");
+		updateSidebarWidth();
+		if (typeof syncSidebarListTitle === "function") syncSidebarListTitle();
+		if (typeof syncSidebarListHeaderActions === "function") syncSidebarListHeaderActions();
+		if (typeof refreshMapLayout === "function") refreshMapLayout();
+	} else if (wasSharedLeftDetail && state && state.isListOpen !== undefined) {
 		// 좌측 공유 상세 모드에서 상세 패널만 닫으면 좌측 목록 패널까지 같이 닫히도록 보정.
 		state.isListOpen = false;
 		document.body.classList.add("sidebar-list-collapsed");
@@ -37520,45 +37538,9 @@ async function updateSidebarAgentSort(action)
 	loadMoreLeftListItems({ sourceItems });
 }
 
-function renderList(data)
+function renderListingCardHtml(item, options = {})
 {
-	// 주소 검색 또는 필지 선택으로 열린 토지정보를 늦게 완료된 매물 목록 갱신이 덮지 못하게 한다.
-	if (propertyList && propertyList.querySelector(".parcel-land-info-panel")) {
-		state.leftListDetailMode = "parcel-land-info";
-		state.leftListTitle = "부동산 정보";
-		syncSidebarListTitle();
-		syncSidebarListHeaderActions();
-		return;
-	}
-	const sourceData = data;
-	data = hydrateLeftListRenderItems(data);
-	if (sourceData === state.leftListItems) state.leftListItems = data;
-	const agentCard = state.agentListFilter ? getSidebarAgentCardForRender(data) : null;
-	if (state.agentListFilter) state.leftListTitle = getAgentListPanelTitle(state.agentListFilter, agentCard);
-	else if (state.leftListDetailMode !== "region-count") state.leftListTitle = "";
-	syncSidebarListTitle();
-	syncSidebarListHeaderActions();
-	const agentCardHtml = state.agentListFilter ? renderSidebarAgentCard(agentCard) : "";
-	const agentSortHtml = state.agentListFilter ? renderSidebarAgentSortBar(state.leftListTotalCount || data.length) : "";
-	const listSortHtml = state.agentListFilter ? "" : renderSidebarListSortBar(state.leftListTotalCount || data.length);
-	const agentHeaderHtml = agentCardHtml + agentSortHtml + listSortHtml;
-	if (!data.length) {
-		propertyList.innerHTML = `${agentHeaderHtml}
-		<div class="card" style="padding:18px; cursor:default; border-bottom:0;">
-		<div class="card-body" style="padding:0; text-align:left;">
-		<div class="map-empty-state-desc">
-		<div class="empty-title">조건에 맞는 매물이 없습니다.</div>
-		<div class="empty-sub">지도를 이동 하거나 필터를 변경해 보세요.</div>
-		</div>
-		</div>
-		</div>
-		`;
-		return;
-	}
-
-		const hasMoreListItems = Number(state.leftListRenderedCount || 0) < Number(state.leftListTotalCount || 0);
-		const selectedListId = normalizeItemId(state.selectedMarkerId);
-		propertyList.innerHTML = agentHeaderHtml + data.map(item => {
+	const selectedListId = normalizeItemId(options.selectedId);
 			const itemId = normalizeItemId(item && item.id);
 			const isSelectedCard = !!itemId && !!selectedListId && itemId === selectedListId;
 			const thumb = getListingItemThumbnailUrl(item);
@@ -37626,7 +37608,277 @@ function renderList(data)
 		</div>
 		</article>
 		`;
-	}).join("") + (hasMoreListItems ? '<div class="left-list-loading" aria-live="polite">불러오는 중...</div>' : "");
+	
+}
+
+function collectParcelRecommendationCoordinates(value, output)
+{
+	if (!Array.isArray(value)) return;
+	if (value.length >= 2 && Number.isFinite(Number(value[0])) && Number.isFinite(Number(value[1]))) {
+		const lng = Number(value[0]);
+		const lat = Number(value[1]);
+		if (lat >= 32 && lat <= 35 && lng >= 125 && lng <= 128) output.push({ lat, lng });
+		return;
+	}
+	value.forEach((child) => collectParcelRecommendationCoordinates(child, output));
+}
+
+function getParcelRecommendationCenter(feature)
+{
+	const props = feature && feature.properties && typeof feature.properties === "object" ? feature.properties : {};
+	const directPairs = [
+		[feature && feature.selectionLat, feature && feature.selectionLng],
+		[props.lat ?? props.latitude ?? props.centerLat, props.lng ?? props.longitude ?? props.centerLng],
+		[feature && (feature.lat ?? feature.latitude), feature && (feature.lng ?? feature.longitude)]
+	];
+	for (const pair of directPairs) {
+		const direct = normalizeJejuLatLngPair(pair[0], pair[1]);
+		if (direct) return direct;
+	}
+	const points = [];
+	collectParcelRecommendationCoordinates(feature && feature.geometry && feature.geometry.coordinates, points);
+	if (!points.length) return null;
+	const total = points.reduce((sum, point) => ({ lat: sum.lat + point.lat, lng: sum.lng + point.lng }), { lat: 0, lng: 0 });
+	return { lat: total.lat / points.length, lng: total.lng / points.length };
+}
+
+function getParcelRecommendationDistanceMeters(a, b)
+{
+	if (!a || !b) return Number.POSITIVE_INFINITY;
+	const toRadians = (value) => Number(value) * Math.PI / 180;
+	const lat1 = toRadians(a.lat);
+	const lat2 = toRadians(b.lat);
+	const deltaLat = lat2 - lat1;
+	const deltaLng = toRadians(b.lng) - toRadians(a.lng);
+	const value = Math.sin(deltaLat / 2) ** 2 + Math.cos(lat1) * Math.cos(lat2) * Math.sin(deltaLng / 2) ** 2;
+	return 6371000 * 2 * Math.atan2(Math.sqrt(value), Math.sqrt(1 - value));
+}
+
+function getParcelRecommendationCandidates(feature)
+{
+	const center = getParcelRecommendationCenter(feature);
+	if (!center) return [];
+	const sourceItems = [].concat(
+		Array.isArray(state.all) ? state.all : [],
+		Array.isArray(state.filtered) ? state.filtered : [],
+		Array.isArray(state.leftListItems) ? state.leftListItems : []
+	);
+	const seen = new Set();
+	const candidates = [];
+	sourceItems.forEach((item) => {
+		const id = normalizeItemId(item && item.id);
+		if (!id || seen.has(id)) return;
+		seen.add(id);
+		const position = getListingDisplayPosition(item);
+		const lat = Number(position && (position.lat ?? (typeof position.getLat === "function" ? position.getLat() : NaN)));
+		const lng = Number(position && (position.lng ?? (typeof position.getLng === "function" ? position.getLng() : NaN)));
+		if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
+		const distance = getParcelRecommendationDistanceMeters(center, { lat, lng });
+		if (distance > 1000) return;
+		candidates.push({ item, distance });
+	});
+	return candidates;
+}
+
+async function renderRecommendedListingCard(target, feature)
+{
+	if (!target) return false;
+	if (typeof target.__realjejuRecommendedListingCleanup === "function") {
+		target.__realjejuRecommendedListingCleanup();
+	}
+	const candidates = getParcelRecommendationCandidates(feature);
+	if (!candidates.length) return false;
+	const shuffled = candidates.slice();
+	for (let index = shuffled.length - 1; index > 0; index -= 1) {
+		const swapIndex = Math.floor(Math.random() * (index + 1));
+		[shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex], shuffled[index]];
+	}
+	let selectedItems = shuffled.slice(0, 3).map((candidate) => candidate.item);
+	try {
+		const fetchedRows = await fetchLeftListRowsByIds(selectedItems.map((item) => item.id));
+		const hydratedRows = hydrateLeftListRenderItems(fetchedRows);
+		const hydratedById = new Map(hydratedRows.map((item) => [normalizeItemId(item && item.id), item]));
+		selectedItems = selectedItems.map((item) => hydratedById.get(normalizeItemId(item.id)) || item);
+	} catch (error) {
+		console.warn("추천 매물 상세 보완 실패:", error);
+	}
+	selectedItems = selectedItems.filter(Boolean);
+	if (!selectedItems.length) return false;
+	rememberLeftListDetailItems(selectedItems);
+	target.classList.remove("parcel-property-loading");
+	target.innerHTML = '<div class="parcel-recommended-listing-slider" data-parcel-recommended-slider>'
+		+ '<div class="parcel-recommended-listing-viewport"><div class="parcel-recommended-listing-track">'
+		+ selectedItems.map((item, index) => '<div class="parcel-recommended-listing-slide" data-parcel-recommended-slide="' + index + '">' + renderListingCardHtml(item, { selectedId: "" }) + '</div>').join("")
+		+ '</div></div>'
+		+ (selectedItems.length > 1 ? '<div class="parcel-recommended-listing-dots" role="tablist" aria-label="추천 매물 선택">'
+			+ selectedItems.map((item, index) => '<button type="button" class="parcel-recommended-listing-dot' + (index === 0 ? ' is-active' : '') + '" data-parcel-recommended-dot="' + index + '" role="tab" aria-selected="' + (index === 0 ? 'true' : 'false') + '" aria-label="추천 매물 ' + (index + 1) + '"></button>').join("")
+			+ '</div>' : '')
+		+ '</div>';
+	target.dataset.recommendedListingIds = selectedItems.map((item) => normalizeItemId(item.id)).join(",");
+	refreshCardViewCounts(selectedItems);
+	void refreshCardFavoriteCounts(selectedItems);
+
+	const itemById = new Map(selectedItems.map((item) => [normalizeItemId(item && item.id), item]));
+      const keepParcelInfoBesideRecommendedDetail = (preservedParcelPanel, preservedScrollTop) => {
+        if (preservedParcelPanel && propertyList && !propertyList.contains(preservedParcelPanel)) {
+          propertyList.replaceChildren(preservedParcelPanel);
+        }
+        state.leftListDetailMode = "parcel-land-info";
+        state.leftListTitle = "부동산 정보";
+        state.selectionMode = "parcel-land-info";
+        state.isListOpen = true;
+        document.body.classList.remove(
+          "detail-page-panel-open",
+          "direct-detail-list-mode",
+          "recent-shared-detail-mode",
+          "map-panels-collapsed",
+          "map-detail-panel-active",
+          "sidebar-list-collapsed"
+        );
+        document.body.classList.add("shared-detail-mode", "list-shared-detail-mode");
+        if (sidebar) sidebar.classList.add("expanded");
+        if (propertyList) propertyList.scrollTop = preservedScrollTop;
+        if (typeof syncSidebarListTitle === "function") syncSidebarListTitle();
+        if (typeof syncSidebarListHeaderActions === "function") syncSidebarListHeaderActions();
+        if (typeof updateSidebarWidth === "function") updateSidebarWidth();
+        if (typeof syncMapFilterbarDetailHidden === "function") syncMapFilterbarDetailHidden();
+        if (typeof refreshMapLayout === "function") refreshMapLayout();
+      };
+
+      target.querySelectorAll(".card[data-id]").forEach((card) => {
+        card.addEventListener("click", async (event) => {
+          if (event.target.closest("a, button")) return;
+          event.preventDefault();
+          const selectedItem = itemById.get(normalizeItemId(card.dataset.id));
+          if (!selectedItem) return;
+          const preservedParcelPanel = target.closest(".parcel-land-info-panel");
+          const preservedScrollTop = propertyList ? propertyList.scrollTop : 0;
+          keepParcelInfoBesideRecommendedDetail(preservedParcelPanel, preservedScrollTop);
+          try {
+            await openDetailPanel(selectedItem, {
+              syncUrl: true,
+              forceOpen: true,
+              overlayPage: false,
+              sharedMode: true
+            });
+          } finally {
+            keepParcelInfoBesideRecommendedDetail(preservedParcelPanel, preservedScrollTop);
+          }
+        });
+      });
+
+	target.querySelectorAll(".favorite-heart-btn[data-favorite-id]").forEach((favoriteButton) => {
+		favoriteButton.addEventListener("click", async (event) => {
+			event.preventDefault();
+			event.stopPropagation();
+			if (favoriteButton.disabled) return;
+			const selectedItem = itemById.get(normalizeItemId(favoriteButton.dataset.favoriteId));
+			if (!selectedItem) return;
+			favoriteButton.disabled = true;
+			const active = await setFavoriteListing(selectedItem.id, !isFavoriteListing(selectedItem.id), selectedItem);
+			favoriteButton.classList.toggle("active", active);
+			favoriteButton.setAttribute("aria-label", active ? "관심 부동산 해제" : "관심 부동산 추가");
+			favoriteButton.setAttribute("aria-pressed", active ? "true" : "false");
+			favoriteButton.disabled = false;
+		});
+	});
+
+	const slider = target.querySelector("[data-parcel-recommended-slider]");
+	const track = slider && slider.querySelector(".parcel-recommended-listing-track");
+	const dots = slider ? Array.from(slider.querySelectorAll("[data-parcel-recommended-dot]")) : [];
+	let activeIndex = 0;
+	let autoplayTimer = 0;
+	const reducedMotion = typeof window.matchMedia === "function" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+	const stopAutoplay = () => {
+		if (!autoplayTimer) return;
+		window.clearInterval(autoplayTimer);
+		autoplayTimer = 0;
+	};
+	const showSlide = (index) => {
+		if (!track || !selectedItems.length) return;
+		activeIndex = (Number(index) + selectedItems.length) % selectedItems.length;
+		track.style.transform = 'translate3d(-' + (activeIndex * 100) + '%, 0, 0)';
+		dots.forEach((dot, dotIndex) => {
+			const isActive = dotIndex === activeIndex;
+			dot.classList.toggle("is-active", isActive);
+			dot.setAttribute("aria-selected", isActive ? "true" : "false");
+		});
+	};
+	const startAutoplay = () => {
+		stopAutoplay();
+		if (!slider || selectedItems.length < 2 || reducedMotion) return;
+		autoplayTimer = window.setInterval(() => {
+			if (!slider.isConnected) {
+				stopAutoplay();
+				return;
+			}
+			if (document.hidden) return;
+			showSlide(activeIndex + 1);
+		}, 2500);
+	};
+	dots.forEach((dot) => {
+		dot.addEventListener("click", (event) => {
+			event.preventDefault();
+			event.stopPropagation();
+			showSlide(Number(dot.dataset.parcelRecommendedDot));
+			startAutoplay();
+		});
+	});
+	if (slider) {
+		slider.addEventListener("mouseenter", stopAutoplay);
+		slider.addEventListener("mouseleave", startAutoplay);
+		slider.addEventListener("focusin", stopAutoplay);
+		slider.addEventListener("focusout", (event) => {
+			if (!slider.contains(event.relatedTarget)) startAutoplay();
+		});
+	}
+	target.__realjejuRecommendedListingCleanup = stopAutoplay;
+	showSlide(0);
+	startAutoplay();
+	return true;
+}
+
+window.realjejuRenderRecommendedListingCard = renderRecommendedListingCard;
+
+function renderList(data)
+{
+	// 주소 검색 또는 필지 선택으로 열린 토지정보를 늦게 완료된 매물 목록 갱신이 덮지 못하게 한다.
+	if (propertyList && propertyList.querySelector(".parcel-land-info-panel")) {
+		state.leftListDetailMode = "parcel-land-info";
+		state.leftListTitle = "부동산 정보";
+		syncSidebarListTitle();
+		syncSidebarListHeaderActions();
+		return;
+	}
+	const sourceData = data;
+	data = hydrateLeftListRenderItems(data);
+	if (sourceData === state.leftListItems) state.leftListItems = data;
+	const agentCard = state.agentListFilter ? getSidebarAgentCardForRender(data) : null;
+	if (state.agentListFilter) state.leftListTitle = getAgentListPanelTitle(state.agentListFilter, agentCard);
+	else if (state.leftListDetailMode !== "region-count") state.leftListTitle = "";
+	syncSidebarListTitle();
+	syncSidebarListHeaderActions();
+	const agentCardHtml = state.agentListFilter ? renderSidebarAgentCard(agentCard) : "";
+	const agentSortHtml = state.agentListFilter ? renderSidebarAgentSortBar(state.leftListTotalCount || data.length) : "";
+	const listSortHtml = state.agentListFilter ? "" : renderSidebarListSortBar(state.leftListTotalCount || data.length);
+	const agentHeaderHtml = agentCardHtml + agentSortHtml + listSortHtml;
+	if (!data.length) {
+		propertyList.innerHTML = `${agentHeaderHtml}
+		<div class="card" style="padding:18px; cursor:default; border-bottom:0;">
+		<div class="card-body" style="padding:0; text-align:left;">
+		<div class="map-empty-state-desc">
+		<div class="empty-title">조건에 맞는 매물이 없습니다.</div>
+		<div class="empty-sub">지도를 이동 하거나 필터를 변경해 보세요.</div>
+		</div>
+		</div>
+		</div>
+		`;
+		return;
+	}
+
+		const hasMoreListItems = Number(state.leftListRenderedCount || 0) < Number(state.leftListTotalCount || 0);
+		const selectedListId = normalizeItemId(state.selectedMarkerId);
+		propertyList.innerHTML = agentHeaderHtml + data.map(item => renderListingCardHtml(item, { selectedId: selectedListId })).join("") + (hasMoreListItems ? '<div class="left-list-loading" aria-live="polite">불러오는 중...</div>' : "");
 
 	refreshCardViewCounts(data);
 	void refreshCardFavoriteCounts(data);

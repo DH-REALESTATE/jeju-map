@@ -1,4 +1,4 @@
-// REALJEJU 5.685 property-info background module
+// REALJEJU 5.705 property-info background module
 // 필지 상세, 실거래가, 공시지가, 건축물대장, 추천 중개사 패널을 한 경계에서 관리합니다.
 /* PATCH 5.295: 필지 상세 통합 화면, 실거래가, 주변 중개사, 건축물대장 */
 (function initParcelPropertyExperience5293()
@@ -12,8 +12,6 @@
   const BUILDING_BROWSER_CACHE_TTL_MS = 30 * 60 * 1000;
   const TRADE_BROWSER_CACHE_TTL_MS = 5 * 60 * 1000;
   const TRADE_COORDINATE_BROWSER_CACHE_TTL_MS = 24 * 60 * 60 * 1000;
-  let recommendedBrokerPool = [];
-  let recommendedBrokerPoolPromise = null;
 
   function esc(value)
   {
@@ -288,8 +286,8 @@
   {
     return '<section id="parcel-property-realtrade" class="parcel-property-block parcel-property-realtrade">'
       + '<h2>실거래가</h2><div class="parcel-property-loading" data-parcel-exact-trades>실거래가를 불러오는 중입니다.</div>'
-      + '<div class="parcel-property-subsection"><h3>추천 중개사</h3><div data-parcel-nearby-brokers class="parcel-property-loading">추천 중개사를 불러오는 중입니다.</div></div>'
       + '<div class="parcel-property-subsection parcel-property-trade-graph-section"><h3>주변 유사거래</h3><div data-parcel-trade-chart class="parcel-property-loading">주변 유사거래를 불러오는 중입니다.</div></div>'
+      + '<div class="parcel-property-subsection"><h3>추천 매물</h3><div data-parcel-recommended-listing class="parcel-property-loading">추천 매물을 불러오는 중입니다.</div></div>'
       // 주변 유사거래는 현재 사용하지 않으므로 임시 주석 처리
       // + '<div class="parcel-property-subsection"><h3>주변 유사거래</h3><p class="parcel-property-trade-tags" data-parcel-trade-tags>#토지 #같은지목 #같은용도지역 #500m</p><div data-parcel-similar-trades class="parcel-property-loading">주변 거래를 불러오는 중입니다.</div></div>'
       + '</section>';
@@ -699,86 +697,18 @@
     });
   }
 
-  function renderParcelBrokerCompactCard(office)
+  async function loadRecommendedListing(panel, feature)
   {
-    const phone = String(office.phone || "").trim();
-    return '<article class="parcel-nearby-broker-card"><div><strong>' + esc(office.officeName || "중개사무소") + '</strong><span>' + esc(office.ownerName || "") + '</span><p>' + esc(office.address || "") + '</p>' + (office.distance == null ? "" : '<em>' + esc(formatDistance(office.distance)) + '</em>') + '</div>' + (phone ? '<a href="tel:' + esc(phone.replace(/[^0-9+]/g, "")) + '" aria-label="' + esc(office.officeName || "중개사무소") + ' 전화">전화</a>' : "") + '</article>';
-  }
-
-  async function loadRecommendedBrokerPool()
-  {
-    if (recommendedBrokerPoolPromise) return recommendedBrokerPoolPromise;
-    const client = getClient();
-    if (!client) return [];
-    recommendedBrokerPoolPromise = (async function() {
-      const result = await client.from("recommended_brokers")
-        .select("id,agency_id,user_id,office_name,owner_name,office_reg_no,office_address,phone,profile_image,active")
-        .eq("active", true)
-        .order("id", { ascending: true });
-      if (result.error) throw result.error;
-      recommendedBrokerPool = (Array.isArray(result.data) ? result.data : []).map(function(row) {
-        return normalizeParcelBroker({
-          id: row.agency_id,
-          user_id: row.user_id,
-          office_name: row.office_name,
-          owner_name: row.owner_name,
-          office_reg_no: row.office_reg_no,
-          office_address: row.office_address,
-          phone: row.phone,
-          profile_image: row.profile_image
-        }, null);
-      }).filter(function(office) {
-        return !!(office.agencyId || office.userId || office.regNo);
-      });
-      return recommendedBrokerPool;
-    })().catch(function(error) {
-      console.warn("추천 중개사 최초 로딩 실패:", error);
-      recommendedBrokerPoolPromise = null;
-      recommendedBrokerPool = [];
-      return recommendedBrokerPool;
-    });
-    return recommendedBrokerPoolPromise;
-  }
-
-  async function loadNearbyBrokers(panel, feature)
-  {
-    const target = panel.querySelector("[data-parcel-nearby-brokers]");
+    const target = panel.querySelector("[data-parcel-recommended-listing]");
     if (!target) return;
-    const pool = await loadRecommendedBrokerPool();
-    if (!pool.length) {
-      target.innerHTML = '<div class="parcel-property-empty">등록된 추천 중개사가 없습니다.</div>';
-      return;
-    }
-    const featured = pool[Math.floor(Math.random() * pool.length)];
-    const agentCard = typeof buildBrokerOfficeAgentCard === "function" ? buildBrokerOfficeAgentCard(featured) : null;
-    if (agentCard) {
-      agentCard.categoryLabel = "공인중개사";
-      agentCard.showListingsAction = true;
-      if (!String(agentCard.image || "").trim()) {
-        agentCard.image = "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Crect width='160' height='160' rx='80' fill='%23eef3f9'/%3E%3Ccircle cx='80' cy='60' r='29' fill='%2394a3b8'/%3E%3Cpath d='M30 142c4-31 23-49 50-49s46 18 50 49' fill='%2394a3b8'/%3E%3C/svg%3E";
-      }
-    }
-    let featuredHtml = agentCard && typeof renderSidebarAgentCard === "function" ? renderSidebarAgentCard(agentCard) : "";
-    featuredHtml = featuredHtml
-      .replace('<span>매물 보기</span>', '<span>매물 더보기</span>');
-    target.classList.remove("parcel-property-loading");
-    target.innerHTML = '<div class="parcel-nearby-broker-featured">' + featuredHtml + '</div>';
-    const listingsButton = target.querySelector("[data-local-business-card-listings]");
-    if (listingsButton && typeof openBrokerOfficeListingPanel === "function") {
-      listingsButton.addEventListener("click", function(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        void openBrokerOfficeListingPanel(featured, { preserveBrokerLayer: true, preserveMapMarkers: true });
-      });
-    }
-    const phoneButton = target.querySelector("[data-sidebar-agent-phone]");
-    if (phoneButton) {
-      phoneButton.addEventListener("click", function(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        const phone = String(phoneButton.dataset.sidebarAgentPhone || "").trim();
-        if (phone) window.location.href = "tel:" + phone;
-      });
+    const section = target.closest(".parcel-property-subsection");
+    try {
+      const renderer = window.realjejuRenderRecommendedListingCard;
+      const rendered = typeof renderer === "function" ? await renderer(target, feature) : false;
+      if (!rendered && section) section.hidden = true;
+    } catch (error) {
+      console.warn("[realjeju recommended listing]", error);
+      if (section) section.hidden = true;
     }
   }
 
@@ -1819,39 +1749,7 @@
       let data = getTimedCache(tradeCache, tradeCacheKey);
       if (!data) {
         const exactTradeCacheKey = pnu + ":exact";
-        try {
-          let exactData = getTimedCache(tradeCache, exactTradeCacheKey);
-          if (!exactData) {
-            exactData = await settleParcelTradePromise(
-              invokeFunction("land-trades", {
-                pnu: pnu,
-                jibun: sourceJibun,
-                umdName: targetUmdName,
-                serviceTypes: REALJEJU_TRADE_SERVICE_TYPES,
-                nearbyServiceTypes: [],
-                lat: null,
-                lng: null,
-                radiusMeters: 500,
-                nearbyLimit: 1
-              }),
-              6000,
-              "정확 필지 실거래가 조회 시간이 초과되었습니다."
-            );
-            if (!isCurrentTask()) return;
-            setTimedCache(tradeCache, exactTradeCacheKey, exactData, TRADE_BROWSER_CACHE_TTL_MS);
-          }
-          if (!isCurrentTask()) return;
-          exactTarget.classList.remove("parcel-property-loading");
-          renderExactTradeExperience(
-            exactTarget,
-            exactTradeRowsFromResponse(exactData, sourceJibun),
-            exactData.cacheCoverage
-          );
-          await waitForParcelTradePaint();
-        } catch (error) {
-          console.warn("[realjeju exact land-trades]", error);
-        }
-        // 필지 조회에서는 공공데이터를 호출하지 않고 미리 적재된 Supabase 거래 레코드만 조회합니다.
+        // 정확 필지와 주변 유사거래를 한 번의 DB 전용 함수 호출로 함께 조회합니다.
         data = await settleParcelTradePromise(
           invokeFunction("land-trades", {
             pnu: pnu,
@@ -1875,6 +1773,7 @@
         );
         if (!isCurrentTask()) return;
         setTimedCache(tradeCache, tradeCacheKey, data, TRADE_BROWSER_CACHE_TTL_MS);
+        setTimedCache(tradeCache, exactTradeCacheKey, data, TRADE_BROWSER_CACHE_TTL_MS);
       }
       if (!isCurrentTask()) return;
       // 법정동ㆍ지번 일치 판정은 Edge Function의 공통 정규화 결과를 신뢰하고,
@@ -2580,7 +2479,7 @@
   }
 
 
-  /* 5.685: 호별정보 선택기는 전유부의 실제 동/층/호만 계층적으로 사용한다. */
+  /* 5.705: 호별정보 선택기는 전유부의 실제 동/층/호만 계층적으로 사용한다. */
   buildingUnitModel = function(rows, selection)
   {
     const source = Array.isArray(rows) ? rows : [];
@@ -3513,7 +3412,7 @@
       // fresh DB-backed response, otherwise only a sparse subset of floors can
       // remain visible for the whole browser-cache lifetime.
       buildingCache.delete(pnu);
-      const basic = await invokeFunction("building-register", { pnu: pnu, scope: "basic" });
+      const basic = await invokeFunction("building-register", { pnu: pnu, scope: "all" });
       if (panel.dataset.parcelPnu !== pnu) return;
       const basicView = Object.assign({}, basic, {
         wastewater: [],
@@ -3530,8 +3429,7 @@
         target.textContent = "건축물대장을 불러오는 중입니다.";
       }
 
-      // 표제부가 없어도 층별개요가 저장된 건물이 있으므로 상세 DB 조회를 항상 진행합니다.
-      // 기본 표제부는 먼저 보여주고 층별·오수정보는 뒤에서 받아 같은 패널을 갱신합니다.
+      // 표제부와 층별·오수정보는 한 번의 DB 전용 함수 호출 결과를 함께 사용합니다.
       const commonHousing = basicRecords.some(function(item) {
         return isCommonHousingBuilding(item, basicRecords);
       });
@@ -3548,7 +3446,7 @@
           })
         : Promise.resolve({ status: 'skipped', items: [] });
       void Promise.all([
-        invokeFunction("building-register", { pnu: pnu, scope: "details" }),
+        Promise.resolve(basic),
         businessesPromise,
         commonHousingPricesPromise,
       ]).then(function(results) {
@@ -3625,7 +3523,7 @@
     }
     bindPanelNavigation(panel);
     refreshUnits(panel);
-    loadNearbyBrokers(panel, feature);
+    loadRecommendedListing(panel, feature);
     loadTrades(panel, feature);
     loadBuilding(panel, feature);
   }
@@ -3763,11 +3661,6 @@
     });
   };
 
-  const preloadRecommendedBrokers = function() {
-    void loadRecommendedBrokerPool();
-  };
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", preloadRecommendedBrokers, { once: true });
-  else preloadRecommendedBrokers();
 
   if (typeof MutationObserver !== "undefined") {
     const pendingParcelPanels = new Set();

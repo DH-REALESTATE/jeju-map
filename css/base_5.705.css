@@ -20688,6 +20688,17 @@ body.realjeju-filters-in-topbar .global-topbar-menu.has-map-filters.has-right-sc
 	pointer-events: auto !important;
 }
 
+/* 5.705: 추천 매물 상세는 왼쪽 필지 정보와 오른쪽 매물 상세가 항상 공존한다. */
+body.shared-detail-mode.list-shared-detail-mode .sidebar-list-panel{
+	display: flex;
+}
+
+body.shared-detail-mode.list-shared-detail-mode .sidebar-detail-panel{
+	left: calc(var(--sidebar-list-width) + var(--rj-detail-panel-gap));
+	width: var(--rj-detail-panel-width);
+	max-width: calc(100vw - var(--sidebar-list-width) - var(--rj-detail-panel-right-safe));
+}
+
 /* PATCH 3.826: in recent-shared detail mode, shift top filter bar right by the left panel width, same as normal list-open flow. */
 body.recent-shared-detail-mode.realjeju-filters-in-topbar:not(.sidebar-list-collapsed) .global-topbar-menu.has-map-filters,
 body.list-shared-detail-mode.realjeju-filters-in-topbar:not(.sidebar-list-collapsed) .global-topbar-menu.has-map-filters{
@@ -33889,10 +33900,10 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
   overflow-wrap: anywhere;
 }
 
-/* REALJEJU 5.327: 기타법률의 긴 포함 내용은 기존보다 조금 왼쪽에서 시작합니다. */
+/* REALJEJU 5.705: 기타법률 값 열은 긴 내용을 위한 폭을 유지하며 이전보다 8px 오른쪽에서 시작합니다. */
 .parcel-land-use-law-group.is-secondary .parcel-land-use-plan-row {
-  grid-template-columns: 64px minmax(0, 1fr);
-  gap: 8px;
+  grid-template-columns: 68px minmax(0, 1fr);
+  gap: 12px;
 }
 
 .parcel-public-data-empty {
@@ -34023,6 +34034,25 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
 }
 
 .parcel-land-price-row[hidden] {
+  display: none;
+}
+
+.parcel-land-price-list-toggle {
+  display: block;
+  width: calc(100% - var(--rj-detail-card-padding-left) - var(--rj-detail-card-padding-right));
+  min-height: var(--rj-property-content-row-min-height, 48px);
+  margin: 0 var(--rj-detail-card-padding-right) 0 var(--rj-detail-card-padding-left);
+  border: 0;
+  border-top: 1px solid #e3e6ea;
+  background: #fff;
+  color: #1267ec;
+  font: inherit;
+  font-size: var(--rj-detail-content-font-size, 15px);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.parcel-land-price-list-toggle[hidden] {
   display: none;
 }
 
@@ -34166,26 +34196,26 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
 .parcel-property-subsection { margin-top:8px; padding:24px 0; border-top:8px solid #eef2f7; }
 .parcel-property-loading,.parcel-property-empty { padding:34px var(--rj-detail-card-padding-right) 34px var(--rj-detail-card-padding-left); color:#a0a7b1; text-align:center; }
 .parcel-property-trade-tags { margin:-7px var(--rj-detail-card-padding-right) 14px var(--rj-detail-card-padding-left); color:#6b7280; font-size:13px; }
-.parcel-trade-property-line { padding:0 var(--rj-detail-card-padding-right) 12px var(--rj-detail-card-padding-left); color:#343940; font-size:14px; line-height:1.4; font-weight:800; }
+.parcel-trade-property-line { padding:0 var(--rj-detail-card-padding-right) 12px var(--rj-detail-card-padding-left); color:#343940; font-size:var(--rj-detail-content-font-size); line-height:1.4; font-weight:800; }
 .parcel-trade-table { padding:0 var(--rj-detail-card-padding-right) 20px var(--rj-detail-card-padding-left); }
 .parcel-trade-head,.parcel-trade-row { display:grid; grid-template-columns:.9fr 1.15fr 1fr 1.35fr; align-items:center; gap:6px; text-align:center; }
-.parcel-trade-head { padding:8px 2px; border-radius:0; background:#f2f3f5; color:#667085; font-size:12px; font-weight:700; }
-.parcel-trade-row { min-height:48px; border-top:1px solid #e7eaf0; color:#102a48; font-size:14px; }
-.parcel-trade-row strong { font-size:15px; }
+.parcel-trade-head { padding:8px 2px; border-radius:0; background:#f2f3f5; color:#667085; font-size:var(--rj-detail-content-font-size); font-weight:700; }
+.parcel-trade-row { min-height:48px; border-top:1px solid #e7eaf0; color:#102a48; font-size:var(--rj-detail-content-font-size); }
+.parcel-trade-row strong { font-size:inherit; }
 .parcel-trade-row small { color:#6b7280; font-size:12px; font-weight:500; }
 .parcel-trade-row em { color:#1667e8; font-style:normal; text-decoration:underline; }
 .parcel-trade-accordion { border-top:1px solid #e7eaf0; }
 .parcel-trade-accordion [hidden] { display:none !important; }
-.parcel-trade-accordion>summary { min-height:44px; display:flex; align-items:center; justify-content:center; gap:8px; color:#1667e8; font-size:13px; font-weight:800; list-style:none; cursor:pointer; }
+.parcel-trade-accordion>summary { min-height:44px; display:flex; align-items:center; justify-content:center; gap:8px; color:#1667e8; font-size:var(--rj-detail-content-font-size); font-weight:800; list-style:none; cursor:pointer; }
 .parcel-trade-accordion>summary::-webkit-details-marker { display:none; }
 .parcel-trade-accordion>summary i { width:7px; height:7px; border-right:2px solid currentColor; border-bottom:2px solid currentColor; transform:translateY(-2px) rotate(45deg); }
 .parcel-trade-accordion[open]>summary { display:none; }
-.parcel-trade-more { width:100%; min-height:44px; display:flex; align-items:center; justify-content:center; gap:8px; padding:0; border:0; background:#fff; color:#1667e8; font-size:13px; font-weight:800; cursor:pointer; }
+.parcel-trade-more { width:100%; min-height:44px; display:flex; align-items:center; justify-content:center; gap:8px; padding:0; border:0; background:#fff; color:#1667e8; font-size:var(--rj-detail-content-font-size); font-weight:800; cursor:pointer; }
 .parcel-trade-more i { width:7px; height:7px; border-right:2px solid currentColor; border-bottom:2px solid currentColor; transform:translateY(-2px) rotate(45deg); }
-.parcel-trade-collapse { width:100%; min-height:44px; display:flex; align-items:center; justify-content:center; gap:8px; padding:0; border:0; border-top:1px solid #e7eaf0; background:#fff; color:#1667e8; font-size:13px; font-weight:800; cursor:pointer; }
+.parcel-trade-collapse { width:100%; min-height:44px; display:flex; align-items:center; justify-content:center; gap:8px; padding:0; border:0; border-top:1px solid #e7eaf0; background:#fff; color:#1667e8; font-size:var(--rj-detail-content-font-size); font-weight:800; cursor:pointer; }
 .parcel-trade-collapse i { width:7px; height:7px; border-top:2px solid currentColor; border-left:2px solid currentColor; transform:translateY(2px) rotate(45deg); }
 
-/* PATCH 5.679: 실거래 유형·면적 선택·최근 거래·커서형 매매/전세 그래프 */
+/* PATCH 5.705: 실거래 유형·면적 선택·최근 거래·커서형 매매/전세 그래프 */
 .parcel-land-trade-only .parcel-trade-row>strong:first-child small { display:none; }
 .parcel-exact-trade-ui { --parcel-trade-kind-height:48px; --parcel-trade-range-height:32px; --parcel-trade-filter-font-size:15px; padding-top:6px; }
 .parcel-exact-kind-tabs { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); margin:0 var(--rj-detail-card-padding-right) 0 var(--rj-detail-card-padding-left); overflow:hidden; border:1px solid #dfe3e8; border-radius:7px; background:#fafafa; }
@@ -34300,7 +34330,7 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
 .parcel-property-info-row>strong { color:#20242c; text-align:right; }
 .parcel-property-info-row>strong span { display:inline-block; margin-left:8px; }
 .parcel-property-info-row>strong small { display:block; }
-@media (max-width:700px) { .parcel-building-card{flex-basis:160px}.parcel-trade-head,.parcel-trade-row{grid-template-columns:.9fr 1.15fr 1fr 1.35fr;gap:4px;font-size:12px}.parcel-property-info-row{padding-right:var(--rj-detail-card-padding-right);padding-left:var(--rj-detail-card-padding-left)}.parcel-property-tabs button{font-size:14px} }
+@media (max-width:700px) { .parcel-building-card{flex-basis:160px}.parcel-trade-head,.parcel-trade-row{grid-template-columns:.9fr 1.15fr 1fr 1.35fr;gap:4px}.parcel-property-info-row{padding-right:var(--rj-detail-card-padding-right);padding-left:var(--rj-detail-card-padding-left)}.parcel-property-tabs button{font-size:14px} }
 
 /* PATCH 5.295: 필지 상세 구역 사이 구분 바 색상 고정 */
 .parcel-land-info-panel .parcel-property-block {
@@ -34620,7 +34650,7 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
 
 .parcel-land-info-panel .parcel-land-move-row {
   min-height: 58px;
-  align-items: start;
+  align-items: center;
   padding-top: 15px;
   padding-bottom: 15px;
   border-bottom: 1px solid #e5e7eb;
@@ -35117,8 +35147,12 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
   width: 100%;
   min-width: 0;
   white-space: nowrap;
-  min-height: 48px;
+  min-height: var(--rj-property-content-row-min-height, 48px);
+  padding-top: var(--rj-property-content-row-padding-y, 8px);
+  padding-bottom: var(--rj-property-content-row-padding-y, 8px);
+  box-sizing: border-box;
   border-top: 1px solid #e7eaf0;
+  font-size: 14px;
 }
 .parcel-trade-graph-recent-list .parcel-similar-trade-row:last-child {
   border-bottom: 0;
@@ -35150,17 +35184,19 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
   text-align: right;
 }
 
-/* REALJEJU 5.679: 건축물현황 면적은 구조 뒤에 같은 둘째 줄로 표시합니다. */
+/* REALJEJU 5.705: 건축물현황 면적은 구조 뒤에 같은 둘째 줄로 표시합니다. */
 .parcel-land-info-panel .parcel-building-floor-row .parcel-building-floor-detail .parcel-building-floor-area,
 .parcel-land-info-panel .parcel-building-floor-row .parcel-building-floor-detail .parcel-building-floor-detail-separator {
   color: inherit !important;
   font: inherit !important;
 }
 
-/* REALJEJU 5.679: 부동산 정보 타이포그래피와 3개 그래프의 공통 규격 */
+/* REALJEJU 5.705: 부동산 정보 내용 행은 공통 14px 규격을 사용합니다. */
 .parcel-land-info-panel {
-  --rj-detail-content-font-size: 15px;
+  --rj-detail-content-font-size: 14px;
   --parcel-trade-filter-font-size: 15px;
+  --rj-property-content-row-min-height: 48px;
+  --rj-property-content-row-padding-y: 8px;
 }
 
 .parcel-land-info-panel .parcel-property-sticky-head > .parcel-land-info-address {
@@ -35180,10 +35216,10 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
 }
 
 .parcel-land-info-panel .parcel-building-floor-group > h3.parcel-building-floor-title .parcel-building-group-link {
-  font-size: 15px !important;
+  font-size: var(--rj-detail-content-font-size);
 }
 
-/* REALJEJU 5.679: 부동산 정보 제목 글꼴의 단일 원본입니다. */
+/* REALJEJU 5.705: 부동산 정보 제목 글꼴의 단일 원본입니다. */
 .parcel-land-info-panel .parcel-property-block > h2,
 .parcel-land-info-panel .parcel-property-subsection > h3,
 .parcel-land-info-panel .parcel-exact-history-title,
@@ -35213,7 +35249,7 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
   font-synthesis: none;
 }
 
-/* REALJEJU 5.679: 도로명주소 아래 오른쪽 진한 값 굵기의 단일 원본입니다. */
+/* REALJEJU 5.705: 도로명주소 아래 오른쪽 진한 값 굵기의 단일 원본입니다. */
 .parcel-land-info-panel .parcel-land-info-row > .parcel-land-info-value,
 .parcel-land-info-panel .parcel-land-use-plan-row > .parcel-land-use-plan-value,
 .parcel-land-info-panel .parcel-land-move-row > strong,
@@ -35223,7 +35259,23 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
   font-weight: var(--rj-property-value-font-weight);
 }
 
-/* REALJEJU 5.679: 기본 스크롤은 즉시 맞추고 화살표의 명시적 한 칸 이동만 부드럽게 처리합니다. */
+/* REALJEJU 5.705: 상세 패널의 2열 내용 행은 하나의 축소 높이와 대칭 여백을 사용합니다. */
+.parcel-land-info-panel .parcel-land-info-row,
+.parcel-land-info-panel .parcel-land-use-plan-row,
+.parcel-land-info-panel .parcel-land-move-row,
+.parcel-land-info-panel .parcel-property-info-row {
+  min-height: var(--rj-property-content-row-min-height);
+  align-items: center;
+  padding-top: var(--rj-property-content-row-padding-y);
+  padding-bottom: var(--rj-property-content-row-padding-y);
+  box-sizing: border-box;
+}
+
+.parcel-land-info-panel .parcel-land-info-row.parcel-land-info-group-start {
+  min-height: calc(var(--rj-property-content-row-min-height) + 8px);
+}
+
+/* REALJEJU 5.705: 기본 스크롤은 즉시 맞추고 화살표의 명시적 한 칸 이동만 부드럽게 처리합니다. */
 .parcel-land-info-panel .parcel-building-card-list {
   scroll-behavior: auto;
 }
@@ -35234,7 +35286,7 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
   }
 }
 
-/* REALJEJU 5.679: 층·용도는 첫 줄, 구조·면적은 둘째 줄에 모두 표시합니다. */
+/* REALJEJU 5.705: 층·용도는 첫 줄, 구조·면적은 둘째 줄에 모두 표시합니다. */
 .parcel-land-info-panel .parcel-building-floor-row {
   display: grid !important;
   grid-template-columns: 100px minmax(0, 1fr) !important;
@@ -35274,13 +35326,24 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
 
 .parcel-land-info-panel .parcel-exact-latest > span,
 .parcel-land-info-panel .parcel-exact-latest > time,
-.parcel-land-info-panel .parcel-exact-area-trigger > span,
+.parcel-land-info-panel .parcel-exact-area-trigger > span {
+  font-size: 15px;
+}
+
+.parcel-land-info-panel .parcel-land-price-table {
+  font-size: var(--rj-detail-content-font-size);
+}
+
+.parcel-land-info-panel .parcel-trade-property-line,
 .parcel-land-info-panel .parcel-trade-head,
 .parcel-land-info-panel .parcel-trade-row,
-.parcel-land-info-panel .parcel-similar-trade-row,
-.parcel-land-info-panel .parcel-property-info-row,
-.parcel-land-info-panel .parcel-land-price-table {
-  font-size: 15px;
+.parcel-land-info-panel .parcel-trade-more,
+.parcel-land-info-panel .parcel-trade-collapse {
+  font-size: var(--rj-detail-content-font-size);
+}
+
+.parcel-land-info-panel .parcel-property-info-row {
+  font-size: var(--rj-detail-content-font-size);
 }
 
 .parcel-land-info-panel .parcel-exact-latest > strong {
@@ -35313,13 +35376,13 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
   font-weight: 600;
 }
 
-/* REALJEJU 5.679: 층명은 공통 왼쪽 기준선, 용도는 고정된 다음 열에 정렬합니다. */
+/* REALJEJU 5.705: 층명은 공통 왼쪽 기준선, 용도는 고정된 다음 열에 정렬합니다. */
 .parcel-land-info-panel .parcel-building-floor-row .parcel-building-floor-name {
   justify-self: stretch !important;
   text-align: left !important;
 }
 
-/* REALJEJU 5.679: 거래내역 제목 행은 데이터 행과 같은 높이의 회색 네모입니다. */
+/* REALJEJU 5.705: 거래내역 제목 행은 데이터 행과 같은 높이의 회색 네모입니다. */
 .parcel-land-info-panel .parcel-trade-head {
   min-height: 48px !important;
   padding-top: 0 !important;
@@ -35328,12 +35391,12 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
   box-sizing: border-box;
 }
 
-/* REALJEJU 5.679: 건축물대장 카드의 빠른 중앙 이동 중에는 스냅 간섭을 막습니다. */
+/* REALJEJU 5.705: 건축물대장 카드의 빠른 중앙 이동 중에는 스냅 간섭을 막습니다. */
 .parcel-land-info-panel .parcel-building-card-list.is-animating {
   scroll-snap-type: none !important;
 }
 
-/* REALJEJU 5.679: 건축물현황은 층/용도/구조·면적을 14px 한 줄 3열로 정렬합니다. */
+/* REALJEJU 5.705: 건축물현황은 층/용도/구조·면적을 14px 한 줄 3열로 정렬합니다. */
 .parcel-land-info-panel .parcel-building-floor-row {
   grid-template-columns: 70px minmax(0, 1fr) max-content !important;
   column-gap: 8px !important;
@@ -35364,7 +35427,7 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
   grid-column: 3 !important;
 }
 
-/* REALJEJU 5.679: 개별공시지가 표는 좌우 20px 안에서 두 열을 균등 중앙 정렬합니다. */
+/* REALJEJU 5.705: 개별공시지가 표는 좌우 20px 안에서 두 열을 균등 중앙 정렬합니다. */
 .parcel-land-info-panel .parcel-land-price-table th,
 .parcel-land-info-panel .parcel-land-price-table td {
   width: 50%;
@@ -35374,7 +35437,7 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
   box-sizing: border-box;
 }
 
-/* REALJEJU 5.679: 건축물현황 층 열을 줄여 용도를 왼쪽으로 옮기고 구조 열과 겹치지 않게 합니다. */
+/* REALJEJU 5.705: 건축물현황 층 열을 줄여 용도를 왼쪽으로 옮기고 구조 열과 겹치지 않게 합니다. */
 .parcel-land-info-panel .parcel-building-floor-row {
   grid-template-columns: 48px minmax(0, 1fr) max-content !important;
   column-gap: 6px !important;
@@ -35385,7 +35448,7 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
   text-overflow: ellipsis !important;
 }
 
-/* REALJEJU 5.679: 건축물현황은 층만 강조하고 용도와 구조·면적은 같은 보조 규격을 사용합니다. */
+/* REALJEJU 5.705: 건축물현황은 층만 강조하고 용도와 구조·면적은 같은 보조 규격을 사용합니다. */
 .parcel-land-info-panel .parcel-building-floor-row .parcel-building-floor-name {
   color: #2f343b !important;
   font-weight: 700 !important;
@@ -35398,7 +35461,7 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
   font-weight: 400 !important;
 }
 
-/* REALJEJU 5.679: 용도를 조금 왼쪽으로 당기고 구조·면적 앞에 슬래시 구분자를 표시합니다. */
+/* REALJEJU 5.705: 용도를 조금 왼쪽으로 당기고 구조·면적 앞에 슬래시 구분자를 표시합니다. */
 .parcel-land-info-panel .parcel-building-floor-row {
   column-gap: 4px !important;
 }
@@ -35410,13 +35473,13 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
   font-weight: 400;
 }
 
-/* REALJEJU 5.679: 용도와 구조·면적 사이의 슬래시를 제거합니다. */
+/* REALJEJU 5.705: 용도와 구조·면적 사이의 슬래시를 제거합니다. */
 .parcel-land-info-panel .parcel-building-floor-row .parcel-building-floor-detail::before {
   content: none !important;
   margin: 0 !important;
 }
 
-/* PATCH 5.679: keep the address-search submit button above the absolute input so clicking the magnifier follows the same form-submit path as Enter. */
+/* PATCH 5.705: keep the address-search submit button above the absolute input so clicking the magnifier follows the same form-submit path as Enter. */
 .sub-address-search-icon{
 	position: relative;
 	z-index: 4;
@@ -35432,7 +35495,7 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
 	z-index: 5 !important;
 }
 
-/* REALJEJU 5.679: 건축물현황은 층·용도를 첫 줄, 구조·면적을 공통 왼쪽선의 둘째 줄에 표시합니다. */
+/* REALJEJU 5.705: 건축물현황은 층·용도를 첫 줄, 구조·면적을 공통 왼쪽선의 둘째 줄에 표시합니다. */
 .parcel-land-info-panel .parcel-building-floor-row {
   grid-template-columns: 48px minmax(0, 1fr) !important;
   column-gap: 4px !important;
@@ -35460,7 +35523,7 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
   white-space: normal !important;
 }
 
-/* REALJEJU 5.679: 건축물현황 첫 줄은 층·용도·면적, 둘째 줄은 구조로 구성하고 본문을 15px로 복원합니다. */
+/* REALJEJU 5.705: 건축물현황 첫 줄은 층·용도·면적, 둘째 줄은 구조로 구성하고 본문을 15px로 복원합니다. */
 .parcel-land-info-panel .parcel-building-floor-row {
   grid-template-columns: 72px minmax(0, 1fr) max-content !important;
   column-gap: 10px !important;
@@ -35472,8 +35535,8 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
 .parcel-land-info-panel .parcel-building-floor-row .parcel-building-floor-purpose,
 .parcel-land-info-panel .parcel-building-floor-row .parcel-building-floor-area,
 .parcel-land-info-panel .parcel-building-floor-row .parcel-building-floor-detail {
-  font-size: 15px !important;
-  line-height: 1.35 !important;
+  font-size: var(--rj-detail-content-font-size);
+  line-height: 1.35;
 }
 
 .parcel-land-info-panel .parcel-building-floor-row .parcel-building-floor-name {
@@ -35510,19 +35573,19 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
   white-space: normal !important;
 }
 
-/* REALJEJU 5.679: 건축물현황의 용도와 구조는 15px/500으로 통일합니다. */
+/* REALJEJU 5.705: 건축물현황의 용도와 구조는 15px/500으로 통일합니다. */
 .parcel-land-info-panel .parcel-building-floor-row .parcel-building-floor-purpose,
 .parcel-land-info-panel .parcel-building-floor-row .parcel-building-floor-detail {
   font-weight: 500 !important;
 }
 
-/* REALJEJU 5.679: 층 표기를 지상9층 형식으로 사용하며 용도를 층 바로 옆에 배치합니다. */
+/* REALJEJU 5.705: 층 표기를 지상9층 형식으로 사용하며 용도를 층 바로 옆에 배치합니다. */
 .parcel-land-info-panel .parcel-building-floor-row {
   grid-template-columns: 58px minmax(0, 1fr) max-content !important;
   column-gap: 6px !important;
 }
 
-/* REALJEJU 5.679: 면적/건축물대장 선택창은 상단 필터 아래의 같은 크기와 위치를 사용합니다. */
+/* REALJEJU 5.705: 면적/건축물대장 선택창은 상단 필터 아래의 같은 크기와 위치를 사용합니다. */
 .parcel-exact-area-modal {
   align-items: flex-start !important;
   padding-top: calc(var(--global-topbar-height, 64px) + 112px) !important;
@@ -35646,7 +35709,7 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
   }
 }
 
-/* REALJEJU 5.679: 거래내역을 펼친 뒤에는 더보기와 접기를 같은 줄에 계속 표시합니다. */
+/* REALJEJU 5.705: 거래내역을 펼친 뒤에는 더보기와 접기를 같은 줄에 계속 표시합니다. */
 .parcel-trade-controls {
   width: 100%;
   display: flex;
@@ -35665,7 +35728,7 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
   border-left: 1px solid #e7eaf0;
 }
 
-/* REALJEJU 5.679: 면적/건축물대장 선택창을 함께 위로 올리고 폭을 줄입니다. */
+/* REALJEJU 5.705: 면적/건축물대장 선택창을 함께 위로 올리고 폭을 줄입니다. */
 .parcel-exact-area-modal {
   padding-top: calc(var(--global-topbar-height, 64px) + 80px) !important;
 }
@@ -35685,18 +35748,18 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
 }
 
 
-/* REALJEJU 5.679: 건축물현황의 층수만 한 단계 더 굵게 강조합니다. */
+/* REALJEJU 5.705: 건축물현황의 층수만 한 단계 더 굵게 강조합니다. */
 .parcel-land-info-panel .parcel-building-floor-row .parcel-building-floor-name {
   font-weight: 800 !important;
 }
 
 
-/* REALJEJU 5.679: 개별주택공시가격 정보행의 왼쪽 글자 굵기를 고정합니다. */
+/* REALJEJU 5.705: 개별주택공시가격 정보행의 왼쪽 글자 굵기를 고정합니다. */
 .parcel-building-house-price-record .parcel-property-info-row > span {
   font-weight: 400 !important;
 }
 
-/* REALJEJU 5.679: 공동주택공시가격 동/층/호 선택과 연도별 가격은 기존 정보행 규격을 공유합니다. */
+/* REALJEJU 5.705: 공동주택공시가격 동/층/호 선택과 연도별 가격은 기존 정보행 규격을 공유합니다. */
 .parcel-common-housing-selectors {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -35718,26 +35781,26 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
 }
 
 
-/* REALJEJU 5.679: 표제부 정보행의 왼쪽 글자 굵기를 고정합니다. */
+/* REALJEJU 5.705: 표제부 정보행의 왼쪽 글자 굵기를 고정합니다. */
 .parcel-building-title-register .parcel-property-info-row > span {
   font-weight: 400 !important;
 }
 
 
-/* REALJEJU 5.679: 건물 정보의 일반 정보행 왼쪽은 400을 적용합니다. */
+/* REALJEJU 5.705: 건물 정보의 일반 정보행 왼쪽은 400을 적용합니다. */
 .parcel-property-building .parcel-building-group .parcel-property-info-row:not(.parcel-building-floor-row) > span {
   font-weight: 400 !important;
 }
 
 
-/* REALJEJU 5.679: 주차장과 일자정보의 왼쪽은 500을 적용합니다. */
+/* REALJEJU 5.705: 주차장과 일자정보의 왼쪽은 500을 적용합니다. */
 .parcel-building-parking-group .parcel-property-info-row > span,
 .parcel-building-date-group .parcel-property-info-row > span {
   font-weight: 500 !important;
 }
 
 
-/* REALJEJU 5.679: 표제부·승강기·오수정화시설의 왼쪽은 500을 적용합니다. */
+/* REALJEJU 5.705: 표제부·승강기·오수정화시설의 왼쪽은 500을 적용합니다. */
 .parcel-building-title-register .parcel-property-info-row > span,
 .parcel-building-elevator-group .parcel-property-info-row > span,
 .parcel-building-wastewater-group .parcel-property-info-row > span {
@@ -35745,7 +35808,7 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
 }
 
 
-/* REALJEJU 5.679: 건축물현황 면적을 오른쪽 끝이 아니라 용도 바로 뒤에 배치합니다. */
+/* REALJEJU 5.705: 건축물현황 면적을 오른쪽 끝이 아니라 용도 바로 뒤에 배치합니다. */
 .parcel-land-info-panel .parcel-building-floor-row {
   grid-template-columns: 58px minmax(0, 1fr) !important;
   column-gap: 6px !important;
@@ -35781,7 +35844,7 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
 }
 
 
-/* REALJEJU 5.679: 건축물현황 첫 줄 세 항목의 간격을 동일하게 맞춥니다. */
+/* REALJEJU 5.705: 건축물현황 첫 줄 세 항목의 간격을 동일하게 맞춥니다. */
 .parcel-land-info-panel .parcel-building-floor-row {
   grid-template-columns: minmax(0, 1fr) !important;
   column-gap: 0 !important;
@@ -35824,7 +35887,7 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
 }
 
 
-/* REALJEJU 5.679: 한 자리·두 자리 층수와 관계없이 용도 시작선을 맞춥니다. */
+/* REALJEJU 5.705: 한 자리·두 자리 층수와 관계없이 용도 시작선을 맞춥니다. */
 .parcel-land-info-panel .parcel-building-floor-row .parcel-building-floor-main .parcel-building-floor-name {
   grid-column: 1 !important;
   width: auto !important;
@@ -35839,7 +35902,7 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
   grid-column: 3 !important;
 }
 
-/* REALJEJU 5.679: 수동 카드 스크롤은 놓은 위치에 유지하고 자동 스냅하지 않습니다. */
+/* REALJEJU 5.705: 수동 카드 스크롤은 놓은 위치에 유지하고 자동 스냅하지 않습니다. */
 .parcel-land-info-panel .parcel-building-card-list {
   scroll-snap-type: none !important;
   scroll-behavior: auto !important;
@@ -35850,7 +35913,7 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
   scroll-snap-stop: normal !important;
 }
 
-/* REALJEJU 5.679: 건축물현황 첫 줄의 세 항목을 같은 문자 규격과 수평선에 맞춥니다. */
+/* REALJEJU 5.705: 건축물현황 첫 줄의 세 항목을 같은 문자 규격과 수평선에 맞춥니다. */
 .parcel-land-info-panel .parcel-building-floor-row .parcel-building-floor-main {
   align-items: center !important;
 }
@@ -35858,8 +35921,8 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
 .parcel-land-info-panel .parcel-building-floor-row .parcel-building-floor-main .parcel-building-floor-name,
 .parcel-land-info-panel .parcel-building-floor-row .parcel-building-floor-main .parcel-building-floor-purpose,
 .parcel-land-info-panel .parcel-building-floor-row .parcel-building-floor-main .parcel-building-floor-area {
-  font-size: 15px !important;
-  line-height: 1.4 !important;
+  font-size: var(--rj-detail-content-font-size);
+  line-height: 1.4;
 }
 
 .parcel-land-info-panel .parcel-building-floor-row .parcel-building-floor-main .parcel-building-floor-area sup {
@@ -35868,7 +35931,7 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
 }
 
 
-/* REALJEJU 5.679: 건축물현황 층수는 검정 강조, 나머지는 상가 업종 보조문구와 통일합니다. */
+/* REALJEJU 5.705: 건축물현황 층수는 검정 강조, 나머지는 상가 업종 보조문구와 통일합니다. */
 .parcel-land-info-panel .parcel-building-floor-row .parcel-building-floor-name {
   color: #171a21 !important;
 }
@@ -35882,7 +35945,7 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
 }
 
 
-/* REALJEJU 5.679: 건축물현황은 처음 5개만 표시하고 거래내역과 같은 더보기·접기를 사용합니다. */
+/* REALJEJU 5.705: 건축물현황은 처음 5개만 표시하고 거래내역과 같은 더보기·접기를 사용합니다. */
 .parcel-building-floor-list [hidden] {
   display: none !important;
 }
@@ -35894,13 +35957,13 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
 }
 
 
-/* REALJEJU 5.679: 층수 고정 칸의 남는 폭을 제거해 두 가시 여백을 16px로 통일합니다. */
+/* REALJEJU 5.705: 층수 고정 칸의 남는 폭을 제거해 두 가시 여백을 16px로 통일합니다. */
 .parcel-land-info-panel .parcel-building-floor-row .parcel-building-floor-main .parcel-building-floor-name {
   text-align: right !important;
 }
 
 
-/* REALJEJU 5.679: 공동주택공시가격은 호별정보와 분리된 선택창·그래프·표를 사용합니다. */
+/* REALJEJU 5.705: 공동주택공시가격은 호별정보와 분리된 선택창·그래프·표를 사용합니다. */
 .parcel-common-housing-selectors {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -35980,7 +36043,7 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
 .parcel-common-housing-highlight div { min-width: 0; text-align: center; }
 .parcel-common-housing-highlight span,
 .parcel-common-housing-highlight strong { display: block; }
-.parcel-common-housing-highlight span { margin-bottom: 7px; font-size: 15px; font-weight: 700; }
+.parcel-common-housing-highlight span { margin-bottom: 7px; font-size: var(--rj-detail-content-font-size); font-weight: 700; }
 .parcel-common-housing-highlight strong { font-size: 25px; font-weight: 800; }
 
 .parcel-common-housing-graph { padding: 18px 20px 0; }
@@ -36005,7 +36068,7 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
   padding: 0 20px;
   border-bottom: 1px solid #e3e6ea;
   text-align: center;
-  font-size: 15px;
+  font-size: var(--rj-detail-content-font-size);
 }
 .parcel-common-housing-table-head { font-weight: 700; }
 .parcel-common-housing-table-row strong { font-weight: 700; }
@@ -36081,14 +36144,14 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
 .parcel-common-housing-picker-dialog > button.is-active i::before { width: 8px; height: 2px; transform: translate(5px, 3px) rotate(45deg); }
 .parcel-common-housing-picker-dialog > button.is-active i::after { width: 15px; height: 2px; transform: translate(11px, 7px) rotate(-45deg); }
 
-/* REALJEJU 5.679: 층수 칸의 글자를 오른쪽에 붙여 두 실제 여백을 모두 16px로 맞춥니다. */
+/* REALJEJU 5.705: 층수 칸의 글자를 오른쪽에 붙여 두 실제 여백을 모두 16px로 맞춥니다. */
 .parcel-land-info-panel .parcel-building-floor-row .parcel-building-floor-main .parcel-building-floor-name {
   flex: 0 0 64px !important;
   width: 64px !important;
   text-align: right !important;
 }
 
-/* REALJEJU 5.679: 건축물대장 카드 스크롤 손잡이를 얇은 파란색 공통 규격으로 맞춥니다. */
+/* REALJEJU 5.705: 건축물대장 카드 스크롤 손잡이를 얇은 파란색 공통 규격으로 맞춥니다. */
 .parcel-building-card-scrollbar {
   height: 5px !important;
   overflow: hidden;
@@ -36143,7 +36206,7 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
 }
 
 
-/* 5.679 공동주택공시가격 그래프 공통 규격 및 포인터 선택 */
+/* 5.705 공동주택공시가격 그래프 공통 규격 및 포인터 선택 */
 .parcel-common-housing-graph {
   box-sizing: border-box !important;
   width: 100% !important;
@@ -36170,7 +36233,7 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
 }
 
 
-/* 5.679 상가업소정보 상단의 실공간 회색 구분 블록 */
+/* 5.705 상가업소정보 상단의 실공간 회색 구분 블록 */
 .parcel-land-info-panel .parcel-apartment-business-group {
   display: block !important;
   border-top: 0 !important;
@@ -36184,7 +36247,7 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
 }
 
 
-/* 5.679 공동주택공시가격 그래프의 원·글자 비율을 보존합니다. */
+/* 5.705 공동주택공시가격 그래프의 원·글자 비율을 보존합니다. */
 .parcel-common-housing-graph svg {
   width: 100% !important;
   max-width: 640px !important;
@@ -36195,7 +36258,7 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
 }
 
 
-/* 5.679 공동주택공시가격 하단 건수 선택 영역은 음영 없이 표시합니다. */
+/* 5.705 공동주택공시가격 하단 건수 선택 영역은 음영 없이 표시합니다. */
 .parcel-common-housing-table-footer {
   background: #fff !important;
 }
@@ -36210,7 +36273,7 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
 }
 
 
-/* 5.679 공동주택공시가격 하단 건수 글자를 같은 규격으로 맞춥니다. */
+/* 5.705 공동주택공시가격 하단 건수 글자를 같은 규격으로 맞춥니다. */
 .parcel-common-housing-table-footer > div:first-child {
   display: flex;
   align-items: center;
@@ -36273,7 +36336,7 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
 }
 
 
-/* 5.679 공동주택공시가격 5건·10건·20건을 동일한 라운드 필 버튼으로 표시합니다. */
+/* 5.705 공동주택공시가격 5건·10건·20건을 동일한 라운드 필 버튼으로 표시합니다. */
 .parcel-common-housing-table-footer button[data-parcel-common-housing-count],
 .parcel-common-housing-table-footer button[data-parcel-common-housing-count].is-active {
   width: 54px !important;
@@ -36297,13 +36360,13 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
 }
 
 
-/* 5.679 상가업소정보 위 구분선을 공통 주요 섹션 두께 8px로 맞춥니다. */
+/* 5.705 상가업소정보 위 구분선을 공통 주요 섹션 두께 8px로 맞춥니다. */
 .parcel-land-info-panel .parcel-apartment-business-group::before {
   height: 8px !important;
 }
 
 
-/* 5.679 부동산 정보의 8px 주요 섹션 구분 바 색상을 하나로 통일합니다. */
+/* 5.705 부동산 정보의 8px 주요 섹션 구분 바 색상을 하나로 통일합니다. */
 .parcel-land-info-panel .parcel-property-block,
 .parcel-land-info-panel .parcel-property-subsection,
 .parcel-land-info-panel .parcel-building-group,
@@ -36320,7 +36383,7 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
 }
 
 
-/* 5.679 동·층·호 선택창은 원형 라디오가 아니라 선택 항목의 파란 체크만 표시합니다. */
+/* 5.705 동·층·호 선택창은 원형 라디오가 아니라 선택 항목의 파란 체크만 표시합니다. */
 .parcel-common-housing-picker-dialog > button i,
 .parcel-common-housing-picker-dialog > button.is-active i {
   position: static !important;
@@ -36352,25 +36415,25 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
   transform: translate(11px, 7px) rotate(-45deg) !important;
 }
 
-/* 5.679 상가업소정보는 항목 사이에만 선을 두고 마지막 업소 아래에는 선을 두지 않습니다. */
+/* 5.705 상가업소정보는 항목 사이에만 선을 두고 마지막 업소 아래에는 선을 두지 않습니다. */
 .parcel-apartment-business-list > .parcel-apartment-business-row:last-child {
   border-bottom: 0 !important;
 }
 
 
-/* 5.679 상가업소 마지막 내용 아래에는 별도의 구분선을 표시하지 않습니다. */
+/* 5.705 상가업소 마지막 내용 아래에는 별도의 구분선을 표시하지 않습니다. */
 .parcel-land-info-panel .parcel-property-building:has(.parcel-apartment-business-group) + .parcel-property-block {
   border-top: 0 !important;
 }
 
 
-/* 5.679 상가업소정보 마지막 내용 아래에 남은 건물 섹션 1px 선을 제거합니다. */
+/* 5.705 상가업소정보 마지막 내용 아래에 남은 건물 섹션 1px 선을 제거합니다. */
 .parcel-land-info-panel .parcel-property-building:has(.parcel-apartment-business-group) {
   border-bottom: 0 !important;
 }
 
 
-/* 5.679 마지막 업소의 1px 선은 없애고 경매 정보 위 공통 구분선은 복원합니다. */
+/* 5.705 마지막 업소의 1px 선은 없애고 경매 정보 위 공통 구분선은 복원합니다. */
 .parcel-land-info-panel .parcel-property-building:has(.parcel-apartment-business-group) {
   border-bottom: 0 !important;
 }
@@ -36387,7 +36450,7 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
 }
 
 
-/* 5.679 공동주택 호별정보: 공통 20px 여백과 동·층·호 선택, 전유공용 표 */
+/* 5.705 공동주택 호별정보: 공통 20px 여백과 동·층·호 선택, 전유공용 표 */
 .parcel-building-unit-group > h3 {
   margin-bottom: 0 !important;
 }
@@ -36685,7 +36748,7 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
 }
 
 
-/* 5.679 공동주택공시가격 하단 페이지 이동 화살표를 페이지 숫자와 시각적으로 균형 있게 키웁니다. */
+/* 5.705 공동주택공시가격 하단 페이지 이동 화살표를 페이지 숫자와 시각적으로 균형 있게 키웁니다. */
 .parcel-common-housing-table-footer button[data-parcel-common-housing-page] {
   font-size: 22px !important;
   font-weight: 700 !important;
@@ -36693,7 +36756,7 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
 }
 
 
-/* 5.679 공동주택공시가격 하단 페이지 숫자와 좌우 화살표의 높이 및 중앙 정렬을 통일합니다. */
+/* 5.705 공동주택공시가격 하단 페이지 숫자와 좌우 화살표의 높이 및 중앙 정렬을 통일합니다. */
 .parcel-common-housing-table-footer > div:last-child {
   height: 30px !important;
   display: flex !important;
@@ -36747,19 +36810,19 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
 }
 
 
-/* 5.679 공동주택공시가격 하단 페이지 이동 묶음을 오른쪽 끝에 정렬합니다. */
+/* 5.705 공동주택공시가격 하단 페이지 이동 묶음을 오른쪽 끝에 정렬합니다. */
 .parcel-common-housing-table-footer > div:last-child {
   margin-left: auto !important;
   justify-content: flex-end !important;
 }
 
 
-/* 5.679 공동주택공시가격 하단 오른쪽 화살표 끝선을 우측 콘텐츠 정렬선에 맞춥니다. */
+/* 5.705 공동주택공시가격 하단 오른쪽 화살표 끝선을 우측 콘텐츠 정렬선에 맞춥니다. */
 .parcel-common-housing-table-footer button[data-parcel-common-housing-page="next"] {
   justify-content: flex-end !important;
 }
 
-/* 5.679 동/층/호 선택창은 모두 지도 영역 세로 중앙에 두고 필터바 시작선에 맞춥니다. */
+/* 5.705 동/층/호 선택창은 모두 지도 영역 세로 중앙에 두고 필터바 시작선에 맞춥니다. */
 [data-parcel-building-unit-picker],
 [data-parcel-common-housing-picker] {
   align-items: center !important;
@@ -36779,12 +36842,12 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
   ) !important;
 }
 
-/* 5.679 건축물대장 선택 하단의 공통 8px 선만 남기고 첫 상세 그룹의 중복 선은 제거합니다. */
+/* 5.705 건축물대장 선택 하단의 공통 8px 선만 남기고 첫 상세 그룹의 중복 선은 제거합니다. */
 .parcel-land-info-panel .parcel-building-details > .parcel-building-title-register {
   border-top: 0 !important;
 }
 
-/* 5.679 건축물대장 전체보기 창 공통 위치와 폭 */
+/* 5.705 건축물대장 전체보기 창 공통 위치와 폭 */
 .parcel-building-all-modal {
   display: flex !important;
   align-items: center !important;
@@ -36817,7 +36880,7 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
   transform: none !important;
 }
 
-/* 5.679 건축물대장 전체보기 창 필터바 비침범 높이 */
+/* 5.705 건축물대장 전체보기 창 필터바 비침범 높이 */
 .parcel-building-all-modal > .parcel-building-all-dialog {
   max-height: min(
     612px,
@@ -36825,7 +36888,7 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
   ) !important;
 }
 
-/* 5.679 건축물대장 카드 스크롤 폭·상하 여백 및 표제부 상단 구분선 */
+/* 5.705 건축물대장 카드 스크롤 폭·상하 여백 및 표제부 상단 구분선 */
 .parcel-building-card-list:not(.is-single) {
   width: calc(100% - 40px) !important;
   box-sizing: border-box !important;
@@ -36883,7 +36946,7 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
   background: transparent !important;
 }
 
-/* 5.679: 운영체제 기본 최소 높이와 사각 끝을 피하는 건축물대장 전용 스크롤바 */
+/* 5.705: 운영체제 기본 최소 높이와 사각 끝을 피하는 건축물대장 전용 스크롤바 */
 .parcel-building-card-list:not(.is-single) {
   margin-bottom: 0 !important;
   padding-bottom: 0 !important;
@@ -36926,7 +36989,7 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
 .parcel-building-card-scrollbar > span:active {
   cursor: grabbing;
 }
-/* 5.679: manual building-card scrolling must stop exactly where the user leaves it. */
+/* 5.705: manual building-card scrolling must stop exactly where the user leaves it. */
 .parcel-land-info-panel .parcel-building-card-list:not(.is-single),
 .parcel-land-info-panel .parcel-building-card-list:not(.is-single).is-dragging {
   scroll-snap-type: none !important;
@@ -36937,7 +37000,7 @@ body.realjeju-side-nav-enabled.operator-page-open.operator-shared-admin-panel-op
   scroll-snap-stop: normal !important;
 }
 
-/* 5.679: manual building-card scrolling never snaps back to the selected card. */
+/* 5.705: manual building-card scrolling never snaps back to the selected card. */
 html body .parcel-land-info-panel .parcel-building-card-list:not(.is-single),
 html body .parcel-land-info-panel .parcel-building-card-list:not(.is-single).is-dragging {
   scroll-snap-type: none !important;
@@ -36948,14 +37011,14 @@ html body .parcel-land-info-panel .parcel-building-card-list:not(.is-single) .pa
   scroll-snap-stop: normal !important;
 }
 
-/* REALJEJU 5.679: 건축물현황 층수는 자릿수와 관계없이 공통 왼쪽 기준선에 맞춥니다. */
+/* REALJEJU 5.705: 건축물현황 층수는 자릿수와 관계없이 공통 왼쪽 기준선에 맞춥니다. */
 .parcel-land-info-panel .parcel-building-floor-row .parcel-building-floor-main .parcel-building-floor-name {
   flex: 0 0 64px !important;
   width: 64px !important;
   text-align: left !important;
 }
 
-/* REALJEJU 5.679: 건축물현황의 층→용도와 용도→면적 가시 간격을 동일한 16px로 고정합니다. */
+/* REALJEJU 5.705: 건축물현황의 층→용도와 용도→면적 가시 간격을 동일한 16px로 고정합니다. */
 .parcel-land-info-panel .parcel-building-floor-row .parcel-building-floor-main {
   grid-template-columns: 58px max-content max-content !important;
   column-gap: 16px !important;
@@ -36974,7 +37037,7 @@ html body .parcel-land-info-panel .parcel-building-card-list:not(.is-single) .pa
 .parcel-land-info-panel .parcel-building-floor-row .parcel-building-floor-main .parcel-building-floor-area {
   margin: 0 !important;
 }
-/* REALJEJU 5.679: 부동산 정보 상태 문구의 타이포그래피를 공통 규격으로 통일합니다. */
+/* REALJEJU 5.705: 부동산 정보 상태 문구의 타이포그래피를 공통 규격으로 통일합니다. */
 .realjeju-property-state-message {
   min-height: 58px !important;
   display: flex !important;
@@ -36987,14 +37050,14 @@ html body .parcel-land-info-panel .parcel-building-card-list:not(.is-single) .pa
   font-weight: 650 !important;
 }
 
-/* 5.679: keep white content spacing below the land-price table before the common divider. */
+/* 5.705: keep white content spacing below the land-price table before the common divider. */
 .parcel-land-price-table {
   padding-bottom: 24px !important;
   background: #fff !important;
   box-sizing: border-box;
 }
 
-/* 5.679: common row-height standard for housing prices and unit details. */
+/* 5.705: common row-height standard for housing prices and unit details. */
 .parcel-common-housing-table-head,
 .parcel-common-housing-table-row,
 .parcel-building-unit-table-head,
@@ -37010,7 +37073,7 @@ html body .parcel-land-info-panel .parcel-building-card-list:not(.is-single) .pa
   box-sizing: border-box;
 }
 
-/* 5.679: common major-section title spacing for the business summary title. */
+/* 5.705: common major-section title spacing for the business summary title. */
 .parcel-land-info-panel {
   --rj-detail-major-title-padding-top: 20px;
   --rj-detail-major-title-padding-bottom: 12px;
@@ -37025,7 +37088,7 @@ html body .parcel-land-info-panel .parcel-building-card-list:not(.is-single) .pa
   box-sizing: border-box !important;
 }
 
-/* 5.679: one shared vertical-spacing path for every property-detail section title. */
+/* 5.705: one shared vertical-spacing path for every property-detail section title. */
 .parcel-land-info-panel {
   --rj-detail-major-title-padding-top: 20px;
   --rj-detail-major-title-padding-bottom: 12px;
@@ -37046,7 +37109,7 @@ html body .parcel-land-info-panel .parcel-building-card-list:not(.is-single) .pa
   box-sizing: border-box !important;
 }
 
-/* 5.679: exact-trade headings use the same section-title spacing path. */
+/* 5.705: exact-trade headings use the same section-title spacing path. */
 .parcel-land-info-panel .parcel-exact-graph {
   padding-top: 0 !important;
 }
@@ -37062,7 +37125,7 @@ html body .parcel-land-info-panel .parcel-building-card-list:not(.is-single) .pa
   margin-bottom: 0 !important;
 }
 
-/* 5.679: land basic-information title joins the shared section-title spacing path. */
+/* 5.705: land basic-information title joins the shared section-title spacing path. */
 .parcel-land-info-panel .parcel-land-info-section-title {
   min-height: 0 !important;
   padding-top: var(--rj-detail-major-title-padding-top) !important;
@@ -37070,7 +37133,7 @@ html body .parcel-land-info-panel .parcel-building-card-list:not(.is-single) .pa
   box-sizing: border-box !important;
 }
 
-/* 5.679: render land-price bottom whitespace on the section, not on the table element. */
+/* 5.705: render land-price bottom whitespace on the section, not on the table element. */
 .parcel-land-info-panel .parcel-land-price-table {
   padding-bottom: 0 !important;
 }
@@ -37080,7 +37143,7 @@ html body .parcel-land-info-panel .parcel-building-card-list:not(.is-single) .pa
   box-sizing: border-box !important;
 }
 
-/* REALJEJU 5.679: empty property sections share one 58px content row with no extra bottom padding. */
+/* REALJEJU 5.705: empty property sections share one 58px content row with no extra bottom padding. */
 .parcel-land-info-panel .parcel-public-data-empty,
 .parcel-land-info-panel .realjeju-property-state-message {
   height: 58px !important;
@@ -37107,7 +37170,7 @@ html body .parcel-land-info-panel .parcel-building-card-list:not(.is-single) .pa
   padding-bottom: 0 !important;
 }
 
-/* REALJEJU 5.679: 주변 유사거래 기간 버튼과 글자만 한 단계 더 작게 표시합니다. */
+/* REALJEJU 5.705: 주변 유사거래 기간 버튼과 글자만 한 단계 더 작게 표시합니다. */
 .parcel-land-info-panel .parcel-trade-graph-ranges button {
   min-width: 62px;
   height: 30px;
@@ -37116,7 +37179,7 @@ html body .parcel-land-info-panel .parcel-building-card-list:not(.is-single) .pa
   font-size: 12px;
 }
 
-/* REALJEJU 5.679: land-basic title uses the shared global area-unit toggle. */
+/* REALJEJU 5.705: land-basic title uses the shared global area-unit toggle. */
 .parcel-land-info-panel .parcel-land-info-section-title {
   display: flex;
   align-items: center;
@@ -37146,7 +37209,7 @@ html body .parcel-land-info-panel .parcel-building-card-list:not(.is-single) .pa
   box-shadow: none;
 }
 
-/* REALJEJU 5.679: shared compact selector for period and row-count controls. */
+/* REALJEJU 5.705: shared compact selector for period and row-count controls. */
 .parcel-land-info-panel .parcel-trade-graph-ranges button,
 .parcel-land-info-panel .parcel-common-housing-table-footer button[data-parcel-common-housing-count] {
   width: auto !important;
@@ -37174,7 +37237,7 @@ html body .parcel-land-info-panel .parcel-building-card-list:not(.is-single) .pa
   color: #ffffff !important;
 }
 
-/* REALJEJU 5.679: individual land-price period buttons share the compact selector design. */
+/* REALJEJU 5.705: individual land-price period buttons share the compact selector design. */
 .parcel-land-info-panel .parcel-land-price-count-button {
   appearance: none;
   width: auto !important;
@@ -37196,7 +37259,7 @@ html body .parcel-land-info-panel .parcel-building-card-list:not(.is-single) .pa
   color: #ffffff !important;
 }
 
-/* REALJEJU 5.679: land-basic area unit toggle is a compact 1:1 square. */
+/* REALJEJU 5.705: land-basic area unit toggle is a compact 1:1 square. */
 .parcel-land-info-panel .parcel-land-area-unit-toggle {
   width: 30px !important;
   min-width: 30px !important;
@@ -37206,18 +37269,18 @@ html body .parcel-land-info-panel .parcel-building-card-list:not(.is-single) .pa
   font-size: 12px !important;
 }
 
-/* REALJEJU 5.679: a section title never draws a divider before its first content row. */
+/* REALJEJU 5.705: a section title never draws a divider before its first content row. */
 .parcel-land-info-panel .parcel-building-group > h3 + .parcel-building-house-price-record > .parcel-property-info-row:first-child {
   border-top: 0 !important;
 }
 
-/* REALJEJU 5.679: land-price bottom whitespace equals the shared left/right inset. */
+/* REALJEJU 5.705: land-price bottom whitespace equals the shared left/right inset. */
 .parcel-land-info-panel .parcel-land-price-section {
   padding-bottom: var(--rj-detail-card-padding-left) !important;
 }
 
 
-/* REALJEJU 5.679: 주변 유사거래 거리 버튼은 기간 버튼 줄의 오른쪽 끝에 정렬합니다. */
+/* REALJEJU 5.705: 주변 유사거래 거리 버튼은 기간 버튼 줄의 오른쪽 끝에 정렬합니다. */
 .parcel-land-info-panel .parcel-trade-graph-radius-ranges {
   display: flex;
   align-items: center;
@@ -37227,13 +37290,13 @@ html body .parcel-land-info-panel .parcel-building-card-list:not(.is-single) .pa
 }
 
 
-/* REALJEJU 5.679: 공동주택공시가격의 기준연도·공시가격 헤더 음영을 공통 공시가격 표 규격으로 복구합니다. */
+/* REALJEJU 5.705: 공동주택공시가격의 기준연도·공시가격 헤더 음영을 공통 공시가격 표 규격으로 복구합니다. */
 .parcel-land-info-panel .parcel-common-housing-table-head {
   background: #b9bdc2 !important;
   color: #ffffff !important;
 }
 
-/* REALJEJU 5.679: individual land-price header and data rows match the shared housing-price table height. */
+/* REALJEJU 5.705: individual land-price header and data rows match the shared housing-price table height. */
 .parcel-land-info-panel .parcel-land-price-table tr,
 .parcel-land-info-panel .parcel-land-price-table th,
 .parcel-land-info-panel .parcel-land-price-table td {
@@ -37247,7 +37310,7 @@ html body .parcel-land-info-panel .parcel-building-card-list:not(.is-single) .pa
   vertical-align: middle !important;
 }
 
-/* REALJEJU 5.679: 지번주소는 지목ㆍ용도지역과 같은 크기로 굵게, 도로명주소는 한 단계 작게 표시합니다. */
+/* REALJEJU 5.705: 지번주소는 지목ㆍ용도지역과 같은 크기로 굵게, 도로명주소는 한 단계 작게 표시합니다. */
 .parcel-land-info-panel .parcel-property-sticky-head > .parcel-land-info-address {
   font-size: 18px;
   font-weight: 800;
@@ -37259,7 +37322,7 @@ html body .parcel-land-info-panel .parcel-building-card-list:not(.is-single) .pa
   line-height: 1.45;
 }
 
-/* REALJEJU 5.679: 도로명주소는 값이 있을 때만 큰 지번주소 바로 아래에 표시합니다. */
+/* REALJEJU 5.705: 도로명주소는 값이 있을 때만 큰 지번주소 바로 아래에 표시합니다. */
 .parcel-land-info-panel .parcel-land-info-address-primary,
 .parcel-land-info-panel .parcel-land-info-address-road {
   display: block;
@@ -37276,4 +37339,65 @@ html body .parcel-land-info-panel .parcel-building-card-list:not(.is-single) .pa
   font-size: 15px;
   font-weight: 400;
   line-height: 1.45;
+}
+
+/* REALJEJU 5.705: 추천 매물은 기존 왼쪽 매물 카드 3개를 한 장씩 우에서 좌로 순환합니다. */
+.parcel-recommended-listing-slider {
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.parcel-recommended-listing-viewport {
+  width: 100%;
+  overflow: hidden;
+}
+
+.parcel-recommended-listing-track {
+  display: flex;
+  width: 100%;
+  transform: translate3d(0, 0, 0);
+  transition: transform 350ms ease;
+  will-change: transform;
+}
+
+.parcel-recommended-listing-slide {
+  flex: 0 0 100%;
+  width: 100%;
+  min-width: 0;
+}
+
+.parcel-recommended-listing-slide > .card {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.parcel-recommended-listing-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 10px 0 16px;
+}
+
+.parcel-recommended-listing-dot {
+  width: 7px;
+  height: 7px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #c8ced8;
+  cursor: pointer;
+}
+
+.parcel-recommended-listing-dot.is-active {
+  width: 18px;
+  border-radius: 999px;
+  background: #1667e8;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .parcel-recommended-listing-track {
+    transition: none;
+  }
 }

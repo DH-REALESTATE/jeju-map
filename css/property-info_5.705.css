@@ -2513,7 +2513,7 @@ body[data-property-type="land"] .property-detail-date-check-row{
 
 
 
-/* 5.685: 건물 탭 마지막 PNU 상가업소정보 */
+/* 5.705: 건물 탭 마지막 PNU 상가업소정보 */
 .parcel-apartment-business-group details{width:100%;}
 .parcel-apartment-business-group summary{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:16px;min-height:58px;padding:0 20px;cursor:pointer;list-style:none;}
 .parcel-apartment-business-group summary::-webkit-details-marker{display:none;}
@@ -2530,38 +2530,38 @@ body[data-property-type="land"] .property-detail-date-check-row{
 .parcel-apartment-business-category{margin-top:5px;}
 
 
-/* REALJEJU 5.685: 상가업소정보가 접힌 상태에서는 화살표가 위쪽을 가리킵니다. */
+/* REALJEJU 5.705: 상가업소정보가 접힌 상태에서는 화살표가 위쪽을 가리킵니다. */
 .parcel-apartment-business-group details:not([open]) summary span::after {
   transform: translateY(2px) rotate(-135deg) !important;
 }
 
 
-/* REALJEJU 5.685: 상가 업체명은 건축물현황 층수와 같은 굵기를 사용합니다. */
+/* REALJEJU 5.705: 상가 업체명은 건축물현황 층수와 같은 굵기를 사용합니다. */
 .parcel-apartment-business-main strong {
   font-weight: 800 !important;
 }
 
-/* REALJEJU 5.685: 토지 탭은 토지 기본 정보 위 굵은 구분선 시작점에 맞춰 멈춥니다. */
+/* REALJEJU 5.705: 토지 탭은 토지 기본 정보 위 굵은 구분선 시작점에 맞춰 멈춥니다. */
 .parcel-land-info-panel #parcel-property-land {
 	scroll-margin-top: calc(var(--parcel-sticky-tabs-top, 50px) + 48px);
 }
 
-/* REALJEJU 5.685: 필지 요약과 상단 탭 버튼 사이의 공통 헤어라인을 복원합니다. */
+/* REALJEJU 5.705: 필지 요약과 상단 탭 버튼 사이의 공통 헤어라인을 복원합니다. */
 .parcel-land-info-panel > .parcel-property-tabs {
 	border-top: 1px solid #d5dae2 !important;
 }
 
-/* REALJEJU 5.685: 모든 상단 탭은 해당 정보 영역 위 굵은 구분선에서 멈춥니다. */
+/* REALJEJU 5.705: 모든 상단 탭은 해당 정보 영역 위 굵은 구분선에서 멈춥니다. */
 .parcel-land-info-panel > .parcel-property-block {
 	scroll-margin-top: calc(var(--parcel-sticky-tabs-top, 50px) + 48px);
 }
 
-/* REALJEJU 5.685: 실거래가 탭 복귀 시 제목 줄 전체가 고정 탭 아래에 보이게 합니다. */
+/* REALJEJU 5.705: 실거래가 탭 복귀 시 제목 줄 전체가 고정 탭 아래에 보이게 합니다. */
 .parcel-land-info-panel > #parcel-property-realtrade {
 	scroll-margin-top: calc(var(--parcel-sticky-tabs-top, 50px) + 48px + 24px);
 }
 
-/* REALJEJU 5.685: 공동주택 단지명은 용도지역보다 먼저 표시합니다. */
+/* REALJEJU 5.705: 공동주택 단지명은 용도지역보다 먼저 표시합니다. */
 .parcel-land-info-panel .parcel-property-complex-name {
 	margin: 0 0 4px;
 	color: #202124;
@@ -2571,17 +2571,17 @@ body[data-property-type="land"] .property-detail-date-check-row{
 	line-height: 1.5;
 }
 
-/* REALJEJU 5.685: 토지 버튼은 토지 기본 정보 위 8px 구분선 전체가 보이는 시작점에 멈춥니다. */
+/* REALJEJU 5.705: 토지 버튼은 토지 기본 정보 위 8px 구분선 전체가 보이는 시작점에 멈춥니다. */
 .parcel-land-info-panel #parcel-property-land {
   scroll-margin-top: calc(var(--parcel-sticky-tabs-top, 50px) + 48px + 8px) !important;
 }
 
-/* REALJEJU 5.685: 건물 버튼은 건물 정보 위 8px 구분선 전체가 보이는 시작점에 멈춥니다. */
+/* REALJEJU 5.705: 건물 버튼은 건물 정보 위 8px 구분선 전체가 보이는 시작점에 멈춥니다. */
 .parcel-land-info-panel #parcel-property-building {
   scroll-margin-top: calc(var(--parcel-sticky-tabs-top, 50px) + 48px + 8px) !important;
 }
 
-/* REALJEJU 5.685: 주소 하단선과 고정 탭 상단선을 1px 겹쳐 단일 헤어라인으로 보이게 합니다. */
+/* REALJEJU 5.705: 주소 하단선과 고정 탭 상단선을 1px 겹쳐 단일 헤어라인으로 보이게 합니다. */
 .parcel-land-info-panel > .parcel-property-tabs {
   margin-top: -1px;
   top: calc(var(--parcel-sticky-tabs-top, 50px) - 1px) !important;

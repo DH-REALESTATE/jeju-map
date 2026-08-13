@@ -1,4 +1,4 @@
-// REALJEJU 5.679 background module loader
+// REALJEJU 5.705 background module loader
 (function initRealjejuModuleLoader(global) {
   "use strict";
   const loadedModules = new Map();
@@ -39,7 +39,7 @@
   global.realjejuModules = Object.freeze({ load: loadScript });
 
   function preloadPropertyInfo() {
-    loadScript("property-info", "/js/property-info_5.679.js?v=20260813-public-land-basic-contract-5679")
+    loadScript("property-info", "/js/property-info_5.705.js?v=20260813-data-rows-no-important-5705")
       .catch((error) => console.error("[realjeju module] property-info load failed", error));
   }
 
