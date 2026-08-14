@@ -191,15 +191,15 @@ REALJEJU HTML 구조 / Ver 5.268
 				transition: none;
 			}
 		</style>
-		<link rel="stylesheet" href="/css/base-foundation_5.775.css?v=20260814-sewer-droplet-5775">
-		<link rel="stylesheet" href="/css/core-map_5.775.css?v=20260814-sewer-droplet-5775">
-		<link rel="stylesheet" href="/css/property-info_5.775.css?v=20260814-sewer-droplet-5775">
-		<link rel="stylesheet" href="/css/workspace-app_5.775.css?v=20260814-sewer-droplet-5775">
-		<link rel="stylesheet" href="/css/admin-app_5.775.css?v=20260814-sewer-droplet-5775">
-		<link rel="stylesheet" href="/css/account_5.775.css?v=20260814-sewer-droplet-5775">
-		<link rel="stylesheet" href="/css/base_5.775.css?v=20260814-sewer-droplet-5775">
+		<link rel="stylesheet" href="/css/base-foundation_5.859.css?v=20260814-region-trade-static-5823">
+		<link rel="stylesheet" href="/css/core-map_5.859.css?v=20260814-region-trade-static-5823">
+		<link rel="stylesheet" href="/css/property-info_5.859.css?v=20260814-region-trade-static-5823">
+		<link rel="stylesheet" href="/css/workspace-app_5.859.css?v=20260814-region-trade-static-5823">
+		<link rel="stylesheet" href="/css/admin-app_5.859.css?v=20260814-region-trade-static-5823">
+		<link rel="stylesheet" href="/css/account_5.859.css?v=20260814-region-trade-static-5823">
+		<link rel="stylesheet" href="/css/base_5.859.css?v=20260814-region-trade-static-5823">
 
-  <link rel="stylesheet" href="/css/service-modes_5.775.css?v=20260814-sewer-droplet-5775">
+  <link rel="stylesheet" href="/css/service-modes_5.859.css?v=20260814-region-trade-static-5823">
 </head>
 	<body class="sidebar-list-collapsed realjeju-side-nav-enabled main-landing-page-open">
 		<script id="realjeju-initial-body-route-prime">
@@ -274,10 +274,10 @@ REALJEJU HTML 구조 / Ver 5.268
 					<nav class="global-topbar-menu" id="topbarMenu" aria-label="상단 필터"></nav>
 					<nav class="global-category-menu" id="globalCategoryMenu" aria-label="상단 서비스">
       <button type="button" class="global-category-item is-active" data-global-category="realestate" aria-pressed="true">
-        <i class="fa-solid fa-house" aria-hidden="true"></i><span>부동산</span>
+        <i class="fa-solid fa-house" aria-hidden="true"></i><span>부동산 홈</span>
       </button>
       <button type="button" class="global-category-item" data-global-category="parcel" aria-pressed="false">
-        <i class="fa-solid fa-draw-polygon" aria-hidden="true"></i><span>필지분석</span>
+        <i class="fa-solid fa-draw-polygon" aria-hidden="true"></i><span>부동산 필지분석</span>
       </button>
       <button type="button" class="global-category-item" data-global-category="local-business" aria-pressed="false">
         <i class="fa-solid fa-store" aria-hidden="true"></i><span>동네업체</span>
@@ -598,6 +598,7 @@ REALJEJU HTML 구조 / Ver 5.268
 			<aside class="realjeju-side-recent-ad realjeju-side-recent-ad-primary realjeju-side-local-business-top-ad" aria-label="서비스 광고">
 				<span class="realjeju-side-recent-ad-badge">AD</span>
 			</aside>
+			<div class="realjeju-side-nav-line realjeju-side-ad-bottom-line" aria-hidden="true"></div>
 			<div class="realjeju-side-recent" aria-label="최근 조회">
 				<div class="realjeju-side-recent-title">최근 조회</div>
 				<div class="realjeju-side-recent-empty" id="realjejuSideRecentEmpty">최근 조회한 매물이 없습니다.</div>
@@ -615,7 +616,7 @@ REALJEJU HTML 구조 / Ver 5.268
 				</button>
 			</nav>
 			<div class="realjeju-side-admin-version" id="realjejuSideAdminVersion" aria-hidden="true" hidden>
-				<span class="topbar-version-text">5.775</span>
+				<span class="topbar-version-text">5.859</span>
 			</div>
 		</aside>
 		<button type="button" class="realjeju-side-nav-toggle" id="realjejuSideNavToggle" aria-controls="realjejuSideNav" aria-expanded="true" aria-label="왼쪽 메뉴 접기">
@@ -4990,7 +4991,7 @@ REALJEJU HTML 구조 / Ver 5.268
 		</div>
 		<div class="map-side-tools" id="mapSideTools">
 			<div class="map-tool-group map-primary-tool-group">
-				<button type="button" class="map-tool-btn map-property-toggle-btn active" id="mapPropertyToggleBtn" onclick="window.toggleMapPropertyPanels && window.toggleMapPropertyPanels()" aria-pressed="true" aria-label="매물 숨기기" title="매물 숨기기">
+				<button type="button" class="map-tool-btn map-property-toggle-btn active" id="mapPropertyToggleBtn" onclick="return window.toggleMapPrimaryAction ? window.toggleMapPrimaryAction(event) : (window.toggleMapPropertyPanels && window.toggleMapPropertyPanels())" aria-pressed="true" aria-label="매물 숨기기" title="매물 숨기기">
 					<span class="map-tool-label">매물</span>
 				</button>
 			</div>
@@ -5887,11 +5888,11 @@ REALJEJU HTML 구조 / Ver 5.268
 			}
 		</script>
 	<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-		<script src="/js/app_5.775.js?v=20260814-sewer-droplet-5775"></script>
-	<script src="/js/workspace-app_5.775.js?v=20260814-sewer-droplet-5775"></script>
-  <script src="/js/service-modes_5.775.js?v=20260814-sewer-droplet-5775"></script>
-	<script src="/js/runtime-tail_5.775.js?v=20260814-sewer-droplet-5775"></script>
-	<script src="/js/bootstrap_5.775.js?v=20260814-sewer-droplet-5775"></script>
+		<script src="/js/app_5.859.js?v=20260814-region-trade-static-5823"></script>
+	<script src="/js/workspace-app_5.859.js?v=20260814-region-trade-static-5823"></script>
+  <script src="/js/service-modes_5.859.js?v=20260814-region-trade-static-5823"></script>
+	<script src="/js/runtime-tail_5.859.js?v=20260814-region-trade-static-5823"></script>
+	<script src="/js/bootstrap_5.859.js?v=20260814-region-trade-static-5823"></script>
 
 
 <script>
@@ -5899,7 +5900,19 @@ REALJEJU HTML 구조 / Ver 5.268
 	function syncMapPropertyButtonFallback() {
 		var btn = document.getElementById("mapPropertyToggleBtn");
 		if (!btn) return;
+		var isParcel = document.body && document.body.dataset.globalCategory === "parcel";
+		var label = btn.querySelector(".map-tool-label");
+		if (isParcel) {
+			var badgesHidden = document.body.classList.contains("parcel-region-trade-badges-hidden");
+			if (label) label.textContent = "숨김";
+			btn.classList.toggle("active", badgesHidden);
+			btn.setAttribute("aria-pressed", badgesHidden ? "true" : "false");
+			btn.setAttribute("aria-label", badgesHidden ? "거래 뱃지 표시" : "거래 뱃지 숨기기");
+			btn.title = badgesHidden ? "거래 뱃지 표시" : "거래 뱃지 숨기기";
+			return;
+		}
 		var isVisible = !document.body.classList.contains("map-properties-hidden");
+		if (label) label.textContent = "매물";
 		btn.classList.toggle("active", isVisible);
 		btn.setAttribute("aria-pressed", isVisible ? "true" : "false");
 		btn.setAttribute("aria-label", isVisible ? "매물 숨기기" : "매물 보이기");
@@ -5915,6 +5928,19 @@ REALJEJU HTML 구조 / Ver 5.268
 					window.realjejuMap.relayout();
 				}
 			}, 60);
+		};
+	}
+	if (typeof window.toggleMapPrimaryAction !== "function") {
+		window.toggleMapPrimaryAction = function (event) {
+			if (event) {
+				event.preventDefault();
+				event.stopPropagation();
+			}
+			if (document.body && document.body.dataset.globalCategory === "parcel") {
+				if (typeof window.toggleParcelLifeSafetyPanel === "function") return window.toggleParcelLifeSafetyPanel();
+				return false;
+			}
+			return window.toggleMapPropertyPanels && window.toggleMapPropertyPanels();
 		};
 	}
 	if (typeof window.toggleMapTypePopover !== "function") {
