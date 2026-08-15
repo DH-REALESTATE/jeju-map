@@ -7471,6 +7471,52 @@
 		return Promise.resolve();
 	}
 
+	const ADMIN_OPERATION_LABELS = Object.freeze({
+		"broker-directory": "중개사 지도 DB 갱신",
+		"trade-monthly": "실거래 월별 집계",
+		"trade-static": "실거래 최종 스냅샷",
+		"broker-specialty": "중개사 전문분야 통계",
+		"broker-weekly": "주간 전문 중개사 선정",
+		"ev-counts": "전기차 충전기 수 집계"
+	});
+
+	async function runAdminOperation(button)
+	{
+		const operationKey = String(button && button.dataset.adminOperationRun || "").trim();
+		const operationLabel = ADMIN_OPERATION_LABELS[operationKey];
+		if (!operationLabel) return;
+		if (!window.confirm(`${operationLabel}을 지금 실행하시겠습니까?`)) return;
+
+		const status = document.querySelector(`[data-admin-operation-status="${operationKey}"]`);
+		const originalText = button.textContent;
+		button.disabled = true;
+		button.textContent = "실행 중";
+		if (status) {
+			status.className = "admin-operation-status";
+			status.textContent = "관리자 요청으로 실행 중입니다.";
+		}
+
+		try {
+			const client = getRealjejuSupabaseClient();
+			if (!client) throw new Error("데이터베이스 연결 설정을 확인하세요.");
+			const { data, error } = await client.rpc("run_admin_operation_5877", { p_operation: operationKey });
+			if (error) throw error;
+			const result = Array.isArray(data) ? data[0] : data;
+			if (status) {
+				status.className = "admin-operation-status success";
+				status.textContent = String(result && result.message || "작업이 완료되었습니다.");
+			}
+		} catch (error) {
+			if (status) {
+				status.className = "admin-operation-status error";
+				status.textContent = String(error && error.message || "실행하지 못했습니다.");
+			}
+		} finally {
+			button.disabled = false;
+			button.textContent = originalText;
+		}
+	}
+
 	function escapeAdminHtml(value)
 	{
 		return String(value ?? "")
@@ -9250,12 +9296,12 @@ function getBrokerHomeActiveTab()
 		return ["property", "deal", "landType", "landUseZone"].includes(value) ? value : "property";
 	}
 
-	function getAdminListingCompactFilterLabel(values, fallback, labelGetter)
+	function getAdminListingCompactFilterLabel(values, fallback, labelGetter, visibleCount = 2)
 	{
 		const list = Array.from(values || []).map((value) => labelGetter ? labelGetter(value) : value).filter(Boolean);
 		if (!list.length) return fallback;
-		if (list.length <= 2) return list.join(", ");
-		return `${list.slice(0, 2).join(", ")} +${list.length - 2}`;
+		if (list.length <= visibleCount) return list.join(", ");
+		return `${list.slice(0, visibleCount).join(", ")} +${list.length - visibleCount}`;
 	}
 
 	function renderAdminListingFilterMenu(type, sections, menuTitle = "")
@@ -9567,7 +9613,7 @@ function getBrokerHomeActiveTab()
 			const areaActive = isArea && isAdminListingAreaRangeActive(areaRange);
 			const label = isArea
 				? (areaActive ? formatAdminListingAreaRangeSummary(areaRange) : getAdminListingFilterFallbackLabel(type))
-				: getAdminListingCompactFilterLabel(values, getAdminListingFilterFallbackLabel(type), labelGetters[type]);
+				: getAdminListingCompactFilterLabel(values, getAdminListingFilterFallbackLabel(type), labelGetters[type], type === "property" ? 3 : 2);
 			if (btn) {
 				btn.innerHTML = `${escapeAdminHtml(label)} <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>`;
 				btn.classList.toggle("active", isArea ? areaActive : values.size > 0);
@@ -10916,12 +10962,12 @@ function getBrokerHomeActiveTab()
 		}[type] || "필터";
 	}
 
-	function getBrokerHomeCompactFilterLabel(values, fallback, labelGetter)
+	function getBrokerHomeCompactFilterLabel(values, fallback, labelGetter, visibleCount = 2)
 	{
 		const list = Array.from(values || []).map((value) => labelGetter ? labelGetter(value) : value).filter(Boolean);
 		if (!list.length) return fallback;
-		if (list.length <= 2) return list.join(", ");
-		return `${list.slice(0, 2).join(", ")} +${list.length - 2}`;
+		if (list.length <= visibleCount) return list.join(", ");
+		return `${list.slice(0, visibleCount).join(", ")} +${list.length - visibleCount}`;
 	}
 
 	function renderBrokerHomeFilterTile(type, value, label)
@@ -11387,7 +11433,7 @@ function getBrokerHomeActiveTab()
 			const isArea = type === "area";
 			const areaRange = isArea ? getBrokerHomeAreaRange() : null;
 			const areaActive = isArea && isBrokerHomeAreaRangeActive(areaRange);
-			const label = areaActive ? formatBrokerHomeAreaRangeSummary(areaRange) : getBrokerHomeCompactFilterLabel(values, getBrokerHomeFilterFallbackLabel(type), labelGetters[type]);
+			const label = areaActive ? formatBrokerHomeAreaRangeSummary(areaRange) : getBrokerHomeCompactFilterLabel(values, getBrokerHomeFilterFallbackLabel(type), labelGetters[type], type === "property" ? 3 : 2);
 			if (btn) {
 				btn.innerHTML = `${escapeAdminHtml(label)} <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>`;
 				btn.classList.toggle("active", isArea ? areaActive : values.size > 0);
@@ -14551,6 +14597,14 @@ function getBrokerHomeActiveTab()
 			return;
 		}
 
+		const adminOperationBtn = e.target.closest("[data-admin-operation-run]");
+		if (adminOperationBtn) {
+			e.preventDefault();
+			e.stopPropagation();
+			void runAdminOperation(adminOperationBtn);
+			return;
+		}
+
 		const adminTabBtn = e.target.closest(".admin-page-tab[data-admin-tab], .realjeju-side-admin-tab[data-admin-tab]");
 		if (adminTabBtn) {
 			e.preventDefault();
@@ -14566,6 +14620,7 @@ function getBrokerHomeActiveTab()
 				notices: "/admin/notices",
 				inquiries: "/admin/inquiries",
 				coupons: "/admin/coupons",
+				operations: "/admin/operations",
 				users: "/admin/users",
 				"broker-applications": "/admin/broker-applications",
 				listings: "/admin/properties"

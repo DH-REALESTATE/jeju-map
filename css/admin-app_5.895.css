@@ -1224,12 +1224,38 @@ body.global-category-nonrealestate-mode .map-location-tool-group{
 	pointer-events: none !important;
 }
 
-/* REALJEJU 5.775: 필지정보는 공통 면적 전환과 규제구역 도구를 표시합니다. */
+/* REALJEJU 5.895: 필지정보는 공통 면적 전환과 규제구역 도구를 표시합니다. */
+body.global-category-nonrealestate-mode[data-global-category="parcel"] .map-primary-tool-group,
 body.global-category-nonrealestate-mode[data-global-category="parcel"] .map-unit-tool-group,
 body.global-category-nonrealestate-mode[data-global-category="parcel"] .map-location-tool-group{
 	visibility: visible !important;
 	opacity: 1 !important;
 	pointer-events: auto !important;
+}
+
+/* REALJEJU 5.895: 생활안전 진입점은 부동산 편의가 아니라 필지분석의 안전 버튼입니다. */
+body[data-global-category="realestate"] [data-convenience-option="life-safety"]{
+	display: none;
+}
+
+/* REALJEJU 5.895: 숨김 상태에서는 안쪽 표시등을 파란색으로 활성화합니다. */
+body[data-global-category="parcel"] #mapPropertyToggleBtn.active .map-tool-label{
+	background: #1764ff;
+	color: #fff;
+}
+
+body[data-global-category="parcel"] #mapPropertyToggleBtn.active:hover .map-tool-label{
+	background: #0e55dc;
+}
+
+.life-safety-update-note{
+	margin: 10px 10px 0;
+	text-align: left;
+	color: #7b8492;
+	font-size: 12px;
+	font-weight: 400;
+	line-height: 1.5;
+	text-align: left;
 }
 
 /* PATCH 4.279: non-admin service categories are intentionally empty map-only views. */
@@ -1564,12 +1590,34 @@ body.global-category-empty-map-mode .realjeju-side-nav .realjeju-side-register-b
 .realjeju-side-local-business-top-ad{
 	display: none;
 	width: auto;
-	margin: 0 10px 14px;
+	margin: 0 10px;
+}
+
+body:is(
+	[data-global-category="parcel"],
+	[data-global-category="local-business"],
+	[data-global-category="ev-charger"]
+) .realjeju-side-nav{
+	--realjeju-side-ad-recent-gap: 16px;
 }
 
 body[data-global-category="local-business"] .realjeju-side-local-business-top-ad,
-body[data-global-category="ev-charger"] .realjeju-side-local-business-top-ad{
+body[data-global-category="ev-charger"] .realjeju-side-local-business-top-ad,
+body[data-global-category="parcel"] .realjeju-side-local-business-top-ad{
 	display: block;
+}
+
+.realjeju-side-ad-bottom-line{
+	display: none;
+}
+
+body:is(
+	[data-global-category="parcel"],
+	[data-global-category="local-business"],
+	[data-global-category="ev-charger"]
+) .realjeju-side-ad-bottom-line{
+	display: block;
+	margin: var(--realjeju-side-ad-recent-gap) 0;
 }
 
 .realjeju-side-account{
@@ -2775,3 +2823,118 @@ label[for="mySuiteBrokerApplyKakaoInput"]{
 /* =====================================================
    6. 결제 / 이용권
    ===================================================== */
+
+
+/* 5.895: 관리자 수동 실행 전용 운영 관리 화면. */
+.realjeju-side-admin-section-divider{
+	width: calc(100% - 28px);
+	height: 1px;
+	margin: 14px auto;
+	background: #e5e7eb;
+}
+
+.admin-operations-manager{
+	padding: 8px 0 48px;
+}
+
+.admin-operations-head h2{
+	margin: 0;
+	color: #111827;
+	font-size: 30px;
+	font-weight: 800;
+}
+
+.admin-operations-head p{
+	margin: 10px 0 0;
+	color: #667085;
+	font-size: 15px;
+	line-height: 1.6;
+}
+
+.admin-operations-sequence{
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin: 24px 0;
+	padding: 16px 18px;
+	border: 1px solid #bfdbfe;
+	border-radius: 12px;
+	background: #eff6ff;
+	color: #1e3a8a;
+	font-size: 14px;
+	line-height: 1.5;
+}
+
+.admin-operation-grid{
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 18px;
+}
+
+.admin-operation-card{
+	display: flex;
+	min-height: 278px;
+	flex-direction: column;
+	padding: 24px;
+	border: 1px solid #d9e0ea;
+	border-radius: 14px;
+	background: #ffffff;
+}
+
+.admin-operation-card h3{
+	margin: 0;
+	color: #111827;
+	font-size: 19px;
+	font-weight: 800;
+}
+
+.admin-operation-divider{
+	height: 1px;
+	margin: 18px 0;
+	background: #e5e7eb;
+}
+
+.admin-operation-card > p:not(.admin-operation-status){
+	min-height: 70px;
+	margin: 0;
+	color: #475467;
+	font-size: 14px;
+	line-height: 1.65;
+}
+
+.admin-operation-cycle{
+	display: block;
+	margin-top: 14px;
+	color: #2563eb;
+	font-size: 13px;
+	font-weight: 700;
+}
+
+.admin-operation-status{
+	min-height: 20px;
+	margin: 12px 0 8px;
+	color: #667085;
+	font-size: 13px;
+	line-height: 1.45;
+}
+
+.admin-operation-status.success{ color: #047857; }
+.admin-operation-status.error{ color: #dc2626; }
+
+.admin-operation-run-btn{
+	width: 100%;
+	margin-top: auto;
+}
+
+.admin-operation-run-btn:disabled{
+	cursor: wait;
+}
+
+@media (max-width: 1050px){
+	.admin-operation-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 700px){
+	.admin-operation-grid{ grid-template-columns: 1fr; }
+	.admin-operations-sequence{ align-items: flex-start; }
+}

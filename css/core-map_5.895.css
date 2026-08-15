@@ -1158,11 +1158,15 @@ body.payment-page-open .weekly-specialist-broker-panel{
 	line-height: 1.08;
 }
 
-/* 5.801: 일반 지도는 카카오 내부 요소의 손 커서를 덮어 기본 화살표로 고정하고,
+/* 5.895: 일반 지도는 카카오 내부 요소의 손 커서를 덮어 기본 화살표로 고정하고,
    실제 지도 드래그 이벤트가 진행되는 동안에만 잡은 손 커서를 표시합니다. */
 body:not(.pickaxe-mode-active) #map:not(.distance-measure-active):not(.is-map-dragging),
 body:not(.pickaxe-mode-active) #map:not(.distance-measure-active):not(.is-map-dragging) *:not(.realjeju-property-cluster-badge):not([style*="cursor: pointer"]):not([style*="cursor:pointer"]):not([style*="cursor: pointer"] *):not([style*="cursor:pointer"] *){
 	cursor: default !important;
+}
+
+.realjeju-property-cluster-badge:not(.is-selected):hover{
+	filter: brightness(1.04);
 }
 
 body:not(.pickaxe-mode-active) #map:not(.distance-measure-active).is-map-dragging,
@@ -2302,3 +2306,23 @@ body.distance-measure-active .admin-boundary-bottom-pill{
 	margin: 0 auto;
 }
 
+
+/* REALJEJU 5.895: restore the two reserved map settings cells. */
+.map-settings-filter-option.map-settings-filter-preparing,
+.map-settings-filter-option.map-settings-filter-preparing:disabled {
+  opacity: 1;
+  color: #b7bcc5;
+  background: #f7f8fa;
+  border-color: transparent;
+  cursor: default;
+  pointer-events: none;
+}
+
+.map-settings-filter-preparing-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #c5c9d0;
+  font-size: 22px;
+  line-height: 1;
+}

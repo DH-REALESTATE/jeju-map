@@ -6739,6 +6739,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		notices: "/admin/notices",
 		inquiries: "/admin/inquiries",
 		coupons: "/admin/coupons",
+		operations: "/admin/operations",
 		users: "/admin/users",
 		"broker-applications": "/admin/broker-applications",
 		listings: "/admin/properties"
@@ -7520,7 +7521,7 @@ document.addEventListener("DOMContentLoaded", function () {
 })();
 
 
-// REALJEJU 5.859: 필지·실거래·건축물 상세 기능은 property-info 모듈로 분리했습니다.
+// REALJEJU 5.895: 필지·실거래·건축물 상세 기능은 property-info 모듈로 분리했습니다.
 
 // Let the route controller at the end of this bundle register before map boot can
 // announce readiness. This keeps a refreshed deep route authoritative from the

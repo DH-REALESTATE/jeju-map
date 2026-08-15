@@ -1,4 +1,4 @@
-// REALJEJU 5.801 background module loader
+// REALJEJU 5.895 user-action module loader
 (function initRealjejuModuleLoader(global) {
   "use strict";
   const loadedModules = new Map();
@@ -39,7 +39,7 @@
   global.realjejuModules = Object.freeze({ load: loadScript });
 
   function preloadPropertyInfo() {
-    return loadScript("property-info", "/js/property-info_5.801.js?v=20260814-building-floors-db-5801")
+    return loadScript("property-info", "/js/property-info_5.895.js?v=20260814-region-trade-static-5823")
       .then(() => true)
       .catch((error) => {
         console.error("[realjeju module] property-info load failed", error);
@@ -48,13 +48,4 @@
   }
 
   global.realjejuPreloadPropertyInfo = preloadPropertyInfo;
-
-  function scheduleBackgroundModules() {
-    preloadPropertyInfo().then((loaded) => {
-      if (!loaded) global.setTimeout(preloadPropertyInfo, 700);
-    });
-  }
-
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", scheduleBackgroundModules, { once: true });
-  else scheduleBackgroundModules();
 })(window);

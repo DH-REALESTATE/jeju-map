@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ko">
 	<!--
@@ -191,15 +192,15 @@ REALJEJU HTML 구조 / Ver 5.268
 				transition: none;
 			}
 		</style>
-		<link rel="stylesheet" href="/css/base-foundation_5.862.css?v=20260814-region-trade-static-5823">
-		<link rel="stylesheet" href="/css/core-map_5.862.css?v=20260814-region-trade-static-5823">
-		<link rel="stylesheet" href="/css/property-info_5.862.css?v=20260814-region-trade-static-5823">
-		<link rel="stylesheet" href="/css/workspace-app_5.862.css?v=20260814-region-trade-static-5823">
-		<link rel="stylesheet" href="/css/admin-app_5.862.css?v=20260814-region-trade-static-5823">
-		<link rel="stylesheet" href="/css/account_5.862.css?v=20260814-region-trade-static-5823">
-		<link rel="stylesheet" href="/css/base_5.862.css?v=20260814-region-trade-static-5823">
+		<link rel="stylesheet" href="/css/base-foundation_5.895.css?v=20260814-region-trade-static-5823">
+		<link rel="stylesheet" href="/css/core-map_5.895.css?v=20260814-region-trade-static-5823">
+		<link rel="stylesheet" href="/css/property-info_5.895.css?v=20260814-region-trade-static-5823">
+		<link rel="stylesheet" href="/css/workspace-app_5.895.css?v=20260814-region-trade-static-5823">
+		<link rel="stylesheet" href="/css/admin-app_5.895.css?v=20260814-region-trade-static-5823">
+		<link rel="stylesheet" href="/css/account_5.895.css?v=20260814-region-trade-static-5823">
+		<link rel="stylesheet" href="/css/base_5.895.css?v=20260814-region-trade-static-5823">
 
-  <link rel="stylesheet" href="/css/service-modes_5.862.css?v=20260814-region-trade-static-5823">
+  <link rel="stylesheet" href="/css/service-modes_5.895.css?v=20260814-region-trade-static-5823">
 </head>
 	<body class="sidebar-list-collapsed realjeju-side-nav-enabled main-landing-page-open">
 		<script id="realjeju-initial-body-route-prime">
@@ -242,6 +243,7 @@ REALJEJU HTML 구조 / Ver 5.268
 					"/admin/notices": true,
 					"/admin/inquiries": true,
 					"/admin/coupons": true,
+					"/admin/operations": true,
 					"/admin/users": true,
 					"/admin/broker-applications": true,
 					"/admin/properties": true
@@ -554,6 +556,11 @@ REALJEJU HTML 구조 / Ver 5.268
 					<i class="fa-solid fa-credit-card" aria-hidden="true"></i>
 					<span>쿠폰 관리</span>
 				</button>
+				<div class="realjeju-side-admin-section-divider" aria-hidden="true"></div>
+				<button type="button" class="realjeju-side-nav-item realjeju-side-admin-tab" data-admin-tab="operations">
+					<i class="fa-solid fa-database" aria-hidden="true"></i>
+					<span>운영 관리</span>
+				</button>
 			</nav>
 			<nav class="realjeju-side-nav-menu realjeju-side-primary-menu">
 				<button type="button" class="realjeju-side-nav-item active" data-side-nav-action="home">
@@ -616,7 +623,7 @@ REALJEJU HTML 구조 / Ver 5.268
 				</button>
 			</nav>
 			<div class="realjeju-side-admin-version" id="realjejuSideAdminVersion" aria-hidden="true" hidden>
-				<span class="topbar-version-text">5.862</span>
+				<span class="topbar-version-text">5.895</span>
 			</div>
 		</aside>
 		<button type="button" class="realjeju-side-nav-toggle" id="realjejuSideNavToggle" aria-controls="realjejuSideNav" aria-expanded="true" aria-label="왼쪽 메뉴 접기">
@@ -1003,7 +1010,7 @@ REALJEJU HTML 구조 / Ver 5.268
 		<div class="admin-page-head">
 			<div>
 				<h1 class="admin-page-title">관리자 페이지</h1>
-				<p class="admin-page-desc">공지사항, 1:1 문의, 쿠폰, 매물, 회원, 가입 신청을 관리합니다.</p>
+				<p class="admin-page-desc">공지사항, 1:1 문의, 쿠폰, 매물, 회원, 가입 신청과 운영 데이터를 관리합니다.</p>
 			</div>
 		</div>
 		<div class="admin-page-tab-panel active" data-admin-tab-panel="notices">
@@ -1230,6 +1237,70 @@ REALJEJU HTML 구조 / Ver 5.268
 							<button type="submit" class="admin-coupon-recipient-confirm" id="adminCouponRecipientConfirm" disabled>확인</button>
 						</div>
 					</form>
+				</div>
+			</div>
+		</div>
+		<div class="admin-page-tab-panel" data-admin-tab-panel="operations">
+			<div class="admin-operations-manager">
+				<div class="admin-operations-head">
+					<div>
+						<h2>운영 관리</h2>
+						<p>필요한 작업만 관리자가 직접 실행합니다. 자동 실행과 백그라운드 갱신은 하지 않습니다.</p>
+					</div>
+				</div>
+				<div class="admin-operations-sequence" role="note">
+					<i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+					<span>실거래 갱신 순서: <strong>1. 실거래 월별 집계</strong> 실행 후 <strong>2. 실거래 최종 스냅샷</strong>을 실행하세요.</span>
+				</div>
+				<div class="admin-operation-grid">
+					<article class="admin-operation-card">
+						<h3>1. 실거래 월별 집계</h3>
+						<div class="admin-operation-divider" aria-hidden="true"></div>
+						<p>적재된 실거래 원본을 월별·행정구역별 숫자로 다시 집계합니다. 새 월의 실거래 원본 적재가 끝난 뒤 먼저 실행합니다.</p>
+						<span class="admin-operation-cycle">권장: 매월 원본 적재 후</span>
+						<p class="admin-operation-status" data-admin-operation-status="trade-monthly" aria-live="polite"></p>
+						<button type="button" class="admin-coupon-issue-btn admin-operation-run-btn" data-admin-operation-run="trade-monthly">실행</button>
+					</article>
+					<article class="admin-operation-card">
+						<h3>2. 실거래 최종 스냅샷</h3>
+						<div class="admin-operation-divider" aria-hidden="true"></div>
+						<p>월별 집계 결과를 지도 뱃지와 부동산 통계창이 즉시 읽는 최종 숫자로 저장합니다. 월별 집계 다음에 실행합니다.</p>
+						<span class="admin-operation-cycle">권장: 매월 월별 집계 직후</span>
+						<p class="admin-operation-status" data-admin-operation-status="trade-static" aria-live="polite"></p>
+						<button type="button" class="admin-coupon-issue-btn admin-operation-run-btn" data-admin-operation-run="trade-static">실행</button>
+					</article>
+					<article class="admin-operation-card">
+						<h3>전기차 충전기 수 집계</h3>
+						<div class="admin-operation-divider" aria-hidden="true"></div>
+						<p>충전소 원본 데이터를 기준으로 충전소별 충전기 수를 다시 계산해 지도 표시값을 맞춥니다.</p>
+						<span class="admin-operation-cycle">권장: 충전소 원본 갱신 후</span>
+						<p class="admin-operation-status" data-admin-operation-status="ev-counts" aria-live="polite"></p>
+						<button type="button" class="admin-coupon-issue-btn admin-operation-run-btn" data-admin-operation-run="ev-counts">실행</button>
+					</article>
+					<article class="admin-operation-card">
+						<h3>중개사 지도 DB 갱신</h3>
+						<div class="admin-operation-divider" aria-hidden="true"></div>
+						<p>중개사무소 위치와 공개 기본정보를 지도 전용 DB에 다시 저장합니다. 중개사 정보가 변경된 뒤 실행합니다.</p>
+						<span class="admin-operation-cycle">권장: 중개사 정보 변경 후</span>
+						<p class="admin-operation-status" data-admin-operation-status="broker-directory" aria-live="polite"></p>
+						<button type="button" class="admin-coupon-issue-btn admin-operation-run-btn" data-admin-operation-run="broker-directory">실행</button>
+					</article>
+					<article class="admin-operation-card">
+						<h3>중개사 전문분야 통계</h3>
+						<div class="admin-operation-divider" aria-hidden="true"></div>
+						<p>중개사별 등록 매물을 기준으로 전문 지역과 전문 부동산 유형 통계를 다시 계산합니다.</p>
+						<span class="admin-operation-cycle">권장: 주 1회 또는 매물 대량 변경 후</span>
+						<p class="admin-operation-status" data-admin-operation-status="broker-specialty" aria-live="polite"></p>
+						<button type="button" class="admin-coupon-issue-btn admin-operation-run-btn" data-admin-operation-run="broker-specialty">실행</button>
+					</article>
+					<article class="admin-operation-card">
+						<h3>주간 전문 중개사 선정</h3>
+						<div class="admin-operation-divider" aria-hidden="true"></div>
+						<p>이번 주 전문분야별 중개사를 선정하고 주간 집계 결과를 확정합니다.</p>
+						<span class="admin-operation-cycle">권장: 매주 일요일 22시 이후</span>
+						<p class="admin-operation-status" data-admin-operation-status="broker-weekly" aria-live="polite"></p>
+						<button type="button" class="admin-coupon-issue-btn admin-operation-run-btn" data-admin-operation-run="broker-weekly">실행</button>
+					</article>
 				</div>
 			</div>
 		</div>
@@ -5888,11 +5959,11 @@ REALJEJU HTML 구조 / Ver 5.268
 			}
 		</script>
 	<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-		<script src="/js/app_5.862.js?v=20260814-region-trade-static-5823"></script>
-	<script src="/js/workspace-app_5.862.js?v=20260814-region-trade-static-5823"></script>
-  <script src="/js/service-modes_5.862.js?v=20260814-region-trade-static-5823"></script>
-	<script src="/js/runtime-tail_5.862.js?v=20260814-region-trade-static-5823"></script>
-	<script src="/js/bootstrap_5.862.js?v=20260814-region-trade-static-5823"></script>
+		<script src="/js/app_5.895.js?v=20260814-region-trade-static-5823"></script>
+	<script src="/js/workspace-app_5.895.js?v=20260814-region-trade-static-5823"></script>
+  <script src="/js/service-modes_5.895.js?v=20260814-region-trade-static-5823"></script>
+	<script src="/js/runtime-tail_5.895.js?v=20260814-region-trade-static-5823"></script>
+	<script src="/js/bootstrap_5.895.js?v=20260814-region-trade-static-5823"></script>
 
 
 <script>

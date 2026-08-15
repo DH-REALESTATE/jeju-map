@@ -1,4 +1,4 @@
-// REALJEJU 5.705 property-info background module
+// REALJEJU 5.895 property-info background module
 // 필지 상세, 실거래가, 공시지가, 건축물대장, 추천 중개사 패널을 한 경계에서 관리합니다.
 /* PATCH 5.295: 필지 상세 통합 화면, 실거래가, 주변 중개사, 건축물대장 */
 (function initParcelPropertyExperience5293()
@@ -140,9 +140,14 @@
     return result.data || {};
   }
 
+  function propertyStateMessageHtml(message)
+  {
+    return '<div class="parcel-property-empty realjeju-property-state-message">' + esc(message) + '</div>';
+  }
+
   function functionErrorHtml(prefix)
   {
-    return '<div class="parcel-property-empty">' + esc(prefix) + '</div>';
+    return propertyStateMessageHtml(prefix);
   }
 
   function infoRow(label, value, extraClass)
@@ -285,7 +290,7 @@
   function buildTradeShell()
   {
     return '<section id="parcel-property-realtrade" class="parcel-property-block parcel-property-realtrade">'
-      + '<h2>실거래가</h2><div class="parcel-property-loading" data-parcel-exact-trades>실거래가를 불러오는 중입니다.</div>'
+      + '<h2>실거래가</h2><div class="parcel-property-empty realjeju-property-state-message" data-parcel-exact-trades data-parcel-trade-loading="true">실거래가를 불러오는 중입니다.</div>'
       + '<div class="parcel-property-subsection parcel-property-trade-graph-section"><h3>주변 유사거래</h3><div data-parcel-trade-chart class="parcel-property-loading">주변 유사거래를 불러오는 중입니다.</div></div>'
       + '<div class="parcel-property-subsection"><h3>추천 매물</h3><div data-parcel-recommended-listing class="parcel-property-loading">추천 매물을 불러오는 중입니다.</div></div>'
       // 주변 유사거래는 현재 사용하지 않으므로 임시 주석 처리
@@ -1014,7 +1019,7 @@
       target.classList.remove("parcel-property-loading");
       // 주변 유사거래가 없을 때도 별도 그래프 여백을 만들지 않고 공통 빈 상태 규격을 사용합니다.
       target.classList.remove("parcel-property-empty");
-      target.innerHTML = controls + '<div class="parcel-property-empty">표시할 주변 유사거래가 없습니다.</div>';
+      target.innerHTML = '<div class="parcel-property-empty realjeju-property-state-message">주변 유사거래 정보가 없습니다.</div>';
       return;
     }
     const anchor = new Date();
@@ -1027,7 +1032,7 @@
     const filtered = cutoff ? all.filter(function(item) { return item.date >= cutoff; }) : all;
     if (!filtered.length) {
       target.classList.remove("parcel-property-loading");
-      target.innerHTML = controls + '<div class="parcel-property-empty">선택한 기간의 주변 유사거래가 없습니다.</div>';
+      target.innerHTML = controls + '<div class="parcel-property-empty realjeju-property-state-message">선택한 기간의 주변 유사거래가 없습니다.</div>';
       return;
     }
     const width = 640;
@@ -1102,6 +1107,9 @@
           const distance = finite(row.distance);
           const location = [row.umdName, row.jibun].filter(Boolean).join(" ");
           const parcelLabel = [location || "거래 필지", row.jimok].filter(Boolean).join(" · ");
+          const locationHtml = location
+            ? '<button type="button" class="parcel-similar-trade-location parcel-similar-trade-link" data-parcel-similar-trade-address="' + esc(location) + '" aria-label="' + esc(location + " 부동산 정보 보기") + '">' + esc(parcelLabel) + '</button>'
+            : '<span class="parcel-similar-trade-location">' + esc(parcelLabel) + '</span>';
           const dateLabel = row.dealDate ? esc(String(row.dealDate).replace(/-/g, ".")) : "-";
           const areaLabel = areaM2 !== null
             ? '<span data-parcel-property-area-sqm="' + esc(String(areaM2)) + '">' + esc(formatArea(areaM2)) + '</span>'
@@ -1109,7 +1117,7 @@
           const distanceLabel = distance !== null ? esc(formatDistance(distance)) : "-";
           return (
             '<div class="parcel-property-info-row parcel-similar-trade-row">' +
-              '<span class="parcel-similar-trade-location">' + esc(parcelLabel) + '</span>' +
+              locationHtml +
               '<span class="parcel-similar-trade-date">' + dateLabel + '</span>' +
               '<span class="parcel-similar-trade-area">' + areaLabel + '</span>' +
               '<span class="parcel-similar-trade-distance">' + distanceLabel + '</span>' +
@@ -1649,18 +1657,18 @@
   {
     const status = String(coverage && coverage.status || "unknown");
     if (status === "complete") {
-      return '<div class="parcel-property-empty">실거래 정보가 없습니다.</div>';
+      return '<div class="parcel-property-empty realjeju-property-state-message">실거래 정보가 없습니다.</div>';
     }
     if (status === "partial") {
       return '<div class="parcel-property-empty realjeju-property-state-message">실거래 정보를 확인 중입니다.</div>';
     }
     if (status === "not_loaded") {
-      return '<div class="parcel-property-empty">실거래 데이터가 아직 DB에 적재되지 않았습니다.</div>';
+      return '<div class="parcel-property-empty realjeju-property-state-message">실거래 데이터가 아직 DB에 적재되지 않았습니다.</div>';
     }
     if (status === "stale") {
-      return '<div class="parcel-property-empty">실거래 데이터 갱신이 필요합니다.</div>';
+      return '<div class="parcel-property-empty realjeju-property-state-message">실거래 데이터 갱신이 필요합니다.</div>';
     }
-    return '<div class="parcel-property-empty">실거래 정보가 존재하지 않습니다.</div>';
+    return '<div class="parcel-property-empty realjeju-property-state-message">실거래 정보가 존재하지 않습니다.</div>';
   }
 
   function renderExactTradeExperience(target, sourceRows, cacheCoverage)
@@ -1772,10 +1780,24 @@
           "실거래가 조회 시간이 초과되었습니다."
         );
         if (!isCurrentTask()) return;
-        setTimedCache(tradeCache, tradeCacheKey, data, TRADE_BROWSER_CACHE_TTL_MS);
-        setTimedCache(tradeCache, exactTradeCacheKey, data, TRADE_BROWSER_CACHE_TTL_MS);
+        const responseQueryStatus = data && data.queryStatus && typeof data.queryStatus === "object"
+          ? data.queryStatus
+          : null;
+        const responseHasQueryFailure = responseQueryStatus && (
+          responseQueryStatus.exact === "error" || responseQueryStatus.nearby === "error"
+        );
+        // 부분 실패 응답을 브라우저 캐시에 남기면 정상 복구 뒤에도 정보 없음처럼 보일 수 있습니다.
+        if (!responseHasQueryFailure) {
+          setTimedCache(tradeCache, tradeCacheKey, data, TRADE_BROWSER_CACHE_TTL_MS);
+          setTimedCache(tradeCache, exactTradeCacheKey, data, TRADE_BROWSER_CACHE_TTL_MS);
+        }
       }
       if (!isCurrentTask()) return;
+      const queryStatus = data && data.queryStatus && typeof data.queryStatus === "object"
+        ? data.queryStatus
+        : {};
+      const exactUnavailable = queryStatus.exact === "error";
+      const nearbyUnavailable = queryStatus.nearby === "error";
       // 법정동ㆍ지번 일치 판정은 Edge Function의 공통 정규화 결과를 신뢰하고,
       // 화면에서는 반환된 정확 거래를 다시 다른 문자열 규칙으로 제거하지 않습니다.
       const exactAll = exactTradeRowsFromResponse(data, sourceJibun);
@@ -1813,8 +1835,19 @@
         : (samePropertyCandidates.length ? samePropertyCandidates : saleCandidates);
       await waitForParcelTradePaint();
       if (!isCurrentTask()) return;
-      exactTarget.classList.remove("parcel-property-loading");
-      renderExactTradeExperience(exactTarget, exactAll, data.cacheCoverage);
+      delete exactTarget.dataset.parcelTradeLoading;
+      exactTarget.classList.remove("parcel-property-loading", "parcel-property-empty", "realjeju-property-state-message");
+      if (exactUnavailable) {
+        exactTarget.innerHTML = functionErrorHtml("실거래가를 불러오지 못했습니다.");
+      } else {
+        renderExactTradeExperience(exactTarget, exactAll, data.cacheCoverage);
+      }
+      if (nearbyUnavailable) {
+        graphTarget.classList.remove("parcel-property-loading");
+        graphTarget.innerHTML = functionErrorHtml("주변 유사거래를 불러오지 못했습니다.");
+        graphTarget.onclick = null;
+        return;
+      }
       const graphRows = graphCandidates.slice().sort(function(a, b) {
         return String(b.dealDate || "").localeCompare(String(a.dealDate || ""));
       }).slice(0, 24);
@@ -1828,7 +1861,8 @@
       if (!isCurrentTask()) return;
       console.error("[realjeju land-trades]", error);
       if (exactTarget) {
-        exactTarget.classList.remove("parcel-property-loading");
+        delete exactTarget.dataset.parcelTradeLoading;
+        exactTarget.classList.remove("parcel-property-loading", "parcel-property-empty", "realjeju-property-state-message");
         exactTarget.innerHTML = functionErrorHtml("실거래가를 불러오지 못했습니다.");
       }
       if (similarTarget) {
@@ -1846,8 +1880,9 @@
         { target: similarTarget, message: "주변 거래를 불러오지 못했습니다." },
         { target: graphTarget, message: "주변 유사거래를 불러오지 못했습니다." }
       ].forEach(function(item) {
-        if (!item.target || !item.target.classList.contains("parcel-property-loading")) return;
-        item.target.classList.remove("parcel-property-loading");
+        if (!item.target || (item.target.dataset.parcelTradeLoading !== "true" && !item.target.classList.contains("parcel-property-loading"))) return;
+        delete item.target.dataset.parcelTradeLoading;
+        item.target.classList.remove("parcel-property-loading", "parcel-property-empty", "realjeju-property-state-message");
         item.target.innerHTML = functionErrorHtml(item.message);
       });
     }
@@ -1863,7 +1898,7 @@
   function individualHousingPriceContent(rows)
   {
     const prices = Array.isArray(rows) ? rows : [];
-    if (!prices.length) return '<div class="parcel-property-empty">개별주택공시가격이 존재하지 않습니다.</div>';
+    if (!prices.length) return '<div class="parcel-property-empty realjeju-property-state-message">개별주택공시가격이 존재하지 않습니다.</div>';
     return prices.slice(0, 3).map(function(item) {
       const period = esc(String(item.year || "-") + "." + String(item.month || "01").padStart(2, "0"));
       return '<div class="parcel-building-house-price-record">'
@@ -2050,10 +2085,12 @@
     modal.setAttribute("data-parcel-common-housing-picker", "");
     modal.setAttribute("data-parcel-common-housing-picker-kind", kind);
     modal.innerHTML = '<div class="parcel-building-unit-picker-dialog" role="dialog" aria-modal="true" aria-label="' + labels[kind] + ' 선택">'
+      + '<header><span aria-hidden="true"></span><h2>' + labels[kind] + ' 선택</h2><button type="button" data-parcel-unit-picker-close aria-label="선택창 닫기">×</button></header>'
+      + '<div class="parcel-building-unit-picker-list">'
       + values.map(function(value) {
         const active = value === selected;
         return '<button type="button" data-parcel-common-housing-picker-value="' + esc(value) + '" class="parcel-building-unit-picker-row' + (active ? " is-selected" : "") + '"><i aria-hidden="true"></i><span>' + esc(commonHousingPriceLabel(value, kind)) + '</span></button>';
-      }).join("") + '</div>';
+      }).join("") + '</div></div>';
     document.body.appendChild(modal);
     const close = function() {
       document.removeEventListener("keydown", onKeyDown);
@@ -2061,6 +2098,8 @@
     };
     const onKeyDown = function(event) { if (event.key === "Escape") close(); };
     document.addEventListener("keydown", onKeyDown);
+    const closeButton = modal.querySelector("[data-parcel-unit-picker-close]");
+    if (closeButton) closeButton.addEventListener("click", close);
     let committed = false;
     Array.from(modal.querySelectorAll("[data-parcel-common-housing-picker-value]")).forEach(function(option) {
       option.addEventListener("click", function(event) {
@@ -2479,7 +2518,7 @@
   }
 
 
-  /* 5.705: 호별정보 선택기는 전유부의 실제 동/층/호만 계층적으로 사용한다. */
+  /* 5.895: 호별정보 선택기는 전유부의 실제 동/층/호만 계층적으로 사용한다. */
   buildingUnitModel = function(rows, selection)
   {
     const source = Array.isArray(rows) ? rows : [];
@@ -2667,10 +2706,10 @@
       return '<section class="parcel-building-group parcel-building-unit-group" data-parcel-building-unit-floor><h3>호별정보</h3><div class="parcel-property-loading">호별정보를 불러오는 중입니다.</div></section>';
     }
     if (activeBuildingUnitStatus === "unavailable" || activeBuildingUnitStatus === "skipped") {
-      return '<section class="parcel-building-group parcel-building-unit-group" data-parcel-building-unit-floor><h3>호별정보</h3><div class="parcel-property-empty">호별정보를 불러오지 못했습니다.</div></section>';
+      return '<section class="parcel-building-group parcel-building-unit-group" data-parcel-building-unit-floor><h3>호별정보</h3>' + propertyStateMessageHtml("호별정보를 불러오지 못했습니다.") + '</section>';
     }
     if (!rows.length) {
-      return '<section class="parcel-building-group parcel-building-unit-group" data-parcel-building-unit-floor><h3>호별정보</h3><div class="parcel-property-empty">호별정보가 존재하지 않습니다.</div></section>';
+      return '<section class="parcel-building-group parcel-building-unit-group" data-parcel-building-unit-floor><h3>호별정보</h3>' + propertyStateMessageHtml("호별정보가 존재하지 않습니다.") + '</section>';
     }
     const model = buildingUnitModel(rows, activeBuildingUnitSelection);
     const dong = model.dongs.find(function(item) { return item.value === model.selectedDong; });
@@ -2687,21 +2726,40 @@
       + '</section>';
   }
 
-  function closeBuildingUnitPicker()
-  {
-    const modal = document.querySelector("[data-parcel-building-unit-picker]");
-    if (modal) modal.remove();
-  }
+function closeBuildingUnitPicker()
+{
+	const modal = document.querySelector("[data-parcel-building-unit-picker]");
+	if (modal) modal.remove();
+}
+
+function closePropertyInfoTransientPickers()
+{
+	closeCommonHousingPricePicker();
+	closeBuildingUnitPicker();
+	const buildingRegisterModal = document.querySelector("[data-parcel-building-all-modal]");
+	if (buildingRegisterModal) {
+		if (typeof buildingRegisterModal.__parcelBuildingReleaseCardPosition === "function") {
+			buildingRegisterModal.__parcelBuildingReleaseCardPosition();
+		}
+		buildingRegisterModal.remove();
+	}
+}
+
+window.realjejuClosePropertyInfoTransientPickers = closePropertyInfoTransientPickers;
 
   function openBuildingUnitPicker(kind, options, selectedValue, onSelect)
   {
     closeBuildingUnitPicker();
+    const labels = { dong: "동", floor: "층", ho: "호" };
     const modal = document.createElement("div");
     modal.className = "parcel-building-unit-picker";
     modal.setAttribute("data-parcel-building-unit-picker", "true");
     modal.setAttribute("data-parcel-building-unit-picker-kind", kind);
     const dialog = document.createElement("div");
     dialog.className = "parcel-building-unit-picker-dialog";
+    dialog.innerHTML = '<header><span aria-hidden="true"></span><h2>' + (labels[kind] || "항목") + ' 선택</h2><button type="button" data-parcel-unit-picker-close aria-label="선택창 닫기">×</button></header>';
+    const list = document.createElement("div");
+    list.className = "parcel-building-unit-picker-list";
     options.forEach(function(option) {
       const button = document.createElement("button");
       button.type = "button";
@@ -2714,9 +2772,12 @@
         onSelect(option.value);
         closeBuildingUnitPicker();
       });
-      dialog.appendChild(button);
+      list.appendChild(button);
     });
+    dialog.appendChild(list);
     modal.appendChild(dialog);
+    const closeButton = dialog.querySelector("[data-parcel-unit-picker-close]");
+    if (closeButton) closeButton.addEventListener("click", closeBuildingUnitPicker);
     modal.addEventListener("click", function(event) {
       if (event.target === modal) closeBuildingUnitPicker();
     });
@@ -3156,26 +3217,18 @@
     };
     panel.addEventListener("scroll", lockCardPosition, true);
     const rows = Array.isArray(records) ? records : [];
-    let titleSequence = 0;
     const modal = document.createElement("div");
     modal.__parcelBuildingReleaseCardPosition = releaseCardPosition;
-    modal.className = "parcel-exact-area-modal parcel-building-all-modal";
+	modal.className = "parcel-building-unit-picker parcel-building-all-modal";
     modal.setAttribute("data-parcel-building-all-modal", "");
-    modal.innerHTML = '<div class="parcel-exact-area-dialog parcel-building-all-dialog" role="dialog" aria-modal="true" aria-label="건축물대장 선택">'
+	modal.innerHTML = '<div class="parcel-building-unit-picker-dialog parcel-building-all-dialog" role="dialog" aria-modal="true" aria-label="건축물대장 선택">'
       + '<header><span aria-hidden="true"></span><h3>건축물대장 선택</h3><button type="button" class="parcel-exact-area-close" data-parcel-building-all-close aria-label="닫기"></button></header>'
       + '<div class="parcel-building-all-list">'
       + (rows.length ? rows.map(function(item, itemIndex) {
         const isRecap = item && item.kind === "recap";
-        if (!isRecap) titleSequence += 1;
-        const registerLabel = isRecap ? "총괄" : "주" + titleSequence;
-        const primary = isRecap
-          ? (item.mainPurpose || item.buildingName || item.dongName || "총괄표제부")
-          : (item.dongName || item.buildingName || "표제부");
-        const secondary = isRecap ? "" : (item.mainPurpose || item.otherPurpose || item.buildingName || "건물");
+        const rowLabel = isRecap ? "총괄" : (item.dongName || item.buildingName || "표제부");
         return '<button type="button" class="parcel-building-all-row' + (itemIndex === selectedIndex ? ' is-active' : '') + '" data-parcel-building-all-index="' + itemIndex + '">'
-          + '<strong>' + esc(registerLabel) + '</strong><span><b>' + esc(primary) + '</b>'
-          + (secondary && secondary !== primary ? '<small>' + esc(secondary) + '</small>' : '')
-          + '</span></button>';
+          + '<b>' + esc(rowLabel) + '</b></button>';
       }).join("") : '<div class="parcel-property-empty">선택할 건축물대장이 없습니다.</div>')
       + '</div></div>';
     modal.addEventListener("click", function(event) {
@@ -3221,10 +3274,12 @@
     const auxiliaryBuildingPattern = /재활용|보관소|기계실|전기실|관리실|경비실|주차|부속|창고|기타|정화조|펌프실|보일러실/;
     const records = sourceRecords.map(function(record, sourceIndex) {
       const dongText = String(record && record.dongName || "").trim();
+	  const sortLabel = String(dongText || (record && record.buildingName) || "표제부").trim();
       const descriptor = [dongText, record && record.buildingName, record && record.mainPurpose, record && record.otherPurpose]
         .filter(Boolean)
         .join(" ");
-      const numberMatch = dongText.match(/\d+/);
+	  const numberMatch = sortLabel.match(/\d+/);
+	  const baseLabel = sortLabel.replace(/\d+/g, "").replace(/\s+/g, " ").trim();
       const isAuxiliary = auxiliaryBuildingPattern.test(descriptor);
       let group = 3;
       if (record && record.kind === "recap") group = 0;
@@ -3237,10 +3292,13 @@
         sourceIndex: sourceIndex,
         group: group,
         number: numberMatch ? Number(numberMatch[0]) : Number.MAX_SAFE_INTEGER,
+		baseLabel: baseLabel,
         descriptor: descriptor
       };
     }).sort(function(a, b) {
       if (a.group !== b.group) return a.group - b.group;
+	  const baseTextOrder = buildingCardCollator.compare(a.baseLabel, b.baseLabel);
+	  if (baseTextOrder) return baseTextOrder;
       if (a.number !== b.number) return a.number - b.number;
       const textOrder = buildingCardCollator.compare(a.descriptor, b.descriptor);
       return textOrder || a.sourceIndex - b.sourceIndex;
@@ -3411,14 +3469,13 @@
       // payload can predate a completed unit crawl and must never suppress a
       // fresh DB-backed response, otherwise only a sparse subset of floors can
       // remain visible for the whole browser-cache lifetime.
-      buildingCache.delete(pnu);
       const basic = await invokeFunction("building-register", { pnu: pnu, scope: "all" });
       if (panel.dataset.parcelPnu !== pnu) return;
       const basicView = Object.assign({}, basic, {
-        wastewater: [],
-        floors: [],
-        units: [],
-        detailsPending: true
+        wastewater: Array.isArray(basic.wastewater) ? basic.wastewater : [],
+        floors: Array.isArray(basic.floors) ? basic.floors : [],
+        units: Array.isArray(basic.units) ? basic.units : [],
+        detailsPending: false
       });
       const basicRecords = Array.isArray(basic.records) ? basic.records : [];
       panel.__parcelBuildingData = basicView;
@@ -3482,15 +3539,19 @@
           detailsPending: false,
           upstreamUnavailable: !basicRecords.length
         });
-        buildingCache.delete(pnu);
         if (panel.dataset.parcelPnu !== pnu) return;
         panel.__parcelBuildingData = settled;
         renderBuilding(panel, settled, panel.dataset.parcelBuildingIndex || 0);
       });
     } catch (error) {
       console.error("[realjeju building-register]", error);
-      target.classList.remove("parcel-property-loading");
-      target.innerHTML = functionErrorHtml("건물 정보를 불러오지 못했습니다.");
+      const fallback = panel.__parcelBuildingData;
+      if (fallback && Array.isArray(fallback.records) && fallback.records.length) {
+        renderBuilding(panel, fallback, panel.dataset.parcelBuildingIndex || 0);
+      } else {
+        target.classList.remove("parcel-property-loading");
+        target.innerHTML = functionErrorHtml("건물 정보를 불러오지 못했습니다.");
+      }
     }
   }
 
@@ -3529,6 +3590,16 @@
   }
 
   document.addEventListener("click", function(event) {
+    const similarTradeAddressLink = event.target.closest("[data-parcel-similar-trade-address]");
+    if (similarTradeAddressLink) {
+      event.preventDefault();
+      event.stopPropagation();
+      const address = String(similarTradeAddressLink.getAttribute("data-parcel-similar-trade-address") || "").trim();
+      if (address && typeof window.openRealjejuParcelInfoByAddress === "function") {
+        void window.openRealjejuParcelInfoByAddress(address);
+      }
+      return;
+    }
     const tab = event.target.closest("[data-parcel-section-target]");
     if (tab) {
       const panel = tab.closest(".parcel-land-info-panel");
@@ -3701,5 +3772,93 @@
     };
     if (document.body) start();
     else document.addEventListener("DOMContentLoaded", start, { once: true });
+  }
+})();
+
+
+
+/* 5.895: 빈 안내 행과 실제 다음 구분선 사이를 DOM 깊이와 무관하게 같은 간격으로 정규화 */
+(() => {
+  const panelSelector = ".parcel-land-info-panel";
+  const messageSelector = ".realjeju-property-state-message";
+  const hostClass = "realjeju-property-empty-host";
+  const sectionClass = "realjeju-property-empty-section";
+  const afterClass = "realjeju-after-empty-state";
+  const sectionSelector = ".parcel-property-block, .parcel-property-subsection";
+  const attachedPanels = new WeakSet();
+
+  function isVisibleSection(node) {
+    if (!node || node.hidden || node.getAttribute("aria-hidden") === "true") return false;
+    return window.getComputedStyle(node).display !== "none";
+  }
+
+  function findNextVisibleNode(node, panel) {
+    let cursor = node;
+    while (cursor && cursor !== panel) {
+      let sibling = cursor.nextElementSibling;
+      while (sibling) {
+        if (isVisibleSection(sibling)) return sibling;
+        sibling = sibling.nextElementSibling;
+      }
+      cursor = cursor.parentElement;
+    }
+    return null;
+  }
+
+  function syncPropertyEmptyStateSpacing(panel) {
+    if (!panel) return;
+
+    panel.querySelectorAll("." + hostClass).forEach((node) => node.classList.remove(hostClass));
+    panel.querySelectorAll("." + sectionClass).forEach((node) => node.classList.remove(sectionClass));
+    panel.querySelectorAll("." + afterClass).forEach((node) => node.classList.remove(afterClass));
+
+    panel.querySelectorAll(messageSelector).forEach((message) => {
+      const host = message.parentElement;
+      if (host) host.classList.add(hostClass);
+
+      const section = message.closest(sectionSelector);
+      if (section && panel.contains(section)) section.classList.add(sectionClass);
+
+      const nextVisibleNode = findNextVisibleNode(message, panel);
+      if (nextVisibleNode) nextVisibleNode.classList.add(afterClass);
+    });
+  }
+
+  function attachPropertyEmptyStateSpacing(panel) {
+    if (!panel || attachedPanels.has(panel)) return;
+    attachedPanels.add(panel);
+    syncPropertyEmptyStateSpacing(panel);
+
+    const observer = new MutationObserver(() => syncPropertyEmptyStateSpacing(panel));
+    observer.observe(panel, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ["hidden", "style"]
+    });
+  }
+
+  function scanPropertyPanels(rootNode) {
+    if (!rootNode) return;
+    if (rootNode.nodeType === Node.ELEMENT_NODE && rootNode.matches(panelSelector)) {
+      attachPropertyEmptyStateSpacing(rootNode);
+    }
+    if (rootNode.querySelectorAll) {
+      rootNode.querySelectorAll(panelSelector).forEach(attachPropertyEmptyStateSpacing);
+    }
+  }
+
+  function startPropertyEmptyStateSpacing() {
+    scanPropertyPanels(document);
+    const observer = new MutationObserver((records) => {
+      records.forEach((record) => record.addedNodes.forEach(scanPropertyPanels));
+    });
+    observer.observe(document.documentElement, { childList: true, subtree: true });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", startPropertyEmptyStateSpacing, { once: true });
+  } else {
+    startPropertyEmptyStateSpacing();
   }
 })();

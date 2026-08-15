@@ -3613,6 +3613,42 @@ async function applyLocalBusinessMapLayerMode(category)
 
 let globalCategoryModeRequestId = 0;
 let realestateMapToolSelectionSnapshot = null;
+let realestatePropertyDataSnapshot = null;
+
+function rememberRealestatePropertyDataBeforeParcelEntry()
+{
+	if (!state) return false;
+	realestatePropertyDataSnapshot = {
+		all: Array.isArray(state.all) ? state.all.slice() : [],
+		filtered: Array.isArray(state.filtered) ? state.filtered.slice() : [],
+		propertyScaleCurrentTotalCount: Number(state.propertyScaleCurrentTotalCount) || 0,
+		viewportCoverage: propertyScaleViewportCoverage && typeof propertyScaleViewportCoverage === "object"
+			? {
+				key: propertyScaleViewportCoverage.key,
+				bounds: propertyScaleViewportCoverage.bounds ? { ...propertyScaleViewportCoverage.bounds } : null
+			}
+			: null
+	};
+	return true;
+}
+
+function restoreRealestatePropertyDataAfterParcelExit()
+{
+	const snapshot = realestatePropertyDataSnapshot;
+	realestatePropertyDataSnapshot = null;
+	if (!snapshot || !state) return false;
+	state.all = snapshot.all.slice();
+	state.filtered = snapshot.filtered.slice();
+	state.propertyScaleCurrentTotalCount = snapshot.propertyScaleCurrentTotalCount;
+	propertyScaleViewportCoverage = snapshot.viewportCoverage
+		? {
+			key: snapshot.viewportCoverage.key,
+			bounds: snapshot.viewportCoverage.bounds ? { ...snapshot.viewportCoverage.bounds } : null
+		}
+		: null;
+	state.markerRenderSignature = "";
+	return true;
+}
 
 function resetRealestateSelectionBeforeParcelEntry()
 {
@@ -3627,6 +3663,7 @@ function resetParcelSelectionBeforeRealestateEntry()
 {
 	clearPropertyRegionCountOverlays();
 	teardownParcelAnalysisSession();
+	clearParcelTradeCanvasSession();
 	clearPropertyRegionCountSelection();
 	selectedAdminBoundaryFeature = null;
 	if (state.leftListDetailMode === "parcel-land-info" || state.leftListDetailMode === "parcel-region-stats") {
@@ -3710,10 +3747,12 @@ async function applyGlobalCategoryMode(category)
 	const nextCategory = category || "realestate";
 	const previousCategory = getCurrentRealjejuGlobalCategoryKey();
 	if (nextCategory === "parcel" && previousCategory !== "parcel") {
+		rememberRealestatePropertyDataBeforeParcelEntry();
 		resetRealestateSelectionBeforeParcelEntry();
 	}
 	if (previousCategory === "parcel" && nextCategory !== "parcel") {
 		resetParcelSelectionBeforeRealestateEntry();
+		if (isGlobalRealestateCategory(nextCategory)) restoreRealestatePropertyDataAfterParcelExit();
 	}
 	if (isGlobalRealestateCategory(previousCategory) && !isGlobalRealestateCategory(nextCategory)) {
 		rememberRealestateMapToolSelections();
@@ -3736,12 +3775,14 @@ async function applyGlobalCategoryMode(category)
 		|| !document.body
 		|| document.body.dataset.globalCategory !== nextCategory) return false;
 	if (!emptyMap && nextCategory === "parcel") {
+		if (document.body) document.body.classList.remove("parcel-region-trade-badges-hidden");
 		const parcelMode = getPropertyMapPresentationMode();
 		propertyMapPresentationMode = parcelMode;
 		if (shouldRenderParcelRegionTradeMapBadges(parcelMode)) {
 			clearMapObjects();
 			await renderPropertyRegionCountOverlays(parcelMode);
 		}
+		await syncParcelTradeCanvasForCategory(nextCategory, { loadInitial: true });
 	}
 	if (!emptyMap && nextCategory === "realestate") {
 		await restoreRealestateMapToolSelections();
@@ -3753,26 +3794,23 @@ async function applyGlobalCategoryMode(category)
 
 function scheduleRealjejuPropertyMapRepaintAfterCategoryReturn()
 {
-	const repaint = () => {
-		try {
-			if (!document.body || document.body.classList.contains("global-category-empty-map-mode")) return;
-			if (document.body.dataset && document.body.dataset.globalCategory && !isGlobalRealestateCategory(document.body.dataset.globalCategory)) return;
-			if (typeof state === "undefined" || !state || !state.map || !state.clusterer || !Array.isArray(state.filtered)) return;
-			if (typeof renderMarkers === "function") renderMarkers(state.filtered, { preserveViewport: true });
-			let viewportItems = null;
-			if (typeof refreshViewportList === "function") viewportItems = refreshViewportList();
-			if (typeof updateMapEmptyState === "function") updateMapEmptyState(viewportItems || []);
-			if (typeof refreshClusterBadges === "function") refreshClusterBadges();
-			if (typeof refreshMapLayout === "function") refreshMapLayout();
-			if (typeof refreshAdminBoundaryBottomPill === "function") refreshAdminBoundaryBottomPill();
-		} catch (error) {
-			console.warn("부동산 카테고리 복귀 후 매물 뱃지 재렌더 실패:", error);
-		}
-	};
-	if (typeof requestAnimationFrame === "function") requestAnimationFrame(repaint);
-	else setTimeout(repaint, 0);
-	setTimeout(repaint, 80);
-	setTimeout(repaint, 240);
+	try {
+		if (!document.body || document.body.classList.contains("global-category-empty-map-mode")) return false;
+		if (document.body.dataset && document.body.dataset.globalCategory && !isGlobalRealestateCategory(document.body.dataset.globalCategory)) return false;
+		if (typeof state === "undefined" || !state || !state.map || !state.clusterer || !Array.isArray(state.filtered)) return false;
+		state.markerRenderSignature = "";
+		if (typeof renderMarkers === "function") renderMarkers(state.filtered, { preserveViewport: true });
+		let viewportItems = null;
+		if (typeof refreshViewportList === "function") viewportItems = refreshViewportList();
+		if (typeof updateMapEmptyState === "function") updateMapEmptyState(viewportItems || []);
+		if (typeof refreshClusterBadges === "function") refreshClusterBadges();
+		if (typeof refreshMapLayout === "function") refreshMapLayout();
+		if (typeof refreshAdminBoundaryBottomPill === "function") refreshAdminBoundaryBottomPill();
+		return true;
+	} catch (error) {
+		console.warn("부동산 카테고리 복귀 후 매물 뱃지 재렌더 실패:", error);
+		return false;
+	}
 }
 
 	function setGlobalCategoryButtonState(category)
@@ -5219,9 +5257,12 @@ document.addEventListener("click", function(event) {
 				if (typeof loadSupabaseScript !== "function") throw new Error("Supabase 로더가 준비되지 않았습니다.");
 				await loadSupabaseScript();
 			}
-			const client = typeof getRealjejuSupabaseClient === "function"
+			const sharedClient = typeof getRealjejuSupabaseClient === "function"
 				? getRealjejuSupabaseClient()
 				: (typeof window.getRealjejuSupabaseClient === "function" ? window.getRealjejuSupabaseClient() : null);
+			const client = sharedClient || (typeof getMapListingsSupabaseClient === "function"
+				? getMapListingsSupabaseClient()
+				: null);
 			if (!client) throw new Error("Supabase 공지사항 클라이언트를 만들지 못했습니다.");
 			const { data, error } = await client
 				.from("notices")
@@ -6167,39 +6208,45 @@ const BADGE_BASE_HEX = "#1D4ED8";
 document.documentElement.style.setProperty("--brand", BRAND_HEX);
 // 4.929: 원형 매물 마커와 숫자 클러스터의 색ㆍ투명도는 마지막 정상 기준인 4.899와 같습니다.
 // 개별 SVG와 카카오 클러스터 DOM이 서로 다른 경로로 그려져도 두 경로 모두 alpha 0.7을 사용합니다.
-const BADGE_BASE_ALPHA = 0.7;
+const BADGE_BASE_ALPHA = 0.9;
 const BADGE_SELECTED_BG_ALPHA = 0.78;
 const BADGE_TEXT_HEX = "#FFFFFF";
+const COMMON_MAP_STYLE_COLORS = Object.freeze([
+	"#FFFFFF",
+	"#DC2626", "#EF4444", "#F43F5E", "#E11D48", "#DB2777", "#EC4899", "#EA580C", "#F97316", "#FB923C",
+	"#D97706", "#F59E0B", "#FBBF24", "#CA8A04", "#EAB308", "#FACC15", "#65A30D", "#84CC16", "#A3E635",
+	"#15807D", "#22C55E", "#10B981", "#0F766E", "#14B8A6", "#06B6D4", "#0369A1", "#38BDF8",
+	"#1D4ED8", "#2563EB", "#4F46E5", "#6D28D9", "#7C3AED", "#A855F7", "#A21CAF", "#C026D3", "#475573"
+]);
 // 4.998: 중개사 계정별 원형 매물 뱃지 표현 설정입니다.
 // 행정구역 네모 뱃지와 카카오 클러스터의 위치ㆍ묶음 계산은 건드리지 않고,
 // 원형 SVG/DOM의 색상과 기본 불투명도만 같은 값으로 바꿉니다.
 const PROPERTY_BADGE_STYLE_DEFAULT = Object.freeze({
-	color: BADGE_BASE_HEX,
+	color: "#FFFFFF",
+	textColor: BADGE_TEXT_HEX,
+	textOpacity: 1,
+	borderColor: BRAND_HEX,
+	borderOpacity: 0.45,
 	opacity: BADGE_BASE_ALPHA
 });
-const PROPERTY_BADGE_STYLE_COLORS = Object.freeze([
-	// 5.000: 특정 계열에 치우치지 않은 36색 스펙트럼입니다.
-	"#DC2626", "#EF4444", "#F43F5E", "#E11D48", "#DB2777", "#EC4899", "#EA580C", "#F97316", "#FB923C",
-	"#D97706", "#F59E0B", "#FBBF24", "#CA8A04", "#EAB308", "#FACC15", "#65A30D", "#84CC16", "#A3E635",
-	"#15807D", "#22C55E", "#10B981", "#0F766E", "#14B8A6", "#06B6D4", "#0369A1", "#0284C7", "#38BDF8",
-	"#1D4ED8", "#2563EB", "#4F46E5", "#6D28D9", "#7C3AED", "#A855F7", "#A21CAF", "#C026D3", "#475573"
-]);
+const PROPERTY_BADGE_STYLE_COLORS = COMMON_MAP_STYLE_COLORS;
 const PROPERTY_BADGE_STYLE_STORAGE_PREFIX = "realjeju:property-badge-style:";
 let propertyBadgeStyleState = {
 	userId: "",
 	color: PROPERTY_BADGE_STYLE_DEFAULT.color,
+	textColor: PROPERTY_BADGE_STYLE_DEFAULT.textColor,
+	textOpacity: PROPERTY_BADGE_STYLE_DEFAULT.textOpacity,
+	borderColor: PROPERTY_BADGE_STYLE_DEFAULT.borderColor,
+	borderOpacity: PROPERTY_BADGE_STYLE_DEFAULT.borderOpacity,
 	opacity: PROPERTY_BADGE_STYLE_DEFAULT.opacity,
 	loaded: false
 };
 let propertyBadgeStyleLoadSeq = 0;
 const ADMIN_BOUNDARY_STYLE_DEFAULT = Object.freeze({
-	color: "#00B8D9",
-	opacity:  0.10
+	color: "#2563EB",
+	opacity:  0.20
 });
-const ADMIN_BOUNDARY_STYLE_COLORS = Object.freeze([
-	ADMIN_BOUNDARY_STYLE_DEFAULT.color,
-	...PROPERTY_BADGE_STYLE_COLORS.filter((color) => color !== ADMIN_BOUNDARY_STYLE_DEFAULT.color)
-]);
+const ADMIN_BOUNDARY_STYLE_COLORS = COMMON_MAP_STYLE_COLORS;
 const ADMIN_BOUNDARY_STYLE_STORAGE_PREFIX = "realjeju:admin-boundary-style:";
 let adminBoundaryStyleState = {
 	userId: "",
@@ -6214,6 +6261,32 @@ function normalizePropertyBadgeStyleColor(value)
 	return PROPERTY_BADGE_STYLE_COLORS.includes(color) ? color : PROPERTY_BADGE_STYLE_DEFAULT.color;
 }
 
+function normalizePropertyBadgeTextColor(value)
+{
+	const color = String(value || "").trim().toUpperCase();
+	return COMMON_MAP_STYLE_COLORS.includes(color) ? color : PROPERTY_BADGE_STYLE_DEFAULT.textColor;
+}
+
+function normalizePropertyBadgeTextOpacity(value)
+{
+	const opacity = Number(value);
+	if (!Number.isFinite(opacity)) return PROPERTY_BADGE_STYLE_DEFAULT.textOpacity;
+	return Math.min(1, Math.max(0.35, Math.round(opacity * 20) / 20));
+}
+
+function normalizePropertyBadgeBorderColor(value)
+{
+	const color = String(value || "").trim().toUpperCase();
+	return COMMON_MAP_STYLE_COLORS.includes(color) ? color : PROPERTY_BADGE_STYLE_DEFAULT.borderColor;
+}
+
+function normalizePropertyBadgeBorderOpacity(value)
+{
+	const opacity = Number(value);
+	if (!Number.isFinite(opacity)) return PROPERTY_BADGE_STYLE_DEFAULT.borderOpacity;
+	return Math.min(1, Math.max(0.05, Math.round(opacity * 20) / 20));
+}
+
 function normalizePropertyBadgeStyleOpacity(value)
 {
 	const opacity = Number(value);
@@ -6225,6 +6298,10 @@ function getPropertyBadgeStyle()
 {
 	return {
 		color: normalizePropertyBadgeStyleColor(propertyBadgeStyleState.color),
+		textColor: normalizePropertyBadgeTextColor(propertyBadgeStyleState.textColor),
+		textOpacity: normalizePropertyBadgeTextOpacity(propertyBadgeStyleState.textOpacity),
+		borderColor: normalizePropertyBadgeBorderColor(propertyBadgeStyleState.borderColor),
+		borderOpacity: normalizePropertyBadgeBorderOpacity(propertyBadgeStyleState.borderOpacity),
 		opacity: normalizePropertyBadgeStyleOpacity(propertyBadgeStyleState.opacity)
 	};
 }
@@ -6244,6 +6321,10 @@ function readCachedPropertyBadgeStyle(userId)
 		if (!parsed || typeof parsed !== "object") return null;
 		return {
 			color: normalizePropertyBadgeStyleColor(parsed.color),
+			textColor: normalizePropertyBadgeTextColor(parsed.textColor),
+			textOpacity: normalizePropertyBadgeTextOpacity(parsed.textOpacity),
+			borderColor: normalizePropertyBadgeBorderColor(parsed.borderColor),
+			borderOpacity: normalizePropertyBadgeBorderOpacity(parsed.borderOpacity),
 			opacity: normalizePropertyBadgeStyleOpacity(parsed.opacity)
 		};
 	} catch (err) {
@@ -6258,6 +6339,10 @@ function writeCachedPropertyBadgeStyle(userId, style)
 	try {
 		localStorage.setItem(key, JSON.stringify({
 			color: normalizePropertyBadgeStyleColor(style && style.color),
+			textColor: normalizePropertyBadgeTextColor(style && style.textColor),
+			textOpacity: normalizePropertyBadgeTextOpacity(style && style.textOpacity),
+			borderColor: normalizePropertyBadgeBorderColor(style && style.borderColor),
+			borderOpacity: normalizePropertyBadgeBorderOpacity(style && style.borderOpacity),
 			opacity: normalizePropertyBadgeStyleOpacity(style && style.opacity)
 		}));
 	} catch (err) {}
@@ -6267,11 +6352,23 @@ function applyPropertyBadgeStyle(style, options = {})
 {
 	const normalized = {
 		color: normalizePropertyBadgeStyleColor(style && style.color),
+		textColor: normalizePropertyBadgeTextColor(style && style.textColor),
+		textOpacity: normalizePropertyBadgeTextOpacity(style && style.textOpacity),
+		borderColor: normalizePropertyBadgeBorderColor(style && style.borderColor),
+		borderOpacity: normalizePropertyBadgeBorderOpacity(style && style.borderOpacity),
 		opacity: normalizePropertyBadgeStyleOpacity(style && style.opacity)
 	};
 	propertyBadgeStyleState.color = normalized.color;
+	propertyBadgeStyleState.textColor = normalized.textColor;
+	propertyBadgeStyleState.textOpacity = normalized.textOpacity;
+	propertyBadgeStyleState.borderColor = normalized.borderColor;
+	propertyBadgeStyleState.borderOpacity = normalized.borderOpacity;
 	propertyBadgeStyleState.opacity = normalized.opacity;
 	document.documentElement.style.setProperty("--property-badge-color", normalized.color);
+	document.documentElement.style.setProperty("--property-badge-text-color", normalized.textColor);
+	document.documentElement.style.setProperty("--property-badge-text-opacity", String(normalized.textOpacity));
+	document.documentElement.style.setProperty("--property-badge-border-color", normalized.borderColor);
+	document.documentElement.style.setProperty("--property-badge-border-opacity", String(normalized.borderOpacity));
 	document.documentElement.style.setProperty("--property-badge-opacity", String(normalized.opacity));
 	if (options.refresh !== false && typeof window.realjejuRefreshPropertyBadgeStyle === "function") {
 		window.realjejuRefreshPropertyBadgeStyle();
@@ -6285,6 +6382,10 @@ function resetPropertyBadgeStyle(options = {})
 	propertyBadgeStyleState = {
 		userId: "",
 		color: PROPERTY_BADGE_STYLE_DEFAULT.color,
+		textColor: PROPERTY_BADGE_STYLE_DEFAULT.textColor,
+		textOpacity: PROPERTY_BADGE_STYLE_DEFAULT.textOpacity,
+		borderColor: PROPERTY_BADGE_STYLE_DEFAULT.borderColor,
+		borderOpacity: PROPERTY_BADGE_STYLE_DEFAULT.borderOpacity,
 		opacity: PROPERTY_BADGE_STYLE_DEFAULT.opacity,
 		loaded: false
 	};
@@ -6329,8 +6430,21 @@ async function syncPropertyBadgeStyleForUser(user, options = {})
 			return getPropertyBadgeStyle();
 		}
 		const serverStyle = data
-			? { color: data.badge_color, opacity: data.badge_opacity }
-			: PROPERTY_BADGE_STYLE_DEFAULT;
+			? {
+				color: data.badge_color,
+				textColor: cached && cached.textColor,
+				textOpacity: cached && cached.textOpacity,
+				borderColor: cached && cached.borderColor,
+				borderOpacity: cached && cached.borderOpacity,
+				opacity: data.badge_opacity
+			}
+			: {
+				...PROPERTY_BADGE_STYLE_DEFAULT,
+				textColor: cached && cached.textColor,
+				textOpacity: cached && cached.textOpacity,
+				borderColor: cached && cached.borderColor,
+				borderOpacity: cached && cached.borderOpacity
+			};
 		const normalized = applyPropertyBadgeStyle(serverStyle, options);
 		writeCachedPropertyBadgeStyle(userId, normalized);
 		propertyBadgeStyleState.loaded = true;
@@ -6398,10 +6512,14 @@ function normalizeAdminBoundaryStyleOpacity(value)
 
 function getAdminBoundaryStylePreference()
 {
-	return {
+	const preference = {
 		color: normalizeAdminBoundaryStyleColor(adminBoundaryStyleState.color),
 		opacity: normalizeAdminBoundaryStyleOpacity(adminBoundaryStyleState.opacity)
 	};
+	if (document.documentElement) {
+		document.documentElement.style.setProperty("--rj-admin-boundary-color", preference.color);
+	}
+	return preference;
 }
 
 function getAdminBoundaryStyleStorageKey(userId)
@@ -6418,6 +6536,15 @@ function readCachedAdminBoundaryStyle(userId)
 		const cachedColor = String(parsed.color || "").trim().toUpperCase();
 		const cachedOpacity = normalizeAdminBoundaryStyleOpacity(parsed.opacity);
 		if (cachedColor === "#10B981" && Math.abs(cachedOpacity - 0.15) < 0.001) {
+			return { ...ADMIN_BOUNDARY_STYLE_DEFAULT };
+		}
+		if (
+			(cachedColor === "#00B8D9" || cachedColor === "#2563EB")
+			&& Math.abs(cachedOpacity - 0.10) < 0.001
+		) {
+			return { ...ADMIN_BOUNDARY_STYLE_DEFAULT };
+		}
+		if (cachedColor === "#2563EB" && Math.abs(cachedOpacity - 0.30) < 0.001) {
 			return { ...ADMIN_BOUNDARY_STYLE_DEFAULT };
 		}
 		return {
@@ -6535,7 +6662,7 @@ const REALJEJU_ROUTE_SEO_META = Object.freeze({
 	}
 });
 // [ARCHIVE] PATCH 3.918: 상단 및 하단 배포 버전 표기를 현재 버전으로 맞춥니다.
-	const APP_VERSION = "5.859";
+	const APP_VERSION = "5.895";
 let realjejuTopbarVersionStatsText = "";
 let realjejuSiteVisitStatsRequested = false;
 let realjejuManagementVersionListingCount = null;
@@ -13621,7 +13748,7 @@ function openParcelLandInfoPanel(feature)
 	syncSidebarListTitle();
 	if (sidebarListShareBtn) sidebarListShareBtn.hidden = true;
 	document.body.classList.remove("map-panels-collapsed");
-	// 5.859: 닫힌 정보 패널 DOM을 재사용하는 경우에도 너비와 접힘 상태를 실제로 복구합니다.
+	// 5.895: 닫힌 정보 패널 DOM을 재사용하는 경우에도 너비와 접힘 상태를 실제로 복구합니다.
 	openSidebarList();
 	const parcelRoadAddress = String(feature.roadAddress || feature.road_address || "").trim();
 	propertyList.innerHTML = '<article class="parcel-land-info-panel"><header class="parcel-land-info-address"><strong class="parcel-land-info-address-primary">' + escapeParcelLandInfoHtml(address) + '</strong>' + (parcelRoadAddress ? '<span class="parcel-land-info-address-road">' + escapeParcelLandInfoHtml(parcelRoadAddress) + '</span>' : "") + '</header><section class="parcel-land-info-section"><h2 class="parcel-land-info-section-title">토지 기본 정보</h2>' + rows.map(([label, value, rawValue]) => buildParcelLandInfoRow(label, value, rawValue)).join("") + '</section>' + (feature.landCharacteristicsStatus === "unavailable" ? '<div class="parcel-land-info-status">토지특성정보 서비스 승인 또는 조회 상태를 확인해 주세요.</div>' : "") + (feature.landPossessionStatus === "unavailable" && !/(?:아파트|연립|다세대|오피스텔|집합)/.test(String(feature.landUseSituation || (feature.landCharacteristics || {}).landUseSituation || "")) ? '<div class="parcel-land-info-status">토지소유정보 서비스 승인 또는 조회 상태를 확인해 주세요.</div>' : "") + buildParcelLandUsePlanSection(feature) + buildParcelLandMoveSection(feature) + buildParcelIndividualLandPriceSection(feature) + '</article>';
@@ -14972,6 +15099,11 @@ window.realjejuServiceModeMapApi = Object.freeze({
   ensureFacilityLevel(level) {
     return ensureFacilityMapVisibleLevel(level);
   },
+  clearAddressSearchMarker() {
+    if (addressSearchMarker && typeof addressSearchMarker.setMap === "function") {
+      addressSearchMarker.setMap(null);
+    }
+  },
   clearParcelBoundary() {
     if (typeof clearParcelBoundaryRenderState === "function") {
       clearParcelBoundaryRenderState();
@@ -15129,6 +15261,7 @@ function setGlobalAreaUnit(unit)
 	globalAreaUnit = normalizedUnit;
 	selectedAreaUnit = normalizedUnit;
 	applyGlobalAreaUnit();
+	if (typeof drawParcelTradeCanvas === "function" && isParcelTradeCanvasModeActive()) drawParcelTradeCanvas();
 	const parcelAreaValue = propertyList && propertyList.querySelector(".parcel-land-info-area-value");
 	if (parcelAreaValue) {
 		const storedParcelAreaM2 = Number(parcelAreaValue.dataset.areaM2);
@@ -15763,6 +15896,28 @@ function buildParcelRegionTradeDeltaHtml(previousValue, recentValue, options = {
 	return `<span class="parcel-region-trade-delta is-${direction}"><strong>${rateLabel} ${arrow}</strong><small>(${difference > 0 ? "+" : "-"}${differenceLabel})</small></span>`;
 }
 
+const PARCEL_REGION_TRADE_RI_PARENT_BY_CODE_PREFIX = Object.freeze({
+	"50110250": "한림읍",
+	"50110253": "애월읍",
+	"50110256": "구좌읍",
+	"50110259": "조천읍",
+	"50110310": "한경면",
+	"50110320": "추자면",
+	"50110330": "우도면",
+	"50130250": "대정읍",
+	"50130253": "남원읍",
+	"50130259": "성산읍",
+	"50130310": "안덕면",
+	"50130320": "표선면"
+});
+
+function getParcelRegionTradeRiHeadingParent(regionCode, regionName)
+{
+	if (!/리$/.test(String(regionName || ""))) return "";
+	const digits = String(regionCode || "").replace(/\D/g, "");
+	return PARCEL_REGION_TRADE_RI_PARENT_BY_CODE_PREFIX[digits.slice(0, 8)] || "";
+}
+
 function buildParcelRegionTradeMeta(regionFeature, parcelFeature)
 {
 	const rawRegionCode = String(getAdminBoundaryFeatureCodeValue(regionFeature) || "");
@@ -15785,8 +15940,9 @@ function buildParcelRegionTradeMeta(regionFeature, parcelFeature)
 	// 지도 뱃지를 그릴 때 경계마다 부모 읍ㆍ면을 비동기로 역탐색하지 않습니다.
 	// 부모가 없는 리 경계는 아래 DB 정적 행 매칭에서 region_name_key의 마지막
 	// 지역명으로 연결해, 화면 진입 시 별도 백그라운드 계산이 돌지 않게 합니다.
+	const headingRiParentName = parentName || getParcelRegionTradeRiHeadingParent(regionCode, regionName);
 	const headingName = /리$/.test(regionName)
-		? [parentName, regionName].filter(Boolean).join(" ")
+		? [headingRiParentName, regionName].filter(Boolean).join(" ")
 		: (/동$/.test(regionName) && !isCityRegion
 			? [city, regionName].filter(Boolean).join(" ")
 			: regionName);
@@ -15795,7 +15951,7 @@ function buildParcelRegionTradeMeta(regionFeature, parcelFeature)
 		: (/동$/.test(regionName) && !isCityRegion ? "" : (city !== regionName ? city : parentName));
 	// 시 단위는 5자리 시군구 코드 자체가 범위 조건입니다. 시 이름을 읍면동명
 	// 필터에 다시 넣으면 모든 거래가 제외되므로 시 단위 이름 필터는 비웁니다.
-	const regionNames = (isProvinceRegion || isCityRegion) ? [] : [parentName, regionName].filter(Boolean);
+	const regionNames = (isProvinceRegion || isCityRegion) ? [] : [headingRiParentName, regionName].filter(Boolean);
 	return {
 		regionCode,
 		regionName,
@@ -16118,6 +16274,16 @@ function setParcelRegionTradeBadgesHidden(hidden)
 {
 	const shouldHide = !!hidden;
 	if (document.body) document.body.classList.toggle("parcel-region-trade-badges-hidden", shouldHide);
+	if (shouldHide) {
+		propertyRegionCountRenderToken += 1;
+		clearPropertyRegionCountOverlays();
+	} else if (getCurrentRealjejuGlobalCategoryKey() === "parcel") {
+		const mode = getPropertyMapPresentationMode();
+		if (shouldRenderParcelRegionTradeMapBadges(mode)) {
+			void renderPropertyRegionCountOverlays(mode);
+		}
+	}
+	if (typeof syncParcelTradeCanvasVisibility === "function") syncParcelTradeCanvasVisibility();
 	syncMapPropertyToggleButton();
 	return shouldHide;
 }
@@ -16135,7 +16301,11 @@ function shouldRenderParcelRegionTradeMapBadges(mode = getPropertyMapPresentatio
 	const category = typeof getCurrentRealjejuGlobalCategoryKey === "function"
 		? getCurrentRealjejuGlobalCategoryKey()
 		: String(document.body?.dataset?.globalCategory || "realestate");
+	const level = getAdminBoundaryLevel();
 	return category === "parcel"
+		&& Number.isFinite(level)
+		&& level >= 1
+		&& !isParcelRegionTradeBadgesHidden()
 		&& mode === getParcelMapLevelProfile().presentationMode
 		&& isPropertyRegionCountMode(mode);
 }
@@ -17149,6 +17319,7 @@ function createParcelRegionTradeMapBadge(feature, mode, meta, data, selection)
 	badge.type = "button";
 	badge.className = "parcel-region-trade-map-badge";
 	badge.style.cursor = "pointer";
+	getAdminBoundaryStylePreference();
 	badge.dataset.regionKey = getPropertyRegionCountSelectionKey(feature, mode);
 	const previous = data?.periods?.previous || null;
 	const recent = data?.periods?.recent || null;
@@ -17598,12 +17769,13 @@ function openAdminBoundaryBottomPillRegionMenu(event)
 	if (trigger && typeof trigger.click === "function") trigger.click();
 }
 
-function hideAdminBoundaryBottomPill()
+function hideAdminBoundaryBottomPill(options = {})
 {
 	const pill = ensureAdminBoundaryBottomPill();
 	if (!pill) return;
 	pill.hidden = true;
 	pill.innerHTML = "";
+	if (options.preserveState === true) return;
 	adminBoundaryBottomPillFeature = null;
 	adminBoundaryBottomPillCount = 0;
 }
@@ -17611,6 +17783,7 @@ function hideAdminBoundaryBottomPill()
 function shouldShowAdminBoundaryBottomPill()
 {
 	if (!document.body || !state || !state.map) return false;
+	if (state.isPropertyMarkersVisible === false) return false;
 	if (document.body.classList.contains("main-landing-page-open")
 		|| document.body.classList.contains("presale-page-open")
 		|| !!document.querySelector(".terms-full-page.open")
@@ -17633,7 +17806,9 @@ function updateAdminBoundaryBottomPill(feature, count)
 	// 하단 라운드 버튼을 다시 표시하는 모든 비동기 경로의 최종 관문입니다.
 	// 행정구역 경계 집계가 늦게 끝나도 도ㆍ시 집계 단계에서는 다시 노출하지 않습니다.
 	if (!shouldShowAdminBoundaryBottomPill()) {
-		hideAdminBoundaryBottomPill();
+		hideAdminBoundaryBottomPill({
+			preserveState: state.isPropertyMarkersVisible === false
+		});
 		return;
 	}
 	const pill = ensureAdminBoundaryBottomPill();
@@ -17650,7 +17825,9 @@ function updateAdminBoundaryBottomPill(feature, count)
 async function refreshAdminBoundaryBottomPill()
 {
 	if (!shouldShowAdminBoundaryBottomPill()) {
-		hideAdminBoundaryBottomPill();
+		hideAdminBoundaryBottomPill({
+			preserveState: state.isPropertyMarkersVisible === false
+		});
 		return;
 	}
 	if (adminBoundaryBottomPillFeature && Number.isFinite(Number(adminBoundaryBottomPillCount))) {
@@ -22300,8 +22477,12 @@ function setMapPropertyMarkersVisible(visible, options = {})
 		clearPropertyRegionCountOverlays();
 		clearMapObjects();
 		updateMarkerSelection(null);
+		hideAdminBoundaryBottomPill({ preserveState: true });
 	} else if (state.filtered && state.filtered.length) {
 		renderMarkers(state.filtered, { preserveViewport: true });
+	}
+	if (shouldShow && adminBoundaryBottomPillFeature && Number.isFinite(Number(adminBoundaryBottomPillCount))) {
+		updateAdminBoundaryBottomPill(adminBoundaryBottomPillFeature, adminBoundaryBottomPillCount);
 	}
 	syncMapPropertyToggleButton();
 	syncPickaxeMode();
@@ -26428,17 +26609,18 @@ window.realjejuReloadMapListings = () => {
 function getBadgeConfig(text)
 {
 	const len = String(text ?? "").length;
-	if (len === 1) return { size: 40, fontSize: 18 };
-	if (len === 2) return { size: 48, fontSize: 18 };
-	if (len === 3) return { size: 56, fontSize: 18 };
-	return { size: Math.min(72, 56 + ((len - 3) * 6)), fontSize: Math.max(14, 18 - (len - 3)) };
+	if (len === 1) return { width: 36, height: 36, fontSize: 18 };
+	if (len === 2) return { width: 36, height: 36, fontSize: 18 };
+	if (len === 3) return { width: 38, height: 36, fontSize: 18 };
+	return { width: 38, height: 36, fontSize: Math.max(12, 18 - ((len - 3) * 2)) };
 }
 
 function getClusterBadgeConfig(text = "")
 {
 	const value = String(text ?? "").trim();
-	if (/^\d$/.test(value)) return { size: 40, fontSize: 18 };
-	return { size: 48, fontSize: 18 };
+	if (/^\d$/.test(value)) return { width: 36, height: 36, fontSize: 18 };
+	if (/^\d{2}$/.test(value)) return { width: 36, height: 36, fontSize: 18 };
+	return { width: 38, height: 36, fontSize: 18 };
 }
 
 
@@ -26459,7 +26641,7 @@ function getBadgeTextMetrics(text)
 		return {
 			xOffset: -0.4,
 			strokeWidth: 0.28,
-			letterSpacing: "0px",
+			letterSpacing: "-1.2px",
 			clusterTranslateX: "-0.4px"
 		};
 	}
@@ -26467,7 +26649,7 @@ function getBadgeTextMetrics(text)
 	return {
 		xOffset: 0,
 		strokeWidth: 0.3,
-		letterSpacing: "0px",
+		letterSpacing: /^\d{2}$/.test(value) ? "-1px" : "0px",
 		clusterTranslateX: "0px"
 	};
 }
@@ -26482,55 +26664,69 @@ function getClusterMarkerColorHex(items)
 	return getPropertyBadgeStyle().color;
 }
 
+function getResolvedPropertyBadgeTextColor(style = getPropertyBadgeStyle())
+{
+	const backgroundColor = normalizePropertyBadgeStyleColor(style && style.color);
+	const textColor = normalizePropertyBadgeTextColor(style && style.textColor);
+	const resolvedColor = backgroundColor === "#FFFFFF" && textColor === "#FFFFFF" ? BRAND_HEX : textColor;
+	return hexToRgba(resolvedColor, normalizePropertyBadgeTextOpacity(style && style.textOpacity));
+}
+
+function getResolvedPropertyBadgeBorderColor(style = getPropertyBadgeStyle())
+{
+	return hexToRgba(
+		normalizePropertyBadgeBorderColor(style && style.borderColor),
+		normalizePropertyBadgeBorderOpacity(style && style.borderOpacity)
+	);
+}
+
 function createMarkerImage(item, isSelected = false, label = "1")
 {
 	const text = String(label ?? "1");
-	const { size, fontSize } = getBadgeConfig(text);
+	const { width, height, fontSize } = getBadgeConfig(text);
 	const textMetrics = getBadgeTextMetrics(text);
-	const markerColor = getPropertyMarkerColorHex(item);
+	const badgeStyle = getPropertyBadgeStyle();
+	const markerColor = badgeStyle.color;
+	const isWhiteBackground = markerColor === "#FFFFFF";
 
 	const shadowPad = 10;
-	const canvasSize = size + shadowPad;
-	const center = canvasSize / 2;
-	const strokeWidth = isSelected ? 3 : 0.5;
-	const radius = (size - strokeWidth) / 2;
+	const canvasWidth = width + shadowPad;
+	const canvasHeight = height + shadowPad;
+	const centerX = canvasWidth / 2;
+	const centerY = canvasHeight / 2;
 
-	const bgColor = isSelected ? hexToRgba("#FFFFFF", BADGE_SELECTED_BG_ALPHA) : hexToRgba(markerColor, getPropertyBadgeStyle().opacity);
-	const textColor = isSelected ? markerColor : BADGE_TEXT_HEX;
-	const strokeColor = isSelected ? hexToRgba(markerColor, BADGE_SELECTED_BG_ALPHA) : "rgba(255,255,255,0.96)";
+	const bgColor = isSelected
+		? (isWhiteBackground ? BRAND_HEX : markerColor)
+		: hexToRgba(markerColor, badgeStyle.opacity);
+	const textColor = isSelected && isWhiteBackground
+		? hexToRgba(BADGE_TEXT_HEX, badgeStyle.textOpacity)
+		: getResolvedPropertyBadgeTextColor(badgeStyle);
 
 	const svg = `
-	<svg xmlns="http://www.w3.org/2000/svg" width="${canvasSize}" height="${canvasSize}" viewBox="0 0 ${canvasSize} ${canvasSize}">
-	<defs>
-	<filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
-		<feDropShadow dx="0" dy="1.5" stdDeviation="1.8" flood-color="rgba(0,0,0,0.13)"/>
-	</filter>
-	</defs>
-	<g filter="url(#shadow)">
-	<circle cx="${center}" cy="${center}" r="${radius}"
-	fill="${bgColor}"
-	stroke="${strokeColor}"
-	stroke-width="${strokeWidth}"/>
-	<text x="${center + textMetrics.xOffset}" y="${center + 1}"
+	<svg xmlns="http://www.w3.org/2000/svg" width="${canvasWidth}" height="${canvasHeight}" viewBox="0 0 ${canvasWidth} ${canvasHeight}">
+	<g>
+	<rect x="${shadowPad / 2}" y="${shadowPad / 2}" width="${width}" height="${height}" rx="12" ry="12"
+	fill="${bgColor}" stroke="${getResolvedPropertyBadgeBorderColor(badgeStyle)}" stroke-width="1"/>
+	<text x="${centerX + textMetrics.xOffset}" y="${centerY + 1}"
 	dominant-baseline="middle"
 	text-anchor="middle"
 	font-size="${fontSize}"
-	font-weight="800"
+	font-weight="750"
 	font-family="${UI_FONT_STACK}"
 	text-rendering="geometricPrecision"
 	fill="${textColor}"
 	stroke="${textColor}"
-	stroke-width="${textMetrics.strokeWidth}"
+	stroke-width="0"
 	paint-order="stroke fill"
-	style="font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1, 'lnum' 1; letter-spacing: ${textMetrics.letterSpacing};">${text}</text>
+	style="font-variant-numeric: ${/^\d{2}$/.test(text) ? "proportional-nums" : "tabular-nums"}; font-feature-settings: ${/^\d{2}$/.test(text) ? "'pnum' 1, 'lnum' 1" : "'tnum' 1, 'lnum' 1"}; letter-spacing: ${textMetrics.letterSpacing};">${text}</text>
 	</g>
 	</svg>
 	`;
 
 	return new kakao.maps.MarkerImage(
 	"data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg),
-	new kakao.maps.Size(canvasSize, canvasSize),
-	{ offset: new kakao.maps.Point(center, center) }
+	new kakao.maps.Size(canvasWidth, canvasHeight),
+	{ offset: new kakao.maps.Point(centerX, centerY) }
 	);
 }
 
@@ -26764,15 +26960,20 @@ function setClusterBadgeSelected(cluster, isSelected)
 	}
 
 	const label = String(count);
-	const { size, fontSize } = getClusterBadgeConfig(label);
-	const clusterColor = getClusterMarkerColorHex(clusterItems);
-
-	const badgeOpacity = getPropertyBadgeStyle().opacity;
-	const bg = isSelected ? hexToRgba("#FFFFFF", BADGE_SELECTED_BG_ALPHA) : hexToRgba(clusterColor, badgeOpacity);
-	const color = isSelected ? clusterColor : BADGE_TEXT_HEX;
+	const useProportionalDigits = /^\d{2}$/.test(label);
+	const { width, height, fontSize } = getClusterBadgeConfig(label);
+	const badgeStyle = getPropertyBadgeStyle();
+	const clusterColor = badgeStyle.color;
+	const badgeOpacity = badgeStyle.opacity;
+	const borderColor = getResolvedPropertyBadgeBorderColor(badgeStyle);
+	const isWhiteBackground = clusterColor === "#FFFFFF";
+	const bg = isSelected
+		? (isWhiteBackground ? BRAND_HEX : clusterColor)
+		: hexToRgba(clusterColor, badgeOpacity);
+	const color = isSelected && isWhiteBackground ? BADGE_TEXT_HEX : getResolvedPropertyBadgeTextColor(badgeStyle);
 	const textMetrics = getBadgeTextMetrics(label);
 	const clusterKey = getClusterKeyFromItems(clusterItems);
-	const signature = `${clusterKey}|${label}|${size}|${clusterColor}|${badgeOpacity}|${isSelected ? "selected" : "default"}`;
+	const signature = `${clusterKey}|${label}|${width}x${height}|${clusterColor}|${color}|${borderColor}|${badgeOpacity}|${isSelected ? "selected" : "default"}`;
 	if (
 		clusterMarker.__realjejuClusterBadgeSignature === signature
 		&& clusterMarker.__realjejuClusterBadgeWrap
@@ -26784,10 +26985,10 @@ function setClusterBadgeSelected(cluster, isSelected)
 	}
 
 	const wrap = document.createElement("div");
-	wrap.style.width = `${size}px`;
-	wrap.style.height = `${size}px`;
-	wrap.style.minWidth = `${size}px`;
-	wrap.style.maxWidth = `${size}px`;
+	wrap.style.width = `${width}px`;
+	wrap.style.height = `${height}px`;
+	wrap.style.minWidth = `${width}px`;
+	wrap.style.maxWidth = `${width}px`;
 	wrap.style.display = "flex";
 	wrap.style.alignItems = "center";
 	wrap.style.justifyContent = "center";
@@ -26802,31 +27003,32 @@ function setClusterBadgeSelected(cluster, isSelected)
 
 	const el = document.createElement("button");
 	el.type = "button";
-	el.style.width = `${size}px`;
-	el.style.height = `${size}px`;
-	el.style.minWidth = `${size}px`;
-	el.style.maxWidth = `${size}px`;
+	el.style.width = `${width}px`;
+	el.style.height = `${height}px`;
+	el.style.minWidth = `${width}px`;
+	el.style.maxWidth = `${width}px`;
 	el.style.padding = "0";
-	el.style.borderRadius = "50%";
+	el.style.borderRadius = "12px";
 	el.style.display = "flex";
 	el.style.alignItems = "center";
 	el.style.justifyContent = "center";
 	el.style.background = bg;
 	el.style.color = color;
 	el.style.fontSize = `${fontSize}px`;
-	el.style.fontWeight = "800";
+	el.style.fontWeight = "750";
 	el.style.fontFamily = UI_FONT_STACK;
 	el.style.lineHeight = "1";
 	el.style.textAlign = "center";
 	el.style.letterSpacing = textMetrics.letterSpacing;
-	el.style.fontVariantNumeric = "tabular-nums";
-	el.style.fontFeatureSettings = "'tnum' 1, 'lnum' 1";
+	el.style.fontVariantNumeric = useProportionalDigits ? "proportional-nums" : "tabular-nums";
+	el.style.fontFeatureSettings = useProportionalDigits ? "'pnum' 1, 'lnum' 1" : "'tnum' 1, 'lnum' 1";
 	el.style.webkitFontSmoothing = "antialiased";
-	el.style.border = isSelected ? "3px solid " + hexToRgba(clusterColor, BADGE_SELECTED_BG_ALPHA) : "0.5px solid rgba(255,255,255,0.96)";
-		el.style.boxShadow = "0 3px 7px rgba(0,0,0,0.13)";
+	el.style.border = "1px solid " + borderColor;
+	el.style.boxShadow = "none";
 	el.style.boxSizing = "border-box";
 	el.style.whiteSpace = "nowrap";
 	el.classList.add("realjeju-property-cluster-badge");
+	el.classList.toggle("is-selected", isSelected);
 	el.style.cursor = "pointer";
 	el.style.pointerEvents = "auto";
 	el.style.transform = "translateZ(0)";
@@ -30046,6 +30248,8 @@ function initMap()
 		renderLifeSafetyOverlay();
 	}
 	scheduleMapCenterRegionLabelUpdate();
+	const initialPropertyBadgeStyle = getPropertyBadgeStyle();
+	const initialPropertyBadgeTextColor = getResolvedPropertyBadgeTextColor(initialPropertyBadgeStyle);
 
 	state.clusterer = new kakao.maps.MarkerClusterer({
 		map: state.map,
@@ -30060,13 +30264,13 @@ function initMap()
 		{
 					width: "40px",
 					height: "40px",
-					background: hexToRgba(getPropertyBadgeStyle().color, getPropertyBadgeStyle().opacity),
-					color: BADGE_TEXT_HEX,
-					borderRadius: "50%",
-					border: "0.5px solid rgba(255,255,255,0.96)",
+					background: hexToRgba(initialPropertyBadgeStyle.color, initialPropertyBadgeStyle.opacity),
+					color: initialPropertyBadgeTextColor,
+					borderRadius: "12px",
+					border: "0",
 					boxShadow: "0 3px 7px rgba(0,0,0,0.13)",
 					textAlign: "center",
-					fontWeight: "800",
+					fontWeight: "750",
 					fontSize: "18px",
 					lineHeight: "40px",
 					boxSizing: "border-box",
@@ -30075,45 +30279,45 @@ function initMap()
 				{
 					width: "40px",
 					height: "40px",
-					background: hexToRgba(getPropertyBadgeStyle().color, getPropertyBadgeStyle().opacity),
-					color: BADGE_TEXT_HEX,
-					borderRadius: "50%",
-					border: "0.5px solid rgba(255,255,255,0.96)",
+					background: hexToRgba(initialPropertyBadgeStyle.color, initialPropertyBadgeStyle.opacity),
+					color: initialPropertyBadgeTextColor,
+					borderRadius: "12px",
+					border: "0",
 					boxShadow: "0 3px 7px rgba(0,0,0,0.13)",
 					textAlign: "center",
-					fontWeight: "800",
+					fontWeight: "750",
 					fontSize: "18px",
 					lineHeight: "40px",
 					boxSizing: "border-box",
 					transition: "none"
 				},
 			{
-				width: "48px",
-				height: "48px",
-					background: hexToRgba(getPropertyBadgeStyle().color, getPropertyBadgeStyle().opacity),
-					color: BADGE_TEXT_HEX,
-					borderRadius: "50%",
-					border: "0.5px solid rgba(255,255,255,0.96)",
+			width: "46px",
+			height: "40px",
+					background: hexToRgba(initialPropertyBadgeStyle.color, initialPropertyBadgeStyle.opacity),
+					color: initialPropertyBadgeTextColor,
+					borderRadius: "12px",
+					border: "0",
 					boxShadow: "0 3px 7px rgba(0,0,0,0.13)",
 					textAlign: "center",
-					fontWeight: "800",
+					fontWeight: "750",
 					fontSize: "18px",
-				lineHeight: "48px",
+			lineHeight: "40px",
 				boxSizing: "border-box",
 				transition: "none"
 			},
 			{
-				width: "48px",
-				height: "48px",
-					background: hexToRgba(getPropertyBadgeStyle().color, getPropertyBadgeStyle().opacity),
-					color: BADGE_TEXT_HEX,
-					borderRadius: "50%",
-					border: "0.5px solid rgba(255,255,255,0.96)",
+			width: "46px",
+			height: "40px",
+					background: hexToRgba(initialPropertyBadgeStyle.color, initialPropertyBadgeStyle.opacity),
+					color: initialPropertyBadgeTextColor,
+					borderRadius: "12px",
+					border: "0",
 					boxShadow: "0 3px 7px rgba(0,0,0,0.13)",
 					textAlign: "center",
-					fontWeight: "800",
+					fontWeight: "750",
 					fontSize: "18px",
-				lineHeight: "48px",
+			lineHeight: "40px",
 				boxSizing: "border-box",
 				transition: "none"
 			}
@@ -30243,6 +30447,7 @@ kakao.maps.event.addListener(state.map, "zoom_changed", () => {
 			kakao.maps.event.addListener(state.map, "click", async function (mouseEvent) {
 				// 시설 뱃지·마커 입력은 지도 클릭 비동기 처리보다 먼저 종료합니다.
 				if (isParcelMapClickBlockedByFacilityMarker()) return;
+				if (await handleParcelTradeCanvasMapClick(mouseEvent)) return;
 				state.initialRandomListActive = false;
 				closeRightMapToolPanels();
 				if (handleDistanceMeasureMapClick(mouseEvent)) return;
@@ -30403,7 +30608,572 @@ kakao.maps.event.addListener(state.map, "zoom_changed", () => {
 			: PROPERTY_MAP_VIEWPORT_REFRESH_DELAY_MS;
 		propertyMapBoundaryRefreshPending = false;
 		scheduleMapViewportRefresh(viewportRefreshDelay);
+		});
+}
+
+const PARCEL_TRADE_MARKER_RPC = "get_parcel_trade_marker_snapshot_in_bounds_5888";
+const PARCEL_TRADE_MARKER_LIMIT = 150;
+const parcelTradeViewportCache = new Map();
+let parcelTradeCanvas = null;
+let parcelTradeCanvasContext = null;
+let parcelTradeCanvasRows = [];
+let parcelTradeCanvasHitBoxes = [];
+let parcelTradeCanvasLoadedBoundsKey = "";
+let parcelTradeCanvasRequestToken = 0;
+let parcelTradeCanvasInitialLoaded = false;
+let parcelTradeCanvasLoading = false;
+let parcelTradeLoadButton = null;
+let parcelTradeCanvasMapBound = false;
+let parcelTradeCanvasViewportIdleHandler = null;
+let parcelTradeCanvasStableLevel = NaN;
+let parcelTradeCanvasMoveFrame = 0;
+let parcelTradeCanvasRevealStartedAt = 0;
+let parcelTradeCanvasRevealFrame = 0;
+
+function isParcelTradeCanvasModeActive()
+{
+	const category = typeof getCurrentRealjejuGlobalCategoryKey === "function"
+		? getCurrentRealjejuGlobalCategoryKey()
+		: String(document.body?.dataset?.globalCategory || "realestate");
+	const level = state.map && typeof state.map.getLevel === "function" ? Number(state.map.getLevel()) : NaN;
+	return false;
+}
+
+function getParcelTradeCanvasMapElement()
+{
+	return document.getElementById("map");
+}
+
+function getParcelTradeCanvasBoundsKey()
+{
+	const bounds = state.map && typeof state.map.getBounds === "function" ? state.map.getBounds() : null;
+	const sw = bounds?.getSouthWest?.();
+	const ne = bounds?.getNorthEast?.();
+	if (!sw || !ne) return "";
+	return [sw.getLat(), sw.getLng(), ne.getLat(), ne.getLng()]
+		.map((value) => Number(value).toFixed(5))
+		.join(":");
+}
+
+function normalizeParcelTradeCanvasRow(row)
+{
+	const lat = Number(row?.lat);
+	const lng = Number(row?.lng);
+	if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
+	return {
+		tradeId: String(row?.trade_id || ""),
+		pnu: String(row?.pnu || ""),
+		lat,
+		lng,
+		dealDate: String(row?.deal_date || ""),
+		dealKind: String(row?.deal_kind || "sale"),
+		serviceType: String(row?.service_type || ""),
+		propertyType: String(row?.property_type || ""),
+		propertyName: String(row?.property_name || ""),
+		amountManWon: Number(row?.amount_man_won),
+		depositManWon: Number(row?.deposit_man_won),
+		monthlyRentManWon: Number(row?.monthly_rent_man_won),
+		areaM2: Number(row?.area_m2),
+		address: String(row?.address || ""),
+		umdName: String(row?.umd_name || ""),
+		jibun: String(row?.jibun || ""),
+		priceLabel: String(row?.price_label || ""),
+		colorKey: Number(row?.color_key)
+	};
+}
+
+function formatParcelTradeCanvasAmount(value)
+{
+	const amount = Number(value);
+	if (!Number.isFinite(amount) || amount <= 0) return "-";
+	if (amount >= 10000) {
+		const eok = amount / 10000;
+		return `${eok >= 10 ? eok.toFixed(1) : eok.toFixed(2)}`.replace(/\.0+$|(?<=\.[0-9])0$/g, "") + "억";
+	}
+	return Math.round(amount).toLocaleString("ko-KR") + "만";
+}
+
+function getParcelTradeCanvasPriceLabel(row)
+{
+	if (row.dealKind === "rent") {
+		const deposit = formatParcelTradeCanvasAmount(row.depositManWon);
+		const monthly = Number(row.monthlyRentManWon);
+		return monthly > 0 ? `${deposit}/${Math.round(monthly).toLocaleString("ko-KR")}` : deposit;
+	}
+	const areaM2 = Number(row.areaM2);
+	const amountManWon = Number(row.amountManWon);
+	if (Number.isFinite(areaM2) && areaM2 > 0 && Number.isFinite(amountManWon) && amountManWon > 0) {
+		const areaByUnit = globalAreaUnit === "py" ? areaM2 / 3.305785 : areaM2;
+		return formatParcelTradeCanvasAmount(amountManWon / areaByUnit);
+	}
+	if (row.priceLabel) return row.priceLabel;
+	return formatParcelTradeCanvasAmount(amountManWon);
+}
+
+function getParcelTradeCanvasDateLabel(row)
+{
+	const match = String(row.dealDate || "").match(/^(\d{4})-(\d{2})/);
+	return match ? `'${match[1].slice(2)}.${match[2]}` : "";
+}
+
+function getParcelTradeCanvasColor(row)
+{
+	const snapshotColors = {
+		1: "#65A30D",
+		2: "#14B8A6",
+		3: "#38BDF8",
+		4: "#7C3AED",
+		5: "#EA580C",
+		6: "#F59E0B"
+	};
+	if (snapshotColors[row.colorKey]) return snapshotColors[row.colorKey];
+	const type = String(row.serviceType || "").toLowerCase();
+	if (type.includes("land")) return "#65A30D";
+	if (type.includes("apt")) return "#14B8A6";
+	if (type.includes("officetel")) return "#38BDF8";
+	if (type.includes("commercial")) return "#7C3AED";
+	if (type.includes("factory")) return "#EA580C";
+	return "#F59E0B";
+}
+
+function ensureParcelTradeLoadButton()
+{
+	if (parcelTradeLoadButton && parcelTradeLoadButton.isConnected) parcelTradeLoadButton.remove();
+	parcelTradeLoadButton = null;
+	return null;
+}
+
+function updateParcelTradeLoadButton()
+{
+	ensureParcelTradeLoadButton();
+}
+
+function ensureParcelTradeCanvas()
+{
+	if (parcelTradeCanvas && parcelTradeCanvas.isConnected) return parcelTradeCanvas;
+	const host = getParcelTradeCanvasMapElement();
+	if (!host) return null;
+	const canvas = document.createElement("canvas");
+	canvas.className = "parcel-trade-marker-canvas";
+	canvas.setAttribute("aria-hidden", "true");
+	host.appendChild(canvas);
+	parcelTradeCanvas = canvas;
+	parcelTradeCanvasContext = canvas.getContext("2d");
+	return canvas;
+}
+
+function drawRoundedCanvasRect(ctx, x, y, width, height, radius)
+{
+	const r = Math.max(0, Math.min(radius, width / 2, height / 2));
+	ctx.beginPath();
+	ctx.moveTo(x + r, y);
+	ctx.arcTo(x + width, y, x + width, y + height, r);
+	ctx.arcTo(x + width, y + height, x, y + height, r);
+	ctx.arcTo(x, y + height, x, y, r);
+	ctx.arcTo(x, y, x + width, y, r);
+	ctx.closePath();
+}
+
+function syncParcelTradeCanvasVisibility()
+{
+	const canvas = ensureParcelTradeCanvas();
+	const hidden = !isParcelTradeCanvasModeActive()
+		|| !!document.body?.classList?.contains("parcel-region-trade-badges-hidden");
+	if (canvas) canvas.hidden = hidden;
+	if (!hidden) drawParcelTradeCanvas();
+}
+
+let parcelMapLevelPresentationMode = "";
+let parcelMapLevelPresentationSyncToken = 0;
+
+async function syncParcelMapLevelPresentation(options = {})
+{
+	const syncToken = ++parcelMapLevelPresentationSyncToken;
+	const category = typeof getCurrentRealjejuGlobalCategoryKey === "function"
+		? getCurrentRealjejuGlobalCategoryKey()
+		: String(document.body?.dataset?.globalCategory || "realestate");
+	const level = state.map && typeof state.map.getLevel === "function"
+		? Number(state.map.getLevel())
+		: NaN;
+
+	if (category !== "parcel" || !Number.isFinite(level)) {
+		parcelMapLevelPresentationMode = "";
+		syncParcelTradeCanvasVisibility();
+		return false;
+	}
+
+	const nextMode = getPropertyMapPresentationMode();
+	const previousMode = parcelMapLevelPresentationMode;
+	const usesIndividualTradeBadges = false;
+	parcelMapLevelPresentationMode = nextMode;
+	propertyMapPresentationMode = nextMode;
+
+	if (usesIndividualTradeBadges) {
+		if (previousMode !== nextMode || propertyRegionCountOverlays.length) {
+			propertyRegionCountRenderToken += 1;
+			clearPropertyRegionCountOverlays();
+			parcelRegionTradeBadgeRenderedSignature = "";
+		}
+		syncParcelTradeCanvasVisibility();
+		if (options.loadInitial === true) {
+			await loadParcelTradeCanvasRowsForCurrentViewport({ source: options.source || "level-router" });
+		}
+		return syncToken === parcelMapLevelPresentationSyncToken;
+	}
+
+	syncParcelTradeCanvasVisibility();
+	if (!shouldRenderParcelRegionTradeMapBadges(nextMode)) return true;
+
+	const modeChanged = previousMode !== nextMode;
+	if (modeChanged) {
+		propertyRegionCountRenderToken += 1;
+		clearPropertyRegionCountOverlays();
+		parcelRegionTradeBadgeRenderedSignature = "";
+	}
+	if (modeChanged || !propertyRegionCountOverlays.length) {
+		await renderPropertyRegionCountOverlays(nextMode);
+	}
+	return syncToken === parcelMapLevelPresentationSyncToken;
+}
+
+function getParcelTradeCanvasRevealDelay(row)
+{
+	const key = String(row?.pnu || row?.tradeId || "parcel-trade");
+	let hash = 2166136261;
+	for (let index = 0; index < key.length; index += 1) {
+		hash ^= key.charCodeAt(index);
+		hash = Math.imul(hash, 16777619);
+	}
+	return Math.abs(hash >>> 0) % 421;
+}
+
+function scheduleParcelTradeCanvasRevealFrame()
+{
+	if (parcelTradeCanvasRevealFrame || typeof requestAnimationFrame !== "function") return;
+	parcelTradeCanvasRevealFrame = requestAnimationFrame(() => {
+		parcelTradeCanvasRevealFrame = 0;
+		drawParcelTradeCanvas();
 	});
+}
+
+function startParcelTradeCanvasReveal()
+{
+	if (parcelTradeCanvasRevealFrame && typeof cancelAnimationFrame === "function") {
+		cancelAnimationFrame(parcelTradeCanvasRevealFrame);
+	}
+	parcelTradeCanvasRevealFrame = 0;
+	const reduceMotion = typeof window.matchMedia === "function"
+		&& window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+	parcelTradeCanvasRevealStartedAt = reduceMotion ? 0 : performance.now();
+	drawParcelTradeCanvas();
+}
+
+function drawParcelTradeCanvas()
+{
+	const canvas = ensureParcelTradeCanvas();
+	const host = getParcelTradeCanvasMapElement();
+	const ctx = parcelTradeCanvasContext;
+	parcelTradeCanvasHitBoxes = [];
+	if (!canvas || !host || !ctx || !state.map || !isParcelTradeCanvasModeActive()) {
+		if (canvas && ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
+		return;
+	}
+	const width = Math.max(1, host.clientWidth);
+	const height = Math.max(1, host.clientHeight);
+	const dpr = Math.min(2, Math.max(1, Number(window.devicePixelRatio) || 1));
+	if (canvas.width !== Math.round(width * dpr) || canvas.height !== Math.round(height * dpr)) {
+		canvas.width = Math.round(width * dpr);
+		canvas.height = Math.round(height * dpr);
+		canvas.style.width = width + "px";
+		canvas.style.height = height + "px";
+	}
+	ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+	ctx.clearRect(0, 0, width, height);
+	const projection = typeof state.map.getProjection === "function" ? state.map.getProjection() : null;
+	if (!projection || typeof projection.containerPointFromCoords !== "function") return;
+	ctx.textAlign = "center";
+	ctx.textBaseline = "middle";
+	const visibleCandidates = parcelTradeCanvasRows
+		.map((row) => ({
+			row,
+			point: projection.containerPointFromCoords(new kakao.maps.LatLng(row.lat, row.lng))
+		}))
+		.filter((candidate) => candidate.point
+			&& candidate.point.x >= -80
+			&& candidate.point.y >= -80
+			&& candidate.point.x <= width + 80
+			&& candidate.point.y <= height + 80)
+		.sort((left, right) => String(right.row.dealDate || "").localeCompare(String(left.row.dealDate || "")));
+	const occupiedRects = [];
+	const maximumVisibleBadges = 150;
+	const revealElapsed = parcelTradeCanvasRevealStartedAt > 0
+		? Math.max(0, performance.now() - parcelTradeCanvasRevealStartedAt)
+		: Number.POSITIVE_INFINITY;
+	let revealPending = false;
+	for (const candidate of visibleCandidates) {
+		if (parcelTradeCanvasHitBoxes.length >= maximumVisibleBadges) break;
+		const { row, point } = candidate;
+		const amountLabel = getParcelTradeCanvasPriceLabel(row);
+		const dateLabel = getParcelTradeCanvasDateLabel(row);
+		ctx.font = '500 12px "Paperlogy", "Pretendard Variable", Pretendard, sans-serif';
+		const amountTextWidth = ctx.measureText(amountLabel).width;
+		ctx.font = '500 9.5px "Paperlogy", "Pretendard Variable", Pretendard, sans-serif';
+		const dateTextWidth = ctx.measureText(dateLabel).width;
+		const badgeWidth = Math.min(76, Math.max(52, Math.ceil(Math.max(amountTextWidth, dateTextWidth) + 8)));
+		const badgeHeight = 29;
+		const left = Math.round(point.x - badgeWidth / 2);
+		const top = Math.round(point.y - badgeHeight - 4);
+		const collisionMargin = 2;
+		const collisionRect = {
+			left: left - collisionMargin,
+			top: top - collisionMargin,
+			right: left + badgeWidth + collisionMargin,
+			bottom: top + badgeHeight + collisionMargin
+		};
+		const overlaps = occupiedRects.some((rect) => !(collisionRect.right <= rect.left
+			|| collisionRect.left >= rect.right
+			|| collisionRect.bottom <= rect.top
+			|| collisionRect.top >= rect.bottom));
+		if (overlaps) continue;
+		occupiedRects.push(collisionRect);
+		const revealAlpha = 1;
+
+		ctx.save();
+		ctx.globalAlpha = revealAlpha;
+		ctx.strokeStyle = "#d7dde7";
+		ctx.lineWidth = 1;
+		ctx.beginPath();
+		ctx.moveTo(point.x, top + badgeHeight);
+		ctx.lineTo(point.x, point.y - 2);
+		ctx.stroke();
+		ctx.fillStyle = getParcelTradeCanvasColor(row);
+		ctx.beginPath();
+		ctx.arc(point.x, point.y, 2.5, 0, Math.PI * 2);
+		ctx.fill();
+		ctx.shadowColor = "rgba(15,23,42,0.16)";
+		ctx.shadowBlur = 8;
+		ctx.shadowOffsetY = 2;
+		drawRoundedCanvasRect(ctx, left, top, badgeWidth, badgeHeight, 15);
+		ctx.fillStyle = "rgba(255,255,255,0.96)";
+		ctx.fill();
+		ctx.shadowColor = "transparent";
+		ctx.lineWidth = 1;
+		ctx.strokeStyle = "#d7dde7";
+		ctx.stroke();
+		let amountFontSize = 12;
+		do {
+			ctx.font = `500 ${amountFontSize}px "Paperlogy", "Pretendard Variable", Pretendard, sans-serif`;
+			if (ctx.measureText(amountLabel).width <= badgeWidth - 6 || amountFontSize <= 9) break;
+			amountFontSize -= 0.5;
+		} while (amountFontSize >= 9);
+		ctx.fillStyle = getParcelTradeCanvasColor(row);
+		ctx.fillText(amountLabel, point.x, top + 10.5);
+		ctx.fillStyle = "#4B5563";
+		ctx.font = '500 9.5px "Paperlogy", "Pretendard Variable", Pretendard, sans-serif';
+		ctx.fillText(dateLabel, point.x, top + 23.5);
+		ctx.restore();
+		parcelTradeCanvasHitBoxes.push({ left, top, right: left + badgeWidth, bottom: top + badgeHeight, row });
+	}
+	if (revealPending) scheduleParcelTradeCanvasRevealFrame();
+	else parcelTradeCanvasRevealStartedAt = 0;
+}
+
+function getParcelTradeCanvasHit(mouseEvent)
+{
+	if (!isParcelTradeCanvasModeActive() || !mouseEvent?.latLng) return null;
+	const projection = state.map?.getProjection?.();
+	const point = projection?.containerPointFromCoords?.(mouseEvent.latLng);
+	if (!point) return null;
+	for (let index = parcelTradeCanvasHitBoxes.length - 1; index >= 0; index -= 1) {
+		const box = parcelTradeCanvasHitBoxes[index];
+		if (point.x >= box.left && point.x <= box.right && point.y >= box.top && point.y <= box.bottom) return box.row;
+	}
+	return null;
+}
+
+async function handleParcelTradeCanvasMapClick(mouseEvent)
+{
+	const row = getParcelTradeCanvasHit(mouseEvent);
+	if (!row) return false;
+	if (window.kakao?.maps?.event && typeof kakao.maps.event.preventMap === "function") kakao.maps.event.preventMap();
+	window.__realjejuSelectedParcelTradeMarker = { ...row };
+	await showParcelBoundaryForSearchLocation(row.lat, row.lng, {
+		openLandInfoPanel: true,
+		pnu: row.pnu,
+		tradeId: row.tradeId,
+		fromTradeMarker: true
+	});
+	return true;
+}
+
+async function loadParcelTradeCanvasRowsForCurrentViewport(options = {})
+{
+	if (!isParcelTradeCanvasModeActive() || !state.map) return false;
+	const bounds = state.map.getBounds?.();
+	const sw = bounds?.getSouthWest?.();
+	const ne = bounds?.getNorthEast?.();
+	const boundsKey = getParcelTradeCanvasBoundsKey();
+	if (!sw || !ne || !boundsKey) return false;
+	const cached = parcelTradeViewportCache.get(boundsKey);
+	if (cached) {
+		parcelTradeCanvasRows = cached;
+		parcelTradeCanvasLoadedBoundsKey = boundsKey;
+		parcelTradeCanvasInitialLoaded = true;
+		startParcelTradeCanvasReveal();
+		updateParcelTradeLoadButton();
+		return true;
+	}
+	parcelTradeCanvasLoading = true;
+	const requestToken = ++parcelTradeCanvasRequestToken;
+	updateParcelTradeLoadButton();
+	try {
+		if (typeof loadSupabaseScript === "function") await loadSupabaseScript();
+		const client = getMapListingsSupabaseClient();
+		if (!client) throw new Error("실거래 DB에 연결하지 못했습니다.");
+		const { data, error } = await client.rpc(PARCEL_TRADE_MARKER_RPC, {
+			p_south: Number(sw.getLat()),
+			p_west: Number(sw.getLng()),
+			p_north: Number(ne.getLat()),
+			p_east: Number(ne.getLng()),
+			p_limit: PARCEL_TRADE_MARKER_LIMIT
+		});
+		if (error) throw error;
+		if (requestToken !== parcelTradeCanvasRequestToken || !isParcelTradeCanvasModeActive()) return false;
+		const rows = (Array.isArray(data) ? data : []).map(normalizeParcelTradeCanvasRow).filter(Boolean);
+		parcelTradeViewportCache.set(boundsKey, rows);
+		while (parcelTradeViewportCache.size > 4) parcelTradeViewportCache.delete(parcelTradeViewportCache.keys().next().value);
+		parcelTradeCanvasRows = rows;
+		parcelTradeCanvasLoadedBoundsKey = boundsKey;
+		parcelTradeCanvasInitialLoaded = true;
+		startParcelTradeCanvasReveal();
+		return true;
+	} catch (error) {
+		if (requestToken === parcelTradeCanvasRequestToken) console.warn("현재 화면 실거래 조회 실패:", error);
+		return false;
+	} finally {
+		if (requestToken === parcelTradeCanvasRequestToken) {
+			parcelTradeCanvasLoading = false;
+			updateParcelTradeLoadButton();
+		}
+	}
+}
+
+function scheduleParcelTradeCanvasViewportLoadAfterZoom()
+{
+	if (!state.map || !window.kakao?.maps?.event) return false;
+	if (parcelTradeCanvasViewportIdleHandler) {
+		kakao.maps.event.removeListener(state.map, "idle", parcelTradeCanvasViewportIdleHandler);
+	}
+	parcelTradeCanvasViewportIdleHandler = async () => {
+		const handler = parcelTradeCanvasViewportIdleHandler;
+		parcelTradeCanvasViewportIdleHandler = null;
+		if (handler) kakao.maps.event.removeListener(state.map, "idle", handler);
+		if (!isParcelTradeCanvasModeActive()) {
+			parcelTradeCanvasStableLevel = Number(state.map?.getLevel?.());
+			if (parcelTradeCanvas) parcelTradeCanvas.style.visibility = "";
+			return;
+		}
+		await loadParcelTradeCanvasRowsForCurrentViewport({ source: "zoom-final-viewport" });
+		parcelTradeCanvasStableLevel = Number(state.map?.getLevel?.());
+		if (parcelTradeCanvas) parcelTradeCanvas.style.visibility = "";
+		startParcelTradeCanvasReveal();
+	};
+	kakao.maps.event.addListener(state.map, "idle", parcelTradeCanvasViewportIdleHandler);
+	return true;
+}
+
+function hideParcelTradeCanvasForZoom()
+{
+	if (!isParcelTradeCanvasModeActive()) return;
+	if (parcelTradeCanvas) parcelTradeCanvas.style.visibility = "hidden";
+	if (parcelTradeCanvasMoveFrame && typeof cancelAnimationFrame === "function") {
+		cancelAnimationFrame(parcelTradeCanvasMoveFrame);
+	}
+	parcelTradeCanvasMoveFrame = 0;
+}
+
+function bindParcelTradeCanvasMapEvents()
+{
+	if (parcelTradeCanvasMapBound || !state.map || !window.kakao?.maps?.event) return;
+	parcelTradeCanvasMapBound = true;
+	parcelTradeCanvasStableLevel = Number(state.map?.getLevel?.());
+	kakao.maps.event.addListener(state.map, "zoom_start", hideParcelTradeCanvasForZoom);
+	const parcelCanvasMapHost = getParcelTradeCanvasMapElement();
+	if (parcelCanvasMapHost) {
+		parcelCanvasMapHost.addEventListener("wheel", hideParcelTradeCanvasForZoom, { capture: true, passive: true });
+		parcelCanvasMapHost.addEventListener("dblclick", hideParcelTradeCanvasForZoom, { capture: true, passive: true });
+		parcelCanvasMapHost.addEventListener("touchmove", (event) => {
+			if (event.touches && event.touches.length > 1) hideParcelTradeCanvasForZoom();
+		}, { capture: true, passive: true });
+	}
+	kakao.maps.event.addListener(state.map, "center_changed", () => {
+		if (!isParcelTradeCanvasModeActive()) return;
+		const movingLevel = Number(state.map?.getLevel?.());
+		if (!Number.isFinite(parcelTradeCanvasStableLevel) || movingLevel !== parcelTradeCanvasStableLevel) {
+			hideParcelTradeCanvasForZoom();
+		}
+	});
+	kakao.maps.event.addListener(state.map, "dragstart", () => {
+		if (parcelTradeCanvas) parcelTradeCanvas.style.visibility = "";
+	});
+	kakao.maps.event.addListener(state.map, "dragend", async () => {
+		if (parcelTradeCanvas) parcelTradeCanvas.style.visibility = "";
+		updateParcelTradeLoadButton();
+		if (isParcelTradeCanvasModeActive()) {
+			const loaded = await loadParcelTradeCanvasRowsForCurrentViewport({ source: "drag-final-viewport" });
+			if (!loaded) drawParcelTradeCanvas();
+		}
+	});
+	kakao.maps.event.addListener(state.map, "zoom_changed", async () => {
+		parcelTradeCanvasStableLevel = NaN;
+		hideParcelTradeCanvasForZoom();
+		await syncParcelMapLevelPresentation({ loadInitial: false, source: "zoom-level-change" });
+		if (isParcelTradeCanvasModeActive()) scheduleParcelTradeCanvasViewportLoadAfterZoom();
+	});
+	kakao.maps.event.addListener(state.map, "mousemove", (mouseEvent) => {
+		const host = getParcelTradeCanvasMapElement();
+		if (host && isParcelTradeCanvasModeActive()) host.style.cursor = getParcelTradeCanvasHit(mouseEvent) ? "pointer" : "";
+	});
+	window.addEventListener("resize", drawParcelTradeCanvas, { passive: true });
+}
+
+async function syncParcelTradeCanvasForCategory(category, options = {})
+{
+	ensureParcelTradeCanvas();
+	ensureParcelTradeLoadButton();
+	bindParcelTradeCanvasMapEvents();
+	return await syncParcelMapLevelPresentation({
+		loadInitial: category === "parcel" && options.loadInitial === true,
+		source: "category-entry"
+	});
+}
+
+function clearParcelTradeCanvasSession()
+{
+	if (parcelTradeCanvasViewportIdleHandler && state.map && window.kakao?.maps?.event) {
+		kakao.maps.event.removeListener(state.map, "idle", parcelTradeCanvasViewportIdleHandler);
+	}
+	parcelTradeCanvasViewportIdleHandler = null;
+	parcelTradeCanvasStableLevel = NaN;
+	if (parcelTradeCanvasMoveFrame && typeof cancelAnimationFrame === "function") {
+		cancelAnimationFrame(parcelTradeCanvasMoveFrame);
+	}
+	parcelTradeCanvasMoveFrame = 0;
+	if (parcelTradeCanvasRevealFrame && typeof cancelAnimationFrame === "function") {
+		cancelAnimationFrame(parcelTradeCanvasRevealFrame);
+	}
+	parcelTradeCanvasRevealFrame = 0;
+	parcelTradeCanvasRevealStartedAt = 0;
+	parcelTradeCanvasRequestToken += 1;
+	parcelTradeCanvasRows = [];
+	parcelTradeCanvasHitBoxes = [];
+	parcelTradeCanvasLoadedBoundsKey = "";
+	parcelTradeCanvasInitialLoaded = false;
+	parcelTradeCanvasLoading = false;
+	parcelTradeViewportCache.clear();
+	if (parcelTradeCanvasContext && parcelTradeCanvas) parcelTradeCanvasContext.clearRect(0, 0, parcelTradeCanvas.width, parcelTradeCanvas.height);
+	if (parcelTradeCanvas) parcelTradeCanvas.hidden = true;
+	if (parcelTradeLoadButton) parcelTradeLoadButton.hidden = true;
 }
 
 function initRoadview()
@@ -36399,6 +37169,8 @@ function syncPropertyBadgeStylePopover(popover, style)
 	if (!popover) return;
 	const normalized = {
 		color: normalizePropertyBadgeStyleColor(style && style.color),
+		textColor: normalizePropertyBadgeTextColor(style && style.textColor),
+		textOpacity: normalizePropertyBadgeTextOpacity(style && style.textOpacity),
 		opacity: normalizePropertyBadgeStyleOpacity(style && style.opacity)
 	};
 	popover.dataset.draftColor = normalized.color;
@@ -36415,7 +37187,68 @@ function syncPropertyBadgeStylePopover(popover, style)
 	const preview = popover.querySelector("[data-property-badge-style-preview]");
 	if (preview) {
 		preview.style.background = hexToRgba(normalized.color, normalized.opacity);
-		preview.style.borderColor = "rgba(255,255,255,0.96)";
+		preview.style.color = getResolvedPropertyBadgeTextColor(normalized);
+		preview.style.borderColor = getResolvedPropertyBadgeBorderColor(normalized);
+	}
+}
+
+function syncPropertyBadgeTextStylePopover(popover, style)
+{
+	if (!popover) return;
+	const current = getPropertyBadgeStyle();
+	const normalized = {
+		color: normalizePropertyBadgeStyleColor(current.color),
+		textColor: normalizePropertyBadgeTextColor(style && style.textColor),
+		textOpacity: normalizePropertyBadgeTextOpacity(style && style.textOpacity),
+		opacity: normalizePropertyBadgeStyleOpacity(current.opacity)
+	};
+	popover.dataset.draftTextColor = normalized.textColor;
+	popover.dataset.draftTextOpacity = String(normalized.textOpacity);
+	popover.querySelectorAll("[data-property-badge-text-style-color]").forEach((button) => {
+		const isActive = String(button.dataset.propertyBadgeTextStyleColor || "").toUpperCase() === normalized.textColor;
+		button.classList.toggle("active", isActive);
+		button.setAttribute("aria-pressed", isActive ? "true" : "false");
+	});
+	const opacityInput = popover.querySelector("[data-property-badge-text-style-opacity]");
+	if (opacityInput) opacityInput.value = String(Math.round(normalized.textOpacity * 100));
+	const opacityValue = popover.querySelector("[data-property-badge-text-style-opacity-value]");
+	if (opacityValue) opacityValue.textContent = `${Math.round(normalized.textOpacity * 100)}%`;
+	const preview = popover.querySelector("[data-property-badge-text-style-preview]");
+	if (preview) {
+		preview.style.background = hexToRgba(normalized.color, normalized.opacity);
+		preview.style.color = getResolvedPropertyBadgeTextColor(normalized);
+		preview.style.borderColor = getResolvedPropertyBadgeBorderColor(normalized);
+	}
+}
+
+function syncPropertyBadgeBorderStylePopover(popover, style)
+{
+	if (!popover) return;
+	const current = getPropertyBadgeStyle();
+	const normalized = {
+		...current,
+		borderColor: normalizePropertyBadgeBorderColor(style && style.borderColor),
+		borderOpacity: normalizePropertyBadgeBorderOpacity(style && style.borderOpacity)
+	};
+	popover.dataset.draftBorderColor = normalized.borderColor;
+	popover.dataset.draftBorderOpacity = String(normalized.borderOpacity);
+	popover.querySelectorAll("[data-property-badge-border-style-color]").forEach((button) => {
+		const isActive = String(button.dataset.propertyBadgeBorderStyleColor || "").toUpperCase() === normalized.borderColor;
+		button.classList.toggle("active", isActive);
+		button.setAttribute("aria-pressed", isActive ? "true" : "false");
+	});
+	const opacityInput = popover.querySelector("[data-property-badge-border-style-opacity]");
+	if (opacityInput) {
+		opacityInput.value = String(Math.round(normalized.borderOpacity * 100));
+		opacityInput.style.accentColor = normalized.borderColor;
+	}
+	const opacityValue = popover.querySelector("[data-property-badge-border-style-opacity-value]");
+	if (opacityValue) opacityValue.textContent = `${Math.round(normalized.borderOpacity * 100)}%`;
+	const preview = popover.querySelector("[data-property-badge-border-style-preview]");
+	if (preview) {
+		preview.style.background = hexToRgba(normalized.color, normalized.opacity);
+		preview.style.color = getResolvedPropertyBadgeTextColor(normalized);
+		preview.style.borderColor = getResolvedPropertyBadgeBorderColor(normalized);
 	}
 }
 
@@ -36452,6 +37285,7 @@ function renderAdminBoundaryStyleEditorHtml()
 	const style = getAdminBoundaryStylePreference();
 	const colors = ADMIN_BOUNDARY_STYLE_COLORS.map((color, index) => (
 		'<button type="button" class="property-badge-style-color '
+		+ (color === '#FFFFFF' ? 'white-color ' : '')
 		+ (color === style.color ? 'active' : '')
 		+ '" style="--badge-style-color:' + escapeHtml(color) + '" data-admin-boundary-style-color="'
 		+ escapeHtml(color)
@@ -36462,7 +37296,7 @@ function renderAdminBoundaryStyleEditorHtml()
 		+ '<span class="property-badge-style-preview admin-boundary-style-preview" data-admin-boundary-style-preview style="background:'
 		+ escapeHtml(hexToRgba(style.color, style.opacity))
 		+ ';border-color:' + escapeHtml(style.color) + '"></span></div>'
-		+ '<div class="property-badge-style-palette" role="group" aria-label="행정구역 색상 36개">'
+		+ '<div class="property-badge-style-palette" role="group" aria-label="행정구역 공통 색상 팔레트">'
 		+ colors
 		+ '</div>'
 		+ '<label class="property-badge-style-opacity-label" for="adminBoundaryStyleOpacity">채움 농도 '
@@ -36482,6 +37316,7 @@ function renderPropertyBadgeStyleEditorHtml()
 	const style = getPropertyBadgeStyle();
 	const colors = PROPERTY_BADGE_STYLE_COLORS.map((color, index) => (
 		'<button type="button" class="property-badge-style-color '
+		+ (color === '#FFFFFF' ? 'white-color ' : '')
 		+ (color === style.color ? 'active' : '')
 		+ '" style="--badge-style-color:' + escapeHtml(color) + '" data-property-badge-style-color="'
 		+ escapeHtml(color)
@@ -36491,8 +37326,10 @@ function renderPropertyBadgeStyleEditorHtml()
 	return '<div class="property-badge-style-popover-head"><strong>원형 뱃지</strong>'
 		+ '<span class="property-badge-style-preview" data-property-badge-style-preview style="background:'
 		+ escapeHtml(hexToRgba(style.color, style.opacity))
+		+ ';color:' + escapeHtml(getResolvedPropertyBadgeTextColor(style))
+		+ ';border-color:' + escapeHtml(getResolvedPropertyBadgeBorderColor(style))
 		+ '">3</span></div>'
-		+ '<div class="property-badge-style-palette" role="group" aria-label="원형 뱃지 색상 36개">'
+		+ '<div class="property-badge-style-palette" role="group" aria-label="원형 뱃지 공통 색상 팔레트">'
 		+ colors
 		+ '</div>'
 		+ '<label class="property-badge-style-opacity-label" for="propertyBadgeStyleOpacity">투명도 '
@@ -36507,14 +37344,84 @@ function renderPropertyBadgeStyleEditorHtml()
 		+ '</div>';
 }
 
+function renderPropertyBadgeTextStyleEditorHtml()
+{
+	const style = getPropertyBadgeStyle();
+	const colors = COMMON_MAP_STYLE_COLORS.map((color, index) => (
+		'<button type="button" class="property-badge-style-color '
+		+ (color === '#FFFFFF' ? 'white-color ' : '')
+		+ (color === style.textColor ? 'active' : '')
+		+ '" style="--badge-style-color:' + escapeHtml(color) + '" data-property-badge-text-style-color="'
+		+ escapeHtml(color)
+		+ '" aria-label="원형 뱃지 글자 색상 ' + (index + 1)
+		+ '" aria-pressed="' + (color === style.textColor ? 'true' : 'false') + '"></button>'
+	)).join("");
+	return '<div class="property-badge-style-popover-head"><strong>원형 뱃지 글자</strong>'
+		+ '<span class="property-badge-style-preview" data-property-badge-text-style-preview style="background:'
+		+ escapeHtml(hexToRgba(style.color, style.opacity))
+		+ ';color:' + escapeHtml(getResolvedPropertyBadgeTextColor(style))
+		+ ';border-color:' + escapeHtml(getResolvedPropertyBadgeBorderColor(style))
+		+ '">3</span></div>'
+		+ '<div class="property-badge-style-palette" role="group" aria-label="원형 뱃지 글자 공통 색상 팔레트">'
+		+ colors
+		+ '</div>'
+		+ '<label class="property-badge-style-opacity-label" for="propertyBadgeTextStyleOpacity">투명도 '
+		+ '<output data-property-badge-text-style-opacity-value>' + Math.round(style.textOpacity * 100) + '%</output></label>'
+		+ '<input id="propertyBadgeTextStyleOpacity" class="property-badge-style-opacity" type="range" min="35" max="100" step="5" value="'
+		+ Math.round(style.textOpacity * 100)
+		+ '" data-property-badge-text-style-opacity>'
+		+ '<div class="property-badge-style-actions">'
+		+ '<button type="button" data-property-badge-text-style-reset>기본값</button>'
+		+ '<button type="button" data-property-badge-style-cancel>취소</button>'
+		+ '<button type="button" class="primary" data-property-badge-style-apply>적용</button>'
+		+ '</div>';
+}
+
+function renderPropertyBadgeBorderStyleEditorHtml()
+{
+	const style = getPropertyBadgeStyle();
+	const colors = COMMON_MAP_STYLE_COLORS.map((color, index) => (
+		'<button type="button" class="property-badge-style-color '
+		+ (color === '#FFFFFF' ? 'white-color ' : '')
+		+ (color === style.borderColor ? 'active' : '')
+		+ '" style="--badge-style-color:' + escapeHtml(color) + '" data-property-badge-border-style-color="'
+		+ escapeHtml(color)
+		+ '" aria-label="원형 뱃지 외곽 색상 ' + (index + 1)
+		+ '" aria-pressed="' + (color === style.borderColor ? 'true' : 'false') + '"></button>'
+	)).join("");
+	return '<div class="property-badge-style-popover-head"><strong>원형 뱃지 외곽</strong>'
+		+ '<span class="property-badge-style-preview" data-property-badge-border-style-preview style="background:'
+		+ escapeHtml(hexToRgba(style.color, style.opacity))
+		+ ';color:' + escapeHtml(getResolvedPropertyBadgeTextColor(style))
+		+ ';border-color:' + escapeHtml(getResolvedPropertyBadgeBorderColor(style))
+		+ '">3</span></div>'
+		+ '<div class="property-badge-style-palette" role="group" aria-label="원형 뱃지 외곽 공통 색상 팔레트">'
+		+ colors
+		+ '</div>'
+		+ '<label class="property-badge-style-opacity-label" for="propertyBadgeBorderStyleOpacity">투명도 '
+		+ '<output data-property-badge-border-style-opacity-value>' + Math.round(style.borderOpacity * 100) + '%</output></label>'
+		+ '<input id="propertyBadgeBorderStyleOpacity" class="property-badge-style-opacity" type="range" min="5" max="100" step="5" value="'
+		+ Math.round(style.borderOpacity * 100)
+		+ '" data-property-badge-border-style-opacity>'
+		+ '<div class="property-badge-style-actions">'
+		+ '<button type="button" data-property-badge-border-style-reset>기본값</button>'
+		+ '<button type="button" data-property-badge-style-cancel>취소</button>'
+		+ '<button type="button" class="primary" data-property-badge-style-apply>적용</button>'
+		+ '</div>';
+}
+
 function isMapSettingsFilterPanelOpen()
 {
 	return !!(mapSettingsFilterPanel && mapSettingsFilterPanel.classList.contains("open"));
 }
 
-function isPropertyBadgeStyleEditorPopoverOpen()
+function isPropertyBadgeStyleEditorPopoverOpen(mode = "")
 {
-	return !!(propertyBadgeStyleEditorPopover && !propertyBadgeStyleEditorPopover.hidden);
+	return !!(
+		propertyBadgeStyleEditorPopover
+		&& !propertyBadgeStyleEditorPopover.hidden
+		&& (!mode || propertyBadgeStyleEditorPopover.dataset.editorMode === mode)
+	);
 }
 
 function isAdminBoundaryStyleEditorPopoverOpen()
@@ -36599,8 +37506,29 @@ function ensurePropertyBadgeStyleEditorPopover()
 			event.preventDefault();
 			event.stopPropagation();
 			syncPropertyBadgeStylePopover(propertyBadgeStyleEditorPopover, {
+				...getPropertyBadgeStyle(),
 				color: colorOption.dataset.propertyBadgeStyleColor,
 				opacity: propertyBadgeStyleEditorPopover.dataset.draftOpacity
+			});
+			return;
+		}
+		const textColorOption = event.target.closest("[data-property-badge-text-style-color]");
+		if (textColorOption) {
+			event.preventDefault();
+			event.stopPropagation();
+			syncPropertyBadgeTextStylePopover(propertyBadgeStyleEditorPopover, {
+				textColor: textColorOption.dataset.propertyBadgeTextStyleColor,
+				textOpacity: propertyBadgeStyleEditorPopover.dataset.draftTextOpacity
+			});
+			return;
+		}
+		const borderColorOption = event.target.closest("[data-property-badge-border-style-color]");
+		if (borderColorOption) {
+			event.preventDefault();
+			event.stopPropagation();
+			syncPropertyBadgeBorderStylePopover(propertyBadgeStyleEditorPopover, {
+				borderColor: borderColorOption.dataset.propertyBadgeBorderStyleColor,
+				borderOpacity: propertyBadgeStyleEditorPopover.dataset.draftBorderOpacity
 			});
 			return;
 		}
@@ -36608,7 +37536,31 @@ function ensurePropertyBadgeStyleEditorPopover()
 		if (resetStyleBtn) {
 			event.preventDefault();
 			event.stopPropagation();
-			syncPropertyBadgeStylePopover(propertyBadgeStyleEditorPopover, PROPERTY_BADGE_STYLE_DEFAULT);
+			syncPropertyBadgeStylePopover(propertyBadgeStyleEditorPopover, {
+				...getPropertyBadgeStyle(),
+				color: PROPERTY_BADGE_STYLE_DEFAULT.color,
+				opacity: PROPERTY_BADGE_STYLE_DEFAULT.opacity
+			});
+			return;
+		}
+		const resetTextStyleBtn = event.target.closest("[data-property-badge-text-style-reset]");
+		if (resetTextStyleBtn) {
+			event.preventDefault();
+			event.stopPropagation();
+			syncPropertyBadgeTextStylePopover(propertyBadgeStyleEditorPopover, {
+				textColor: PROPERTY_BADGE_STYLE_DEFAULT.textColor,
+				textOpacity: PROPERTY_BADGE_STYLE_DEFAULT.textOpacity
+			});
+			return;
+		}
+		const resetBorderStyleBtn = event.target.closest("[data-property-badge-border-style-reset]");
+		if (resetBorderStyleBtn) {
+			event.preventDefault();
+			event.stopPropagation();
+			syncPropertyBadgeBorderStylePopover(propertyBadgeStyleEditorPopover, {
+				borderColor: PROPERTY_BADGE_STYLE_DEFAULT.borderColor,
+				borderOpacity: PROPERTY_BADGE_STYLE_DEFAULT.borderOpacity
+			});
 			return;
 		}
 		const cancelStyleBtn = event.target.closest("[data-property-badge-style-cancel]");
@@ -36627,11 +37579,20 @@ function ensurePropertyBadgeStyleEditorPopover()
 		applyStyleBtn.disabled = true;
 		applyStyleBtn.textContent = "저장 중";
 		try {
-			await savePropertyBadgeStyleForCurrentUser({
-				color: propertyBadgeStyleEditorPopover.dataset.draftColor,
-				opacity: propertyBadgeStyleEditorPopover.dataset.draftOpacity
-			});
-			// 5.005: 적용 뒤에도 편집창을 유지해 다른 색상과 투명도를 연속 비교할 수 있게 한다.
+			const currentStyle = getPropertyBadgeStyle();
+			const mode = propertyBadgeStyleEditorPopover.dataset.editorMode;
+			const nextStyle = { ...currentStyle };
+			if (mode === "text") {
+				nextStyle.textColor = propertyBadgeStyleEditorPopover.dataset.draftTextColor;
+				nextStyle.textOpacity = propertyBadgeStyleEditorPopover.dataset.draftTextOpacity;
+			} else if (mode === "border") {
+				nextStyle.borderColor = propertyBadgeStyleEditorPopover.dataset.draftBorderColor;
+				nextStyle.borderOpacity = propertyBadgeStyleEditorPopover.dataset.draftBorderOpacity;
+			} else {
+				nextStyle.color = propertyBadgeStyleEditorPopover.dataset.draftColor;
+				nextStyle.opacity = propertyBadgeStyleEditorPopover.dataset.draftOpacity;
+			}
+			await savePropertyBadgeStyleForCurrentUser(nextStyle);
 			renderMapSettingsFilterPanel();
 			syncMapToolPopoverZOrder(mapSettingsFilterPanel);
 			applyStyleBtn.disabled = false;
@@ -36645,10 +37606,27 @@ function ensurePropertyBadgeStyleEditorPopover()
 	});
 	propertyBadgeStyleEditorPopover.addEventListener("input", (event) => {
 		const opacityInput = event.target.closest("[data-property-badge-style-opacity]");
-		if (!opacityInput) return;
-		syncPropertyBadgeStylePopover(propertyBadgeStyleEditorPopover, {
-			color: propertyBadgeStyleEditorPopover.dataset.draftColor,
-			opacity: Number(opacityInput.value) / 100
+		if (opacityInput) {
+			syncPropertyBadgeStylePopover(propertyBadgeStyleEditorPopover, {
+				...getPropertyBadgeStyle(),
+				color: propertyBadgeStyleEditorPopover.dataset.draftColor,
+				opacity: Number(opacityInput.value) / 100
+			});
+			return;
+		}
+		const textOpacityInput = event.target.closest("[data-property-badge-text-style-opacity]");
+		if (textOpacityInput) {
+			syncPropertyBadgeTextStylePopover(propertyBadgeStyleEditorPopover, {
+				textColor: propertyBadgeStyleEditorPopover.dataset.draftTextColor,
+				textOpacity: Number(textOpacityInput.value) / 100
+			});
+			return;
+		}
+		const borderOpacityInput = event.target.closest("[data-property-badge-border-style-opacity]");
+		if (!borderOpacityInput) return;
+		syncPropertyBadgeBorderStylePopover(propertyBadgeStyleEditorPopover, {
+			borderColor: propertyBadgeStyleEditorPopover.dataset.draftBorderColor,
+			borderOpacity: Number(borderOpacityInput.value) / 100
 		});
 	});
 	document.body.appendChild(propertyBadgeStyleEditorPopover);
@@ -36723,16 +37701,30 @@ function ensureAdminBoundaryStyleEditorPopover()
 	return adminBoundaryStyleEditorPopover;
 }
 
-function openPropertyBadgeStyleEditorPopover()
+function openPropertyBadgeStyleEditorPopover(mode = "background")
 {
 	closeAdminBoundaryStyleEditorPopover();
 	const editor = ensurePropertyBadgeStyleEditorPopover();
 	const style = getPropertyBadgeStyle();
-	editor.innerHTML = renderPropertyBadgeStyleEditorHtml();
-	editor.dataset.draftColor = style.color;
-	editor.dataset.draftOpacity = String(style.opacity);
+	const editorMode = mode === "text" || mode === "border" ? mode : "background";
+	editor.dataset.editorMode = editorMode;
+	editor.innerHTML = editorMode === "text"
+		? renderPropertyBadgeTextStyleEditorHtml()
+		: (editorMode === "border" ? renderPropertyBadgeBorderStyleEditorHtml() : renderPropertyBadgeStyleEditorHtml());
+	if (editorMode === "text") {
+		editor.dataset.draftTextColor = style.textColor;
+		editor.dataset.draftTextOpacity = String(style.textOpacity);
+		syncPropertyBadgeTextStylePopover(editor, style);
+	} else if (editorMode === "border") {
+		editor.dataset.draftBorderColor = style.borderColor;
+		editor.dataset.draftBorderOpacity = String(style.borderOpacity);
+		syncPropertyBadgeBorderStylePopover(editor, style);
+	} else {
+		editor.dataset.draftColor = style.color;
+		editor.dataset.draftOpacity = String(style.opacity);
+		syncPropertyBadgeStylePopover(editor, style);
+	}
 	editor.hidden = false;
-	syncPropertyBadgeStylePopover(editor, style);
 	document.body.appendChild(editor);
 	syncMapToolPopoverZOrder(editor);
 	positionPropertyBadgeStyleEditorPopover();
@@ -36767,13 +37759,19 @@ function ensureMapSettingsFilterPanel()
 		if (!option || option.disabled) return;
 		event.preventDefault();
 		event.stopPropagation();
-		if (option.dataset.mapSettingsOption === "property-badge-style") {
-			if (isPropertyBadgeStyleEditorPopoverOpen()) {
+		const modeByOption = {
+			"property-badge-style": "background",
+			"property-badge-text-style": "text",
+			"property-badge-border-style": "border"
+		};
+		const editorMode = modeByOption[option.dataset.mapSettingsOption];
+		if (editorMode) {
+			if (isPropertyBadgeStyleEditorPopoverOpen(editorMode)) {
 				closePropertyBadgeStyleEditorPopover();
 				renderMapSettingsFilterPanel();
 				syncMapToolPopoverZOrder(mapSettingsFilterPanel);
 			} else {
-				openPropertyBadgeStyleEditorPopover();
+				openPropertyBadgeStyleEditorPopover(editorMode);
 			}
 			return;
 		}
@@ -36796,7 +37794,9 @@ function renderMapSettingsFilterPanel()
 	const panel = ensureMapSettingsFilterPanel();
 	const style = getPropertyBadgeStyle();
 	const boundaryStyle = getAdminBoundaryStylePreference();
-	const isEditingBadge = isPropertyBadgeStyleEditorPopoverOpen();
+	const isEditingBadge = isPropertyBadgeStyleEditorPopoverOpen("background");
+	const isEditingBadgeText = isPropertyBadgeStyleEditorPopoverOpen("text");
+	const isEditingBadgeBorder = isPropertyBadgeStyleEditorPopoverOpen("border");
 	const isEditingBoundary = isAdminBoundaryStyleEditorPopoverOpen();
 	const badgeOption = '<button type="button" class="education-facility-filter-option map-settings-filter-option '
 		+ (isEditingBadge ? 'active' : '')
@@ -36804,6 +37804,20 @@ function renderMapSettingsFilterPanel()
 		+ '<span class="map-settings-filter-swatch" style="background:'
 		+ escapeHtml(hexToRgba(style.color, style.opacity))
 		+ '" aria-hidden="true"></span><span>뱃지색상 변경</span></button>';
+	const badgeTextOption = '<button type="button" class="education-facility-filter-option map-settings-filter-option '
+		+ (isEditingBadgeText ? 'active' : '')
+		+ '" data-map-settings-option="property-badge-text-style">'
+		+ '<span class="map-settings-filter-swatch" style="background:'
+		+ escapeHtml(getResolvedPropertyBadgeTextColor(style))
+		+ '" aria-hidden="true"></span><span>글자색상 변경</span></button>';
+	const badgeBorderOption = '<button type="button" class="education-facility-filter-option map-settings-filter-option '
+		+ (isEditingBadgeBorder ? 'active' : '')
+		+ '" data-map-settings-option="property-badge-border-style">'
+		+ '<span class="map-settings-filter-swatch property-badge-border-settings-swatch" style="background:'
+		+ escapeHtml(hexToRgba(style.color, style.opacity))
+		+ ';border-color:'
+		+ escapeHtml(getResolvedPropertyBadgeBorderColor(style))
+		+ '" aria-hidden="true"></span><span>외곽색상 변경</span></button>';
 	const boundaryOption = '<button type="button" class="education-facility-filter-option map-settings-filter-option '
 		+ (isEditingBoundary ? 'active' : '')
 		+ '" data-map-settings-option="admin-boundary-style">'
@@ -36811,17 +37825,18 @@ function renderMapSettingsFilterPanel()
 		+ escapeHtml(hexToRgba(boundaryStyle.color, boundaryStyle.opacity))
 		+ ';border-color:' + escapeHtml(boundaryStyle.color)
 		+ '" aria-hidden="true"></span><span>행정구역 변경</span></button>';
-	const reservedOptions = Array.from({ length: 4 }, () => (
-		'<button type="button" class="education-facility-filter-option map-settings-filter-option placeholder" '
-		+ 'disabled aria-disabled="true"><i class="fa-solid fa-gear" aria-hidden="true"></i><span>준비중</span></button>'
-	)).join("");
+	const preparingOption = '<button type="button" class="education-facility-filter-option map-settings-filter-option map-settings-filter-preparing" disabled>'
+		+ '<span class="map-settings-filter-preparing-icon" aria-hidden="true">&#9881;</span><span>준비중</span></button>';
 	panel.innerHTML = '<div class="education-facility-filter-grid map-settings-filter-grid">'
 		+ badgeOption
+		+ badgeTextOption
+		+ badgeBorderOption
 		+ boundaryOption
-		+ reservedOptions
+		+ preparingOption
+		+ preparingOption
 		+ '</div>';
 	positionMapSettingsFilterPanel();
-	if (isEditingBadge) positionPropertyBadgeStyleEditorPopover();
+	if (isEditingBadge || isEditingBadgeText || isEditingBadgeBorder) positionPropertyBadgeStyleEditorPopover();
 	if (isEditingBoundary) positionAdminBoundaryStyleEditorPopover();
 }
 
@@ -40969,7 +41984,11 @@ async function applySubAddressSearchResult(found, query, parcelMode)
   }
 
   const label = found.address_name || found.road_address_name || found.place_name || query;
-  if (!parcelMode) {
+  const currentSearchCategory = typeof getCurrentRealjejuGlobalCategoryKey === "function"
+    ? getCurrentRealjejuGlobalCategoryKey()
+    : String(document.body?.dataset?.globalCategory || "realestate");
+  const realestateMode = currentSearchCategory === "realestate";
+  if (!parcelMode && !realestateMode) {
     if (typeof clearParcelBoundaryOverlays === "function") clearParcelBoundaryOverlays();
     focusMapByAddress(found.y, found.x, label, {
       mapLevel: 2,
@@ -40979,14 +41998,28 @@ async function applySubAddressSearchResult(found, query, parcelMode)
     return { matched: true, completed: true };
   }
 
+  if (realestateMode) {
+    selectedPropertyRegionCountKey = "";
+    selectedPropertyRegionBoundaryFeature = null;
+    selectedAdminBoundaryFeature = null;
+    adminBoundarySelectedPoint = null;
+    clearAdminBoundaryOverlay();
+  }
   const searchViewport = focusMapByAddress(found.y, found.x, label, {
     mapLevel: 2,
-    showAddressMarker: false
+    showAddressMarker: realestateMode
   });
-  const parcelOpened = await showParcelBoundaryForSearchLocation(found.y, found.x, {
-    openLandInfoPanel: true,
-    fromAddressSearch: true
-  });
+  if (realestateMode) {
+    clearParcelBoundaryRenderState();
+    searchViewport?.restoreIfCurrent();
+    return { matched: true, completed: true };
+  }
+  const parcelOpened = parcelMode
+    ? await showParcelBoundaryForSearchLocation(found.y, found.x, {
+        openLandInfoPanel: true,
+        fromAddressSearch: true
+      })
+    : false;
   searchViewport?.restoreIfCurrent();
   return { matched: true, completed: parcelOpened };
 }

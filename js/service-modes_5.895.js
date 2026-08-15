@@ -13,7 +13,6 @@
 
   let currentMode = "realestate";
   let localBusinessUserMapType = "";
-  let evRecentSurfaceSnapshot = null;
   const SEARCH_STORAGE_PREFIX = "realjeju.serviceAddressSearch.v1.";
 
   function getMapApi() {
@@ -91,46 +90,51 @@
     restoreSearchValue(currentMode);
   }
 
-  function syncEvChargerRecentSurface(mode) {
+  function syncServiceRecentSurface() {
+    if (typeof window.realjejuRenderSideRecentViewedList === "function") {
+      window.realjejuRenderSideRecentViewedList();
+      return;
+    }
     const list = document.getElementById("realjejuSideRecentList");
     const empty = document.getElementById("realjejuSideRecentEmpty");
     if (!list || !empty) return;
-    if (mode === "ev-charger") {
-      if (!evRecentSurfaceSnapshot) {
-        evRecentSurfaceSnapshot = {
-          listHidden: list.hidden,
-          listDisplay: list.style.display,
-          emptyHidden: empty.hidden,
-          emptyDisplay: empty.style.display,
-          emptyText: empty.textContent
-        };
-      }
+    if (currentMode === "ev-charger" || currentMode === "local-business") {
       list.hidden = true;
       list.style.display = "none";
+      list.innerHTML = "";
       empty.hidden = false;
       empty.style.display = "block";
-      empty.textContent = "최근 조회한 충전소가 없습니다.";
-      return;
+      empty.textContent = currentMode === "ev-charger"
+        ? "최근 조회한 충전소가 없습니다."
+        : "최근 조회한 업체가 없습니다.";
     }
-    if (!evRecentSurfaceSnapshot) return;
-    list.hidden = evRecentSurfaceSnapshot.listHidden;
-    list.style.display = evRecentSurfaceSnapshot.listDisplay;
-    empty.hidden = evRecentSurfaceSnapshot.emptyHidden;
-    empty.style.display = evRecentSurfaceSnapshot.emptyDisplay;
-    empty.textContent = evRecentSurfaceSnapshot.emptyText;
-    evRecentSurfaceSnapshot = null;
   }
 
-  async function apply(mode) {
-    const nextMode = normalizeMode(mode);
-    rememberCurrentSearchValue();
-    currentMode = nextMode;
+function closeTransientUiForModeChange(previousMode, nextMode) {
+	if (previousMode === nextMode) return;
+	if (typeof window.realjejuClosePropertyInfoTransientPickers === "function") {
+		window.realjejuClosePropertyInfoTransientPickers();
+	}
+	document.querySelectorAll("[data-parcel-building-unit-picker], [data-parcel-common-housing-picker], [data-parcel-building-all-modal]").forEach((surface) => surface.remove());
+}
+
+async function apply(mode) {
+	const nextMode = normalizeMode(mode);
+	const previousMode = currentMode;
+	rememberCurrentSearchValue();
+	closeTransientUiForModeChange(previousMode, nextMode);
+	currentMode = nextMode;
     syncBodyMode(currentMode);
     restoreSearchValue(currentMode);
-    syncEvChargerRecentSurface(currentMode);
+    syncServiceRecentSurface();
 
     const api = getMapApi();
     if (!api) return false;
+
+    if (previousMode !== currentMode) {
+      api.clearAddressSearchMarker?.();
+      api.clearParcelBoundary?.();
+    }
 
     if (currentMode === "realestate") {
       api.clearParcelBoundary?.();
@@ -139,14 +143,13 @@
       api.restorePropertyMarkersVisible?.();
       api.setMapType?.("roadmap");
     } else if (currentMode === "parcel") {
-      void window.realjejuPreloadPropertyInfo?.();
-      void api.prewarmParcelLookup?.();
       api.closePropertyList?.();
       await api.setLocalBusinessMapVisible?.(false);
       await api.setEvChargerVisible?.(false);
       api.setPropertyMarkersVisible?.(false);
       api.setMapType?.("satellite");
     } else if (currentMode === "local-business") {
+      await api.setEvChargerVisible?.(false);
       api.setMapType?.(getLocalBusinessMapType());
       await api.setLocalBusinessMapVisible?.(true);
     } else if (currentMode === "ev-charger") {
@@ -169,13 +172,14 @@
 
   window.realjejuServiceModes = Object.freeze({
     apply,
-    sync(mode) {
-      const nextMode = normalizeMode(mode);
-      rememberCurrentSearchValue();
-      currentMode = nextMode;
+	sync(mode) {
+		const nextMode = normalizeMode(mode);
+		rememberCurrentSearchValue();
+		closeTransientUiForModeChange(currentMode, nextMode);
+		currentMode = nextMode;
       syncBodyMode(currentMode);
       restoreSearchValue(currentMode);
-      syncEvChargerRecentSurface(currentMode);
+      syncServiceRecentSurface();
       applyLocalBusinessMapType();
       return currentMode;
     },
