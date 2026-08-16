@@ -382,6 +382,40 @@ async function loadOfflineLandMoves(pnu)
   }));
 }
 
+async function loadRoadContactParcelsByBounds(bounds, limit)
+{
+  const response = await supabaseAdminFetch(
+    "/rest/v1/rpc/get_jeju_road_contact_parcels_in_bounds",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        p_west: Number(bounds.west),
+        p_south: Number(bounds.south),
+        p_east: Number(bounds.east),
+        p_north: Number(bounds.north),
+        p_limit: Number(limit)
+      })
+    }
+  );
+  if (!response || !response.ok) {
+    if (response) console.warn("[parcel-boundary-by-point] road-contact bounds RPC failed:", response.status);
+    return null;
+  }
+  const rows = await response.json().catch(() => []);
+  return (Array.isArray(rows) ? rows : []).reduce((items, row) => {
+    const pnu = String(row?.pnu || "").trim();
+    const jimok = String(row?.jimok || "").trim();
+    let geometry = row?.geometry || null;
+    if (typeof geometry === "string") {
+      try { geometry = JSON.parse(geometry); } catch (_) { geometry = null; }
+    }
+    if (!/^\d{19}$/.test(pnu) || !jimok || !geometry) return items;
+    items.push({ pnu, jimok, geometry });
+    return items;
+  }, []);
+}
+
 async function loadParcelMasterBoundaryByPointRpc(lat, lng)
 {
   const normalizedLat = normalizeCoordinate(lat);
@@ -1502,20 +1536,9 @@ module.exports = async function handler(req, res)
 		return;
 	}
 
-	const lat = normalizeCoordinate(req.query && req.query.lat);
-	const lng = normalizeCoordinate(req.query && req.query.lng);
-	if (lat === null || lng === null) {
-		res.setHeader("Cache-Control", "no-store");
-		res.status(400).json({ ok: false, code: "INVALID_COORDINATES" });
-		return;
-	}
-	if (!isJejuCoordinate(lat, lng)) {
-		res.setHeader("Cache-Control", "no-store");
-		res.status(400).json({ ok: false, code: "OUTSIDE_JEJU" });
-		return;
-	}
-
 	const boundaryOnly = ["1", "true", "yes"].includes(String(req.query && req.query.boundaryOnly || "").trim().toLowerCase());
+	const priceOnly = ["1", "true", "yes"].includes(String(req.query && req.query.priceOnly || "").trim().toLowerCase());
+	const roadContactBounds = ["1", "true", "yes"].includes(String(req.query && req.query.roadContactBounds || "").trim().toLowerCase());
 	const refreshRequested = ["1", "true", "yes"].includes(String(req.query && req.query.refresh || "").trim().toLowerCase());
 	const requestedPnu = String(req.query && req.query.pnu || "").trim();
 	if (refreshRequested && !parcelWorkerAuthorized(req)) {
@@ -1528,9 +1551,85 @@ module.exports = async function handler(req, res)
 		res.status(400).json({ ok: false, code: "INVALID_PNU" });
 		return;
 	}
-	if (requestedPnu && !parcelWorkerAuthorized(req)) {
+	if (requestedPnu && !priceOnly && !parcelWorkerAuthorized(req)) {
 		res.setHeader("Cache-Control", "no-store");
 		res.status(403).json({ ok: false, code: "WORKER_AUTH_REQUIRED" });
+		return;
+	}
+	if (roadContactBounds) {
+		const bounds = {
+			west: Number(req.query && req.query.west),
+			south: Number(req.query && req.query.south),
+			east: Number(req.query && req.query.east),
+			north: Number(req.query && req.query.north)
+		};
+		const spanLng = bounds.east - bounds.west;
+		const spanLat = bounds.north - bounds.south;
+		const validBounds = Object.values(bounds).every(Number.isFinite)
+			&& bounds.west >= 124 && bounds.east <= 128
+			&& bounds.south >= 32 && bounds.north <= 35
+			&& spanLng > 0 && spanLat > 0 && spanLng <= 0.25 && spanLat <= 0.25;
+		if (!validBounds) {
+			res.setHeader("Cache-Control", "no-store");
+			res.status(400).json({ ok: false, code: "INVALID_BOUNDS" });
+			return;
+		}
+		const limit = Math.max(1, Math.min(1200, Math.trunc(Number(req.query && req.query.limit) || 1200)));
+		try {
+			const parcels = await loadRoadContactParcelsByBounds(bounds, limit);
+			if (!Array.isArray(parcels)) {
+				res.setHeader("Cache-Control", "no-store");
+				res.status(502).json({ ok: false, code: "ROAD_CONTACT_DATABASE_LOOKUP_FAILED" });
+				return;
+			}
+			res.setHeader("Cache-Control", "public, max-age=120, s-maxage=600, stale-while-revalidate=3600");
+			res.status(200).json({ ok: true, roadContactBounds: true, parcels });
+		} catch (error) {
+			console.error("도로접면 필지 DB 조회 실패:", error && error.message ? error.message : "UNKNOWN_ERROR");
+			res.setHeader("Cache-Control", "no-store");
+			res.status(502).json({ ok: false, code: "ROAD_CONTACT_DATABASE_LOOKUP_FAILED" });
+		}
+		return;
+	}
+	if (priceOnly) {
+		if (!/^\d{19}$/.test(requestedPnu)) {
+			res.setHeader("Cache-Control", "no-store");
+			res.status(400).json({ ok: false, code: "INVALID_PNU" });
+			return;
+		}
+		try {
+			const individualLandPrices = await loadOfflineIndividualLandPrices(requestedPnu);
+			if (!Array.isArray(individualLandPrices)) {
+				res.setHeader("Cache-Control", "no-store");
+				res.status(502).json({ ok: false, code: "LAND_PRICE_DATABASE_LOOKUP_FAILED" });
+				return;
+			}
+			res.setHeader("Cache-Control", "public, max-age=300, s-maxage=86400, stale-while-revalidate=604800");
+			res.status(200).json({
+				ok: true,
+				pnu: requestedPnu,
+				priceOnly: true,
+				individualLandPrices,
+				individualLandPricesStatus: individualLandPrices.length ? "ok" : "not-found"
+			});
+		} catch (error) {
+			console.error("필지 공시지가 DB 조회 실패:", error && error.message ? error.message : "UNKNOWN_ERROR");
+			res.setHeader("Cache-Control", "no-store");
+			res.status(502).json({ ok: false, code: "LAND_PRICE_DATABASE_LOOKUP_FAILED" });
+		}
+		return;
+	}
+
+	const lat = normalizeCoordinate(req.query && req.query.lat);
+	const lng = normalizeCoordinate(req.query && req.query.lng);
+	if (lat === null || lng === null) {
+		res.setHeader("Cache-Control", "no-store");
+		res.status(400).json({ ok: false, code: "INVALID_COORDINATES" });
+		return;
+	}
+	if (!isJejuCoordinate(lat, lng)) {
+		res.setHeader("Cache-Control", "no-store");
+		res.status(400).json({ ok: false, code: "OUTSIDE_JEJU" });
 		return;
 	}
 	const apiKey = normalizeApiKey(process.env.VWORLD_API_KEY);
@@ -1557,6 +1656,10 @@ module.exports = async function handler(req, res)
 				dbContract: "parcel-master-boundary-property-db-only-v4",
 				dataSource: "database",
 				boundaryOnly: true,
+				apiCapabilities: {
+					priceOnly: true,
+					roadContactBounds: true
+				},
 				propertyInformationAvailable: false,
 				datasetStates: { boundary: "loaded" }
 			});
