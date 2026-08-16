@@ -1,4 +1,4 @@
-// REALJEJU 5.902 property-info background module
+// REALJEJU 5.995 property-info background module
 // 필지 상세, 실거래가, 공시지가, 건축물대장, 추천 중개사 패널을 한 경계에서 관리합니다.
 /* PATCH 5.295: 필지 상세 통합 화면, 실거래가, 주변 중개사, 건축물대장 */
 (function initParcelPropertyExperience5293()
@@ -224,9 +224,9 @@
     const overviewDetail = ownershipSummaryJimoks.has(jimokLabel)
       ? ownership
       : zone;
-    return '<section class="parcel-property-overview">'
+    return '<section class="parcel-property-overview"><div class="parcel-property-overview-copy">'
       + '<p class="parcel-property-overview-primary"><span data-parcel-property-overview-prefix>' + esc(jimok) + ' · </span><span data-parcel-property-complex-name hidden></span><span data-parcel-property-overview-detail>' + esc(overviewDetail) + '</span></p>'
-      + '<p class="parcel-property-overview-secondary">토지 <span data-parcel-property-area-sqm="' + (area == null ? "" : area) + '">' + esc(formatArea(area)) + '</span><span data-parcel-building-summary></span></p>'
+      + '<p class="parcel-property-overview-secondary">토지 <span data-parcel-property-area-sqm="' + (area == null ? "" : area) + '">' + esc(formatArea(area)) + '</span><span data-parcel-building-summary></span></p></div><button type="button" class="map-area-unit-toggle-btn parcel-land-area-unit-toggle parcel-overview-area-unit-toggle" data-parcel-land-area-unit-toggle aria-label="' + (currentAreaUnit() === "pyeong" ? "제곱미터" : "평") + ' 단위로 전환" title="평 / ㎡"><i class="fa-solid fa-arrows-rotate" aria-hidden="true"></i><span class="map-unit-cycle-label">' + (currentAreaUnit() === "pyeong" ? "㎡" : "평") + '</span></button>'
       + '</section>';
   }
 
@@ -717,6 +717,20 @@
     }
   }
 
+  function scheduleRecommendedListing(panel, feature)
+  {
+    const expectedPnu = String(feature && feature.pnu || "");
+    const run = function() {
+      if (!panel || !panel.isConnected || String(panel.dataset.parcelPnu || "") !== expectedPnu) return;
+      loadRecommendedListing(panel, feature);
+    };
+    if (typeof window.requestIdleCallback === "function") {
+      window.requestIdleCallback(run, { timeout: 1600 });
+    } else {
+      window.setTimeout(run, 500);
+    }
+  }
+
   function normalizeJibun(value)
   {
     const compact = String(value || "").replace(/\s+/g, "");
@@ -772,7 +786,17 @@
 
   function tradePropertyLabel(row)
   {
-    return String(row && row.propertyType || "토지").trim() || "토지";
+    const serviceType = String(row && row.serviceType || "").trim().toLowerCase();
+    const propertyType = String(row && row.propertyType || "").trim();
+    if (serviceType.indexOf("land-") === 0 || propertyType.toLowerCase() === "land" || propertyType === "토지") return "토지";
+    return propertyType || "토지";
+  }
+
+  function isLandTradeRow(row)
+  {
+    const serviceType = String(row && row.serviceType || "").trim().toLowerCase();
+    const propertyType = String(row && row.propertyType || "").trim().toLowerCase();
+    return serviceType.indexOf("land-") === 0 || propertyType === "land" || propertyType === "토지";
   }
 
   function formatTradePrimaryAmount(row)
@@ -808,6 +832,7 @@
     const representativeKind = exactTradeKindKey(representative);
     const isMonthlyTable = representativeKind === "monthly";
     const isJeonseTable = representativeKind === "jeonse";
+    const isLandTable = rows.every(isLandTradeRow);
     const rowHtml = rows.map(function(row) {
       if (isMonthlyTable) {
         return '<div class="parcel-trade-row"><span>' + esc(exactTradeDateText(row.dealDate, false)) + '</span><span>' + esc(exactTradeBuildingPosition(row)) + '</span><strong>' + esc(formatTradeAmount(row.depositManWon)) + '</strong><strong>' + esc(formatTradeAmount(row.monthlyRentManWon)) + '</strong></div>';
@@ -817,7 +842,10 @@
       const amount = kind === "jeonse" ? finite(row.depositManWon) : (kind === "sale" ? finite(row.amountManWon) : null);
       const unitArea = area == null ? null : (unit === "py" ? area / 3.305785 : area);
       const unitPrice = amount != null && unitArea && unitArea > 0 ? amount / unitArea : null;
-      return '<div class="parcel-trade-row"><span>' + esc(exactTradeDateText(row.dealDate, false)) + '</span><span>' + esc(exactTradeBuildingPosition(row)) + '</span><strong>' + esc(formatTradePrimaryAmount(row)) + '</strong><span>' + (unitPrice == null ? "-" : esc(unitPrice.toLocaleString("ko-KR", { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + "만원")) + '</span></div>';
+      const position = isLandTable
+        ? (area == null ? "-" : exactTradeAreaText(area, unit))
+        : exactTradeBuildingPosition(row);
+      return '<div class="parcel-trade-row"><span>' + esc(exactTradeDateText(row.dealDate, false)) + '</span><span>' + esc(position) + '</span><strong>' + esc(formatTradePrimaryAmount(row)) + '</strong><span>' + (unitPrice == null ? "-" : esc(unitPrice.toLocaleString("ko-KR", { minimumFractionDigits: 0, maximumFractionDigits: 2 }) + "만원")) + '</span></div>';
     });
     const visibleRows = rowHtml.slice(0, 5).join("");
     const extraRowCount = Math.max(0, rowHtml.length - 5);
@@ -831,8 +859,41 @@
       : '';
     const tableHead = isMonthlyTable
       ? '<div class="parcel-trade-head"><span>거래일</span><span>동/층/호</span><span>보증금</span><span>임대료(월세)</span></div>'
-      : '<div class="parcel-trade-head"><span>거래일</span><span>동/층/호</span><span>' + (isJeonseTable ? "보증금" : "실거래가") + '</span><span>' + (unit === "m2" ? "면적(㎡)당 단가" : "면적(평)당 단가") + '</span></div>';
+      : '<div class="parcel-trade-head"><span>거래일</span><span>' + (isLandTable ? "계약면적" : "동/층/호") + '</span><span>' + (isJeonseTable ? "보증금" : "실거래가") + '</span><span>' + (unit === "m2" ? "면적(㎡)당 단가" : "면적(평)당 단가") + '</span></div>';
     return (typeLabel ? '<div class="parcel-trade-property-line">' + esc(typeLabel) + '</div>' : '') + '<div class="parcel-trade-table">' + tableHead + visibleRows + accordion + '</div>';
+  }
+
+  function isCancelledTradeRow(row)
+  {
+    return Boolean(row && (row.isCancelled || String(row.cancellationDate || "").trim()));
+  }
+
+  function cancelledTradeSectionHtml(rows, requestedUnit)
+  {
+    const cancelledRows = (Array.isArray(rows) ? rows : []).slice().sort(function(a, b) {
+      return String(b.dealDate || "").localeCompare(String(a.dealDate || ""));
+    });
+    if (!cancelledRows.length) return "";
+    const unit = requestedUnit === "m2" ? "m2" : "py";
+    const rowHtml = cancelledRows.map(function(row) {
+      const area = finite(row && row.areaM2);
+      const areaLabel = area == null ? "-" : exactTradeAreaText(area, unit);
+      const cancellationDate = String(row && row.cancellationDate || "").trim();
+      return '<div class="parcel-trade-row parcel-trade-cancelled-row">' +
+        '<span>' + esc(exactTradeDateText(row && row.dealDate, false)) + '</span>' +
+        '<span>' + esc(areaLabel) + '</span>' +
+        '<strong>' + esc(formatTradePrimaryAmount(row)) + '</strong>' +
+        '<span class="parcel-trade-cancelled-status">' + (cancellationDate ? esc(exactTradeDateText(cancellationDate, false)) : "해제") + '</span>' +
+      '</div>';
+    }).join("");
+    return '<section class="parcel-cancelled-trades">' +
+      '<h3>해제 거래 (' + cancelledRows.length.toLocaleString("ko-KR") + '건)</h3>' +
+      '<p>해제된 거래는 정상 거래 건수와 그래프에서 제외됩니다.</p>' +
+      '<div class="parcel-trade-table">' +
+        '<div class="parcel-trade-head"><span>거래일</span><span>면적</span><span>거래금액</span><span>해제일</span></div>' +
+        rowHtml +
+      '</div>' +
+    '</section>';
   }
 
   function geocodeAddress(address)
@@ -998,10 +1059,10 @@
   function renderParcelTradeGraph(target, rows, range, radiusMeters)
   {
     if (!target) return;
-    const selectedRange = range === "1y" || range === "all" ? range : "3y";
+    const selectedRange = range === "1y" || range === "3y" ? range : "all";
     const selectedRadiusMeters = Number(radiusMeters) === 1000 ? 1000 : 500;
     const saleRows = (Array.isArray(rows) ? rows : []).filter(function(row) {
-      return String(row && row.dealKind || "sale") === "sale";
+      return exactTradeKindKey(row) === "sale";
     });
     const all = saleRows.map(function(row) {
       return { row: row, date: parcelTradeGraphDate(row), amount: Number(row && row.amountManWon) };
@@ -1186,6 +1247,95 @@
     });
   }
 
+  const PARCEL_TRADE_INFLIGHT_TTL_MS = 12 * 1000;
+  const parcelTradeRequestDedup = new Map();
+
+  function normalizeTradeServiceTypesForCache(values)
+  {
+    if (!Array.isArray(values)) return "";
+    return Array.from(new Set(values.map(function(value) {
+      return String(value || "").trim().toLowerCase();
+    }))).filter(Boolean).sort().join(",");
+  }
+
+  function buildParcelTradeRequestKey(pnu, mode, serviceTypes, tradeKind, range, radiusMeters)
+  {
+    const normalizedServiceTypes = normalizeTradeServiceTypesForCache(serviceTypes);
+    return [
+      "parcelTrade",
+      String(pnu || ""),
+      String(mode || ""),
+      normalizedServiceTypes,
+      String(tradeKind || "all"),
+      String(range || "all"),
+      String(Number(radiusMeters) || 0)
+    ].join("|");
+  }
+
+  function abortableTradePromise(promise, signal)
+  {
+    if (!signal) return promise;
+    return new Promise(function(resolve, reject) {
+      if (signal.aborted) {
+        reject(signal.reason || new Error("요청이 취소되었습니다."));
+        return;
+      }
+      let settled = false;
+      const onAbort = function() {
+        if (settled) return;
+        settled = true;
+        reject(signal.reason || new Error("요청이 취소되었습니다."));
+      };
+      signal.addEventListener("abort", onAbort, { once: true });
+      Promise.resolve(promise).then(function(value) {
+        if (settled) return;
+        settled = true;
+        signal.removeEventListener("abort", onAbort);
+        resolve(value);
+      }, function(error) {
+        if (settled) return;
+        settled = true;
+        signal.removeEventListener("abort", onAbort);
+        reject(error);
+      });
+    });
+  }
+
+  function getParcelTradeRequestPromise(cacheKey, factory)
+  {
+    const now = Date.now();
+    const existing = parcelTradeRequestDedup.get(cacheKey);
+    if (existing && existing.promise && existing.expiresAt > now) return existing.promise;
+    const request = factory();
+    parcelTradeRequestDedup.set(cacheKey, {
+      promise: request,
+      expiresAt: now + PARCEL_TRADE_INFLIGHT_TTL_MS
+    });
+    request.finally(function() {
+      const current = parcelTradeRequestDedup.get(cacheKey);
+      if (current && current.promise === request) {
+        parcelTradeRequestDedup.delete(cacheKey);
+      }
+    });
+    return request;
+  }
+
+  function removeTradeLoadingState(target, type)
+  {
+    if (!target) return;
+    if (target.dataset.parcelTradeLoading !== type) return;
+    delete target.dataset.parcelTradeLoading;
+    target.classList.remove("parcel-property-loading", "parcel-property-empty", "realjeju-property-state-message");
+  }
+
+  function markTradeLoadingState(target, type)
+  {
+    if (!target) return;
+    target.dataset.parcelTradeLoading = type;
+    target.classList.add("parcel-property-loading");
+    target.classList.remove("parcel-property-empty", "realjeju-property-state-message");
+  }
+
   let parcelTradeTaskSequence = 0;
   const parcelTradeTaskTokens = new WeakMap();
 
@@ -1325,18 +1475,21 @@
   {
     if (kind === "jeonse") return finite(row && row.depositManWon);
     if (kind === "sale") return finite(row && row.amountManWon);
+    if (kind === "monthly") return finite(row && row.monthlyRentManWon);
     return null;
   }
 
-  function exactTradeGraphModel(rows, range)
+  function exactTradeGraphModel(rows, range, requestedKind)
   {
+    const monthlyMode = requestedKind === "monthly";
+    const landMode = requestedKind === "land";
     let points = rows.map(function(row) {
       const kind = exactTradeKindKey(row);
       const stamp = exactTradeDateStamp(row && row.dealDate);
       const value = exactTradeMoneyValue(row, kind);
       return { kind: kind, stamp: stamp, value: value };
     }).filter(function(point) {
-      return (point.kind === "sale" || point.kind === "jeonse") && point.stamp != null && point.value != null && point.value > 0;
+      return (monthlyMode ? point.kind === "monthly" : (landMode ? point.kind === "sale" : (point.kind === "sale" || point.kind === "jeonse"))) && point.stamp != null && point.value != null && point.value > 0;
     }).sort(function(a, b) { return a.stamp - b.stamp; });
     if (!points.length) return null;
     const latestStamp = points[points.length - 1].stamp;
@@ -1375,8 +1528,8 @@
         return { kind: kind, stamp: stamp, value: latest.value, sourceStamp: latest.stamp };
       });
     }
-    const sale = expandMonthlySeries("sale");
-    const jeonse = expandMonthlySeries("jeonse");
+    const sale = monthlyMode ? [] : expandMonthlySeries("sale");
+    const jeonse = monthlyMode ? expandMonthlySeries("monthly") : (landMode ? [] : expandMonthlySeries("jeonse"));
     const width = 640;
     const height = 360;
     const left = 64;
@@ -1386,7 +1539,9 @@
     const minStamp = timeline[0];
     const maxStamp = timeline[timeline.length - 1];
     const rawMax = Math.max.apply(null, points.map(function(point) { return point.value; }));
-    const amountStep = rawMax >= 10000 ? 10000 : 1000;
+    const amountStep = monthlyMode
+      ? (rawMax >= 1000 ? 1000 : (rawMax >= 100 ? 100 : 10))
+      : (rawMax >= 10000 ? 10000 : 1000);
     const maxValue = Math.max(amountStep, Math.ceil(rawMax / amountStep) * amountStep);
     function xFor(stamp) {
       if (maxStamp === minStamp) return left + (width - left - right) / 2;
@@ -1416,6 +1571,7 @@
         + " Z";
     }
     return {
+      mode: monthlyMode ? "monthly" : (landMode ? "land" : "sale-jeonse"),
       points: points,
       sale: sale,
       jeonse: jeonse,
@@ -1457,9 +1613,11 @@
     };
   }
 
-  function exactTradeGraphHtml(model, range)
+  function exactTradeGraphHtml(model, range, requestedKind)
   {
-    if (!model) return '<div class="parcel-exact-graph-empty">선택 면적의 매매·전세 그래프 데이터가 없습니다.</div>';
+    const monthlyMode = requestedKind === "monthly" || Boolean(model && model.mode === "monthly");
+    const landMode = requestedKind === "land" || Boolean(model && model.mode === "land");
+    if (!model) return '<div class="parcel-exact-graph-empty">' + (landMode ? "토지 매매" : ("선택 면적의 " + (monthlyMode ? "월세" : "매매·전세"))) + ' 그래프 데이터가 없습니다.</div>';
     const initial = exactTradeGraphSnapshot(model, model.maxStamp);
     const midValue = model.maxValue / 2;
     const axisY = [
@@ -1480,11 +1638,11 @@
     }).join("") + '</div>' +
       '<div class="parcel-exact-graph-readout">' +
         '<strong data-parcel-exact-graph-date>' + exactTradeMonthText(initial.stamp, false) + '</strong>' +
-        '<span><b>매매</b><em data-parcel-exact-graph-sale>' + (initial.sale ? formatTradeAmount(initial.sale.value) : "-") + '</em><small data-parcel-exact-graph-sale-date>' + (initial.sale ? "(" + exactTradeMonthText(initial.sale.sourceStamp || initial.sale.stamp, false) + ")" : "") + '</small></span>' +
-        '<span><b>전세</b><em data-parcel-exact-graph-jeonse>' + (initial.jeonse ? formatTradeAmount(initial.jeonse.value) : "-") + '</em><small data-parcel-exact-graph-jeonse-date>' + (initial.jeonse ? "(" + exactTradeMonthText(initial.jeonse.sourceStamp || initial.jeonse.stamp, false) + ")" : "") + '</small></span>' +
-        '<span class="parcel-exact-graph-ratio"><b>전세가율</b><em data-parcel-exact-graph-ratio>' + (initial.ratio == null ? "-" : initial.ratio.toFixed(2) + "%") + '</em></span>' +
+        (monthlyMode ? "" : '<span><b>매매</b><em data-parcel-exact-graph-sale>' + (initial.sale ? formatTradeAmount(initial.sale.value) : "-") + '</em><small data-parcel-exact-graph-sale-date>' + (initial.sale ? "(" + exactTradeMonthText(initial.sale.sourceStamp || initial.sale.stamp, false) + ")" : "") + '</small></span>') +
+        (landMode ? "" : '<span><b>' + (monthlyMode ? "월세" : "전세") + '</b><em data-parcel-exact-graph-jeonse>' + (initial.jeonse ? formatTradeAmount(initial.jeonse.value) : "-") + '</em><small data-parcel-exact-graph-jeonse-date>' + (initial.jeonse ? "(" + exactTradeMonthText(initial.jeonse.sourceStamp || initial.jeonse.stamp, false) + ")" : "") + '</small></span>') +
+        (monthlyMode || landMode ? "" : '<span class="parcel-exact-graph-ratio"><b>전세가율</b><em data-parcel-exact-graph-ratio>' + (initial.ratio == null ? "-" : initial.ratio.toFixed(2) + "%") + '</em></span>') +
       '</div>' +
-      '<div class="parcel-exact-graph-canvas"><svg data-parcel-exact-graph-svg viewBox="0 0 ' + model.width + ' ' + model.height + '" role="img" aria-label="실거래가 매매 전세 그래프">' +
+      '<div class="parcel-exact-graph-canvas"><svg data-parcel-exact-graph-svg viewBox="0 0 ' + model.width + ' ' + model.height + '" role="img" aria-label="' + (landMode ? "토지 매매 실거래가 그래프" : (monthlyMode ? "실거래가 월세 그래프" : "실거래가 매매 전세 그래프")) + '">' +
         '<g class="parcel-exact-graph-grid">' + axisY + '</g>' +
         '<g class="parcel-exact-graph-axis-labels">' +
           '<text x="' + (model.left - 12) + '" y="' + (model.top + 5) + '" text-anchor="end">' + formatTradeAmount(model.maxValue) + '</text>' +
@@ -1614,6 +1772,16 @@
         renderExactTradeExperience(target, target.__parcelExactTradeRows || []);
         return;
       }
+      if (event.target.closest("[data-parcel-land-area-toggle]")) {
+        const nextUnit = target.__parcelExactTradeAreaUnit === "m2" ? "py" : "m2";
+        target.__parcelExactTradeAreaUnit = nextUnit;
+        if (typeof window.setGlobalAreaUnit === "function") {
+          window.setGlobalAreaUnit(nextUnit);
+        } else {
+          renderExactTradeExperience(target, target.__parcelExactTradeRows || []);
+        }
+        return;
+      }
       if (event.target.closest("[data-parcel-exact-area-open]")) {
         openExactTradeAreaModal(target);
         return;
@@ -1646,11 +1814,7 @@
   function isLandExactTradeExperience(rows)
   {
     if (!rows.length) return true;
-    return rows.every(function(row) {
-      const serviceType = String(row && row.serviceType || "").toLowerCase();
-      const propertyType = String(row && row.propertyType || "").trim();
-      return serviceType.indexOf("land-") === 0 || propertyType === "토지";
-    });
+    return rows.every(isLandTradeRow);
   }
 
   function exactTradeEmptyStateHtml(coverage)
@@ -1671,9 +1835,13 @@
     return '<div class="parcel-property-empty realjeju-property-state-message">실거래 정보가 존재하지 않습니다.</div>';
   }
 
-  function renderExactTradeExperience(target, sourceRows, cacheCoverage)
+  function renderExactTradeExperience(target, sourceRows, cacheCoverage, sourceCancelledRows)
   {
     const rows = Array.isArray(sourceRows) ? sourceRows.slice() : [];
+    if (Array.isArray(sourceCancelledRows)) target.__parcelCancelledTradeRows = sourceCancelledRows.slice();
+    const cancelledRows = Array.isArray(target.__parcelCancelledTradeRows)
+      ? target.__parcelCancelledTradeRows.slice()
+      : [];
     const complexTrade = rows.find(function(row) {
       return normalizedHousingComplexName(row && row.propertyName) && isNamedHousingComplexType(tradePropertyLabel(row));
     });
@@ -1690,12 +1858,28 @@
     if (isLandExactTradeExperience(rows)) {
       const oldModal = document.querySelector("[data-parcel-exact-area-modal]");
       if (oldModal) oldModal.remove();
-      target.onclick = null;
-      target.innerHTML = rows.length
-        ? '<div class="parcel-land-trade-only">' + tradeRowsHtml(rows.slice().sort(function(a, b) {
-          return String(b.dealDate || "").localeCompare(String(a.dealDate || ""));
-        }).slice(0, 500), unit) + '</div>'
-        : exactTradeEmptyStateHtml(resolvedCoverage);
+      const range = target.__parcelExactTradeRange || "all";
+      const historyRows = rows.slice().sort(function(a, b) {
+        return String(b.dealDate || "").localeCompare(String(a.dealDate || ""));
+      });
+      const latest = historyRows[0] || null;
+      const graphModel = historyRows.length >= 2 ? exactTradeGraphModel(historyRows, range, "land") : null;
+      const landArea = latest ? finite(latest.areaM2) : null;
+      const cancelledSection = cancelledTradeSectionHtml(cancelledRows, unit);
+      target.innerHTML = historyRows.length
+        ? '<div class="parcel-exact-trade-ui parcel-land-exact-trade-ui">' +
+          '<div class="parcel-exact-summary"><div class="parcel-exact-latest"><span>최근 실거래가</span><strong>' + escapeHtml(formatTradePrimaryAmount(latest)) + '</strong><time>' + exactTradeDateText(latest.dealDate, false) + '</time></div>' +
+          '<div class="parcel-exact-area-trigger parcel-land-area-summary"><strong>토지면적</strong><span>' + (landArea == null ? "-" : exactTradeAreaText(landArea, unit)) + '</span></div></div>' +
+          '<div class="parcel-exact-divider"></div>' +
+          '<h3 class="parcel-exact-history-title">거래내역 (' + historyRows.length.toLocaleString("ko-KR") + '건)</h3>' +
+          tradeRowsHtml(historyRows.slice(0, 500), unit) +
+          (graphModel ? '<section class="parcel-exact-graph"><h3>실거래가 그래프</h3>' + exactTradeGraphHtml(graphModel, range, "land") + '</section>' : '') +
+          cancelledSection +
+          '</div>'
+        : (cancelledRows.length
+          ? '<div class="parcel-exact-trade-ui parcel-land-exact-trade-ui">' + cancelledSection + '</div>'
+          : exactTradeEmptyStateHtml(resolvedCoverage));
+      wireExactTradeExperience(target, graphModel);
       return;
     }
     const kind = target.__parcelExactTradeKind || exactTradeDefaultKind(rows);
@@ -1713,179 +1897,229 @@
     });
     const latest = historyRows[0] || null;
     const graphRows = rows.filter(function(row) { return !selectedKey || exactTradeAreaKey(row) === selectedKey; });
-    const graphModel = exactTradeGraphModel(graphRows, range);
+    const graphModel = exactTradeGraphModel(graphRows, range, kind);
     target.innerHTML = '<div class="parcel-exact-trade-ui">' +
       '<div class="parcel-exact-kind-tabs" role="tablist" aria-label="실거래 유형">' + EXACT_TRADE_KIND_TABS.map(function(tab) {
         return '<button type="button" role="tab" aria-selected="' + (kind === tab.key ? "true" : "false") + '" data-parcel-exact-kind="' + tab.key + '" class="' + (kind === tab.key ? "is-active" : "") + '">' + tab.label + '</button>';
       }).join("") + '</div>' +
-      '<div class="parcel-exact-summary"><div class="parcel-exact-latest"><span>최근 실거래가</span><strong>' + (latest ? escapeHtml(formatTradePrimaryAmount(latest)) : "-") + '</strong><time>' + (latest ? exactTradeDateText(latest.dealDate, true) : "거래 없음") + '</time></div>' +
+      '<div class="parcel-exact-summary"><div class="parcel-exact-latest"><span>최근 실거래가</span><strong>' + (latest ? escapeHtml(formatTradePrimaryAmount(latest)) : "-") + '</strong><time>' + (latest ? exactTradeDateText(latest.dealDate, false) : "거래 없음") + '</time></div>' +
       '<button type="button" class="parcel-exact-area-trigger" data-parcel-exact-area-open><strong>' + (selectedGroup && selectedGroup.supplyM2 != null ? "분양 " + exactTradeAreaText(selectedGroup.supplyM2, unit) : "분양면적 -") + '</strong><span>전용 ' + (selectedGroup ? exactTradeAreaText(selectedGroup.exclusiveM2, unit) : "-") + '</span><i aria-hidden="true"></i></button></div>' +
       '<div class="parcel-exact-divider"></div>' +
       '<h3 class="parcel-exact-history-title">거래내역 (' + historyRows.length.toLocaleString("ko-KR") + '건)</h3>' +
       tradeRowsHtml(historyRows.slice(0, 500), unit) +
-      '<section class="parcel-exact-graph"><h3>실거래가 그래프</h3>' + exactTradeGraphHtml(graphModel, range) + '</section>' +
+      '<section class="parcel-exact-graph"><h3>실거래가 그래프</h3>' + exactTradeGraphHtml(graphModel, range, kind) + '</section>' +
+      cancelledTradeSectionHtml(cancelledRows, unit) +
     '</div>';
     wireExactTradeExperience(target, graphModel);
   }
 
-  function exactTradeRowsFromResponse(data, sourceJibun)
+  function exactTradeRowsFromResponse(data)
   {
-    const records = Array.isArray(data && data.records) ? data.records.slice() : [];
-    return records.filter(function(row) {
-      return sourceJibun && normalizeJibun(row && row.jibun) === sourceJibun;
-    });
+    // 서버가 PNU와 확정 지번으로 판정한 정확 필지 거래를 화면에서 다시 제거하지 않습니다.
+    return Array.isArray(data && data.records) ? data.records.slice() : [];
   }
 
 
   async function loadTrades(panel, feature, radiusMeters, range)
   {
     const exactTarget = panel.querySelector("[data-parcel-exact-trades]");
-    const similarTarget = panel.querySelector("[data-parcel-similar-trades]");
     const graphTarget = panel.querySelector("[data-parcel-trade-chart]");
     const pnu = String(feature.pnu || "");
     if (!pnu || !exactTarget || !graphTarget) return;
     const selectedRadiusMeters = Number(radiusMeters) === 1000 ? 1000 : 500;
-    const selectedRange = range === "1y" || range === "all" ? range : "3y";
+    const selectedRange = range === "1y" || range === "3y" ? range : "all";
+    const selectedTradeKind = String((exactTarget.__parcelExactTradeKind || "all"));
     const isCurrentTask = beginParcelTradeTask(panel);
+
+    const previousTradeControllers = panel.__parcelTradeControllers || {};
+    if (previousTradeControllers.exact) previousTradeControllers.exact.abort(new Error("요청이 취소되었습니다."));
+    if (previousTradeControllers.nearby) previousTradeControllers.nearby.abort(new Error("요청이 취소되었습니다."));
+    const exactController = new AbortController();
+    const nearbyController = new AbortController();
+    panel.__parcelTradeControllers = { exact: exactController, nearby: nearbyController };
+
+    const sourceJibun = normalizeJibun(
+      feature.jibun || (feature.landCharacteristics || {}).jibun || parcelJibunFromPnu(pnu)
+    );
+    const targetUmdName = parcelTradeUmdName(feature);
+    const featurePoint = parcelTradeFeaturePoint(feature);
+    const tradeServiceTypes = REALJEJU_TRADE_SERVICE_TYPES.slice();
+    const nearbyTradeServiceTypes = tradeServiceTypes.filter(function(serviceType) {
+      return serviceType === "land" || /-sale$/.test(serviceType);
+    });
+    const exactTradeCacheKey = buildParcelTradeRequestKey(
+      pnu,
+      "exact",
+      tradeServiceTypes,
+      selectedTradeKind,
+      selectedRange,
+      selectedRadiusMeters
+    );
+    const nearbyTradeCacheKey = buildParcelTradeRequestKey(
+      pnu,
+      "nearby",
+      tradeServiceTypes,
+      selectedTradeKind,
+      selectedRange,
+      selectedRadiusMeters
+    );
+    const commonPayload = {
+      pnu: pnu,
+      jibun: sourceJibun,
+      umdName: targetUmdName,
+      serviceTypes: tradeServiceTypes,
+      nearbyServiceTypes: nearbyTradeServiceTypes,
+      tradeKind: selectedTradeKind,
+      range: selectedRange,
+      lat: featurePoint ? featurePoint.lat : null,
+      lng: featurePoint ? featurePoint.lng : null,
+      radiusMeters: selectedRadiusMeters,
+      nearbyLimit: 100
+    };
+
+    markTradeLoadingState(exactTarget, "exact");
+    markTradeLoadingState(graphTarget, "nearby");
+
+    function exactPayloadWithMode(mode)
+    {
+      return Object.assign({}, commonPayload, { mode: mode });
+    }
+
+    function isTradeRequestCancelled(error)
+    {
+      return error && (error.name === "AbortError" || String(error.message || "").indexOf("취소") === 0);
+    }
+
+    let exactData = getTimedCache(tradeCache, exactTradeCacheKey);
+    let exactUnavailable = true;
+    let exactAll = [];
+    let exactCancelledRows = [];
+
     try {
-      const sourceJibun = normalizeJibun(
-        feature.jibun || (feature.landCharacteristics || {}).jibun || parcelJibunFromPnu(pnu)
-      );
-      const targetUmdName = parcelTradeUmdName(feature);
-      const featurePoint = parcelTradeFeaturePoint(feature);
-      const tradeCacheKey = pnu + ":" + selectedRadiusMeters;
-      let data = getTimedCache(tradeCache, tradeCacheKey);
-      if (!data) {
-        const exactTradeCacheKey = pnu + ":exact";
-        // 정확 필지와 주변 유사거래를 한 번의 DB 전용 함수 호출로 함께 조회합니다.
-        data = await settleParcelTradePromise(
-          invokeFunction("land-trades", {
-            pnu: pnu,
-            jibun: sourceJibun,
-            umdName: targetUmdName,
-            serviceTypes: REALJEJU_TRADE_SERVICE_TYPES,
-            nearbyServiceTypes: [
-              "land-sale",
-              "apt-sale",
-              "rowhouse-sale",
-              "single-house-sale",
-              "officetel-sale"
-            ],
-            lat: featurePoint ? featurePoint.lat : null,
-            lng: featurePoint ? featurePoint.lng : null,
-            radiusMeters: selectedRadiusMeters,
-            nearbyLimit: 50
-          }),
-          9000,
-          "실거래가 조회 시간이 초과되었습니다."
-        );
+      if (!exactData) {
+        const exactRequest = getParcelTradeRequestPromise(exactTradeCacheKey, function() {
+          return settleParcelTradePromise(
+            invokeFunction("land-trades", exactPayloadWithMode("exact")),
+            9000,
+            "실거래가 조회 시간이 초과되었습니다."
+          );
+        });
+        exactData = await abortableTradePromise(exactRequest, exactController.signal);
         if (!isCurrentTask()) return;
-        const responseQueryStatus = data && data.queryStatus && typeof data.queryStatus === "object"
-          ? data.queryStatus
-          : null;
-        const responseHasQueryFailure = responseQueryStatus && (
-          responseQueryStatus.exact === "error" || responseQueryStatus.nearby === "error"
-        );
-        // 부분 실패 응답을 브라우저 캐시에 남기면 정상 복구 뒤에도 정보 없음처럼 보일 수 있습니다.
-        if (!responseHasQueryFailure) {
-          setTimedCache(tradeCache, tradeCacheKey, data, TRADE_BROWSER_CACHE_TTL_MS);
-          setTimedCache(tradeCache, exactTradeCacheKey, data, TRADE_BROWSER_CACHE_TTL_MS);
+        const exactQueryStatus = exactData && exactData.queryStatus && typeof exactData.queryStatus === "object"
+          ? exactData.queryStatus
+          : {};
+        if (exactQueryStatus.exact !== "error" && exactQueryStatus.coverage !== "error") {
+          setTimedCache(tradeCache, exactTradeCacheKey, exactData, TRADE_BROWSER_CACHE_TTL_MS);
         }
       }
-      if (!isCurrentTask()) return;
-      const queryStatus = data && data.queryStatus && typeof data.queryStatus === "object"
-        ? data.queryStatus
+
+      const exactQueryStatus = exactData && exactData.queryStatus && typeof exactData.queryStatus === "object"
+        ? exactData.queryStatus
         : {};
-      const exactUnavailable = queryStatus.exact === "error";
-      const nearbyUnavailable = queryStatus.nearby === "error";
-      // 법정동ㆍ지번 일치 판정은 Edge Function의 공통 정규화 결과를 신뢰하고,
-      // 화면에서는 반환된 정확 거래를 다시 다른 문자열 규칙으로 제거하지 않습니다.
-      const exactAll = exactTradeRowsFromResponse(data, sourceJibun);
-      const info = feature.landCharacteristics || {};
-      const graphJimok = String(feature.jimok || info.jimok || "").trim();
-      const graphZone = String(feature.landUseZone || info.landUseZone || "").trim();
-      const exactSale = exactAll.find(function(row) {
-        return String(row && row.dealKind || "sale") === "sale";
-      });
-      const graphPropertyType = exactSale ? tradePropertyLabel(exactSale) : "토지";
-      const nearbyRecords = Array.isArray(data.nearbyRecords) ? data.nearbyRecords.slice() : [];
-      const normalizedTargetUmd = String(targetUmdName || "").replace(/\s+/g, "");
-      const saleCandidates = nearbyRecords.filter(function(row) {
-        const isSale = String(row && row.dealKind || "sale") === "sale";
-        const rowUmd = String(row && row.umdName || "").replace(/\s+/g, "");
-        const sameUmd = !normalizedTargetUmd || rowUmd === normalizedTargetUmd ||
-          rowUmd.endsWith(normalizedTargetUmd) || normalizedTargetUmd.endsWith(rowUmd);
-        const sameParcel = sameUmd && normalizeJibun(row && row.jibun) === sourceJibun;
-        return isSale && !sameParcel;
-      });
-      const samePropertyCandidates = saleCandidates.filter(function(row) {
-        return tradePropertyLabel(row) === graphPropertyType;
-      });
-      const strictCandidates = samePropertyCandidates.filter(function(row) {
-        const rowJimok = String(row && row.jimok || "").trim();
-        const jimokMatch = graphPropertyType !== "토지" || !graphJimok || !rowJimok || rowJimok === graphJimok;
-        const rowZone = String(row && row.landUseZone || "").trim();
-        const zoneMatch = graphPropertyType !== "토지" || !graphZone || !rowZone || rowZone === graphZone;
-        return jimokMatch && zoneMatch;
-      });
-      // 공공 원본의 지목ㆍ용도지역 누락만으로 전체 후보가 사라지지 않게
-      // 동일 유형, 전체 매매 후보 순으로 완화합니다. 선택한 거리 범위는 서버가 보장합니다.
-      const graphCandidates = strictCandidates.length
-        ? strictCandidates
-        : (samePropertyCandidates.length ? samePropertyCandidates : saleCandidates);
-      await waitForParcelTradePaint();
-      if (!isCurrentTask()) return;
-      delete exactTarget.dataset.parcelTradeLoading;
-      exactTarget.classList.remove("parcel-property-loading", "parcel-property-empty", "realjeju-property-state-message");
-      if (exactUnavailable) {
-        exactTarget.innerHTML = functionErrorHtml("실거래가를 불러오지 못했습니다.");
-      } else {
-        renderExactTradeExperience(exactTarget, exactAll, data.cacheCoverage);
-      }
-      if (nearbyUnavailable) {
-        graphTarget.classList.remove("parcel-property-loading");
+      exactUnavailable = exactQueryStatus.exact === "error";
+      const exactRows = exactTradeRowsFromResponse(exactData, sourceJibun);
+      exactCancelledRows = exactRows.filter(isCancelledTradeRow);
+      exactAll = exactRows.filter(function(row) { return !isCancelledTradeRow(row); });
+    } catch (error) {
+      if (!isCurrentTask() || isTradeRequestCancelled(error)) return;
+      removeTradeLoadingState(exactTarget, "exact");
+      console.error("[realjeju land-trades]", error);
+      exactUnavailable = true;
+      exactAll = [];
+      exactCancelledRows = [];
+    }
+
+    if (!isCurrentTask()) return;
+    removeTradeLoadingState(exactTarget, "exact");
+    if (exactUnavailable) {
+      exactTarget.innerHTML = functionErrorHtml("실거래가를 불러오지 못했습니다.");
+    } else {
+      renderExactTradeExperience(exactTarget, exactAll, exactData && exactData.cacheCoverage, exactCancelledRows);
+    }
+
+    await waitForParcelTradePaint();
+    if (!isCurrentTask()) return;
+
+    const info = feature.landCharacteristics || {};
+    const graphJimok = String(feature.jimok || info.jimok || "").trim();
+    const graphZone = String(feature.landUseZone || info.landUseZone || "").trim();
+    const exactSale = exactAll.find(function(row) {
+      return exactTradeKindKey(row) === "sale";
+    });
+    const graphPropertyType = exactSale ? tradePropertyLabel(exactSale) : "토지";
+    (async function() {
+      try {
+        let nearbyData = getTimedCache(tradeCache, nearbyTradeCacheKey);
+        if (!nearbyData) {
+          const nearbyRequest = getParcelTradeRequestPromise(nearbyTradeCacheKey, function() {
+            return settleParcelTradePromise(
+              invokeFunction("land-trades", exactPayloadWithMode("nearby")),
+              9000,
+              "주변 유사거래 조회 시간이 초과되었습니다."
+            );
+          });
+          nearbyData = await abortableTradePromise(nearbyRequest, nearbyController.signal);
+          if (!isCurrentTask()) return;
+          const nearbyQueryStatus = nearbyData && nearbyData.queryStatus && typeof nearbyData.queryStatus === "object"
+            ? nearbyData.queryStatus
+            : {};
+          if (nearbyQueryStatus.nearby !== "error") {
+            setTimedCache(tradeCache, nearbyTradeCacheKey, nearbyData, TRADE_BROWSER_CACHE_TTL_MS);
+          }
+        }
+        if (!isCurrentTask()) return;
+
+        const nearbyUnavailable = nearbyData && nearbyData.queryStatus && nearbyData.queryStatus.nearby === "error";
+        const nearbyRecords = Array.isArray(nearbyData.nearbyRecords) ? nearbyData.nearbyRecords.slice() : [];
+        const normalizedTargetUmd = String(targetUmdName || "").replace(/\s+/g, "");
+        const saleCandidates = nearbyRecords.filter(function(row) {
+          const isSale = exactTradeKindKey(row) === "sale";
+          const rowUmd = String(row && row.umdName || "").replace(/\s+/g, "");
+          const sameUmd = !normalizedTargetUmd || rowUmd === normalizedTargetUmd ||
+            rowUmd.endsWith(normalizedTargetUmd) || normalizedTargetUmd.endsWith(rowUmd);
+          const sameParcel = sameUmd && normalizeJibun(row && row.jibun) === sourceJibun;
+          return isSale && !sameParcel;
+        });
+        const samePropertyCandidates = saleCandidates.filter(function(row) {
+          return tradePropertyLabel(row) === graphPropertyType;
+        });
+        const strictCandidates = samePropertyCandidates.filter(function(row) {
+          const rowJimok = String(row && row.jimok || "").trim();
+          const jimokMatch = graphPropertyType !== "토지" || !graphJimok || !rowJimok || rowJimok === graphJimok;
+          const rowZone = String(row && row.landUseZone || "").trim();
+          const zoneMatch = graphPropertyType !== "토지" || !graphZone || !rowZone || rowZone === graphZone;
+          return jimokMatch && zoneMatch;
+        });
+        const graphCandidates = strictCandidates.length
+          ? strictCandidates
+          : (samePropertyCandidates.length ? samePropertyCandidates : saleCandidates);
+
+        removeTradeLoadingState(graphTarget, "nearby");
+        if (!isCurrentTask()) return;
+        if (nearbyUnavailable) {
+          graphTarget.innerHTML = functionErrorHtml("주변 유사거래를 불러오지 못했습니다.");
+          graphTarget.onclick = null;
+          return;
+        }
+        const graphRows = graphCandidates.slice().sort(function(a, b) {
+          return String(b.dealDate || "").localeCompare(String(a.dealDate || ""));
+        }).slice(0, 100);
+        renderParcelTradeGraph(graphTarget, graphRows, selectedRange, selectedRadiusMeters);
+        graphTarget.onclick = function(event) {
+          const rangeButton = event.target.closest("[data-parcel-trade-range]");
+          if (!rangeButton) return;
+          renderParcelTradeGraph(graphTarget, graphRows, rangeButton.getAttribute("data-parcel-trade-range"), selectedRadiusMeters);
+        };
+      } catch (error) {
+        if (!isCurrentTask() || isTradeRequestCancelled(error)) return;
+        console.error("[realjeju parcel nearby-trade]", error);
+        removeTradeLoadingState(graphTarget, "nearby");
+        if (!isCurrentTask()) return;
         graphTarget.innerHTML = functionErrorHtml("주변 유사거래를 불러오지 못했습니다.");
         graphTarget.onclick = null;
-        return;
       }
-      const graphRows = graphCandidates.slice().sort(function(a, b) {
-        return String(b.dealDate || "").localeCompare(String(a.dealDate || ""));
-      }).slice(0, 24);
-      renderParcelTradeGraph(graphTarget, graphRows, selectedRange, selectedRadiusMeters);
-      graphTarget.onclick = function(event) {
-        const rangeButton = event.target.closest("[data-parcel-trade-range]");
-        if (!rangeButton) return;
-        renderParcelTradeGraph(graphTarget, graphRows, rangeButton.getAttribute("data-parcel-trade-range"), selectedRadiusMeters);
-      };
-    } catch (error) {
-      if (!isCurrentTask()) return;
-      console.error("[realjeju land-trades]", error);
-      if (exactTarget) {
-        delete exactTarget.dataset.parcelTradeLoading;
-        exactTarget.classList.remove("parcel-property-loading", "parcel-property-empty", "realjeju-property-state-message");
-        exactTarget.innerHTML = functionErrorHtml("실거래가를 불러오지 못했습니다.");
-      }
-      if (similarTarget) {
-        similarTarget.classList.remove("parcel-property-loading");
-        similarTarget.innerHTML = functionErrorHtml("주변 거래를 불러오지 못했습니다.");
-      }
-      if (graphTarget) {
-        graphTarget.classList.remove("parcel-property-loading");
-        graphTarget.innerHTML = functionErrorHtml("주변 유사거래를 불러오지 못했습니다.");
-      }
-    } finally {
-      if (!isCurrentTask()) return;
-      [
-        { target: exactTarget, message: "실거래가를 불러오지 못했습니다." },
-        { target: similarTarget, message: "주변 거래를 불러오지 못했습니다." },
-        { target: graphTarget, message: "주변 유사거래를 불러오지 못했습니다." }
-      ].forEach(function(item) {
-        if (!item.target || (item.target.dataset.parcelTradeLoading !== "true" && !item.target.classList.contains("parcel-property-loading"))) return;
-        delete item.target.dataset.parcelTradeLoading;
-        item.target.classList.remove("parcel-property-loading", "parcel-property-empty", "realjeju-property-state-message");
-        item.target.innerHTML = functionErrorHtml(item.message);
-      });
-    }
+    })();
   }
 
   function formatIndividualHousingPrice(value)
@@ -2518,7 +2752,7 @@
   }
 
 
-  /* 5.902: 호별정보 선택기는 전유부의 실제 동/층/호만 계층적으로 사용한다. */
+  /* 5.995: 호별정보 선택기는 전유부의 실제 동/층/호만 계층적으로 사용한다. */
   buildingUnitModel = function(rows, selection)
   {
     const source = Array.isArray(rows) ? rows : [];
@@ -3465,10 +3699,12 @@ window.realjejuClosePropertyInfoTransientPickers = closePropertyInfoTransientPic
     const target = panel.querySelector("[data-parcel-building-content]");
     if (!pnu || !target) return;
     try {
-      // The Edge Function's DB cache is the source of truth. A browser-memory
-      // payload can predate a completed unit crawl and must never suppress a
-      // fresh DB-backed response, otherwise only a sparse subset of floors can
-      // remain visible for the whole browser-cache lifetime.
+      // 안정 상태 브라우저 캐시는 즉시 표시하되 최신 DB 조회를 생략하지 않는다.
+      const cachedBuilding = getTimedCache(buildingCache, pnu);
+      if (cachedBuilding && isStableBuildingPayload(cachedBuilding)) {
+        panel.__parcelBuildingData = cachedBuilding;
+        renderBuilding(panel, cachedBuilding, panel.dataset.parcelBuildingIndex || 0);
+      }
       const basic = await invokeFunction("building-register", { pnu: pnu, scope: "all" });
       if (panel.dataset.parcelPnu !== pnu) return;
       const basicView = Object.assign({}, basic, {
@@ -3503,13 +3739,12 @@ window.realjejuClosePropertyInfoTransientPickers = closePropertyInfoTransientPic
           })
         : Promise.resolve({ status: 'skipped', items: [] });
       void Promise.all([
-        Promise.resolve(basic),
         businessesPromise,
         commonHousingPricesPromise,
       ]).then(function(results) {
-        const details = results[0] || {};
-        const businessData = results[1] || {};
-        const commonHousingData = results[2] || {};
+        const details = basic || {};
+        const businessData = results[0] || {};
+        const commonHousingData = results[1] || {};
         const detailRecords = Array.isArray(details.records) ? details.records : [];
         const merged = {
           pnu: pnu,
@@ -3575,19 +3810,30 @@ window.realjejuClosePropertyInfoTransientPickers = closePropertyInfoTransientPic
     panel.insertAdjacentHTML("beforeend", buildOverview(feature) + buildNavigation() + buildTradeShell());
     panel.appendChild(detachedLand);
     panel.insertAdjacentHTML("beforeend", buildBuildingShell() + buildAuctionShell());
-    const tabs = panel.querySelector(":scope > .parcel-property-tabs");
-    if (addressHeader && tabs) {
+    const tabs = panel.querySelector(".parcel-property-tabs");
+    if (addressHeader || tabs) {
       const stickyHead = document.createElement("div");
       stickyHead.className = "parcel-property-sticky-head";
-      stickyHead.appendChild(addressHeader);
+      if (addressHeader) stickyHead.appendChild(addressHeader);
+      if (tabs) stickyHead.appendChild(tabs);
       panel.insertBefore(stickyHead, panel.firstChild);
     }
     bindPanelNavigation(panel);
     refreshUnits(panel);
-    loadRecommendedListing(panel, feature);
-    loadTrades(panel, feature);
-    loadBuilding(panel, feature);
+    const primaryTradeTask = Promise.resolve(loadTrades(panel, feature)).catch(function() {});
+    Promise.race([
+      primaryTradeTask,
+      new Promise(function(resolve) { window.setTimeout(resolve, 700); })
+    ]).then(function() {
+      if (!panel.isConnected || String(panel.dataset.parcelPnu || "") !== String(feature.pnu || "")) return;
+      loadBuilding(panel, feature);
+    });
+    primaryTradeTask.then(function() {
+      scheduleRecommendedListing(panel, feature);
+    });
   }
+
+  window.realjejuEnhanceParcelPropertyPanel = enhancePanel;
 
   document.addEventListener("click", function(event) {
     const similarTradeAddressLink = event.target.closest("[data-parcel-similar-trade-address]");
@@ -3777,7 +4023,7 @@ window.realjejuClosePropertyInfoTransientPickers = closePropertyInfoTransientPic
 
 
 
-/* 5.902: 빈 안내 행과 실제 다음 구분선 사이를 DOM 깊이와 무관하게 같은 간격으로 정규화 */
+/* 5.995: 빈 안내 행과 실제 다음 구분선 사이를 DOM 깊이와 무관하게 같은 간격으로 정규화 */
 (() => {
   const panelSelector = ".parcel-land-info-panel";
   const messageSelector = ".realjeju-property-state-message";

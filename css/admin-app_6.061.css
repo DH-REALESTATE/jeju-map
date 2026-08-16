@@ -1071,15 +1071,24 @@ body.realjeju-side-nav-enabled{
 }
 
 @media (min-width: 901px){
-	body.realjeju-side-nav-enabled.realjeju-property-home-route:not(.main-landing-page-open) .realjeju-side-nav-toggle{
+	body.realjeju-side-nav-enabled:not(.main-landing-page-open)[data-global-category="realestate"] .realjeju-side-nav-toggle,
+	body.realjeju-side-nav-enabled:not(.main-landing-page-open)[data-global-category="parcel"] .realjeju-side-nav-toggle,
+	body.realjeju-side-nav-enabled:not(.main-landing-page-open)[data-global-category="local-business"] .realjeju-side-nav-toggle,
+	body.realjeju-side-nav-enabled:not(.main-landing-page-open)[data-global-category="ev-charger"] .realjeju-side-nav-toggle{
 		display: inline-flex;
 	}
 
-	body.realjeju-side-nav-enabled.realjeju-property-home-route.realjeju-side-nav-collapsed:not(.main-landing-page-open){
+	body.realjeju-side-nav-enabled:not(.main-landing-page-open)[data-global-category="realestate"].realjeju-side-nav-collapsed,
+	body.realjeju-side-nav-enabled:not(.main-landing-page-open)[data-global-category="parcel"].realjeju-side-nav-collapsed,
+	body.realjeju-side-nav-enabled:not(.main-landing-page-open)[data-global-category="local-business"].realjeju-side-nav-collapsed,
+	body.realjeju-side-nav-enabled:not(.main-landing-page-open)[data-global-category="ev-charger"].realjeju-side-nav-collapsed{
 		--realjeju-side-nav-width: 0px;
 	}
 
-	body.realjeju-side-nav-enabled.realjeju-property-home-route.realjeju-side-nav-collapsed:not(.main-landing-page-open) .realjeju-side-nav{
+	body.realjeju-side-nav-enabled:not(.main-landing-page-open)[data-global-category="realestate"].realjeju-side-nav-collapsed .realjeju-side-nav,
+	body.realjeju-side-nav-enabled:not(.main-landing-page-open)[data-global-category="parcel"].realjeju-side-nav-collapsed .realjeju-side-nav,
+	body.realjeju-side-nav-enabled:not(.main-landing-page-open)[data-global-category="local-business"].realjeju-side-nav-collapsed .realjeju-side-nav,
+	body.realjeju-side-nav-enabled:not(.main-landing-page-open)[data-global-category="ev-charger"].realjeju-side-nav-collapsed .realjeju-side-nav{
 		transform: translateX(-100%);
 		pointer-events: none;
 	}
@@ -1224,7 +1233,7 @@ body.global-category-nonrealestate-mode .map-location-tool-group{
 	pointer-events: none !important;
 }
 
-/* REALJEJU 5.895: 필지정보는 공통 면적 전환과 규제구역 도구를 표시합니다. */
+/* REALJEJU 5.995: 필지정보는 공통 면적 전환과 규제구역 도구를 표시합니다. */
 body.global-category-nonrealestate-mode[data-global-category="parcel"] .map-primary-tool-group,
 body.global-category-nonrealestate-mode[data-global-category="parcel"] .map-unit-tool-group,
 body.global-category-nonrealestate-mode[data-global-category="parcel"] .map-location-tool-group{
@@ -1233,12 +1242,12 @@ body.global-category-nonrealestate-mode[data-global-category="parcel"] .map-loca
 	pointer-events: auto !important;
 }
 
-/* REALJEJU 5.895: 생활안전 진입점은 부동산 편의가 아니라 필지분석의 안전 버튼입니다. */
+/* REALJEJU 5.995: 생활안전 진입점은 부동산 편의가 아니라 필지분석의 안전 버튼입니다. */
 body[data-global-category="realestate"] [data-convenience-option="life-safety"]{
 	display: none;
 }
 
-/* REALJEJU 5.895: 숨김 상태에서는 안쪽 표시등을 파란색으로 활성화합니다. */
+/* REALJEJU 5.995: 숨김 상태에서는 안쪽 표시등을 파란색으로 활성화합니다. */
 body[data-global-category="parcel"] #mapPropertyToggleBtn.active .map-tool-label{
 	background: #1764ff;
 	color: #fff;
@@ -1477,10 +1486,13 @@ body.global-category-empty-map-mode .realjeju-side-nav .realjeju-side-register-b
 
 .realjeju-side-recent-empty{
 	margin: 0 10px;
+	min-height: 50px;
+	padding: 8px 0;
+	box-sizing: border-box;
 	color: #9ca3af;
-	font-size: 10px;
-	font-weight: 600;
-	line-height: 1.45;
+	font-size: 11.5px;
+	font-weight: 700;
+	line-height: 1.35;
 	white-space: nowrap;
 }
 
@@ -2825,7 +2837,7 @@ label[for="mySuiteBrokerApplyKakaoInput"]{
    ===================================================== */
 
 
-/* 5.895: 관리자 수동 실행 전용 운영 관리 화면. */
+/* 5.995: 관리자 수동 실행 전용 운영 관리 화면. */
 .realjeju-side-admin-section-divider{
 	width: calc(100% - 28px);
 	height: 1px;

@@ -1,4 +1,4 @@
-// REALJEJU 5.895 user-action module loader
+// REALJEJU 5.995 user-action module loader
 (function initRealjejuModuleLoader(global) {
   "use strict";
   const loadedModules = new Map();
@@ -39,7 +39,7 @@
   global.realjejuModules = Object.freeze({ load: loadScript });
 
   function preloadPropertyInfo() {
-    return loadScript("property-info", "/js/property-info_5.895.js?v=20260814-region-trade-static-5823")
+    return loadScript("property-info", "/js/property-info_6.061.js?v=20260816-parcel-performance-6061")
       .then(() => true)
       .catch((error) => {
         console.error("[realjeju module] property-info load failed", error);

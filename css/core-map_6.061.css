@@ -1090,6 +1090,61 @@ body.payment-page-open .weekly-specialist-broker-panel{
 	gap: var(--map-tool-stack-gap);
 }
 
+.map-parcel-analysis-tool-group{
+	display: none;
+	border: 0;
+	background: #fff;
+	box-shadow: 0 2px 6px rgba(15, 23, 42, 0.10), 0 8px 16px rgba(15, 23, 42, 0.10);
+}
+
+body[data-global-category="parcel"] .map-parcel-analysis-tool-group{
+	display: flex;
+}
+
+.map-parcel-analysis-tool-group .map-tool-btn{
+	width: var(--map-control-box-size);
+	min-width: var(--map-control-box-size);
+	height: 56px;
+	min-height: 56px;
+	padding: 5px 3px;
+}
+
+.map-parcel-analysis-tool-group .map-tool-btn + .map-tool-btn{
+	border-top: 1px solid #e5e7eb;
+}
+
+.map-parcel-analysis-tool-group .map-tool-btn.active{
+	background: #1764ff;
+	color: #fff;
+}
+
+.map-parcel-analysis-tool-group .map-tool-label-stack{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 2px;
+	margin: auto;
+	line-height: 1.05;
+}
+
+.map-parcel-road-contact-tool-btn .map-tool-label{
+	font-size: 11px;
+	font-weight: 700;
+}
+
+.map-parcel-road-contact-tool-btn.is-level-disabled,
+.map-parcel-road-contact-tool-btn:disabled{
+	background:#f3f4f6 !important;
+	color:#9ca3af !important;
+	cursor:not-allowed !important;
+	opacity:1 !important;
+}
+.map-parcel-road-contact-tool-btn.is-level-disabled .map-tool-label,
+.map-parcel-road-contact-tool-btn:disabled .map-tool-label{
+	color:#9ca3af !important;
+}
+
 .map-tool-btn{
 	width: var(--map-control-box-size);
 	min-width: var(--map-control-box-size);
@@ -1158,7 +1213,7 @@ body.payment-page-open .weekly-specialist-broker-panel{
 	line-height: 1.08;
 }
 
-/* 5.902: 일반 지도는 카카오 내부 요소의 손 커서를 덮어 기본 화살표로 고정하고,
+/* 5.995: 일반 지도는 카카오 내부 요소의 손 커서를 덮어 기본 화살표로 고정하고,
    실제 지도 드래그 이벤트가 진행되는 동안에만 잡은 손 커서를 표시합니다. */
 body:not(.pickaxe-mode-active) #map:not(.distance-measure-active):not(.is-map-dragging),
 body:not(.pickaxe-mode-active) #map:not(.distance-measure-active):not(.is-map-dragging) *:not(.realjeju-property-cluster-badge):not([style*="cursor: pointer"]):not([style*="cursor:pointer"]):not([style*="cursor: pointer"] *):not([style*="cursor:pointer"] *){
@@ -1673,7 +1728,9 @@ body.map-panels-collapsed #areaUnitToolGroup{
 }
 
 .map-side-tools .map-tool-btn:not(.map-property-toggle-btn):not(.active):hover,
-.map-side-tools .map-tool-btn:not(.map-property-toggle-btn):not(.active):focus-visible{
+.map-side-tools .map-tool-btn:not(.map-property-toggle-btn):not(.active):focus-visible,
+.parcel-trade-left-tool-stack .map-parcel-analysis-tool-group .map-tool-btn:not(.active):hover,
+.parcel-trade-left-tool-stack .map-parcel-analysis-tool-group .map-tool-btn:not(.active):focus-visible{
 	background: #f3f4f6;
 	color: #111827;
 	box-shadow: 0 8px 20px rgba(15, 41, 66, 0.12);
@@ -1889,7 +1946,8 @@ body.map-panels-collapsed #areaUnitToolGroup{
 .life-safety-legend-swatch{
 	width: 14px;
 	height: 10px;
-	border: 1px solid rgba(31, 41, 55, 0.18);
+	border: 1px solid #d1d5db;
+	box-shadow: 2px 4px 10px rgba(15, 23, 42, 0.15);
 	box-sizing: border-box;
 	flex: 0 0 auto;
 }
@@ -2147,10 +2205,10 @@ body.distance-measure-active .admin-boundary-bottom-pill{
 	min-width:64px;
 	padding:7px 8px;
 	box-sizing:border-box;
-	border:1px solid #525252;
+	border:1px solid #d1d5db;
+	box-shadow:2px 4px 10px rgba(15, 23, 42, 0.15);
 	border-radius:6px;
 	background:#ffffff;
-	box-shadow:none;
 	color:#111111;
 	font-size:13px;
 	font-weight:600;
@@ -2307,7 +2365,7 @@ body.distance-measure-active .admin-boundary-bottom-pill{
 }
 
 
-/* REALJEJU 5.902: restore the two reserved map settings cells. */
+/* REALJEJU 5.995: restore the two reserved map settings cells. */
 .map-settings-filter-option.map-settings-filter-preparing,
 .map-settings-filter-option.map-settings-filter-preparing:disabled {
   opacity: 1;
@@ -2327,9 +2385,315 @@ body.distance-measure-active .admin-boundary-bottom-pill{
   line-height: 1;
 }
 
-/* 5.902: 매물 토글은 기존 지도 객체를 유지하고 표시 상태만 전환한다. */
+/* 5.995: 매물 토글은 기존 지도 객체를 유지하고 표시 상태만 전환한다. */
 body.map-properties-hidden .realjeju-property-cluster-badge,
 body.map-properties-hidden .property-region-count-label{
 	visibility:hidden !important;
 	pointer-events:none !important;
-+}
+}
+
+/* 5.995: 위성 지명 감추기와 지적편집도 사이에 공통 구분 여백을 둔다. */
+.map-type-label-toggle{
+	margin-bottom:14px;
+	padding-bottom:14px;
+	border-bottom:1px solid #e6ebf1;
+}
+.map-type-label-toggle:disabled{
+	opacity:.42;
+	cursor:default;
+}
+
+
+/* 5.995: 필지분석 1~5레벨 개별 실거래 말풍선 Canvas */
+.parcel-trade-marker-canvas{
+	position:absolute !important;
+	inset:0 !important;
+	z-index:29 !important;
+	pointer-events:none !important;
+}
+body.parcel-region-trade-badges-hidden .parcel-trade-marker-canvas{
+	visibility:hidden !important;
+}
+
+
+/* 5.995: 1~5레벨에서는 개별 필지 말풍선만 표시한다. */
+body.parcel-individual-trade-level .property-region-count-label{
+	display:none !important;
+	pointer-events:none !important;
+}
+
+
+/* 5.995: 필지분석 1~5레벨에서는 행정구역 실거래 통계 뱃지를 표시하지 않는다. */
+body.parcel-individual-trade-level .parcel-region-trade-map-badge{
+	display:none !important;
+	pointer-events:none !important;
+}
+
+
+/* 5.995: 필지분석 1~5레벨 실거래 유형 필터 */
+.parcel-trade-left-tool-stack{
+	position:absolute;
+	top:50%;
+	left:var(--map-side-tools-right,16px);
+	z-index:35;
+	display:flex;
+	flex-direction:column;
+	align-items:center;
+	justify-content:center;
+	gap:var(--map-tool-stack-gap);
+	transform:translateY(-50%);
+	pointer-events:auto;
+}
+.parcel-trade-left-tool-stack[hidden],
+body:not([data-global-category="parcel"]) .parcel-trade-left-tool-stack{display:none !important;}
+
+.parcel-trade-filter-control{
+	position:static !important;
+	top:auto !important;
+	left:auto !important;
+	order:1;
+	z-index:35 !important;
+	width:var(--map-control-box-size) !important;
+	min-width:var(--map-control-box-size) !important;
+	max-width:var(--map-control-box-size) !important;
+	height:var(--map-control-box-size) !important;
+	min-height:var(--map-control-box-size) !important;
+	max-height:var(--map-control-box-size) !important;
+	border:0 !important;
+	border-radius:var(--map-control-radius) !important;
+	background:#fff !important;
+	box-shadow:0 8px 20px rgba(15,41,66,.12) !important;
+}
+body:not([data-global-category="parcel"]) .parcel-trade-filter-control,
+.parcel-trade-filter-control[hidden]{display:none !important;}
+.parcel-trade-filter-control .map-tool-label{margin:auto;}
+.parcel-trade-filter-control.active .map-tool-label{background:#1764ff;color:#fff;}
+
+.parcel-trade-badge-visibility-control{
+	position:static !important;
+	top:auto !important;
+	left:auto !important;
+	order:2;
+	z-index:35 !important;
+	width:var(--map-control-box-size) !important;
+	min-width:var(--map-control-box-size) !important;
+	max-width:var(--map-control-box-size) !important;
+	height:var(--map-control-box-size) !important;
+	min-height:var(--map-control-box-size) !important;
+	max-height:var(--map-control-box-size) !important;
+	border:0 !important;
+	border-radius:var(--map-control-radius) !important;
+	background:#fff !important;
+	box-shadow:0 8px 20px rgba(15,41,66,.12) !important;
+}
+.parcel-trade-badge-visibility-control .map-tool-label{margin:auto;}
+body:not([data-global-category="parcel"]) .parcel-trade-badge-visibility-control,
+.parcel-trade-badge-visibility-control[hidden]{display:none !important;}
+
+.parcel-trade-price-mode-control{
+	position:static !important;
+	top:auto !important;
+	left:auto !important;
+	order:3;
+	z-index:35 !important;
+	display:grid;
+	grid-template-rows:repeat(2,minmax(0,1fr));
+	width:var(--map-control-box-size) !important;
+	min-width:var(--map-control-box-size) !important;
+	max-width:var(--map-control-box-size) !important;
+	height:var(--map-control-box-size) !important;
+	min-height:var(--map-control-box-size) !important;
+	max-height:var(--map-control-box-size) !important;
+	aspect-ratio:1 / 1;
+	padding:0 !important;
+	border:1px solid #d1d5db !important;
+	border-radius:var(--map-control-radius) !important;
+	background:#fff !important;
+	box-shadow:0 8px 20px rgba(15,41,66,.12) !important;
+	overflow:hidden;
+	font-family:var(--font-ui);
+}
+.parcel-trade-price-mode-control > button{
+	display:flex;
+	align-items:center;
+	justify-content:center;
+	cursor:pointer;
+	min-width:0;
+	min-height:0;
+	padding:0;
+	border:0;
+	background:#fff;
+	color:#111827;
+	font:inherit;
+	cursor:pointer;
+}
+.parcel-trade-filter-control,
+.parcel-trade-badge-visibility-control{
+	cursor:pointer !important;
+}
+.parcel-trade-price-mode-control > button:first-child{border-bottom:1px solid #d1d5db;}
+.parcel-trade-price-mode-control > button.active{background:#1764ff;color:#fff;}
+.parcel-trade-price-mode-control .map-tool-label{
+	margin:0;
+	font-size:12px !important;
+	font-weight:600;
+	background:transparent !important;
+	color:inherit !important;
+}
+body:not([data-global-category="parcel"]) .parcel-trade-price-mode-control,
+.parcel-trade-price-mode-control[hidden]{display:none !important;}
+
+.parcel-trade-left-tool-stack .map-parcel-analysis-tool-group{
+	order:4;
+}
+.parcel-trade-left-tool-stack .map-parcel-analysis-tool-group .map-tool-btn:disabled{
+	background:#f3f4f6 !important;
+	border-color:#d1d5db !important;
+	color:#9ca3af !important;
+	box-shadow:none !important;
+	cursor:not-allowed;
+}
+.parcel-trade-left-tool-stack .map-parcel-analysis-tool-group .map-tool-btn:disabled .map-tool-icon{
+	opacity:.62;
+}
+
+body[data-global-category="parcel"] #mapPropertyToggleBtn.parcel-primary-placeholder{
+	opacity:1 !important;
+	cursor:default !important;
+	pointer-events:none !important;
+}
+
+.parcel-area-measure-map-label{
+	display:flex;
+	flex-direction:column;
+	align-items:center;
+	gap:4px;
+	pointer-events:none;
+}
+.parcel-area-measure-map-label strong{
+	display:block;
+	padding:5px 9px;
+	border-radius:15px;
+	background:#fff;
+	color:#1764ff;
+	box-shadow:0 2px 8px rgba(15,23,42,.18);
+	font-size:13px;
+	font-weight:800;
+	line-height:1;
+	white-space:nowrap;
+}
+.parcel-area-measure-map-label span{
+	display:flex;
+	align-items:center;
+	justify-content:center;
+	width:22px;
+	height:22px;
+	border:2px solid #fff;
+	border-radius:50%;
+	background:#1764ff;
+	color:#fff;
+	box-shadow:0 2px 7px rgba(15,23,42,.2);
+	font-size:12px;
+	font-weight:800;
+	line-height:1;
+}
+
+body > .parcel-trade-type-filter-modal{
+	position:fixed !important;
+	inset:0 !important;
+	z-index:2147483000 !important;
+	display:flex !important;
+	align-items:center !important;
+	justify-content:center !important;
+	padding:20px !important;
+	box-sizing:border-box !important;
+	background:rgba(15,23,42,.42) !important;
+}
+.parcel-trade-type-filter-dialog{
+	width:min(292px,calc(100vw - 40px)) !important;
+	max-height:min(620px,calc(100vh - 40px)) !important;
+	margin:0 !important;
+	overflow:hidden !important;
+	border-radius:12px !important;
+	background:#fff !important;
+	box-shadow:0 18px 55px rgba(15,23,42,.28) !important;
+}
+.parcel-trade-type-filter-dialog > header{height:56px;min-height:56px;}
+.parcel-trade-filter-heading{
+	display:flex;align-items:center;justify-content:space-between;height:48px;padding:0 16px;box-sizing:border-box;border-bottom:1px solid #e3e7ed;
+}
+.parcel-trade-filter-heading strong{font-size:15px;font-weight:700;color:#111827;}
+.parcel-trade-filter-heading button{border:0;background:transparent;color:#69707c;font:inherit;font-size:12px;font-weight:600;cursor:pointer;}
+.parcel-trade-filter-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));padding:10px;gap:8px;background:#fff;}
+.parcel-trade-filter-grid > button{
+	grid-template-columns:18px minmax(0,1fr);align-items:center;gap:6px;height:50px;padding:0 9px;border:1px solid #e3e7ed;border-radius:3px;background:#f8f9fa;color:#075a9e;font:inherit;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;
+}
+.parcel-trade-filter-grid > button i{display:block;width:12px;height:12px;justify-self:center;border:0;border-radius:50%;background-color:var(--parcel-filter-color) !important;box-shadow:0 0 0 1px rgba(255,255,255,.38);}
+.parcel-trade-filter-grid > button span{text-align:center;}
+.parcel-trade-filter-grid > button.is-selected{border-color:#0b63a5;background:#0b63a5;color:#fff;}
+.parcel-trade-filter-grid > button.is-selected i{opacity:1;visibility:visible;}
+@media (max-width:640px){
+	.parcel-trade-left-tool-stack{left:12px;}
+}
+
+
+/* 5.995: 필지 실거래 필터 가로 배치와 리얼제주 팔레트 */
+.parcel-trade-filter-grid{padding:12px !important;gap:10px !important;}
+.parcel-trade-filter-grid > button{display:flex !important;flex-direction:row !important;align-items:center !important;justify-content:center !important;gap:10px !important;height:52px !important;padding:0 12px !important;border-radius:4px !important;}
+.parcel-trade-filter-grid > button i{display:block !important;flex:0 0 12px !important;width:12px !important;height:12px !important;margin:0 !important;opacity:1 !important;visibility:visible !important;background-color:var(--parcel-filter-color) !important;}
+.parcel-trade-filter-grid > button span{flex:0 0 auto !important;text-align:left !important;}
+
+
+/* 5.995: 필터 색상 원은 고정 열에 두고 항목명은 같은 시작선에서 왼쪽 정렬합니다. */
+body.parcel-individual-trade-level .parcel-trade-filter-control .map-tool-label{background:#1764ff !important;color:#fff !important;}
+.parcel-trade-filter-grid > button{
+  position:relative !important;
+  display:grid !important;
+  grid-template-columns:14px minmax(0,1fr) !important;
+  align-items:center !important;
+  justify-content:stretch !important;
+  column-gap:12px !important;
+  padding:0 18px !important;
+}
+.parcel-trade-filter-grid > button i{
+  position:static !important;
+  justify-self:start !important;
+  margin:0 !important;
+  transform:none !important;
+}
+.parcel-trade-filter-grid > button span{
+  min-width:0 !important;
+  text-align:left !important;
+}
+
+
+/* 5.995: 실거래 필터 폭 320px */
+.parcel-trade-type-filter-dialog{width:min(320px,calc(100vw - 40px)) !important;}
+
+/* REALJEJU 5.995: transaction-kind controls in the parcel-analysis top-left filter. */
+.parcel-trade-deal-filter-heading {
+  border-top: 1px solid #e3e7ed;
+}
+
+/* 5.995: vertically center only the menu opened from the parcel-analysis filter. */
+body > .parcel-trade-type-filter-modal {
+	align-items: center !important;
+}
+body > .parcel-trade-type-filter-modal > .parcel-trade-type-filter-dialog {
+	position: relative !important;
+	top: auto !important;
+	bottom: auto !important;
+	transform: none !important;
+	align-self: center !important;
+	margin-top: 0 !important;
+	margin-bottom: 0 !important;
+}
+
+/* REALJEJU 6.061: every parcel-analysis left tool exposes the same clickable cursor. */
+body[data-global-category="parcel"] .parcel-trade-left-tool-stack button,
+body[data-global-category="parcel"] .parcel-trade-left-tool-stack button:hover,
+body[data-global-category="parcel"] .parcel-trade-left-tool-stack button:focus,
+body[data-global-category="parcel"] .parcel-trade-left-tool-stack button:active,
+body[data-global-category="parcel"] .parcel-trade-left-tool-stack button:disabled {
+  cursor: pointer !important;
+}

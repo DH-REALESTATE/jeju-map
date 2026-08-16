@@ -105,7 +105,7 @@
       empty.hidden = false;
       empty.style.display = "block";
       empty.textContent = currentMode === "ev-charger"
-        ? "최근 조회한 충전소가 없습니다."
+        ? "최근 조회한 충전소 정보가\n없습니다."
         : "최근 조회한 업체가 없습니다.";
     }
   }
@@ -140,8 +140,8 @@ async function apply(mode) {
       api.clearParcelBoundary?.();
       await api.setEvChargerVisible?.(false);
       await api.setLocalBusinessMapVisible?.(false);
-      api.restorePropertyMarkersVisible?.();
       api.setMapType?.("roadmap");
+      api.restorePropertyMarkersVisible?.();
     } else if (currentMode === "parcel") {
       api.closePropertyList?.();
       await api.setLocalBusinessMapVisible?.(false);

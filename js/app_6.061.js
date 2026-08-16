@@ -42,7 +42,7 @@ if (globalBrandLink) {
 	});
 }
 
-/* PC 부동산 홈의 왼쪽 메뉴만 화면 상태를 유지한 채 경계선에 붙은 한 컨트롤로 빠르게 접고 펼친다. */
+/* PC 부동산 홈·필지분석·동네업체·전기차의 왼쪽 메뉴를 같은 컨트롤로 접고 펼친다. */
 (function initDesktopSideNavToggle()
 {
 	const button = document.getElementById("realjejuSideNavToggle");
@@ -55,9 +55,27 @@ if (globalBrandLink) {
 		return !!document.body?.classList.contains("realjeju-side-nav-collapsed");
 	}
 
+	function canShowSideNavToggle(category)
+	{
+		const nextCategory = String(category || "").trim();
+		return nextCategory === "realestate"
+			|| nextCategory === "parcel"
+			|| nextCategory === "local-business"
+			|| nextCategory === "ev-charger";
+	}
+
+	function shouldShowSideNavToggle()
+	{
+		return desktopQuery.matches
+			&& canShowSideNavToggle(document.body?.dataset?.globalCategory);
+	}
+
 	function syncButton()
 	{
 		if (!button) return;
+		const shouldShow = shouldShowSideNavToggle();
+		button.hidden = !shouldShow;
+		if (!shouldShow) return;
 		const collapsed = isCollapsed();
 		const icon = button.querySelector("i");
 		const label = button.querySelector("span");
@@ -83,6 +101,12 @@ if (globalBrandLink) {
 		relayoutTimer = window.setTimeout(() => {
 			relayoutTimer = 0;
 			if (state?.map && typeof state.map.relayout === "function") state.map.relayout();
+			if (typeof drawParcelTradeCanvas === "function"
+				&& typeof isParcelTradeCanvasModeActive === "function"
+				&& isParcelTradeCanvasModeActive()) {
+				drawParcelTradeCanvas();
+				if (typeof requestAnimationFrame === "function") requestAnimationFrame(drawParcelTradeCanvas);
+			}
 			if (typeof window.realjejuSyncTopbarFilterSafeLeft === "function") window.realjejuSyncTopbarFilterSafeLeft();
 			if (typeof syncMapFilterScrollControls === "function") syncMapFilterScrollControls();
 		}, 110);
@@ -92,7 +116,7 @@ if (globalBrandLink) {
 		button.addEventListener("click", () => {
 			if (!desktopQuery.matches
 				|| !document.body
-				|| !document.body.classList.contains("realjeju-property-home-route")) return;
+				|| !canShowSideNavToggle(document.body.dataset.globalCategory)) return;
 			const collapsed = !isCollapsed();
 			document.body.classList.toggle("realjeju-side-nav-collapsed", collapsed);
 			persist(collapsed);
@@ -103,6 +127,7 @@ if (globalBrandLink) {
 		});
 	}
 
+	window.realjejuSyncDesktopSideNavToggle = syncButton;
 	window.addEventListener("resize", syncButton, { passive: true });
 	syncButton();
 })();
@@ -3662,11 +3687,13 @@ function resetRealestateSelectionBeforeParcelEntry()
 function resetParcelSelectionBeforeRealestateEntry()
 {
 	clearPropertyRegionCountOverlays();
+	if (typeof deactivateParcelAreaMeasure === "function") deactivateParcelAreaMeasure();
+	if (typeof setParcelRoadContactActive === "function") setParcelRoadContactActive(false);
 	teardownParcelAnalysisSession();
 	clearParcelTradeCanvasSession();
 	clearPropertyRegionCountSelection();
 	selectedAdminBoundaryFeature = null;
-	if (state.leftListDetailMode === "parcel-land-info" || state.leftListDetailMode === "parcel-region-stats") {
+	if (state.leftListDetailMode === "parcel-land-info" || state.leftListDetailMode === "parcel-region-stats" || state.leftListDetailMode === "parcel-area-measure") {
 		state.leftListDetailMode = "";
 		state.leftListTitle = "매물 목록";
 		state.selectionMode = null;
@@ -3777,8 +3804,10 @@ async function applyGlobalCategoryMode(category)
 	if (!emptyMap && nextCategory === "parcel") {
 		if (document.body) document.body.classList.remove("parcel-region-trade-badges-hidden");
 		const parcelMode = getPropertyMapPresentationMode();
+		const parcelLevel = Number(state.map?.getLevel?.());
+		const usesIndividualTradeBadges = Number.isFinite(parcelLevel) && parcelLevel >= 1 && parcelLevel <= 5;
 		propertyMapPresentationMode = parcelMode;
-		if (shouldRenderParcelRegionTradeMapBadges(parcelMode)) {
+		if (!usesIndividualTradeBadges && shouldRenderParcelRegionTradeMapBadges(parcelMode)) {
 			clearMapObjects();
 			await renderPropertyRegionCountOverlays(parcelMode);
 		}
@@ -3841,6 +3870,8 @@ function scheduleRealjejuPropertyMapRepaintAfterCategoryReturn()
 			clearGlobalCategoryEmptyMapOverlays();
 		}
 		scheduleRealjejuGlobalCategoryMenuPosition();
+		if (typeof window.realjejuSyncDesktopSideNavToggle === "function") window.realjejuSyncDesktopSideNavToggle();
+		if (typeof syncParcelTradeFilterControlVisibility === "function") syncParcelTradeFilterControlVisibility();
 	}
 
 	function getGlobalCategoryRoutePath(category)
@@ -4441,19 +4472,34 @@ async function setMapRegionBoundaryListStateFromAdminFeature(feature, count)
 	}
 	const name = normalizeRegionDongName(getAdminBoundaryFeatureName(feature));
 	const city = normalizeJejuCityName(mapRegionFilterState.city || "제주시");
+	const regionCode = getPropertyScaleRegionCode(feature);
+	const sort = mapRegionFilterState.sort || "latest";
+	const previousState = getMapRegionBoundaryListState();
+	if (previousState
+		&& previousState.regionCode === regionCode
+		&& previousState.sort === sort) {
+		previousState.feature = feature;
+		previousState.name = name;
+		previousState.count = Math.max(0, Number(count) || 0);
+		previousState.totalCount = Math.max(
+			previousState.items.length,
+			Math.max(0, Number(count) || 0)
+		);
+		return previousState;
+	}
 	const parentDong = await resolveMapRegionBoundaryParentDong(feature, city);
 	mapRegionBoundaryListState = {
 		feature,
 		name,
 		parentDong: parentDong || name,
 		count: Math.max(0, Number(count) || 0),
-		regionCode: getPropertyScaleRegionCode(feature),
+		regionCode,
 		items: [],
 		totalCount: Math.max(0, Number(count) || 0),
 		loading: false,
 		exhausted: false,
 		requestSeq: ++mapRegionBoundaryRemoteRequestSeq,
-		sort: mapRegionFilterState.sort || "latest"
+		sort
 	};
 	return mapRegionBoundaryListState;
 }
@@ -4573,10 +4619,11 @@ async function loadMapRegionBoundaryRemotePage(options = {})
 	const boundaryState = getMapRegionBoundaryListState();
 	if (!boundaryState || !boundaryState.regionCode) return boundaryState;
 	const reset = options.reset === true;
-	if (!reset && (boundaryState.loading || boundaryState.exhausted)) return boundaryState;
-	if (reset) {
-		boundaryState.items = [];
-		boundaryState.loading = false;
+	const refresh = options.refresh === true;
+	if (boundaryState.loading) return boundaryState;
+	if (!reset && !refresh && boundaryState.exhausted) return boundaryState;
+	if (reset || refresh) {
+		if (!refresh) boundaryState.items = [];
 		boundaryState.exhausted = false;
 		boundaryState.requestSeq = ++mapRegionBoundaryRemoteRequestSeq;
 		boundaryState.sort = mapRegionFilterState.sort || "latest";
@@ -4585,21 +4632,22 @@ async function loadMapRegionBoundaryRemotePage(options = {})
 	boundaryState.loading = true;
 	try {
 		const result = await fetchPropertyScaleRegionPage(boundaryState.regionCode, {
-			offset: boundaryState.items.length,
+			offset: refresh ? 0 : boundaryState.items.length,
 			limit: LEFT_LIST_PAGE_SIZE,
 			totalCount: boundaryState.totalCount,
 			sort: mapRegionFilterState.sort || "latest"
 		});
 		const activeState = getMapRegionBoundaryListState();
 		if (activeState !== boundaryState || activeState.requestSeq !== requestSeq) return activeState;
-		const knownIds = new Set(boundaryState.items.map((item) => normalizeItemId(item && item.id)).filter(Boolean));
+		const knownIds = new Set((refresh ? [] : boundaryState.items).map((item) => normalizeItemId(item && item.id)).filter(Boolean));
 		const nextItems = (Array.isArray(result.items) ? result.items : []).filter((item) => {
 			const id = normalizeItemId(item && item.id);
 			if (!id || knownIds.has(id)) return false;
 			knownIds.add(id);
 			return true;
 		});
-		boundaryState.items.push(...nextItems);
+		if (refresh) boundaryState.items = nextItems;
+		else boundaryState.items.push(...nextItems);
 		boundaryState.totalCount = Number.isFinite(Number(result.totalCount))
 			? Math.max(0, Number(result.totalCount))
 			: boundaryState.totalCount;
@@ -5051,6 +5099,10 @@ function renderMapRegionFilterMenu()
 	const meta = getMapRegionCurrentMeta();
 	const mode = mapRegionFilterState.mode || "list";
 	panel.classList.toggle("is-city-select", mode === "city" || mode === "province");
+	if (mapRegionFilterState.boundaryLoading === true) {
+		panel.innerHTML = `<div class="map-region-loading">매물 목록을 불러오는 중입니다.</div>`;
+		return;
+	}
 	if (!meta.dong && mode !== "select" && mode !== "city" && mode !== "province") {
 		panel.innerHTML = `<div class="map-region-loading">지도 중심 주소를 불러오는 중입니다.</div>`;
 		return;
@@ -6216,7 +6268,7 @@ const COMMON_MAP_STYLE_COLORS = Object.freeze([
 	"#DC2626", "#EF4444", "#F43F5E", "#E11D48", "#DB2777", "#EC4899", "#EA580C", "#F97316", "#FB923C",
 	"#D97706", "#F59E0B", "#FBBF24", "#CA8A04", "#EAB308", "#FACC15", "#65A30D", "#84CC16", "#A3E635",
 	"#15807D", "#22C55E", "#10B981", "#0F766E", "#14B8A6", "#06B6D4", "#0369A1", "#38BDF8",
-	"#1D4ED8", "#2563EB", "#4F46E5", "#6D28D9", "#7C3AED", "#A855F7", "#A21CAF", "#C026D3", "#475573"
+	"#1D4ED8", "#2563EB", "#4F46E5", "#6D28D9", "#7C3AED", "#A855F7", "#A21CAF", "#C026D3", "#E5E7EB", "#475573"
 ]);
 // 4.998: 중개사 계정별 원형 매물 뱃지 표현 설정입니다.
 // 행정구역 네모 뱃지와 카카오 클러스터의 위치ㆍ묶음 계산은 건드리지 않고,
@@ -6225,10 +6277,11 @@ const PROPERTY_BADGE_STYLE_DEFAULT = Object.freeze({
 	color: "#FFFFFF",
 	textColor: BADGE_TEXT_HEX,
 	textOpacity: 1,
-	borderColor: BRAND_HEX,
-	borderOpacity: 0.45,
+	borderColor: "#C4C7CC",
+	borderOpacity: 1,
 	opacity: BADGE_BASE_ALPHA
 });
+const PROPERTY_BADGE_OBSOLETE_BORDER_COLORS = new Set(["#475573", "#D2D8E1", "#D1D5DB", "#E5E7EB", "#525252"]);
 const PROPERTY_BADGE_STYLE_COLORS = COMMON_MAP_STYLE_COLORS;
 const PROPERTY_BADGE_STYLE_STORAGE_PREFIX = "realjeju:property-badge-style:";
 let propertyBadgeStyleState = {
@@ -6277,6 +6330,7 @@ function normalizePropertyBadgeTextOpacity(value)
 function normalizePropertyBadgeBorderColor(value)
 {
 	const color = String(value || "").trim().toUpperCase();
+	if (PROPERTY_BADGE_OBSOLETE_BORDER_COLORS.has(color)) return PROPERTY_BADGE_STYLE_DEFAULT.borderColor;
 	return COMMON_MAP_STYLE_COLORS.includes(color) ? color : PROPERTY_BADGE_STYLE_DEFAULT.borderColor;
 }
 
@@ -6319,12 +6373,15 @@ function readCachedPropertyBadgeStyle(userId)
 	try {
 		const parsed = JSON.parse(localStorage.getItem(key) || "null");
 		if (!parsed || typeof parsed !== "object") return null;
+		const usesLegacyBorderDefault = PROPERTY_BADGE_OBSOLETE_BORDER_COLORS.has(
+			String(parsed.borderColor || "").trim().toUpperCase()
+		);
 		return {
 			color: normalizePropertyBadgeStyleColor(parsed.color),
 			textColor: normalizePropertyBadgeTextColor(parsed.textColor),
 			textOpacity: normalizePropertyBadgeTextOpacity(parsed.textOpacity),
-			borderColor: normalizePropertyBadgeBorderColor(parsed.borderColor),
-			borderOpacity: normalizePropertyBadgeBorderOpacity(parsed.borderOpacity),
+			borderColor: usesLegacyBorderDefault ? PROPERTY_BADGE_STYLE_DEFAULT.borderColor : normalizePropertyBadgeBorderColor(parsed.borderColor),
+			borderOpacity: usesLegacyBorderDefault ? PROPERTY_BADGE_STYLE_DEFAULT.borderOpacity : normalizePropertyBadgeBorderOpacity(parsed.borderOpacity),
 			opacity: normalizePropertyBadgeStyleOpacity(parsed.opacity)
 		};
 	} catch (err) {
@@ -6662,7 +6719,7 @@ const REALJEJU_ROUTE_SEO_META = Object.freeze({
 	}
 });
 // [ARCHIVE] PATCH 3.918: 상단 및 하단 배포 버전 표기를 현재 버전으로 맞춥니다.
-	const APP_VERSION = "5.895";
+	const APP_VERSION = "6.061";
 let realjejuTopbarVersionStatsText = "";
 let realjejuSiteVisitStatsRequested = false;
 let realjejuManagementVersionListingCount = null;
@@ -7447,7 +7504,7 @@ const REALJEJU_RECENT_CATEGORY_STORAGE_KEYS = {
 const REALJEJU_RECENT_CATEGORY_EMPTY_TEXT = {
 	realestate: "최근 조회한 매물이 없습니다.",
 	"local-business": "최근 조회한 업체가 없습니다.",
-	"ev-charger": "최근 조회한 충전소가 없습니다.",
+	"ev-charger": "최근 조회한 충전소 정보가\n없습니다.",
 	"part-time": "최근 조회한 알바가 없습니다.",
 	"used-market": "최근 조회한 중고거래가 없습니다.",
 	car: "최근 조회한 차량이 없습니다.",
@@ -12553,6 +12610,11 @@ let parcelBoundaryPolygonOverlays = [];
 let parcelBoundaryFeature = null;
 let parcelBoundaryRenderError = "";
 let parcelBoundaryAbortController = null;
+let parcelAreaMeasureActive = false;
+let parcelAreaMeasureRequestToken = 0;
+let parcelAreaMeasureSelections = [];
+let parcelAreaMeasurePolygonOverlays = [];
+let parcelAreaMeasureLabelOverlays = [];
 const parcelBoundaryLookupCache = new Map();
 const PARCEL_BOUNDARY_BROWSER_CACHE_TTL_MS = 10 * 60 * 1000;
 
@@ -12913,6 +12975,12 @@ return {
 		individualHousingPrices,
 		individualHousingPricesStatus,
 		propertyInformationAvailable: payload.propertyInformationAvailable === true,
+		apiCapabilities: payload.apiCapabilities && typeof payload.apiCapabilities === "object"
+			? {
+				priceOnly: payload.apiCapabilities.priceOnly === true,
+				roadContactBounds: payload.apiCapabilities.roadContactBounds === true
+			}
+			: {},
 		pathGroups,
 		paths
 	};
@@ -13081,6 +13149,763 @@ function renderParcelBoundaryOverlay(feature)
 		return false;
 	}
 }
+
+function clearParcelAreaMeasureOverlays()
+{
+	parcelAreaMeasurePolygonOverlays.forEach((overlay) => {
+		if (overlay && typeof overlay.setMap === "function") overlay.setMap(null);
+	});
+	parcelAreaMeasureLabelOverlays.forEach((overlay) => {
+		if (overlay && typeof overlay.setMap === "function") overlay.setMap(null);
+	});
+	parcelAreaMeasurePolygonOverlays = [];
+	parcelAreaMeasureLabelOverlays = [];
+}
+
+function getParcelAreaMeasurePoint(point)
+{
+	if (!point) return null;
+	const lat = Number(typeof point.getLat === "function" ? point.getLat() : (point.lat ?? point.y));
+	const lng = Number(typeof point.getLng === "function" ? point.getLng() : (point.lng ?? point.x));
+	return Number.isFinite(lat) && Number.isFinite(lng) ? { lat, lng } : null;
+}
+
+function estimateParcelAreaMeasureM2(paths, pathGroups)
+{
+	if (!Array.isArray(paths)) return 0;
+	const measureRing = (path) => {
+		if (!Array.isArray(path) || path.length < 3) return;
+		const points = path.map(getParcelAreaMeasurePoint).filter(Boolean);
+		if (points.length < 3) return 0;
+		const centerLat = points.reduce((sum, point) => sum + point.lat, 0) / points.length;
+		const metersPerLng = 111320 * Math.cos(centerLat * Math.PI / 180);
+		const metersPerLat = 110540;
+		let signedArea = 0;
+		for (let index = 0; index < points.length; index += 1) {
+			const current = points[index];
+			const next = points[(index + 1) % points.length];
+			signedArea += (current.lng * metersPerLng) * (next.lat * metersPerLat)
+				- (next.lng * metersPerLng) * (current.lat * metersPerLat);
+		}
+		return Math.abs(signedArea / 2);
+	};
+	if (Array.isArray(pathGroups) && pathGroups.length) {
+		return pathGroups.reduce((total, group) => {
+			if (!Array.isArray(group) || !group.length) return total;
+			const ringAreas = group.map(measureRing);
+			const outerArea = Number(ringAreas[0] || 0);
+			const holeArea = ringAreas.slice(1).reduce((sum, area) => sum + Number(area || 0), 0);
+			return total + Math.max(0, outerArea - holeArea);
+		}, 0);
+	}
+	return paths.reduce((total, path) => total + Number(measureRing(path) || 0), 0);
+}
+
+function getParcelAreaMeasureAreaM2(feature)
+{
+	const properties = feature?.properties || feature?.attributes || {};
+	const candidates = [
+		feature?.areaM2,
+		feature?.landCharacteristics?.areaM2,
+		properties.areaM2,
+		properties.area_m2,
+		properties.area,
+		properties.parea
+	];
+	for (const candidate of candidates) {
+		const value = Number(String(candidate ?? "").replace(/,/g, ""));
+		if (Number.isFinite(value) && value > 0) return value;
+	}
+	return estimateParcelAreaMeasureM2(feature?.paths, feature?.pathGroups);
+}
+
+function formatParcelAreaMeasureValue(areaM2, unit = globalAreaUnit)
+{
+	const normalizedArea = Number(areaM2);
+	if (!Number.isFinite(normalizedArea) || normalizedArea <= 0) return "-";
+	const value = unit === "py" ? normalizedArea / 3.305785 : normalizedArea;
+	const digits = value >= 100 ? 0 : 1;
+	return value.toLocaleString("ko-KR", { maximumFractionDigits: digits }) + (unit === "py" ? "평" : "㎡");
+}
+
+function getParcelAreaMeasurePnu(feature)
+{
+	const properties = feature?.properties || feature?.attributes || {};
+	return String(feature?.pnu || properties.pnu || properties.PNU || "").trim();
+}
+
+function getParcelAreaMeasureJibunFromPnu(value)
+{
+	const pnu = String(value || "").replace(/\D/g, "");
+	if (!/^\d{19}$/.test(pnu)) return "";
+	const mainNumber = Number(pnu.slice(11, 15));
+	const subNumber = Number(pnu.slice(15, 19));
+	if (!Number.isFinite(mainNumber) || mainNumber <= 0) return "";
+	return (pnu.charAt(10) === "2" ? "산" : "")
+		+ String(mainNumber)
+		+ (Number.isFinite(subNumber) && subNumber > 0 ? "-" + String(subNumber) : "");
+}
+
+function compactParcelAreaMeasureAddress(value)
+{
+	const normalized = String(value || "").replace(/\s+/g, " ").trim();
+	if (!normalized || /^\d{19}$/.test(normalized)) return "";
+	const match = normalized.match(/((?:[가-힣0-9]+(?:읍|면)\s+)?[가-힣0-9]+(?:동|리))\s+(산?\d+(?:-\d+)?)/u);
+	return match ? (match[1] + " " + match[2]) : "";
+}
+
+async function getParcelAreaMeasureAddress(feature)
+{
+	const properties = feature?.properties || feature?.attributes || {};
+	const pnu = getParcelAreaMeasurePnu(feature);
+	const directAddress = compactParcelAreaMeasureAddress(
+		feature?.address
+		|| properties.address
+		|| properties.fullAddress
+		|| properties.full_address
+		|| properties.addr
+		|| ""
+	);
+	if (directAddress) return directAddress;
+	let legalDongName = String(
+		feature?.legalDongName
+		|| feature?.landCharacteristics?.legalDongName
+		|| properties.legalDongName
+		|| properties.legal_dong_name
+		|| ""
+	).trim();
+	const jibun = String(
+		feature?.jibun
+		|| feature?.landCharacteristics?.jibun
+		|| properties.jibun
+		|| properties.jibunAddress
+		|| properties.jibun_address
+		|| getParcelAreaMeasureJibunFromPnu(pnu)
+		|| ""
+	).trim();
+	if (/^\d{19}$/.test(legalDongName)) legalDongName = "";
+	if (!legalDongName && /^\d{19}$/.test(pnu) && typeof loadAdminBoundaryGeoJson === "function") {
+		try {
+			const data = await loadAdminBoundaryGeoJson("local");
+			const features = Array.isArray(data?.features) ? data.features : [];
+			const matches = features.filter((item) => {
+				const code = String(getAdminBoundaryFeatureCodeValue(item) || "").replace(/\D/g, "");
+				return code && pnu.startsWith(code);
+			}).sort((left, right) => {
+				return String(getAdminBoundaryFeatureCodeValue(right) || "").length
+					- String(getAdminBoundaryFeatureCodeValue(left) || "").length;
+			});
+			const localFeature = matches[0] || null;
+			const localName = String(getAdminBoundaryFeatureName(localFeature) || "").trim();
+			if (/리$/.test(localName)) {
+				const emdData = await loadAdminBoundaryGeoJson("emd");
+				const emdCode = pnu.slice(0, 8);
+				const parentFeature = (Array.isArray(emdData?.features) ? emdData.features : []).find((item) => {
+					return String(getAdminBoundaryFeatureCodeValue(item) || "").replace(/\D/g, "") === emdCode;
+				});
+				const parentName = String(getAdminBoundaryFeatureName(parentFeature) || "").trim();
+				legalDongName = [parentName, localName].filter(Boolean).join(" ");
+			} else {
+				legalDongName = localName;
+			}
+		} catch (_error) {}
+	}
+	const address = [legalDongName, jibun].filter(Boolean).join(" ").trim();
+	return compactParcelAreaMeasureAddress(address) || address || jibun || "선택 필지";
+}
+
+const PARCEL_AREA_MEASURE_PRICE_CACHE_TTL_MS = 30 * 60 * 1000;
+const PARCEL_AREA_MEASURE_PRICE_TIMEOUT_MS = 6000;
+const parcelAreaMeasurePriceCache = new Map();
+const parcelAreaMeasurePriceInflight = new Map();
+
+function formatParcelAreaMeasureOfficialPrice(value)
+{
+	const price = Number(value);
+	if (!Number.isFinite(price) || price <= 0) return "-";
+	if (price >= 100000000) {
+		return (price / 100000000).toLocaleString("ko-KR", { maximumFractionDigits: 2 }) + "억";
+	}
+	return Math.round(price / 10000).toLocaleString("ko-KR") + "만";
+}
+
+async function lookupParcelAreaMeasureOfficialPrice(pnu, lat, lng, supportsPriceOnly)
+{
+	const normalizedPnu = String(pnu || "").replace(/\D/g, "");
+	if (!/^\d{19}$/.test(normalizedPnu)) return null;
+	const normalizedLat = Number(lat);
+	const normalizedLng = Number(lng);
+	const cached = parcelAreaMeasurePriceCache.get(normalizedPnu);
+	if (cached && cached.expiresAt > Date.now()) return cached.value;
+	if (parcelAreaMeasurePriceInflight.has(normalizedPnu)) return parcelAreaMeasurePriceInflight.get(normalizedPnu);
+	const request = (async () => {
+		const config = getParcelBoundaryApiConfig();
+		if (!config.url) return null;
+		const requestUrl = new URL(config.url, window.location.origin);
+		Object.keys(config.query || {}).forEach((name) => {
+			if (name) requestUrl.searchParams.set(name, String(config.query[name]));
+		});
+		requestUrl.searchParams.set("pnu", normalizedPnu);
+		requestUrl.searchParams.set("priceOnly", "1");
+		requestUrl.searchParams.set("dbOnly", "1");
+		const controller = new AbortController();
+		const timeout = window.setTimeout(() => controller.abort(), PARCEL_AREA_MEASURE_PRICE_TIMEOUT_MS);
+		try {
+			const requestOptions = {
+				method: "GET",
+				credentials: requestUrl.origin === window.location.origin ? "same-origin" : "omit",
+				mode: requestUrl.origin === window.location.origin ? "same-origin" : "cors",
+				signal: controller.signal,
+				cache: "no-cache"
+			};
+			const canUseLegacyFallback = Number.isFinite(normalizedLat)
+				&& Number.isFinite(normalizedLng);
+			let payload = null;
+			if (supportsPriceOnly === true) {
+				const response = await fetch(requestUrl.toString(), requestOptions);
+				payload = response.ok ? await response.json().catch(() => null) : null;
+			}
+			if (!payload && supportsPriceOnly !== true && canUseLegacyFallback) {
+				const fallbackUrl = new URL(config.url, window.location.origin);
+				Object.keys(config.query || {}).forEach((name) => {
+					if (name) fallbackUrl.searchParams.set(name, String(config.query[name]));
+				});
+				fallbackUrl.searchParams.delete("pnu");
+				fallbackUrl.searchParams.delete("priceOnly");
+				fallbackUrl.searchParams.delete("boundaryOnly");
+				fallbackUrl.searchParams.set("lat", String(normalizedLat));
+				fallbackUrl.searchParams.set("lng", String(normalizedLng));
+				fallbackUrl.searchParams.set("dbOnly", "1");
+				const fallbackResponse = await fetch(fallbackUrl.toString(), {
+					...requestOptions,
+					credentials: fallbackUrl.origin === window.location.origin ? "same-origin" : "omit",
+					mode: fallbackUrl.origin === window.location.origin ? "same-origin" : "cors"
+				});
+				payload = fallbackResponse.ok ? await fallbackResponse.json().catch(() => null) : null;
+			}
+			if (!payload) return null;
+			const latest = normalizeParcelLandPriceItems(payload?.individualLandPrices)[0] || null;
+			return latest && Number.isFinite(Number(latest.pricePerSquareMeter))
+				? Number(latest.pricePerSquareMeter)
+				: null;
+		} finally {
+			window.clearTimeout(timeout);
+		}
+	})().catch(() => null).then((value) => {
+		parcelAreaMeasurePriceCache.set(normalizedPnu, {
+			value,
+			expiresAt: Date.now() + PARCEL_AREA_MEASURE_PRICE_CACHE_TTL_MS
+		});
+		return value;
+	}).finally(() => {
+		parcelAreaMeasurePriceInflight.delete(normalizedPnu);
+	});
+	parcelAreaMeasurePriceInflight.set(normalizedPnu, request);
+	return request;
+}
+
+async function hydrateParcelAreaMeasureOfficialPrice(selection)
+{
+	const pricePerSquareMeter = await lookupParcelAreaMeasureOfficialPrice(
+		selection?.pnu,
+		selection?.selectionLat,
+		selection?.selectionLng,
+		selection?.feature?.apiCapabilities?.priceOnly === true
+	);
+	if (!parcelAreaMeasureActive || !parcelAreaMeasureSelections.includes(selection)) return;
+	selection.officialPricePerM2 = Number.isFinite(Number(pricePerSquareMeter)) ? Number(pricePerSquareMeter) : null;
+	selection.officialPriceStatus = selection.officialPricePerM2 ? "loaded" : "unavailable";
+	renderParcelAreaMeasurePanel();
+}
+
+function getParcelAreaMeasureDisplayPathGroups(feature)
+{
+	if (!feature || !Array.isArray(feature.paths) || !feature.paths.length) return [];
+	const displayPaths = buildParcelBoundaryDisplayPaths(feature.paths, getParcelBoundaryDisplayCalibration());
+	const sourcePathGroups = Array.isArray(feature.pathGroups) && feature.pathGroups.length
+		? feature.pathGroups
+		: feature.paths.map((path) => [path]);
+	let displayPathIndex = 0;
+	return sourcePathGroups.map((group) => group.map(() => displayPaths[displayPathIndex++]))
+		.map((group) => group.filter((path) => Array.isArray(path) && path.length >= 3))
+		.filter((group) => group.length);
+}
+
+function appendParcelAreaMeasureOverlay(selection, selectionIndex)
+{
+	const pathGroups = getParcelAreaMeasureDisplayPathGroups(selection.feature);
+	pathGroups.forEach((group) => {
+		try {
+			const polygon = new kakao.maps.Polygon({
+				path: group.length === 1 ? group[0] : group,
+				strokeWeight: 2,
+				strokeColor: "#1764ff",
+				strokeOpacity: 0.96,
+				strokeStyle: "shortdash",
+				fillColor: "#1764ff",
+				fillOpacity: 0.18
+			});
+			polygon.setMap(state.map);
+			if (typeof polygon.setZIndex === "function") polygon.setZIndex(PARCEL_BOUNDARY_ACTIVE_Z_INDEX + 1);
+			parcelAreaMeasurePolygonOverlays.push(polygon);
+		} catch (_error) {}
+	});
+	const center = getParcelBoundaryDisplayCenter(pathGroups.flat());
+	if (!center || !Number.isFinite(center.lat) || !Number.isFinite(center.lng) || !kakao.maps.CustomOverlay || !kakao.maps.LatLng) return;
+	const label = document.createElement("div");
+	label.className = "parcel-area-measure-map-label";
+	label.innerHTML = "<strong>" + escapeParcelLandInfoHtml(formatParcelAreaMeasureValue(selection.areaM2))
+		+ "</strong><span>" + (selectionIndex + 1) + "</span>";
+	const overlay = new kakao.maps.CustomOverlay({
+		map: state.map,
+		position: new kakao.maps.LatLng(center.lat, center.lng),
+		content: label,
+		xAnchor: 0.5,
+		yAnchor: 0.5,
+		zIndex: PARCEL_BOUNDARY_ACTIVE_Z_INDEX + 2
+	});
+	parcelAreaMeasureLabelOverlays.push(overlay);
+}
+
+function renderParcelAreaMeasureOverlays(options = {})
+{
+	if (!parcelAreaMeasureActive || !state.map || !window.kakao?.maps) return;
+	if (options.appendOnly === true && parcelAreaMeasureSelections.length) {
+		const selectionIndex = parcelAreaMeasureSelections.length - 1;
+		appendParcelAreaMeasureOverlay(parcelAreaMeasureSelections[selectionIndex], selectionIndex);
+		return;
+	}
+	clearParcelAreaMeasureOverlays();
+	parcelAreaMeasureSelections.forEach(appendParcelAreaMeasureOverlay);
+}
+
+function renderParcelAreaMeasurePanel()
+{
+	if (!propertyList || !parcelAreaMeasureActive) return;
+	const totalAreaM2 = parcelAreaMeasureSelections.reduce((sum, item) => sum + Number(item.areaM2 || 0), 0);
+	const hasPendingPrice = parcelAreaMeasureSelections.some((item) => item.officialPriceStatus === "loading");
+	const hasAvailablePrice = parcelAreaMeasureSelections.some((item) => (
+		item.officialPriceStatus === "loaded"
+		&& Number(item.areaM2 || 0) > 0
+		&& Number(item.officialPricePerM2 || 0) > 0
+	));
+	const totalOfficialPrice = parcelAreaMeasureSelections.reduce((sum, item) => {
+		if (item.officialPriceStatus !== "loaded") return sum;
+		const areaM2 = Number(item.areaM2 || 0);
+		const pricePerSquareMeter = Number(item.officialPricePerM2 || 0);
+		return sum + (areaM2 > 0 && pricePerSquareMeter > 0 ? areaM2 * pricePerSquareMeter : 0);
+	}, 0);
+	const rowsHtml = parcelAreaMeasureSelections.map((selection, index) => {
+		const officialPrice = Number(selection.areaM2 || 0) * Number(selection.officialPricePerM2 || 0);
+		const officialPriceText = selection.officialPriceStatus === "loading"
+			? ""
+			: formatParcelAreaMeasureOfficialPrice(officialPrice);
+		return '<div class="parcel-area-measure-row">'
+			+ '<span class="parcel-area-measure-index">' + (index + 1) + '</span>'
+			+ '<strong>' + escapeParcelLandInfoHtml(selection.address) + '</strong>'
+			+ '<span class="parcel-area-measure-area"><b>' + escapeParcelLandInfoHtml(formatParcelAreaMeasureValue(selection.areaM2)) + '</b></span>'
+			+ '<span class="parcel-area-measure-price">' + escapeParcelLandInfoHtml(officialPriceText) + '</span>'
+			+ '<button type="button" data-parcel-area-remove="' + index + '" aria-label="' + (index + 1) + '번 필지 삭제">×</button>'
+			+ '</div>';
+	}).join("");
+	let panel = propertyList.querySelector(".parcel-area-measure-panel");
+	if (!panel) {
+		propertyList.innerHTML = '<section class="parcel-area-measure-panel">'
+			+ '<div class="parcel-area-measure-summary">'
+			+ '<div class="parcel-area-measure-summary-head"><strong data-parcel-area-count></strong>'
+			+ '<div class="parcel-area-measure-summary-actions">'
+			+ '<button type="button" data-parcel-area-unit-toggle aria-label="평 단위로 전환"><i class="fa-solid fa-arrows-rotate" aria-hidden="true"></i><span data-parcel-area-unit-label>평</span></button>'
+			+ '<button type="button" data-parcel-area-reset>초기화</button></div></div>'
+			+ '<div class="parcel-area-measure-summary-metrics">'
+			+ '<div><span>총 면적</span><strong data-parcel-area-total></strong></div>'
+			+ '<div><span>공시지가</span><strong data-parcel-area-price-total></strong></div></div></div>'
+			+ '<div class="parcel-area-measure-table-head"><span>번호</span><span>지번</span><span>면적</span><span>공시지가</span><span></span></div>'
+			+ '<div class="parcel-area-measure-rows" data-parcel-area-rows></div>'
+			+ '</section>';
+		panel = propertyList.querySelector(".parcel-area-measure-panel");
+		panel?.addEventListener("click", (event) => {
+			const unitToggleButton = event.target.closest("[data-parcel-area-unit-toggle]");
+			if (unitToggleButton) {
+				event.preventDefault();
+				event.stopPropagation();
+				toggleSharedAreaUnit();
+				return;
+			}
+			const resetButton = event.target.closest("[data-parcel-area-reset]");
+			if (resetButton) {
+				parcelAreaMeasureSelections = [];
+				renderParcelAreaMeasureOverlays();
+				renderParcelAreaMeasurePanel();
+				return;
+			}
+			const removeButton = event.target.closest("[data-parcel-area-remove]");
+			if (!removeButton) return;
+			const index = Number(removeButton.dataset.parcelAreaRemove);
+			if (!Number.isInteger(index) || index < 0) return;
+			parcelAreaMeasureSelections.splice(index, 1);
+			renderParcelAreaMeasureOverlays();
+			renderParcelAreaMeasurePanel();
+		});
+	}
+	panel?.querySelector("[data-parcel-area-count]")?.replaceChildren(document.createTextNode("총 " + parcelAreaMeasureSelections.length.toLocaleString("ko-KR") + "개 필지가 선택됨"));
+	panel?.querySelector("[data-parcel-area-total]")?.replaceChildren(document.createTextNode(formatParcelAreaMeasureValue(totalAreaM2)));
+	const unitToggleButton = panel?.querySelector("[data-parcel-area-unit-toggle]");
+	if (unitToggleButton) {
+		const nextUnitLabel = globalAreaUnit === "py" ? "㎡" : "평";
+		const unitToggleLabel = unitToggleButton.querySelector("[data-parcel-area-unit-label]");
+		if (unitToggleLabel) unitToggleLabel.textContent = nextUnitLabel;
+		unitToggleButton.setAttribute("aria-label", nextUnitLabel + " 단위로 전환");
+	}
+	// 조회 중에는 기존 합계를 유지하고, 공시지가가 없는 필지는 합계에서 제외한다.
+	const totalPriceText = hasAvailablePrice
+		? formatParcelAreaMeasureOfficialPrice(totalOfficialPrice)
+		: (hasPendingPrice ? "" : "-");
+	panel?.querySelector("[data-parcel-area-price-total]")?.replaceChildren(document.createTextNode(totalPriceText));
+	const resetButton = panel?.querySelector("[data-parcel-area-reset]");
+	if (resetButton) resetButton.disabled = !parcelAreaMeasureSelections.length;
+	const rowsHost = panel?.querySelector("[data-parcel-area-rows]");
+	if (rowsHost) rowsHost.innerHTML = rowsHtml || '<p class="parcel-area-measure-empty">지도에서 필지를 차례대로 선택하세요.</p>';
+}
+
+function isParcelAreaMeasureVisibleLevel()
+{
+	const category = typeof getCurrentRealjejuGlobalCategoryKey === "function"
+		? getCurrentRealjejuGlobalCategoryKey()
+		: String(document.body?.dataset?.globalCategory || "realestate");
+	const level = Number(state.map?.getLevel?.());
+	return category === "parcel" && Number.isFinite(level) && level >= 1 && level <= 3;
+}
+
+function syncParcelAreaMeasureButton()
+{
+	const button = document.getElementById("mapParcelAreaToolBtn");
+	if (!button) return;
+	const isAvailable = isParcelAreaMeasureVisibleLevel();
+	button.disabled = !isAvailable;
+	button.classList.toggle("is-level-disabled", !isAvailable);
+	button.classList.toggle("active", parcelAreaMeasureActive && isAvailable);
+	button.setAttribute("aria-disabled", isAvailable ? "false" : "true");
+	button.setAttribute("aria-pressed", parcelAreaMeasureActive && isAvailable ? "true" : "false");
+	button.title = isAvailable ? "필지 면적 선택" : "지도 1~3레벨에서 사용 가능";
+}
+
+function deactivateParcelAreaMeasure()
+{
+	parcelAreaMeasureRequestToken += 1;
+	parcelAreaMeasureActive = false;
+	parcelAreaMeasureSelections = [];
+	clearParcelAreaMeasureOverlays();
+	syncParcelAreaMeasureButton();
+}
+
+function setParcelAreaMeasureActive(active)
+{
+	if (!active) {
+		const ownsPanel = state.leftListDetailMode === "parcel-area-measure"
+			|| !!propertyList?.querySelector(".parcel-area-measure-panel");
+		deactivateParcelAreaMeasure();
+		if (ownsPanel) {
+			state.leftListDetailMode = "";
+			state.leftListTitle = "매물 목록";
+			state.selectionMode = null;
+			if (propertyList) propertyList.innerHTML = "";
+			closeSidebarList();
+		}
+		return;
+	}
+	teardownParcelAnalysisSession();
+	if (typeof clearAgentListFilter === "function") clearAgentListFilter();
+	if (typeof clearListLock === "function") clearListLock();
+	state.leftListRemoteAgent = null;
+	state.leftListRemoteRegion = null;
+	if (typeof resetLeftListPagination === "function") resetLeftListPagination([]);
+	parcelAreaMeasureActive = true;
+	parcelAreaMeasureSelections = [];
+	state.leftListDetailMode = "parcel-area-measure";
+	state.leftListTitle = "면적 측정";
+	state.selectionMode = "parcel-area-measure";
+	syncSidebarListTitle();
+	renderParcelAreaMeasurePanel();
+	renderParcelAreaMeasureOverlays();
+	syncParcelAreaMeasureButton();
+	openSidebarList({ singlePass: true });
+}
+
+async function handleParcelAreaMeasureMapClick(mouseEvent)
+{
+	if (!parcelAreaMeasureActive) return false;
+	const category = typeof getCurrentRealjejuGlobalCategoryKey === "function"
+		? getCurrentRealjejuGlobalCategoryKey()
+		: String(document.body?.dataset?.globalCategory || "realestate");
+	if (category !== "parcel") return false;
+	if (window.kakao?.maps?.event && typeof kakao.maps.event.preventMap === "function") kakao.maps.event.preventMap();
+	const level = Number(state.map?.getLevel?.());
+	if (!Number.isFinite(level) || level < 1 || level > 5 || !mouseEvent?.latLng) return true;
+	const token = ++parcelAreaMeasureRequestToken;
+	const selectionLat = mouseEvent.latLng.getLat();
+	const selectionLng = mouseEvent.latLng.getLng();
+	try {
+		const feature = await lookupParcelBoundaryByLatLng(
+			selectionLat,
+			selectionLng,
+			{ boundaryOnly: true }
+		);
+		if (token !== parcelAreaMeasureRequestToken || !parcelAreaMeasureActive || !feature) return true;
+		const pnu = getParcelAreaMeasurePnu(feature);
+		const address = await getParcelAreaMeasureAddress(feature);
+		if (token !== parcelAreaMeasureRequestToken || !parcelAreaMeasureActive) return true;
+		const selectionKey = pnu || address;
+		const existingSelectionIndex = parcelAreaMeasureSelections.findIndex((item) => item.selectionKey === selectionKey);
+		if (existingSelectionIndex >= 0) {
+			parcelAreaMeasureSelections.splice(existingSelectionIndex, 1);
+			renderParcelAreaMeasureOverlays();
+			renderParcelAreaMeasurePanel();
+			return true;
+		}
+		const selection = {
+			selectionKey,
+			pnu,
+			address,
+			areaM2: getParcelAreaMeasureAreaM2(feature),
+			selectionLat,
+			selectionLng,
+			officialPricePerM2: null,
+			officialPriceStatus: "loading",
+			feature
+		};
+		parcelAreaMeasureSelections.push(selection);
+		renderParcelAreaMeasureOverlays({ appendOnly: true });
+		renderParcelAreaMeasurePanel();
+		void hydrateParcelAreaMeasureOfficialPrice(selection);
+	} catch (error) {
+		console.error("[realjeju parcel area] selection error", error);
+	}
+	return true;
+}
+
+const PARCEL_ROAD_CONTACT_EXCLUDED_JIMOK = new Set(["하천", "강", "구거", "도로", "묘지"]);
+const PARCEL_ROAD_CONTACT_GRID_DEGREES = 0.002;
+const PARCEL_ROAD_CONTACT_CACHE_LIMIT = 12;
+const PARCEL_ROAD_CONTACT_REQUEST_LIMIT = 1200;
+const PARCEL_ROAD_CONTACT_REFRESH_DELAY_MS = 180;
+const PARCEL_ROAD_CONTACT_REQUEST_TIMEOUT_MS = 9000;
+let parcelRoadContactActive = false;
+let parcelRoadContactOverlays = [];
+let parcelRoadContactRenderToken = 0;
+let parcelRoadContactRefreshTimer = null;
+const parcelRoadContactViewportCache = new Map();
+const parcelRoadContactViewportInflight = new Map();
+
+function isParcelRoadContactVisibleLevel()
+{
+	const category = typeof getCurrentRealjejuGlobalCategoryKey === "function"
+		? getCurrentRealjejuGlobalCategoryKey()
+		: String(document.body?.dataset?.globalCategory || "realestate");
+	const level = Number(state.map?.getLevel?.());
+	return category === "parcel" && Number.isFinite(level) && level >= 1 && level <= 3;
+}
+
+function clearParcelRoadContactOverlays()
+{
+	parcelRoadContactOverlays.forEach((overlay) => {
+		if (overlay && typeof overlay.setMap === "function") overlay.setMap(null);
+	});
+	parcelRoadContactOverlays = [];
+}
+
+function syncParcelRoadContactButton()
+{
+	const button = document.getElementById("mapParcelRoadContactToolBtn");
+	if (!button) return;
+	const isAvailable = isParcelRoadContactVisibleLevel();
+	button.disabled = !isAvailable;
+	button.classList.toggle("is-level-disabled", !isAvailable);
+	button.classList.toggle("active", parcelRoadContactActive && isAvailable);
+	button.setAttribute("aria-disabled", isAvailable ? "false" : "true");
+	button.setAttribute("aria-pressed", parcelRoadContactActive && isAvailable ? "true" : "false");
+	button.title = isAvailable ? "도로접면" : "지도 1~3레벨에서 사용 가능";
+}
+
+function getParcelRoadContactViewportRequest()
+{
+	const bounds = state.map?.getBounds?.();
+	const sw = bounds?.getSouthWest?.();
+	const ne = bounds?.getNorthEast?.();
+	if (!sw || !ne) return null;
+	const rawSouth = Number(sw.getLat());
+	const rawWest = Number(sw.getLng());
+	const rawNorth = Number(ne.getLat());
+	const rawEast = Number(ne.getLng());
+	if (![rawSouth, rawWest, rawNorth, rawEast].every(Number.isFinite)) return null;
+	const grid = PARCEL_ROAD_CONTACT_GRID_DEGREES;
+	const south = Math.floor(Math.min(rawSouth, rawNorth) / grid) * grid;
+	const west = Math.floor(Math.min(rawWest, rawEast) / grid) * grid;
+	const north = Math.ceil(Math.max(rawSouth, rawNorth) / grid) * grid;
+	const east = Math.ceil(Math.max(rawWest, rawEast) / grid) * grid;
+	return {
+		south,
+		west,
+		north,
+		east,
+		key: [south, west, north, east].map((value) => value.toFixed(4)).join("|")
+	};
+}
+
+async function loadParcelRoadContactViewportRows(viewport)
+{
+	if (!viewport?.key) return [];
+	if (parcelRoadContactViewportCache.has(viewport.key)) return parcelRoadContactViewportCache.get(viewport.key);
+	if (parcelRoadContactViewportInflight.has(viewport.key)) return parcelRoadContactViewportInflight.get(viewport.key);
+	const request = (async () => {
+		const config = getParcelBoundaryApiConfig();
+		if (!config.url) return [];
+		const requestUrl = new URL(config.url, window.location.origin);
+		Object.keys(config.query || {}).forEach((name) => {
+			if (name) requestUrl.searchParams.set(name, String(config.query[name]));
+		});
+		requestUrl.searchParams.delete("pnu");
+		requestUrl.searchParams.delete("priceOnly");
+		requestUrl.searchParams.delete("boundaryOnly");
+		requestUrl.searchParams.set("roadContactBounds", "1");
+		requestUrl.searchParams.set("west", String(viewport.west));
+		requestUrl.searchParams.set("south", String(viewport.south));
+		requestUrl.searchParams.set("east", String(viewport.east));
+		requestUrl.searchParams.set("north", String(viewport.north));
+		requestUrl.searchParams.set("limit", String(PARCEL_ROAD_CONTACT_REQUEST_LIMIT));
+		requestUrl.searchParams.set("dbOnly", "1");
+		const controller = new AbortController();
+		const timeout = window.setTimeout(() => controller.abort(), PARCEL_ROAD_CONTACT_REQUEST_TIMEOUT_MS);
+		try {
+			const response = await fetch(requestUrl.toString(), {
+				method: "GET",
+				credentials: requestUrl.origin === window.location.origin ? "same-origin" : "omit",
+				mode: requestUrl.origin === window.location.origin ? "same-origin" : "cors",
+				signal: controller.signal,
+				cache: "no-cache"
+			});
+			if (!response.ok) throw new Error("도로접면 필지 조회 실패");
+			const payload = await response.json().catch(() => null);
+			return (Array.isArray(payload?.parcels) ? payload.parcels : []).filter((row) => {
+				const jimok = String(row?.jimok || "").replace(/\s+/g, "").trim();
+				return jimok && !PARCEL_ROAD_CONTACT_EXCLUDED_JIMOK.has(jimok) && row?.geometry;
+			});
+		} finally {
+			window.clearTimeout(timeout);
+		}
+	})().then((rows) => {
+		if (parcelRoadContactViewportCache.size >= PARCEL_ROAD_CONTACT_CACHE_LIMIT) {
+			const oldestKey = parcelRoadContactViewportCache.keys().next().value;
+			if (oldestKey) parcelRoadContactViewportCache.delete(oldestKey);
+		}
+		parcelRoadContactViewportCache.set(viewport.key, rows);
+		return rows;
+	}).finally(() => {
+		parcelRoadContactViewportInflight.delete(viewport.key);
+	});
+	parcelRoadContactViewportInflight.set(viewport.key, request);
+	return request;
+}
+
+function renderParcelRoadContactRows(rows)
+{
+	if (!state.map || !window.kakao?.maps?.Polygon) return;
+	const nextOverlays = [];
+	(Array.isArray(rows) ? rows : []).forEach((row) => {
+		let geometry = row?.geometry;
+		if (typeof geometry === "string") {
+			try { geometry = JSON.parse(geometry); } catch (_error) { geometry = null; }
+		}
+		toLatLngPathGroupsFromGeometry(geometry).forEach((group) => {
+			if (!Array.isArray(group) || !group.length) return;
+			try {
+				const polygon = new kakao.maps.Polygon({
+					map: state.map,
+					path: group.length === 1 ? group[0] : group,
+					strokeWeight: 1,
+					strokeColor: "#000000",
+					strokeOpacity: 0.95,
+					strokeStyle: "solid",
+					fillColor: "#000000",
+					fillOpacity: 0.58,
+					clickable: false
+				});
+				if (typeof polygon.setZIndex === "function") polygon.setZIndex(3);
+				nextOverlays.push(polygon);
+			} catch (_error) {}
+		});
+	});
+	const previousOverlays = parcelRoadContactOverlays;
+	parcelRoadContactOverlays = nextOverlays;
+	previousOverlays.forEach((overlay) => {
+		if (overlay && typeof overlay.setMap === "function") overlay.setMap(null);
+	});
+}
+
+async function refreshParcelRoadContactViewport()
+{
+	const token = ++parcelRoadContactRenderToken;
+	if (!parcelRoadContactActive || !isParcelRoadContactVisibleLevel()) {
+		clearParcelRoadContactOverlays();
+		return false;
+	}
+	const viewport = getParcelRoadContactViewportRequest();
+	if (!viewport) return false;
+	try {
+		const rows = await loadParcelRoadContactViewportRows(viewport);
+		if (token !== parcelRoadContactRenderToken || !parcelRoadContactActive || !isParcelRoadContactVisibleLevel()) return false;
+		renderParcelRoadContactRows(rows);
+		return true;
+	} catch (_error) {
+		return false;
+	}
+}
+
+function scheduleParcelRoadContactViewportRefresh()
+{
+	syncParcelRoadContactButton();
+	if (parcelRoadContactRefreshTimer) window.clearTimeout(parcelRoadContactRefreshTimer);
+	if (!parcelRoadContactActive) {
+		parcelRoadContactRefreshTimer = null;
+		return;
+	}
+	parcelRoadContactRefreshTimer = window.setTimeout(() => {
+		parcelRoadContactRefreshTimer = null;
+		void refreshParcelRoadContactViewport();
+	}, PARCEL_ROAD_CONTACT_REFRESH_DELAY_MS);
+}
+
+function setParcelRoadContactActive(active)
+{
+	parcelRoadContactActive = active === true;
+	parcelRoadContactRenderToken += 1;
+	if (parcelRoadContactRefreshTimer) {
+		window.clearTimeout(parcelRoadContactRefreshTimer);
+		parcelRoadContactRefreshTimer = null;
+	}
+	if (!parcelRoadContactActive) clearParcelRoadContactOverlays();
+	else scheduleParcelRoadContactViewportRefresh();
+	syncParcelRoadContactButton();
+}
+
+function bindParcelAnalysisToolButtons()
+{
+	const areaButton = document.getElementById("mapParcelAreaToolBtn");
+	const roadContactButton = document.getElementById("mapParcelRoadContactToolBtn");
+	areaButton?.addEventListener("click", (event) => {
+		event.preventDefault();
+		event.stopPropagation();
+		setParcelAreaMeasureActive(!parcelAreaMeasureActive);
+	});
+	roadContactButton?.addEventListener("click", (event) => {
+		event.preventDefault();
+		event.stopPropagation();
+		setParcelRoadContactActive(!parcelRoadContactActive);
+	});
+	syncParcelAreaMeasureButton();
+	syncParcelRoadContactButton();
+}
+
+bindParcelAnalysisToolButtons();
 
 
 
@@ -13748,24 +14573,27 @@ function openParcelLandInfoPanel(feature)
 	syncSidebarListTitle();
 	if (sidebarListShareBtn) sidebarListShareBtn.hidden = true;
 	document.body.classList.remove("map-panels-collapsed");
-	// 5.895: 닫힌 정보 패널 DOM을 재사용하는 경우에도 너비와 접힘 상태를 실제로 복구합니다.
-	openSidebarList();
 	const parcelRoadAddress = String(feature.roadAddress || feature.road_address || "").trim();
 	propertyList.innerHTML = '<article class="parcel-land-info-panel"><header class="parcel-land-info-address"><strong class="parcel-land-info-address-primary">' + escapeParcelLandInfoHtml(address) + '</strong>' + (parcelRoadAddress ? '<span class="parcel-land-info-address-road">' + escapeParcelLandInfoHtml(parcelRoadAddress) + '</span>' : "") + '</header><section class="parcel-land-info-section"><h2 class="parcel-land-info-section-title">토지 기본 정보</h2>' + rows.map(([label, value, rawValue]) => buildParcelLandInfoRow(label, value, rawValue)).join("") + '</section>' + (feature.landCharacteristicsStatus === "unavailable" ? '<div class="parcel-land-info-status">토지특성정보 서비스 승인 또는 조회 상태를 확인해 주세요.</div>' : "") + (feature.landPossessionStatus === "unavailable" && !/(?:아파트|연립|다세대|오피스텔|집합)/.test(String(feature.landUseSituation || (feature.landCharacteristics || {}).landUseSituation || "")) ? '<div class="parcel-land-info-status">토지소유정보 서비스 승인 또는 조회 상태를 확인해 주세요.</div>' : "") + buildParcelLandUsePlanSection(feature) + buildParcelLandMoveSection(feature) + buildParcelIndividualLandPriceSection(feature) + '</article>';
-	const parcelLandInfoTitle = propertyList.querySelector(".parcel-land-info-section-title");
-	if (parcelLandInfoTitle) {
-		const parcelLandAreaUnitToggle = document.createElement("button");
-		parcelLandAreaUnitToggle.type = "button";
-		parcelLandAreaUnitToggle.className = "parcel-land-area-unit-toggle";
-		parcelLandAreaUnitToggle.dataset.parcelLandAreaUnitToggle = "";
-		parcelLandAreaUnitToggle.textContent = globalAreaUnit === "py" ? "㎡" : "평";
-		parcelLandAreaUnitToggle.setAttribute("aria-label", parcelLandAreaUnitToggle.textContent + " 단위로 전환");
-		parcelLandAreaUnitToggle.addEventListener("click", (event) => {
+	const parcelPropertyPanel = propertyList.querySelector(".parcel-land-info-panel");
+	if (parcelPropertyPanel && typeof window.realjejuEnhanceParcelPropertyPanel === "function") {
+		try {
+			window.realjejuEnhanceParcelPropertyPanel(parcelPropertyPanel);
+		} catch (error) {
+			console.warn("[realjeju property info] synchronous enhancement failed", error);
+		}
+	}
+	// 최종 정보 DOM을 먼저 완성한 뒤 지도 레이아웃을 한 번만 갱신합니다.
+	openSidebarList({ singlePass: true });
+	if (!propertyList.dataset.parcelLandAreaUnitDelegated) {
+		propertyList.dataset.parcelLandAreaUnitDelegated = "true";
+		propertyList.addEventListener("click", (event) => {
+			const parcelLandAreaUnitToggle = event.target.closest("[data-parcel-land-area-unit-toggle]");
+			if (!parcelLandAreaUnitToggle || !propertyList.contains(parcelLandAreaUnitToggle)) return;
 			event.preventDefault();
 			event.stopPropagation();
 			toggleSharedAreaUnit();
 		});
-		parcelLandInfoTitle.appendChild(parcelLandAreaUnitToggle);
 	}
 	propertyList.scrollTop = 0;
 	recordParcelInfoRecent(feature, address, info);
@@ -13785,15 +14613,6 @@ async function showParcelBoundaryForSearchLocation(lat, lng, options = {})
 		return false;
 	}
 	if (!isParcelBoundaryJejuCoordinate(latNum, lngNum)) return false;
-	if (options && options.openLandInfoPanel === true && propertyList && sidebarListTitle) {
-		state.leftListDetailMode = "parcel-land-info";
-		state.leftListTitle = "부동산 정보";
-		syncSidebarListTitle();
-		document.body.classList.remove("map-panels-collapsed");
-		openSidebarList();
-		propertyList.innerHTML = '<article class="parcel-land-info-panel"><div class="parcel-property-loading">필지 정보를 불러오는 중입니다.</div></article>';
-		propertyList.scrollTop = 0;
-	}
 
 	const requestToken = ++parcelBoundaryRequestToken;
 	parcelBoundaryLoading = true;
@@ -13842,9 +14661,6 @@ async function showParcelBoundaryForSearchLocation(lat, lng, options = {})
 		}
 		parcelBoundaryRenderError = String(error && error.message ? error.message : "필지 경계 조회 중 오류가 발생했습니다.");
 		if (!boundaryRendered) clearParcelBoundaryOverlays();
-		else if (options && options.openLandInfoPanel === true && propertyList) {
-			propertyList.innerHTML = '<article class="parcel-land-info-panel"><div class="parcel-land-info-status">필지 상세정보를 불러오지 못했습니다.</div></article>';
-		}
 		if (typeof console !== "undefined" && console.error) {
 			console.error("[realjeju parcel]", parcelBoundaryRenderError);
 		}
@@ -14752,7 +15568,9 @@ function updateGlobalAreaUnitButtons()
 	if (areaUnitToggleLabel) areaUnitToggleLabel.textContent = globalAreaUnit === "py" ? "㎡" : "평";
 	document.querySelectorAll("[data-parcel-land-area-unit-toggle]").forEach((button) => {
 		const nextLabel = globalAreaUnit === "py" ? "㎡" : "평";
-		button.textContent = nextLabel;
+		const nestedLabel = button.querySelector(".map-unit-cycle-label");
+		if (nestedLabel) nestedLabel.textContent = nextLabel;
+		else button.textContent = nextLabel;
 		button.setAttribute("aria-label", nextLabel + " 단위로 전환");
 	});
 }
@@ -14783,14 +15601,16 @@ function positionMapTypePopover()
 	const rect = mapTypeMenuBtn.getBoundingClientRect();
 	const mapToolGroup = mapTypeMenuBtn.closest ? mapTypeMenuBtn.closest(".map-map-tool-group") : null;
 	const groupRect = mapToolGroup ? mapToolGroup.getBoundingClientRect() : null;
+	mapTypePopover.style.height = "auto";
 	const popoverRect = mapTypePopover.getBoundingClientRect();
-	const targetHeight = groupRect && Number.isFinite(groupRect.height) ? groupRect.height : popoverRect.height;
+	const targetHeight = popoverRect.height;
 	const left = Math.max(8, rect.left - popoverRect.width - 8);
-	const top = Math.min(Math.max(8, groupRect ? groupRect.top : rect.top), window.innerHeight - targetHeight - 8);
+	const preferredTop = groupRect ? groupRect.top : rect.top;
+	const top = Math.min(Math.max(8, preferredTop), Math.max(8, window.innerHeight - targetHeight - 8));
 	mapTypePopover.style.position = "fixed";
 	mapTypePopover.style.left = left + "px";
 	mapTypePopover.style.top = top + "px";
-	mapTypePopover.style.height = targetHeight + "px";
+	mapTypePopover.style.height = "auto";
 	mapTypePopover.style.right = "auto";
 }
 
@@ -14844,6 +15664,15 @@ function updateMapTypeButtons()
 	if (mapTypeRoadBtn) mapTypeRoadBtn.classList.toggle("active", currentMapTypeMode === "roadmap");
 	if (mapTypeSatelliteBtn) mapTypeSatelliteBtn.classList.toggle("active", currentMapTypeMode === "satellite");
 	if (mapTypeTerrainBtn) mapTypeTerrainBtn.classList.toggle("active", currentMapTypeMode === "terrain");
+	const mapTypeLabelBtn = document.getElementById("mapTypeLabelBtn");
+	if (mapTypeLabelBtn) {
+		const labelControlEnabled = currentMapTypeMode === "satellite" && isSatelliteLabelControlAvailable();
+		mapTypeLabelBtn.disabled = !labelControlEnabled;
+		const satelliteLabelsHidden = labelControlEnabled && !isMapSatelliteLabelsVisible;
+		mapTypeLabelBtn.classList.toggle("active", satelliteLabelsHidden);
+		mapTypeLabelBtn.setAttribute("aria-pressed", satelliteLabelsHidden ? "true" : "false");
+		mapTypeLabelBtn.setAttribute("aria-label", isMapSatelliteLabelsVisible ? "위성 지명 감추기" : "위성 지명 보이기");
+	}
 	if (mapTypeCadastralBtn) {
 		mapTypeCadastralBtn.classList.toggle("active", isMapCadastralOverlayVisible);
 		mapTypeCadastralBtn.setAttribute("aria-pressed", isMapCadastralOverlayVisible ? "true" : "false");
@@ -14874,6 +15703,36 @@ function toggleMapCadastralOverlay()
 	updateMapTypeButtons();
 }
 
+function toggleMapSatelliteLabels()
+{
+	if (currentMapTypeMode !== "satellite" || !isSatelliteLabelControlAvailable()) return;
+	isMapSatelliteLabelsVisible = !isMapSatelliteLabelsVisible;
+	try {
+		window.localStorage.setItem(MAP_SATELLITE_LABELS_STORAGE_KEY, isMapSatelliteLabelsVisible ? "true" : "false");
+	} catch (_error) {}
+	applyMapTypeMode("satellite");
+}
+
+const MAP_SATELLITE_LABELS_STORAGE_KEY = "realjeju:map-satellite-labels-visible";
+let isMapSatelliteLabelsVisible = (() => {
+	try {
+		return window.localStorage.getItem(MAP_SATELLITE_LABELS_STORAGE_KEY) !== "false";
+	} catch (_error) {
+		return true;
+	}
+})();
+
+function isSatelliteLabelControlAvailable()
+{
+	const category = typeof getCurrentRealjejuGlobalCategoryKey === "function"
+		? getCurrentRealjejuGlobalCategoryKey()
+		: String(document.body?.dataset?.globalCategory || "realestate");
+	return category === "parcel"
+		|| (typeof isGlobalRealestateCategory === "function"
+			? isGlobalRealestateCategory(category)
+			: category === "realestate");
+}
+
 function shouldShowSatelliteLabelsForCurrentService()
 {
 	const category = typeof getCurrentRealjejuGlobalCategoryKey === "function"
@@ -14881,10 +15740,12 @@ function shouldShowSatelliteLabelsForCurrentService()
 		: (document.body && document.body.dataset
 			? String(document.body.dataset.globalCategory || "realestate")
 			: "realestate");
-	return category === "parcel"
-    || (typeof isGlobalRealestateCategory === "function"
-      ? isGlobalRealestateCategory(category)
-      : category === "realestate");
+	return isMapSatelliteLabelsVisible && (
+		category === "parcel"
+		|| (typeof isGlobalRealestateCategory === "function"
+			? isGlobalRealestateCategory(category)
+			: category === "realestate")
+	);
 }
 
 let satelliteLabelServiceObserver = null;
@@ -14981,6 +15842,7 @@ function toggleMapTypePopover()
 
 window.toggleMapTypePopover = toggleMapTypePopover;
 window.toggleMapCadastralOverlay = toggleMapCadastralOverlay;
+window.toggleMapSatelliteLabels = toggleMapSatelliteLabels;
 window.addEventListener("resize", scheduleViewportMapLayoutSync, { passive: true });
 if (window.visualViewport) window.visualViewport.addEventListener("resize", scheduleViewportMapLayoutSync, { passive: true });
 
@@ -15010,14 +15872,17 @@ function syncMapPropertyToggleButton()
 	const label = mapPropertyToggleBtn.querySelector(".map-tool-label");
 	const isParcelMode = getCurrentRealjejuGlobalCategoryKey() === "parcel";
 	if (isParcelMode) {
-		const badgesHidden = isParcelRegionTradeBadgesHidden();
-		if (label) label.textContent = "숨김";
-		mapPropertyToggleBtn.classList.toggle("active", badgesHidden);
-		mapPropertyToggleBtn.setAttribute("aria-pressed", badgesHidden ? "true" : "false");
-		mapPropertyToggleBtn.setAttribute("aria-label", badgesHidden ? "거래 뱃지 표시" : "거래 뱃지 숨기기");
-		mapPropertyToggleBtn.title = badgesHidden ? "거래 뱃지 표시" : "거래 뱃지 숨기기";
+		if (label) label.textContent = "";
+		mapPropertyToggleBtn.classList.add("active", "parcel-primary-placeholder");
+		mapPropertyToggleBtn.disabled = true;
+		mapPropertyToggleBtn.setAttribute("aria-pressed", "false");
+		mapPropertyToggleBtn.setAttribute("aria-label", "기능 준비 중");
+		mapPropertyToggleBtn.title = "";
+		syncParcelTradeBadgeVisibilityControl();
 		return;
 	}
+	mapPropertyToggleBtn.classList.remove("parcel-primary-placeholder");
+	mapPropertyToggleBtn.disabled = false;
 	if (label) label.textContent = "매물";
 	mapPropertyToggleBtn.classList.toggle("active", isVisible);
 	mapPropertyToggleBtn.setAttribute("aria-pressed", isVisible ? "true" : "false");
@@ -15262,6 +16127,11 @@ function setGlobalAreaUnit(unit)
 	selectedAreaUnit = normalizedUnit;
 	applyGlobalAreaUnit();
 	if (typeof drawParcelTradeCanvas === "function" && isParcelTradeCanvasModeActive()) drawParcelTradeCanvas();
+	if (typeof updateParcelTradePriceModeControl === "function") updateParcelTradePriceModeControl();
+	if (parcelAreaMeasureActive) {
+		renderParcelAreaMeasureOverlays();
+		renderParcelAreaMeasurePanel();
+	}
 	const parcelAreaValue = propertyList && propertyList.querySelector(".parcel-land-info-area-value");
 	if (parcelAreaValue) {
 		const storedParcelAreaM2 = Number(parcelAreaValue.dataset.areaM2);
@@ -16279,11 +17149,33 @@ function setParcelRegionTradeBadgesHidden(hidden)
 		clearPropertyRegionCountOverlays();
 	} else if (getCurrentRealjejuGlobalCategoryKey() === "parcel") {
 		const mode = getPropertyMapPresentationMode();
-		if (shouldRenderParcelRegionTradeMapBadges(mode)) {
+		const level = Number(state.map?.getLevel?.());
+		if (Number.isFinite(level) && level >= 1 && level <= 5) {
+			// 숨김 해제는 지도 이동 이벤트를 기다리지 않고 현재 프레임에서 즉시 확정한다.
+			if (parcelTradeCanvas) {
+				parcelTradeCanvas.hidden = false;
+				parcelTradeCanvas.style.visibility = "";
+			}
+			drawParcelTradeCanvas();
+			if (typeof window.requestAnimationFrame === "function") {
+				window.requestAnimationFrame(() => {
+					if (isParcelRegionTradeBadgesHidden()) return;
+					if (parcelTradeCanvas) {
+						parcelTradeCanvas.hidden = false;
+						parcelTradeCanvas.style.visibility = "";
+					}
+					drawParcelTradeCanvas();
+				});
+			}
+			// 기존 행을 먼저 유지하고, 같은 화면의 캐시/RPC 결과를 다시 연결한다.
+			parcelTradeCanvasLoadedBoundsKey = "";
+			void loadParcelTradeCanvasRowsForCurrentViewport({ source: "visibility-toggle" });
+		} else if (shouldRenderParcelRegionTradeMapBadges(mode)) {
 			void renderPropertyRegionCountOverlays(mode);
 		}
 	}
 	if (typeof syncParcelTradeCanvasVisibility === "function") syncParcelTradeCanvasVisibility();
+	syncParcelTradeBadgeVisibilityControl();
 	syncMapPropertyToggleButton();
 	return shouldHide;
 }
@@ -16817,6 +17709,15 @@ function shouldUseAdminBoundaryMapLevelPresentation()
 	return !blockedClasses.some((className) => document.body.classList.contains(className));
 }
 
+function hasPropertyRegionCountOverlaysForMode(mode)
+{
+	const prefix = `${String(mode || "")}:`;
+	return Array.isArray(propertyRegionCountOverlays) && propertyRegionCountOverlays.some((overlay) => {
+		const label = overlay && overlay.__realjejuRegionCountLabel;
+		return !!label && String(label.dataset?.regionKey || "").startsWith(prefix);
+	});
+}
+
 function clearPropertyRegionCountOverlays()
 {
   parcelRegionTradeBadgeRenderedSignature = "";
@@ -17015,15 +17916,24 @@ function syncSidebarListTitle()
 	const hasState = typeof state !== "undefined" && state;
 	const hasOpenParcelLandInfo = !!(propertyList && propertyList.querySelector(".parcel-land-info-panel"));
 	const hasOpenParcelRegionStats = !!(propertyList && propertyList.querySelector(".parcel-region-trade-stats-panel"));
-	const hasLockedParcelInfoMode = !!(hasState && (state.leftListDetailMode === "parcel-land-info" || state.leftListDetailMode === "parcel-region-stats"));
+	const hasOpenParcelAreaMeasure = !!(propertyList && propertyList.querySelector(".parcel-area-measure-panel"));
+	const hasLockedParcelInfoMode = !!(hasState && (
+		state.leftListDetailMode === "parcel-land-info"
+		|| state.leftListDetailMode === "parcel-region-stats"
+		|| state.leftListDetailMode === "parcel-area-measure"
+	));
 	const isParcelRegionStatsTitle = hasOpenParcelRegionStats
 		|| (!!hasState && state.leftListDetailMode === "parcel-region-stats" && !hasOpenParcelLandInfo);
-	const parcelPanelTitle = isParcelRegionStatsTitle ? "부동산 통계" : "부동산 정보";
-	if (hasState && (hasOpenParcelLandInfo || hasOpenParcelRegionStats || hasLockedParcelInfoMode)) {
-		state.leftListDetailMode = hasOpenParcelLandInfo ? "parcel-land-info" : "parcel-region-stats";
+	const parcelPanelTitle = hasOpenParcelAreaMeasure || (!!hasState && state.leftListDetailMode === "parcel-area-measure")
+		? "면적 측정"
+		: (isParcelRegionStatsTitle ? "부동산 통계" : "부동산 정보");
+	if (hasState && (hasOpenParcelLandInfo || hasOpenParcelRegionStats || hasOpenParcelAreaMeasure || hasLockedParcelInfoMode)) {
+		state.leftListDetailMode = hasOpenParcelAreaMeasure
+			? "parcel-area-measure"
+			: (hasOpenParcelLandInfo ? "parcel-land-info" : "parcel-region-stats");
 		state.leftListTitle = parcelPanelTitle;
 	}
-	const title = (hasOpenParcelLandInfo || hasOpenParcelRegionStats || hasLockedParcelInfoMode) ? parcelPanelTitle : (hasState && state.leftListTitle ? state.leftListTitle : "매물 목록");
+	const title = (hasOpenParcelLandInfo || hasOpenParcelRegionStats || hasOpenParcelAreaMeasure || hasLockedParcelInfoMode) ? parcelPanelTitle : (hasState && state.leftListTitle ? state.leftListTitle : "매물 목록");
 	const isAgentOfficeTitle = !!(hasState && state.agentListFilter && title !== "매물 목록");
 	sidebarListTitle.textContent = title;
 	sidebarListTitle.classList.toggle("is-agent-office-title", isAgentOfficeTitle);
@@ -17052,6 +17962,11 @@ async function openPropertyRegionCountListPanel(feature, count)
 	const regionCode = getPropertyScaleRegionCode(feature);
 	const totalCount = Math.max(0, Number(count) || 0);
 	if (!regionCode) return false;
+	const prefetchedItems = boundaryState
+		&& boundaryState.regionCode === regionCode
+		&& Array.isArray(boundaryState.items)
+		? boundaryState.items.slice(0, LEFT_LIST_PAGE_SIZE)
+		: [];
 
 	hardCloseDetailPanel();
 	currentDetailItem = null;
@@ -17075,8 +17990,8 @@ async function openPropertyRegionCountListPanel(feature, count)
 	state.leftListRemoteRegion = {
 		regionCode,
 		totalCount,
-		items: [],
-		exhausted: totalCount <= 0,
+		items: prefetchedItems,
+		exhausted: totalCount <= prefetchedItems.length,
 		loading: false,
 		seq: state.leftListSeq
 	};
@@ -17084,7 +17999,20 @@ async function openPropertyRegionCountListPanel(feature, count)
 		propertyList.innerHTML = "";
 		propertyList.scrollTop = 0;
 	}
-	await loadMoreLeftListItems();
+	if (prefetchedItems.length) {
+		state.leftListItems = prefetchedItems.slice();
+		state.leftListSourceIds = prefetchedItems.map((item) => normalizeItemId(item && item.id)).filter(Boolean);
+		state.leftListSourceKey = `remote-region:${regionCode}:${getPropertyScaleFilterKey()}:${getPropertyScaleSortValue()}`;
+		state.leftListRenderedCount = prefetchedItems.length;
+		state.leftListTotalCount = totalCount;
+		lockListToItems(prefetchedItems, { keepOnMapClick: true });
+		updateMarkerSelection(null, []);
+		renderList(prefetchedItems);
+		setPagedListInfo(totalCount, prefetchedItems.length);
+	}
+	if (prefetchedItems.length < Math.min(totalCount, LEFT_LIST_PAGE_SIZE)) {
+		void loadMoreLeftListItems();
+	}
 	const listTotalCount = Math.max(0, Number(state.leftListRemoteRegion?.totalCount) || 0);
 	setResultInfo(`${regionName} 매물 ${listTotalCount}건`);
 	setPagedListInfo(listTotalCount, state.leftListItems.length);
@@ -17374,11 +18302,22 @@ function createParcelRegionTradeMapBadge(feature, mode, meta, data, selection)
 	return badge;
 }
 
+function isParcelIndividualTradeLevelNow()
+{
+	const category = typeof getCurrentRealjejuGlobalCategoryKey === "function"
+		? getCurrentRealjejuGlobalCategoryKey()
+		: String(document.body?.dataset?.globalCategory || "realestate");
+	const level = Number(state.map?.getLevel?.());
+	return category === "parcel" && Number.isFinite(level) && level >= 1 && level <= 5;
+}
+
 async function renderParcelRegionTradeMapBadgesUncached(mode, renderToken, renderSignature)
 {
+	if (renderToken !== propertyRegionCountRenderToken || isParcelIndividualTradeLevelNow()) return false;
 	const type = getAdminBoundaryDataTypeForPresentationMode(mode);
 	const data = await loadAdminBoundaryGeoJson(type);
-	if (renderSignature !== getParcelRegionTradeBadgeRenderSignature(mode) || !shouldRenderParcelRegionTradeMapBadges(mode)
+	if (renderToken !== propertyRegionCountRenderToken || isParcelIndividualTradeLevelNow()
+		|| renderSignature !== getParcelRegionTradeBadgeRenderSignature(mode) || !shouldRenderParcelRegionTradeMapBadges(mode)
 		|| getPropertyMapPresentationMode() !== mode) return false;
 	const features = Array.isArray(data?.features)
 		? data.features.filter((feature) => doesParcelRegionTradeFeatureMatchMode(feature, mode))
@@ -17397,8 +18336,10 @@ async function renderParcelRegionTradeMapBadgesUncached(mode, renderToken, rende
 		...candidate,
 		meta: await loadParcelRegionTradeBadgeMeta(candidate.feature)
 	})))).filter((candidate) => candidate.meta?.regionCode);
+	if (renderToken !== propertyRegionCountRenderToken || isParcelIndividualTradeLevelNow()) return false;
 	const statsByKey = await fetchParcelRegionTradeStatsBatch(candidates.map((candidate) => candidate.meta), parcelRegionTradeSelection);
-	if (renderSignature !== getParcelRegionTradeBadgeRenderSignature(mode) || !shouldRenderParcelRegionTradeMapBadges(mode)
+	if (renderToken !== propertyRegionCountRenderToken || isParcelIndividualTradeLevelNow()
+		|| renderSignature !== getParcelRegionTradeBadgeRenderSignature(mode) || !shouldRenderParcelRegionTradeMapBadges(mode)
 		|| getPropertyMapPresentationMode() !== mode) return false;
 	const visibleCandidates = candidates.sort((a, b) => {
 		if (a.hasPreferredAnchor !== b.hasPreferredAnchor) return a.hasPreferredAnchor ? -1 : 1;
@@ -17479,7 +18420,7 @@ async function renderParcelRegionTradeMapBadges(mode, renderToken) {
   const renderSignature = getParcelRegionTradeBadgeRenderSignature(mode);
   const renderedMode = String(parcelRegionTradeBadgeRenderedSignature || "").split("|")[0];
   if (renderedMode && renderedMode !== String(mode || "") && propertyRegionCountOverlays.length) {
-    clearPropertyRegionCountOverlays();
+    // 새 단계가 준비될 때까지 기존 네모 뱃지를 유지한다.
     parcelRegionTradeBadgeRenderedSignature = "";
   }
   if (parcelRegionTradeBadgeRenderedSignature === renderSignature
@@ -17493,7 +18434,9 @@ async function renderParcelRegionTradeMapBadges(mode, renderToken) {
   parcelRegionTradeBadgeRenderInFlight.set(renderSignature, request);
   try {
     const rendered = await request;
-    if (rendered && renderSignature === getParcelRegionTradeBadgeRenderSignature(mode)) {
+    if (rendered && renderToken === propertyRegionCountRenderToken
+        && !isParcelIndividualTradeLevelNow()
+        && renderSignature === getParcelRegionTradeBadgeRenderSignature(mode)) {
       parcelRegionTradeBadgeRenderedSignature = renderSignature;
     }
     return rendered;
@@ -17506,6 +18449,13 @@ async function renderParcelRegionTradeMapBadges(mode, renderToken) {
 
 async function renderPropertyRegionCountOverlays(mode = getPropertyMapPresentationMode(), options = {})
 {
+	if (isParcelIndividualTradeLevelNow()) {
+		propertyLocalCountEntryAnimationPending = false;
+		propertyRegionCountRenderToken += 1;
+		parcelRegionTradeBadgeRenderedSignature = "";
+		clearPropertyRegionCountOverlays();
+		return false;
+	}
 	if ((!shouldUsePropertyMapLevelPresentation() && !shouldRenderParcelRegionTradeMapBadges(mode)) || !isPropertyRegionCountMode(mode)) {
 		propertyLocalCountEntryAnimationPending = false;
 		propertyRegionCountRenderToken += 1;
@@ -17677,7 +18627,7 @@ function beginPropertyPresentationBoundaryTransition()
 	const hasSquareBadges = Array.isArray(propertyRegionCountOverlays) && propertyRegionCountOverlays.length > 0;
 	const entersRegionCountModeFromCircles = isPropertyRegionCountMode(nextMode)
 		&& (previousMode === "clusters" || hasCircleMarkers);
-	const shouldAnimateLocalCountEntry = nextMode === "local-counts" && entersRegionCountModeFromCircles;
+	const shouldAnimateLocalCountEntry = false;
 	const returnsToMarkerMode = (nextMode === "clusters" || nextMode === "individual")
 		&& (isPropertyRegionCountMode(previousMode) || hasSquareBadges);
 	const markerRestoreVisibleBounds = returnsToMarkerMode ? getPropertyScaleViewportBounds() : null;
@@ -17709,8 +18659,12 @@ function beginPropertyPresentationBoundaryTransition()
 	propertyScaleViewportRequestSeq += 1;
 	propertyRegionCountRenderToken += 1;
 	clearMapObjects();
-	clearPropertyRegionCountOverlays();
+	// 네모 단계끼리 이동할 때는 새 단계가 준비될 때까지 기존 뱃지를 유지한다.
+	if (!isPropertyRegionCountMode(nextMode)) clearPropertyRegionCountOverlays();
 	propertyMapPresentationMode = nextMode;
+	if (isPropertyRegionCountMode(nextMode)) {
+		void renderPropertyRegionCountOverlays(nextMode);
+	}
 	if (returnsToMarkerMode) hideAdminBoundaryBottomPill();
 	if (resetsRegionSelection) {
 		const keepsLocalBoundaryInMarkerMode = (nextMode === "clusters" || nextMode === "individual")
@@ -19949,23 +20903,55 @@ function initMapRegionAndAllFilterDropdowns()
 		}
 	}
 
+	let mapRegionBottomPillOpenSeq = 0;
 	window.openRealjejuMapRegionFilterFromBottomPill = async function(feature, count)
 	{
 		if (!regionDropdown || !regionTrigger) return;
+		const openSeq = ++mapRegionBottomPillOpenSeq;
 		if (typeof closeRightMapToolPanels === "function") closeRightMapToolPanels();
-		if (feature && typeof setMapRegionBoundaryListStateFromAdminFeature === "function") {
-			await setMapRegionBoundaryListStateFromAdminFeature(feature, count);
-		} else if (typeof clearMapRegionBoundaryListState === "function") {
-			clearMapRegionBoundaryListState();
-		}
+		const requestedRegionCode = feature ? getPropertyScaleRegionCode(feature) : "";
+		const existingBoundaryState = typeof getMapRegionBoundaryListState === "function"
+			? getMapRegionBoundaryListState()
+			: null;
+		const canReuse = !!(existingBoundaryState
+			&& requestedRegionCode
+			&& existingBoundaryState.regionCode === requestedRegionCode
+			&& Array.isArray(existingBoundaryState.items)
+			&& existingBoundaryState.items.length);
 		mapRegionFilterState.mode = "list";
-		// 4.925: 하단 지역 버튼은 현재 화면의 경량 좌표 행을 지역 전체 목록으로 재사용하지 않는다.
-		// 클릭한 행정구역의 실제 공개 매물 첫 30건을 받은 뒤 기존 드롭다운 UI에 그대로 렌더한다.
-		if (typeof loadMapRegionBoundaryRemotePage === "function") {
-			await loadMapRegionBoundaryRemotePage({ reset: true });
-		}
+		mapRegionFilterState.boundaryLoading = !canReuse;
 		renderMapRegionFilterMenu();
 		toggleDropdown(regionDropdown, regionTrigger, true);
+		try {
+			if (feature && typeof setMapRegionBoundaryListStateFromAdminFeature === "function") {
+				await setMapRegionBoundaryListStateFromAdminFeature(feature, count);
+			} else if (typeof clearMapRegionBoundaryListState === "function") {
+				clearMapRegionBoundaryListState();
+			}
+		} finally {
+			if (openSeq === mapRegionBottomPillOpenSeq) {
+				mapRegionFilterState.boundaryLoading = false;
+				renderMapRegionFilterMenu();
+			}
+		}
+		if (openSeq !== mapRegionBottomPillOpenSeq) return;
+		const activeBoundaryState = typeof getMapRegionBoundaryListState === "function"
+			? getMapRegionBoundaryListState()
+			: null;
+		const hasCachedItems = !!(activeBoundaryState
+			&& Array.isArray(activeBoundaryState.items)
+			&& activeBoundaryState.items.length);
+		if (typeof loadMapRegionBoundaryRemotePage === "function") {
+			Promise.resolve(loadMapRegionBoundaryRemotePage({
+				reset: !hasCachedItems,
+				refresh: hasCachedItems
+			})).then((loadedState) => {
+				if (openSeq !== mapRegionBottomPillOpenSeq
+					|| !regionDropdown.classList.contains("open")
+					|| loadedState !== getMapRegionBoundaryListState()) return;
+				renderMapRegionFilterMenu();
+			}).catch((error) => console.warn("상단 지역 매물 백그라운드 갱신 실패:", error));
+		}
 	};
 
 	function closeAllFilterDropdownFromCloseButton(event)
@@ -22077,11 +23063,11 @@ function updateSidebarWidth()
 	}
 }
 
-function openSidebarList()
+function openSidebarList(options = {})
 {
 	state.isListOpen = true;
 	updateSidebarWidth();
-	refreshMapLayout();
+	if (!options.deferMapLayout) refreshMapLayout({ singlePass: options.singlePass === true });
 	if (typeof scheduleMapFilterScrollSyncBurst === "function") scheduleMapFilterScrollSyncBurst();
 }
 
@@ -22107,11 +23093,17 @@ function closeFloatingDetailShareMenu()
 
 function closeSidebarList(options = {})
 {
+	const closingParcelAreaMeasure = !!propertyList && (
+		state.leftListDetailMode === "parcel-area-measure"
+		|| !!propertyList.querySelector(".parcel-area-measure-panel")
+	);
 	const closingParcelAnalysisPanel = !!propertyList && (
 		state.leftListDetailMode === "parcel-land-info"
 		|| state.leftListDetailMode === "parcel-region-stats"
-		|| !!propertyList.querySelector(".parcel-land-info-panel, .parcel-region-trade-stats-panel")
+		|| closingParcelAreaMeasure
+		|| !!propertyList.querySelector(".parcel-land-info-panel, .parcel-region-trade-stats-panel, .parcel-area-measure-panel")
 	);
+	if (closingParcelAreaMeasure) deactivateParcelAreaMeasure();
 	if (closingParcelAnalysisPanel) {
     teardownParcelAnalysisSession();
 	}
@@ -22456,6 +23448,19 @@ function updateMapPanelToggleState()
 	syncMapFilterbarDetailHidden();
 }
 
+let cachedPropertyMapVisibilitySyncToken = 0;
+
+function setCachedPropertyMapObjectsVisible(visible)
+{
+	const shouldShow = Boolean(visible);
+	if (!Array.isArray(state.markers)) return;
+	state.markers.forEach((marker) => {
+		if (!marker) return;
+		if (typeof marker.setOpacity === "function") marker.setOpacity(shouldShow ? 1 : 0);
+		if (typeof marker.setClickable === "function") marker.setClickable(shouldShow);
+	});
+}
+
 function setMapPropertyMarkersVisible(visible, options = {})
 {
 	const requestedVisible = Boolean(visible);
@@ -22463,28 +23468,30 @@ function setMapPropertyMarkersVisible(visible, options = {})
 		state.propertyMarkersVisibleByUser = requestedVisible;
 	}
 	const activeCategory = document.body && document.body.dataset
-		? document.body.dataset.globalCategory
+		? (document.body.dataset.serviceMode || document.body.dataset.globalCategory || "realestate")
 		: "realestate";
 	const shouldShow = requestedVisible && isGlobalRealestateCategory(activeCategory);
 	state.isPropertyMarkersVisible = shouldShow;
 	document.body.classList.toggle("map-properties-hidden", !shouldShow);
-	if (!shouldShow) {
-		state.selectedClusterKey = null;
-		state.selectedMarkerId = null;
-		state.selectedMarkerIds = new Set();
-		state.selectionMode = null;
-		propertyRegionCountRenderToken += 1;
-		clearPropertyRegionCountOverlays();
-		clearMapObjects();
-		updateMarkerSelection(null);
-		hideAdminBoundaryBottomPill({ preserveState: true });
-	} else if (state.filtered && state.filtered.length) {
-		renderMarkers(state.filtered, { preserveViewport: true });
+	// 버튼을 먼저 실제 화면에 그린 뒤 기존 지도 객체의 표시만 전환한다.
+	// 같은 실행 흐름에서 지도 객체를 건드리면 브라우저 페인트가 늦어져 파란불이 나중에 보인다.
+	syncMapPropertyToggleButton();
+	const visibilitySyncToken = ++cachedPropertyMapVisibilitySyncToken;
+	const applyCachedVisibility = () => {
+		if (visibilitySyncToken !== cachedPropertyMapVisibilitySyncToken) return;
+		if (state.isPropertyMarkersVisible !== shouldShow) return;
+		setCachedPropertyMapObjectsVisible(shouldShow);
+	};
+	if (typeof requestAnimationFrame === "function") {
+		requestAnimationFrame(() => requestAnimationFrame(applyCachedVisibility));
+	} else {
+		setTimeout(applyCachedVisibility, 0);
 	}
-	if (shouldShow && adminBoundaryBottomPillFeature && Number.isFinite(Number(adminBoundaryBottomPillCount))) {
+	if (!shouldShow) {
+		hideAdminBoundaryBottomPill({ preserveState: true });
+	} else if (adminBoundaryBottomPillFeature && Number.isFinite(Number(adminBoundaryBottomPillCount))) {
 		updateAdminBoundaryBottomPill(adminBoundaryBottomPillFeature, adminBoundaryBottomPillCount);
 	}
-	syncMapPropertyToggleButton();
 	syncPickaxeMode();
 }
 
@@ -26689,7 +27696,7 @@ function createMarkerImage(item, isSelected = false, label = "1")
 	const markerColor = badgeStyle.color;
 	const isWhiteBackground = markerColor === "#FFFFFF";
 
-	const shadowPad = 10;
+	const shadowPad = 24;
 	const canvasWidth = width + shadowPad;
 	const canvasHeight = height + shadowPad;
 	const centerX = canvasWidth / 2;
@@ -26704,9 +27711,10 @@ function createMarkerImage(item, isSelected = false, label = "1")
 
 	const svg = `
 	<svg xmlns="http://www.w3.org/2000/svg" width="${canvasWidth}" height="${canvasHeight}" viewBox="0 0 ${canvasWidth} ${canvasHeight}">
+	<defs><filter id="propertyBadgeGrayShadow" x="-45%" y="-45%" width="200%" height="200%"><feDropShadow dx="2" dy="3" stdDeviation="3" flood-color="#000000" flood-opacity="0.24"/></filter></defs>
 	<g>
-	<rect x="${shadowPad / 2}" y="${shadowPad / 2}" width="${width}" height="${height}" rx="12" ry="12"
-	fill="${bgColor}" stroke="${getResolvedPropertyBadgeBorderColor(badgeStyle)}" stroke-width="1"/>
+	<rect filter="url(#propertyBadgeGrayShadow)" x="${shadowPad / 2}" y="${shadowPad / 2}" width="${width}" height="${height}" rx="12" ry="12"
+	fill="${bgColor}" stroke="${getResolvedPropertyBadgeBorderColor(badgeStyle)}" stroke-width="0.8"/>
 	<text x="${centerX + textMetrics.xOffset}" y="${centerY + 1}"
 	dominant-baseline="middle"
 	text-anchor="middle"
@@ -26996,7 +28004,9 @@ function setClusterBadgeSelected(cluster, isSelected)
 	wrap.style.transform = `translateX(0)`;
 	wrap.style.transformOrigin = "center center";
 	wrap.style.boxSizing = "border-box";
-	wrap.style.contain = "layout style paint";
+	// 묶음 뱃지도 단일 SVG 뱃지처럼 하단·우측 그림자가 잘리지 않게 한다.
+	wrap.style.contain = "layout style";
+	wrap.style.overflow = "visible";
 	wrap.style.backfaceVisibility = "hidden";
 	wrap.style.webkitBackfaceVisibility = "hidden";
 	wrap.style.touchAction = "manipulation";
@@ -27023,8 +28033,8 @@ function setClusterBadgeSelected(cluster, isSelected)
 	el.style.fontVariantNumeric = useProportionalDigits ? "proportional-nums" : "tabular-nums";
 	el.style.fontFeatureSettings = useProportionalDigits ? "'pnum' 1, 'lnum' 1" : "'tnum' 1, 'lnum' 1";
 	el.style.webkitFontSmoothing = "antialiased";
-	el.style.border = "1px solid " + borderColor;
-	el.style.boxShadow = "none";
+	el.style.border = "0.8px solid " + borderColor;
+	el.style.boxShadow = "2px 3px 7px rgba(0,0,0,0.24)";
 	el.style.boxSizing = "border-box";
 	el.style.whiteSpace = "nowrap";
 	el.classList.add("realjeju-property-cluster-badge");
@@ -30268,7 +31278,7 @@ function initMap()
 					color: initialPropertyBadgeTextColor,
 					borderRadius: "12px",
 					border: "0",
-					boxShadow: "0 3px 7px rgba(0,0,0,0.13)",
+					boxShadow: "0 2px 6px rgba(100,116,139,0.18)",
 					textAlign: "center",
 					fontWeight: "750",
 					fontSize: "18px",
@@ -30283,7 +31293,7 @@ function initMap()
 					color: initialPropertyBadgeTextColor,
 					borderRadius: "12px",
 					border: "0",
-					boxShadow: "0 3px 7px rgba(0,0,0,0.13)",
+					boxShadow: "0 2px 6px rgba(100,116,139,0.18)",
 					textAlign: "center",
 					fontWeight: "750",
 					fontSize: "18px",
@@ -30298,7 +31308,7 @@ function initMap()
 					color: initialPropertyBadgeTextColor,
 					borderRadius: "12px",
 					border: "0",
-					boxShadow: "0 3px 7px rgba(0,0,0,0.13)",
+					boxShadow: "0 2px 6px rgba(100,116,139,0.18)",
 					textAlign: "center",
 					fontWeight: "750",
 					fontSize: "18px",
@@ -30313,7 +31323,7 @@ function initMap()
 					color: initialPropertyBadgeTextColor,
 					borderRadius: "12px",
 					border: "0",
-					boxShadow: "0 3px 7px rgba(0,0,0,0.13)",
+					boxShadow: "0 2px 6px rgba(100,116,139,0.18)",
 					textAlign: "center",
 					fontWeight: "750",
 					fontSize: "18px",
@@ -30403,6 +31413,16 @@ kakao.maps.event.addListener(state.map, "zoom_changed", () => {
 			parcelRegionTradeStatsAnchorPoint = null;
 			syncPropertyRegionCountSelectedLabels();
 		}
+		if (currentServiceCategory === "parcel"
+			&& Number.isFinite(currentMapLevel)
+			&& currentMapLevel > 5
+			&& shouldOpenParcelRegionStatsAfterZoom) {
+			scheduleParcelRegionTradeStatsAfterZoom(
+				parcelRegionPoint,
+				parcelRegionSelectionSnapshot,
+				{ source: "parcel-level-transition" }
+			);
+		}
 		if (isPropertyListingFlowBlockedForCurrentService()) {
 			if (currentServiceCategory === "parcel") {
 				const nextPresentationMode = getPropertyMapPresentationMode();
@@ -30421,7 +31441,8 @@ kakao.maps.event.addListener(state.map, "zoom_changed", () => {
 		clearAdminBoundaryOverlay();
 		const presentationTransitioned = beginPropertyPresentationBoundaryTransition();
 		if (presentationTransitioned) {
-			propertyMapBoundaryRefreshPending = true;
+			// 네모 단계는 위 전환 함수에서 즉시 렌더하므로 idle 재렌더를 예약하지 않는다.
+			propertyMapBoundaryRefreshPending = !isPropertyRegionCountMode(getPropertyMapPresentationMode());
 			if (shouldRestoreSelectedRegionBoundary) {
 				const restoreBoundary = () => {
 					if (hasAdminBoundarySelectedPoint() || selectedPropertyRegionBoundaryFeature) {
@@ -30447,6 +31468,7 @@ kakao.maps.event.addListener(state.map, "zoom_changed", () => {
 			kakao.maps.event.addListener(state.map, "click", async function (mouseEvent) {
 				// 시설 뱃지·마커 입력은 지도 클릭 비동기 처리보다 먼저 종료합니다.
 				if (isParcelMapClickBlockedByFacilityMarker()) return;
+				if (await handleParcelAreaMeasureMapClick(mouseEvent)) return;
 				if (await handleParcelTradeCanvasMapClick(mouseEvent)) return;
 				state.initialRandomListActive = false;
 				closeRightMapToolPanels();
@@ -30570,15 +31592,18 @@ kakao.maps.event.addListener(state.map, "zoom_changed", () => {
 
 		kakao.maps.event.addListener(state.map, "idle", async () => {
 			scheduleMapCenterRegionLabelUpdate();
+			scheduleParcelRoadContactViewportRefresh();
 			if (isPropertyListingFlowBlockedForCurrentService()) {
 				const currentServiceCategory = typeof getCurrentRealjejuGlobalCategoryKey === "function"
 					? getCurrentRealjejuGlobalCategoryKey()
 					: String(document.body?.dataset?.globalCategory || "realestate");
-				if (currentServiceCategory === "parcel" && propertyMapBoundaryRefreshPending) {
-					propertyMapBoundaryRefreshPending = false;
+				if (currentServiceCategory === "parcel") {
 					const finalPresentationMode = getPropertyMapPresentationMode();
+					const needsBadgeRestore = propertyMapBoundaryRefreshPending
+						|| !hasPropertyRegionCountOverlaysForMode(finalPresentationMode);
+					propertyMapBoundaryRefreshPending = false;
 					propertyMapPresentationMode = finalPresentationMode;
-					if (shouldRenderParcelRegionTradeMapBadges(finalPresentationMode)) {
+					if (needsBadgeRestore && shouldRenderParcelRegionTradeMapBadges(finalPresentationMode)) {
 						await renderPropertyRegionCountOverlays(finalPresentationMode);
 					}
 				}
@@ -30591,12 +31616,18 @@ kakao.maps.event.addListener(state.map, "zoom_changed", () => {
 				return;
 			}
 		if (propertyHomeMapDragPending) {
-			const mustFinishLevelTransition = propertyMapBoundaryRefreshPending;
 			propertyHomeMapDragPending = false;
-			if (!mustFinishLevelTransition) {
+			const finalPresentationMode = getPropertyMapPresentationMode();
+			const shouldRefreshVisibleBadges = isPropertyRegionCountMode(finalPresentationMode);
+			if (shouldRefreshVisibleBadges) {
+				propertyMapBoundaryRefreshPending = false;
+				propertyMapPresentationMode = finalPresentationMode;
+				// 네트워크 조회 없이 캐시된 전체 집계에서 새 화면 영역의 뱃지만 갱신한다.
+				await renderPropertyRegionCountOverlays(finalPresentationMode);
 				scheduleFacilityViewportRender();
 				return;
 			}
+			// 1~5레벨 실제 좌표 모드는 여기서 끝내지 않고 아래 현재 화면 RPC로 이어진다.
 		}
 		if (isClusterClicking && state.selectionMode === "cluster") {
 			scheduleFacilityViewportRender();
@@ -30612,8 +31643,12 @@ kakao.maps.event.addListener(state.map, "zoom_changed", () => {
 }
 
 const PARCEL_TRADE_MARKER_RPC = "get_parcel_trade_marker_snapshot_in_bounds_5888";
-const PARCEL_TRADE_MARKER_LIMIT = 150;
+const PARCEL_TRADE_MARKER_LIMIT = 200;
+const PARCEL_TRADE_CANVAS_VIEWPORT_CACHE_MAX = 12;
+const PARCEL_TRADE_CANVAS_BOUNDS_GRID_MIN_DEG = 0.0003;
+const PARCEL_TRADE_CANVAS_BOUNDS_GRID_DECIMALS = 6;
 const parcelTradeViewportCache = new Map();
+const parcelTradeViewportRequests = new Map();
 let parcelTradeCanvas = null;
 let parcelTradeCanvasContext = null;
 let parcelTradeCanvasRows = [];
@@ -30629,6 +31664,371 @@ let parcelTradeCanvasStableLevel = NaN;
 let parcelTradeCanvasMoveFrame = 0;
 let parcelTradeCanvasRevealStartedAt = 0;
 let parcelTradeCanvasRevealFrame = 0;
+let parcelTradeFilterControl = null;
+let parcelTradeFilterModal = null;
+let parcelTradeBadgeVisibilityControl = null;
+let parcelTradePriceModeControl = null;
+let parcelTradePriceMode = "total";
+let parcelTradePriceModeRenderFrame = 0;
+let parcelTradeLeftToolStack = null;
+let parcelTradeLeftToolStackPositionBound = false;
+const PARCEL_TRADE_FILTER_OPTIONS = Object.freeze([
+	{ key: "commercial-building", label: "상업용건물", color: "#6268F2" },
+	{ key: "land", label: "토지", color: "#E1A900" },
+	{ key: "store-office", label: "상가/사무실", color: "#E548B8" },
+	{ key: "factory-warehouse", label: "공장/창고", color: "#FF7A45" },
+	{ key: "single-multi", label: "단독/다가구", color: "#216BFF" },
+	{ key: "apartment", label: "아파트", color: "#00B8A9" },
+	{ key: "officetel", label: "오피스텔", color: "#27A9F8" },
+	{ key: "rowhouse", label: "연립/다세대", color: "#FF3B30" },
+	{ key: "lodging", label: "숙박시설", color: "#FF3D9A" },
+	{ key: "presale", label: "분양권", color: "#8B5CF6" }
+]);
+const PARCEL_TRADE_DEAL_FILTER_OPTIONS = Object.freeze([
+	{ key: "sale", label: "매매", color: "#1764FF" },
+	{ key: "jeonse", label: "전세", color: "#6268F2" },
+	{ key: "yearly", label: "년세", color: "#E1A900" },
+	{ key: "monthly", label: "월세", color: "#E548B8" }
+]);
+const parcelTradeSelectedFilterKeys = new Set(PARCEL_TRADE_FILTER_OPTIONS.map((option) => option.key));
+const parcelTradeSelectedDealFilterKeys = new Set(["sale"]);
+
+function getParcelTradeFilterKey(row)
+{
+	const text = [row?.tradeId, row?.serviceType, row?.propertyType, row?.propertyName]
+		.map((value) => String(value || "").toLowerCase())
+		.join(" " );
+	if (/(분양권|입주권|presale|subscription)/.test(text)) return "presale";
+	if (/(숙박|호텔|펜션|리조트|lodging|hotel|pension)/.test(text)) return "lodging";
+	if (/(공장|창고|factory|warehouse)/.test(text)) return "factory-warehouse";
+	if (/(오피스텔|officetel)/.test(text)) return "officetel";
+	if (/(아파트|apartment|apt-sale|\bapt\b)/.test(text)) return "apartment";
+	if (/(연립|다세대|빌라|rowhouse|multi-family)/.test(text)) return "rowhouse";
+	if (/(단독|다가구|single-house|detached)/.test(text)) return "single-multi";
+	if (/(상가|사무실|store|office)/.test(text)) return "store-office";
+	if (/(상업용건물|상업용|commercial-building|commercial)/.test(text)) return "commercial-building";
+	if (/(토지|land)/.test(text)) return "land";
+	const colorKeyFallback = { 1: "land", 2: "apartment", 3: "officetel", 4: "commercial-building", 5: "factory-warehouse", 6: "single-multi" };
+	return colorKeyFallback[Number(row?.colorKey)] || "commercial-building";
+}
+
+function getParcelTradeDealFilterKey(row)
+{
+	const dealKind = String(row?.dealKind || "").trim().toLowerCase();
+	const serviceType = String(row?.serviceType || "").trim().toLowerCase();
+	const tradeKind = String(row?.tradeKind || "").trim();
+	const tradeId = String(row?.tradeId || "").trim().toLowerCase();
+	const priceLabel = String(row?.priceLabel || "").trim();
+	const monthlyRent = Number(row?.monthlyRentManWon);
+	const identity = [dealKind, serviceType, tradeKind, tradeId].join(" ");
+	const isRental = /rent|전세|월세|년세|연세/.test(identity) || priceLabel.includes("/");
+	if (!isRental) return "sale";
+	if (/yearly|년세|연세/.test(identity)) return "yearly";
+	return (Number.isFinite(monthlyRent) && monthlyRent > 0)
+		|| /monthly|월세/.test(identity)
+		|| priceLabel.includes("/")
+		? "monthly"
+		: "jeonse";
+}
+
+function isParcelTradeRowFilterVisible(row)
+{
+	return parcelTradeSelectedFilterKeys.has(getParcelTradeFilterKey(row))
+		&& parcelTradeSelectedDealFilterKeys.has(getParcelTradeDealFilterKey(row));
+}
+
+function updateParcelTradeFilterControl()
+{
+	if (!parcelTradeFilterControl) return;
+	const isFiltered = parcelTradeSelectedFilterKeys.size !== PARCEL_TRADE_FILTER_OPTIONS.length
+		|| parcelTradeSelectedDealFilterKeys.size !== PARCEL_TRADE_DEAL_FILTER_OPTIONS.length;
+	parcelTradeFilterControl.classList.toggle("active", isFiltered);
+	parcelTradeFilterControl.setAttribute("aria-pressed", isFiltered ? "true" : "false");
+	parcelTradeFilterControl.title = isFiltered ? "실거래 유형 필터 적용 중" : "실거래 유형 필터";
+}
+
+function updateParcelTradePriceModeControl()
+{
+	if (!parcelTradePriceModeControl) return;
+	parcelTradePriceModeControl.querySelectorAll("[data-parcel-trade-price-mode]").forEach((button) => {
+		const active = button.dataset.parcelTradePriceMode === parcelTradePriceMode;
+		button.classList.toggle("active", active);
+		button.setAttribute("aria-pressed", active ? "true" : "false");
+	});
+}
+
+function scheduleParcelTradePriceModeRender()
+{
+	if (parcelTradePriceModeRenderFrame) return;
+	if (typeof window.requestAnimationFrame !== "function") {
+		drawParcelTradeCanvas();
+		return;
+	}
+	parcelTradePriceModeRenderFrame = window.requestAnimationFrame(() => {
+		parcelTradePriceModeRenderFrame = 0;
+		if (parcelTradeCanvas) parcelTradeCanvas.style.visibility = "";
+		drawParcelTradeCanvas();
+	});
+}
+
+function ensureParcelTradeLeftToolStack()
+{
+	if (parcelTradeLeftToolStack?.isConnected) return parcelTradeLeftToolStack;
+	const host = getParcelTradeCanvasMapElement();
+	if (!host) return null;
+	const stack = document.createElement("div");
+	stack.className = "parcel-trade-left-tool-stack";
+	stack.setAttribute("aria-label", "필지 분석 지도 도구");
+	host.appendChild(stack);
+	const parcelAnalysisGroup = document.getElementById("mapParcelAnalysisToolGroup");
+	if (parcelAnalysisGroup) stack.appendChild(parcelAnalysisGroup);
+	parcelTradeLeftToolStack = stack;
+	return stack;
+}
+
+function syncParcelTradeLeftToolStackPosition()
+{
+	if (!parcelTradeLeftToolStack?.isConnected || !parcelTradeFilterControl?.isConnected) return;
+	const host = getParcelTradeCanvasMapElement();
+	const adBadge = document.querySelector(".realjeju-side-local-business-top-ad .realjeju-side-recent-ad-badge");
+	if (!host || !adBadge) return;
+	const hostRect = host.getBoundingClientRect();
+	const adRect = adBadge.getBoundingClientRect();
+	const filterRect = parcelTradeFilterControl.getBoundingClientRect();
+	if (!adRect.width || !adRect.height || !filterRect.height) return;
+	const targetTop = adRect.top + (adRect.height / 2) - hostRect.top - (filterRect.height / 2);
+	parcelTradeLeftToolStack.style.top = Math.max(0, Math.round(targetTop)) + "px";
+	parcelTradeLeftToolStack.style.transform = "none";
+}
+
+function scheduleParcelTradeLeftToolStackPosition()
+{
+	if (typeof window.requestAnimationFrame === "function") {
+		window.requestAnimationFrame(() => window.requestAnimationFrame(syncParcelTradeLeftToolStackPosition));
+	} else {
+		window.setTimeout(syncParcelTradeLeftToolStackPosition, 0);
+	}
+	if (parcelTradeLeftToolStackPositionBound) return;
+	parcelTradeLeftToolStackPositionBound = true;
+	window.addEventListener("resize", scheduleParcelTradeLeftToolStackPosition, { passive: true });
+}
+
+function ensureParcelTradePriceModeControl()
+{
+	if (parcelTradePriceModeControl?.isConnected) return parcelTradePriceModeControl;
+	const host = ensureParcelTradeLeftToolStack();
+	if (!host) return null;
+	const control = document.createElement("div");
+	control.className = "parcel-trade-price-mode-control";
+	control.setAttribute("role", "group");
+	control.setAttribute("aria-label", "실거래 가격 표시 방식");
+	control.innerHTML = '<button type="button" data-parcel-trade-price-mode="total" aria-pressed="true"><span class="map-tool-label">총액</span></button>'
+		+ '<button type="button" data-parcel-trade-price-mode="unit" aria-pressed="false"><span class="map-tool-label">단가</span></button>';
+	const suppressMapEvent = (event) => {
+		if (event?.preventDefault) event.preventDefault();
+		if (event?.stopPropagation) event.stopPropagation();
+		if (event?.stopImmediatePropagation) event.stopImmediatePropagation();
+		if (window.kakao?.maps?.event && typeof kakao.maps.event.preventMap === "function") kakao.maps.event.preventMap();
+	};
+	control.addEventListener("pointerdown", suppressMapEvent);
+	control.addEventListener("mousedown", suppressMapEvent);
+	control.addEventListener("touchstart", suppressMapEvent);
+	control.addEventListener("click", (event) => {
+		suppressMapEvent(event);
+		const button = event.target.closest("[data-parcel-trade-price-mode]");
+		if (!button) return;
+		const nextMode = button.dataset.parcelTradePriceMode;
+		if (nextMode === parcelTradePriceMode) return;
+		parcelTradePriceMode = nextMode;
+		updateParcelTradePriceModeControl();
+		scheduleParcelTradePriceModeRender();
+	});
+	host.appendChild(control);
+	parcelTradePriceModeControl = control;
+	updateParcelTradePriceModeControl();
+	return control;
+}
+
+function closeParcelTradeFilterModal()
+{
+	if (!parcelTradeFilterModal) return;
+	parcelTradeFilterModal.remove();
+	parcelTradeFilterModal = null;
+}
+
+function renderParcelTradeFilterModalState()
+{
+	if (!parcelTradeFilterModal) return;
+	parcelTradeFilterModal.querySelectorAll("[data-parcel-trade-filter-key]").forEach((button) => {
+		const key = String(button.dataset.parcelTradeFilterKey || "");
+		const selected = parcelTradeSelectedFilterKeys.has(key);
+		button.classList.toggle("is-selected", selected);
+		button.setAttribute("aria-pressed", selected ? "true" : "false");
+	});
+	parcelTradeFilterModal.querySelectorAll("[data-parcel-trade-deal-filter-key]").forEach((button) => {
+		const key = String(button.dataset.parcelTradeDealFilterKey || "");
+		const selected = parcelTradeSelectedDealFilterKeys.has(key);
+		button.classList.toggle("is-selected", selected);
+		button.setAttribute("aria-pressed", selected ? "true" : "false");
+	});
+	const allButton = parcelTradeFilterModal.querySelector("[data-parcel-trade-filter-all]");
+	if (allButton) {
+		const allSelected = parcelTradeSelectedFilterKeys.size === PARCEL_TRADE_FILTER_OPTIONS.length;
+		allButton.textContent = allSelected ? "× 모두 해제" : "✓ 모두 선택";
+	}
+	const dealAllButton = parcelTradeFilterModal.querySelector("[data-parcel-trade-deal-filter-all]");
+	if (dealAllButton) {
+		const allDealsSelected = parcelTradeSelectedDealFilterKeys.size === PARCEL_TRADE_DEAL_FILTER_OPTIONS.length;
+		dealAllButton.textContent = allDealsSelected ? "× 모두 해제" : "✓ 모두 선택";
+	}
+	updateParcelTradeFilterControl();
+}
+
+function openParcelTradeFilterModal()
+{
+	closeParcelTradeFilterModal();
+	const modal = document.createElement("div");
+	modal.className = "parcel-building-unit-picker parcel-trade-type-filter-modal";
+	modal.setAttribute("data-parcel-trade-filter-modal", "");
+	modal.innerHTML = '<div class="parcel-building-unit-picker-dialog parcel-trade-type-filter-dialog" role="dialog" aria-modal="true" aria-label="실거래 필터">'
+		+ '<header><span aria-hidden="true"></span><h2>필터</h2><button type="button" data-parcel-trade-filter-close aria-label="필터 닫기">×</button></header>'
+		+ '<div class="parcel-trade-filter-heading"><strong>부동산 유형</strong><button type="button" data-parcel-trade-filter-all></button></div>'
+		+ '<div class="parcel-trade-filter-grid">'
+		+ PARCEL_TRADE_FILTER_OPTIONS.map((option) => '<button type="button" data-parcel-trade-filter-key="' + option.key + '" aria-pressed="true"><i style="--parcel-filter-color:' + option.color + '" aria-hidden="true"></i><span>' + option.label + '</span></button>').join("")
+		+ '</div>'
+		+ '<div class="parcel-trade-filter-heading parcel-trade-deal-filter-heading"><strong>거래 유형</strong><button type="button" data-parcel-trade-deal-filter-all></button></div>'
+		+ '<div class="parcel-trade-filter-grid parcel-trade-deal-filter-grid">'
+		+ PARCEL_TRADE_DEAL_FILTER_OPTIONS.map((option) => '<button type="button" data-parcel-trade-deal-filter-key="' + option.key + '" aria-pressed="true"><i style="--parcel-filter-color:' + option.color + '" aria-hidden="true"></i><span>' + option.label + '</span></button>').join("")
+		+ '</div></div>';
+	document.body.appendChild(modal);
+	parcelTradeFilterModal = modal;
+	renderParcelTradeFilterModalState();
+	modal.querySelector("[data-parcel-trade-filter-close]")?.addEventListener("click", closeParcelTradeFilterModal);
+	modal.querySelector("[data-parcel-trade-filter-all]")?.addEventListener("click", () => {
+		if (parcelTradeSelectedFilterKeys.size === PARCEL_TRADE_FILTER_OPTIONS.length) {
+			parcelTradeSelectedFilterKeys.clear();
+		} else {
+			PARCEL_TRADE_FILTER_OPTIONS.forEach((option) => parcelTradeSelectedFilterKeys.add(option.key));
+		}
+		renderParcelTradeFilterModalState();
+		drawParcelTradeCanvas();
+	});
+	modal.querySelectorAll("[data-parcel-trade-filter-key]").forEach((button) => {
+		button.addEventListener("click", () => {
+			const key = String(button.dataset.parcelTradeFilterKey || "");
+			if (parcelTradeSelectedFilterKeys.has(key)) parcelTradeSelectedFilterKeys.delete(key);
+			else parcelTradeSelectedFilterKeys.add(key);
+			renderParcelTradeFilterModalState();
+			drawParcelTradeCanvas();
+		});
+	});
+	modal.querySelector("[data-parcel-trade-deal-filter-all]")?.addEventListener("click", () => {
+		if (parcelTradeSelectedDealFilterKeys.size === PARCEL_TRADE_DEAL_FILTER_OPTIONS.length) {
+			parcelTradeSelectedDealFilterKeys.clear();
+		} else {
+			PARCEL_TRADE_DEAL_FILTER_OPTIONS.forEach((option) => parcelTradeSelectedDealFilterKeys.add(option.key));
+		}
+		renderParcelTradeFilterModalState();
+		drawParcelTradeCanvas();
+	});
+	modal.querySelectorAll("[data-parcel-trade-deal-filter-key]").forEach((button) => {
+		button.addEventListener("click", () => {
+			const key = String(button.dataset.parcelTradeDealFilterKey || "");
+			if (parcelTradeSelectedDealFilterKeys.has(key)) parcelTradeSelectedDealFilterKeys.delete(key);
+			else parcelTradeSelectedDealFilterKeys.add(key);
+			renderParcelTradeFilterModalState();
+			drawParcelTradeCanvas();
+		});
+	});
+	modal.addEventListener("click", (event) => {
+		if (event.target === modal) closeParcelTradeFilterModal();
+	});
+}
+
+function ensureParcelTradeFilterControl()
+{
+	if (parcelTradeFilterControl?.isConnected) return parcelTradeFilterControl;
+	const host = ensureParcelTradeLeftToolStack();
+	if (!host) return null;
+	const control = document.createElement("button");
+	control.type = "button";
+	control.className = "map-tool-btn map-property-toggle-btn parcel-trade-filter-control";
+	control.setAttribute("aria-label", "실거래 유형 필터");
+	control.innerHTML = '<span class="map-tool-label">필터</span>';
+	control.addEventListener("pointerdown", (event) => event.stopPropagation());
+	control.addEventListener("click", (event) => {
+		event.preventDefault();
+		event.stopPropagation();
+		openParcelTradeFilterModal();
+	});
+	host.appendChild(control);
+	parcelTradeFilterControl = control;
+	updateParcelTradeFilterControl();
+	scheduleParcelTradeLeftToolStackPosition();
+	return control;
+}
+
+function syncParcelTradeBadgeVisibilityControl()
+{
+	if (!parcelTradeBadgeVisibilityControl) return;
+	const badgesHidden = isParcelRegionTradeBadgesHidden();
+	const label = parcelTradeBadgeVisibilityControl.querySelector(".map-tool-label");
+	if (label) label.textContent = "숨김";
+	parcelTradeBadgeVisibilityControl.classList.toggle("active", badgesHidden);
+	parcelTradeBadgeVisibilityControl.setAttribute("aria-pressed", badgesHidden ? "true" : "false");
+	parcelTradeBadgeVisibilityControl.setAttribute("aria-label", badgesHidden ? "거래 뱃지 표시" : "거래 뱃지 숨기기");
+	parcelTradeBadgeVisibilityControl.title = badgesHidden ? "거래 뱃지 표시" : "거래 뱃지 숨기기";
+}
+
+function ensureParcelTradeBadgeVisibilityControl()
+{
+	if (parcelTradeBadgeVisibilityControl?.isConnected) return parcelTradeBadgeVisibilityControl;
+	const host = ensureParcelTradeLeftToolStack();
+	if (!host) return null;
+	const control = document.createElement("button");
+	control.type = "button";
+	control.className = "map-tool-btn map-property-toggle-btn parcel-trade-badge-visibility-control";
+	control.innerHTML = '<span class="map-tool-label">숨김</span>';
+	control.addEventListener("pointerdown", (event) => event.stopPropagation());
+	control.addEventListener("click", (event) => {
+		event.preventDefault();
+		event.stopPropagation();
+		toggleParcelRegionTradeBadgesVisibility();
+	});
+	host.appendChild(control);
+	parcelTradeBadgeVisibilityControl = control;
+	syncParcelTradeBadgeVisibilityControl();
+	return control;
+}
+
+function syncParcelTradeFilterControlVisibility()
+{
+	const leftToolStack = ensureParcelTradeLeftToolStack();
+	const control = ensureParcelTradeFilterControl();
+	const badgeVisibilityControl = ensureParcelTradeBadgeVisibilityControl();
+	const priceModeControl = ensureParcelTradePriceModeControl();
+	const category = typeof getCurrentRealjejuGlobalCategoryKey === "function"
+		? getCurrentRealjejuGlobalCategoryKey()
+		: String(document.body?.dataset?.globalCategory || "realestate");
+	const persistentControlsVisible = category === "parcel";
+	const parcelAnalysisToolsEnabled = isParcelAreaMeasureVisibleLevel();
+	const parcelAnalysisGroup = document.getElementById("mapParcelAnalysisToolGroup");
+	const parcelAreaToolButton = document.getElementById("mapParcelAreaToolBtn");
+	if (leftToolStack) leftToolStack.hidden = !persistentControlsVisible;
+	if (control) control.hidden = !persistentControlsVisible;
+	if (badgeVisibilityControl) badgeVisibilityControl.hidden = !persistentControlsVisible;
+	if (priceModeControl) priceModeControl.hidden = !persistentControlsVisible;
+	if (parcelAnalysisGroup) parcelAnalysisGroup.hidden = !persistentControlsVisible;
+	if (parcelAreaToolButton)
+	{
+		parcelAreaToolButton.disabled = !parcelAnalysisToolsEnabled;
+		parcelAreaToolButton.setAttribute("aria-disabled", parcelAnalysisToolsEnabled ? "false" : "true");
+	}
+	syncParcelRoadContactButton();
+	if (persistentControlsVisible) scheduleParcelTradeLeftToolStackPosition();
+	if (!persistentControlsVisible) closeParcelTradeFilterModal();
+	return persistentControlsVisible;
+}
 
 function isParcelTradeCanvasModeActive()
 {
@@ -30636,12 +32036,38 @@ function isParcelTradeCanvasModeActive()
 		? getCurrentRealjejuGlobalCategoryKey()
 		: String(document.body?.dataset?.globalCategory || "realestate");
 	const level = state.map && typeof state.map.getLevel === "function" ? Number(state.map.getLevel()) : NaN;
-	return false;
+	return category === "parcel" && Number.isFinite(level) && level >= 1 && level <= 5;
 }
 
 function getParcelTradeCanvasMapElement()
 {
 	return document.getElementById("map");
+}
+
+function getParcelTradeCanvasBoundsGridSize()
+{
+	const bounds = state.map && typeof state.map.getBounds === "function" ? state.map.getBounds() : null;
+	const sw = bounds?.getSouthWest?.();
+	const ne = bounds?.getNorthEast?.();
+	if (!sw || !ne) return PARCEL_TRADE_CANVAS_BOUNDS_GRID_MIN_DEG;
+
+	const latSpan = Math.abs(Number(ne.getLat()) - Number(sw.getLat()));
+	const lngSpan = Math.abs(Number(ne.getLng()) - Number(sw.getLng()));
+	const span = Math.max(latSpan, lngSpan);
+	if (!Number.isFinite(span) || span <= 0) return PARCEL_TRADE_CANVAS_BOUNDS_GRID_MIN_DEG;
+
+	const level = Number(state.map && typeof state.map.getLevel === "function" ? state.map.getLevel() : NaN);
+	const spanGrid = span / 12;
+	if (level <= 2) return Math.max(spanGrid, 0.005);
+	if (level === 3) return Math.max(spanGrid, 0.003);
+	if (level === 4) return Math.max(spanGrid, 0.0015);
+	if (level === 5) return Math.max(spanGrid, 0.0008);
+	return Math.max(spanGrid, PARCEL_TRADE_CANVAS_BOUNDS_GRID_MIN_DEG);
+}
+
+function getParcelTradeCanvasGridAlignedValue(value, gridSize)
+{
+	return (Math.floor(Number(value) / gridSize) * gridSize).toFixed(PARCEL_TRADE_CANVAS_BOUNDS_GRID_DECIMALS);
 }
 
 function getParcelTradeCanvasBoundsKey()
@@ -30650,8 +32076,13 @@ function getParcelTradeCanvasBoundsKey()
 	const sw = bounds?.getSouthWest?.();
 	const ne = bounds?.getNorthEast?.();
 	if (!sw || !ne) return "";
-	return [sw.getLat(), sw.getLng(), ne.getLat(), ne.getLng()]
-		.map((value) => Number(value).toFixed(5))
+	const gridSize = getParcelTradeCanvasBoundsGridSize();
+	return [
+		getParcelTradeCanvasGridAlignedValue(sw.getLat(), gridSize),
+		getParcelTradeCanvasGridAlignedValue(sw.getLng(), gridSize),
+		getParcelTradeCanvasGridAlignedValue(ne.getLat(), gridSize),
+		getParcelTradeCanvasGridAlignedValue(ne.getLng(), gridSize)
+	]
 		.join(":");
 }
 
@@ -30666,7 +32097,8 @@ function normalizeParcelTradeCanvasRow(row)
 		lat,
 		lng,
 		dealDate: String(row?.deal_date || ""),
-		dealKind: String(row?.deal_kind || "sale"),
+		dealKind: String(row?.deal_kind || ""),
+		tradeKind: String(row?.trade_kind || row?.trade_type || row?.rent_type || ""),
 		serviceType: String(row?.service_type || ""),
 		propertyType: String(row?.property_type || ""),
 		propertyName: String(row?.property_name || ""),
@@ -30693,6 +32125,28 @@ function formatParcelTradeCanvasAmount(value)
 	return Math.round(amount).toLocaleString("ko-KR") + "만";
 }
 
+function getParcelTradeCanvasAmountManWon(row)
+{
+	const directAmount = Number(row?.amountManWon);
+	if (Number.isFinite(directAmount) && directAmount > 0) return directAmount;
+	const label = String(row?.priceLabel || "").replace(/\s+/g, "").replace(/원/g, "");
+	if (!label) return 0;
+	const parseNumber = (value) => Number(String(value || "").replace(/,/g, ""));
+	const eokMatch = label.match(/([\d,.]+)억/);
+	let totalManWon = 0;
+	if (eokMatch) {
+		const eok = parseNumber(eokMatch[1]);
+		if (Number.isFinite(eok) && eok > 0) totalManWon += eok * 10000;
+	}
+	const trailingSource = eokMatch ? label.slice(label.indexOf(eokMatch[0]) + eokMatch[0].length) : label;
+	const manMatch = trailingSource.match(/([\d,.]+)(?:만)?$/);
+	if (manMatch) {
+		const manWon = parseNumber(manMatch[1]);
+		if (Number.isFinite(manWon) && manWon > 0) totalManWon += manWon;
+	}
+	return totalManWon;
+}
+
 function getParcelTradeCanvasPriceLabel(row)
 {
 	if (row.dealKind === "rent") {
@@ -30701,10 +32155,13 @@ function getParcelTradeCanvasPriceLabel(row)
 		return monthly > 0 ? `${deposit}/${Math.round(monthly).toLocaleString("ko-KR")}` : deposit;
 	}
 	const areaM2 = Number(row.areaM2);
-	const amountManWon = Number(row.amountManWon);
-	if (Number.isFinite(areaM2) && areaM2 > 0 && Number.isFinite(amountManWon) && amountManWon > 0) {
-		const areaByUnit = globalAreaUnit === "py" ? areaM2 / 3.305785 : areaM2;
-		return formatParcelTradeCanvasAmount(amountManWon / areaByUnit);
+	const amountManWon = getParcelTradeCanvasAmountManWon(row);
+	if (parcelTradePriceMode === "unit") {
+		if (Number.isFinite(areaM2) && areaM2 > 0 && Number.isFinite(amountManWon) && amountManWon > 0) {
+			const areaByUnit = globalAreaUnit === "py" ? areaM2 / 3.305785 : areaM2;
+			return formatParcelTradeCanvasAmount(amountManWon / areaByUnit);
+		}
+		return "-";
 	}
 	if (row.priceLabel) return row.priceLabel;
 	return formatParcelTradeCanvasAmount(amountManWon);
@@ -30718,24 +32175,10 @@ function getParcelTradeCanvasDateLabel(row)
 
 function getParcelTradeCanvasColor(row)
 {
-	const snapshotColors = {
-		1: "#65A30D",
-		2: "#14B8A6",
-		3: "#38BDF8",
-		4: "#7C3AED",
-		5: "#EA580C",
-		6: "#F59E0B"
-	};
-	if (snapshotColors[row.colorKey]) return snapshotColors[row.colorKey];
-	const type = String(row.serviceType || "").toLowerCase();
-	if (type.includes("land")) return "#65A30D";
-	if (type.includes("apt")) return "#14B8A6";
-	if (type.includes("officetel")) return "#38BDF8";
-	if (type.includes("commercial")) return "#7C3AED";
-	if (type.includes("factory")) return "#EA580C";
-	return "#F59E0B";
+	const filterKey = getParcelTradeFilterKey(row);
+	const option = PARCEL_TRADE_FILTER_OPTIONS.find((item) => item.key === filterKey);
+	return option?.color || "#6268F2";
 }
-
 function ensureParcelTradeLoadButton()
 {
 	if (parcelTradeLoadButton && parcelTradeLoadButton.isConnected) parcelTradeLoadButton.remove();
@@ -30784,6 +32227,7 @@ function syncParcelTradeCanvasVisibility()
 }
 
 let parcelMapLevelPresentationMode = "";
+let parcelMapLevelInteractionMode = "";
 let parcelMapLevelPresentationSyncToken = 0;
 
 async function syncParcelMapLevelPresentation(options = {})
@@ -30797,23 +32241,33 @@ async function syncParcelMapLevelPresentation(options = {})
 		: NaN;
 
 	if (category !== "parcel" || !Number.isFinite(level)) {
+		document.body?.classList?.remove("parcel-individual-trade-level");
 		parcelMapLevelPresentationMode = "";
+		parcelMapLevelInteractionMode = "";
 		syncParcelTradeCanvasVisibility();
+		syncParcelTradeFilterControlVisibility();
 		return false;
 	}
 
-	const nextMode = getPropertyMapPresentationMode();
+	const nextProfile = getParcelMapLevelProfile(level);
+	const nextMode = nextProfile.presentationMode;
+	const nextInteractionMode = nextProfile.clickMode;
 	const previousMode = parcelMapLevelPresentationMode;
-	const usesIndividualTradeBadges = false;
+	const previousInteractionMode = parcelMapLevelInteractionMode;
+	const usesIndividualTradeBadges = level >= 1 && level <= 5;
+	document.body?.classList?.toggle("parcel-individual-trade-level", usesIndividualTradeBadges);
 	parcelMapLevelPresentationMode = nextMode;
+	parcelMapLevelInteractionMode = nextInteractionMode;
 	propertyMapPresentationMode = nextMode;
+	syncParcelTradeFilterControlVisibility();
 
 	if (usesIndividualTradeBadges) {
-		if (previousMode !== nextMode || propertyRegionCountOverlays.length) {
-			propertyRegionCountRenderToken += 1;
-			clearPropertyRegionCountOverlays();
-			parcelRegionTradeBadgeRenderedSignature = "";
-		}
+		// 5.995: 1~5레벨에서는 진행 중인 행정구역 통계 요청까지 무조건 폐기한다.
+		propertyRegionCountRenderToken += 1;
+		parcelRegionTradeBadgeRenderedSignature = "";
+		// 5.995: 취소된 local-counts 요청을 6레벨이 재사용하지 않도록 진행 중 키도 제거한다.
+		parcelRegionTradeBadgeRenderInFlight.clear();
+		clearPropertyRegionCountOverlays();
 		syncParcelTradeCanvasVisibility();
 		if (options.loadInitial === true) {
 			await loadParcelTradeCanvasRowsForCurrentViewport({ source: options.source || "level-router" });
@@ -30824,11 +32278,12 @@ async function syncParcelMapLevelPresentation(options = {})
 	syncParcelTradeCanvasVisibility();
 	if (!shouldRenderParcelRegionTradeMapBadges(nextMode)) return true;
 
-	const modeChanged = previousMode !== nextMode;
+	const modeChanged = previousMode !== nextMode
+		|| previousInteractionMode !== nextInteractionMode;
 	if (modeChanged) {
 		propertyRegionCountRenderToken += 1;
-		clearPropertyRegionCountOverlays();
-		parcelRegionTradeBadgeRenderedSignature = "";
+		// 기존 네모 뱃지는 새 단계가 준비될 때까지 유지한다.
+		if (previousMode !== nextMode) parcelRegionTradeBadgeRenderedSignature = "";
 	}
 	if (modeChanged || !propertyRegionCountOverlays.length) {
 		await renderPropertyRegionCountOverlays(nextMode);
@@ -30845,6 +32300,26 @@ function getParcelTradeCanvasRevealDelay(row)
 		hash = Math.imul(hash, 16777619);
 	}
 	return Math.abs(hash >>> 0) % 421;
+}
+
+function getParcelTradeCanvasViewportLimit()
+{
+	const level = Number(state.map?.getLevel?.());
+	if (Number.isFinite(level) && level <= 1) return 2000;
+	if (Number.isFinite(level) && level <= 2) return 1200;
+	if (Number.isFinite(level) && level <= 3) return 800;
+	if (Number.isFinite(level) && level <= 4) return 500;
+	return 300;
+}
+
+function getParcelTradeCanvasBadgeLimit()
+{
+	const level = Number(state.map?.getLevel?.());
+	if (Number.isFinite(level) && level <= 1) return 250;
+	if (Number.isFinite(level) && level <= 2) return 180;
+	if (Number.isFinite(level) && level <= 3) return 120;
+	if (Number.isFinite(level) && level <= 4) return 80;
+	return 50;
 }
 
 function scheduleParcelTradeCanvasRevealFrame()
@@ -30866,6 +32341,156 @@ function startParcelTradeCanvasReveal()
 		&& window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 	parcelTradeCanvasRevealStartedAt = reduceMotion ? 0 : performance.now();
 	drawParcelTradeCanvas();
+}
+
+function getRealjejuCanvasUiFontFamily()
+{
+	return '"Paperlogy", "Pretendard Variable", Pretendard, sans-serif';
+}
+
+function getParcelTradeCanvasTypeOption(row)
+{
+	const filterKey = getParcelTradeFilterKey(row);
+	return PARCEL_TRADE_FILTER_OPTIONS.find((item) => item.key === filterKey)
+		|| PARCEL_TRADE_FILTER_OPTIONS[0];
+}
+
+function expandParcelTradeCanvasPriceLabel(value)
+{
+	const label = String(value || "-").trim();
+	const eokMatch = label.match(/^([\d,.]+)억$/);
+	if (eokMatch) {
+		const totalManWon = Math.round(Number(eokMatch[1].replaceAll(",", "")) * 10000);
+		if (Number.isFinite(totalManWon)) {
+			const eok = Math.floor(totalManWon / 10000);
+			const manWon = totalManWon % 10000;
+			return eok + "억" + (manWon ? " " + manWon.toLocaleString("ko-KR") + "만원" : "원");
+		}
+	}
+	if (/만$/.test(label)) return label + "원";
+	return label;
+}
+
+function getParcelTradeCanvasDetailAmountLabel(row)
+{
+	const compactLabel = String(getParcelTradeCanvasPriceLabel(row) || row?.priceLabel || "-");
+	if (parcelTradePriceMode === "unit" && row?.dealKind !== "rent") return compactLabel;
+	if (compactLabel.includes("/")) {
+		const [deposit, monthly] = compactLabel.split("/", 2);
+		return "월세 " + expandParcelTradeCanvasPriceLabel(deposit) + "/" + String(monthly || "-") + "만원";
+	}
+	const tradeKind = row?.dealKind === "rent" ? "전세" : "매매";
+	return tradeKind + " " + expandParcelTradeCanvasPriceLabel(compactLabel);
+}
+
+function getParcelTradeCanvasDetailAreaLabel(row, typeOption)
+{
+	const areaM2 = Number(row?.areaM2);
+	if (!Number.isFinite(areaM2) || areaM2 <= 0) return "면적 -";
+	const areaValue = globalAreaUnit === "py" ? areaM2 / 3.305785 : areaM2;
+	const unit = globalAreaUnit === "py" ? "평" : "m²";
+	const roundedArea = areaValue >= 100 ? Math.round(areaValue).toLocaleString("ko-KR") : areaValue.toFixed(1).replace(/\.0$/, "");
+	return (typeOption?.key === "land" ? "토지 " : "면적 ") + roundedArea + unit;
+}
+
+function drawSelectedParcelTradeCanvasBadge(ctx, row, point, viewportWidth)
+{
+	const typeOption = getParcelTradeCanvasTypeOption(row);
+	const typeColor = typeOption.color;
+	const amountLabel = getParcelTradeCanvasDetailAmountLabel(row);
+	const areaLabel = getParcelTradeCanvasDetailAreaLabel(row, typeOption);
+	const dateLabel = "계약일 " + getParcelTradeCanvasDateLabel(row);
+	const leftWidth = 54;
+	const rightPadding = 8;
+	ctx.font = '550 14.5px ' + getRealjejuCanvasUiFontFamily();
+	ctx.letterSpacing = '0px';
+	const amountWidth = ctx.measureText(amountLabel).width;
+	ctx.letterSpacing = '0px';
+	ctx.font = '400 12.5px ' + getRealjejuCanvasUiFontFamily();
+	const areaWidth = ctx.measureText(areaLabel).width;
+	ctx.font = '400 12.5px ' + getRealjejuCanvasUiFontFamily();
+	const dateWidth = ctx.measureText(dateLabel).width;
+	const metaWidth = Math.max(areaWidth, dateWidth);
+	ctx.font = '600 10.5px "Paperlogy", "Pretendard Variable", Pretendard, sans-serif';
+	const typeWidth = ctx.measureText(typeOption.label).width + 12;
+	const rightWidth = Math.ceil(Math.max(amountWidth, metaWidth, typeWidth) + rightPadding * 2);
+	const badgeWidth = leftWidth + rightWidth;
+	const badgeHeight = 76;
+	const tailHeight = 7;
+	const unclampedLeft = Math.round(point.x - badgeWidth / 2);
+	const left = Math.max(4, Math.min(unclampedLeft, Math.max(4, viewportWidth - badgeWidth - 4)));
+	const top = Math.round(point.y - badgeHeight - tailHeight);
+	const anchorX = Math.max(left + 12, Math.min(point.x, left + badgeWidth - 12));
+
+	ctx.save();
+	ctx.fillStyle = "rgba(255,255,255,.98)";
+	drawRoundedCanvasRect(ctx, left, top, badgeWidth, badgeHeight, 8);
+	ctx.fill();
+	ctx.shadowColor = "transparent";
+	ctx.save();
+	drawRoundedCanvasRect(ctx, left, top, badgeWidth, badgeHeight, 8);
+	ctx.clip();
+	ctx.fillStyle = "#1764FF";
+	ctx.fillRect(left, top, leftWidth, badgeHeight);
+	ctx.restore();
+
+	ctx.fillStyle = typeColor;
+	ctx.beginPath();
+	ctx.arc(point.x, point.y, 4, 0, Math.PI * 2);
+	ctx.fill();
+	ctx.fillStyle = "rgba(255,255,255,.98)";
+	ctx.beginPath();
+	ctx.moveTo(anchorX - 5, top + badgeHeight - 1);
+	ctx.lineTo(anchorX + 5, top + badgeHeight - 1);
+	ctx.lineTo(point.x, point.y);
+	ctx.closePath();
+	ctx.fill();
+
+	ctx.save();
+	ctx.globalAlpha = 1;
+	ctx.strokeStyle = "#E3E3E3";
+	ctx.lineWidth = 0.8;
+	drawRoundedCanvasRect(ctx, left, top, badgeWidth, badgeHeight, 8);
+	ctx.stroke();
+	ctx.beginPath();
+	ctx.moveTo(anchorX - 5, top + badgeHeight - 0.5);
+	ctx.lineTo(point.x, point.y);
+	ctx.lineTo(anchorX + 5, top + badgeHeight - 0.5);
+	ctx.stroke();
+	ctx.restore();
+	ctx.save();
+	ctx.fillStyle = "rgba(255,255,255,.98)";
+	ctx.fillRect(anchorX - 5.2, top + badgeHeight - 1.5, 10.4, 2.8);
+	ctx.restore();
+
+	ctx.textAlign = "center";
+	ctx.fillStyle = "#FFFFFF";
+	ctx.font = '600 13px "Paperlogy", "Pretendard Variable", Pretendard, sans-serif';
+	ctx.fillText("실거래", left + leftWidth / 2, top + badgeHeight / 2 + 1);
+
+	const contentLeft = left + leftWidth + rightPadding;
+	ctx.textAlign = "left";
+	ctx.font = '600 10.5px "Paperlogy", "Pretendard Variable", Pretendard, sans-serif';
+	const pillWidth = Math.ceil(ctx.measureText(typeOption.label).width + 12);
+	ctx.fillStyle = typeColor;
+	drawRoundedCanvasRect(ctx, contentLeft, top + 8, pillWidth, 14, 7);
+	ctx.fill();
+	ctx.fillStyle = "#FFFFFF";
+	ctx.fillText(typeOption.label, contentLeft + 6, top + 15.5);
+
+	ctx.fillStyle = typeColor;
+	ctx.font = '550 14.5px ' + getRealjejuCanvasUiFontFamily();
+	ctx.letterSpacing = '0px';
+	ctx.fillText(amountLabel, contentLeft, top + 33);
+	ctx.letterSpacing = '0px';
+	ctx.fillStyle = "#4B5563";
+	ctx.font = '400 12.5px ' + getRealjejuCanvasUiFontFamily();
+	ctx.fillText(areaLabel, contentLeft, top + 49);
+	ctx.fillStyle = "#4B5563";
+	ctx.font = '400 12.5px ' + getRealjejuCanvasUiFontFamily();
+	ctx.fillText(dateLabel, contentLeft, top + 64);
+	ctx.restore();
+	return { left, top, right: left + badgeWidth, bottom: point.y + 4 };
 }
 
 function drawParcelTradeCanvas()
@@ -30893,7 +32518,14 @@ function drawParcelTradeCanvas()
 	if (!projection || typeof projection.containerPointFromCoords !== "function") return;
 	ctx.textAlign = "center";
 	ctx.textBaseline = "middle";
+	const selectedMarker = window.__realjejuSelectedParcelTradeMarker || null;
+	const isSelectedRow = (row) => {
+		if (!selectedMarker) return false;
+		if (selectedMarker.tradeId && row.tradeId) return String(selectedMarker.tradeId) === String(row.tradeId);
+		return !!selectedMarker.pnu && String(selectedMarker.pnu) === String(row.pnu);
+	};
 	const visibleCandidates = parcelTradeCanvasRows
+		.filter(isParcelTradeRowFilterVisible)
 		.map((row) => ({
 			row,
 			point: projection.containerPointFromCoords(new kakao.maps.LatLng(row.lat, row.lng))
@@ -30903,32 +32535,54 @@ function drawParcelTradeCanvas()
 			&& candidate.point.y >= -80
 			&& candidate.point.x <= width + 80
 			&& candidate.point.y <= height + 80)
-		.sort((left, right) => String(right.row.dealDate || "").localeCompare(String(left.row.dealDate || "")));
-	const occupiedRects = [];
-	const maximumVisibleBadges = 150;
-	const revealElapsed = parcelTradeCanvasRevealStartedAt > 0
-		? Math.max(0, performance.now() - parcelTradeCanvasRevealStartedAt)
-		: Number.POSITIVE_INFINITY;
-	let revealPending = false;
+		.sort((left, right) => {
+			const leftSelected = isSelectedRow(left.row);
+			const rightSelected = isSelectedRow(right.row);
+			if (leftSelected !== rightSelected) return leftSelected ? 1 : -1;
+			return String(right.row.dealDate || "").localeCompare(String(left.row.dealDate || ""));
+		});
+	// 모든 실거래 필지는 말풍선 배치 여부와 관계없이 색상 점을 유지합니다.
 	for (const candidate of visibleCandidates) {
-		if (parcelTradeCanvasHitBoxes.length >= maximumVisibleBadges) break;
 		const { row, point } = candidate;
+		ctx.save();
+		ctx.fillStyle = getParcelTradeCanvasColor(row);
+		ctx.beginPath();
+		ctx.arc(point.x, point.y, 3, 0, Math.PI * 2);
+		ctx.fill();
+		ctx.restore();
+	}
+	const occupiedRects = [];
+	const hasSelectedCandidate = visibleCandidates.some((candidate) => isSelectedRow(candidate.row));
+	const badgeLimit = getParcelTradeCanvasBadgeLimit();
+	const maximumNormalBadges = Math.max(1, badgeLimit - (hasSelectedCandidate ? 1 : 0));
+	for (const candidate of visibleCandidates) {
+		const { row, point } = candidate;
+		const isSelectedBadge = isSelectedRow(row);
+		if (!isSelectedBadge && parcelTradeCanvasHitBoxes.length >= maximumNormalBadges) continue;
+		if (isSelectedBadge) {
+			const selectedHitBox = drawSelectedParcelTradeCanvasBadge(ctx, row, point, width);
+			parcelTradeCanvasHitBoxes.push({ ...selectedHitBox, row });
+			continue;
+		}
 		const amountLabel = getParcelTradeCanvasPriceLabel(row);
 		const dateLabel = getParcelTradeCanvasDateLabel(row);
-		ctx.font = '500 12px "Paperlogy", "Pretendard Variable", Pretendard, sans-serif';
+		ctx.font = '500 14px ' + getRealjejuCanvasUiFontFamily();
+	ctx.letterSpacing = '0px';
 		const amountTextWidth = ctx.measureText(amountLabel).width;
-		ctx.font = '500 9.5px "Paperlogy", "Pretendard Variable", Pretendard, sans-serif';
+	ctx.letterSpacing = '0px';
+		ctx.font = '400 12px ' + getRealjejuCanvasUiFontFamily();
 		const dateTextWidth = ctx.measureText(dateLabel).width;
-		const badgeWidth = Math.min(76, Math.max(52, Math.ceil(Math.max(amountTextWidth, dateTextWidth) + 8)));
-		const badgeHeight = 29;
+		const badgeWidth = Math.max(44, Math.ceil(Math.max(amountTextWidth, dateTextWidth) + 20));
+		const badgeHeight = 35;
+		const tailHeight = 6;
 		const left = Math.round(point.x - badgeWidth / 2);
-		const top = Math.round(point.y - badgeHeight - 4);
+		const top = Math.round(point.y - badgeHeight - tailHeight);
 		const collisionMargin = 2;
 		const collisionRect = {
 			left: left - collisionMargin,
 			top: top - collisionMargin,
 			right: left + badgeWidth + collisionMargin,
-			bottom: top + badgeHeight + collisionMargin
+			bottom: point.y + collisionMargin
 		};
 		const overlaps = occupiedRects.some((rect) => !(collisionRect.right <= rect.left
 			|| collisionRect.left >= rect.right
@@ -30936,46 +32590,64 @@ function drawParcelTradeCanvas()
 			|| collisionRect.top >= rect.bottom));
 		if (overlaps) continue;
 		occupiedRects.push(collisionRect);
-		const revealAlpha = 1;
 
 		ctx.save();
-		ctx.globalAlpha = revealAlpha;
-		ctx.strokeStyle = "#d7dde7";
-		ctx.lineWidth = 1;
-		ctx.beginPath();
-		ctx.moveTo(point.x, top + badgeHeight);
-		ctx.lineTo(point.x, point.y - 2);
-		ctx.stroke();
-		ctx.fillStyle = getParcelTradeCanvasColor(row);
-		ctx.beginPath();
-		ctx.arc(point.x, point.y, 2.5, 0, Math.PI * 2);
-		ctx.fill();
-		ctx.shadowColor = "rgba(15,23,42,0.16)";
-		ctx.shadowBlur = 8;
-		ctx.shadowOffsetY = 2;
-		drawRoundedCanvasRect(ctx, left, top, badgeWidth, badgeHeight, 15);
-		ctx.fillStyle = "rgba(255,255,255,0.96)";
+		ctx.fillStyle = "rgba(255,255,255,0.99)";
+		ctx.shadowColor = "rgba(15,23,42,0.30)";
+		ctx.shadowBlur = 12;
+		ctx.shadowOffsetX = 3;
+		ctx.shadowOffsetY = 5;
+		drawRoundedCanvasRect(ctx, left, top, badgeWidth, badgeHeight, 17);
 		ctx.fill();
 		ctx.shadowColor = "transparent";
-		ctx.lineWidth = 1;
-		ctx.strokeStyle = "#d7dde7";
-		ctx.stroke();
-		let amountFontSize = 12;
-		do {
-			ctx.font = `500 ${amountFontSize}px "Paperlogy", "Pretendard Variable", Pretendard, sans-serif`;
-			if (ctx.measureText(amountLabel).width <= badgeWidth - 6 || amountFontSize <= 9) break;
-			amountFontSize -= 0.5;
-		} while (amountFontSize >= 9);
 		ctx.fillStyle = getParcelTradeCanvasColor(row);
-		ctx.fillText(amountLabel, point.x, top + 10.5);
-		ctx.fillStyle = "#4B5563";
-		ctx.font = '500 9.5px "Paperlogy", "Pretendard Variable", Pretendard, sans-serif';
-		ctx.fillText(dateLabel, point.x, top + 23.5);
+		ctx.beginPath();
+		ctx.arc(point.x, point.y, 3.5, 0, Math.PI * 2);
+		ctx.fill();
+		ctx.fillStyle = "rgba(255,255,255,0.99)";
+		ctx.beginPath();
+		ctx.moveTo(point.x - 4.5, top + badgeHeight - 1);
+		ctx.lineTo(point.x + 4.5, top + badgeHeight - 1);
+		ctx.lineTo(point.x, point.y);
+		ctx.closePath();
+		ctx.fill();
+		ctx.fillStyle = "rgba(255,255,255,0.99)";
+		drawRoundedCanvasRect(ctx, left, top, badgeWidth, badgeHeight, 17);
+		ctx.fill();
+
+		ctx.font = '500 14px ' + getRealjejuCanvasUiFontFamily();
+	ctx.letterSpacing = '0px';
+		const sharedBadgeBorderStyle = getPropertyBadgeStyle();
+		ctx.save();
+		ctx.shadowColor = "transparent";
+		ctx.strokeStyle = "rgba(148,163,184,0.78)";
+		ctx.lineWidth = 0.8;
+		drawRoundedCanvasRect(ctx, left, top, badgeWidth, badgeHeight, 17);
+		ctx.stroke();
+		ctx.beginPath();
+		ctx.moveTo(point.x - 5, top + badgeHeight - 0.4);
+		ctx.lineTo(point.x, point.y);
+		ctx.lineTo(point.x + 5, top + badgeHeight - 0.4);
+		ctx.stroke();
+		ctx.fillStyle = "rgba(255,255,255,.96)";
+		ctx.fillRect(point.x - 5.2, top + badgeHeight - 1.5, 10.4, 2.8);
 		ctx.restore();
-		parcelTradeCanvasHitBoxes.push({ left, top, right: left + badgeWidth, bottom: top + badgeHeight, row });
+		ctx.fillStyle = getParcelTradeCanvasColor(row);
+		ctx.fillText(amountLabel, point.x, top + 12.5);
+	ctx.letterSpacing = '0px';
+		ctx.fillStyle = "#4B5563";
+		ctx.font = '400 12px ' + getRealjejuCanvasUiFontFamily();
+		ctx.fillText(dateLabel, point.x, top + 26.5);
+		ctx.restore();
+		parcelTradeCanvasHitBoxes.push({
+			left,
+			top,
+			right: left + badgeWidth,
+			bottom: point.y + 4,
+			row
+		});
 	}
-	if (revealPending) scheduleParcelTradeCanvasRevealFrame();
-	else parcelTradeCanvasRevealStartedAt = 0;
+	parcelTradeCanvasRevealStartedAt = 0;
 }
 
 function getParcelTradeCanvasHit(mouseEvent)
@@ -30996,7 +32668,17 @@ async function handleParcelTradeCanvasMapClick(mouseEvent)
 	const row = getParcelTradeCanvasHit(mouseEvent);
 	if (!row) return false;
 	if (window.kakao?.maps?.event && typeof kakao.maps.event.preventMap === "function") kakao.maps.event.preventMap();
+	const selectedMarker = window.__realjejuSelectedParcelTradeMarker || null;
+	const isSameSelectedMarker = selectedMarker
+		&& ((selectedMarker.tradeId && row.tradeId && String(selectedMarker.tradeId) === String(row.tradeId))
+			|| (!selectedMarker.tradeId && selectedMarker.pnu && String(selectedMarker.pnu) === String(row.pnu)));
+	if (isSameSelectedMarker) {
+		window.__realjejuSelectedParcelTradeMarker = null;
+		drawParcelTradeCanvas();
+		return true;
+	}
 	window.__realjejuSelectedParcelTradeMarker = { ...row };
+	drawParcelTradeCanvas();
 	await showParcelBoundaryForSearchLocation(row.lat, row.lng, {
 		openLandInfoPanel: true,
 		pnu: row.pnu,
@@ -31012,7 +32694,9 @@ async function loadParcelTradeCanvasRowsForCurrentViewport(options = {})
 	const bounds = state.map.getBounds?.();
 	const sw = bounds?.getSouthWest?.();
 	const ne = bounds?.getNorthEast?.();
-	const boundsKey = getParcelTradeCanvasBoundsKey();
+	const markerLimit = getParcelTradeCanvasViewportLimit();
+	const viewportBoundsKey = getParcelTradeCanvasBoundsKey();
+	const boundsKey = viewportBoundsKey ? viewportBoundsKey + ":" + markerLimit : "";
 	if (!sw || !ne || !boundsKey) return false;
 	const cached = parcelTradeViewportCache.get(boundsKey);
 	if (cached) {
@@ -31023,39 +32707,55 @@ async function loadParcelTradeCanvasRowsForCurrentViewport(options = {})
 		updateParcelTradeLoadButton();
 		return true;
 	}
-	parcelTradeCanvasLoading = true;
+	const ongoingRequest = parcelTradeViewportRequests.get(boundsKey);
+	if (ongoingRequest) return await ongoingRequest;
+
 	const requestToken = ++parcelTradeCanvasRequestToken;
+	parcelTradeCanvasLoading = true;
 	updateParcelTradeLoadButton();
-	try {
-		if (typeof loadSupabaseScript === "function") await loadSupabaseScript();
-		const client = getMapListingsSupabaseClient();
-		if (!client) throw new Error("실거래 DB에 연결하지 못했습니다.");
-		const { data, error } = await client.rpc(PARCEL_TRADE_MARKER_RPC, {
-			p_south: Number(sw.getLat()),
-			p_west: Number(sw.getLng()),
-			p_north: Number(ne.getLat()),
-			p_east: Number(ne.getLng()),
-			p_limit: PARCEL_TRADE_MARKER_LIMIT
-		});
-		if (error) throw error;
-		if (requestToken !== parcelTradeCanvasRequestToken || !isParcelTradeCanvasModeActive()) return false;
-		const rows = (Array.isArray(data) ? data : []).map(normalizeParcelTradeCanvasRow).filter(Boolean);
-		parcelTradeViewportCache.set(boundsKey, rows);
-		while (parcelTradeViewportCache.size > 4) parcelTradeViewportCache.delete(parcelTradeViewportCache.keys().next().value);
-		parcelTradeCanvasRows = rows;
-		parcelTradeCanvasLoadedBoundsKey = boundsKey;
-		parcelTradeCanvasInitialLoaded = true;
-		startParcelTradeCanvasReveal();
-		return true;
-	} catch (error) {
-		if (requestToken === parcelTradeCanvasRequestToken) console.warn("현재 화면 실거래 조회 실패:", error);
-		return false;
-	} finally {
-		if (requestToken === parcelTradeCanvasRequestToken) {
-			parcelTradeCanvasLoading = false;
-			updateParcelTradeLoadButton();
+
+	const requestPromise = (async () => {
+		try {
+			let client = getMapListingsSupabaseClient();
+			if (!client && typeof loadSupabaseScript === "function") {
+				await loadSupabaseScript();
+				client = getMapListingsSupabaseClient();
+			}
+			if (!client) throw new Error("실거래 DB에 연결하지 못했습니다.");
+			const { data, error } = await client.rpc(PARCEL_TRADE_MARKER_RPC, {
+				p_south: Number(sw.getLat()),
+				p_west: Number(sw.getLng()),
+				p_north: Number(ne.getLat()),
+				p_east: Number(ne.getLng()),
+				p_limit: markerLimit
+			});
+			if (error) throw error;
+			if (requestToken !== parcelTradeCanvasRequestToken || !isParcelTradeCanvasModeActive()) return false;
+			const rows = (Array.isArray(data) ? data : []).map(normalizeParcelTradeCanvasRow).filter(Boolean);
+			parcelTradeViewportCache.set(boundsKey, rows);
+			while (parcelTradeViewportCache.size > PARCEL_TRADE_CANVAS_VIEWPORT_CACHE_MAX) {
+				parcelTradeViewportCache.delete(parcelTradeViewportCache.keys().next().value);
+			}
+			parcelTradeCanvasRows = rows;
+			parcelTradeCanvasLoadedBoundsKey = boundsKey;
+			parcelTradeCanvasInitialLoaded = true;
+			startParcelTradeCanvasReveal();
+			return true;
+		} catch (error) {
+			if (requestToken === parcelTradeCanvasRequestToken) console.warn("현재 화면 실거래 조회 실패:", error);
+			return false;
+		} finally {
+			if (requestToken === parcelTradeCanvasRequestToken) {
+				parcelTradeCanvasLoading = false;
+				updateParcelTradeLoadButton();
+			}
+			if (parcelTradeViewportRequests.get(boundsKey) === requestPromise) {
+				parcelTradeViewportRequests.delete(boundsKey);
+			}
 		}
-	}
+	})();
+	parcelTradeViewportRequests.set(boundsKey, requestPromise);
+	return await requestPromise;
 }
 
 function scheduleParcelTradeCanvasViewportLoadAfterZoom()
@@ -31100,8 +32800,16 @@ function bindParcelTradeCanvasMapEvents()
 	kakao.maps.event.addListener(state.map, "zoom_start", hideParcelTradeCanvasForZoom);
 	const parcelCanvasMapHost = getParcelTradeCanvasMapElement();
 	if (parcelCanvasMapHost) {
-		parcelCanvasMapHost.addEventListener("wheel", hideParcelTradeCanvasForZoom, { capture: true, passive: true });
-		parcelCanvasMapHost.addEventListener("dblclick", hideParcelTradeCanvasForZoom, { capture: true, passive: true });
+		parcelCanvasMapHost.addEventListener("wheel", (event) => {
+			const level = Number(state.map?.getLevel?.());
+			if (Number.isFinite(level) && level <= 1 && Number(event.deltaY) < 0) return;
+			hideParcelTradeCanvasForZoom();
+		}, { capture: true, passive: true });
+		parcelCanvasMapHost.addEventListener("dblclick", () => {
+			const level = Number(state.map?.getLevel?.());
+			if (Number.isFinite(level) && level <= 1) return;
+			hideParcelTradeCanvasForZoom();
+		}, { capture: true, passive: true });
 		parcelCanvasMapHost.addEventListener("touchmove", (event) => {
 			if (event.touches && event.touches.length > 1) hideParcelTradeCanvasForZoom();
 		}, { capture: true, passive: true });
@@ -31111,7 +32819,13 @@ function bindParcelTradeCanvasMapEvents()
 		const movingLevel = Number(state.map?.getLevel?.());
 		if (!Number.isFinite(parcelTradeCanvasStableLevel) || movingLevel !== parcelTradeCanvasStableLevel) {
 			hideParcelTradeCanvasForZoom();
+			return;
 		}
+		if (parcelTradeCanvasMoveFrame || typeof requestAnimationFrame !== "function") return;
+		parcelTradeCanvasMoveFrame = requestAnimationFrame(() => {
+			parcelTradeCanvasMoveFrame = 0;
+			drawParcelTradeCanvas();
+		});
 	});
 	kakao.maps.event.addListener(state.map, "dragstart", () => {
 		if (parcelTradeCanvas) parcelTradeCanvas.style.visibility = "";
@@ -31128,7 +32842,27 @@ function bindParcelTradeCanvasMapEvents()
 		parcelTradeCanvasStableLevel = NaN;
 		hideParcelTradeCanvasForZoom();
 		await syncParcelMapLevelPresentation({ loadInitial: false, source: "zoom-level-change" });
-		if (isParcelTradeCanvasModeActive()) scheduleParcelTradeCanvasViewportLoadAfterZoom();
+		if (!isParcelTradeCanvasModeActive()) {
+			if (parcelTradeCanvas) parcelTradeCanvas.style.visibility = "";
+			const settledLevel = Number(state.map?.getLevel?.());
+			const settledMode = getParcelMapLevelProfile(settledLevel).presentationMode;
+			if (getCurrentRealjejuGlobalCategoryKey() === "parcel"
+				&& Number.isFinite(settledLevel)
+				&& settledLevel >= 6
+				&& shouldRenderParcelRegionTradeMapBadges(settledMode)
+				&& !propertyRegionCountOverlays.length) {
+				// 5.995: 5→6 전환의 첫 요청이 취소됐으면 클릭을 기다리지 않고 즉시 다시 확정한다.
+				parcelRegionTradeBadgeRenderInFlight.clear();
+				parcelRegionTradeBadgeRenderedSignature = "";
+				await renderPropertyRegionCountOverlays(settledMode);
+			}
+			return;
+		}
+		// 5.995: idle 이벤트를 뒤늦게 기다리지 않고 확대·축소 완료 시점에 바로 복구한다.
+		await loadParcelTradeCanvasRowsForCurrentViewport({ source: "zoom-final-viewport" });
+		parcelTradeCanvasStableLevel = Number(state.map?.getLevel?.());
+		if (parcelTradeCanvas) parcelTradeCanvas.style.visibility = "";
+		drawParcelTradeCanvas();
 	});
 	kakao.maps.event.addListener(state.map, "mousemove", (mouseEvent) => {
 		const host = getParcelTradeCanvasMapElement();
@@ -31143,7 +32877,7 @@ async function syncParcelTradeCanvasForCategory(category, options = {})
 	ensureParcelTradeLoadButton();
 	bindParcelTradeCanvasMapEvents();
 	return await syncParcelMapLevelPresentation({
-		loadInitial: category === "parcel" && options.loadInitial === true,
+		loadInitial: category === "parcel",
 		source: "category-entry"
 	});
 }
@@ -31170,6 +32904,8 @@ function clearParcelTradeCanvasSession()
 	parcelTradeCanvasLoadedBoundsKey = "";
 	parcelTradeCanvasInitialLoaded = false;
 	parcelTradeCanvasLoading = false;
+	parcelTradeViewportRequests.clear();
+	window.__realjejuSelectedParcelTradeMarker = null;
 	parcelTradeViewportCache.clear();
 	if (parcelTradeCanvasContext && parcelTradeCanvas) parcelTradeCanvasContext.clearRect(0, 0, parcelTradeCanvas.width, parcelTradeCanvas.height);
 	if (parcelTradeCanvas) parcelTradeCanvas.hidden = true;
@@ -37954,7 +39690,7 @@ function updateBrokerOfficeToolActiveState()
 	updateMapSettingsToolActiveState();
 }
 
-function renderMarkers(data, options = {})
+ function renderMarkers(data, options = {})
 {
 	if (isPresaleMapMode()) {
 		renderPresaleEmptyMap();
@@ -40238,7 +41974,9 @@ async function loadMorePropertyScaleRegionItems()
 		applyPropertyScaleRegionPageResult(remote, result, requestSeq, limit);
 	} catch (error) {
 		console.error("행정구역 매물 단계별 추가 로딩 실패:", error);
-		if (!remote.items.length && propertyList) {
+		if (!remote.items.length && propertyList
+			&& state.leftListDetailMode !== "parcel-area-measure"
+			&& !propertyList.querySelector(".parcel-area-measure-panel")) {
 			propertyList.innerHTML = `
 			<div class="card" style="padding:18px; cursor:default; border-bottom:0;">
 			<div class="card-body" style="padding:0; text-align:left;">
@@ -40315,6 +42053,8 @@ async function loadMorePropertyScaleAgentItems()
 
 async function loadMoreLeftListItems(options = {})
 {
+	if (state.leftListDetailMode === "parcel-area-measure"
+		|| !!propertyList?.querySelector(".parcel-area-measure-panel")) return;
 	if (state.leftListDetailMode === "parcel-region-stats") return;
 	if (state.leftListDetailMode === "parcel-land-info" && propertyList && propertyList.querySelector(".parcel-land-info-panel")) return;
 	if (document.body.classList.contains("sidebar-list-collapsed")) return;
@@ -40381,7 +42121,9 @@ async function loadMoreLeftListItems(options = {})
 			error?.details || ""
 		);
 		setLeftListLoading(false);
-		if (!state.leftListItems.length) {
+		if (!state.leftListItems.length
+			&& state.leftListDetailMode !== "parcel-area-measure"
+			&& !propertyList?.querySelector(".parcel-area-measure-panel")) {
 			propertyList.innerHTML = `
 			<div class="card" style="padding:18px; cursor:default; border-bottom:0;">
 			<div class="card-body" style="padding:0; text-align:left;">
@@ -41154,13 +42896,20 @@ window.realjejuRenderRecommendedListingCard = renderRecommendedListingCard;
 
 function renderList(data)
 {
-	// 필지정보에서 열린 토지정보ㆍ지역통계를 늦게 완료된 매물 목록 갱신이 덮지 못하게 한다.
+	// 필지정보에서 열린 토지정보ㆍ지역통계ㆍ면적측정을 늦게 완료된 매물 목록 갱신이 덮지 못하게 한다.
 	const hasParcelLandInfo = !!(propertyList && propertyList.querySelector(".parcel-land-info-panel"));
 	const hasParcelRegionStats = !!(propertyList && propertyList.querySelector(".parcel-region-trade-stats-panel"));
-	const hasLockedParcelInfoMode = state.leftListDetailMode === "parcel-land-info" || state.leftListDetailMode === "parcel-region-stats";
-	if (hasParcelLandInfo || hasParcelRegionStats || hasLockedParcelInfoMode) {
-		state.leftListDetailMode = hasParcelLandInfo ? "parcel-land-info" : "parcel-region-stats";
-		state.leftListTitle = state.leftListDetailMode === "parcel-region-stats" ? "부동산 통계" : "부동산 정보";
+	const hasParcelAreaMeasure = !!(propertyList && propertyList.querySelector(".parcel-area-measure-panel"));
+	const hasLockedParcelInfoMode = state.leftListDetailMode === "parcel-land-info"
+		|| state.leftListDetailMode === "parcel-region-stats"
+		|| state.leftListDetailMode === "parcel-area-measure";
+	if (hasParcelLandInfo || hasParcelRegionStats || hasParcelAreaMeasure || hasLockedParcelInfoMode) {
+		state.leftListDetailMode = hasParcelAreaMeasure
+			? "parcel-area-measure"
+			: (hasParcelLandInfo ? "parcel-land-info" : "parcel-region-stats");
+		state.leftListTitle = state.leftListDetailMode === "parcel-area-measure"
+			? "면적 측정"
+			: (state.leftListDetailMode === "parcel-region-stats" ? "부동산 통계" : "부동산 정보");
 		syncSidebarListTitle();
 		syncSidebarListHeaderActions();
 		return;
@@ -42909,88 +44658,7 @@ function normalizeRealjejuPhone(value)
 		return String(value || "").replace(/[^0-9]/g, "");
 	}
 
-	function isValidRealjejuMobilePhone(value)
-	{
-		return /^010\d{8}$/.test(normalizeRealjejuPhone(value));
-	}
-
-		function isValidRealjejuOfficePhone(value)
-		{
-			const phone = normalizeRealjejuPhone(value);
-			if (phone.startsWith("010")) return /^010\d{8}$/.test(phone);
-			if (/^02\d{7,8}$/.test(phone)) return true;
-			if (/^(031|032|033|041|042|043|044|051|052|053|054|055|061|062|063|064)\d{7,8}$/.test(phone)) return true;
-			return false;
-		}
-
-		function isValidRealjejuBrokerOfficeEmail(value)
-		{
-			return /^[^\s@]+@[^\s@]+$/.test(String(value || "").trim());
-		}
-
-
-
-		function isValidRealjejuKakaoOpenChatUrl(value)
-		{
-			const url = String(value || "").trim();
-			if (!url) return true;
-			return /^https?:\/\/\S+$/i.test(url);
-		}
-
 	const REALJEJU_KAKAO_URL_COLUMN_MESSAGE = "카카오 오픈 채팅방 저장 컬럼이 없습니다.\nsql/admin_tools_3.188.sql을 Supabase SQL Editor에서 실행해 주세요.";
-
-		function isRealjejuKakaoUrlColumnError(error)
-		{
-			const text = [
-				error && error.code,
-				error && error.message,
-				error && error.details,
-				error && error.hint
-			].map(value => String(value || "")).join(" ");
-			return /kakao_url/i.test(text) && /(42703|schema cache|column|could not find)/i.test(text);
-		}
-
-		function isRealjejuMissingKakaoRpcError(error)
-		{
-			const text = [
-				error && error.code,
-				error && error.message,
-				error && error.details,
-				error && error.hint
-			].map(value => String(value || "")).join(" ");
-			return /save_my_agency_kakao_url|save_my_agency_profile|PGRST202|schema cache|function/i.test(text);
-		}
-
-		function isRealjejuAgencyNotFoundError(error)
-		{
-			const text = [
-				error && error.code,
-				error && error.message,
-				error && error.details,
-				error && error.hint
-			].map(value => String(value || "")).join(" ");
-			return /P0002|agency not found/i.test(text);
-		}
-
-		async function saveRealjejuAgencyProfile(client, agencyId, payload)
-		{
-			if (!client) throw new Error("Supabase client missing");
-			const params = {
-				p_agency_id: agencyId ? String(agencyId) : null,
-				p_office_name: String(payload && payload.office_name || "").trim(),
-				p_owner_name: String(payload && payload.owner_name || "").trim(),
-				p_office_reg_no: normalizeBrokerOfficeRegNo(payload && payload.office_reg_no),
-				p_office_address: String(payload && payload.office_address || "").trim(),
-				p_phone: String(payload && payload.phone || "").trim(),
-				p_email: String(payload && payload.email || "").trim(),
-				p_kakao_url: String(payload && payload.kakao_url || "").trim()
-			};
-			const { data, error } = await client.rpc("save_my_agency_profile", params);
-			if (error) throw error;
-			const row = Array.isArray(data) ? data[0] : data;
-			if (!row || !row.id) throw new Error("중개사무소 정보 저장 확인 실패");
-			return row;
-		}
 
 		async function saveRealjejuAgencyKakaoUrl(client, agencyId, kakaoUrl)
 		{
@@ -46498,22 +48166,6 @@ function normalizeRealjejuPhone(value)
 
 	window.saveBrokerOfficeLocationSnapshot = saveBrokerOfficeLocationSnapshot;
 	window.saveAgencyLatLngSnapshot = saveAgencyLatLngSnapshot;
-
-	async function saveRealjejuOwnProfile(client, userId, profilePayload)
-	{
-		if (!client || !userId || !profilePayload) return { error: new Error("profile save context missing") };
-		const updatePayload = { ...profilePayload };
-		delete updatePayload.id;
-		let result = await client.from("profiles").update(updatePayload).eq("id", userId).select("id").maybeSingle();
-		if (result && !result.error && result.data && result.data.id) return result;
-		if (result && result.error && /profile_image/i.test(String(result.error.message || ""))) {
-			delete updatePayload.profile_image;
-			delete profilePayload.profile_image;
-			result = await client.from("profiles").update(updatePayload).eq("id", userId).select("id").maybeSingle();
-			if (result && !result.error && result.data && result.data.id) return result;
-		}
-		return client.from("profiles").insert(profilePayload).select("id").maybeSingle();
-	}
 
 	function renderMySuiteBrokerOfficeApplyPage(user, profile)
 	{

@@ -1,3 +1,6 @@
+
+
+
 <!DOCTYPE html>
 <html lang="ko">
 	<!--
@@ -191,15 +194,15 @@ REALJEJU HTML 구조 / Ver 5.268
 				transition: none;
 			}
 		</style>
-		<link rel="stylesheet" href="/css/base-foundation_5.902.css?v=20260814-region-trade-static-5823">
-		<link rel="stylesheet" href="/css/core-map_5.902.css?v=20260814-region-trade-static-5823">
-		<link rel="stylesheet" href="/css/property-info_5.902.css?v=20260814-region-trade-static-5823">
-		<link rel="stylesheet" href="/css/workspace-app_5.902.css?v=20260814-region-trade-static-5823">
-		<link rel="stylesheet" href="/css/admin-app_5.902.css?v=20260814-region-trade-static-5823">
-		<link rel="stylesheet" href="/css/account_5.902.css?v=20260814-region-trade-static-5823">
-		<link rel="stylesheet" href="/css/base_5.902.css?v=20260814-region-trade-static-5823">
+		<link rel="stylesheet" href="/css/base-foundation_6.061.css?v=20260816-side-toggle">
+		<link rel="stylesheet" href="/css/core-map_6.061.css?v=20260816-side-toggle">
+		<link rel="stylesheet" href="/css/property-info_6.061.css?v=20260816-side-toggle">
+		<link rel="stylesheet" href="/css/workspace-app_6.061.css?v=20260816-side-toggle">
+		<link rel="stylesheet" href="/css/admin-app_6.061.css?v=20260816-side-toggle">
+		<link rel="stylesheet" href="/css/account_6.061.css?v=20260816-side-toggle">
+		<link rel="stylesheet" href="/css/base_6.061.css?v=20260816-side-toggle">
 
-  <link rel="stylesheet" href="/css/service-modes_5.902.css?v=20260814-region-trade-static-5823">
+  <link rel="stylesheet" href="/css/service-modes_6.061.css?v=20260816-side-toggle">
 </head>
 	<body class="sidebar-list-collapsed realjeju-side-nav-enabled main-landing-page-open">
 		<script id="realjeju-initial-body-route-prime">
@@ -622,7 +625,7 @@ REALJEJU HTML 구조 / Ver 5.268
 				</button>
 			</nav>
 			<div class="realjeju-side-admin-version" id="realjejuSideAdminVersion" aria-hidden="true" hidden>
-				<span class="topbar-version-text">5.902</span>
+				<span class="topbar-version-text">6.061</span>
 			</div>
 		</aside>
 		<button type="button" class="realjeju-side-nav-toggle" id="realjejuSideNavToggle" aria-controls="realjejuSideNav" aria-expanded="true" aria-label="왼쪽 메뉴 접기">
@@ -5084,6 +5087,16 @@ REALJEJU HTML 구조 / Ver 5.268
 					</span>
 				</button>
 			</div>
+			<div class="map-tool-group map-parcel-analysis-tool-group" id="mapParcelAnalysisToolGroup" aria-label="필지 분석 도구">
+				<button class="map-tool-btn" id="mapParcelAreaToolBtn" type="button" aria-label="필지 면적 선택" aria-pressed="false">
+					<span class="map-tool-icon" aria-hidden="true"><i class="fa-solid fa-draw-polygon"></i></span>
+					<span class="map-tool-label">면적</span>
+				</button>
+				<button class="map-tool-btn map-parcel-road-contact-tool-btn" id="mapParcelRoadContactToolBtn" type="button" aria-label="도로" title="도로">
+					<span class="map-tool-icon" aria-hidden="true"><i class="fa-solid fa-road"></i></span>
+					<span class="map-tool-label">도로</span>
+				</button>
+			</div>
 			<div class="map-tool-group map-location-tool-group" id="mapContextToolGroup" aria-label="지도 분석 도구">
 				<button type="button" class="map-tool-btn" id="mapEducationToolBtn" aria-pressed="false" aria-label="교육" title="교육">
 					<span class="map-tool-icon"><i class="fa-solid fa-graduation-cap" aria-hidden="true"></i></span>
@@ -5137,6 +5150,11 @@ REALJEJU HTML 구조 / Ver 5.268
 					</button>
 				</div>
 				<div class="map-type-divider"></div>
+				<button type="button" class="map-type-cadastral-toggle map-type-label-toggle" id="mapTypeLabelBtn" onclick="event.stopPropagation(); window.toggleMapSatelliteLabels && window.toggleMapSatelliteLabels()" aria-pressed="false">
+					<span class="map-type-cadastral-icon"><i class="fa-solid fa-font" aria-hidden="true"></i></span>
+					<span class="map-type-cadastral-label">지명 감추기</span>
+					<span class="map-type-switch" aria-hidden="true"></span>
+				</button>
 				<button type="button" class="map-type-cadastral-toggle" id="mapTypeCadastralBtn" onclick="event.stopPropagation(); window.toggleMapCadastralOverlay && window.toggleMapCadastralOverlay()" aria-pressed="false">
 					<span class="map-type-cadastral-icon"><i class="fa-solid fa-draw-polygon" aria-hidden="true"></i></span>
 					<span class="map-type-cadastral-label">지적편집도</span>
@@ -5958,11 +5976,11 @@ REALJEJU HTML 구조 / Ver 5.268
 			}
 		</script>
 	<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-		<script src="/js/app_5.902.js?v=20260814-region-trade-static-5823"></script>
-	<script src="/js/workspace-app_5.902.js?v=20260814-region-trade-static-5823"></script>
-  <script src="/js/service-modes_5.902.js?v=20260814-region-trade-static-5823"></script>
-	<script src="/js/runtime-tail_5.902.js?v=20260814-region-trade-static-5823"></script>
-	<script src="/js/bootstrap_5.902.js?v=20260814-region-trade-static-5823"></script>
+		<script src="/js/app_6.061.js?v=20260816-side-toggle"></script>
+	<script src="/js/workspace-app_6.061.js?v=20260816-side-toggle"></script>
+  <script src="/js/service-modes_6.061.js?v=20260816-side-toggle"></script>
+	<script src="/js/runtime-tail_6.061.js?v=20260816-side-toggle"></script>
+	<script src="/js/bootstrap_6.061.js?v=20260816-side-toggle"></script>
 
 
 <script>
