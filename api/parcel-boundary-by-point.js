@@ -11,8 +11,6 @@ const VWORLD_UPSTREAM_RETRY_DELAY_MS = 180;
 const PARCEL_QUERY_BUFFER_DEGREES = 0.000025;
 // Interactive parcel lookup is DB-only. Do not retain pre-reset parcel rows in
 // a warm serverless instance after the permanent cache has been purged.
-const PARCEL_CACHE_TTL_MS = 0;
-const PARCEL_CACHE_MAX_ENTRIES = 300;
 const PARCEL_INFORMATION_CACHE_TABLE = "parcel_information_cache";
 const PARCEL_BOUNDARY_POINT_CACHE_TABLE = "parcel_boundary_point_cache";
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -48,8 +46,8 @@ const JEJU_QUERY_BOUNDS = Object.freeze({
 	maxLat: 34.25
 });
 
-const responseCache = new Map();
 const inflightRequests = new Map();
+let parcelInformationSnapshotRpcUnavailableUntil = 0;
 
 function getAllowedCorsOrigin(req)
 {
@@ -158,21 +156,53 @@ async function supabaseAdminFetch(path, options)
   }
 }
 
-async function loadOfflineLandUsePlan(pnu)
+async function loadParcelInformationSnapshot(pnu, priceOnly)
 {
   const normalizedPnu = String(pnu || "").trim();
   if (!/^\d{19}$/.test(normalizedPnu)) return null;
+  if (Date.now() < parcelInformationSnapshotRpcUnavailableUntil) return null;
   const response = await supabaseAdminFetch(
-    `/rest/v1/realjeju_land_use_plan_current?select=relation_type,law_name,zone_code,zone_name,source_standard_date,payload&pnu=eq.${encodeURIComponent(normalizedPnu)}&order=id.asc&limit=1000`
+    "/rest/v1/rpc/get_parcel_information_snapshot_6047",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        p_pnu: normalizedPnu,
+        p_price_only: priceOnly === true
+      })
+    }
   );
   if (!response || !response.ok) {
-    if (response) {
-      console.warn("[parcel-boundary-by-point] offline land-use lookup failed:", response.status);
+    const errorText = response ? await response.text().catch(() => "") : "";
+    if (response && (response.status === 404 || /PGRST202|could not find.*function/i.test(errorText))) {
+      parcelInformationSnapshotRpcUnavailableUntil = Date.now() + (5 * 60 * 1000);
+    } else if (response) {
+      console.warn("[parcel-boundary-by-point] snapshot RPC failed:", response.status);
     }
     return null;
   }
+  const payload = await response.json().catch(() => null);
+  const snapshot = Array.isArray(payload) ? payload[0] : payload;
+  return snapshot && typeof snapshot === "object" ? snapshot : null;
+}
 
-  const rows = await response.json().catch(() => []);
+async function loadOfflineLandUsePlan(pnu, prefetchedRows)
+{
+  const normalizedPnu = String(pnu || "").trim();
+  if (!/^\d{19}$/.test(normalizedPnu)) return null;
+  let rows = Array.isArray(prefetchedRows) ? prefetchedRows : null;
+  if (!rows) {
+    const response = await supabaseAdminFetch(
+      `/rest/v1/realjeju_land_use_plan_current?select=relation_type,law_name,zone_code,zone_name,source_standard_date,payload&pnu=eq.${encodeURIComponent(normalizedPnu)}&order=id.asc&limit=1000`
+    );
+    if (!response || !response.ok) {
+      if (response) {
+        console.warn("[parcel-boundary-by-point] offline land-use lookup failed:", response.status);
+      }
+      return null;
+    }
+    rows = await response.json().catch(() => []);
+  }
   if (!Array.isArray(rows)) return null;
   const relationByCode = { "1": "포함", "2": "저촉", "3": "접합" };
   const seen = new Set();
@@ -212,20 +242,23 @@ async function loadOfflineLandUsePlan(pnu)
   return items;
 }
 
-async function loadOfflineLandBasic(pnu)
+async function loadOfflineLandBasic(pnu, prefetchedRows)
 {
   const normalizedPnu = String(pnu || "").trim();
   if (!/^\d{19}$/.test(normalizedPnu)) return null;
-  const response = await supabaseAdminFetch(
-    `/rest/v1/realjeju_land_characteristics_current?select=pnu,legal_dong_name,jibun,jimok_name,area_m2,land_use_zone_name_1,land_use_situation_name,terrain_height_name,terrain_shape_name,road_side_name,published_land_price,standard_year,standard_month,source_standard_date&pnu=eq.${encodeURIComponent(normalizedPnu)}&limit=1`
-  );
-  if (!response || !response.ok) {
-    if (response) {
-      console.warn("[parcel-boundary-by-point] offline land-basic lookup failed:", response.status);
+  let rows = Array.isArray(prefetchedRows) ? prefetchedRows : null;
+  if (!rows) {
+    const response = await supabaseAdminFetch(
+      `/rest/v1/realjeju_land_characteristics_current?select=pnu,legal_dong_name,jibun,jimok_name,area_m2,land_use_zone_name_1,land_use_situation_name,terrain_height_name,terrain_shape_name,road_side_name,published_land_price,standard_year,standard_month,source_standard_date&pnu=eq.${encodeURIComponent(normalizedPnu)}&limit=1`
+    );
+    if (!response || !response.ok) {
+      if (response) {
+        console.warn("[parcel-boundary-by-point] offline land-basic lookup failed:", response.status);
+      }
+      return null;
     }
-    return null;
+    rows = await response.json().catch(() => []);
   }
-  const rows = await response.json().catch(() => []);
   const row = Array.isArray(rows) ? rows[0] : null;
   if (!row || String(row.pnu || "").trim() !== normalizedPnu) return null;
   const areaM2 = Number(row.area_m2);
@@ -249,20 +282,23 @@ async function loadOfflineLandBasic(pnu)
   };
 }
 
-async function loadOfflineIndividualLandPrices(pnu)
+async function loadOfflineIndividualLandPrices(pnu, prefetchedRows)
 {
   const normalizedPnu = String(pnu || "").trim();
   if (!/^\d{19}$/.test(normalizedPnu)) return null;
-  const response = await supabaseAdminFetch(
-    `/rest/v1/realjeju_land_prices?select=base_year,base_month,official_price_per_m2,announcement_date,standard_land,data_reference_date&pnu=eq.${encodeURIComponent(normalizedPnu)}&order=base_year.desc,base_month.desc&limit=20`
-  );
-  if (!response || !response.ok) {
-    if (response) {
-      console.warn("[parcel-boundary-by-point] offline D151 lookup failed:", response.status);
+  let rows = Array.isArray(prefetchedRows) ? prefetchedRows : null;
+  if (!rows) {
+    const response = await supabaseAdminFetch(
+      `/rest/v1/realjeju_land_prices?select=base_year,base_month,official_price_per_m2,announcement_date,standard_land,data_reference_date&pnu=eq.${encodeURIComponent(normalizedPnu)}&order=base_year.desc,base_month.desc&limit=20`
+    );
+    if (!response || !response.ok) {
+      if (response) {
+        console.warn("[parcel-boundary-by-point] offline D151 lookup failed:", response.status);
+      }
+      return null;
     }
-    return null;
+    rows = await response.json().catch(() => []);
   }
-  const rows = await response.json().catch(() => []);
   if (!Array.isArray(rows)) return null;
   return rows.reduce((items, row) => {
     const year = String(row?.base_year ?? "").trim();
@@ -283,18 +319,21 @@ async function loadOfflineIndividualLandPrices(pnu)
   }, []);
 }
 
-async function loadOfflineIndividualHousingPrices(pnu)
+async function loadOfflineIndividualHousingPrices(pnu, prefetchedRows)
 {
   const normalizedPnu = String(pnu || "").trim();
   if (!/^\d{19}$/.test(normalizedPnu)) return null;
-  const response = await supabaseAdminFetch(
-    `/rest/v1/realjeju_individual_housing_prices?select=base_year,base_month,house_price,building_register_key,dong_code,land_register_area_m2,calculated_land_area_m2,total_building_area_m2,calculated_building_area_m2,data_reference_date&pnu=eq.${encodeURIComponent(normalizedPnu)}&order=base_year.desc,base_month.desc&limit=100`
-  );
-  if (!response || !response.ok) {
-    if (response) console.warn("[parcel-boundary-by-point] offline D169 lookup failed:", response.status);
-    return null;
+  let rows = Array.isArray(prefetchedRows) ? prefetchedRows : null;
+  if (!rows) {
+    const response = await supabaseAdminFetch(
+      `/rest/v1/realjeju_individual_housing_prices?select=base_year,base_month,house_price,building_register_key,dong_code,land_register_area_m2,calculated_land_area_m2,total_building_area_m2,calculated_building_area_m2,data_reference_date&pnu=eq.${encodeURIComponent(normalizedPnu)}&order=base_year.desc,base_month.desc&limit=100`
+    );
+    if (!response || !response.ok) {
+      if (response) console.warn("[parcel-boundary-by-point] offline D169 lookup failed:", response.status);
+      return null;
+    }
+    rows = await response.json().catch(() => []);
   }
-  const rows = await response.json().catch(() => []);
   if (!Array.isArray(rows)) return null;
   return rows.reduce((items, row) => {
     const year = String(row?.base_year ?? "").trim();
@@ -318,20 +357,23 @@ async function loadOfflineIndividualHousingPrices(pnu)
   }, []);
 }
 
-async function loadOfflineLandPossession(pnu)
+async function loadOfflineLandPossession(pnu, prefetchedRows)
 {
   const normalizedPnu = String(pnu || "").trim();
   if (!/^\d{19}$/.test(normalizedPnu)) return null;
-  const response = await supabaseAdminFetch(
-    `/rest/v1/realjeju_land_ownership_current?select=pnu,ownership_code,ownership_name,owner_count,ownership_change_date,ownership_change_reason,source_standard_date,payload&pnu=eq.${encodeURIComponent(normalizedPnu)}&limit=1`
-  );
-  if (!response || !response.ok) {
-    if (response) {
-      console.warn("[parcel-boundary-by-point] offline ownership lookup failed:", response.status);
+  let rows = Array.isArray(prefetchedRows) ? prefetchedRows : null;
+  if (!rows) {
+    const response = await supabaseAdminFetch(
+      `/rest/v1/realjeju_land_ownership_current?select=pnu,ownership_code,ownership_name,owner_count,ownership_change_date,ownership_change_reason,source_standard_date,payload&pnu=eq.${encodeURIComponent(normalizedPnu)}&limit=1`
+    );
+    if (!response || !response.ok) {
+      if (response) {
+        console.warn("[parcel-boundary-by-point] offline ownership lookup failed:", response.status);
+      }
+      return null;
     }
-    return null;
+    rows = await response.json().catch(() => []);
   }
-  const rows = await response.json().catch(() => []);
   const row = Array.isArray(rows) ? rows[0] : null;
   if (!row || String(row.pnu || "").trim() !== normalizedPnu) return null;
   const payload = row.payload && typeof row.payload === "object" ? row.payload : {};
@@ -358,20 +400,23 @@ async function loadOfflineLandPossession(pnu)
   };
 }
 
-async function loadOfflineLandMoves(pnu)
+async function loadOfflineLandMoves(pnu, prefetchedRows)
 {
   const normalizedPnu = String(pnu || "").trim();
   if (!/^\d{19}$/.test(normalizedPnu)) return [];
-  const response = await supabaseAdminFetch(
-    `/rest/v1/realjeju_land_movements_current?select=movement_date,movement_reason,movement_reason_code,area_m2,jimok_name,source_standard_date&pnu=eq.${encodeURIComponent(normalizedPnu)}&order=movement_date.desc.nullslast&limit=100`
-  );
-  if (!response || !response.ok) {
-    if (response) {
-      console.warn("[parcel-boundary-by-point] offline land-movement lookup failed:", response.status);
+  let rows = Array.isArray(prefetchedRows) ? prefetchedRows : null;
+  if (!rows) {
+    const response = await supabaseAdminFetch(
+      `/rest/v1/realjeju_land_movements_current?select=movement_date,movement_reason,movement_reason_code,area_m2,jimok_name,source_standard_date&pnu=eq.${encodeURIComponent(normalizedPnu)}&order=movement_date.desc.nullslast&limit=100`
+    );
+    if (!response || !response.ok) {
+      if (response) {
+        console.warn("[parcel-boundary-by-point] offline land-movement lookup failed:", response.status);
+      }
+      return null;
     }
-    return null;
+    rows = await response.json().catch(() => []);
   }
-  const rows = await response.json().catch(() => []);
   return (Array.isArray(rows) ? rows : []).map((row) => ({
     movedAt: String(row.movement_date || "").trim(),
     reason: String(row.movement_reason || "").trim(),
@@ -638,18 +683,21 @@ async function storePermanentBoundary(pointKey, parcel)
   if (response && !response.ok) console.warn("[parcel boundary point cache] store failed:", response.status);
 }
 
-async function loadPermanentParcelInformation(pnu)
+async function loadPermanentParcelInformation(pnu, prefetchedRows)
 {
   const result = new Map();
   if (!/^\d{19}$/.test(String(pnu || ""))) return result;
-  const query = new URLSearchParams({
-    select: "data_type,payload,cache_status,expires_at",
-    pnu: `eq.${pnu}`,
-    data_type: `in.(${PARCEL_INFORMATION_CACHE_TYPES.join(",")})`
-  });
-  const response = await supabaseAdminFetch(`/rest/v1/${PARCEL_INFORMATION_CACHE_TABLE}?${query.toString()}`);
-  if (!response || !response.ok) return result;
-  const rows = await response.json().catch(() => []);
+  let rows = Array.isArray(prefetchedRows) ? prefetchedRows : null;
+  if (!rows) {
+    const query = new URLSearchParams({
+      select: "data_type,payload,cache_status,expires_at",
+      pnu: `eq.${pnu}`,
+      data_type: `in.(${PARCEL_INFORMATION_CACHE_TYPES.join(",")})`
+    });
+    const response = await supabaseAdminFetch(`/rest/v1/${PARCEL_INFORMATION_CACHE_TABLE}?${query.toString()}`);
+    if (!response || !response.ok) return result;
+    rows = await response.json().catch(() => []);
+  }
   for (const row of Array.isArray(rows) ? rows : []) {
     if (row && row.data_type && isUsablePermanentCacheRow(row)) {
       result.set(String(row.data_type), row.payload || {});
@@ -938,30 +986,6 @@ function normalizeParcelResponse(feature)
 	};
 }
 
-function getCachedResponse(key)
-{
-	const cached = responseCache.get(key);
-	if (!cached) return null;
-	if (Date.now() - cached.savedAt > PARCEL_CACHE_TTL_MS) {
-		responseCache.delete(key);
-		return null;
-	}
-	responseCache.delete(key);
-	responseCache.set(key, cached);
-	return cached.value;
-}
-
-function saveCachedResponse(key, value)
-{
-	responseCache.delete(key);
-	responseCache.set(key, { savedAt: Date.now(), value });
-	while (responseCache.size > PARCEL_CACHE_MAX_ENTRIES) {
-		const oldestKey = responseCache.keys().next().value;
-		if (!oldestKey) break;
-		responseCache.delete(oldestKey);
-	}
-}
-
 function waitForRetry(delayMs)
 {
 	return new Promise(resolve => setTimeout(resolve, delayMs));
@@ -1246,15 +1270,9 @@ async function fetchLandPossession(apiKey, apiDomain, pnu)
 async function getParcelBoundary(apiKey, apiDomain, lat, lng)
 {
 	const key = buildPointCacheKey(lat, lng);
-	const cached = getCachedResponse(key);
-	if (cached) return cached;
 	if (inflightRequests.has(key)) return inflightRequests.get(key);
 
 	const request = fetchParcelBoundary(apiKey, apiDomain, lat, lng)
-		.then((value) => {
-			if (value) saveCachedResponse(key, value);
-			return value;
-		})
 		.finally(() => {
 			inflightRequests.delete(key);
 		});
@@ -1598,7 +1616,13 @@ module.exports = async function handler(req, res)
 			return;
 		}
 		try {
-			const individualLandPrices = await loadOfflineIndividualLandPrices(requestedPnu);
+			const snapshot = await loadParcelInformationSnapshot(requestedPnu, true);
+			const individualLandPrices = await loadOfflineIndividualLandPrices(
+				requestedPnu,
+				snapshot && Array.isArray(snapshot.individualLandPriceRows)
+					? snapshot.individualLandPriceRows
+					: undefined
+			);
 			if (!Array.isArray(individualLandPrices)) {
 				res.setHeader("Cache-Control", "no-store");
 				res.status(502).json({ ok: false, code: "LAND_PRICE_DATABASE_LOOKUP_FAILED" });
@@ -1677,14 +1701,16 @@ module.exports = async function handler(req, res)
   let individualLandPricesStatus = "unavailable";
   let individualHousingPrices = [];
   let individualHousingPricesStatus = "unavailable";
+	  const snapshot = await loadParcelInformationSnapshot(parcel.pnu, false);
+	  const snapshotRows = (key) => snapshot && Array.isArray(snapshot[key]) ? snapshot[key] : undefined;
 	  const [permanentCache, offlineLandUsePlan, offlineLandBasic, offlineLandPossession, offlineLandMoves, offlineIndividualLandPrices, offlineIndividualHousingPrices] = await Promise.all([
-	    loadPermanentParcelInformation(parcel.pnu),
-	    loadOfflineLandUsePlan(parcel.pnu),
-	    loadOfflineLandBasic(parcel.pnu),
-	    loadOfflineLandPossession(parcel.pnu),
-	    loadOfflineLandMoves(parcel.pnu),
-	    loadOfflineIndividualLandPrices(parcel.pnu),
-	    loadOfflineIndividualHousingPrices(parcel.pnu)
+	    loadPermanentParcelInformation(parcel.pnu, snapshotRows("cacheRows")),
+	    loadOfflineLandUsePlan(parcel.pnu, snapshotRows("landUsePlanRows")),
+	    loadOfflineLandBasic(parcel.pnu, snapshotRows("landBasicRows")),
+	    loadOfflineLandPossession(parcel.pnu, snapshotRows("landPossessionRows")),
+	    loadOfflineLandMoves(parcel.pnu, snapshotRows("landMovementRows")),
+	    loadOfflineIndividualLandPrices(parcel.pnu, snapshotRows("individualLandPriceRows")),
+	    loadOfflineIndividualHousingPrices(parcel.pnu, snapshotRows("individualHousingPriceRows"))
 	  ]);
 	  const ownershipLandBasic = offlineLandPossession
 	    && (offlineLandPossession.jimok || Number.isFinite(offlineLandPossession.areaM2))
