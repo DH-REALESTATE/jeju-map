@@ -174,7 +174,35 @@ REALJEJU HTML 구조 / Ver 5.268
 				}, 15000);
 			})();
 		</script>
-		<link rel="icon" type="image/png" sizes="100x100" href="/favicon_realjeju_blue.png?v=20260979-4833">
+		<link rel="icon" type="image/png" sizes="100x100" href="/favicon_realjeju_blue.png?v=20261049-4833">
+		<link rel="preconnect" href="https://dapi.kakao.com" crossorigin>
+		<link rel="preconnect" href="https://t1.kakaocdn.net" crossorigin>
+		<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+		<link rel="preconnect" href="https://jctovfrcvfosoowribej.supabase.co" crossorigin>
+		<script id="realjeju-route-core-preload">
+			(function () {
+				// 6.142: 정적 랜딩은 894KB core를 첫 화면보다 먼저 받지 않는다.
+				if (!document.documentElement.classList.contains("realjeju-route-booting")) return;
+				var link = document.createElement("link");
+				link.rel = "preload";
+				link.as = "script";
+				link.fetchPriority = "high";
+				link.href = "/js/app-core_6.142.min.js?v=20261062-landing-core-idle-6142";
+				document.head.appendChild(link);
+			})();
+		</script>
+		<script id="realjeju-route-feature-preload">
+			(function () {
+				// 6.141: 정적 랜딩은 561KB 기능 파일을 첫 화면보다 먼저 받지 않는다.
+				if (!document.documentElement.classList.contains("realjeju-route-booting")) return;
+				var link = document.createElement("link");
+				link.rel = "preload";
+				link.as = "script";
+				link.fetchPriority = "low";
+				link.href = "/js/app-features_6.142.min.js?v=20261062-landing-core-idle-6142";
+				document.head.appendChild(link);
+			})();
+		</script>
 		<style id="realjeju-initial-sidebar-guard">
 			html.realjeju-route-booting,
 			html.realjeju-route-booting body {
@@ -194,15 +222,15 @@ REALJEJU HTML 구조 / Ver 5.268
 				transition: none;
 			}
 		</style>
-		<link rel="stylesheet" href="/css/base-foundation_6.097.css?v=20260976-side-toggle">
-		<link rel="stylesheet" href="/css/core-map_6.097.css?v=20260976-side-toggle">
-		<link rel="stylesheet" href="/css/property-info_6.097.css?v=20260976-side-toggle">
-		<link rel="stylesheet" href="/css/workspace-app_6.097.css?v=20260976-side-toggle">
-		<link rel="stylesheet" href="/css/admin-app_6.097.css?v=20260976-side-toggle">
-		<link rel="stylesheet" href="/css/account_6.097.css?v=20260976-side-toggle">
-		<link rel="stylesheet" href="/css/base_6.097.css?v=20260976-side-toggle">
+		<link rel="stylesheet" href="/css/base-foundation_6.142.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/core-map_6.142.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/property-info_6.142.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/workspace-app_6.142.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/admin-app_6.142.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/account_6.142.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/base_6.142.css?v=20261046-side-toggle">
 
-  <link rel="stylesheet" href="/css/service-modes_6.097.css?v=20260976-side-toggle">
+  <link rel="stylesheet" href="/css/service-modes_6.142.css?v=20261046-side-toggle">
 </head>
 	<body class="sidebar-list-collapsed realjeju-side-nav-enabled main-landing-page-open">
 		<script id="realjeju-initial-body-route-prime">
@@ -611,7 +639,7 @@ REALJEJU HTML 구조 / Ver 5.268
 				</button>
 			</nav>
 			<div class="realjeju-side-admin-version" id="realjejuSideAdminVersion" aria-hidden="true" hidden>
-				<span class="topbar-version-text">6.097</span>
+				<span class="topbar-version-text">6.140</span>
 			</div>
 		</aside>
 		<button type="button" class="realjeju-side-nav-toggle" id="realjejuSideNavToggle" aria-controls="realjejuSideNav" aria-expanded="true" aria-label="왼쪽 메뉴 접기">
@@ -5055,7 +5083,8 @@ REALJEJU HTML 구조 / Ver 5.268
 				</button>
 			</div>
 			<div class="map-tool-group map-unit-tool-group" id="areaUnitToolGroup">
-				<button type="button" class="map-tool-btn map-area-unit-toggle-btn" id="areaUnitToggleBtn" data-area-unit-global-toggle aria-label="면적 단위 전환" title="평 / ㎡">
+							<template id="areaUnitLegacyArrowButtonTemplate">
+				<button type="button" class="map-tool-btn map-area-unit-toggle-btn map-area-unit-toggle-btn-legacy" aria-label="면적 단위 전환" title="평 / ㎡">
 					<span class="map-unit-cycle-icon" aria-hidden="true">
 						<svg class="map-unit-cycle-svg" viewBox="0 0 32 32" focusable="false" aria-hidden="true">
 							<path class="map-unit-cycle-arc top" d="M27.0 9.8A11.6 11.6 0 0 0 5.0 13.0" />
@@ -5069,8 +5098,12 @@ REALJEJU HTML 구조 / Ver 5.268
 								<line x1="28.6" y1="22.9" x2="27.2" y2="19.0" />
 							</g>
 						</svg>
-						<span class="map-unit-cycle-label" id="areaUnitToggleLabel">평</span>
+						<span class="map-unit-cycle-label">평</span>
 					</span>
+				</button>
+			</template>
+<button type="button" class="map-tool-btn map-area-unit-toggle-btn" id="areaUnitToggleBtn" data-area-unit-global-toggle aria-label="면적 단위 전환" title="평 / ㎡">
+					<span class="map-unit-cycle-label" id="areaUnitToggleLabel">㎡</span>
 				</button>
 			</div>
 			<div class="map-tool-group map-parcel-analysis-tool-group" id="mapParcelAnalysisToolGroup" aria-label="필지 분석 도구">
@@ -5266,7 +5299,6 @@ REALJEJU HTML 구조 / Ver 5.268
 	</div>
 </div>
 <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=b7db2d3c35122f3ec33c88ea6d3195fb&libraries=services,clusterer&autoload=false"></script>
-<script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.5/kakao.min.js" crossorigin="anonymous"></script>
 
 <!-- 9. 인증 / 내정보 / 중개사무소 신청 -->
 <div class="auth-modal" id="authModal" aria-hidden="true">
@@ -5962,11 +5994,7 @@ REALJEJU HTML 구조 / Ver 5.268
 			}
 		</script>
 	<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-		<script src="/js/app_6.097.js?v=20260976-side-toggle"></script>
-	<script src="/js/workspace-app_6.097.js?v=20260976-side-toggle"></script>
-  <script src="/js/service-modes_6.097.js?v=20260976-side-toggle"></script>
-	<script src="/js/runtime-tail_6.097.js?v=20260976-side-toggle"></script>
-	<script src="/js/bootstrap_6.097.js?v=20260976-side-toggle"></script>
+	<script src="/js/bootstrap_6.142.min.js?v=20261062-landing-core-idle-6142"></script>
 
 
 <script>

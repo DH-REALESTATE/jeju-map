@@ -43,6 +43,8 @@
     }
   ],
   "rewrites": [
+    { "source": "/parcels", "destination": "/index.html" },
+    { "source": "/parcels/:path*", "destination": "/index.html" },
     { "source": "/properties", "destination": "/index.html" },
     { "source": "/properties/:path*", "destination": "/index.html" },
     { "source": "/companies", "destination": "/index.html" },
