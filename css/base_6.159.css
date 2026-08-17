@@ -1396,7 +1396,7 @@ body{
 	font-size: 14px;
 	letter-spacing: -0.1px;
 	font-weight: 700;
-	color: #506097;
+	color: #506104;
 	overflow: hidden;
 	flex-shrink: 0;
 	border: 1px solid #e5ebf1;
@@ -27504,7 +27504,7 @@ body.main-landing-page-open .global-topbar{
 	grid-column: 1;
 	grid-row: 1;
 	display: grid;
-	grid-template-columns: repeat(6, minmax(0, 1fr));
+	grid-template-columns: repeat(2, minmax(0, 1fr));
 	gap: 18px;
 }
 
@@ -27524,9 +27524,10 @@ body.main-landing-page-open .global-topbar{
 }
 
 .main-landing-simple-card.is-wide{
-	grid-column: span 2;
+	grid-column: span 1;
 	min-height: 170px;
 }
+
 
 .main-landing-simple-title{
 	font-size: 21px;
@@ -27672,6 +27673,14 @@ body.main-landing-page-open .global-topbar{
 .main-landing-simple-banner{
 		grid-column: 1;
 		grid-row: auto;
+	}
+
+	.main-landing-simple-grid{
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.main-landing-simple-card.is-wide{
+		grid-column: span 1;
 	}
 }
 
@@ -29058,10 +29067,22 @@ body:has(.company-full-page.open)::-webkit-scrollbar,
 	background-position: 58% center;
 }
 
-.main-landing-simple-card[data-main-landing-action="notice"]::before{
-	background-image: url("../img/landingpage_5.jpg?v=6a4ba786-20260978-4824");
+.main-landing-simple-card[data-main-landing-category="ev-charger"]::before{
+	background-image:
+		radial-gradient(circle at 78% 24%, rgba(111, 255, 214, 0.72) 0 5%, transparent 6%),
+		linear-gradient(135deg, #0f5f78 0%, #087f8c 48%, #0ca678 100%);
 	background-position: center;
-	filter: saturate(0.82) contrast(0.92);
+}
+
+.main-landing-simple-card[data-main-landing-category="ev-charger"]::after{
+	background: linear-gradient(90deg, rgba(5, 31, 48, 0.7) 0%, rgba(5, 49, 58, 0.34) 58%, rgba(3, 91, 79, 0.1) 100%);
+}
+
+.main-landing-simple-card[data-main-landing-action="notice"]::before{
+	background-image: none;
+	background-color: #ffffff;
+	background-position: center;
+	filter: none;
 }
 
 .main-landing-simple-card[data-main-landing-action="notice"]::after{
@@ -37575,13 +37596,13 @@ body.realjeju-side-nav-enabled.realjeju-side-nav-collapsed[data-global-category=
 	display:flex;
 	align-items:center;
 	justify-content:center;
-	width:30px;
-	height:30px;
+	width:26px;
+	height:26px;
 	margin:auto;
 	border-radius:50%;
 	background:#0874c9;
 	color:#fff;
-	font-size:15px;
+	font-size:14px;
 	font-weight:800;
 }
 .parcel-area-measure-row > strong{min-width:0;color:#111827;font-size:15px;font-weight:700;line-height:1.35;overflow-wrap:anywhere;}
@@ -38694,7 +38715,7 @@ body > .parcel-region-trade-picker-surface .parcel-region-trade-picker-options b
   padding: 6px 4px 4px !important;
 }
 
-/* REALJEJU 5.995: final property-info unit button appearance, above shared map-control specificity. */
+/* REALJEJU 6.140: property-info unit button matches the right map unit control. */
 .parcel-land-info-panel .parcel-property-overview .parcel-overview-area-unit-toggle,
 .parcel-land-info-panel .parcel-property-overview .parcel-overview-area-unit-toggle:hover,
 .parcel-land-info-panel .parcel-property-overview .parcel-overview-area-unit-toggle:focus,
@@ -38703,43 +38724,48 @@ body > .parcel-region-trade-picker-surface .parcel-region-trade-picker-options b
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 4px !important;
-  width: 58px !important;
-  min-width: 58px !important;
-  max-width: 58px !important;
-  height: 30px !important;
-  min-height: 30px !important;
-  max-height: 30px !important;
-  padding: 6px 9px !important;
-  border: 1px solid #1764ff !important;
-  border-radius: 999px !important;
+  justify-self: center !important;
+  gap: 0 !important;
+  width: var(--map-control-box-size, 42px) !important;
+  min-width: var(--map-control-box-size, 42px) !important;
+  max-width: var(--map-control-box-size, 42px) !important;
+  height: var(--map-control-box-size, 42px) !important;
+  min-height: var(--map-control-box-size, 42px) !important;
+  max-height: var(--map-control-box-size, 42px) !important;
+  padding: 6px !important;
+  border: 1px solid #D9DDE4 !important;
+  border-radius: var(--map-control-radius, 10px) !important;
   background: #ffffff !important;
-  color: #1764ff !important;
-  font: inherit !important;
-  font-size: 11px !important;
-  font-weight: 700 !important;
-  line-height: 1 !important;
+  color: #ffffff !important;
   box-shadow: none !important;
   filter: none !important;
   text-shadow: none !important;
 }
-.parcel-land-info-panel .parcel-property-overview .parcel-overview-area-unit-toggle > i,
+.parcel-land-info-panel .parcel-property-overview .parcel-overview-area-unit-toggle > i {
+  display: none !important;
+}
 .parcel-land-info-panel .parcel-property-overview .parcel-overview-area-unit-toggle > .map-unit-cycle-label {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
+  width: 30px !important;
+  min-width: 30px !important;
+  height: 30px !important;
   margin: 0 !important;
-  color: inherit !important;
+  border-radius: 9999px !important;
+  background: #1764ff !important;
+  color: #ffffff !important;
   font-size: 11px !important;
   font-weight: 700 !important;
   line-height: 1 !important;
+  white-space: nowrap !important;
 }
 .realjeju-side-recent-empty {
   white-space: pre-line;
   overflow-wrap: anywhere;
 }
 
-/* REALJEJU 6.097: 지정 제목은 유지하고 각 제목 아래 정보행의 왼쪽 항목명만 회색으로 통일합니다. */
+/* REALJEJU 6.140: 지정 제목은 유지하고 각 제목 아래 정보행의 왼쪽 항목명만 회색으로 통일합니다. */
 .parcel-land-info-panel .parcel-property-land .parcel-land-info-row > :first-child,
 .parcel-land-info-panel .parcel-land-use-plan-section .parcel-land-use-plan-row > .parcel-land-use-plan-label,
 .parcel-land-info-panel .parcel-land-move-section .parcel-land-move-row > :first-child,
@@ -38747,7 +38773,7 @@ body > .parcel-region-trade-picker-surface .parcel-region-trade-picker-options b
   color: #7b8494 !important;
 }
 
-/* REALJEJU 6.097: 기타법률의 포함·저촉 값은 첫 줄만 48px 들여쓰고 다음 줄은 왼쪽 시작점으로 복귀합니다. */
+/* REALJEJU 6.140: 기타법률의 포함·저촉 값은 첫 줄만 48px 들여쓰고 다음 줄은 왼쪽 시작점으로 복귀합니다. */
 .parcel-land-info-panel .parcel-land-use-law-group.is-secondary .parcel-land-use-plan-value {
   text-indent: 48px;
 }
