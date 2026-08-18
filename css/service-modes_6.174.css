@@ -1,0 +1,22 @@
+/* REALJEJU VERSION: 6.174 */
+:root {
+  --service-parcel-accent: #7c3aed;
+  --service-ev-accent: #16803c;
+}
+
+.global-category-item[data-global-category="parcel"].is-active,
+.global-category-item[data-global-category="parcel"][aria-pressed="true"],
+.global-category-item[data-global-category="ev-charger"].is-active,
+.global-category-item[data-global-category="ev-charger"][aria-pressed="true"] {
+  color: #111827;
+}
+
+.global-category-item[data-global-category="parcel"].is-active i,
+.global-category-item[data-global-category="parcel"][aria-pressed="true"] i {
+  color: var(--service-parcel-accent);
+}
+
+.global-category-item[data-global-category="ev-charger"].is-active i,
+.global-category-item[data-global-category="ev-charger"][aria-pressed="true"] i {
+  color: var(--service-ev-accent);
+}

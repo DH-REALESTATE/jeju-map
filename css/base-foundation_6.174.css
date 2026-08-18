@@ -1,0 +1,99 @@
+/* REALJEJU VERSION: 6.174 */
+/* REALJEJU 5.436 CSS module: shared foundation
++ * Original cascade order is preserved. Rules are moved, not duplicated.
++ */
+/*
+REALJEJU CSS 구조 / Ver 5.263
+	파일은 단일 CSS를 유지하고, 실제 병합 블록 순서대로 큰 화면 단위만 주석으로 구분한다.
+	0. 폰트 / 전역 변수 / 공통 토큰
+	1. 부동산 홈 / 지도 / 필터바
+	2. 왼쪽 목록 / 상세 패널 / 사진 확대
+	3. 매물 등록 / 수정
+	4. 중개사 홈 / 중개사 관련 화면
+	5. 관리자 페이지 / 운영자 권한
+	6. 결제 / 이용권
+	7. 내정보 / 중개사무소 신청
+	8. 인증
+	9. 이전 기본 / 전역 보정
+*/
+
+/* PATCH 4.603: map every shipped static face to one canonical cross-platform weight. */
+@font-face {
+	font-family: "SUITLocal";
+	src: url("../fonts/SUIT-Regular.woff2") format("woff2");
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "SUITLocal";
+	src: url("../fonts/SUIT-Medium.woff2") format("woff2");
+	font-weight: 500;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "SUITLocal";
+	src: url("../fonts/SUIT-SemiBold.woff2") format("woff2");
+	font-weight: 600;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "SUITLocal";
+	src: url("../fonts/SUIT-Bold.woff2") format("woff2");
+	font-weight: 700;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "SUITLocal";
+	src: url("../fonts/SUIT-ExtraBold.woff2") format("woff2");
+	font-weight: 800;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "SUITLocal";
+	src: url("../fonts/SUIT-Heavy.woff2") format("woff2");
+	font-weight: 900;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "PaperlogyLocal";
+	src: url("../fonts/Paperlogy-7Bold.woff2") format("woff2");
+	font-weight: 700;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "PaperlogyLocal";
+	src: url("../fonts/Paperlogy-8ExtraBold.woff2") format("woff2");
+	font-weight: 800;
+	font-style: normal;
+	font-display: swap;
+}
+
+
+/* REALJEJU consolidated stylesheet / Ver 2.903 */
+/* Legacy split CSS is merged here so realjeju_2.903.html loads one CSS file. */
+/* Responsive Refactor 3.240
+ * Breakpoint order (desktop -> mobile): 1440, 980, 900, 720, 480
+ * Rule:
+ * 1) New responsive styles must use only the breakpoints above.
+ * 2) Do not add inline one-line @media blocks.
+ * 3) Keep component base style + responsive override close together.
+ */
+
+
+/* =====================================================
+   1. 부동산 홈 / 지도 / 필터바
+   ===================================================== */
