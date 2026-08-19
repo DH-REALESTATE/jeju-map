@@ -1,5 +1,5 @@
-<!-- REALJEJU 6.205 | 2026-08-18 -->
-<!-- REALJEJU VERSION: 6.205 -->
+<!-- REALJEJU 6.225 | 2026-08-19 -->
+<!-- REALJEJU VERSION: 6.225 -->
 
 
 
@@ -189,7 +189,7 @@ REALJEJU HTML 구조 / Ver 5.268
 				link.rel = "preload";
 				link.as = "script";
 				link.fetchPriority = "high";
-				link.href = "/js/app-core_6.205.min.js?v=20261071-nearby-next-margin-6180";
+				link.href = "/js/app-core_6.225.min.js?v=20261071-nearby-next-margin-6180";
 				document.head.appendChild(link);
 			})();
 		</script>
@@ -201,7 +201,7 @@ REALJEJU HTML 구조 / Ver 5.268
 				link.rel = "preload";
 				link.as = "script";
 				link.fetchPriority = "low";
-				link.href = "/js/app-features_6.205.min.js?v=20261071-nearby-next-margin-6180";
+				link.href = "/js/app-features_6.225.min.js?v=20261071-nearby-next-margin-6180";
 				document.head.appendChild(link);
 			})();
 		</script>
@@ -224,15 +224,15 @@ REALJEJU HTML 구조 / Ver 5.268
 				transition: none;
 			}
 		</style>
-		<link rel="stylesheet" href="/css/base-foundation_6.205.css?v=20261046-side-toggle">
-		<link rel="stylesheet" href="/css/core-map_6.205.css?v=20261046-side-toggle">
-		<link rel="stylesheet" href="/css/property-info_6.205.css?v=20261046-side-toggle">
-		<link rel="stylesheet" href="/css/workspace-app_6.205.css?v=20261046-side-toggle">
-		<link rel="stylesheet" href="/css/admin-app_6.205.css?v=20261046-side-toggle">
-		<link rel="stylesheet" href="/css/account_6.205.css?v=20261046-side-toggle">
-		<link rel="stylesheet" href="/css/base_6.205.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/base-foundation_6.225.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/core-map_6.225.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/property-info_6.225.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/workspace-app_6.225.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/admin-app_6.225.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/account_6.225.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/base_6.225.css?v=20261046-side-toggle">
 
-  <link rel="stylesheet" href="/css/service-modes_6.205.css?v=20261046-side-toggle">
+  <link rel="stylesheet" href="/css/service-modes_6.225.css?v=20261046-side-toggle">
 </head>
 	<body class="sidebar-list-collapsed realjeju-side-nav-enabled main-landing-page-open">
 		<script id="realjeju-initial-body-route-prime">
@@ -549,6 +549,7 @@ REALJEJU HTML 구조 / Ver 5.268
 			</div>
 		</section>
 		<aside class="realjeju-side-nav" id="realjejuSideNav" aria-label="주요 메뉴">
+			<button type="button" class="realjeju-mobile-side-nav-close" id="realjejuMobileSideNavClose" aria-label="왼쪽 메뉴 닫기" hidden><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
 			<nav class="realjeju-side-nav-menu realjeju-side-admin-tabs" aria-label="관리자 메뉴">
 				<button type="button" class="realjeju-side-nav-item realjeju-side-admin-tab active" data-admin-tab="notices">
 					<i class="fa-solid fa-bullhorn" aria-hidden="true"></i>
@@ -641,13 +642,17 @@ REALJEJU HTML 구조 / Ver 5.268
 				</button>
 			</nav>
 			<div class="realjeju-side-admin-version" id="realjejuSideAdminVersion" aria-hidden="true" hidden>
-				<span class="topbar-version-text">6.205</span>
+				<span class="topbar-version-text">6.225</span>
 			</div>
 		</aside>
 		<button type="button" class="realjeju-side-nav-toggle" id="realjejuSideNavToggle" aria-controls="realjejuSideNav" aria-expanded="true" aria-label="왼쪽 메뉴 접기">
 			<i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
 			<span>접기</span>
 		</button>
+		<button type="button" class="realjeju-mobile-side-nav-trigger" id="realjejuMobileSideNavTrigger" aria-controls="realjejuSideNav" aria-expanded="false" hidden>
+			<i class="fa-solid fa-bars" aria-hidden="true"></i><span>메뉴</span>
+		</button>
+		<button type="button" class="realjeju-mobile-side-nav-backdrop" id="realjejuMobileSideNavBackdrop" aria-label="왼쪽 메뉴 닫기" hidden></button>
 		<aside class="global-category-side-panel" id="globalCategorySidePanel" aria-hidden="true">
 			<div class="global-category-side-head">
 				<div class="global-category-side-title">
@@ -5996,7 +6001,7 @@ REALJEJU HTML 구조 / Ver 5.268
 			}
 		</script>
 	<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-	<script src="/js/bootstrap_6.205.min.js?v=20261071-nearby-next-margin-6180"></script>
+	<script src="/js/bootstrap_6.225.min.js?v=20261071-nearby-next-margin-6180"></script>
 
 
 <script>
