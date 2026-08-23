@@ -1,5 +1,5 @@
-<!-- REALJEJU 6.225 | 2026-08-19 -->
-<!-- REALJEJU VERSION: 6.225 -->
+<!-- REALJEJU 6.275 | 2026-08-19 -->
+<!-- REALJEJU VERSION: 6.275 -->
 
 
 
@@ -189,7 +189,7 @@ REALJEJU HTML 구조 / Ver 5.268
 				link.rel = "preload";
 				link.as = "script";
 				link.fetchPriority = "high";
-				link.href = "/js/app-core_6.225.min.js?v=20261071-nearby-next-margin-6180";
+				link.href = "/js/app-core_6.275.min.js?v=20261071-nearby-next-margin-6180";
 				document.head.appendChild(link);
 			})();
 		</script>
@@ -201,7 +201,7 @@ REALJEJU HTML 구조 / Ver 5.268
 				link.rel = "preload";
 				link.as = "script";
 				link.fetchPriority = "low";
-				link.href = "/js/app-features_6.225.min.js?v=20261071-nearby-next-margin-6180";
+				link.href = "/js/app-features_6.275.min.js?v=20261071-nearby-next-margin-6180";
 				document.head.appendChild(link);
 			})();
 		</script>
@@ -224,15 +224,15 @@ REALJEJU HTML 구조 / Ver 5.268
 				transition: none;
 			}
 		</style>
-		<link rel="stylesheet" href="/css/base-foundation_6.225.css?v=20261046-side-toggle">
-		<link rel="stylesheet" href="/css/core-map_6.225.css?v=20261046-side-toggle">
-		<link rel="stylesheet" href="/css/property-info_6.225.css?v=20261046-side-toggle">
-		<link rel="stylesheet" href="/css/workspace-app_6.225.css?v=20261046-side-toggle">
-		<link rel="stylesheet" href="/css/admin-app_6.225.css?v=20261046-side-toggle">
-		<link rel="stylesheet" href="/css/account_6.225.css?v=20261046-side-toggle">
-		<link rel="stylesheet" href="/css/base_6.225.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/base-foundation_6.275.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/core-map_6.275.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/property-info_6.275.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/workspace-app_6.275.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/admin-app_6.275.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/account_6.275.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/base_6.275.css?v=20261046-side-toggle">
 
-  <link rel="stylesheet" href="/css/service-modes_6.225.css?v=20261046-side-toggle">
+  <link rel="stylesheet" href="/css/service-modes_6.275.css?v=20261046-side-toggle">
 </head>
 	<body class="sidebar-list-collapsed realjeju-side-nav-enabled main-landing-page-open">
 		<script id="realjeju-initial-body-route-prime">
@@ -586,6 +586,11 @@ REALJEJU HTML 구조 / Ver 5.268
 					<i class="fa-solid fa-house" aria-hidden="true"></i>
 					<span>부동산 홈</span>
 				</button>
+				<div class="realjeju-mobile-flat-line realjeju-mobile-flat-line-after-home" aria-hidden="true"></div>
+				<aside class="realjeju-side-recent-ad realjeju-mobile-home-ad" aria-label="서비스 광고">
+					<span class="realjeju-side-recent-ad-badge">AD</span>
+				</aside>
+				<div class="realjeju-mobile-flat-line realjeju-mobile-flat-line-after-ad" aria-hidden="true"></div>
 				<button type="button" class="realjeju-side-nav-item" data-side-nav-action="favorites">
 					<i class="fa-solid fa-heart" aria-hidden="true"></i>
 					<span>관심 부동산</span>
@@ -642,7 +647,7 @@ REALJEJU HTML 구조 / Ver 5.268
 				</button>
 			</nav>
 			<div class="realjeju-side-admin-version" id="realjejuSideAdminVersion" aria-hidden="true" hidden>
-				<span class="topbar-version-text">6.225</span>
+				<span class="topbar-version-text">6.275</span>
 			</div>
 		</aside>
 		<button type="button" class="realjeju-side-nav-toggle" id="realjejuSideNavToggle" aria-controls="realjejuSideNav" aria-expanded="true" aria-label="왼쪽 메뉴 접기">
@@ -2902,8 +2907,7 @@ REALJEJU HTML 구조 / Ver 5.268
 					<div class="maintenance-form-row maintenance-fee-row maintenance-fixed-detail-row">
 						<label class="property-form-label">기타</label>
 						<div class="maintenance-form-field maintenance-fee-field maintenance-etc-fee-field">
-							<label class="property-radio-option"><input type="radio" name="maintenanceEtcType" value="none" checked /><span>없음</span></label>
-							<label class="property-radio-option"><input type="radio" name="maintenanceEtcType" value="usage" /><span>쓴 만큼</span></label>
+							<label class="property-radio-option"><input type="radio" name="maintenanceEtcType" value="usage" checked /><span>쓴 만큼</span></label>
 							<label class="property-radio-option"><input type="radio" name="maintenanceEtcType" value="fixed" /><span>정액</span></label>
 							<div class="property-unit-input"><input type="text" class="property-register-input" id="maintenanceEtcInput" placeholder="0" disabled /><span class="property-unit-label">원</span></div>
 						</div>
@@ -3113,8 +3117,7 @@ REALJEJU HTML 구조 / Ver 5.268
 	<div class="property-register-bottom-bar" id="propertyRegisterBottomBar">
 		<div class="property-register-bottom-inner">
 			<p class="property-register-legal-notice">
-				매물 등록 시에 공인중개사법 및 하위 법령, 중개대상물의 표시·광고 명시사항 세부기준 등을 준수해야 하며,<br>
-				이를 준수하지 않아 발생하는 불이익에 대해 당사는 책임지지 않습니다.
+				매물 등록 시에 공인중개사법 및 하위 법령, 중개대상물의 표시·광고 명시사항 세부기준 등을 준수해야 하며, 이를 준수하지 않아 발생하는 불이익에 대해 당사는 책임지지 않습니다.
 			</p>
 			<div class="property-register-bottom-actions">
 				<button type="button" class="property-register-bottom-btn draft" id="propertyDraftSaveBtn">임시저장</button>
@@ -4932,7 +4935,11 @@ REALJEJU HTML 구조 / Ver 5.268
 		<div class="map-center-region-label" id="mapCenterRegionLabel" aria-live="polite" hidden>
 		</div>
 		<!-- 5.001: 설정과 현위치의 기능은 유지하고 사용자가 요청한 두 버튼의 자리만 교환합니다. -->
-		<div class="map-zoom-stack" aria-label="설정">
+		<div class="map-zoom-stack" aria-label="지도 확대·축소 및 설정">
+			<div class="mobile-map-zoom-controls" aria-label="지도 확대·축소">
+				<button type="button" id="mobileMapZoomInBtn" aria-label="지도 확대">+</button>
+				<button type="button" id="mobileMapZoomOutBtn" aria-label="지도 축소">&minus;</button>
+			</div>
 			<div class="map-settings-tool-group map-settings-bottom-group" id="mapSettingsToolGroup" aria-label="설정 도구" hidden>
 				<button type="button" class="map-current-btn" id="mapSettingsToolBtn" aria-expanded="false" aria-label="설정">
 					<i class="fa-solid fa-gear" aria-hidden="true"></i>
@@ -6001,7 +6008,7 @@ REALJEJU HTML 구조 / Ver 5.268
 			}
 		</script>
 	<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-	<script src="/js/bootstrap_6.225.min.js?v=20261071-nearby-next-margin-6180"></script>
+	<script src="/js/bootstrap_6.275.min.js?v=20261071-nearby-next-margin-6180"></script>
 
 
 <script>
