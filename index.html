@@ -1,5 +1,5 @@
-<!-- REALJEJU 6.471 | 2026-08-19 -->
-<!-- REALJEJU VERSION: 6.471 -->
+<!-- REALJEJU 6.636 | 2026-08-19 -->
+<!-- REALJEJU VERSION: 6.636 -->
 
 
 
@@ -169,7 +169,6 @@ REALJEJU HTML 구조 / Ver 5.268
 					document.documentElement.classList.remove("realjeju-route-booting");
 				};
 				window.setTimeout(function () {
-					if (normalizedPath === "/properties") return;
 					if (typeof window.realjejuReleaseInitialRouteGuard === "function") {
 						window.realjejuReleaseInitialRouteGuard();
 					}
@@ -189,7 +188,7 @@ REALJEJU HTML 구조 / Ver 5.268
 				link.rel = "preload";
 				link.as = "script";
 				link.fetchPriority = "high";
-				link.href = "/js/app-core_6.471.min.js?v=20261071-nearby-next-margin-6180";
+				link.href = "/js/app-core_6.636.min.js?v=20261071-nearby-next-margin-6180";
 				document.head.appendChild(link);
 				var kakaoSdkLink = document.createElement("link");
 				kakaoSdkLink.rel = "preload";
@@ -207,7 +206,7 @@ REALJEJU HTML 구조 / Ver 5.268
 				link.rel = "preload";
 				link.as = "script";
 				link.fetchPriority = "low";
-				link.href = "/js/app-features_6.471.min.js?v=20261071-nearby-next-margin-6180";
+				link.href = "/js/app-features_6.636.min.js?v=20261071-nearby-next-margin-6180";
 				document.head.appendChild(link);
 			})();
 		</script>
@@ -219,10 +218,10 @@ REALJEJU HTML 구조 / Ver 5.268
 			html.realjeju-route-booting body {
 				visibility: visible;
 				opacity: 1;
-				pointer-events: none;
 			}
 			html.realjeju-route-booting body .app {
 				visibility: hidden;
+				pointer-events: none;
 			}
 			html.realjeju-route-booting body .app .map-wrap,
 			html.realjeju-route-booting body .app .map-wrap #map {
@@ -237,15 +236,15 @@ REALJEJU HTML 구조 / Ver 5.268
 				transition: none;
 			}
 		</style>
-		<link rel="stylesheet" href="/css/base-foundation_6.471.css?v=20261046-side-toggle">
-		<link rel="stylesheet" href="/css/core-map_6.471.css?v=20261046-side-toggle">
-		<link rel="stylesheet" href="/css/property-info_6.471.css?v=20261046-side-toggle">
-		<link rel="stylesheet" href="/css/workspace-app_6.471.css?v=20261046-side-toggle">
-		<link rel="stylesheet" href="/css/admin-app_6.471.css?v=20261046-side-toggle">
-		<link rel="stylesheet" href="/css/account_6.471.css?v=20261046-side-toggle">
-		<link rel="stylesheet" href="/css/base_6.471.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/base-foundation_6.636.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/core-map_6.636.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/property-info_6.636.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/workspace-app_6.636.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/admin-app_6.636.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/account_6.636.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/base_6.636.css?v=20261046-side-toggle">
 
-  <link rel="stylesheet" href="/css/service-modes_6.471.css?v=20261046-side-toggle">
+  <link rel="stylesheet" href="/css/service-modes_6.636.css?v=20261046-side-toggle">
 </head>
 	<body class="sidebar-list-collapsed realjeju-side-nav-enabled main-landing-page-open">
 		<script id="realjeju-initial-body-route-prime">
@@ -318,7 +317,11 @@ REALJEJU HTML 구조 / Ver 5.268
 					</div>
 					<button type="button" class="global-topbar-my-suite-link" id="globalTopbarMySuiteLink" data-global-my-suite-link><span>마이페이지</span><span class="global-topbar-my-suite-arrow" aria-hidden="true">&gt;</span></button>
 				</div>
-				<div class="mobile-topbar-left-actions" id="mobileTopbarLeftActions" aria-label="모바일 검색"></div>
+				<div class="mobile-topbar-left-actions" id="mobileTopbarLeftActions" aria-label="모바일 메뉴 및 검색">
+					<button type="button" class="realjeju-mobile-side-nav-trigger" id="realjejuMobileSideNavTrigger" aria-controls="realjejuSideNav" aria-expanded="false">
+						<i class="fa-solid fa-bars" aria-hidden="true"></i><span>메뉴</span>
+					</button>
+				</div>
 				
 				
 				
@@ -381,7 +384,7 @@ REALJEJU HTML 구조 / Ver 5.268
 				
 				<script>
 					(function setupCanonicalMobileShellStructure() {
-						var mobileQuery = window.matchMedia("(max-width: 760px)");
+						var mobileQuery = window.matchMedia("(max-width: 850px)");
 						var homes = new Map();
 						var observer = null;
 						var controlObserver = null;
@@ -461,6 +464,55 @@ REALJEJU HTML 구조 / Ver 5.268
 							});
 						}
 
+						var horizontalDragScrollControls = new WeakSet();
+						function enableHorizontalDragScroll(node) {
+							if (!node || horizontalDragScrollControls.has(node)) return;
+							horizontalDragScrollControls.add(node);
+							node.classList.add("realjeju-horizontal-drag-scroll");
+							var pointerId = null;
+							var startX = 0;
+							var startScrollLeft = 0;
+							var dragged = false;
+							var suppressClick = false;
+							var dragThreshold = 6;
+							function stopDragging(event) {
+								if (pointerId === null || (event && event.pointerId !== pointerId)) return;
+								if (dragged) suppressClick = true;
+								if (node.hasPointerCapture && node.hasPointerCapture(pointerId)) node.releasePointerCapture(pointerId);
+								pointerId = null;
+								dragged = false;
+								node.classList.remove("is-dragging");
+							}
+							node.addEventListener("pointerdown", function(event) {
+								if (event.button !== 0 || node.scrollWidth <= node.clientWidth) return;
+								pointerId = event.pointerId;
+								startX = event.clientX;
+								startScrollLeft = node.scrollLeft;
+								dragged = false;
+								suppressClick = false;
+							});
+							node.addEventListener("pointermove", function(event) {
+								if (event.pointerId !== pointerId) return;
+								var deltaX = event.clientX - startX;
+								if (!dragged) {
+									if (Math.abs(deltaX) < dragThreshold) return;
+									dragged = true;
+									if (node.setPointerCapture) node.setPointerCapture(pointerId);
+									node.classList.add("is-dragging");
+								}
+								node.scrollLeft = startScrollLeft - deltaX;
+								event.preventDefault();
+							});
+							node.addEventListener("pointerup", stopDragging);
+							node.addEventListener("pointercancel", stopDragging);
+							node.addEventListener("click", function(event) {
+								if (!suppressClick) return;
+								suppressClick = false;
+								event.preventDefault();
+								event.stopImmediatePropagation();
+							}, true);
+						}
+
 						function isMapShell() {
 							if (!document.body) return false;
 							var category = String(document.body.dataset.globalCategory || "realestate");
@@ -474,8 +526,150 @@ REALJEJU HTML 구조 / Ver 5.268
 								&& !document.body.classList.contains("notice-page-open");
 						}
 
-						function syncNow() {
+						var mapToolStackCollapseControls = new WeakSet();
+						var mobileAccountMenuBackdropControls = new WeakSet();
+
+						function setMapToolStackCollapsed(stack, button, collapsed) {
+							if (!stack || !button) return;
+							var controlGroup = button.closest(".map-tool-stack-collapse-group");
+							var measuredHeight = Math.ceil(
+								(controlGroup && controlGroup.getBoundingClientRect().height)
+								|| button.getBoundingClientRect().height
+								|| button.offsetHeight
+								|| 0
+							);
+							if (measuredHeight > 0) {
+								var collapsedHeight = measuredHeight + "px";
+								if (stack.style.getPropertyValue("--map-tool-stack-collapsed-height") !== collapsedHeight) {
+									stack.style.setProperty("--map-tool-stack-collapsed-height", collapsedHeight);
+								}
+							}
+							stack.classList.toggle("map-tool-stack-collapsed", collapsed);
+							if (stack.id === "mapSideTools" && document.body) {
+								document.body.classList.toggle("map-right-tool-stack-collapsed", collapsed);
+							}
+							button.setAttribute("aria-expanded", collapsed ? "false" : "true");
+							button.setAttribute("aria-label", collapsed ? "지도 도구 펼치기" : "지도 도구 접기");
+							button.title = collapsed ? "지도 도구 펼치기" : "지도 도구 접기";
+							var icon = button.querySelector("i");
+							if (icon) icon.className = collapsed ? "fa-solid fa-circle-chevron-down" : "fa-solid fa-circle-chevron-up";
+						}
+
+						function ensureMapToolStackCollapseControl(stack, enabled) {
+							if (!stack) return;
+							var controlGroup = stack.querySelector(":scope > .map-tool-stack-collapse-group");
+							var button = controlGroup && controlGroup.querySelector(".map-tool-stack-collapse-control");
+							if (!enabled) {
+								if (controlGroup) controlGroup.remove();
+								stack.classList.remove("map-tool-stack-collapsible", "map-tool-stack-collapsed");
+								stack.style.removeProperty("--map-tool-stack-collapsed-height");
+								return;
+							}
+
+							stack.classList.add("map-tool-stack-collapsible");
+							if (!controlGroup) {
+								controlGroup = document.createElement("div");
+								controlGroup.className = "map-tool-group map-unit-tool-group map-tool-stack-collapse-group";
+								stack.insertBefore(controlGroup, stack.firstChild);
+							}
+							if (!button) {
+								button = document.createElement("button");
+								button.type = "button";
+								button.className = "map-tool-btn map-tool-stack-collapse-control";
+								button.innerHTML = '<span class="map-tool-stack-collapse-icon" aria-hidden="true"><i class="fa-solid fa-circle-chevron-up"></i></span>';
+								controlGroup.appendChild(button);
+							}
+
+							if (!mapToolStackCollapseControls.has(button)) {
+								button.addEventListener("pointerdown", function(event) {
+									event.stopPropagation();
+								});
+								button.addEventListener("click", function(event) {
+									event.preventDefault();
+									event.stopPropagation();
+									setMapToolStackCollapsed(stack, button, !stack.classList.contains("map-tool-stack-collapsed"));
+								});
+								mapToolStackCollapseControls.add(button);
+							}
+
+							setMapToolStackCollapsed(stack, button, stack.classList.contains("map-tool-stack-collapsed"));
+						}
+
+						function syncMapToolStackCollapseControls() {
+							ensureMapToolStackCollapseControl(document.getElementById("mapSideTools"), true);
+							ensureMapToolStackCollapseControl(
+								document.querySelector(".parcel-trade-left-tool-stack"),
+								mobileQuery.matches
+							);
+						}
+
+						function ensureMobileAccountMenuCloseControl(menu, profile) {
+							if (!menu) return null;
+							var header = document.getElementById("realjejuMobileAccountMenuHeader");
+							if (!header) {
+								header = document.createElement("div");
+								header.id = "realjejuMobileAccountMenuHeader";
+								header.className = "realjeju-mobile-account-drawer-header";
+								header.textContent = "마이페이지";
+							}
+							var closeButton = document.getElementById("realjejuMobileAccountMenuClose");
+							if (!closeButton) {
+								closeButton = document.createElement("button");
+								closeButton.type = "button";
+								closeButton.id = "realjejuMobileAccountMenuClose";
+								closeButton.setAttribute("aria-label", "마이페이지 메뉴 닫기");
+								closeButton.title = "닫기";
+								closeButton.innerHTML = '<i class="fa-solid fa-xmark" aria-hidden="true"></i>';
+								closeButton.addEventListener("click", function(event) {
+									event.preventDefault();
+									event.stopPropagation();
+									if (typeof window.closeGlobalTopbarMoreMenu === "function") {
+										window.closeGlobalTopbarMoreMenu();
+										return;
+									}
+									menu.hidden = true;
+									menu.classList.remove("open");
+									menu.setAttribute("aria-hidden", "true");
+									menu.setAttribute("inert", "");
+									if (profile) profile.setAttribute("aria-expanded", "false");
+								});
+							}
+							if (header.parentElement !== menu || header !== menu.firstElementChild) {
+								menu.insertBefore(header, menu.firstChild);
+							}
+							if (closeButton.parentElement !== menu || closeButton.previousElementSibling !== header) {
+								menu.insertBefore(closeButton, header.nextSibling);
+							}
+							header.hidden = false;
+							closeButton.hidden = false;
+							return closeButton;
+						}
+
+						function bindMobileAccountMenuBackdropControl(backdrop, menu, profile) {
+							if (!backdrop || mobileAccountMenuBackdropControls.has(backdrop)) return;
+							backdrop.addEventListener("click", function(event) {
+								if (!document.body || !document.body.classList.contains("realjeju-mobile-account-menu-open")) return;
+								event.preventDefault();
+								event.stopPropagation();
+								if (typeof window.closeGlobalTopbarMoreMenu === "function") {
+									window.closeGlobalTopbarMoreMenu();
+									return;
+								}
+								if (menu) {
+									menu.hidden = true;
+									menu.classList.remove("open");
+									menu.setAttribute("aria-hidden", "true");
+									menu.setAttribute("inert", "");
+								}
+								document.body.classList.remove("realjeju-mobile-account-menu-open");
+								if (profile) profile.setAttribute("aria-expanded", "false");
+							});
+							mobileAccountMenuBackdropControls.add(backdrop);
+						}
+
+function syncNow() {
 							scheduled = false;
+							syncMapToolStackCollapseControls();
 							resolveLandingServices();
 							var topbarInner = document.querySelector(".global-topbar .global-topbar-inner");
 							var slot = document.getElementById("mobileTopbarLeftActions");
@@ -486,13 +680,25 @@ REALJEJU HTML 구조 / Ver 5.268
 								slot.setAttribute("aria-label", "모바일 메뉴 및 검색");
 								topbarInner.appendChild(slot);
 							}
-							var sideTrigger = document.getElementById("realjejuMobileSideNavTrigger");
+    var sideTrigger = document.getElementById("realjejuMobileSideNavTrigger");
 							var searchTrigger = document.getElementById("mobileTopbarSearchTrigger");
 							var right = document.getElementById("globalTopbarRight");
 							var chat = document.getElementById("globalTopbarChatBtn");
 							var notification = document.getElementById("globalTopbarNotificationBtn");
 							var profile = document.getElementById("detailAuthTrigger");
+							var accountMenu = document.getElementById("globalTopbarMoreMenu");
+							var accountMenuHeader = document.getElementById("realjejuMobileAccountMenuHeader");
+							var accountMenuClose = document.getElementById("realjejuMobileAccountMenuClose");
+							var sideNavBackdrop = document.getElementById("realjejuMobileSideNavBackdrop");
 							var categoryMenu = document.getElementById("globalCategoryMenu");
+							var brokerHomeFilterbar = document.querySelector(".broker-home-filterbar");
+							var shareIconClass = mobileQuery.matches
+								? "fa-solid fa-share-nodes"
+								: "fa-solid fa-arrow-up-from-bracket";
+							document.querySelectorAll("#sidebarListShareBtn, #detailShareBtn, #partTimeDetailShareBtn").forEach(function(button) {
+								var icon = button.querySelector("i");
+								if (icon) icon.className = shareIconClass;
+							});
 							if (!primaryHome) {
 								primaryHome = document.querySelector('#realjejuSideNav .realjeju-side-primary-menu > .realjeju-side-nav-item[data-side-nav-action="home"]');
 							}
@@ -500,19 +706,28 @@ REALJEJU HTML 구조 / Ver 5.268
 								primaryHomeDivider = document.querySelector("#realjejuSideNav .realjeju-mobile-flat-line-after-home");
 							}
 
-							[sideTrigger, searchTrigger, chat, notification, profile, categoryMenu, primaryHome, primaryHomeDivider].forEach(remember);
-							[sideTrigger, searchTrigger, chat, notification, profile, categoryMenu].forEach(watchControl);
+							[sideTrigger, searchTrigger, chat, notification, profile, accountMenu, categoryMenu, primaryHome, primaryHomeDivider].forEach(remember);
+							[sideTrigger, searchTrigger, chat, notification, profile, accountMenu, categoryMenu].forEach(watchControl);
+							watchControl(document.body);
+							if (typeof window.syncRealjejuPageTopbarSearchLabels === "function") {
+								window.syncRealjejuPageTopbarSearchLabels();
+							}
+							if (mobileQuery.matches) enableHorizontalDragScroll(brokerHomeFilterbar);
+
+    if (slot && searchTrigger && searchTrigger.parentElement !== slot) slot.appendChild(searchTrigger);
 
 							if (!mobileQuery.matches) {
+								if (document.body) document.body.classList.remove("realjeju-mobile-account-menu-open");
 								restoreLandingServices();
-								restore(sideTrigger);
-								restore(searchTrigger);
 								restore(chat);
 								restore(notification);
 								restore(profile);
+								restore(accountMenu);
 								restore(categoryMenu);
 								restore(primaryHomeDivider);
 								restore(primaryHome);
+								if (accountMenuHeader) accountMenuHeader.hidden = true;
+								if (accountMenuClose) accountMenuClose.hidden = true;
 								return;
 							}
 
@@ -521,20 +736,28 @@ REALJEJU HTML 구조 / Ver 5.268
 							if (primaryHome && primaryHome.parentNode) primaryHome.parentNode.removeChild(primaryHome);
 							if (primaryHomeDivider && primaryHomeDivider.parentNode) primaryHomeDivider.parentNode.removeChild(primaryHomeDivider);
 
-							// A narrow desktop window enters the same mobile map shell as a phone.
-							// Restore the existing drawer trigger from any desktop hidden state before moving it.
-							if (sideTrigger && isMapShell()) {
-								sideTrigger.hidden = false;
-								sideTrigger.removeAttribute("hidden");
-								sideTrigger.removeAttribute("aria-hidden");
-								sideTrigger.style.removeProperty("display");
-								sideTrigger.style.removeProperty("visibility");
-								sideTrigger.style.removeProperty("opacity");
-								sideTrigger.style.removeProperty("pointer-events");
+    // A narrow desktop window enters the same mobile map shell as a phone.
+    // Markup owns the trigger slot; responsive CSS owns visibility.
+							if (typeof window.realjejuSyncMobileSideNavDrawer === "function") {
+								window.realjejuSyncMobileSideNavDrawer();
 							}
-
-							if (slot && sideTrigger && sideTrigger.parentElement !== slot) slot.appendChild(sideTrigger);
-							if (slot && searchTrigger && searchTrigger.parentElement !== slot) slot.appendChild(searchTrigger);
+							if (sideNavBackdrop && document.body && sideNavBackdrop.parentElement !== document.body) {
+								document.body.appendChild(sideNavBackdrop);
+							}
+							if (accountMenu && document.body && accountMenu.parentElement !== document.body) {
+								document.body.appendChild(accountMenu);
+							}
+							accountMenuClose = ensureMobileAccountMenuCloseControl(accountMenu, profile);
+							bindMobileAccountMenuBackdropControl(sideNavBackdrop, accountMenu, profile);
+							if (document.body) {
+								var accountMenuOpen = !!accountMenu
+									&& !accountMenu.hidden
+									&& (accountMenu.classList.contains("open") || accountMenu.getAttribute("aria-hidden") === "false");
+								document.body.classList.toggle("realjeju-mobile-account-menu-open", accountMenuOpen);
+								var anyMobileDrawerOpen = accountMenuOpen
+									|| document.body.classList.contains("realjeju-mobile-side-nav-open");
+								if (sideNavBackdrop) sideNavBackdrop.hidden = !anyMobileDrawerOpen;
+							}
 
 							if (right) {
 								var orderedButtons = [chat, notification, profile].filter(Boolean);
@@ -581,7 +804,16 @@ REALJEJU HTML 구조 / Ver 5.268
 						observer = new MutationObserver(scheduleSync);
 						controlObserver = new MutationObserver(scheduleSync);
 						observer.observe(document.documentElement, { childList: true, subtree: true });
-						if (typeof mobileQuery.addEventListener === "function") mobileQuery.addEventListener("change", scheduleSync);
+						if (typeof mobileQuery.addEventListener === "function") {
+							mobileQuery.addEventListener("change", scheduleSync);
+						} else if (typeof mobileQuery.addListener === "function") {
+							mobileQuery.addListener(scheduleSync);
+						}
+						window.addEventListener("resize", scheduleSync, { passive: true });
+						window.addEventListener("orientationchange", scheduleSync, { passive: true });
+						if (window.visualViewport) {
+							window.visualViewport.addEventListener("resize", scheduleSync, { passive: true });
+						}
 						if (document.readyState === "loading") {
 							document.addEventListener("DOMContentLoaded", scheduleSync, { once: true });
 						} else {
@@ -603,6 +835,24 @@ REALJEJU HTML 구조 / Ver 5.268
 							if (body.classList.contains(className) === enabled) return;
 							body.classList.toggle(className, enabled);
 						}
+
+						function closeMobileEducationSummarySheet() {
+							if (!mobileQuery.matches || !document.body) return;
+							setMobileBodyClassState(document.body, "education-facility-mobile-closing", true);
+							setMobileBodyClassState(document.body, "education-facility-mobile-expanded", false);
+							setMobileBodyClassState(document.body, "mobile-summary-sheet-dragging", false);
+							var panel = document.getElementById("educationFacilityDetailPanel");
+							if (panel) panel.style.removeProperty("--realjeju-mobile-listing-drag-height");
+							summarySheetDragState = null;
+						}
+
+						function prepareMobileEducationSummarySheet() {
+							if (!mobileQuery.matches || !document.body) return;
+							setMobileBodyClassState(document.body, "education-facility-mobile-closing", false);
+						}
+
+						window.realjejuCloseMobileEducationSummarySheet = closeMobileEducationSummarySheet;
+						window.realjejuPrepareMobileEducationSummarySheet = prepareMobileEducationSummarySheet;
 
 						function getMobileListingViewportHeight() {
 							var visualHeight = window.visualViewport ? Number(window.visualViewport.height) : 0;
@@ -708,6 +958,13 @@ REALJEJU HTML 구조 / Ver 5.268
 							if (closeIcon) closeIcon.className = "fa-solid " + (listSurfaceActive ? "fa-circle-xmark" : "fa-xmark");
 							var educationCloseIcon = educationCloseButton ? educationCloseButton.querySelector("i") : null;
 							if (educationCloseIcon) educationCloseIcon.className = "fa-solid " + (active && sheet.educationActive ? "fa-circle-xmark" : "fa-xmark");
+							var detailCloseButton = document.getElementById("detailCloseBtn");
+							var detailPanel = document.getElementById("sidebarDetailPanel");
+							var detailCloseIcon = detailCloseButton ? detailCloseButton.querySelector("i") : null;
+							if (detailCloseIcon) {
+								var detailOpen = mobileQuery.matches && detailPanel && detailPanel.getAttribute("aria-hidden") === "false";
+								detailCloseIcon.className = "fa-solid " + (detailOpen ? "fa-circle-xmark" : "fa-xmark");
+							}
 							if (title) {
 								title.classList.toggle("mobile-summary-drag-handle", listSurfaceActive);
 								if (listSurfaceActive) title.setAttribute("title", expanded ? "아래로 드래그하면 패널이 축소됩니다." : "위로 드래그하면 패널이 전체 화면으로 확장됩니다.");
@@ -755,12 +1012,12 @@ REALJEJU HTML 구조 / Ver 5.268
 								if (drag.wasExpanded) nextExpanded = !(deltaY > 56 || expansionProgress < 0.72);
 								else nextExpanded = deltaY < -56 || expansionProgress > 0.28;
 							}
+							setMobileSummarySheetExpanded(nextExpanded);
 							setMobileBodyClassState(document.body, "mobile-summary-sheet-dragging", false);
 							if (panel) panel.style.removeProperty("--realjeju-mobile-listing-drag-height");
 							try {
 								if (drag.handle.hasPointerCapture(event.pointerId)) drag.handle.releasePointerCapture(event.pointerId);
 							} catch (error) {}
-							setMobileSummarySheetExpanded(nextExpanded);
 							if (drag.moved) event.preventDefault();
 						}
 
@@ -806,9 +1063,7 @@ REALJEJU HTML 구조 / Ver 5.268
 								if (!sheet.active) return;
 								var panel = sheet.educationActive
 									? sheet.educationPanel
-									: (sheet.areaActive
-										? sheet.areaPanel
-										: handle.closest(".sidebar-list-panel"));
+									: handle.closest(".sidebar-list-panel");
 								if (!panel) return;
 								var viewportHeight = getMobileListingViewportHeight();
 								var collapsedHeight = getMobileSummarySheetCollapsedHeight(panel, sheet);
@@ -901,16 +1156,8 @@ REALJEJU HTML 구조 / Ver 5.268
 							var statisticsPanel = document.querySelector(".parcel-region-trade-stats-panel");
 							var statisticsActive = mobileQuery.matches && !educationActive && !areaActive && !!statisticsPanel;
 							var statisticsRegionCode = statisticsPanel ? String(statisticsPanel.dataset.regionCode || "") : "";
-							var propertyList = document.getElementById("propertyList");
 							var sidebarListTitle = document.getElementById("sidebarListTitle");
 							var sidebarDetailPanel = document.getElementById("sidebarDetailPanel");
-							var listChildren = propertyList ? Array.from(propertyList.children) : [];
-							var hasStandardSortBar = listChildren.some(function(child) {
-								return child.classList && child.classList.contains("sidebar-list-sortbar");
-							});
-							var hasListingCard = listChildren.some(function(child) {
-								return child.matches && child.matches(".card[data-id]");
-							});
 							var listingTitle = sidebarListTitle ? String(sidebarListTitle.textContent || "").trim() : "";
 							var standardListingTitle = listingTitle === "매물 목록" || /^(?:제주시|서귀포시)(?:\s|$)/.test(listingTitle);
 							var listingDetailIsOpen = !!(sidebarDetailPanel && sidebarDetailPanel.getAttribute("aria-hidden") === "false")
@@ -918,14 +1165,17 @@ REALJEJU HTML 구조 / Ver 5.268
 								|| body.classList.contains("shared-detail-mode")
 								|| body.classList.contains("map-detail-panel-active")
 								|| body.classList.contains("global-detail-surface-open");
+							var managedWorkspaceActive = body.classList.contains("my-suite-page-open")
+								|| body.classList.contains("broker-home-page-open")
+								|| body.classList.contains("admin-page-open")
+								|| body.classList.contains("operator-page-open");
 							var listingActive = mobileQuery.matches
 								&& !educationActive
+								&& !managedWorkspaceActive
 								&& String(body.dataset.globalCategory || "realestate") === "realestate"
 								&& !body.classList.contains("sidebar-list-collapsed")
 								&& !listingDetailIsOpen
-								&& standardListingTitle
-								&& hasStandardSortBar
-								&& hasListingCard;
+								&& standardListingTitle;
 							if (panel !== activePropertyInfoPanel) {
 								activePropertyInfoPanel = panel;
 								setMobileBodyClassState(body, "parcel-property-mobile-detail-open", false);
@@ -1383,17 +1633,14 @@ REALJEJU HTML 구조 / Ver 5.268
 					<span>공지사항</span>
 				</button>
 			</nav>
-			<div class="realjeju-mobile-drawer-divider" aria-hidden="true"></div>
+			<div class="realjeju-mobile-drawer-divider realjeju-mobile-drawer-version-divider" aria-hidden="true"></div>
 			<div class="realjeju-side-admin-version" id="realjejuSideAdminVersion" aria-hidden="true" hidden>
-				<span class="topbar-version-text">6.471</span>
+				<span class="topbar-version-text">6.636</span>
 			</div>
 		</aside>
 		<button type="button" class="realjeju-side-nav-toggle" id="realjejuSideNavToggle" aria-controls="realjejuSideNav" aria-expanded="true" aria-label="왼쪽 메뉴 접기">
 			<i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
 			<span>접기</span>
-		</button>
-		<button type="button" class="realjeju-mobile-side-nav-trigger" id="realjejuMobileSideNavTrigger" aria-controls="realjejuSideNav" aria-expanded="false" hidden>
-			<i class="fa-solid fa-bars" aria-hidden="true"></i><span>메뉴</span>
 		</button>
 		<button type="button" class="realjeju-mobile-side-nav-backdrop" id="realjejuMobileSideNavBackdrop" aria-label="왼쪽 메뉴 닫기" hidden></button>
 		<aside class="global-category-side-panel" id="globalCategorySidePanel" aria-hidden="true">
@@ -1781,6 +2028,13 @@ REALJEJU HTML 구조 / Ver 5.268
 		</div>
 		<div class="admin-page-tab-panel active" data-admin-tab-panel="notices">
 		<div class="admin-notice-manager" id="adminNoticeManager">
+			<div class="admin-notice-list-head">
+				<h3 class="admin-notice-list-title">공지사항 목록</h3>
+				<span class="admin-notice-list-count" id="adminNoticeListCount">0건</span>
+			</div>
+			<div class="admin-notice-list" id="adminNoticeList">
+				<div class="admin-empty">공지사항을 불러오세요.</div>
+			</div>
 			<div class="admin-notice-head">
 				<div>
 					<h2 class="admin-notice-title">공지사항 관리</h2>
@@ -1832,13 +2086,6 @@ REALJEJU HTML 구조 / Ver 5.268
 					<button type="submit" class="my-suite-inquiry-primary">저장</button>
 				</div>
 			</form>
-			<div class="admin-notice-list-head">
-				<h3 class="admin-notice-list-title">공지사항 목록</h3>
-				<span class="admin-notice-list-count" id="adminNoticeListCount">0건</span>
-			</div>
-			<div class="admin-notice-list" id="adminNoticeList">
-				<div class="admin-empty">공지사항을 불러오세요.</div>
-			</div>
 		</div>
 		</div>
 			<div class="admin-page-tab-panel" data-admin-tab-panel="broker-applications">
@@ -2072,32 +2319,37 @@ REALJEJU HTML 구조 / Ver 5.268
 		</div>
 		<div class="admin-page-tab-panel" data-admin-tab-panel="listings">
 			<div class="admin-listings-content">
-				<div class="my-suite-favorites-filterbar admin-listings-filterbar">
-					<button type="button" class="broker-home-filter-btn active" data-admin-listing-view="all">전체 <span id="adminListingsAllCount">0</span></button>
-					<button type="button" class="broker-home-filter-btn" data-admin-listing-view="reported">신고 매물 <span id="adminListingsReportedCount">0</span></button>
-					<button type="button" class="broker-home-filter-btn" data-admin-listing-view="closed">거래완료 <span id="adminListingsClosedCount">0</span></button>
-					<button type="button" class="broker-home-filter-btn" data-admin-listing-view="hidden">숨김 <span id="adminListingsHiddenCount">0</span></button>
-					<div class="broker-home-filter-item">
-						<button type="button" class="broker-home-filter-btn" id="adminListingPropertyTypeFilterBtn" data-admin-listing-filter-menu="property">매물 유형 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
-						<div class="broker-home-filter-menu extra-filter-menu type-filter-menu broker-home-map-style-menu" id="adminListingPropertyTypeFilterMenu"></div>
+				<div class="my-suite-favorites-filterbar admin-listings-filterbar management-list-filterbar">
+					<div class="management-list-filter-row management-list-filter-row-overview">
+						<button type="button" class="broker-home-filter-btn active" data-admin-listing-view="all">전체 <span id="adminListingsAllCount">0</span></button>
+						<button type="button" class="broker-home-filter-btn" data-admin-listing-view="reported">신고 매물 <span id="adminListingsReportedCount">0</span></button>
+						<button type="button" class="broker-home-filter-btn" data-admin-listing-view="closed">거래완료 <span id="adminListingsClosedCount">0</span></button>
+						<button type="button" class="broker-home-filter-btn" data-admin-listing-view="hidden">숨김 <span id="adminListingsHiddenCount">0</span></button>
+						<div class="broker-home-filter-spacer" aria-hidden="true"></div>
+						<button type="button" class="broker-home-filter-btn" data-admin-listing-view="deleted">휴지통 <span id="adminListingsDeletedCount">0</span></button>
 					</div>
-					<div class="broker-home-filter-item">
-						<button type="button" class="broker-home-filter-btn" id="adminListingPriceTypeFilterBtn" data-admin-listing-filter-menu="deal">가격 유형 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
-						<div class="broker-home-filter-menu extra-filter-menu deal-filter-menu broker-home-price-type-menu broker-home-map-style-menu" id="adminListingPriceTypeFilterMenu"></div>
+					<div class="management-list-filter-row management-list-filter-row-filters">
+						<div class="broker-home-filter-item">
+													<button type="button" class="broker-home-filter-btn" id="adminListingPropertyTypeFilterBtn" data-admin-listing-filter-menu="property">매물 유형 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
+													<div class="broker-home-filter-menu extra-filter-menu type-filter-menu broker-home-map-style-menu" id="adminListingPropertyTypeFilterMenu"></div>
+												</div>
+						<div class="broker-home-filter-item">
+													<button type="button" class="broker-home-filter-btn" id="adminListingPriceTypeFilterBtn" data-admin-listing-filter-menu="deal">가격 유형 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
+													<div class="broker-home-filter-menu extra-filter-menu deal-filter-menu broker-home-price-type-menu broker-home-map-style-menu" id="adminListingPriceTypeFilterMenu"></div>
+												</div>
+						<div class="broker-home-filter-item">
+													<button type="button" class="broker-home-filter-btn" id="adminListingAreaFilterBtn" data-admin-listing-filter-menu="area">면적 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
+													<div class="broker-home-filter-menu extra-filter-menu area-filter-menu broker-home-area-menu broker-home-map-style-menu" id="adminListingAreaFilterMenu"></div>
+												</div>
+						<div class="broker-home-filter-item">
+													<button type="button" class="broker-home-filter-btn" id="adminListingLandTypeFilterBtn" data-admin-listing-filter-menu="landType">지목 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
+													<div class="broker-home-filter-menu extra-filter-menu type-filter-menu land-type-filter-menu broker-home-land-type-menu broker-home-map-style-menu" id="adminListingLandTypeFilterMenu"></div>
+												</div>
+						<div class="broker-home-filter-item">
+													<button type="button" class="broker-home-filter-btn" id="adminListingLandUseZoneFilterBtn" data-admin-listing-filter-menu="landUseZone">용도지역 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
+													<div class="broker-home-filter-menu extra-filter-menu type-filter-menu broker-home-land-use-zone-menu broker-home-map-style-menu" id="adminListingLandUseZoneFilterMenu"></div>
+												</div>
 					</div>
-					<div class="broker-home-filter-item">
-						<button type="button" class="broker-home-filter-btn" id="adminListingAreaFilterBtn" data-admin-listing-filter-menu="area">면적 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
-						<div class="broker-home-filter-menu extra-filter-menu area-filter-menu broker-home-area-menu broker-home-map-style-menu" id="adminListingAreaFilterMenu"></div>
-					</div>
-					<div class="broker-home-filter-item">
-						<button type="button" class="broker-home-filter-btn" id="adminListingLandTypeFilterBtn" data-admin-listing-filter-menu="landType">지목 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
-						<div class="broker-home-filter-menu extra-filter-menu type-filter-menu land-type-filter-menu broker-home-land-type-menu broker-home-map-style-menu" id="adminListingLandTypeFilterMenu"></div>
-					</div>
-					<div class="broker-home-filter-item">
-						<button type="button" class="broker-home-filter-btn" id="adminListingLandUseZoneFilterBtn" data-admin-listing-filter-menu="landUseZone">용도지역 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
-						<div class="broker-home-filter-menu extra-filter-menu type-filter-menu broker-home-land-use-zone-menu broker-home-map-style-menu" id="adminListingLandUseZoneFilterMenu"></div>
-					</div>
-					<button type="button" class="broker-home-filter-btn" data-admin-listing-view="deleted">휴지통 <span id="adminListingsDeletedCount">0</span></button>
 				</div>
 				<div class="broker-listing-shell admin-listings-shell">
 					<div class="broker-listing-list admin-listings-list" id="adminListingsList">
@@ -2210,45 +2462,50 @@ REALJEJU HTML 구조 / Ver 5.268
 			</div>
 		</div>
 		
-		<div class="broker-home-filterbar" id="brokerHomeFilterbar">
-			<div class="broker-home-filter-item">
-				<button type="button" class="broker-home-filter-btn active" data-broker-home-status-filter="trading">거래중 <span id="brokerTradingCount">0</span></button>
-			</div>
-			<div class="broker-home-filter-item">
-				<button type="button" class="broker-home-filter-btn" data-broker-home-status-filter="closed">거래완료 <span id="brokerClosedCount">0</span></button>
-			</div>
-			<div class="broker-home-filter-item">
-				<button type="button" class="broker-home-filter-btn" data-broker-home-status-filter="hidden">숨김 <span id="brokerHiddenCount">0</span></button>
-			</div>
-			<div class="broker-home-filter-item">
-				<button type="button" class="broker-home-filter-btn" data-broker-home-status-filter="draft">임시저장 <span id="brokerDraftCount">0</span></button>
-			</div>
-			<div class="broker-home-filter-item">
-				<button type="button" class="broker-home-filter-btn" id="brokerPropertyTypeFilterBtn" data-broker-home-filter-menu="property">매물 유형 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
-				<div class="broker-home-filter-menu extra-filter-menu type-filter-menu broker-home-map-style-menu" id="brokerPropertyTypeFilterMenu"></div>
-			</div>
+		<div class="broker-home-filterbar management-list-filterbar" id="brokerHomeFilterbar">
+			<div class="management-list-filter-row management-list-filter-row-overview">
 				<div class="broker-home-filter-item">
-					<button type="button" class="broker-home-filter-btn" id="brokerPriceTypeFilterBtn" data-broker-home-filter-menu="deal">가격 유형 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
-					<div class="broker-home-filter-menu extra-filter-menu deal-filter-menu broker-home-price-type-menu broker-home-map-style-menu" id="brokerPriceTypeFilterMenu"></div>
-				</div>
+									<button type="button" class="broker-home-filter-btn active" data-broker-home-status-filter="all">전체 <span id="brokerAllCount">0</span></button>
+								</div>
 				<div class="broker-home-filter-item">
-					<button type="button" class="broker-home-filter-btn" id="brokerAreaFilterBtn" data-broker-home-filter-menu="area">면적 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
-					<div class="broker-home-filter-menu extra-filter-menu area-filter-menu broker-home-area-menu broker-home-map-style-menu" id="brokerAreaFilterMenu"></div>
-				</div>
+									<button type="button" class="broker-home-filter-btn" data-broker-home-status-filter="trading">거래중 <span id="brokerTradingCount">0</span></button>
+								</div>
 				<div class="broker-home-filter-item">
-					<button type="button" class="broker-home-filter-btn" id="brokerLandTypeFilterBtn" data-broker-home-filter-menu="landType">지목 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
-					<div class="broker-home-filter-menu extra-filter-menu type-filter-menu land-type-filter-menu broker-home-land-type-menu broker-home-map-style-menu" id="brokerLandTypeFilterMenu"></div>
-				</div>
+									<button type="button" class="broker-home-filter-btn" data-broker-home-status-filter="closed">거래완료 <span id="brokerClosedCount">0</span></button>
+								</div>
 				<div class="broker-home-filter-item">
-					<button type="button" class="broker-home-filter-btn" id="brokerLandUseZoneFilterBtn" data-broker-home-filter-menu="landUseZone">용도지역 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
-					<div class="broker-home-filter-menu extra-filter-menu type-filter-menu broker-home-land-use-zone-menu broker-home-map-style-menu" id="brokerLandUseZoneFilterMenu"></div>
-				</div>
-				<div class="broker-home-filter-divider"></div>
+									<button type="button" class="broker-home-filter-btn" data-broker-home-status-filter="hidden">숨김 <span id="brokerHiddenCount">0</span></button>
+								</div>
+				<div class="broker-home-filter-item">
+									<button type="button" class="broker-home-filter-btn" data-broker-home-status-filter="draft">임시저장 <span id="brokerDraftCount">0</span></button>
+								</div>
 				<button type="button" class="broker-home-filter-btn" id="brokerBulkRefreshBtn">전체갱신</button>
-				<button type="button" class="broker-home-filter-btn">엑셀변환</button>
-			<div class="broker-home-filter-spacer" aria-hidden="true"></div>
-			<div class="broker-home-filter-item">
-				<button type="button" class="broker-home-filter-btn" data-broker-home-status-filter="deleted">휴지통 <span id="brokerDeletedCount">0</span></button>
+				<div class="broker-home-filter-spacer" aria-hidden="true"></div>
+				<div class="broker-home-filter-item">
+									<button type="button" class="broker-home-filter-btn" data-broker-home-status-filter="deleted">휴지통 <span id="brokerDeletedCount">0</span></button>
+								</div>
+			</div>
+			<div class="management-list-filter-row management-list-filter-row-filters">
+				<div class="broker-home-filter-item">
+									<button type="button" class="broker-home-filter-btn" id="brokerPropertyTypeFilterBtn" data-broker-home-filter-menu="property">매물 유형 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
+									<div class="broker-home-filter-menu extra-filter-menu type-filter-menu broker-home-map-style-menu" id="brokerPropertyTypeFilterMenu"></div>
+								</div>
+				<div class="broker-home-filter-item">
+									<button type="button" class="broker-home-filter-btn" id="brokerPriceTypeFilterBtn" data-broker-home-filter-menu="deal">가격 유형 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
+									<div class="broker-home-filter-menu extra-filter-menu deal-filter-menu broker-home-price-type-menu broker-home-map-style-menu" id="brokerPriceTypeFilterMenu"></div>
+								</div>
+				<div class="broker-home-filter-item">
+									<button type="button" class="broker-home-filter-btn" id="brokerAreaFilterBtn" data-broker-home-filter-menu="area">면적 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
+									<div class="broker-home-filter-menu extra-filter-menu area-filter-menu broker-home-area-menu broker-home-map-style-menu" id="brokerAreaFilterMenu"></div>
+								</div>
+				<div class="broker-home-filter-item">
+									<button type="button" class="broker-home-filter-btn" id="brokerLandTypeFilterBtn" data-broker-home-filter-menu="landType">지목 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
+									<div class="broker-home-filter-menu extra-filter-menu type-filter-menu land-type-filter-menu broker-home-land-type-menu broker-home-map-style-menu" id="brokerLandTypeFilterMenu"></div>
+								</div>
+				<div class="broker-home-filter-item">
+									<button type="button" class="broker-home-filter-btn" id="brokerLandUseZoneFilterBtn" data-broker-home-filter-menu="landUseZone">용도지역 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
+									<div class="broker-home-filter-menu extra-filter-menu type-filter-menu broker-home-land-use-zone-menu broker-home-map-style-menu" id="brokerLandUseZoneFilterMenu"></div>
+								</div>
 			</div>
 		</div>
 		<div class="broker-listing-shell" id="brokerListingsList">
@@ -2690,7 +2947,7 @@ REALJEJU HTML 구조 / Ver 5.268
 					<span class="myinfo-page-label">외부공유 아이디</span>
 					<div class="agency-public-id-field">
 						<div class="myinfo-page-value agency-public-id-display" id="brokerOfficePagePublicIdValue">-</div>
-						<p class="agency-public-id-help">※ 설정한 아이디로 중개사무소 매물 공유 주소가 만들어집니다.</p>
+						<p class="agency-public-id-help">※ 설정한 아이디로 중개사무소 매물 공유 주소가 생성됩니다.</p>
 					</div>
 				</div>
 				<div class="myinfo-page-row"><span class="myinfo-page-label">카카오 오픈 채팅방</span><span class="myinfo-page-value" id="brokerOfficePageKakaoValue">-</span></div>
@@ -2752,7 +3009,7 @@ REALJEJU HTML 구조 / Ver 5.268
 							<input type="text" class="profile-suite-input agency-public-id-input" id="brokerOfficePublicIdInput" placeholder="영문 숫자만 가능합니다." autocomplete="off" spellcheck="false" data-agency-public-id-input />
 							<button type="button" class="agency-public-id-check-btn" data-agency-public-id-check>중복 확인</button>
 						</div>
-						<p class="agency-public-id-help">※ 설정한 아이디로 중개사무소 매물 공유 주소가 만들어집니다.</p>
+						<p class="agency-public-id-help">※ 설정한 아이디로 중개사무소 매물 공유 주소가 생성됩니다.</p>
 						<div class="agency-public-id-meta">
 							<span class="agency-public-id-status" aria-live="polite" data-agency-public-id-status></span>
 						</div>
@@ -2800,7 +3057,7 @@ REALJEJU HTML 구조 / Ver 5.268
 							<input type="text" class="profile-suite-input agency-public-id-input" id="brokerOfficeEditPagePublicIdInput" data-agency-public-id-input minlength="4" maxlength="24" autocomplete="off" spellcheck="false" aria-describedby="brokerOfficeEditPagePublicIdStatus" placeholder="영문 숫자만 가능합니다." />
 							<button type="button" class="agency-public-id-check-btn" id="brokerOfficeEditPagePublicIdCheckBtn" data-agency-public-id-check>중복 확인</button>
 						</div>
-						<p class="agency-public-id-help">※ 설정한 아이디로 중개사무소 매물 공유 주소가 만들어집니다.</p>
+						<p class="agency-public-id-help">※ 설정한 아이디로 중개사무소 매물 공유 주소가 생성됩니다.</p>
 						<div class="agency-public-id-meta">
 							<span class="agency-public-id-status" id="brokerOfficeEditPagePublicIdStatus" data-agency-public-id-status aria-live="polite"></span>
 						</div>
@@ -5375,7 +5632,7 @@ REALJEJU HTML 구조 / Ver 5.268
 						</div>
 						<div class="detail-top-actions">
 							<button type="button" class="detail-icon-btn" id="detailShareBtn" aria-label="공유하기" title="공유하기">
-								<i class="fa-solid fa-arrow-up-from-bracket" aria-hidden="true"></i>
+								<i class="fa-solid fa-share-nodes" aria-hidden="true"></i>
 							</button>
 							<button type="button" class="detail-icon-btn detail-close-btn" id="detailCloseBtn" aria-label="종료" title="종료">
 								<i class="fa-solid fa-xmark" aria-hidden="true"></i>
@@ -6746,7 +7003,7 @@ REALJEJU HTML 구조 / Ver 5.268
 			}
 		</script>
 	<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-	<script src="/js/bootstrap_6.471.min.js?v=20261071-nearby-next-margin-6180"></script>
+	<script src="/js/bootstrap_6.636.min.js?v=20261071-nearby-next-margin-6180"></script>
 
 
 <script>
