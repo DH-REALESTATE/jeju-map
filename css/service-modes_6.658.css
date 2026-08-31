@@ -1,0 +1,2691 @@
+/* REALJEJU 6.658: shared map tool stack collapse owner. */
+.map-tool-stack-collapse-group
+{
+  border-radius: var(--map-control-radius, 12px);
+  background: transparent;
+  overflow: hidden;
+}
+
+.map-tool-stack-collapse-group > .map-tool-stack-collapse-control,
+.map-tool-stack-collapse-group > .map-tool-stack-collapse-control:hover,
+.map-tool-stack-collapse-group > .map-tool-stack-collapse-control:focus,
+.map-tool-stack-collapse-group > .map-tool-stack-collapse-control:focus-visible,
+.map-tool-stack-collapse-group > .map-tool-stack-collapse-control:active
+{
+  -webkit-appearance: none;
+  appearance: none;
+  border: 0;
+  border-radius: var(--map-control-radius, 12px);
+  background: #ffffff;
+  box-shadow: none;
+  outline: 0;
+  overflow: hidden;
+  transition: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.map-tool-stack-collapse-group > .map-tool-stack-collapse-control::before,
+.map-tool-stack-collapse-group > .map-tool-stack-collapse-control::after
+{
+  content: none;
+  display: none;
+}
+
+#mapSideTools > .map-tool-stack-collapse-group,
+.parcel-trade-left-tool-stack > .map-tool-stack-collapse-group {
+  order: -1000;
+  flex: 0 0 auto;
+  z-index: 100;
+}
+
+.map-tool-stack-collapse-control .map-tool-stack-collapse-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+  font-size: 22px;
+  transition: none;
+}
+
+.map-tool-stack-collapse-control .map-tool-stack-collapse-icon > i {
+  font-size: inherit;
+  line-height: 1;
+}
+
+#mapSideTools.map-tool-stack-collapsible > :not(.map-tool-stack-collapse-group),
+.parcel-trade-left-tool-stack.map-tool-stack-collapsible > :not(.map-tool-stack-collapse-group) {
+  transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
+  transition: none;
+}
+
+#mapSideTools.map-tool-stack-collapsed,
+.parcel-trade-left-tool-stack.map-tool-stack-collapsed {
+  height: var(--map-tool-stack-collapsed-height, 64px);
+  min-height: var(--map-tool-stack-collapsed-height, 64px);
+  justify-content: flex-start;
+  overflow: hidden;
+}
+
+#mapSideTools.map-tool-stack-collapsed > .map-tool-stack-collapse-group,
+.parcel-trade-left-tool-stack.map-tool-stack-collapsed > .map-tool-stack-collapse-group {
+  position: relative;
+  display: flex;
+  transform: none;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+#mapSideTools.map-tool-stack-collapsed > :not(.map-tool-stack-collapse-group),
+.parcel-trade-left-tool-stack.map-tool-stack-collapsed > :not(.map-tool-stack-collapse-group) {
+  position: absolute;
+  inset: 0 auto auto 0;
+  transform: none;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: none;
+}
+
+body :is(.map-zoom-stack, .mobile-map-zoom-controls, #mapSettingsToolGroup, .map-settings-bottom-group) {
+  transition: none;
+}
+
+body.map-right-tool-stack-collapsed :is(.map-zoom-stack, .mobile-map-zoom-controls, #mapSettingsToolGroup, .map-settings-bottom-group) {
+  transform: none;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: none;
+}
+/* REALJEJU 6.658: end shared map tool stack collapse owner. */
+
+/* ========================================================================== */
+/* REALJEJU 6.658: single owner for the shared mobile shell             */
+/* Desktop and page/state-specific layouts intentionally remain independent.  */
+/* ========================================================================== */
+@media (max-width: 850px) {
+  :root {
+    --realjeju-mobile-top-row-height: 69px;
+    --realjeju-mobile-map-top: var(--realjeju-mobile-top-row-height);
+    --map-side-tools-right: 8px;
+    --realjeju-mobile-header-divider-color: #e5e7eb;
+    --rj-mobile-drawer-inline: 16px;
+    --rj-mobile-drawer-control-padding: 12px;
+    --rj-mobile-drawer-control-inset: calc(var(--rj-mobile-drawer-inline) - var(--rj-mobile-drawer-control-padding));
+    --realjeju-mobile-action-size: 36px;
+    --realjeju-mobile-action-gap: 8px;
+    --realjeju-mobile-header-glyph-size: 21px;
+    --realjeju-mobile-summary-title-size: 18px;
+    --realjeju-mobile-map-control-border: #edf1f5;
+    --realjeju-mobile-map-control-background: #fff;
+    --realjeju-mobile-map-control-shadow: drop-shadow(2px 3px 5px rgba(15, 23, 42, 0.12));
+    --realjeju-mobile-listing-header-icon-size: 23px;
+    --realjeju-mobile-listing-header-icon-color: #4b5563;
+    --realjeju-mobile-sheet-action-size: 40px;
+    --realjeju-mobile-sheet-action-inline: 10px;
+    --realjeju-mobile-sheet-action-gap: 4px;
+    --realjeju-mobile-map-tools-z: 2147483639;
+    --realjeju-mobile-shell-z: 2147483640;
+    --realjeju-mobile-listing-z: 2147483643;
+    --realjeju-mobile-service-nav-z: 2147483644;
+    --realjeju-mobile-drawer-backdrop-z: 2147483646;
+    --realjeju-mobile-drawer-z: 2147483647;
+    --realjeju-mobile-modal-z: 2147483645;
+  }
+
+  html body:not(.main-landing-page-open) #globalTopbarMoreMenu.account-launcher-menu {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: auto;
+    width: 50vw;
+    min-width: 50vw;
+    max-width: 50vw;
+    height: 100dvh;
+    min-height: 100dvh;
+    max-height: 100dvh;
+    flex-direction: column;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0 12px 18px;
+    border: 0;
+    border-radius: 0;
+    background: #fff;
+    box-shadow: none;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    isolation: isolate;
+    z-index: var(--realjeju-mobile-drawer-z);
+  }
+
+  /* A single layer contract: full-screen content always covers mobile chrome. */
+  html body :is(
+    .sidebar-list-panel,
+    .sidebar-detail-panel,
+    #sidebarDetailPanel,
+    .listing-list-panel,
+    .listing-detail-panel,
+    .broker-list-panel,
+    .broker-listing-panel,
+    .broker-property-list-panel,
+    .broker-property-detail-panel,
+    .property-info-panel,
+    .parcel-land-info-panel,
+    .parcel-region-trade-stats-panel,
+    .education-facility-detail-panel
+  ) {
+    z-index: var(--realjeju-mobile-modal-z);
+    isolation: isolate;
+  }
+
+  html body #realjejuSideNav.realjeju-side-nav.realjeju-side-nav {
+    z-index: var(--realjeju-mobile-drawer-z);
+  }
+
+  html body #mobileMapCategoryPills.mobile-map-category-pills.mobile-map-category-pills,
+  html body .mobile-map-category-pills.mobile-map-category-pills {
+    z-index: var(--realjeju-mobile-service-nav-z);
+  }
+
+  html {
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+  }
+
+  body .global-topbar {
+    position: fixed;
+    inset: 0 0 auto 0;
+    width: 100%;
+    height: var(--realjeju-mobile-top-row-height);
+    min-height: var(--realjeju-mobile-top-row-height);
+    margin: 0;
+    padding: 0;
+    background: #fff;
+    box-sizing: border-box;
+    border: 0;
+    border-bottom: 1px solid var(--realjeju-mobile-header-divider-color);
+    box-shadow: none;
+    z-index: var(--realjeju-mobile-shell-z);
+  }
+
+  body .global-topbar .global-topbar-inner {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: none;
+    height: var(--realjeju-mobile-top-row-height);
+    min-height: var(--realjeju-mobile-top-row-height);
+    margin: 0;
+    padding: 0 12px;
+    box-sizing: border-box;
+  }
+
+  body .global-topbar .global-topbar-left {
+    display: contents;
+  }
+
+  body .global-topbar .global-brand {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    right: auto;
+    bottom: auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    max-width: 32vw;
+    height: auto;
+    margin: 0;
+    padding: 0;
+    transform: translate(-50%, -50%);
+    white-space: nowrap;
+    z-index: 3;
+    cursor: pointer;
+    pointer-events: auto;
+    touch-action: manipulation;
+  }
+
+  body .global-topbar .global-brand .brand-name {
+    display: block;
+    margin: 0;
+    font-size: clamp(16px, 4.5vw, 19px);
+    font-weight: 750;
+    line-height: 1;
+    letter-spacing: -0.035em;
+  }
+
+  body .global-topbar #mobileTopbarLeftActions,
+  body .global-topbar .mobile-topbar-left-actions {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    right: auto;
+    bottom: auto;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: var(--realjeju-mobile-action-gap);
+    width: auto;
+    height: var(--realjeju-mobile-action-size);
+    margin: 0;
+    padding: 0;
+    transform: translateY(-50%);
+    z-index: 4;
+  }
+
+  body .global-topbar #mobileTopbarSearchTrigger,
+  body .global-topbar .mobile-topbar-square-button:not(#mobileTopbarSearchTrigger),
+  body .global-topbar #globalTopbarChatBtn,
+  body .global-topbar #globalTopbarNotificationBtn {
+    position: static;
+    inset: auto;
+    flex: 0 0 var(--realjeju-mobile-action-size);
+    align-items: center;
+    justify-content: center;
+    width: var(--realjeju-mobile-action-size);
+    height: var(--realjeju-mobile-action-size);
+    min-width: var(--realjeju-mobile-action-size);
+    min-height: var(--realjeju-mobile-action-size);
+    margin: 0;
+    padding: 0;
+    border: 0;
+    box-shadow: none;
+    color: #111827;
+    transform: none;
+    visibility: visible;
+    opacity: 1;
+  }
+
+  body .global-topbar #mobileTopbarSearchTrigger {
+    border-radius: 0;
+    background: transparent;
+    font-size: var(--realjeju-mobile-header-glyph-size);
+  }
+
+  body .global-topbar .mobile-topbar-square-button:not(#mobileTopbarSearchTrigger),
+  body .global-topbar #globalTopbarChatBtn,
+  body .global-topbar #globalTopbarNotificationBtn {
+    border-radius: 50%;
+    background: #f3f6fa;
+    font-size: 21px;
+  }
+
+  body .global-topbar #mobileTopbarSearchTrigger .mobile-topbar-search-icon > i {
+    display: block;
+    width: auto;
+    height: auto;
+    font-size: inherit;
+    line-height: 1;
+  }
+
+  body .global-topbar .mobile-topbar-square-button:not(#mobileTopbarSearchTrigger) svg {
+    width: 21px;
+    height: 21px;
+  }
+
+  body .global-topbar #mobileTopbarSearchTrigger {
+    order: 2;
+  }
+
+  body .global-topbar .global-topbar-right {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    left: auto;
+    bottom: auto;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--realjeju-mobile-action-gap);
+    width: auto;
+    height: var(--realjeju-mobile-action-size);
+    margin: 0;
+    padding: 0;
+    transform: translateY(-50%);
+    z-index: 4;
+  }
+
+  body .global-topbar #mobileTopbarSearchTrigger,
+  body .global-topbar .mobile-topbar-square-button {
+    display: inline-flex;
+  }
+
+  body .global-topbar #globalTopbarChatBtn,
+  body .global-topbar #globalTopbarNotificationBtn {
+    display: none;
+  }
+
+  body.topbar-account-launcher-visible .global-topbar #globalTopbarChatBtn,
+  body.topbar-account-launcher-visible .global-topbar #globalTopbarNotificationBtn {
+    display: inline-flex;
+  }
+
+  body .global-topbar #mainLandingAuthLinks {
+    position: static;
+    inset: auto;
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: flex-end;
+    width: auto;
+    min-width: 0;
+    height: var(--realjeju-mobile-action-size);
+    min-height: var(--realjeju-mobile-action-size);
+    margin: 0;
+    transform: none;
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  body.topbar-account-launcher-visible .global-topbar #mainLandingAuthLinks {
+    display: none;
+  }
+
+  body .global-topbar #globalTopbarChatBtn { order: 1; }
+  body .global-topbar #globalTopbarNotificationBtn { order: 2; }
+  body .global-topbar #detailAuthTrigger { order: 3; }
+  body .global-topbar #globalTopbarMoreBtn { display: none; }
+
+  html body .global-topbar #globalTopbarChatBtn > svg,
+  html body .global-topbar #globalTopbarNotificationBtn > svg {
+    display: block;
+    visibility: visible;
+    opacity: 1;
+  }
+
+  body .global-topbar .global-topbar-right > #detailAuthTrigger:not([data-auth-state="logged-in"]) {
+    display: none;
+  }
+
+  body .global-topbar .global-topbar-right > #detailAuthTrigger.logged-in,
+  body .global-topbar .global-topbar-right > #detailAuthTrigger.logged-in .topbar-account-profile {
+    position: static;
+    inset: auto;
+    display: inline-flex;
+    flex: 0 0 var(--realjeju-mobile-action-size);
+    align-items: center;
+    justify-content: center;
+    width: var(--realjeju-mobile-action-size);
+    height: var(--realjeju-mobile-action-size);
+    min-width: var(--realjeju-mobile-action-size);
+    min-height: var(--realjeju-mobile-action-size);
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    box-shadow: none;
+    transform: none;
+  }
+
+  body .global-topbar .global-topbar-right > #detailAuthTrigger.logged-in .topbar-profile-image,
+  body .global-topbar .global-topbar-right > #detailAuthTrigger.logged-in .topbar-profile-fallback {
+    display: block;
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    min-height: 32px;
+    margin: 0;
+    border: 0;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  body .global-topbar .topbar-account-display-name,
+  body .global-topbar .account-email-text,
+  body .global-topbar .auth-arrow,
+  body .global-topbar .topbar-version-text,
+  html body #subAddressSearch.sub-address-search,
+  html body #subAddressSearch[data-topbar-address-search="true"],
+  body [data-topbar-address-search="true"],
+  body .global-topbar .global-topbar-search,
+  body .global-topbar .global-topbar-search-wrap,
+  body .global-topbar .global-topbar-address-search,
+  body .global-topbar .topbar-address-search,
+  body .global-topbar #globalTopbarAddressSearch,
+  body .global-topbar form:has(input[placeholder*="주소"]),
+  body .global-topbar [class*="search"]:has(input[placeholder*="주소"]),
+  body .global-topbar .global-topbar-menu,
+  body .global-topbar .admin-listing-topbar-search,
+  body .global-topbar .global-topbar-page-title,
+  body .global-topbar .global-topbar-my-suite-tabs {
+    display: none;
+    width: 0;
+    min-width: 0;
+    height: 0;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    pointer-events: none;
+  }html body #realjejuSideNav .realjeju-side-primary-menu > .realjeju-side-nav-item,
+html body #realjejuSideNav .realjeju-side-primary-menu > .realjeju-side-register-btn,
+html body #realjejuSideNav .realjeju-side-nav-bottom > .realjeju-side-nav-item,
+  html body #realjejuSideNav .realjeju-side-admin-tabs > .realjeju-side-nav-item {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 40px;
+    margin: 0;
+    padding: 0 var(--rj-mobile-drawer-inline);
+    gap: 8px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: #7b8494;
+    font-family: "PaperlogyLocal", "SUIT", sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  html body #realjejuSideNav .realjeju-side-admin-tabs > .realjeju-side-admin-section-divider {
+    display: block;
+    flex: 0 0 1px;
+    width: calc(100% - (var(--rj-mobile-drawer-inline) * 2));
+    height: 1px;
+    margin: 8px var(--rj-mobile-drawer-inline);
+    background: #e5e7eb;
+  }
+
+  html body #realjejuSideNav .realjeju-side-primary-menu > .realjeju-side-register-btn {
+    width: calc(100% - (var(--rj-mobile-drawer-control-inset) * 2));
+    min-height: 40px;
+    margin: 4px var(--rj-mobile-drawer-control-inset);
+    padding: 0 var(--rj-mobile-drawer-control-padding);
+    border-radius: 8px;
+    background: #f3f4f6;
+    color: #111827;
+  }html body #realjejuSideNav .realjeju-side-primary-menu > :is(.realjeju-side-nav-item, .realjeju-side-register-btn) > i,
+html body #realjejuSideNav .realjeju-side-nav-bottom > .realjeju-side-nav-item > i,
+html body #realjejuSideNav .realjeju-side-admin-tabs > .realjeju-side-nav-item > i {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 22px;
+    width: 22px;
+    min-width: 22px;
+    margin: 0;
+    color: #7b8494;
+  }html body #realjejuSideNav .realjeju-side-nav-item.active {
+    color: #111827;
+    font-weight: 700;
+  }
+
+  html body #realjejuSideNav .realjeju-side-nav-item.active > i {
+    color: #111827;
+  }
+
+  body:is(
+    [data-global-category="realestate"],
+    [data-global-category="parcel"],
+    [data-global-category="local-business"],
+    [data-global-category="ev-charger"]
+  ):not(.main-landing-page-open):not(.realjeju-document-page-open):not(.admin-page-open):not(.operator-page-open):not(.my-suite-page-open):not(.broker-home-open):not(.broker-home-page-open):not(.property-register-page-open):not(.notice-page-open):not(.myinfo-page-open):not(.profile-edit-page-open):not(.broker-office-info-page-open):not(.broker-office-apply-page-open):not(.broker-office-edit-page-open):not(.payment-page-open):not(.account-inquiries-page-open) .global-topbar {
+    height: var(--realjeju-mobile-top-row-height);
+    min-height: var(--realjeju-mobile-top-row-height);
+    border-bottom: 1px solid #dfe4ea;
+  }
+
+  #globalCategoryMenu.global-category-menu {
+    display: none;
+  }
+
+  /* Every map page uses this one shared mobile tool position. */
+  body:not(.main-landing-page-open) .parcel-trade-left-tool-stack,
+  body:not(.main-landing-page-open) #mapSideTools.map-side-tools {
+    top: var(--map-tool-stack-gap);
+  }
+
+  body:not(.main-landing-page-open) #mapSideTools.map-side-tools {
+    right: var(--map-side-tools-right);
+    bottom: auto;
+    transform: none;
+  }
+
+  body:is(
+    [data-global-category="realestate"],
+    [data-global-category="parcel"],
+    [data-global-category="local-business"],
+    [data-global-category="ev-charger"]
+  ):not(.main-landing-page-open):not(.realjeju-document-page-open):not(.admin-page-open):not(.operator-page-open):not(.my-suite-page-open):not(.broker-home-open):not(.broker-home-page-open):not(.property-register-page-open):not(.notice-page-open):not(.myinfo-page-open):not(.profile-edit-page-open):not(.broker-office-info-page-open):not(.broker-office-apply-page-open):not(.broker-office-edit-page-open):not(.payment-page-open):not(.account-inquiries-page-open) {
+    width: 100%;
+    height: 100dvh;
+    min-height: 100dvh;
+    margin: 0;
+    overflow: hidden;
+  }
+
+  body:is(
+    [data-global-category="realestate"],
+    [data-global-category="parcel"],
+    [data-global-category="local-business"],
+    [data-global-category="ev-charger"]
+  ):not(.main-landing-page-open):not(.realjeju-document-page-open):not(.admin-page-open):not(.operator-page-open):not(.my-suite-page-open):not(.broker-home-open):not(.broker-home-page-open):not(.property-register-page-open):not(.notice-page-open):not(.myinfo-page-open):not(.profile-edit-page-open):not(.broker-office-info-page-open):not(.broker-office-apply-page-open):not(.broker-office-edit-page-open):not(.payment-page-open):not(.account-inquiries-page-open) .app {
+    position: fixed;
+    inset: var(--realjeju-mobile-map-top) 0 0 0;
+    display: block;
+    width: 100%;
+    height: auto;
+    min-width: 0;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  body:is(
+    [data-global-category="realestate"],
+    [data-global-category="parcel"],
+    [data-global-category="local-business"],
+    [data-global-category="ev-charger"]
+  ):not(.main-landing-page-open):not(.realjeju-document-page-open):not(.admin-page-open):not(.operator-page-open):not(.my-suite-page-open):not(.broker-home-open):not(.broker-home-page-open):not(.property-register-page-open):not(.notice-page-open):not(.myinfo-page-open):not(.profile-edit-page-open):not(.broker-office-info-page-open):not(.broker-office-apply-page-open):not(.broker-office-edit-page-open):not(.payment-page-open):not(.account-inquiries-page-open) .map-wrap {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  body:is(
+    [data-global-category="realestate"],
+    [data-global-category="parcel"],
+    [data-global-category="local-business"],
+    [data-global-category="ev-charger"]
+  ):not(.main-landing-page-open):not(.realjeju-document-page-open):not(.admin-page-open):not(.operator-page-open):not(.my-suite-page-open):not(.broker-home-open):not(.broker-home-page-open):not(.property-register-page-open):not(.notice-page-open):not(.myinfo-page-open):not(.profile-edit-page-open):not(.broker-office-info-page-open):not(.broker-office-apply-page-open):not(.broker-office-edit-page-open):not(.payment-page-open):not(.account-inquiries-page-open) #map {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* One mobile map-control surface and layer contract above map badges. */
+body .parcel-trade-left-tool-stack,
+body .map-side-tools {
+    z-index: var(--realjeju-mobile-map-tools-z);
+    isolation: isolate;
+    filter: var(--realjeju-mobile-map-control-shadow);
+  }
+
+html body .map-zoom-stack {
+    display: flex;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  html body .mobile-map-zoom-controls {
+    display: none;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  body .map-current-btn {
+    border-color: var(--realjeju-mobile-map-control-border);
+    background: var(--realjeju-mobile-map-control-background);
+  }html body #mobileTopbarSearchTrigger,
+html body #mobileTopbarSearchTrigger * {
+    cursor: pointer;
+  }
+
+  html body #realjejuSideNav #realjejuSideAdminVersion.realjeju-side-admin-version,
+  html body #realjejuSideNav #realjejuSideAdminVersion.realjeju-side-admin-version[hidden] {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 38px;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .mobile-map-category-pills,
+  #mobileMapCategoryPills {
+    display: none;
+  }
+}
+
+/* Shared mobile drawer: single canonical definition. */
+
+.realjeju-mobile-drawer-brand {
+  display: none;
+}
+
+.realjeju-mobile-drawer-services {
+  display: none;
+}
+
+.realjeju-mobile-drawer-divider {
+  display: none;
+}
+
+#realjejuMobileSideNav {
+  display: none;
+}
+
+#realjejuMobileSideNavBackdrop {
+  display: none;
+}
+
+@media (max-width: 850px) {
+  html body #realjejuSideNav > .realjeju-mobile-drawer-brand,
+  html body #globalTopbarMoreMenu > .realjeju-mobile-account-drawer-header {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    flex: 0 0 var(--realjeju-mobile-top-row-height);
+    width: 100%;
+    height: var(--realjeju-mobile-top-row-height);
+    min-height: var(--realjeju-mobile-top-row-height);
+    margin: 0 0 8px;
+    border-bottom: 1px solid var(--realjeju-mobile-header-divider-color);
+    color: #111827;
+    font-family: "PaperlogyLocal", "SUIT", sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1;
+  }
+
+  html body #globalTopbarMoreMenu > .realjeju-mobile-account-drawer-header {
+    padding: 0 58px 0 var(--rj-mobile-drawer-inline);
+  }
+
+  html body.realjeju-mobile-side-nav-open #realjejuSideNav.realjeju-side-nav > :not(#realjejuMobileSideNavClose) {
+    position: relative;
+    z-index: 1;
+  }
+
+  html body #realjejuSideNav > .realjeju-mobile-drawer-brand {
+    position: relative;
+    padding: 0 66px 0 var(--rj-mobile-drawer-inline);
+  }
+
+  html body #realjejuSideNav > .realjeju-mobile-drawer-services {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    box-shadow: none;
+  }
+
+  html body #realjejuSideNav > .realjeju-mobile-drawer-divider {
+    display: block;
+    flex: 0 0 1px;
+    width: 100%;
+    height: 1px;
+    margin: 8px 0;
+    background: #e5e7eb;
+  }
+
+  html body #realjejuSideNav .realjeju-side-primary-menu > .realjeju-mobile-drawer-divider {
+    display: block;
+    flex: 0 0 1px;
+    width: 100%;
+    height: 1px;
+    margin: 8px 0;
+    background: #e5e7eb;
+  }
+
+  html body #realjejuSideNav > .realjeju-mobile-drawer-brand + .realjeju-mobile-drawer-divider {
+    display: none;
+  }
+
+  html body.admin-page-open #realjejuSideNav > :not(#realjejuMobileSideNavClose, .realjeju-mobile-drawer-brand, .realjeju-mobile-drawer-divider, .realjeju-mobile-drawer-services, .realjeju-side-admin-tabs, #realjejuSideAdminVersion) {
+    display: none;
+  }
+
+  html body.admin-page-open #realjejuSideNav > :is(.realjeju-mobile-drawer-brand, .realjeju-mobile-drawer-services, .realjeju-side-admin-tabs, #realjejuSideAdminVersion) {
+    display: flex;
+  }
+
+  html body.admin-page-open #realjejuSideNav > .realjeju-mobile-drawer-version-divider {
+    margin-top: auto;
+  }
+
+  body .global-topbar #realjejuMobileSideNavTrigger {
+    position: static;
+    inset: auto;
+    display: inline-flex;
+    flex: 0 0 var(--realjeju-mobile-action-size);
+    align-items: center;
+    justify-content: center;
+    width: var(--realjeju-mobile-action-size);
+    height: var(--realjeju-mobile-action-size);
+    min-width: var(--realjeju-mobile-action-size);
+    min-height: var(--realjeju-mobile-action-size);
+    margin: 0;
+    padding: 0;
+    border: 0;
+    box-shadow: none;
+    color: #111827;
+    font-size: 21px;
+    transform: none;
+    visibility: visible;
+    opacity: 1;
+    order: 1;
+    border-radius: 0;
+    background: transparent;
+  }
+
+  body .global-topbar .realjeju-mobile-side-nav-trigger {
+    position: static;
+    inset: auto;
+    display: inline-flex;
+    flex: 0 0 var(--realjeju-mobile-action-size);
+    align-items: center;
+    justify-content: center;
+    width: var(--realjeju-mobile-action-size);
+    height: var(--realjeju-mobile-action-size);
+    min-width: var(--realjeju-mobile-action-size);
+    min-height: var(--realjeju-mobile-action-size);
+    margin: 0;
+    padding: 0;
+    border: 0;
+    box-shadow: none;
+    color: #111827;
+    font-size: 21px;
+    transform: none;
+    visibility: visible;
+    opacity: 1;
+    order: 1;
+    border-radius: 0;
+    background: transparent;
+  }
+
+  body .global-topbar #realjejuMobileSideNavTrigger svg {
+    width: var(--realjeju-mobile-header-glyph-size);
+    height: var(--realjeju-mobile-header-glyph-size);
+  }
+
+  body .global-topbar .realjeju-mobile-side-nav-trigger svg {
+    width: var(--realjeju-mobile-header-glyph-size);
+    height: var(--realjeju-mobile-header-glyph-size);
+  }
+
+  body .global-topbar #realjejuMobileSideNavTrigger > span {
+    display: none;
+  }
+
+  body .global-topbar .realjeju-mobile-side-nav-trigger > span {
+    display: none;
+  }
+
+  body .global-topbar #realjejuMobileSideNavTrigger > i {
+    position: static;
+    inset: auto;
+    display: block;
+    width: auto;
+    height: auto;
+    margin: 0;
+    font-size: var(--realjeju-mobile-header-glyph-size);
+    line-height: 1;
+    color: #111827;
+    transform: none;
+  }
+
+  body .global-topbar .realjeju-mobile-side-nav-trigger > i {
+    position: static;
+    inset: auto;
+    display: block;
+    width: auto;
+    height: auto;
+    margin: 0;
+    font-size: var(--realjeju-mobile-header-glyph-size);
+    line-height: 1;
+    color: #111827;
+    transform: none;
+  }
+
+  body .global-topbar #realjejuMobileSideNavTrigger::before {
+    content: none;
+    display: none;
+  }
+
+  body .global-topbar #realjejuMobileSideNavTrigger::after {
+    content: none;
+    display: none;
+  }
+
+  html body #realjejuSideNav .realjeju-mobile-drawer-item {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 40px;
+    margin: 0;
+    padding: 0 var(--rj-mobile-drawer-inline);
+    gap: 8px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: #7b8494;
+    font-family: "PaperlogyLocal", "SUIT", sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  html body #realjejuSideNav .realjeju-mobile-drawer-item > i {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 22px;
+    width: 22px;
+    min-width: 22px;
+    margin: 0;
+    color: #7b8494;
+  }
+
+  html body #realjejuSideNav .realjeju-mobile-drawer-item.active {
+    color: #111827;
+    font-weight: 700;
+  }
+
+  html body #realjejuSideNav .realjeju-mobile-drawer-item.active > i {
+    color: #111827;
+  }
+
+  html body #realjejuMobileSideNavTrigger {
+    cursor: pointer;
+  }
+
+  html body #realjejuMobileSideNavTrigger * {
+    cursor: pointer;
+  }
+
+  #realjejuMobileSideNavBackdrop {
+    position: fixed;
+    inset: 0;
+    display: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    -webkit-appearance: none;
+    appearance: none;
+    background: rgba(15, 23, 42, 0.34);
+    z-index: var(--realjeju-mobile-drawer-backdrop-z);
+  }
+
+  body.realjeju-mobile-side-nav-open #realjejuMobileSideNavBackdrop,
+  body.realjeju-mobile-account-menu-open #realjejuMobileSideNavBackdrop {
+    display: block;
+  }
+
+  html body.realjeju-side-nav-enabled #realjejuSideNav.realjeju-side-nav {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: auto;
+    display: flex;
+    width: 50vw;
+    height: 100dvh;
+    max-height: 100dvh;
+    flex-direction: column;
+    padding: 0 12px 18px;
+    overflow: hidden auto;
+    background: #fff;
+    transform: translateX(-102%);
+    visibility: hidden;
+    pointer-events: none;
+    transition: none;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    z-index: var(--realjeju-mobile-drawer-z);
+  }
+
+  html body.realjeju-mobile-side-nav-transition-ready #realjejuSideNav.realjeju-side-nav {
+    transition: transform 180ms ease, visibility 0s linear 180ms;
+  }
+
+  html body.realjeju-side-nav-enabled.realjeju-mobile-side-nav-open #realjejuSideNav.realjeju-side-nav {
+    transform: translateX(0);
+    visibility: visible;
+    pointer-events: auto;
+    transition: transform 180ms ease;
+  }
+
+  body.realjeju-mobile-side-nav-open {
+    overflow: hidden;
+  }
+
+  .realjeju-mobile-drawer-services {
+    display: flex;
+    flex-direction: column;
+  }
+
+  #realjejuMobileSideNavClose,
+  #realjejuMobileAccountMenuClose:not([hidden]) {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: inline-flex;
+    width: 44px;
+    height: 44px;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: #111827;
+    font: inherit;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    appearance: none;
+    z-index: 2;
+  }
+
+  #realjejuMobileSideNavClose svg,
+  #realjejuMobileAccountMenuClose i {
+    width: 20px;
+    height: 20px;
+    font-size: 20px;
+    line-height: 1;
+  }
+
+  #realjejuMobileSideNavClose:focus-visible,
+  #realjejuMobileAccountMenuClose:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+  }
+
+}
+/* REALJEJU 6.658: end shared mobile shell */
+
+@media (max-width: 850px) {
+	/* A visible mobile property detail is the sole interactive full-screen sidebar surface. */
+	html body:has(#sidebarDetailPanel[aria-hidden="false"]) > .app,
+	html body:has(#sidebarDetailPanel[aria-hidden="false"]) #sidebar,
+	html body:has(#sidebarDetailPanel[aria-hidden="false"]) #sidebar > .sidebar-inner {
+		position: fixed;
+		inset: 0;
+		width: 100vw;
+		min-width: 100vw;
+		max-width: 100vw;
+		height: 100dvh;
+		min-height: 100dvh;
+		max-height: 100dvh;
+		margin: 0;
+		transform: none;
+		z-index: var(--realjeju-mobile-modal-z);
+		isolation: isolate;
+	}
+
+	html body:has(#sidebarDetailPanel[aria-hidden="false"]) #sidebar,
+	html body:has(#sidebarDetailPanel[aria-hidden="false"]) #sidebar > .sidebar-inner {
+		pointer-events: none;
+		background: transparent;
+	}
+
+	html body:has(#sidebarDetailPanel[aria-hidden="false"]) #sidebarDetailPanel {
+		position: fixed;
+		inset: 0;
+		display: block;
+		width: 100vw;
+		height: 100dvh;
+		max-width: none;
+		max-height: none;
+		pointer-events: auto;
+	}
+
+	html body:has(#sidebarDetailPanel[aria-hidden="false"]) #sidebar::before {
+		content: none;
+		pointer-events: none;
+	}
+}
+
+/* REALJEJU 6.658: single owner for mobile roadview surface. */
+@media (max-width: 850px) {
+  html body:is(.map-roadview-overlay-open, .roadview-split-open, .roadview-detail-left-open) {
+    overflow: hidden;
+  }
+
+  html body:is(.map-roadview-overlay-open, .roadview-split-open, .roadview-detail-left-open) > #roadviewPanel.roadview-overlay,
+  html body:is(.map-roadview-overlay-open, .roadview-split-open, .roadview-detail-left-open) > #roadviewPanel.roadview-overlay.open,
+  html body:is(.map-roadview-overlay-open, .roadview-split-open, .roadview-detail-left-open) > #roadviewPanel.roadview-overlay.detail-left-roadview {
+    position: fixed;
+    inset: 0;
+    display: block;
+    width: 100vw;
+    min-width: 0;
+    max-width: none;
+    height: 100dvh;
+    min-height: 100dvh;
+    max-height: none;
+    margin: 0;
+    border: 0;
+    background: #000;
+    box-shadow: none;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    overflow: hidden;
+    pointer-events: auto;
+    isolation: isolate;
+    z-index: var(--realjeju-mobile-modal-z);
+  }
+
+  html body:is(.map-roadview-overlay-open, .roadview-split-open, .roadview-detail-left-open) > #roadviewPanel .roadview-inner {
+    width: 100%;
+    height: 100%;
+  }
+
+  html body:is(.map-roadview-overlay-open, .roadview-split-open, .roadview-detail-left-open) > #roadviewPanel .roadview-close-btn,
+  html body:is(.map-roadview-overlay-open, .roadview-split-open, .roadview-detail-left-open) > #roadviewPanel .roadview-fullscreen-btn {
+    position: absolute;
+    top: calc(env(safe-area-inset-top, 0px) + 12px);
+    display: inline-flex;
+    width: 42px;
+    height: 42px;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    pointer-events: auto;
+    -webkit-tap-highlight-color: transparent;
+    z-index: 4;
+  }
+
+  html body:is(.map-roadview-overlay-open, .roadview-split-open, .roadview-detail-left-open) > #roadviewPanel .roadview-close-btn {
+    right: calc(env(safe-area-inset-right, 0px) + 12px);
+    background: rgba(17, 24, 39, 0.82);
+    color: #fff;
+  }
+
+  html body:is(.map-roadview-overlay-open, .roadview-split-open, .roadview-detail-left-open) > #roadviewPanel .roadview-fullscreen-btn {
+    right: calc(env(safe-area-inset-right, 0px) + 62px);
+    background: rgba(255, 255, 255, 0.94);
+    color: #111827;
+  }
+}
+/* REALJEJU 6.658: end mobile roadview surface owner. */
+
+/* REALJEJU 6.658: single owner for mobile parcel-area measurement. */
+@media (max-width: 850px) {
+  body.parcel-area-mobile-active .sidebar-list-panel:has(.parcel-area-measure-panel) .sidebar-list-header,
+  body.parcel-area-mobile-active:not(.parcel-area-mobile-detail-open):not(.mobile-summary-sheet-dragging) .parcel-area-measure-table-head,
+  body.parcel-area-mobile-active:not(.parcel-area-mobile-detail-open):not(.mobile-summary-sheet-dragging) .parcel-area-measure-rows,
+  body.parcel-area-mobile-active:not(.parcel-area-mobile-detail-open) .parcel-area-mobile-detail-back {
+    display: none;
+  }
+
+  body.parcel-area-mobile-active:not(.parcel-area-mobile-detail-open) .parcel-area-measure-panel {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+    height: auto;
+    min-height: 0;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    overflow: hidden;
+  }
+
+  body.parcel-area-mobile-active .parcel-area-measure-summary {
+    --parcel-area-summary-arrow-visual-inset: 11px;
+    box-sizing: border-box;
+    width: 100%;
+    margin: 0;
+    padding-right: 14px;
+    padding-left: 14px;
+    border-radius: 0;
+    background: #0874c9;
+  }
+
+  body.parcel-area-mobile-active:not(.parcel-area-mobile-detail-open) .parcel-area-measure-summary {
+    padding-top: 18px;
+    padding-bottom: 20px;
+  }
+
+  body.parcel-area-mobile-active .parcel-area-measure-summary.mobile-summary-drag-handle {
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    cursor: grab;
+  }
+
+  body.parcel-area-mobile-active.mobile-summary-sheet-dragging .parcel-area-measure-summary.mobile-summary-drag-handle {
+    cursor: grabbing;
+  }
+
+  body.parcel-area-mobile-active .parcel-area-measure-summary-head {
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 8px;
+  }
+
+  body.parcel-area-mobile-active .parcel-area-measure-summary-head > strong {
+    min-width: 0;
+    overflow: hidden;
+    font-size: 14px;
+    line-height: 1.3;
+    letter-spacing: -.025em;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  body.parcel-area-mobile-active .parcel-area-mobile-expand-toggle {
+    display: inline-grid;
+    place-items: center;
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #fff;
+    cursor: pointer;
+  }
+
+  body.parcel-area-mobile-active .parcel-area-mobile-expand-toggle i {
+    font-size: var(--realjeju-mobile-listing-header-icon-size);
+  }
+
+  body.parcel-area-mobile-active .parcel-area-measure-summary-actions {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 44px;
+    align-items: center;
+    gap: 6px;
+    margin-right: var(--parcel-area-summary-arrow-visual-inset);
+  }
+
+  body.parcel-area-mobile-active .parcel-area-measure-summary-actions > button,
+  body.parcel-area-mobile-active .parcel-area-measure-summary-actions > [data-parcel-area-unit-toggle],
+  body.parcel-area-mobile-active .parcel-area-measure-summary-actions > [data-parcel-area-cadastral],
+  body.parcel-area-mobile-active .parcel-area-measure-summary-actions > [data-parcel-area-reset] {
+    width: 44px;
+    min-width: 44px;
+    max-width: 44px;
+    height: 30px;
+    padding: 0 4px;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+
+  body.parcel-area-mobile-active .parcel-area-measure-summary-actions > button span {
+    font-size: 11px;
+  }
+
+  body.parcel-area-mobile-active:not(.parcel-area-mobile-detail-open) .parcel-area-measure-summary-metrics {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+    margin-top: 20px;
+  }
+
+  body.parcel-area-mobile-active:not(.parcel-area-mobile-detail-open) .parcel-area-measure-summary-metrics > div {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    text-align: center;
+  }
+
+  body.parcel-area-mobile-active:not(.parcel-area-mobile-detail-open) .parcel-area-measure-summary-metrics span {
+    display: block;
+    font-size: 15px;
+  }
+
+  body.parcel-area-mobile-active:not(.parcel-area-mobile-detail-open) .parcel-area-measure-summary-metrics strong {
+    display: block;
+    font-size: 24px;
+    line-height: 1.1;
+    white-space: nowrap;
+  }
+
+  body.parcel-area-mobile-active #mapSettingsToolGroup,
+  body.parcel-area-mobile-active .map-settings-bottom-group {
+    display: none;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  body.parcel-area-mobile-active.mobile-summary-sheet-dragging .parcel-area-measure-panel {
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+    overscroll-behavior: none;
+    touch-action: none;
+  }
+
+  body.parcel-area-mobile-detail-open {
+    overflow: hidden;
+  }
+
+  body.parcel-area-mobile-active.parcel-area-mobile-detail-open:not(.mobile-summary-sheet-dragging) .parcel-area-measure-panel {
+    inset: 0;
+    width: 100vw;
+    min-width: 100vw;
+    max-width: 100vw;
+    height: 100dvh;
+    min-height: 100dvh;
+    max-height: 100dvh;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  body.parcel-area-mobile-active.parcel-area-mobile-detail-open:not(.mobile-summary-sheet-dragging) .parcel-area-measure-panel {
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .parcel-area-mobile-detail-back {
+    display: none;
+  }
+
+  body.parcel-area-mobile-active.parcel-area-mobile-detail-open .parcel-area-mobile-detail-back {
+    position: sticky;
+    top: 0;
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr) 44px;
+    align-items: center;
+    width: 100%;
+    min-height: 58px;
+    padding: 0 12px;
+    border: 0;
+    border-bottom: 1px solid #e5e7eb;
+    background: #fff;
+    color: #111827;
+    font: inherit;
+    cursor: pointer;
+    z-index: 3;
+  }
+
+  body.parcel-area-mobile-active.parcel-area-mobile-detail-open .parcel-area-mobile-detail-back i {
+    grid-column: 1;
+    justify-self: start;
+    font-size: 22px;
+  }
+
+  body.parcel-area-mobile-active.parcel-area-mobile-detail-open .parcel-area-mobile-detail-back strong {
+    grid-column: 2;
+    justify-self: center;
+    font-size: 18px;
+    font-weight: 800;
+  }
+}
+/* REALJEJU 6.658: end mobile parcel-area measurement owner. */
+
+/* REALJEJU 6.658: single owner for mobile parcel property summary. */
+@media (max-width: 850px) {
+  body.parcel-property-mobile-active > .app {
+    position: relative;
+    z-index: var(--realjeju-mobile-listing-z);
+    isolation: isolate;
+  }
+
+  body.parcel-property-mobile-active:is(.parcel-property-mobile-detail-open, .mobile-summary-sheet-dragging) > .app {
+    z-index: var(--realjeju-mobile-modal-z);
+  }
+
+body.parcel-property-mobile-active #sidebar,
+body.parcel-property-mobile-active #sidebar > .sidebar-inner {
+	position: fixed;
+	z-index: var(--realjeju-mobile-listing-z);
+	isolation: isolate;
+    inset: 0;
+    width: 100vw;
+    min-width: 100vw;
+    max-width: 100vw;
+    height: 100dvh;
+    min-height: 100dvh;
+    max-height: 100dvh;
+    margin: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+    transform: none;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  body.parcel-property-mobile-active #sidebar::before {
+    content: none;
+  }
+
+  body.parcel-property-mobile-detail-open:not(.mobile-summary-sheet-dragging) :is(
+    .parcel-trade-left-tool-stack,
+    #mapSideTools.map-side-tools,
+    #mapSettingsToolGroup,
+    .map-settings-bottom-group
+  ) {
+    display: none;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  body.parcel-property-mobile-active .sidebar-list-panel:has(.parcel-land-info-panel) {
+    position: fixed;
+    inset: auto 0 0 0;
+    display: flex;
+    box-sizing: border-box;
+    width: 100vw;
+    min-width: 100vw;
+    max-width: 100vw;
+    height: auto;
+    min-height: 0;
+    max-height: calc(100dvh - var(--realjeju-mobile-top-row-height));
+    flex-direction: column;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    clip-path: none;
+    background: #fff;
+    box-shadow: none;
+    transform: none;
+    overflow: hidden;
+    pointer-events: auto;
+    z-index: var(--realjeju-mobile-modal-z);
+  }
+
+
+  body.parcel-property-mobile-active:not(.parcel-property-mobile-detail-open) #propertyList {
+    display: block;
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    max-height: none;
+    flex: 0 0 auto;
+    overflow: hidden;
+    overscroll-behavior: none;
+    touch-action: manipulation;
+  }
+
+  body.parcel-property-mobile-active:not(.parcel-property-mobile-detail-open) .parcel-land-info-panel {
+    display: block;
+    width: 100%;
+    min-height: 0;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    background: #fff;
+    cursor: pointer;
+    overflow: hidden;
+  }
+
+  body.parcel-property-mobile-active:not(.parcel-property-mobile-detail-open):not(.mobile-summary-sheet-dragging) .parcel-land-info-panel[data-parcel-property-enhanced="true"] > :not(.parcel-property-sticky-head):not(.parcel-property-overview) {
+    display: none;
+  }
+
+  body.parcel-property-mobile-active:not(.parcel-property-mobile-detail-open) .parcel-property-sticky-head {
+    position: static;
+    top: auto;
+    z-index: auto;
+  }
+
+  body.parcel-property-mobile-active:not(.parcel-property-mobile-detail-open) .parcel-land-info-address {
+    padding: 14px 14px 13px;
+    background: #f3f6fb;
+  }
+
+  body.parcel-property-mobile-active:not(.parcel-property-mobile-detail-open) .parcel-land-info-address-primary,
+  body.parcel-property-mobile-active:not(.parcel-property-mobile-detail-open) .parcel-land-info-address-road {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  body.parcel-property-mobile-active:not(.parcel-property-mobile-detail-open) .parcel-land-info-address-primary {
+    font-size: 16px;
+    line-height: 1.35;
+  }
+
+  body.parcel-property-mobile-active:not(.parcel-property-mobile-detail-open) .parcel-land-info-address-road {
+    margin-top: 5px;
+    font-size: 13px;
+    line-height: 1.35;
+  }
+
+  body.parcel-property-mobile-active:not(.parcel-property-mobile-detail-open) .parcel-property-tabs {
+    position: static;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    width: 100%;
+    min-height: 48px;
+    border-bottom: 1px solid #d8dee8;
+  }
+
+  body.parcel-property-mobile-active:not(.parcel-property-mobile-detail-open) .parcel-property-tabs > button {
+    min-width: 0;
+    min-height: 48px;
+    padding: 0 6px;
+    font-size: 14px;
+  }
+
+  body.parcel-property-mobile-active.mobile-summary-sheet-dragging #sidebar,
+  body.parcel-property-mobile-active.mobile-summary-sheet-dragging #sidebar > .sidebar-inner {
+    z-index: var(--realjeju-mobile-modal-z);
+    isolation: isolate;
+  }
+
+  body.parcel-property-mobile-active:not(.parcel-property-mobile-detail-open) .parcel-property-overview {
+    display: flex;
+    min-height: 78px;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0;
+    padding: 14px 18px;
+    border: 0;
+    background: #fff;
+  }
+
+  body.parcel-property-mobile-active:not(.parcel-property-mobile-detail-open) .parcel-property-overview-copy {
+    min-width: 0;
+  }
+
+  body.parcel-property-mobile-active:not(.parcel-property-mobile-detail-open) .parcel-property-overview-primary,
+  body.parcel-property-mobile-active:not(.parcel-property-mobile-detail-open) .parcel-property-overview-secondary {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  body.parcel-property-mobile-active:not(.parcel-property-mobile-detail-open) .parcel-property-overview-primary {
+    font-size: 16px;
+    line-height: 1.35;
+  }
+
+  body.parcel-property-mobile-active:not(.parcel-property-mobile-detail-open) .parcel-property-overview-secondary {
+    margin-top: 6px;
+    font-size: 14px;
+    line-height: 1.35;
+  }
+
+  body.parcel-property-mobile-active:not(.parcel-property-mobile-detail-open) .parcel-property-overview .parcel-overview-area-unit-toggle {
+    flex: 0 0 auto;
+  }
+
+  body.parcel-property-mobile-detail-open {
+    overflow: hidden;
+  }
+
+  body.parcel-property-mobile-active.parcel-property-mobile-detail-open:not(.mobile-summary-sheet-dragging) .sidebar-list-panel:has(.parcel-land-info-panel) {
+    inset: 0;
+    width: 100vw;
+    min-width: 100vw;
+    max-width: 100vw;
+    height: 100dvh;
+    min-height: 100dvh;
+    max-height: 100dvh;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  body.parcel-property-mobile-active.parcel-property-mobile-detail-open:not(.mobile-summary-sheet-dragging) #propertyList {
+    display: block;
+    width: 100%;
+    min-height: 0;
+    height: auto;
+    max-height: none;
+    flex: 1 1 auto;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+  }
+
+  body.parcel-property-mobile-active.parcel-property-mobile-detail-open:not(.mobile-summary-sheet-dragging) .parcel-land-info-panel {
+    width: 100%;
+    min-height: 100%;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    cursor: default;
+  }
+}
+/* REALJEJU 6.658: end mobile parcel property summary owner. */
+
+/* REALJEJU 6.658: single owner for mobile parcel statistics summary. */
+@media (max-width: 850px) {
+  body.parcel-statistics-mobile-active > .app {
+    position: relative;
+    z-index: var(--realjeju-mobile-listing-z);
+    isolation: isolate;
+  }
+
+  body.parcel-statistics-mobile-active:is(.parcel-statistics-mobile-detail-open, .mobile-summary-sheet-dragging) > .app {
+    z-index: var(--realjeju-mobile-modal-z);
+  }
+
+body.parcel-statistics-mobile-active #sidebar,
+body.parcel-statistics-mobile-active #sidebar > .sidebar-inner {
+	position: fixed;
+	z-index: var(--realjeju-mobile-listing-z);
+	isolation: isolate;
+    inset: 0;
+    width: 100vw;
+    min-width: 100vw;
+    max-width: 100vw;
+    height: 100dvh;
+    min-height: 100dvh;
+    max-height: 100dvh;
+    margin: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+    transform: none;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  body.parcel-statistics-mobile-active.mobile-summary-sheet-dragging #sidebar,
+  body.parcel-statistics-mobile-active.mobile-summary-sheet-dragging #sidebar > .sidebar-inner {
+    z-index: var(--realjeju-mobile-modal-z);
+    isolation: isolate;
+  }
+
+  body.parcel-statistics-mobile-active #sidebar::before {
+    content: none;
+  }
+
+  body.parcel-statistics-mobile-detail-open:not(.mobile-summary-sheet-dragging) :is(
+    .parcel-trade-left-tool-stack,
+    #mapSideTools.map-side-tools,
+    #mapSettingsToolGroup,
+    .map-settings-bottom-group
+  ) {
+    display: none;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  body.parcel-statistics-mobile-active .sidebar-list-panel:has(.parcel-region-trade-stats-panel) {
+    position: fixed;
+    inset: auto 0 0 0;
+    display: flex;
+    box-sizing: border-box;
+    width: 100vw;
+    min-width: 100vw;
+    max-width: 100vw;
+    height: auto;
+    min-height: 0;
+    max-height: calc(100dvh - var(--realjeju-mobile-top-row-height));
+    flex-direction: column;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    clip-path: none;
+    background: #fff;
+    box-shadow: none;
+    transform: none;
+    overflow: hidden;
+    pointer-events: auto;
+    z-index: var(--realjeju-mobile-modal-z);
+  }
+
+
+  body.parcel-statistics-mobile-active:not(.parcel-statistics-mobile-detail-open) #propertyList {
+    display: block;
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    max-height: none;
+    flex: 0 0 auto;
+    overflow: hidden;
+    overscroll-behavior: none;
+    touch-action: manipulation;
+  }
+
+  body.parcel-statistics-mobile-active:not(.parcel-statistics-mobile-detail-open) .parcel-region-trade-stats-panel {
+    display: flex;
+    width: 100%;
+    min-height: 0;
+    flex-direction: column;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    background: #fff;
+    cursor: pointer;
+    overflow: hidden;
+  }
+
+  body.parcel-statistics-mobile-active:not(.parcel-statistics-mobile-detail-open):not(.mobile-summary-sheet-dragging) .parcel-region-trade-stats-panel > :not(.parcel-region-trade-heading):not(.parcel-region-trade-summary-bar):not(.parcel-region-trade-comparison) {
+    display: none;
+  }
+
+  body.parcel-statistics-mobile-active:not(.parcel-statistics-mobile-detail-open) .parcel-region-trade-heading {
+    display: flex;
+    min-height: 66px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 18px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  body.parcel-statistics-mobile-active:not(.parcel-statistics-mobile-detail-open) .parcel-region-trade-heading h2 {
+    min-width: 0;
+    overflow: hidden;
+    font-size: 21px;
+    line-height: 1.3;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  body.parcel-statistics-mobile-active:not(.parcel-statistics-mobile-detail-open) .parcel-region-trade-heading p {
+    flex: 0 0 auto;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+
+  body.parcel-statistics-mobile-active:not(.parcel-statistics-mobile-detail-open) .parcel-region-trade-summary-bar {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    width: auto;
+    min-height: 44px;
+    margin: 14px 16px 0;
+    border-radius: 22px;
+  }
+
+  body.parcel-statistics-mobile-active:not(.parcel-statistics-mobile-detail-open) .parcel-region-trade-summary-bar > button {
+    min-width: 0;
+    min-height: 44px;
+    padding-right: 10px;
+    padding-left: 10px;
+    font-size: 13px;
+  }
+
+  body.parcel-statistics-mobile-active:not(.parcel-statistics-mobile-detail-open) .parcel-region-trade-comparison {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+    gap: 8px;
+    padding: 16px 18px 18px;
+    border-bottom: 8px solid #edf1f5;
+  }
+
+  body.parcel-statistics-mobile-active:not(.parcel-statistics-mobile-detail-open) .parcel-region-trade-comparison strong {
+    font-size: 18px;
+  }
+
+  body.parcel-statistics-mobile-active:not(.parcel-statistics-mobile-detail-open) .parcel-region-trade-comparison > p {
+    margin-top: 20px;
+    font-size: 13px;
+  }
+
+  body.parcel-statistics-mobile-detail-open {
+    overflow: hidden;
+  }
+
+  body.parcel-statistics-mobile-active.parcel-statistics-mobile-detail-open:not(.mobile-summary-sheet-dragging) .sidebar-list-panel:has(.parcel-region-trade-stats-panel) {
+    inset: 0;
+    width: 100vw;
+    min-width: 100vw;
+    max-width: 100vw;
+    height: 100dvh;
+    min-height: 100dvh;
+    max-height: 100dvh;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  body.parcel-statistics-mobile-active.parcel-statistics-mobile-detail-open:not(.mobile-summary-sheet-dragging) #propertyList {
+    display: block;
+    width: 100%;
+    min-height: 0;
+    height: auto;
+    max-height: none;
+    flex: 1 1 auto;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+  }
+
+  body.parcel-statistics-mobile-active.parcel-statistics-mobile-detail-open:not(.mobile-summary-sheet-dragging) .parcel-region-trade-stats-panel {
+    width: 100%;
+    min-height: 100%;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    cursor: default;
+  }
+}
+/* REALJEJU 6.658: end mobile parcel statistics summary owner. */
+
+/* REALJEJU 6.658: single owner for mobile parcel selector dialogs. */
+@media (max-width: 850px) {
+  html body > :is(
+    [data-parcel-region-trade-picker-surface="true"],
+    [data-parcel-building-unit-picker],
+    [data-parcel-common-housing-picker],
+    [data-parcel-trade-filter-modal],
+    .parcel-building-all-modal
+  ) {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    box-sizing: border-box;
+    width: 100vw;
+    min-width: 100vw;
+    max-width: 100vw;
+    height: 100dvh;
+    min-height: 100dvh;
+    max-height: 100dvh;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 20px;
+    transform: none;
+    z-index: var(--realjeju-mobile-drawer-z);
+  }
+
+  html body > :is(
+    [data-parcel-region-trade-picker-surface="true"],
+    [data-parcel-building-unit-picker],
+    [data-parcel-common-housing-picker],
+    [data-parcel-trade-filter-modal]
+  ) > .parcel-building-unit-picker-dialog,
+  html body > .parcel-building-all-modal > .parcel-building-all-dialog {
+    position: static;
+    max-height: calc(100dvh - 40px);
+    margin: 0;
+    transform: none;
+  }
+}
+/* REALJEJU 6.658: end mobile parcel selector dialogs owner. */
+
+/* REALJEJU 6.658: single owner for mobile education facility summary sheets. */
+@media (max-width: 850px) {
+  body.education-facility-mobile-closing #educationFacilityDetailPanel {
+    display: none;
+  }
+
+  body.education-facility-detail-open > .app {
+    position: relative;
+    z-index: var(--realjeju-mobile-listing-z);
+    isolation: isolate;
+  }
+
+  body.education-facility-detail-open:is(.education-facility-mobile-expanded, .mobile-summary-sheet-dragging) > .app {
+    z-index: var(--realjeju-mobile-modal-z);
+  }
+
+  body.education-facility-detail-open.education-facility-mobile-expanded :is(
+    .parcel-trade-left-tool-stack,
+    #mapSideTools.map-side-tools,
+    #mapSettingsToolGroup,
+    .map-settings-bottom-group
+  ) {
+    display: none;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  body.education-facility-detail-open .education-facility-detail-panel {
+    position: fixed;
+    inset: auto 0 0 0;
+    display: flex;
+    box-sizing: border-box;
+    width: 100vw;
+    min-width: 100vw;
+    max-width: 100vw;
+    height: auto;
+    min-height: 0;
+    max-height: calc(100dvh - var(--realjeju-mobile-top-row-height));
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    background: #fff;
+    box-shadow: none;
+    transform: none;
+    overflow: hidden;
+    z-index: var(--realjeju-mobile-modal-z);
+  }
+
+  body.education-facility-detail-open .education-facility-detail-head {
+    position: relative;
+    display: flex;
+    min-height: 56px;
+    flex: 0 0 56px;
+    align-items: center;
+    justify-content: center;
+    padding: 0 56px;
+    border-bottom: 0.5px solid #f1f3f6;
+    border-radius: 0;
+    background: #fff;
+    text-align: center;
+    z-index: 3;
+  }
+
+  body.education-facility-detail-open .education-facility-detail-head > strong {
+    font: inherit;
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  body.education-facility-detail-open:not(.education-facility-mobile-expanded):not(.mobile-summary-sheet-dragging) .education-facility-detail-scroll {
+    flex: 0 0 auto;
+    max-height: none;
+    overflow: hidden;
+  }
+
+  body.education-facility-detail-open:not(.education-facility-mobile-expanded):not(.mobile-summary-sheet-dragging) .education-facility-detail-scroll > :not(.education-facility-detail-hero) {
+    display: none;
+  }
+
+  body.education-facility-detail-open .education-facility-detail-hero {
+    border-bottom: 8px solid #f3f4f6;
+  }
+
+  body.education-facility-mobile-expanded {
+    overflow: hidden;
+  }
+
+  body.education-facility-detail-open.education-facility-mobile-expanded .education-facility-detail-panel {
+    inset: 0;
+    width: 100vw;
+    min-width: 100vw;
+    max-width: 100vw;
+    height: 100dvh;
+    min-height: 100dvh;
+    max-height: 100dvh;
+  }
+
+  body.education-facility-detail-open.education-facility-mobile-expanded .education-facility-detail-scroll {
+    min-height: 0;
+    flex: 1 1 auto;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+  }
+
+  body.education-facility-detail-open.mobile-summary-sheet-dragging .education-facility-detail-panel {
+    inset: auto 0 0;
+    height: var(--realjeju-mobile-listing-drag-height);
+    min-height: var(--realjeju-mobile-listing-drag-height);
+    max-height: var(--realjeju-mobile-listing-drag-height);
+  }
+
+  body.education-facility-detail-open.mobile-summary-sheet-dragging .education-facility-detail-scroll {
+    min-height: 0;
+    flex: 1 1 auto;
+    overflow: hidden;
+    overscroll-behavior: none;
+    touch-action: none;
+  }
+}
+/* REALJEJU 6.658: end mobile education facility summary sheets owner. */
+
+/* REALJEJU 6.658: single owner for mobile listing summary. */
+@media (max-width: 850px) {
+  body:is(.listing-mobile-active, .parcel-area-mobile-active) > .app {
+    z-index: var(--realjeju-mobile-listing-z);
+    isolation: isolate;
+  }
+
+  body.listing-mobile-active:is(.mobile-summary-sheet-dragging, .listing-mobile-expanded) > .app,
+  body.parcel-area-mobile-active:is(.mobile-summary-sheet-dragging, .parcel-area-mobile-detail-open) > .app {
+    z-index: var(--realjeju-mobile-modal-z);
+  }
+
+  body.listing-mobile-active #sidebar,
+  body.listing-mobile-active #sidebar > .sidebar-inner,
+  body.parcel-area-mobile-active #sidebar,
+  body.parcel-area-mobile-active #sidebar > .sidebar-inner {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    min-width: 100vw;
+    max-width: 100vw;
+    height: 100dvh;
+    min-height: 100dvh;
+    max-height: 100dvh;
+    margin: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+    transform: none;
+    overflow: visible;
+    pointer-events: none;
+    z-index: var(--realjeju-mobile-modal-z);
+    isolation: isolate;
+  }
+
+  body:is(.listing-mobile-active, .parcel-area-mobile-active) #sidebar::before {
+    content: none;
+  }
+
+  body.listing-mobile-active .map-current-tool-group,
+  body.parcel-property-mobile-active:not(.mobile-summary-sheet-dragging) .map-current-tool-group,
+  body.parcel-statistics-mobile-active:not(.mobile-summary-sheet-dragging) .map-current-tool-group,
+  body.education-facility-detail-open .map-current-tool-group {
+    display: none;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  body:is(.listing-mobile-active, .parcel-area-mobile-active) .sidebar-list-panel {
+    position: fixed;
+    inset: auto 0 0 0;
+    display: flex;
+    box-sizing: border-box;
+    width: 100vw;
+    min-width: 100vw;
+    max-width: 100vw;
+    height: auto;
+    min-height: 0;
+    max-height: calc(100dvh - var(--realjeju-mobile-top-row-height));
+    flex-direction: column;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    background: #fff;
+    box-shadow: none;
+    transform: none;
+    overflow: hidden;
+    pointer-events: auto;
+    z-index: var(--realjeju-mobile-modal-z);
+  }
+
+  body.listing-mobile-active .sidebar-list-header,
+  body.parcel-property-mobile-active .sidebar-list-panel:has(.parcel-land-info-panel) .sidebar-list-header,
+  body.parcel-statistics-mobile-active .sidebar-list-panel:has(.parcel-region-trade-stats-panel) .sidebar-list-header,
+  body.education-facility-detail-open .education-facility-detail-head,
+  body:has(#sidebarDetailPanel[aria-hidden="false"]) #sidebarDetailPanel .detail-topbar {
+    box-sizing: border-box;
+    height: var(--rj-panel-header-height, 56px);
+    min-height: var(--rj-panel-header-height, 56px);
+    flex: 0 0 var(--rj-panel-header-height, 56px);
+  }
+
+  body.listing-mobile-active .sidebar-list-header,
+  body.parcel-property-mobile-active .sidebar-list-panel:has(.parcel-land-info-panel) .sidebar-list-header,
+  body.parcel-statistics-mobile-active .sidebar-list-panel:has(.parcel-region-trade-stats-panel) .sidebar-list-header,
+  body.education-facility-detail-open .education-facility-detail-head {
+    position: relative;
+    top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 16px;
+    border-bottom: 0.5px solid #f1f3f6;
+    border-radius: 0;
+    background: #fff;
+    font-size: var(--realjeju-mobile-summary-title-size);
+    font-weight: 800;
+    z-index: 3;
+  }
+
+  body:is(.listing-mobile-active, .parcel-property-mobile-active, .parcel-statistics-mobile-active, .education-facility-detail-open) .mobile-summary-expand-toggle,
+  body:is(.listing-mobile-active, .parcel-property-mobile-active, .parcel-statistics-mobile-active, .education-facility-detail-open) :is(#sidebarListCloseBtn, #educationFacilityDetailCloseBtn, #sidebarListShareBtn:not([hidden])),
+  body:has(#sidebarDetailPanel[aria-hidden="false"]) :is(#detailCloseBtn, #detailShareBtn) {
+    position: absolute;
+    top: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--realjeju-mobile-sheet-action-size);
+    height: var(--realjeju-mobile-sheet-action-size);
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--realjeju-mobile-listing-header-icon-color);
+    font-size: var(--realjeju-mobile-listing-header-icon-size);
+    line-height: 1;
+    transform: translateY(-50%);
+    cursor: pointer;
+    z-index: 4;
+  }
+
+  body:is(.listing-mobile-active, .parcel-property-mobile-active, .parcel-statistics-mobile-active, .education-facility-detail-open) :is(.mobile-summary-expand-toggle, #sidebarListCloseBtn, #educationFacilityDetailCloseBtn, #sidebarListShareBtn:not([hidden])) > i,
+  body:has(#sidebarDetailPanel[aria-hidden="false"]) :is(#detailCloseBtn, #detailShareBtn) > i {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1em;
+    height: 1em;
+    color: inherit;
+    font-size: inherit;
+    line-height: 1;
+    transform: none;
+  }
+
+  body:is(.listing-mobile-active, .parcel-property-mobile-active, .parcel-statistics-mobile-active, .education-facility-detail-open) .mobile-summary-expand-toggle {
+    left: var(--realjeju-mobile-sheet-action-inline);
+  }
+
+  body:is(.listing-mobile-active, .parcel-property-mobile-active, .parcel-statistics-mobile-active, .education-facility-detail-open) :is(#sidebarListCloseBtn, #educationFacilityDetailCloseBtn),
+  body:has(#sidebarDetailPanel[aria-hidden="false"]) #detailCloseBtn {
+    right: var(--realjeju-mobile-sheet-action-inline);
+  }
+
+  body.listing-mobile-active #sidebarListShareBtn:not([hidden]),
+  body:has(#sidebarDetailPanel[aria-hidden="false"]) #detailShareBtn {
+    right: calc(var(--realjeju-mobile-sheet-action-inline) + var(--realjeju-mobile-sheet-action-size) + var(--realjeju-mobile-sheet-action-gap));
+  }
+
+  body:has(#sidebarDetailPanel[aria-hidden="false"]) #detailShareMenu {
+    position: absolute;
+    top: calc(100% + var(--realjeju-mobile-sheet-action-inline));
+    right: var(--realjeju-mobile-sheet-action-inline);
+    left: auto;
+    width: 260px;
+    max-width: calc(100vw - var(--realjeju-mobile-sheet-action-inline) - var(--realjeju-mobile-sheet-action-inline));
+  }
+
+  body:is(.listing-mobile-active, .parcel-property-mobile-active, .parcel-statistics-mobile-active) #sidebarListTitle.mobile-summary-drag-handle,
+  body.education-facility-detail-open #educationFacilityDetailCategory.mobile-summary-drag-handle {
+    position: absolute;
+    inset: 0 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: none;
+    margin: 0;
+    padding: 0 8px;
+    overflow: hidden;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    cursor: grab;
+  }
+
+  body.mobile-summary-sheet-dragging :is(#sidebarListTitle, #educationFacilityDetailCategory).mobile-summary-drag-handle {
+    cursor: grabbing;
+  }
+
+  body.listing-mobile-active:not(.listing-mobile-expanded) #propertyList {
+    display: block;
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    max-height: none;
+    flex: 0 0 auto;
+    padding: 0;
+    overflow: hidden;
+    overscroll-behavior: none;
+    touch-action: manipulation;
+    cursor: pointer;
+  }
+
+  body.listing-mobile-active:not(.listing-mobile-expanded) #propertyList > .sidebar-list-sortbar {
+    position: relative;
+    top: auto;
+    display: flex;
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 44px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 0 18px;
+    border-bottom: 1px solid #e5e7eb;
+    background: #f5f7fa;
+  }
+
+  body.listing-mobile-active:not(.listing-mobile-expanded) .sidebar-list-agent-count {
+    flex: 0 0 auto;
+    font-size: 15px;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  body.listing-mobile-active:not(.listing-mobile-expanded) .sidebar-list-agent-count strong {
+    color: #2563eb;
+    font-size: 16px;
+  }
+
+  body.listing-mobile-active:not(.listing-mobile-expanded) .sidebar-list-agent-sort-actions {
+    gap: 5px;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  body.listing-mobile-active:not(.listing-mobile-expanded) .sidebar-list-agent-sort-btn,
+  body.listing-mobile-active:not(.listing-mobile-expanded) .sidebar-list-agent-sort-divider {
+    font-size: 13px;
+  }
+
+  body.listing-mobile-active:not(.listing-mobile-expanded) #propertyList > .card[data-id] {
+    width: 100%;
+    margin: 0;
+    background: #fff;
+  }
+
+  body.listing-mobile-active:not(.listing-mobile-expanded):not(.mobile-summary-sheet-dragging) #propertyList > .card[data-id] ~ .card[data-id],
+  body.listing-mobile-active:not(.listing-mobile-expanded):not(.mobile-summary-sheet-dragging) #propertyList > .left-list-loading {
+    display: none;
+  }
+
+  body.listing-mobile-expanded {
+    overflow: hidden;
+  }
+
+  body:is(
+    .listing-mobile-active.listing-mobile-expanded,
+    .parcel-area-mobile-active.parcel-area-mobile-detail-open
+  ) .sidebar-list-panel {
+    inset: 0;
+    width: 100vw;
+    min-width: 100vw;
+    max-width: 100vw;
+    height: 100dvh;
+    min-height: 100dvh;
+    max-height: 100dvh;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  body.listing-mobile-active.listing-mobile-expanded #propertyList {
+    display: block;
+    width: 100%;
+    min-height: 0;
+    height: auto;
+    max-height: none;
+    flex: 1 1 auto;
+    padding: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+  }
+
+  body:is(.listing-mobile-active, .parcel-area-mobile-active, .parcel-property-mobile-active, .parcel-statistics-mobile-active).mobile-summary-sheet-dragging .sidebar-list-panel {
+    inset: auto 0 0;
+    height: var(--realjeju-mobile-listing-drag-height);
+    min-height: var(--realjeju-mobile-listing-drag-height);
+    max-height: var(--realjeju-mobile-listing-drag-height);
+    transition: none;
+    will-change: height;
+  }
+
+  body:is(.listing-mobile-active, .parcel-property-mobile-active, .parcel-statistics-mobile-active).mobile-summary-sheet-dragging #propertyList {
+    display: block;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+    overscroll-behavior: none;
+    touch-action: none;
+  }
+
+  body.listing-mobile-active.mobile-summary-sheet-dragging #propertyList > .card[data-id] {
+    display: block;
+  }
+}
+/* REALJEJU 6.658: end mobile listing summary owner. */
+
+/* REALJEJU 6.658 | 2026-08-20 */
+/* REALJEJU VERSION: 6.658 */
+:root {
+  --service-parcel-accent: #7c3aed;
+  --service-ev-accent: #16803c;
+}
+
+/* REALJEJU 6.658: hamburger opens the left service drawer; profile opens the right account drawer. */
+@media (max-width: 850px) {
+
+html body #realjejuSideNav .realjeju-side-account-wrap {
+    display: none;
+  }
+
+  
+
+  html body #globalTopbarMoreMenu.account-launcher-menu.open {
+    flex-direction: column;
+  }
+
+  html body #globalTopbarMoreMenu .account-launcher-grid,
+  html body #globalTopbarMoreMenu .account-launcher-actions {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 0;
+  }
+
+  html body #globalTopbarMoreMenu .account-launcher-item,
+  html body #globalTopbarMoreMenu .account-launcher-management,
+  html body #globalTopbarMoreMenu .account-launcher-logout {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px;
+    width: 100%;
+    min-height: 48px;
+    margin: 0;
+    padding: 0 var(--rj-mobile-drawer-inline);
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: #374151;
+    font-family: var(--font-ui);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.2;
+    text-align: left;
+  }
+
+  html body #globalTopbarMoreMenu .global-account-menu-item > i {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    min-width: 20px;
+    color: #737b8c;
+    font-size: 16px;
+  }
+
+  html body #globalTopbarMoreMenu .account-launcher-divider {
+    display: block;
+    width: 100%;
+    height: 1px;
+    margin: 10px 0;
+    background: #e5e7eb;
+  }
+}
+
+/* REALJEJU 6.658: keep the left hamburger drawer limited to service links and recent items. */
+@media (max-width: 850px) {
+  html body #realjejuSideNav > .realjeju-mobile-home-ad,
+  html body #realjejuSideNav > .realjeju-mobile-flat-line-after-ad,
+  html body #realjejuSideNav > .realjeju-side-account-wrap,
+  html body #realjejuSideNav > .realjeju-side-account-wrap + .realjeju-side-nav-line,
+  html body #realjejuSideNav > .realjeju-side-recent-ad-primary,
+  html body #realjejuSideNav > .realjeju-side-ad-bottom-line,
+  html body #realjejuSideNav > .realjeju-side-nav-bottom-line,
+  html body #realjejuSideNav > .realjeju-side-nav-bottom {
+    display: none;
+  }
+
+  html body #realjejuSideNav > .realjeju-side-primary-menu > .realjeju-mobile-flat-line-after-home {
+    display: block;
+    width: 100%;
+    height: 1px;
+    margin: 10px 0;
+    background: #e5e7eb;
+  }
+
+  html body #realjejuSideNav > .realjeju-side-primary-menu + .realjeju-side-nav-line {
+    display: block;
+    width: 100%;
+    height: 1px;
+    margin: 10px 0;
+    background: #e5e7eb;
+  }
+}
+
+/* REALJEJU 6.658: responsive topbar uses logo | search, chat, notification, profile. */
+@media (max-width: 850px) {
+
+  #globalTopbarMoreBtn {
+    display: none;
+  }
+
+  body.topbar-account-launcher-visible #globalTopbarChatMenu.topbar-notification-menu.open,
+  body.topbar-account-launcher-visible #globalTopbarNotificationMenu.topbar-notification-menu.open {
+    display: block;
+    position: fixed;
+    top: 48px;
+    right: 8px;
+    left: auto;
+    z-index: 2147483642;
+  }
+}
+
+@media (max-width: 850px) {
+
+  html body #realjejuSideNav .realjeju-side-nav-item,
+  html body #realjejuSideNav .realjeju-side-register-btn,
+  html body #realjejuSideNav .realjeju-side-account-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-ui);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.25;
+  }
+
+  html body #realjejuSideNav .realjeju-side-nav-item > i,
+  html body #realjejuSideNav .realjeju-side-register-btn > i,
+  html body #realjejuSideNav .realjeju-side-account-menu-item > i {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    min-width: 20px;
+    height: 20px;
+    margin: 0;
+    color: #737b8c;
+    font-size: 16px;
+    line-height: 1;
+    flex: 0 0 20px;
+  }
+}
+
+/* REALJEJU 6.658: equal mobile action spacing, profile last, account menu visible. */
+@media (max-width: 850px) {
+
+  
+
+  html body #globalTopbarMoreMenu.account-launcher-menu.open {
+    display: flex;
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+/* REALJEJU 6.658: the broker slot becomes the livestock layer in parcel mode. */
+@media (max-width: 850px) {
+  html body[data-global-category="parcel"] #mapBrokerToolBtn,
+  html body[data-global-category="parcel"] #mapBrokerToolBtn[hidden] {
+    display: flex;
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+/* REALJEJU 6.658: structural mobile left search slot prevents overlap with the centered brand. */
+@media (min-width: 851px) {
+  .mobile-topbar-left-actions,
+  .realjeju-mobile-side-nav-trigger {
+    display: none;
+  }
+}
+
+/* REALJEJU 6.658: mobile full-screen menu panels are edge-to-edge without rounded corners. */
+@media (max-width: 850px) {
+  html body :is(
+    .sidebar-list-panel,
+    .sidebar-detail-panel,
+    #sidebarDetailPanel,
+    .listing-list-panel,
+    .listing-detail-panel,
+    .broker-list-panel,
+    .broker-listing-panel,
+    .broker-property-list-panel,
+    .broker-property-detail-panel,
+    .property-info-panel,
+    .parcel-land-info-panel,
+    .parcel-region-trade-stats-panel
+  ) {
+    border-radius: 0;
+  }
+
+  html body:is(
+    .list-shared-detail-mode,
+    .recent-shared-detail-mode,
+    .shared-detail-mode,
+    .detail-page-panel-open,
+    .map-detail-panel-active
+  ) :is(.sidebar-list-panel, .sidebar-detail-panel, #sidebarDetailPanel) {
+    inset: 0;
+    width: 100vw;
+    max-width: 100vw;
+    height: 100dvh;
+    max-height: 100dvh;
+    margin: 0;
+    border-radius: 0;
+  }
+}
+
+/* 6.658: PC topbar right-side order restoration.
+   Keep the desktop sequence independent from mobile touch layout rules. */
+@media (min-width: 851px) and (hover: hover) and (pointer: fine) {
+  html body .global-topbar-right {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+
+  html body .global-topbar-right > #detailAuthTrigger,
+  html body .global-topbar-right > .global-auth-trigger {
+    order: 1;
+    margin-left: 0;
+  }
+
+  html body .global-topbar-right > #globalTopbarChatBtn {
+    order: 2;
+  }
+
+  html body .global-topbar-right > #globalTopbarNotificationBtn {
+    order: 3;
+  }
+
+  html body .global-topbar-right > #globalTopbarMoreBtn {
+    order: 4;
+  }
+}
+
+@media (max-width: 850px) {
+html body #realjejuSideNav .realjeju-side-primary-menu > [data-side-nav-action="home"],
+  html body #realjejuSideNav .realjeju-mobile-home-ad,
+  html body #realjejuSideNav .realjeju-mobile-flat-line,
+  html body #realjejuSideNav > .realjeju-side-account-wrap,
+  html body #realjejuSideNav > .realjeju-side-account-wrap + .realjeju-side-nav-line,
+  html body #realjejuSideNav > .realjeju-side-recent-ad-primary,
+  html body #realjejuSideNav > .realjeju-side-ad-bottom-line,
+  html body #realjejuSideNav > .realjeju-side-nav-line {
+    display: none;
+  }
+
+  html body #realjejuSideNav > .realjeju-side-primary-menu,
+  html body #realjejuSideNav > .realjeju-side-nav-bottom {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  html body #realjejuSideNav .realjeju-side-primary-menu > [hidden],
+  html body #realjejuSideNav .realjeju-side-nav-bottom > [hidden] {
+    display: none;
+  }
+
+  html body #realjejuSideNav > .realjeju-side-recent {
+    box-sizing: border-box;
+    display: block;
+    width: 100%;
+    min-height: 0;
+    margin: 0;
+    padding: 0 var(--rj-mobile-drawer-inline);
+  }
+
+  html body #realjejuSideNav .realjeju-side-recent-title,
+  html body #realjejuSideNav .realjeju-side-recent-empty,
+  html body #realjejuSideNav .realjeju-side-recent-list {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  html body #realjejuSideNav .realjeju-side-recent-title {
+    min-height: 38px;
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+    font-family: "PaperlogyLocal", "SUIT", sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+  }
+}
+
+/* REALJEJU 6.658: canonical mobile account launcher and pending mobile UI fixes. */
+@media (max-width: 850px) {
+
+  html body #globalTopbarMoreMenu.account-launcher-menu.open,
+  html body #globalTopbarMoreMenu.account-launcher-menu[aria-hidden="false"] {
+    display: flex;
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 2147483647;
+  }
+
+}
+
+@media (max-width: 850px) {
+
+  html body #realjejuSideNav > .realjeju-side-nav-bottom-line {
+    display: block;
+    flex: 0 0 1px;
+    width: 100%;
+    height: 1px;
+    margin: 8px 0;
+    border: 0;
+    background: #e5e7eb;
+  }
+}
+
+/* REALJEJU 6.658: keep exactly one divider below the EV charger service row. */
+@media (max-width: 850px) {
+  html body #realjejuSideNav .realjeju-side-primary-menu > .realjeju-mobile-flat-line-after-home {
+    display: none;
+    height: 0;
+    margin: 0;
+    border: 0;
+    background: transparent;
+  }
+}
+
+/* REALJEJU 6.658: single divider below notice and shared left edge for version text. */
+@media (max-width: 850px) {
+
+  html body #realjejuSideNav #realjejuSideAdminVersion {
+    box-sizing: border-box;
+    width: 100%;
+    margin: 0;
+    padding-left: calc(var(--rj-mobile-drawer-inline, 22px) + 30px);
+    padding-right: var(--rj-mobile-drawer-inline, 22px);
+    text-align: left;
+    justify-content: flex-start;
+  }
+}
+
+/* REALJEJU 6.658: profile opens only the right account menu; hamburger stays visible. */
+@media (max-width: 850px) {
+
+  
+}
+
+/* REALJEJU 6.658: remove the version row's own top rule; retain only the shared notice divider. */
+@media (max-width: 850px) {
+  html body #realjejuSideNav #realjejuSideAdminVersion,
+  html body #realjejuSideNav #realjejuSideAdminVersion::before,
+  html body #realjejuSideNav #realjejuSideAdminVersion::after {
+    border: 0;
+    border-top: 0;
+    box-shadow: none;
+  }
+}
+
+/* REALJEJU 6.658: every interactive row in the hamburger side menu uses a pointer cursor. */
+html body #realjejuSideNav :is(
+  a,
+  button:not([disabled]),
+  [role="button"],
+  [data-global-category],
+  [data-realjeju-side-nav-action]
+),
+html body #realjejuSideNav :is(
+  a,
+  button:not([disabled]),
+  [role="button"],
+  [data-global-category],
+  [data-realjeju-side-nav-action]
+) * {
+  cursor: pointer;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
