@@ -1,0 +1,108 @@
+/* REALJEJU 6.666 | 2026-08-20 */
+/* REALJEJU VERSION: 6.666 */
+/* REALJEJU 5.436 CSS module: shared foundation
++ * Original cascade order is preserved. Rules are moved, not duplicated.
++ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@font-face {
+	font-family: "SUITLocal";
+	src: url("../fonts/SUIT-Regular.woff2") format("woff2");
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "SUITLocal";
+	src: url("../fonts/SUIT-Medium.woff2") format("woff2");
+	font-weight: 500;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "SUITLocal";
+	src: url("../fonts/SUIT-SemiBold.woff2") format("woff2");
+	font-weight: 600;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "SUITLocal";
+	src: url("../fonts/SUIT-Bold.woff2") format("woff2");
+	font-weight: 700;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "SUITLocal";
+	src: url("../fonts/SUIT-ExtraBold.woff2") format("woff2");
+	font-weight: 800;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "SUITLocal";
+	src: url("../fonts/SUIT-Heavy.woff2") format("woff2");
+	font-weight: 900;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "PaperlogyLocal";
+	src: url("../fonts/Paperlogy-7Bold.woff2") format("woff2");
+	font-weight: 700;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "PaperlogyLocal";
+	src: url("../fonts/Paperlogy-8ExtraBold.woff2") format("woff2");
+	font-weight: 800;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "PaperlogyNumbers";
+	src: url("../fonts/Paperlogy-6SemiBold-Numbers.woff2") format("woff2");
+	font-weight: 600;
+	font-style: normal;
+	font-display: swap;
+}
+
+
+/* REALJEJU consolidated stylesheet / Ver 2.903 */
+/* Split foundation rules are merged here and owned by this module. */
+
+
+
+
+
+
+
+
+
+/* =====================================================
+   1. 부동산 홈 / 지도 / 필터바
+   ===================================================== */
