@@ -1,0 +1,626 @@
+/* REALJEJU 6.662 | 2026-08-20 */
+/* REALJEJU VERSION: 6.662 */
+/* REALJEJU 5.436 CSS module: payment, account and authentication
++ * Original cascade order is preserved. Rules are moved, not duplicated.
++ */
+/* ===== MERGED FROM payment_2.712.css ===== */
+
+
+
+
+.payment-page-head{display:flex;justify-content:space-between;}
+.payment-page-title{margin:0;letter-spacing:-0.04em;}
+.payment-page-desc{margin:8px 0 0;}
+
+.payment-current-label{display:block;}
+.payment-current-plan-card strong{display:block;}
+.payment-current-plan-card em{display:block;font-style:normal;}
+
+.payment-current-date-box span{display:block;margin-bottom:5px;}
+.payment-current-date-box strong{display:block;letter-spacing:-.02em;}
+.payment-tabs{display:inline-flex;}
+.payment-tab{border:0;background:transparent;cursor:pointer;}
+
+.payment-tab-panel{display:none;}
+.payment-tab-panel.active{display:block;}
+.payment-plan-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));}
+.payment-plan-card{position:relative;}
+.payment-plan-card.featured{box-shadow:none;}
+.payment-plan-badge{position:absolute;}
+.payment-plan-topline{letter-spacing:.08em;}
+.payment-plan-card h2{letter-spacing:-.04em;}
+.payment-plan-price{letter-spacing:-.04em;}
+
+.payment-plan-card ul{list-style:none;padding:0;display:grid;}
+.payment-plan-card li:before{content:'✓';margin-right:8px;color:#2563eb;font-weight:800;}
+.payment-plan-btn{width:100%;border:0;color:#fff;cursor:pointer;}
+.payment-plan-btn.is-secondary{background:#e8eef7;color:#64748b;cursor:default;}
+
+.payment-extra-box h2,
+.payment-history-card h2,
+.payment-help-card h2{margin:0 0 14px;letter-spacing:-.03em;}
+.payment-extra-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));}
+.payment-extra-item{display:flex;justify-content:space-between;align-items:center;cursor:pointer;}
+
+.payment-ready-note{margin:14px 0 0;}
+.payment-history-head{display:flex;align-items:center;justify-content:space-between;}
+.payment-history-refresh,
+.payment-help-btn{cursor:pointer;}
+.payment-history-table{width:100%;border-collapse:collapse;}
+.payment-history-table th{text-align:left;}
+
+.payment-empty-row td{text-align:center;color:#94a3b8;}
+
+.payment-help-card p{margin:0 0 14px;color:#64748b;}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.payment-history-head{margin-bottom:7px;}
+.payment-history-refresh,
+.payment-help-btn{padding:8px 13px;}
+
+
+
+.payment-help-card{margin-top:14px;}
+.payment-help-card p{margin-bottom:13px;font-size:13px;}
+
+
+
+@media (max-width: 900px) {
+	.payment-current-plan-card{
+		margin-top: 14px;
+	}
+
+	
+}
+
+
+.payment-page-panel .payment-current-plan-card,
+.payment-page-panel .payment-tab.active,
+.payment-page-panel .payment-plan-card,
+.payment-page-panel .payment-plan-card.featured,
+.payment-page-panel .payment-extra-box,
+.payment-page-panel .payment-history-card,
+.payment-page-panel .payment-help-card{
+	box-shadow: none;
+}
+
+.payment-page-panel .payment-plan-card.featured{
+	border-width: 1px;
+	border-color: #e5e7eb;
+}
+
+
+
+
+
+
+.payment-page-panel .payment-current-plan-card,
+.payment-page-panel .payment-plan-card,
+.payment-page-panel .payment-extra-box,
+.payment-page-panel .payment-history-card,
+.payment-page-panel .payment-help-card{
+	border-radius: 10px;
+}
+
+.payment-page-panel .payment-tabs,
+.payment-page-panel .payment-tab,
+.payment-page-panel .payment-plan-btn,
+.payment-page-panel .payment-extra-item,
+.payment-page-panel .payment-history-refresh,
+.payment-page-panel .payment-help-btn,
+.payment-page-panel .payment-plan-badge{
+	border-radius: 10px;
+}
+
+
+
+
+
+
+
+
+
+
+
+.payment-page-head{
+	align-items: center;
+	gap: 28px;
+	margin: 0 0 26px;
+}
+
+.payment-page-title{
+	font-size: 25px;
+	font-weight: 700;
+	line-height: 1.25;
+}
+
+.payment-page-desc{
+	margin-top: 7px;
+	color: #6b7280;
+	font-size: 14px;
+	line-height: 1.45;
+}
+
+.payment-current-plan-card{
+	min-width: 260px;
+	padding: 18px 20px;
+	border: 1px solid #e5e7eb;
+	border-radius: 8px;
+	background: #ffffff;
+	box-shadow: none;
+}
+
+.payment-current-label{
+	margin-bottom: 7px;
+	color: #6b7280;
+	font-size: 12px;
+	font-weight: 600;
+}
+
+.payment-current-plan-card strong{
+	color: #111827;
+	font-size: 18px;
+	font-weight: 700;
+}
+
+.payment-current-plan-card em{
+	margin-top: 5px;
+	color: #2563eb;
+	font-size: 13px;
+	font-weight: 600;
+}
+
+.payment-current-date-box{
+	margin-top: 15px;
+	padding-top: 14px;
+	border-top: 1px solid #eef2f7;
+}
+
+.payment-current-date-box span{
+	color: #6b7280;
+	font-size: 12px;
+	font-weight: 600;
+}
+
+.payment-current-date-box strong{
+	color: #374151;
+	font-size: 13px;
+	font-weight: 600;
+}
+
+.payment-tabs{
+	margin-bottom: 18px;
+	padding: 0;
+	border: 1px solid #e5e7eb;
+	border-radius: 0;
+	background: #ffffff;
+	overflow: hidden;
+}
+
+.payment-tab{
+	height: 50px;
+	min-width: 132px;
+	padding: 0 22px;
+	border-radius: 0;
+	color: #6b7280;
+	font-size: 15px;
+	font-weight: 600;
+}
+
+.payment-tab.active{
+	background: #2563eb;
+	color: #ffffff;
+	box-shadow: none;
+}
+
+.payment-plan-grid{
+	gap: 12px;
+	margin-bottom: 18px;
+}
+
+.payment-plan-card{
+	display: flex;
+	min-height: 288px;
+	padding: 24px;
+	flex-direction: column;
+	border: 1px solid #e5e7eb;
+	border-radius: 8px;
+	background: #ffffff;
+	box-shadow: none;
+}
+
+.payment-plan-card.featured{
+	border: 1px solid #e5e7eb;
+	background: #ffffff;
+}
+
+.payment-plan-badge{
+	top: 18px;
+	right: 18px;
+	padding: 4px 8px;
+	border-radius: 6px;
+	background: #eff6ff;
+	color: #2563eb;
+	font-size: 12px;
+	font-weight: 700;
+}
+
+.payment-plan-topline{
+	color: #2563eb;
+	font-size: 12px;
+	font-weight: 700;
+	text-transform: none;
+}
+
+.payment-plan-card h2{
+	margin: 8px 0 16px;
+	color: #111827;
+	font-size: 20px;
+	font-weight: 700;
+}
+
+.payment-plan-price{
+	color: #111827;
+	font-size: 30px;
+	font-weight: 800;
+}
+
+.payment-plan-price span{
+	color: #6b7280;
+	font-size: 13px;
+	font-weight: 600;
+}
+
+.payment-plan-card ul{
+	margin: 22px 0 24px;
+	gap: 9px;
+	color: #4b5573;
+	font-size: 13px;
+	line-height: 1.45;
+}
+
+.payment-plan-card li::before{
+	color: #2563eb;
+}
+
+.payment-plan-card li.payment-plan-divider{
+	margin: 8px 0 4px;
+	padding: 0;
+	border-top: 0.5px solid #e5e7eb;
+}
+
+.payment-plan-card li.payment-plan-divider::before{
+	content: none;
+}
+
+.payment-plan-btn{
+	height: 42px;
+	margin-top: auto;
+	border-radius: 8px;
+	background: #2563eb;
+	font-size: 14px;
+	font-weight: 700;
+	box-shadow: none;
+}
+
+.payment-extra-box,
+.payment-history-card,
+.payment-help-card{
+	padding: 22px;
+	border: 1px solid #e5e7eb;
+	border-radius: 8px;
+	background: #ffffff;
+	box-shadow: none;
+}
+
+.payment-extra-box h2,
+.payment-history-card h2,
+.payment-help-card h2{
+	margin-bottom: 14px;
+	color: #111827;
+	font-size: 16px;
+	font-weight: 700;
+}
+
+.payment-extra-list{
+	gap: 10px;
+}
+
+.payment-extra-item{
+	padding: 14px 15px;
+	border: 1px solid #e5e7eb;
+	border-radius: 8px;
+	background: #fafafa;
+	color: #374151;
+	font-size: 13px;
+	font-weight: 600;
+}
+
+.payment-extra-item strong{
+	color: #2563eb;
+	font-weight: 700;
+}
+
+.payment-ready-note{
+	margin-top: 12px;
+	color: #9ca3af;
+	font-size: 12px;
+}
+
+.payment-history-refresh,
+.payment-help-btn{
+	border: 1px solid #d1d5db;
+	border-radius: 8px;
+	background: #ffffff;
+	color: #374151;
+	font-size: 13px;
+	font-weight: 600;
+}
+
+.payment-history-table{
+	font-size: 13px;
+}
+
+.payment-history-table th{
+	padding: 13px 12px;
+	border-bottom: 1px solid #e5e7eb;
+	background: #f9fafb;
+	color: #6b7280;
+	font-weight: 700;
+}
+
+.payment-history-table td{
+	padding: 16px 12px;
+	border-bottom: 1px solid #f0f2f5;
+	color: #4b5573;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@media (max-width: 900px) {
+	
+
+	.payment-page-head{
+		align-items: stretch;
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+	}
+
+	.payment-current-plan-card{
+		min-width: 0;
+	}
+
+	.payment-plan-grid,
+.payment-extra-list{
+		grid-template-columns: 1fr;
+	}
+
+	.payment-plan-card{
+		min-height: 0;
+	}
+}
+
+
+.payment-page-panel .payment-tabs{
+	margin-bottom: 18px;
+	padding: 0;
+	border: 1px solid #e5e7eb;
+	border-radius: 12px;
+	background: #ffffff;
+	overflow: hidden;
+}
+
+.payment-page-panel .payment-tab{
+	height: 50px;
+	min-width: 118px;
+	padding: 0 16px;
+	border-radius: 0;
+	border-right: 1px solid #e5e7eb;
+	color: #6b7280;
+	font-size: 15px;
+	font-weight: 600;
+}
+
+.payment-page-panel .payment-tab:last-child{
+	border-right: 0;
+}
+
+.payment-page-panel .payment-tab.active{
+	background: #2563eb;
+	color: #ffffff;
+	box-shadow: none;
+}
+
+
+.payment-page-panel .payment-plan-card .payment-plan-btn,
+.payment-page-panel .payment-plan-card .payment-plan-btn.is-secondary{
+	border-radius: 999px;
+}
+
+
+.payment-page-panel .payment-plan-card .payment-plan-btn{
+	background: #ffffff;
+	border: 1px solid #d1d5db;
+	color: #111827;
+	box-shadow: none;
+}
+
+.payment-page-panel .payment-plan-card .payment-plan-btn:not(.is-secondary):not(.is-current):hover{
+	border-color: #2563eb;
+	color: #2563eb;
+}
+
+.payment-page-panel .payment-plan-card ul{
+	margin-bottom: 24px;
+}
+
+.payment-page-panel .payment-coupon-note{
+	margin: 12px 0 24px;
+}
+
+.payment-page-panel .payment-plan-card .payment-plan-btn.is-secondary,
+.payment-page-panel .payment-plan-card .payment-plan-btn:disabled{
+	background: #d1d5db;
+	border-color: #d1d5db;
+	color: #ffffff;
+	cursor: default;
+	pointer-events: none;
+}
+
+
+.payment-page-panel .payment-plan-card.featured{
+	border: 1px solid #e5e7eb;
+	box-shadow: none;
+}
+
+
+
+
+.payment-page-panel .payment-current-plan-card,
+.payment-page-panel .payment-plan-card,
+.payment-page-panel .payment-plan-card.featured,
+.payment-page-panel .payment-plan-card:has(.payment-plan-btn.is-current),
+.payment-page-panel .payment-extra-box,
+.payment-page-panel .payment-history-card,
+.payment-page-panel .payment-help-card,
+.payment-page-panel .payment-tab,
+.payment-page-panel .payment-tab.active{
+	box-shadow: none;
+}
+
+
+/* =====================================================
+   8. 인증
+   ===================================================== */
+/* ===== MERGED FROM auth_2.712.css ===== */
+
+
+body.auth-page-open #authSignupTermsScreen .auth-terms-list{
+	display: grid;
+	grid-template-columns: 1fr;
+	padding: 0;
+}
+
+body.auth-page-open #authSignupTermsScreen .auth-terms-item{
+	display: grid;
+	grid-template-columns: 28px minmax(0, 1fr) 20px;
+	align-items: center;
+	column-gap: 10px;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	border-bottom: 1px solid #eef2f7;
+	line-height: 1.35;
+	box-sizing: border-box;
+}
+
+body.auth-page-open #authSignupTermsScreen .auth-terms-item:last-child{
+	border-bottom: 0;
+}
+
+body.auth-page-open #authSignupTermsScreen .auth-terms-check-zone{
+	display: flex;
+	align-items: center;
+	width: 28px;
+	height: 46px;
+	margin: 0;
+	padding: 0;
+	grid-column: 1;
+}
+
+body.auth-page-open #authSignupTermsScreen .auth-terms-checkbox{
+	margin: 0;
+	box-sizing: border-box;
+}
+
+
+
+body.auth-page-open #authSignupTermsScreen .auth-terms-open-zone{
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 20px;
+	align-items: center;
+	width: 100%;
+	height: 46px;
+	min-height: 46px;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	background: transparent;
+	color: inherit;
+	font: inherit;
+	text-align: left;
+	box-sizing: border-box;
+}
+
+body.auth-page-open #authSignupTermsScreen label.auth-terms-item > .auth-terms-text{
+	grid-column: 2;
+}
+
+body.auth-page-open #authSignupTermsScreen .auth-terms-text{
+	display: block;
+	min-width: 0;
+	margin: 0;
+	padding: 0;
+	line-height: 1.35;
+}
+
+body.auth-page-open #authSignupTermsScreen .auth-terms-highlight{
+	line-height: 1.35;
+}
+
+body.auth-page-open #authSignupTermsScreen .auth-terms-arrow{
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	width: 20px;
+	height: 46px;
+	margin: 0;
+	line-height: 1;
+}
+
+
+
+
+
