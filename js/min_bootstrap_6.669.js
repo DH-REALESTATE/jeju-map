@@ -1,5 +1,5 @@
-/* REALJEJU 6.662 | 2026-08-20 */
-/* REALJEJU VERSION: 6.662 */
+/* REALJEJU 6.669 | 2026-08-20 */
+/* REALJEJU VERSION: 6.669 */
 // REALJEJU 6.140 user-action module loader
 (function initRealjejuModuleLoader(global) {
   "use strict";
@@ -51,9 +51,9 @@
       return Promise.resolve(true);
     }
     if (coreLoadPromise) return coreLoadPromise;
-    coreLoadPromise = loadScript("app-core", "/js/app-core_6.662.min.js?v=20261071-nearby-next-margin-6180")
-      .then(() => loadScript("service-modes", "/js/service-modes_6.662.min.js?v=20261071-nearby-next-margin-6180"))
-      .then(() => loadScript("app-start", "/js/app-start_6.662.min.js?v=20261071-nearby-next-margin-6180"))
+    coreLoadPromise = loadScript("app-core", "/js/min_app-core_6.669.js?v=20261071-nearby-next-margin-6180")
+      .then(() => loadScript("service-modes", "/js/min_service-modes_6.669.js?v=20261071-nearby-next-margin-6180"))
+      .then(() => loadScript("app-start", "/js/min_app-start_6.669.js?v=20261071-nearby-next-margin-6180"))
       .then(() => true)
       .catch((error) => {
         coreLoadPromise = null;
@@ -64,7 +64,7 @@
   }
 
   function preloadPropertyInfo() {
-    return loadScript("property-info", "/js/property-info_6.662.min.js?v=20261047-parcel-nearby-map-reuse-6104")
+    return loadScript("property-info", "/js/min_property-info_6.669.js?v=20261047-parcel-nearby-map-reuse-6104")
       .then(() => true)
       .catch((error) => {
         console.error("[realjeju module] property-info load failed", error);
@@ -73,7 +73,7 @@
   }
 
   function preloadAppFeatures() {
-    return loadScript("app-features", "/js/app-features_6.662.min.js?v=20261071-nearby-next-margin-6180")
+    return loadScript("app-features", "/js/min_app-features_6.669.js?v=20261071-nearby-next-margin-6180")
       .then(() => true)
       .catch((error) => {
         console.error("[realjeju module] app features load failed", error);
@@ -82,7 +82,7 @@
   }
 
   function preloadRuntimeTail() {
-    return loadScript("runtime-tail", "/js/runtime-tail_6.662.min.js?v=20261071-nearby-next-margin-6180")
+    return loadScript("runtime-tail", "/js/min_runtime-tail_6.669.js?v=20261071-nearby-next-margin-6180")
       .then(() => {
         runtimeTailReady = true;
         return true;
@@ -158,7 +158,7 @@
       })
       .then((featuresLoaded) => {
         if (!featuresLoaded) throw new Error("app features are required before workspace");
-        return loadScript("workspace", "/js/workspace-app_6.662.min.js?v=20261071-nearby-next-margin-6180");
+        return loadScript("workspace", "/js/min_workspace-app_6.669.js?v=20261071-nearby-next-margin-6180");
       })
       .then(() => {
         workspaceReady = true;

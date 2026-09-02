@@ -1,5 +1,5 @@
-/* REALJEJU 6.662 | 2026-08-20 */
-/* REALJEJU VERSION: 6.662 */
+/* REALJEJU 6.669 | 2026-08-20 */
+/* REALJEJU VERSION: 6.669 */
 (() => {
   "use strict";
 
@@ -156,8 +156,7 @@ function closeTransientUiForModeChange(previousMode, nextMode) {
       api.clearParcelBoundary?.();
       await api.setEvChargerVisible?.(false);
       await api.setLocalBusinessMapVisible?.(false);
-      /* REALJEJU preserve current mobile realestate map type */
-      if (!window.matchMedia("(max-width: 850px)").matches) api.setMapType?.("roadmap");
+      /* REALJEJU preserve the service-scoped realestate map type. */
       api.restorePropertyMarkersVisible?.();
     } else if (currentMode === "parcel") {
       api.closePropertyList?.();

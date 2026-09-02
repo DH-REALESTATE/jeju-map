@@ -1,5 +1,5 @@
-/* REALJEJU 6.662 | 2026-08-20 */
-/* REALJEJU VERSION: 6.662 */
+/* REALJEJU 6.669 | 2026-08-20 */
+/* REALJEJU VERSION: 6.669 */
 (function startRealjejuCore(global) {
   "use strict";
   if (typeof global.startRealjejuApp === "function") {

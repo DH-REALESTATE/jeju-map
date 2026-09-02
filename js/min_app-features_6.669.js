@@ -1,6 +1,6 @@
-/* REALJEJU 6.662 | 2026-08-20 */
-/* REALJEJU VERSION: 6.662 */
-/* REALJEJU 6.140 deferred features - generated from app_6.662.js */
+/* REALJEJU 6.669 | 2026-08-20 */
+/* REALJEJU VERSION: 6.669 */
+/* REALJEJU 6.140 deferred features - generated from app_6.669.js */
 function normalizeRealjejuNonnegativeCount(value)
 {
 	const count = Number(value);
@@ -31,7 +31,9 @@ function normalizeRealjejuNonnegativeCount(value)
 	function shouldShowSideNavToggle()
 	{
 		return desktopQuery.matches
-			&& canShowSideNavToggle(document.body?.dataset?.globalCategory);
+			&& !!document.body
+			&& !document.body.classList.contains("property-register-page-open")
+			&& canShowSideNavToggle(document.body.dataset.globalCategory);
 	}
 
 	function syncButton()
@@ -78,9 +80,7 @@ function normalizeRealjejuNonnegativeCount(value)
 
 	if (button) {
 		button.addEventListener("click", () => {
-			if (!desktopQuery.matches
-				|| !document.body
-				|| !canShowSideNavToggle(document.body.dataset.globalCategory)) return;
+			if (!shouldShowSideNavToggle()) return;
 			const collapsed = !isCollapsed();
 			document.body.classList.toggle("realjeju-side-nav-collapsed", collapsed);
 			persist(collapsed);
@@ -93,6 +93,12 @@ function normalizeRealjejuNonnegativeCount(value)
 
 	window.realjejuSyncDesktopSideNavToggle = syncButton;
 	window.addEventListener("resize", syncButton, { passive: true });
+	if (document.body) {
+		new MutationObserver(syncButton).observe(document.body, {
+			attributes: true,
+			attributeFilter: ["class", "data-global-category"]
+		});
+	}
 	syncButton();
 })();
 
@@ -3739,7 +3745,14 @@ async function syncRealjejuSiteVisitStats()
 	if (typeof shouldLoadRealjejuRemotePageData === "function" && !shouldLoadRealjejuRemotePageData("site-visit")) return;
 	try {
 		if (typeof loadSupabaseScript === "function") await loadSupabaseScript();
-		const client = typeof window.getRealjejuSupabaseClient === "function" ? window.getRealjejuSupabaseClient() : null;
+		const sharedClient = typeof window.getRealjejuSupabaseClient === "function"
+			? window.getRealjejuSupabaseClient()
+			: null;
+		const client = sharedClient
+			|| (typeof getMapListingsSupabaseClient === "function" ? getMapListingsSupabaseClient() : null)
+			|| (typeof window.getMapListingsSupabaseClient === "function" ? window.getMapListingsSupabaseClient() : null)
+			|| window.__realjejuSupabaseClient
+			|| null;
 		if (!client || typeof client.rpc !== "function") return;
 		const { data, error } = await client.rpc("record_site_visit");
 		if (error) throw error;
@@ -6008,7 +6021,7 @@ function initMapRegionAndAllFilterDropdowns()
 				return;
 			}
 
-			// 6.662: 주소 확인 메뉴는 서버의 지역 매물 준비를 기다리지 않고 즉시 엽니다.
+			// 6.669: 주소 확인 메뉴는 서버의 지역 매물 준비를 기다리지 않고 즉시 엽니다.
 			// 기존 캐시를 먼저 보여주고 최신 지역 목록은 열린 메뉴 안에서 백그라운드 갱신합니다.
 			toggleDropdown(regionDropdown, regionTrigger, true);
 			if (typeof prepareMapRegionBoundaryRemoteSelection === "function") {
@@ -13204,6 +13217,39 @@ function initEvents()
 			return `${getPart("year")}.${getPart("month")}.${getPart("day")}`;
 		}
 
+		function parseRealjejuEntitlementBoundary(value, endOfDay = false)
+		{
+			if (value === null || value === undefined || value === "") return Number.NaN;
+			const raw = String(value).trim();
+			if (!raw) return Number.NaN;
+			const dateOnly = /^\d{4}-\d{2}-\d{2}$/.test(raw);
+			const normalized = dateOnly
+				? raw + (endOfDay ? "T23:59:59.999+09:00" : "T00:00:00.000+09:00")
+				: raw;
+			const time = Date.parse(normalized);
+			return Number.isFinite(time) ? time : Number.NaN;
+		}
+
+		function normalizeRealjejuEntitlementActiveFlag(value)
+		{
+			if (value === true || value === 1) return true;
+			return ["true", "1", "yes", "active"].includes(String(value || "").trim().toLowerCase());
+		}
+
+		function isRealjejuEntitlementCurrentlyActive(row)
+		{
+			const source = row && typeof row === "object" ? row : {};
+			const status = String(source.status || "").trim().toLowerCase();
+			if (status && status !== "active") return false;
+			if (status !== "active" && !normalizeRealjejuEntitlementActiveFlag(source.active)) return false;
+			const now = Date.now();
+			const startsAt = parseRealjejuEntitlementBoundary(source.starts_at, false);
+			const endsAt = parseRealjejuEntitlementBoundary(source.ends_at, true);
+			if (Number.isFinite(startsAt) && now < startsAt) return false;
+			if (Number.isFinite(endsAt) && now > endsAt) return false;
+			return true;
+		}
+
 		function normalizeRealjejuPaymentPlanState(
 			value,
 			userId,
@@ -13316,7 +13362,7 @@ function initEvents()
 				start,
 				end,
 				periodText,
-				active: row.active === true,
+				active: isRealjejuEntitlementCurrentlyActive(row),
 				nextPlan,
 				scheduledPlans,
 				limits: {

@@ -1,5 +1,5 @@
-/* REALJEJU 6.658 | 2026-08-20 */
-/* REALJEJU VERSION: 6.658 */
+/* REALJEJU 6.669 | 2026-08-20 */
+/* REALJEJU VERSION: 6.669 */
 /* REALJEJU 5.436 account workspace module.
  * Physical source move only: authentication, broker workspace, property registration,
  * operator and administrator behavior retain their original execution order.
@@ -2361,7 +2361,7 @@
 			return;
 		}
 
-		if (globalTopbarMoreMenu && globalTopbarMoreMenu.classList.contains("open") && !e.target.closest("#globalTopbarMoreMenu") && !e.target.closest("#globalTopbarMoreBtn") && !e.target.closest("#detailAuthTrigger") && !e.target.closest("#detailAuthTrigger") && !e.target.closest("#detailAuthTrigger")) {
+		if (globalTopbarMoreMenu && globalTopbarMoreMenu.classList.contains("open") && !e.target.closest("#globalTopbarMoreMenu") && !e.target.closest("#globalTopbarMoreBtn") && !e.target.closest("#detailAuthTrigger") && !e.target.closest("#detailAuthTrigger")) {
 			closeGlobalTopbarMoreMenu();
 		}
 
@@ -7561,10 +7561,24 @@ let adminListingPage = 1;
 	{
 		const id = normalizeItemId(row && row.id);
 		const rowUserId = normalizeItemId(row && row.user_id);
-		if (!id || !Array.isArray(brokerListingRowsCache)) return false;
+		if (!id) return false;
 		if (brokerListingRowsCacheUserId && rowUserId && brokerListingRowsCacheUserId !== rowUserId) return false;
-		brokerListingRowsCache = replaceListingRowById(brokerListingRowsCache, id, row, { appendIfMissing: true });
+		if (!Array.isArray(brokerListingRowsCache)) {
+			if (document.body.classList.contains("broker-home-page-open")) {
+				void loadBrokerListings({ currentListingId: id, force: true, silent: true });
+			}
+			return false;
+		}
+		const nextRows = brokerListingRowsCache.slice();
+		const rowIndex = nextRows.findIndex((item) => normalizeItemId(item && item.id) === id);
+		if (rowIndex >= 0) nextRows[rowIndex] = { ...nextRows[rowIndex], ...row };
+		else nextRows.unshift(row);
+		brokerListingRowsCache = nextRows;
 		brokerListingRowsCacheLoadedAt = Date.now();
+		const listEl = document.getElementById("brokerListingsList");
+		if (listEl && document.body.classList.contains("broker-home-page-open")) {
+			renderBrokerListingRows(listEl, brokerListingRowsCache);
+		}
 		return true;
 	}
 

@@ -1,5 +1,5 @@
-/* REALJEJU 6.649 | 2026-08-20 */
-/* REALJEJU VERSION: 6.649 */
+/* REALJEJU 6.669 | 2026-08-20 */
+/* REALJEJU VERSION: 6.669 */
 // REALJEJU app.js / Ver 5.268
 // 파일은 단일 JS를 유지하고, 실제 코드 위치 순서대로 큰 기능 구역만 주석으로 구분한다.
 // 0. 전역 공통 상수 / 상태 / 캐시
@@ -3488,7 +3488,7 @@ const LOCAL_PROFESSIONAL_BUSINESSES = Object.freeze([
 		phone: "064-702-4488",
 		address: "제주시 복지로3길 2-7 4층",
 		lat: 33.4894321,
-		lng: 126.6499500,
+		lng: 126.6699500,
 		badgeColor: "#0F766E",
 		iconClass: "fa-calculator"
 	})
@@ -3852,9 +3852,11 @@ document.addEventListener("click", (event) => {
 	prepareServiceMapToolCategoryTransition(button.dataset.globalCategory);
 }, true);
 
-function createEmptyServiceMapToolSelectionSnapshot()
+function createEmptyServiceMapToolSelectionSnapshot(category)
 {
+	const key = String(category || "").trim();
 	return {
+		mapTypeMode: key === "realestate" ? "satellite" : "roadmap",
 		isBrokerOfficesVisible: false,
 		brokerOfficeMapFilter: "none",
 		brokerListingMapScope: "all",
@@ -3883,6 +3885,7 @@ function rememberServiceMapToolSelections(category)
 	const key = String(category || "").trim();
 	if (!key || !state) return false;
 	serviceMapToolSelectionSnapshots.set(key, {
+		mapTypeMode: currentMapTypeMode,
 		isBrokerOfficesVisible: !!state.isBrokerOfficesVisible,
 		brokerOfficeMapFilter: String(state.brokerOfficeMapFilter || "none"),
 		brokerListingMapScope: String(state.brokerListingMapScope || "all"),
@@ -3938,8 +3941,9 @@ function restoreServiceMapToolSelections(category)
 {
 	if (!state) return false;
 	const key = String(category || "").trim();
-	const snapshot = serviceMapToolSelectionSnapshots.get(key) || createEmptyServiceMapToolSelectionSnapshot();
+	const snapshot = serviceMapToolSelectionSnapshots.get(key) || createEmptyServiceMapToolSelectionSnapshot(key);
 	clearServiceScopedMapToolOverlays();
+	applyMapTypeMode(snapshot.mapTypeMode);
 	state.isBrokerOfficesVisible = !!snapshot.isBrokerOfficesVisible;
 	state.brokerOfficeMapFilter = String(snapshot.brokerOfficeMapFilter || "none");
 	state.brokerListingMapScope = String(snapshot.brokerListingMapScope || "all");
@@ -4154,6 +4158,9 @@ function scheduleRealjejuPropertyMapRepaintAfterCategoryReturn()
 			? pendingServiceMapToolCategoryTransition
 			: null;
 		const serviceStatePreviousCategory = pendingServiceTransition?.from || previousCategory;
+		if (nextCategory !== serviceStatePreviousCategory && distanceMeasureActive) {
+			setDistanceMeasureActive(false, { clear: true });
+		}
 		if (nextCategory !== serviceStatePreviousCategory && !pendingServiceTransition) {
 			rememberServiceMapToolSelections(serviceStatePreviousCategory);
 		}
@@ -7079,7 +7086,7 @@ const REALJEJU_ROUTE_SEO_META = Object.freeze({
 	}
 });
 
-	const APP_VERSION = "6.649";
+	const APP_VERSION = "6.669";
 let realjejuTopbarVersionStatsText = "";
 let realjejuSiteVisitStatsRequested = false;
 let realjejuManagementVersionListingCount = null;
@@ -7348,7 +7355,14 @@ async function syncRealjejuSiteVisitStats()
 	if (typeof shouldLoadRealjejuRemotePageData === "function" && !shouldLoadRealjejuRemotePageData("site-visit")) return;
 	try {
 		if (typeof loadSupabaseScript === "function") await loadSupabaseScript();
-		const client = typeof window.getRealjejuSupabaseClient === "function" ? window.getRealjejuSupabaseClient() : null;
+		const sharedClient = typeof window.getRealjejuSupabaseClient === "function"
+			? window.getRealjejuSupabaseClient()
+			: null;
+		const client = sharedClient
+			|| (typeof getMapListingsSupabaseClient === "function" ? getMapListingsSupabaseClient() : null)
+			|| (typeof window.getMapListingsSupabaseClient === "function" ? window.getMapListingsSupabaseClient() : null)
+			|| window.__realjejuSupabaseClient
+			|| null;
 		if (!client || typeof client.rpc !== "function") return;
 		const { data, error } = await client.rpc("record_site_visit");
 		if (error) throw error;
@@ -9124,7 +9138,7 @@ async function openListSharedDetailFromItem(item)
 	state.selectedClusterKey = null;
 	state.selectedMarkerId = normalizedId;
 	state.selectedMarkerIds = new Set([normalizedId]);
-	// REALJEJU 6.649: 상세를 열어도 현재 매물 목록 문맥을 유지한다.
+	// REALJEJU 6.669: 상세를 열어도 현재 매물 목록 문맥을 유지한다.
 	highlightCard(normalizedId);
 	updateMarkerSelection(normalizedId, [normalizedId]);
 
@@ -12357,7 +12371,8 @@ function matchesSelectedDealFilter(itemDeal, dealValues)
 }
 function ensureTypeFilterHasSelection()
 {
-	if (!(selectedType instanceof Set) || selectedType.size === 0) {
+	// Empty selection is the valid reset state; only repair an invalid container.
+	if (!(selectedType instanceof Set)) {
 		selectedType = createDefaultTypeFilterSet();
 	}
 }
@@ -15439,7 +15454,7 @@ const LIFE_SAFETY_REGION_OPTIONS = [
 ];
 const DEFAULT_LIFE_SAFETY_REGION_KEYS = [];
 let lifeSafetySelectedRegionKeys = new Set(DEFAULT_LIFE_SAFETY_REGION_KEYS);
-const DEFAULT_MAP_CENTER = { lat: 33.483115, lng: 126.649993, level: 5 };
+const DEFAULT_MAP_CENTER = { lat: 33.4867, lng: 126.4789, level: 5 };
 const GEOLOCATION_MAP_LEVEL = 4;
 let preventMapViewportChange = false;
 let isClusterClicking = false;
@@ -17461,9 +17476,14 @@ async function fetchParcelRegionTradeStats(meta, selection)
 	const cacheKey = `region-static-stats-v2|${regionLookupKey}|${type.key}|${selection.months}`;
 	if (parcelRegionTradeStatsCache.has(cacheKey)) return parcelRegionTradeStatsCache.get(cacheKey);
 	if (typeof loadSupabaseScript === "function") await loadSupabaseScript();
-	const client = typeof window.getRealjejuSupabaseClient === "function"
+	const sharedClient = typeof window.getRealjejuSupabaseClient === "function"
 		? window.getRealjejuSupabaseClient()
 		: null;
+	const client = sharedClient
+		|| (typeof getMapListingsSupabaseClient === "function" ? getMapListingsSupabaseClient() : null)
+		|| (typeof window.getMapListingsSupabaseClient === "function" ? window.getMapListingsSupabaseClient() : null)
+		|| window.__realjejuSupabaseClient
+		|| null;
 	if (!client) throw new Error("실거래 통계 DB 연결을 준비하지 못했습니다.");
 	const regionCode = normalizeParcelRegionTradeStatsRegionCode(meta.regionCode);
 	const { data: rows, error } = await client
@@ -17644,9 +17664,14 @@ async function fetchParcelRegionTradeStatsBatchUncached(regionMetas, selection)
 	if (parcelRegionTradeStatsCache.has(cacheKey)) return parcelRegionTradeStatsCache.get(cacheKey);
 	if (!regions.length) return new Map();
 	if (typeof loadSupabaseScript === "function") await loadSupabaseScript();
-	const client = typeof window.getRealjejuSupabaseClient === "function"
+	const sharedClient = typeof window.getRealjejuSupabaseClient === "function"
 		? window.getRealjejuSupabaseClient()
 		: null;
+	const client = sharedClient
+		|| (typeof getMapListingsSupabaseClient === "function" ? getMapListingsSupabaseClient() : null)
+		|| (typeof window.getMapListingsSupabaseClient === "function" ? window.getMapListingsSupabaseClient() : null)
+		|| window.__realjejuSupabaseClient
+		|| null;
 	if (!client) throw new Error("실거래 통계 DB 연결을 준비하지 못했습니다.");
 	const { data: rows, error } = await client
 		.from("real_estate_region_trade_static_stats")
@@ -17780,6 +17805,7 @@ async function loadParcelRegionTradeStatsPanel(meta, selection)
 
 async function openParcelRegionTradeStatsForFeature(regionFeature, parcelFeature = null, selectionSnapshot = parcelRegionTradeSelection, options = {})
 {
+	if (distanceMeasureActive) return false;
 	const featureRequestGeneration = Number.isFinite(Number(options?.zoomSyncToken))
 		? Number(options.zoomSyncToken)
 		: parcelRegionTradeZoomSyncToken;
@@ -18473,7 +18499,7 @@ function syncSidebarListTitle()
 
 async function openPropertyRegionCountListPanel(feature, count)
 {
-	if (!feature) return false;
+	if (distanceMeasureActive || !feature) return false;
 	if (shouldUseParcelAdminBoundaryPresentation()) {
 		return openParcelRegionTradeStatsForFeature(feature);
 	}
@@ -18713,6 +18739,7 @@ function bindPropertyRegionCountPureClick(label, onPureClick)
 		document.addEventListener("pointercancel", cancelPointer, true);
 	}, { passive: true });
 	label.addEventListener("click", (event) => {
+		if (distanceMeasureActive) return;
 		event.preventDefault();
 		event.stopPropagation();
 		if (pointerDragged) {
@@ -18814,6 +18841,7 @@ function createParcelRegionTradeMapBadge(feature, mode, meta, data, selection)
 		badge.appendChild(changeLabel);
 	}
 	const stopBadgeMapEvent = (event) => {
+		if (distanceMeasureActive) return false;
 		event.stopPropagation();
 		if (typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
 		if (window.kakao?.maps?.event && typeof kakao.maps.event.preventMap === "function") {
@@ -18824,6 +18852,7 @@ function createParcelRegionTradeMapBadge(feature, mode, meta, data, selection)
 		badge.addEventListener(eventName, stopBadgeMapEvent, { passive: false });
 	});
 	badge.addEventListener("click", (event) => {
+		if (distanceMeasureActive) return;
 		event.preventDefault();
 		stopBadgeMapEvent(event);
 		clearParcelBoundaryRenderState();
@@ -21389,7 +21418,7 @@ function initMapRegionAndAllFilterDropdowns()
 				return;
 			}
 
-			// 6.649: 주소 확인 메뉴는 서버의 지역 매물 준비를 기다리지 않고 즉시 엽니다.
+			// 6.669: 주소 확인 메뉴는 서버의 지역 매물 준비를 기다리지 않고 즉시 엽니다.
 			// 기존 캐시를 먼저 보여주고 최신 지역 목록은 열린 메뉴 안에서 백그라운드 갱신합니다.
 			toggleDropdown(regionDropdown, regionTrigger, true);
 			if (typeof prepareMapRegionBoundaryRemoteSelection === "function") {
@@ -23296,7 +23325,7 @@ function renderRecommendationCard(item)
 			state.selectionMode = "single";
 		state.selectedClusterKey = null;
 		state.selectedMarkerId = normalizedId;
-		// REALJEJU 6.649: 상세를 열어도 현재 매물 목록 문맥을 유지한다.
+		// REALJEJU 6.669: 상세를 열어도 현재 매물 목록 문맥을 유지한다.
 		highlightCard(normalizedId);
 		updateMarkerSelection(normalizedId, [normalizedId]);
 
@@ -23886,7 +23915,7 @@ function setCachedPropertyMapObjectsVisible(visible)
 	state.markers.forEach((marker) => {
 		if (!marker) return;
 		if (typeof marker.setOpacity === "function") marker.setOpacity(shouldShow ? 1 : 0);
-		if (typeof marker.setClickable === "function") marker.setClickable(shouldShow);
+		if (typeof marker.setClickable === "function") marker.setClickable(shouldShow && !distanceMeasureActive);
 	});
 }
 
@@ -27198,7 +27227,7 @@ function isLikelyHallasanFallbackPosition(latValue, lngValue)
 	return Number.isFinite(lat)
 		&& Number.isFinite(lng)
 		&& Math.abs(lat - 33.3617) < 0.0005
-		&& Math.abs(lng - 126.6492) < 0.0005;
+		&& Math.abs(lng - 126.6692) < 0.0005;
 }
 
 function getAgencyListingFallbackPosition(row, agenciesById = new Map(), agenciesByUserId = new Map(), agenciesByOfficeName = new Map())
@@ -28464,7 +28493,7 @@ function setClusterBadgeSelected(cluster, isSelected)
 	el.classList.add("realjeju-property-cluster-badge");
 	el.classList.toggle("is-selected", isSelected);
 	el.style.cursor = "pointer";
-	el.style.pointerEvents = "auto";
+	// 뱃지 포인터 입력은 거리재기 상태를 포함한 공통 CSS 소유자가 관리합니다.
 	el.style.transform = "translateZ(0)";
 	el.style.transformOrigin = "center center";
 	el.style.transition = "none";
@@ -28474,6 +28503,7 @@ function setClusterBadgeSelected(cluster, isSelected)
 	let lastClusterBadgeTriggerAt = 0;
 
 	const suppressClusterBadgeMapEvent = function (e) {
+		if (distanceMeasureActive) return false;
 		if (e) {
 			if (typeof e.preventDefault === "function") e.preventDefault();
 			if (typeof e.stopPropagation === "function") e.stopPropagation();
@@ -28485,6 +28515,7 @@ function setClusterBadgeSelected(cluster, isSelected)
 	};
 
 	const triggerClusterListOnly = async function (e) {
+		if (distanceMeasureActive) return false;
 		const now = Date.now();
 		if (now - lastClusterBadgeTriggerAt < 350) {
 			suppressClusterBadgeMapEvent(e);
@@ -29188,6 +29219,13 @@ function setDistanceMeasureActive(active, options = {})
 	const nextActive = !!active;
 	if (options.clear) clearDistanceMeasureDrawings();
 	distanceMeasureActive = nextActive;
+	if (Array.isArray(state.markers)) {
+		state.markers.forEach((marker) => {
+			if (marker && typeof marker.setClickable === "function") {
+				marker.setClickable(!distanceMeasureActive && state.isPropertyMarkersVisible !== false);
+			}
+		});
+	}
 	if (!distanceMeasureActive && !options.clear) clearDistanceMeasureDrawings();
 	if (distanceMeasureActive) {
 		closeMapPanelsForDistanceMeasureStart();
@@ -31147,7 +31185,7 @@ async function openDetailPanel(item, options = {})
 		sidebarDetailPanelEl.style.visibility = "";
 	}
 	sidebar.classList.add("expanded");
-	// REALJEJU 6.649: 데스크톱 상세 진입 중 비워진 목록은 현재 목록 상태에서 즉시 복원한다.
+	// REALJEJU 6.669: 데스크톱 상세 진입 중 비워진 목록은 현재 목록 상태에서 즉시 복원한다.
 	const shouldRestoreDesktopList = window.matchMedia("(min-width: 851px)").matches
 		&& propertyList
 		&& !propertyList.firstElementChild
@@ -31523,6 +31561,7 @@ function closeDetailPanel(options = {})
 
 async function handleClusterBadgeInteraction(cluster)
 {
+	if (distanceMeasureActive) return false;
 	if (isClusterClicking) return;
 	isClusterClicking = true;
 	allowDetailOpenFromListClick = false;
@@ -31622,6 +31661,7 @@ async function handleClusterSelection(cluster)
 
 async function openPropertyBadgeListPanel(items, options = {})
 {
+	if (distanceMeasureActive) return false;
 	const list = Array.isArray(items) ? items.slice() : [];
 	const isMobile = typeof window.matchMedia === "function"
 		&& window.matchMedia("(max-width: 850px)").matches;
@@ -31799,6 +31839,7 @@ function initMap()
 	});
 
 	kakao.maps.event.addListener(state.clusterer, "clusterclick", async function (cluster) {
+		if (distanceMeasureActive) return;
 		if (typeof kakao.maps.event.preventMap === "function") kakao.maps.event.preventMap();
 		await handleClusterBadgeInteraction(cluster);
 	});
@@ -31930,6 +31971,8 @@ kakao.maps.event.addListener(state.map, "zoom_changed", () => {
 	});
 
 			kakao.maps.event.addListener(state.map, "click", async function (mouseEvent) {
+				// 거리재기 중에는 측정 입력이 모든 필지·뱃지 선택보다 먼저 지도 클릭을 소유합니다.
+				if (handleDistanceMeasureMapClick(mouseEvent)) return;
 				// 시설 뱃지·마커 입력은 지도 클릭 비동기 처리보다 먼저 종료합니다.
 				if (isParcelMapClickBlockedByFacilityMarker()) return;
 				if (await handleParcelAreaMeasureMapClick(mouseEvent)) return;
@@ -33216,6 +33259,7 @@ function getParcelTradeCanvasHit(mouseEvent)
 
 async function handleParcelTradeCanvasMapClick(mouseEvent)
 {
+	if (distanceMeasureActive) return false;
 	const row = getParcelTradeCanvasHit(mouseEvent);
 	if (!row) return false;
 	if (window.kakao?.maps?.event && typeof kakao.maps.event.preventMap === "function") kakao.maps.event.preventMap();
@@ -40283,12 +40327,13 @@ function updateBrokerOfficeToolActiveState()
 		const marker = new kakao.maps.Marker({
 			position,
 			image: createMarkerImage(item, isPropertyMarkerSelected(item), markerLabel),
-			clickable: true
+			clickable: !distanceMeasureActive
 		});
 
 		marker.__property = item;
 
 	kakao.maps.event.addListener(marker, "click", async function () {
+			if (distanceMeasureActive) return;
 			closeEducationFacilityDetailForPropertyInteraction();
 			if (typeof closeRoadviewPanelForPropertyInteraction === "function") {
 				await closeRoadviewPanelForPropertyInteraction();
@@ -42590,8 +42635,11 @@ async function loadMoreLeftListItems(options = {})
 	if (state.leftListDetailMode === "parcel-region-stats") return;
 	if (state.leftListDetailMode === "parcel-land-info" && propertyList && propertyList.querySelector(".parcel-land-info-panel")) return;
 	if (document.body.classList.contains("sidebar-list-collapsed")) return;
-	// 목록에서 상세를 연 동안 왼쪽 표면은 상세 패널로 교체된다.
-	if (document.body.classList.contains("list-shared-detail-mode")) return;
+	// 모바일에서는 상세가 목록을 대체하지만, 데스크톱의 나란한 목록은 계속 페이지를 불러옵니다.
+	const detailReplacesList = document.body.classList.contains("list-shared-detail-mode")
+		&& typeof window.matchMedia === "function"
+		&& window.matchMedia("(max-width: 850px)").matches;
+	if (detailReplacesList) return;
 	if (state.leftListLoading) return;
 	// 4.924: 행정구역ㆍ중개사 목록은 전체 ID를 자르지 않고 서버에서 다음 30개를 직접 받는다.
 	if (state.leftListRemoteAgent) return loadMorePropertyScaleAgentItems();
@@ -45821,6 +45869,39 @@ function initEvents()
 			return `${getPart("year")}.${getPart("month")}.${getPart("day")}`;
 		}
 
+		function parseRealjejuEntitlementBoundary(value, endOfDay = false)
+		{
+			if (value === null || value === undefined || value === "") return Number.NaN;
+			const raw = String(value).trim();
+			if (!raw) return Number.NaN;
+			const dateOnly = /^\d{4}-\d{2}-\d{2}$/.test(raw);
+			const normalized = dateOnly
+				? raw + (endOfDay ? "T23:59:59.999+09:00" : "T00:00:00.000+09:00")
+				: raw;
+			const time = Date.parse(normalized);
+			return Number.isFinite(time) ? time : Number.NaN;
+		}
+
+		function normalizeRealjejuEntitlementActiveFlag(value)
+		{
+			if (value === true || value === 1) return true;
+			return ["true", "1", "yes", "active"].includes(String(value || "").trim().toLowerCase());
+		}
+
+		function isRealjejuEntitlementCurrentlyActive(row)
+		{
+			const source = row && typeof row === "object" ? row : {};
+			const status = String(source.status || "").trim().toLowerCase();
+			if (status && status !== "active") return false;
+			if (status !== "active" && !normalizeRealjejuEntitlementActiveFlag(source.active)) return false;
+			const now = Date.now();
+			const startsAt = parseRealjejuEntitlementBoundary(source.starts_at, false);
+			const endsAt = parseRealjejuEntitlementBoundary(source.ends_at, true);
+			if (Number.isFinite(startsAt) && now < startsAt) return false;
+			if (Number.isFinite(endsAt) && now > endsAt) return false;
+			return true;
+		}
+
 		function normalizeRealjejuPaymentPlanState(
 			value,
 			userId,
@@ -45933,7 +46014,7 @@ function initEvents()
 				start,
 				end,
 				periodText,
-				active: row.active === true,
+				active: isRealjejuEntitlementCurrentlyActive(row),
 				nextPlan,
 				scheduledPlans,
 				limits: {
@@ -52034,7 +52115,7 @@ function keepMapFilterMenuOpen(dropdown, trigger)
 		typeFilterResetBtn.addEventListener("click", (e) => {
 			e.preventDefault();
 			e.stopPropagation();
-			selectedType = createAllFilterResetTypeSet();
+			selectedType = new Set();
 			syncTypeFilterUI();
 			keepMapFilterMenuOpen(typeFilterDropdown, typeFilterTrigger);
 			state.initialRandomListActive = false;
@@ -52692,7 +52773,7 @@ function startRealjejuApp()
   sync();
 })();
 
-/* REALJEJU 6.649: responsive topbar search button and full-screen recent address search. */
+/* REALJEJU 6.669: responsive topbar search button and full-screen recent address search. */
 ;(function installResponsiveTopbarSearch6281()
 {
   const RECENT_SEARCH_KEY = "realjeju.mobileRecentAddressSearch.v1";

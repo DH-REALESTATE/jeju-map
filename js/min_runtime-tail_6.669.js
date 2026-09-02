@@ -1,5 +1,5 @@
-/* REALJEJU 6.649 | 2026-08-20 */
-/* REALJEJU VERSION: 6.649 */
+/* REALJEJU 6.669 | 2026-08-20 */
+/* REALJEJU VERSION: 6.669 */
 /* REALJEJU 5.436 ordered runtime tail. */
 
 
@@ -2401,8 +2401,16 @@ document.addEventListener("DOMContentLoaded", function () {
 					console.error("매물 사진 정보 저장 실패:", photoUpdateError);
 					throw new Error("매물은 저장됐지만 사진 정보 저장에 실패했습니다.");
 				}
+				const refreshedListingRow = {
+					...row,
+					photos: savedPhotos,
+					payload: payloadWithThumbnail
+				};
+				if (typeof window.realjejuUpdateBrokerListingRowsCacheItem === "function") {
+					window.realjejuUpdateBrokerListingRowsCacheItem(refreshedListingRow);
+				}
 				deleteLeftListDetailItemCache(savedListingId);
-				return uploadResult;
+				return { ...uploadResult, row: refreshedListingRow };
 			};
 
 			const refreshSavedListingAfterPhotoSave = () => {
@@ -5080,7 +5088,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	let isAddressRectangleDragging = false;
 	let addressRectangleDragStartLatLng = null;
 	let addressRectangleDragPointerId = null;
-	const quickAddressFallbackCenter = { lat: 33.3617, lng: 126.6492 };
+	const quickAddressFallbackCenter = { lat: 33.3617, lng: 126.6692 };
 
 	function setAddressModalTitle(title){
 		document.querySelectorAll("#propertyAddressSearchModal .property-address-search-title").forEach((el) => {

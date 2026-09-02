@@ -1,5 +1,5 @@
-/* REALJEJU 6.649 | 2026-08-20 */
-/* REALJEJU VERSION: 6.649 */
+/* REALJEJU 6.669 | 2026-08-20 */
+/* REALJEJU VERSION: 6.669 */
 // REALJEJU 5.995 property-info background module
 // 필지 상세, 실거래가, 공시지가, 건축물대장, 추천 중개사 패널을 한 경계에서 관리합니다.
 
@@ -94,9 +94,15 @@
   function getClient()
   {
     try {
-      return typeof window.getRealjejuSupabaseClient === "function"
-        ? window.getRealjejuSupabaseClient()
-        : null;
+      if (typeof window.getRealjejuSupabaseClient === "function") {
+        const sharedClient = window.getRealjejuSupabaseClient();
+        if (sharedClient) return sharedClient;
+      }
+      if (typeof window.getMapListingsSupabaseClient === "function") {
+        const mapClient = window.getMapListingsSupabaseClient();
+        if (mapClient) return mapClient;
+      }
+      return window.__realjejuSupabaseClient || null;
     } catch (error) {
       return null;
     }
@@ -115,11 +121,11 @@
     });
     const client = getClient();
     if (!client || !client.functions || typeof client.functions.invoke !== "function") {
-      throw new Error("공공데이터 연결이 준비되지 않았습니다.");
+      throw new Error("데이터베이스 연결이 준비되지 않았습니다.");
     }
     const result = await client.functions.invoke(name, { body: body });
     if (result.error) {
-      let message = String(result.error.message || "공공데이터 요청에 실패했습니다.");
+      let message = String(result.error.message || "데이터베이스 요청에 실패했습니다.");
       const context = result.error.context;
       if (context) {
         try {
