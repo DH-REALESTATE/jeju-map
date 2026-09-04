@@ -1,5 +1,5 @@
-<!-- REALJEJU 6.669 | 2026-08-19 -->
-<!-- REALJEJU VERSION: 6.669 -->
+<!-- REALJEJU 6.705 | 2026-09-04 -->
+<!-- REALJEJU VERSION: 6.705 -->
 
 
 
@@ -188,7 +188,7 @@ REALJEJU HTML 구조 / Ver 5.268
 				link.rel = "preload";
 				link.as = "script";
 				link.fetchPriority = "high";
-				link.href = "/js/min_app-core_6.669.js?v=20261071-nearby-next-margin-6180";
+				link.href = "/js/min_app-core_6.705.js?v=20261071-nearby-next-margin-6180";
 				document.head.appendChild(link);
 				var kakaoSdkLink = document.createElement("link");
 				kakaoSdkLink.rel = "preload";
@@ -206,7 +206,7 @@ REALJEJU HTML 구조 / Ver 5.268
 				link.rel = "preload";
 				link.as = "script";
 				link.fetchPriority = "low";
-				link.href = "/js/min_app-features_6.669.js?v=20261071-nearby-next-margin-6180";
+				link.href = "/js/min_app-features_6.705.js?v=20261071-nearby-next-margin-6180";
 				document.head.appendChild(link);
 			})();
 		</script>
@@ -236,15 +236,15 @@ REALJEJU HTML 구조 / Ver 5.268
 				transition: none;
 			}
 		</style>
-		<link rel="stylesheet" href="/css/base-foundation_6.669.css?v=20261046-side-toggle">
-		<link rel="stylesheet" href="/css/core-map_6.669.css?v=20261046-side-toggle">
-		<link rel="stylesheet" href="/css/property-info_6.669.css?v=20261046-side-toggle">
-		<link rel="stylesheet" href="/css/workspace-app_6.669.css?v=20261046-side-toggle">
-		<link rel="stylesheet" href="/css/admin-app_6.669.css?v=20261046-side-toggle">
-		<link rel="stylesheet" href="/css/account_6.669.css?v=20261046-side-toggle">
-		<link rel="stylesheet" href="/css/base_6.669.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/base-foundation_6.705.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/core-map_6.705.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/property-info_6.705.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/workspace-app_6.705.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/admin-app_6.705.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/account_6.705.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/base_6.705.css?v=20261046-side-toggle">
 
-  <link rel="stylesheet" href="/css/service-modes_6.669.css?v=20261046-side-toggle">
+  <link rel="stylesheet" href="/css/service-modes_6.705.css?v=20261046-side-toggle">
 </head>
 	<body class="sidebar-list-collapsed realjeju-side-nav-enabled main-landing-page-open">
 		<script id="realjeju-initial-body-route-prime">
@@ -384,7 +384,7 @@ REALJEJU HTML 구조 / Ver 5.268
 				
 				<script>
 					(function setupCanonicalMobileShellStructure() {
-						var mobileQuery = window.matchMedia("(max-width: 850px)");
+						var mobileQuery = window.matchMedia("(max-width: 900px)");
 						var homes = new Map();
 						var observer = null;
 						var controlObserver = null;
@@ -1635,7 +1635,7 @@ function syncNow() {
 			</nav>
 			<div class="realjeju-mobile-drawer-divider realjeju-mobile-drawer-version-divider" aria-hidden="true"></div>
 			<div class="realjeju-side-admin-version" id="realjejuSideAdminVersion" aria-hidden="true" hidden>
-				<span class="topbar-version-text">6.669</span>
+				<span class="topbar-version-text">6.705</span>
 			</div>
 		</aside>
 		<button type="button" class="realjeju-side-nav-toggle" id="realjejuSideNavToggle" aria-controls="realjejuSideNav" aria-expanded="true" aria-label="왼쪽 메뉴 접기">
@@ -3084,6 +3084,7 @@ function syncNow() {
 					<button type="button" class="property-register-top-btn" id="loadExistingPropertyBtn">기존 매물 불러오기</button>
 					<button type="button" class="property-register-top-btn" id="quickPropertyRegisterBtn">간편 매물 등록</button>
 				</div>
+				<button type="button" class="property-register-page-close-btn realjeju-mobile-filter-dialog-close" aria-label="매물등록 종료" title="종료" onclick="if (typeof window.closePropertyRegisterPage === 'function') window.closePropertyRegisterPage({ restoreMapLayout: true });"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
 			</div>
 			<div class="property-register-card property-brokerage-card">
 				<div class="property-form-row">
@@ -3131,7 +3132,7 @@ function syncNow() {
 								</button>
 								<div class="property-register-dropdown-menu" data-register-dropdown-menu role="listbox">
 										<section class="property-register-type-section">
-											<h3 class="property-register-type-section-title">매물유형</h3>
+											<div class="realjeju-mobile-filter-dialog-head"><h3 class="property-register-type-section-title">매물유형</h3><button type="button" class="realjeju-mobile-filter-dialog-close" data-realjeju-mobile-filter-dialog-close aria-label="매물유형 선택창 닫기"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></div>
 											<div class="property-register-type-grid">
 												<button type="button" class="property-register-dropdown-option property-register-type-tile" data-value="apartment" role="option">아파트</button>
 												<button type="button" class="property-register-dropdown-option property-register-type-tile" data-value="officetel" role="option">오피스텔</button>
@@ -3183,7 +3184,7 @@ function syncNow() {
 						<input type="checkbox" id="propertyAddressHideDetailCheck" />
 						<span>상세지번은 노출하지 않겠습니다.</span>
 					</label>
-					<p class="property-address-hide-help">매물의 상세지번을 노출하고 싶지 않을때 선택해 주세요. 선택하면 읍ㆍ면ㆍ동ㆍ리까지만 보여요.</p>
+					<p class="property-address-hide-help">매물의 상세지번을 노출하고 싶지 않을때 선택해 주세요.<span class="property-address-hide-help-mobile-break" aria-hidden="true"></span> 선택하면 읍ㆍ면ㆍ동ㆍ리까지만 보여요.</p>
 				</div>
 
 				<div class="property-address-location-row" id="propertyAddressLocationRow" aria-hidden="true">
@@ -3542,7 +3543,7 @@ function syncNow() {
 								</select>
 								<button type="button" class="property-register-dropdown-trigger" data-register-dropdown-trigger aria-haspopup="listbox" aria-expanded="false"><span data-register-dropdown-label>토지종류 선택</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
 								<div class="property-register-dropdown-menu property-register-land-menu" data-register-dropdown-menu role="listbox">
-									<h3 class="property-register-land-menu-title">지목</h3>
+									<div class="realjeju-mobile-filter-dialog-head"><h3 class="property-register-land-menu-title">지목</h3><button type="button" class="realjeju-mobile-filter-dialog-close" data-realjeju-mobile-filter-dialog-close aria-label="지목 선택창 닫기"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></div>
 									<section class="property-register-land-section">
 										<div class="property-register-land-grid">
 											<button type="button" class="property-register-dropdown-option property-register-land-tile" data-value="전" role="option">전</button>
@@ -3592,7 +3593,7 @@ function syncNow() {
 								</select>
 								<button type="button" class="property-register-dropdown-trigger" data-register-dropdown-trigger aria-haspopup="listbox" aria-expanded="false"><span data-register-dropdown-label>용도지역 선택</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
 								<div class="property-register-dropdown-menu property-register-land-menu property-register-land-use-zone-menu" data-register-dropdown-menu role="listbox">
-									<h3 class="property-register-land-menu-title">용도지역</h3>
+									<div class="realjeju-mobile-filter-dialog-head"><h3 class="property-register-land-menu-title">용도지역</h3><button type="button" class="realjeju-mobile-filter-dialog-close" data-realjeju-mobile-filter-dialog-close aria-label="용도지역 선택창 닫기"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></div>
 									<section class="property-register-land-section">
 										<h4 class="property-register-land-section-title">주거지역</h4>
 										<div class="property-register-land-grid property-register-land-use-zone-grid">
@@ -7003,7 +7004,7 @@ function syncNow() {
 			}
 		</script>
 	<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-	<script src="/js/min_bootstrap_6.669.js?v=20261071-nearby-next-margin-6180"></script>
+	<script src="/js/min_bootstrap_6.705.js?v=20261071-nearby-next-margin-6180"></script>
 
 
 <script>
