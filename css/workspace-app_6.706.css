@@ -1,0 +1,5729 @@
+/* REALJEJU 6.706 | 2026-09-04 */
+/* REALJEJU VERSION: 6.706 */
+/* REALJEJU 5.436 CSS module: property registration and broker workspace
++ * Original cascade order is preserved. Rules are moved, not duplicated.
++ */
+/* ===== MERGED FROM property-register_2.712.css ===== */
+/* =====================================================
+   3. 매물 등록 / 수정
+   ===================================================== */
+/* ===== INLINE FROM property-register.css ===== */
+/* REALJEJU property-register.css - stable split from realjeju_2.361(3).html / Ver 2.551 */
+
+.auth-profile-photo-preview,
+.auth-myinfo-photo{
+	width: 84px;
+	height: 84px;
+	border-radius: 50%;
+	object-fit: cover;
+	background: #e5e7eb;
+	border: 2px solid #e5e7eb;
+	flex: 0 0 auto;
+}
+
+.auth-modal.profile-page-mode .auth-myinfo-photo,
+.auth-modal.profile-page-mode .auth-profile-photo-preview{
+	width: var(--profile-page-photo-size);
+	height: var(--profile-page-photo-size);
+	border-radius: var(--profile-page-photo-radius);
+	object-fit: cover;
+	background: #e5e7eb;
+	border: 0;
+	box-shadow: none;
+}
+
+
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-guide,
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-photo-field,
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-photo-box,
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-photo-preview,
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-photo-select-btn,
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-select-wrap,
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-select-wrap *,
+.auth-modal.profile-page-mode .auth-profile-setup-screen #authProfileRoleRequestSelect,
+.auth-modal.profile-page-mode .auth-profile-setup-screen [class*="role"],
+.auth-modal.profile-page-mode .auth-profile-setup-screen [class*="role"] *,
+.auth-modal.profile-page-mode .auth-profile-setup-screen [class*="select"],
+.auth-modal.profile-page-mode .auth-profile-setup-screen [class*="select"] *{
+	border-radius: 0;
+	box-shadow: none;
+}
+
+
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-photo-preview,
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-photo-preview img,
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-photo-box img{
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+
+.property-register-page{
+	position: absolute;
+	inset: var(--global-topbar-height) 0 0 0;
+	z-index: 120;
+	display: none;
+	background: #f4f7fb;
+	color: #111827;
+	overflow-y: auto;
+	padding: 13px 0 114px;
+}
+
+body.property-register-page-open .property-register-page{
+	display: block;
+}
+
+/* REALJEJU 6.706: mobile property register viewport owner. */
+@media (max-width: 900px){
+	body.property-register-page-open .property-register-page{
+		position: fixed;
+		inset: 0;
+		width: 100vw;
+		height: 100dvh;
+		padding-top: 13px;
+		z-index: var(--realjeju-mobile-modal-z, 2147483000);
+	}
+
+	body.property-register-page-open .property-register-bottom-bar{
+		z-index: var(--realjeju-mobile-modal-z, 2147483000);
+	}
+
+	#propertyRegisterPage .property-register-head{
+		width: 100%;
+		align-items: center;
+		justify-content: space-between;
+		gap: 12px;
+	}
+
+	#propertyRegisterPage .property-register-top-actions{
+		display: flex;
+		align-items: center;
+		justify-content: flex-start;
+		flex: 1 1 auto;
+		flex-wrap: nowrap;
+		min-width: 0;
+	}
+
+	#propertyRegisterPage .property-register-page-close-btn{
+		margin-left: auto;
+	}
+
+	#propertyRegisterPage .property-address-hide-row,
+	#propertyRegisterPage .property-address-location-row{
+		width: 100%;
+		max-width: 100%;
+		margin-left: 0;
+		box-sizing: border-box;
+	}
+
+	#propertyRegisterPage .property-address-hide-row{
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		text-align: left;
+	}
+
+	#propertyRegisterPage .property-address-hide-label,
+	#propertyRegisterPage .property-address-hide-help{
+		align-self: flex-start;
+		margin-left: 0;
+		text-align: left;
+	}
+
+	#propertyRegisterPage .property-address-hide-help-mobile-break{
+		display: block;
+	}
+
+	#propertyRegisterPage .property-address-location-mode-group{
+		display: grid;
+		grid-template-columns: repeat(3, max-content);
+		align-items: center;
+		justify-content: flex-start;
+		gap: 12px;
+		width: 100%;
+		min-width: 0;
+	}
+
+	#propertyRegisterPage .property-address-location-mode-group > .property-radio-option{
+		justify-content: flex-start;
+		min-width: 0;
+		white-space: nowrap;
+	}
+
+	#propertyRegisterPage .property-address-location-direct-group{
+		grid-column: 1 / -1;
+		width: 100%;
+		min-width: 0;
+		justify-content: flex-start;
+	}
+
+	#propertyRegisterPage .property-address-location-map{
+		width: 100%;
+		max-width: 100%;
+		box-sizing: border-box;
+	}
+
+	#propertyRegisterPage .property-price-card{
+		--property-register-mobile-deal-label-col: 92px;
+		--property-register-mobile-price-label-col: 68px;
+	}
+
+	#propertyRegisterPage .property-price-row{
+		display: grid;
+		grid-template-columns:
+			var(--property-register-mobile-deal-label-col)
+			var(--property-register-mobile-price-label-col)
+			minmax(0, 1fr);
+		align-items: center;
+		column-gap: 12px;
+		row-gap: 10px;
+		width: 100%;
+		min-width: 0;
+	}
+
+	#propertyRegisterPage .property-price-row > .property-form-label{
+		grid-column: 1;
+		grid-row: 1;
+		display: flex;
+		align-self: stretch;
+		align-items: center;
+		width: 100%;
+		min-width: 0;
+		white-space: nowrap;
+	}
+
+	#propertyRegisterPage .property-price-fields,
+	#propertyRegisterPage .property-price-fields.two{
+		display: contents;
+	}
+
+	#propertyRegisterPage .property-price-fields > div{
+		display: contents;
+	}
+
+	#propertyRegisterPage .property-price-field-title{
+		grid-column: 2;
+		align-self: center;
+		margin: 0;
+		white-space: nowrap;
+	}
+
+	#propertyRegisterPage .property-price-field{
+		grid-column: 3;
+		width: 100%;
+		min-width: 0;
+	}
+
+	#propertyRegisterPage .property-form-control.property-type-dropdown .property-register-dropdown-menu,
+	#propertyRegisterPage .property-form-control.property-register-land-dropdown .property-register-dropdown-menu,
+	#propertyRegisterPage .property-form-control.property-register-land-use-zone-dropdown .property-register-dropdown-menu{
+		position: fixed;
+		inset: auto;
+		top: 50%;
+		left: 50%;
+		right: auto;
+		width: min(410px, calc(100vw - 28px));
+		min-width: 0;
+		max-width: calc(100vw - 28px);
+		height: fit-content;
+		max-height: calc(100dvh - 28px);
+		margin: 0;
+		padding: 22px 24px 24px;
+		border: 1px solid #dbe4ee;
+		border-radius: 20px;
+		background: rgba(255,255,255,0.98);
+		box-shadow: 0 18px 42px rgba(15,23,42,0.14);
+		transform: translate(-50%, -50%);
+		overflow-y: auto;
+		overscroll-behavior: contain;
+		gap: 16px;
+		z-index: var(--realjeju-mobile-modal-z, 2147483647);
+	}
+
+	#propertyRegisterPage .property-register-card > .property-register-section-title{
+		margin-bottom: 28px;
+	}
+
+	#propertyRegisterPage .property-register-card > .property-register-section-title + * > .property-form-label{
+		align-self: flex-start;
+		display: flex;
+		align-items: flex-start;
+		height: auto;
+		min-height: 0;
+	}
+
+	#propertyRegisterPage .property-agency-row{
+		row-gap: 12px;
+	}
+
+	#propertyRegisterPage .property-agency-row > .property-form-label{
+		align-self: flex-start;
+		height: auto;
+		min-height: 0;
+		align-items: flex-start;
+	}
+
+	#propertyRegisterPage .maintenance-section[data-maintenance-section="unknown"] .maintenance-top-row{
+		grid-template-columns: minmax(0, 1fr);
+		align-items: start;
+		gap: 16px;
+	}
+
+	#propertyRegisterPage .maintenance-section[data-maintenance-section="unknown"] .maintenance-top-row > .property-form-label{
+		justify-self: start;
+		width: 100%;
+		text-align: left;
+	}
+
+	#propertyRegisterPage .maintenance-section[data-maintenance-section="unknown"] .maintenance-detail-type-grid{
+		display: grid;
+		grid-template-columns: minmax(0, 1fr);
+		justify-items: start;
+		gap: 18px;
+		width: 100%;
+		min-width: 0;
+	}
+
+	#propertyRegisterPage .maintenance-section[data-maintenance-section="unknown"] .maintenance-detail-type-grid > .property-radio-option{
+		grid-column: 1;
+		justify-self: start;
+		margin-left: 0;
+		text-align: left;
+	}
+
+	#propertyRegisterPage .property-land-extra-checks{
+		display: grid;
+		grid-template-columns: repeat(4, max-content);
+		justify-content: space-between;
+		column-gap: 8px;
+		row-gap: 0;
+		width: 100%;
+		min-width: 0;
+	}
+
+	#propertyRegisterPage .property-land-extra-checks .property-check-option{
+		gap: 6px;
+		font-size: clamp(12px, 3.3vw, 15px);
+		white-space: nowrap;
+	}
+}
+/* REALJEJU 6.706: end mobile property register viewport owner. */
+
+body.property-register-page-open .sub-topbar,
+body.property-register-page-open .sidebar,
+body.property-register-page-open .resizer,
+body.property-register-page-open .map-wrap{
+	display: none;
+}
+
+.property-register-inner{
+	width: min(960px, calc(100vw - 48px));
+	margin: 0 auto;
+}
+
+.property-register-head{
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 16px;
+	margin-bottom: 13px;
+}
+
+.property-register-flag-checks{
+	display: inline-flex;
+	align-items: center;
+	gap: 30px;
+	padding: 13px 0;
+	flex: 0 0 auto;
+}
+
+.property-register-flag-check{
+	display: inline-flex;
+	align-items: center;
+	gap: var(--property-register-option-gap);
+	color: #111827;
+	font-size: var(--property-register-option-font-size);
+	font-weight: var(--property-register-option-font-weight);
+	line-height: 1;
+	letter-spacing: var(--property-register-option-letter-spacing);
+	white-space: nowrap;
+	cursor: pointer;
+	user-select: none;
+}
+
+.property-register-flag-check input{
+	width: var(--property-register-info-checkbox-size);
+	height: var(--property-register-info-checkbox-size);
+	margin: 0;
+	accent-color: #2f363d;
+	cursor: pointer;
+}
+
+.property-register-title{
+	margin: 0;
+	font-size: 24px;
+	font-weight: 600;
+	letter-spacing: -0.35px;
+	color: #111827;
+	line-height: 1.25;
+}
+
+.property-register-top-actions{
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+	flex-wrap: wrap;
+	padding: 13px 0;
+}
+
+.property-register-top-btn{
+	height: 42px;
+	padding: 0 18px;
+	border: 1px solid #e5e7eb;
+	border-radius: 0;
+	background: #ffffff;
+	color: #111827;
+	font-size: 14px;
+	font-weight: 600;
+	letter-spacing: -0.12px;
+	cursor: pointer;
+	box-shadow: none;
+}
+
+.property-register-card{
+	background: #ffffff;
+	border: 1px solid #e5e7eb;
+	border-radius: 0;
+	box-shadow: none;
+	padding: 34px 40px 40px;
+	min-height: 520px;
+}
+
+.property-register-section-title{
+	margin: 0 0 28px;
+	font-size: 22px;
+	font-weight: 700;
+	letter-spacing: -0.28px;
+	color: #111827;
+	line-height: 1.3;
+}
+
+.property-register-placeholder{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 380px;
+	border: 1px dashed #cbd5e1;
+	background: #f8fafc;
+	color: #64748b;
+	font-size: 15px;
+	font-weight: 600;
+	letter-spacing: -0.12px;
+	text-align: center;
+	padding: 24px;
+}
+
+.property-register-bottom-bar{
+	position: fixed;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 9995;
+	display: none;
+	justify-content: center;
+	background: rgba(255,255,255,0.96);
+	border-top: 1px solid #e5e7eb;
+	padding: 18px 0;
+	box-shadow: 0 -8px 24px rgba(15, 23, 42, 0.05);
+}
+
+body.property-register-page-open .property-register-bottom-bar{
+	display: flex;
+}
+
+.property-register-bottom-inner{
+	width: min(960px, calc(100vw - 48px));
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+}
+
+.property-register-legal-notice{
+	margin: 0;
+	flex: 1 1 auto;
+	color: #9ca3af;
+	font-size: 13px;
+	font-weight: 400;
+	line-height: 1.55;
+	letter-spacing: -0.12px;
+	text-align: left;
+}
+
+.property-register-bottom-actions{
+	flex: 0 0 auto;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 12px;
+}
+
+.property-register-bottom-btn{
+	height: 52px;
+	min-width: 132px;
+	padding: 0 22px;
+	border-radius: 0;
+	font-size: 16px;
+	font-weight: 700;
+	letter-spacing: -0.18px;
+	cursor: pointer;
+	box-shadow: none;
+}
+
+.property-register-bottom-btn.draft{
+	border: 1px solid #d1d5db;
+	background: #ffffff;
+	color: #111827;
+}
+
+.property-register-bottom-btn.submit{
+	border: 1px solid #1B6FA4;
+	background: #1B6FA4;
+	color: #ffffff;
+}
+
+@media (max-width: 720px) {
+	.property-register-page{
+		padding-top: 26px;
+	}
+	.property-register-flag-checks{
+		gap: 18px;
+		flex-wrap: wrap;
+	}
+	.property-register-flag-check{
+		font-size: var(--property-register-option-font-size);
+	}
+	.property-register-flag-check input{
+		width: var(--property-register-info-checkbox-size);
+		height: var(--property-register-info-checkbox-size);
+	}
+	.property-register-card{
+		padding: 26px 22px 32px;
+	}
+	.property-register-bottom-inner{
+		align-items: stretch;
+		flex-direction: column;
+		justify-content: stretch;
+	}
+	.property-register-legal-notice{
+		font-size: 12px;
+		line-height: 1.45;
+	}
+	.property-register-bottom-actions{
+		width: 100%;
+	}
+	.property-register-bottom-btn{
+		flex: 1 1 0;
+		min-width: 0;
+	}
+	.property-direction-pair-field{
+		grid-template-columns: 1fr;
+		gap: 10px;
+	}
+	.property-direction-base-label{
+		justify-self: start;
+	}
+}
+
+
+.property-register-card + .property-register-card{
+	margin-top: 28px;
+}
+
+.property-form-label{
+	font-size: var(--property-register-left-label-font-size);
+	font-weight: var(--property-register-left-label-font-weight);
+	color: #111827;
+	letter-spacing: -0.18px;
+	line-height: 1.3;
+}
+
+.property-type-listing-no-row{
+	display: grid;
+	grid-template-columns: 140px minmax(0, 1fr) auto;
+	align-items: center;
+	column-gap: 24px;
+}
+
+.property-type-listing-no-row > .property-form-label{
+	grid-column: 1;
+}
+
+.property-type-listing-no-row > .property-type-dropdown{
+	grid-column: 2;
+}
+
+.property-type-listing-no-row > .property-listing-no-inline{
+	grid-column: 3;
+}
+
+.property-listing-no-inline{
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+	color: #111827;
+	font-size: var(--property-register-left-label-font-size);
+	font-weight: var(--property-register-left-label-font-weight);
+	letter-spacing: -0.18px;
+	line-height: 1.3;
+	white-space: nowrap;
+}
+
+.property-listing-no-inline-title{
+	display: inline-flex;
+	align-items: center;
+	flex: 0 0 auto;
+}
+
+.property-listing-no-mode-option{
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	flex: 0 0 auto;
+	color: #111827;
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 1;
+	white-space: nowrap;
+}
+
+.property-listing-no-mode-option input{
+	width: 14px;
+	height: 14px;
+	margin: 0;
+	accent-color: #2563eb;
+}
+
+.property-listing-no-inline-input{
+	width: 190px;
+	font-size: var(--property-register-control-font-size);
+	font-weight: var(--property-register-control-font-weight);
+	letter-spacing: var(--property-register-control-letter-spacing);
+	padding: 0 var(--property-register-control-padding-x);
+}
+
+.property-listing-no-inline-input[readonly]{
+	color: #94a3b8;
+	background: #f8fafc;
+}
+
+
+
+
+
+.property-register-select{
+	appearance: none;
+	-webkit-appearance: none;
+	color: #a8b0bd;
+	cursor: pointer;
+}
+
+
+.property-register-native-select{
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	opacity: 0;
+	pointer-events: none;
+	overflow: hidden;
+}
+
+.property-register-dropdown{
+	position: relative;
+}
+
+.property-register-dropdown::after{
+	display: none;
+	content: none;
+}
+
+.property-register-dropdown-trigger{
+	width: 100%;
+	height: var(--property-register-input-height);
+	padding: 0 0;
+	border-radius: 0;
+	color: #111827;
+	font-family: var(--font-ui);
+	font-size: var(--property-register-control-font-size);
+	font-weight: var(--property-register-control-font-weight);
+	letter-spacing: var(--property-register-control-letter-spacing);
+	line-height: 1;
+	display: inline-flex;
+	align-items: center;
+	justify-content: flex-start;
+	gap: 8px;
+	cursor: pointer;
+}
+
+.property-register-dropdown-trigger span{
+	display: inline-block;
+	min-width: 0;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+
+.property-register-dropdown-trigger span,
+.property-register-dropdown-option{
+	font-variant-numeric: tabular-nums;
+	font-feature-settings: "tnum" 1;
+}
+
+.property-register-dropdown-trigger i{
+	font-size: 12px;
+	line-height: 1;
+	color: #111827;
+	transition: transform 0.18s ease;
+}
+
+.property-register-dropdown.open .property-register-dropdown-trigger i{
+	transform: rotate(180deg);
+}
+
+.property-register-dropdown-menu{
+	position: absolute;
+	top: calc(100% + 10.6px);
+	left: 0;
+	right: auto;
+	min-width: 240px;
+	width: max-content;
+	max-width: min(360px, calc(100vw - 48px));
+	max-height: 320px;
+	overflow-y: auto;
+	padding: 8px;
+	border-radius: 0;
+	border: 1px solid #e2e8f0;
+	background: rgba(255,255,255,0.98);
+	box-shadow: 0 18px 34px rgba(15, 41, 66, 0.14);
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
+	display: none;
+	flex-direction: column;
+	gap: 2px;
+	z-index: 9999;
+}
+
+.property-type-dropdown .property-register-dropdown-menu{
+	width: min(724px, calc(100vw - 64px));
+	max-width: none;
+	max-height: none;
+	overflow-y: visible;
+	padding: 28px 30px 30px;
+	border: 0;
+	border-radius: 26px;
+	background: rgba(255, 255, 255, 0.98);
+	box-shadow: 0 18px 42px rgba(15, 23, 42, 0.18);
+	gap: 28px;
+}
+
+.property-register-dropdown.open .property-register-dropdown-menu{
+	display: flex;
+}
+
+.property-register-dropdown-option{
+	min-height: 36px;
+	padding: 0 10px;
+	border: 0;
+	border-radius: 0;
+	background: transparent;
+	color: var(--subbar-item-color, #334155);
+	font-family: var(--subbar-item-font-family, var(--font-ui));
+	font-size: var(--subbar-item-font-size, 14px);
+	font-weight: var(--subbar-item-font-weight, 700);
+	letter-spacing: var(--subbar-item-letter-spacing, -0.1px);
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	text-align: left;
+	cursor: pointer;
+	white-space: nowrap;
+}
+
+.property-register-dropdown-option:hover{
+	background: #f8fafc;
+	color: #334155;
+}
+
+.property-register-dropdown-option.active{
+	background: #eff6ff;
+	color: #2563eb;
+	font-weight: 700;
+}
+
+.property-type-dropdown .property-register-dropdown-option{
+	width: auto;
+	min-height: auto;
+}
+
+.property-register-type-section{
+	display: flex;
+	flex-direction: column;
+}
+
+.property-register-type-section-title{
+	margin: 0;
+	color: #111827;
+	font-size: 22px;
+	font-weight: 700;
+	letter-spacing: -0.3px;
+	line-height: 1.25;
+}
+
+.property-register-type-grid{
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 12px 14px;
+}
+
+.property-register-type-tile{
+	height: 56px;
+	border: 1px solid transparent;
+	border-radius: 8px;
+	background: #f3f4f6;
+	color: #737982;
+	font-size: 20px;
+	font-weight: 700;
+	letter-spacing: -0.2px;
+	justify-content: center;
+	text-align: center;
+	padding: 0 14px;
+}
+
+.property-register-type-tile:hover{
+	background: #ffffff;
+	color: #111827;
+	border-color: #111827;
+}
+
+.property-register-type-tile.active{
+	background: #ffffff;
+	color: #111827;
+	border-color: #111827;
+	box-shadow: none;
+}
+
+@media (max-width: 720px) {
+	.property-type-dropdown .property-register-dropdown-menu{
+		width: min(420px, calc(100vw - 32px));
+		padding: 22px;
+	}
+
+	.property-register-type-grid{
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.property-register-type-tile{
+		font-size: 17px;
+	}
+}
+
+
+.property-register-input,
+.property-register-select{
+	width: 100%;
+	height: var(--property-register-input-height);
+	border: 1px solid #d8dee8;
+	border-radius: 0;
+	background: #ffffff;
+	color: #111827;
+	font-family: var(--font-ui);
+	font-size: var(--property-register-control-font-size);
+	font-weight: var(--property-register-control-font-weight);
+	letter-spacing: var(--property-register-control-letter-spacing);
+	padding: 0 var(--property-register-control-padding-x);
+	outline: none;
+	box-shadow: none;
+	box-sizing: border-box;
+}
+
+.property-register-input:focus,
+.property-register-select:focus{
+	border-color: #d8dee8;
+	background: #ffffff;
+	box-shadow: none;
+	outline: none;
+}
+
+.property-register-input::placeholder{
+	color: #a8b0bd;
+	font-size: var(--property-register-placeholder-font-size);
+	font-weight: var(--property-register-placeholder-font-weight);
+}
+
+.property-register-dropdown-trigger{
+	border: 0;
+	background: transparent;
+	box-shadow: none;
+	outline: none;
+}
+
+.property-register-dropdown-trigger:focus{
+	border: 0;
+	background: transparent;
+	box-shadow: none;
+	outline: none;
+}
+
+
+.property-form-control.property-register-dropdown{
+	width: 100%;
+	height: var(--property-register-dropdown-menu-height);
+	border: 1px solid #d8dee8;
+	border-radius: 0;
+	background: #ffffff;
+	padding: 0 var(--property-register-control-padding-x);
+	display: flex;
+	align-items: center;
+	box-sizing: border-box;
+}
+
+.property-form-control.property-register-dropdown .property-register-dropdown-trigger{
+	height: 100%;
+	width: 100%;
+	padding: 0;
+}
+
+.property-form-control.property-register-dropdown .property-register-dropdown-menu{
+	top: calc(100% + 10.6px);
+	left: 0;
+}
+
+
+.property-register-dropdown-trigger .building-use-living-accommodation-badge{
+	display: none;
+	margin-left: auto;
+	padding-left: 12px;
+	color: #9ca3af;
+	font-size: 15px;
+	font-weight: 500;
+	white-space: nowrap;
+	overflow: visible;
+	text-overflow: clip;
+}
+
+.property-register-dropdown-trigger .building-use-living-accommodation-badge.is-visible{
+	display: inline-flex;
+}
+
+
+.property-form-control.property-register-dropdown,
+.property-register-dropdown{
+	width: 100%;
+}
+
+/* 매물 등록 - 매물 종류, 건축물 용도 드롭 다운 너비 조정 */
+.property-form-control.property-register-dropdown .property-register-dropdown-menu,
+.property-register-dropdown-menu{
+	left: -1px;
+	right: auto;
+	width: calc(100% + 2px);
+	min-width: 0;
+	max-width: none;
+	box-sizing: border-box;
+}
+
+.property-register-dropdown-option{
+	width: 100%;
+}
+
+
+
+.property-address-wrap::before{
+	content: "\f002";
+	font-family: "Font Awesome 6 Free";
+	font-weight: 900;
+	position: absolute;
+	left: 18px;
+	top: 50%;
+	transform: translateY(-50%);
+	font-size: 18px;
+	color: #475573;
+	z-index: 1;
+}
+
+.property-address-wrap .property-register-input{
+	padding-left: 52px;
+}
+
+.property-unit-input .property-register-input{
+	padding-right: 56px;
+}
+
+/* 매물 등록 - 가격 (거래 유형이 2개 이상이면 모두 선택해 주세요. 글자) */
+.property-price-guide{
+	margin: -16px 0 28px 164px;
+	color: var(--property-register-right-text-color);
+	font-size: 14px;
+	font-weight: 500;
+	letter-spacing: -0.12px;
+	line-height: 1.5;
+}
+
+.property-land-extra-guide{
+	position: static;
+	display: block;
+	margin: 8px 0;
+	color: var(--property-register-right-text-color);
+	font-size: 14px;
+	font-weight: 500;
+	letter-spacing: -0.12px;
+	line-height: 1.5;
+}
+
+
+
+.property-land-extra-row > .property-form-label{
+	display: inline-flex;
+}
+
+.property-land-extra-row .property-form-control{
+	position: relative;
+	display: flex;
+	flex-direction: column;
+}
+
+.property-deal-checks{
+	display: grid;
+	grid-template-columns: repeat(5, minmax(0, 1fr));
+	align-items: center;
+	justify-content: flex-start;
+	column-gap: 0;
+	row-gap: 12px;
+}
+
+.property-deal-option{
+	display: inline-flex;
+	align-items: center;
+	gap: var(--property-register-option-gap);
+	font-size: var(--property-register-option-font-size);
+	font-weight: var(--property-register-option-font-weight);
+	color: #111827;
+	letter-spacing: var(--property-register-option-letter-spacing);
+	cursor: pointer;
+	user-select: none;
+	white-space: nowrap;
+}
+
+/* 매물 등록 - 가격 거래 유형 체크 박스 */
+.property-deal-option input{
+	width: var(--property-register-info-checkbox-size);
+	height: var(--property-register-info-checkbox-size);
+	margin: 0;
+	accent-color: #2f363d;
+	cursor: pointer;
+	flex: 0 0 auto;
+}
+
+
+
+.property-price-dynamic:empty{
+	display: none;
+}
+
+.property-price-field .property-register-input,
+.property-money-input-wrap .property-register-input{
+	padding-right: 190px;
+}
+
+
+.property-info-card{
+	min-height: 0;
+}
+
+
+
+.property-direction-pair-field{
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 16px 32px;
+	align-items: center;
+}
+
+.property-direction-pair-field > .property-register-dropdown{
+	min-width: 0;
+}
+
+.property-direction-base-label{
+	display: none;
+}
+
+.property-direction-pair-field .property-register-dropdown-trigger span{
+	color: #a8b0bd;
+	font-weight: 500;
+}
+
+.property-parking-inline-grid{
+	gap: 16px 32px;
+}
+
+.property-parking-inline-unit{
+	display: grid;
+	grid-template-columns: 64px minmax(0, 1fr);
+	align-items: center;
+	column-gap: 12px;
+	min-width: 0;
+}
+
+.property-parking-unit-input{
+	position: relative;
+	display: block;
+	width: 100%;
+	min-width: 0;
+}
+
+.property-parking-unit-input .property-register-input{
+	width: 100%;
+	padding-left: 18px;
+	padding-right: 56px;
+}
+
+.property-parking-input-label{
+	position: static;
+	display: block;
+	min-width: 0;
+	color: #a8b0bd;
+	font-size: 16px;
+	font-weight: 500;
+	letter-spacing: -0.16px;
+	line-height: 1.2;
+	white-space: nowrap;
+	pointer-events: none;
+}
+
+.property-parking-unit-input .property-unit-label{
+	position: absolute;
+	left: auto;
+	right: 18px;
+	top: 50%;
+	transform: translateY(-50%);
+	white-space: nowrap;
+	z-index: 2;
+}
+
+.property-inline-label{
+	font-size: var(--property-register-option-font-size);
+	font-weight: var(--property-register-option-font-weight);
+	color: var(--property-register-right-text-color);
+	letter-spacing: var(--property-register-option-letter-spacing);
+	white-space: nowrap;
+}
+
+.property-check-option,
+.property-radio-option{
+	display: inline-flex;
+	align-items: center;
+	gap: var(--property-register-option-gap);
+	font-size: var(--property-register-option-font-size);
+	font-weight: var(--property-register-option-font-weight);
+	color: var(--property-register-right-text-color);
+	letter-spacing: var(--property-register-option-letter-spacing);
+	cursor: pointer;
+	user-select: none;
+	white-space: nowrap;
+}
+
+.property-check-option input{
+	width: var(--property-register-info-checkbox-size);
+	height: var(--property-register-info-checkbox-size);
+	margin: 0;
+	accent-color: #2f363d;
+	cursor: pointer;
+	flex: 0 0 auto;
+}
+
+.property-radio-option input{
+	width: var(--property-register-info-radio-size);
+	height: var(--property-register-info-radio-size);
+	margin: 0;
+	accent-color: #2f363d;
+	cursor: pointer;
+	flex: 0 0 auto;
+}
+
+
+.property-land-select-field .property-register-dropdown-menu{
+	max-height: 470px;
+	overflow-y: auto;
+}
+
+
+
+.property-info-row.property-heating-row .property-radio-row{
+	align-items: center;
+	min-height: var(--property-register-info-radio-size);
+}
+
+
+
+
+
+.property-register-card,
+.property-info-card{
+	width: 100%;
+	max-width: 100%;
+	min-width: 0;
+	overflow: visible;
+}
+
+
+.property-facility-card{
+	min-height: 0;
+}
+
+.property-facility-card .property-check-option{
+	width: 100%;
+	gap: var(--property-register-option-gap);
+	white-space: nowrap;
+}
+
+
+.property-maintenance-card{
+	min-height: 0;
+}
+
+/* 모바일 매물 등록 공통 레이아웃: PC용 고정 열을 작은 화면에서 안전하게 재배치 */
+@media (max-width: 720px) {
+	#propertyRegisterPage{
+		width: 100%;
+		max-width: 100vw;
+		overflow-x: hidden;
+	}
+
+	#propertyRegisterPage .property-register-inner{
+		width: 100%;
+		max-width: none;
+		padding-left: 14px;
+		padding-right: 14px;
+		box-sizing: border-box;
+	}
+
+	#propertyRegisterPage .property-register-card{
+		width: 100%;
+		min-width: 0;
+		padding: 24px 18px 28px;
+		box-sizing: border-box;
+	}
+
+	#propertyRegisterPage .property-form-row,
+	#propertyRegisterPage .property-info-row,
+	#propertyRegisterPage .maintenance-form-row,
+	#propertyRegisterPage .property-detail-row,
+	#propertyRegisterPage .property-agency-row,
+	#propertyRegisterPage .property-registrant-form-row,
+	#propertyRegisterPage .property-premium-field,
+	#propertyRegisterPage .property-type-listing-no-row{
+		grid-template-columns: minmax(0, 1fr);
+		column-gap: 0;
+		row-gap: 10px;
+		align-items: stretch;
+		width: 100%;
+		min-width: 0;
+	}
+
+	#propertyRegisterPage .property-type-listing-no-row > .property-form-label,
+	#propertyRegisterPage .property-type-listing-no-row > .property-type-dropdown,
+	#propertyRegisterPage .property-type-listing-no-row > .property-listing-no-inline{
+		grid-column: 1;
+	}
+
+	#propertyRegisterPage .property-form-label,
+	#propertyRegisterPage .property-info-field,
+	#propertyRegisterPage .property-form-control,
+	#propertyRegisterPage .property-select-wrap,
+	#propertyRegisterPage .property-register-dropdown,
+	#propertyRegisterPage .property-register-dropdown-trigger,
+	#propertyRegisterPage .property-register-input,
+	#propertyRegisterPage .property-register-select{
+		width: 100%;
+		min-width: 0;
+		max-width: 100%;
+		box-sizing: border-box;
+	}
+
+	#propertyRegisterPage .property-listing-no-inline{
+		display: grid;
+		grid-template-columns: max-content max-content max-content minmax(68px, 1fr);
+		align-items: center;
+		gap: 8px;
+		width: 100%;
+		min-width: 0;
+		white-space: nowrap;
+	}
+
+	#propertyRegisterPage .property-listing-no-inline-input{
+		width: 100%;
+		min-width: 0;
+	}
+
+	#propertyRegisterPage .property-inline-grid,
+	#propertyRegisterPage .property-area-pair,
+	#propertyRegisterPage .property-land-select-row,
+	#propertyRegisterPage .property-parking-inline-grid{
+		grid-template-columns: minmax(0, 1fr);
+		gap: 12px;
+		width: 100%;
+		min-width: 0;
+	}
+
+	#propertyRegisterPage .property-direction-pair-field{
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 10px;
+		width: 100%;
+		min-width: 0;
+	}
+
+	#propertyRegisterPage .property-radio-row{
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		column-gap: 16px;
+		row-gap: 12px;
+		width: 100%;
+		min-width: 0;
+	}
+
+	#propertyRegisterPage .property-info-card .property-loan-row > .property-radio-row,
+	#propertyRegisterPage .property-info-card .property-pet-row > .property-radio-row,
+	#propertyRegisterPage .property-info-card .property-parking-row > .property-info-field > .property-radio-row,
+	#propertyRegisterPage .property-info-card .property-heating-row > .property-info-field > .property-radio-row{
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		column-gap: 16px;
+		row-gap: 12px;
+		width: 100%;
+		height: auto;
+		min-height: 0;
+	}
+
+	#propertyRegisterPage .property-check-option,
+	#propertyRegisterPage .property-radio-option{
+		width: auto;
+		min-width: 0;
+		height: auto;
+		min-height: 24px;
+		line-height: 1.35;
+		white-space: normal;
+	}
+
+	#propertyRegisterPage .property-info-row.property-parking-row > .property-form-label,
+	#propertyRegisterPage .property-info-row.property-heating-row > .property-form-label{
+		height: auto;
+		min-height: 0;
+		padding-top: 0;
+		line-height: 1.3;
+		align-items: center;
+	}
+
+	#propertyRegisterPage .property-info-row.property-parking-row > .property-info-field > .property-radio-row{
+		height: auto;
+		min-height: 0;
+		line-height: normal;
+	}
+
+	#propertyRegisterPage .property-info-row.property-heating-row > .property-info-field{
+		grid-template-columns: minmax(0, 1fr);
+		gap: 12px;
+		width: 100%;
+		min-width: 0;
+	}
+
+	#propertyRegisterPage .property-info-row.property-heating-row .property-heating-fuel-wrap{
+		grid-template-columns: 48px minmax(0, 1fr);
+		gap: 10px;
+		width: 100%;
+		height: auto;
+		min-height: var(--property-register-input-height);
+		margin-top: 0;
+	}
+
+	#propertyRegisterPage .property-parking-inline-unit{
+		grid-template-columns: 52px minmax(0, 1fr);
+		column-gap: 10px;
+	}
+
+	#propertyRegisterPage .property-floor-display-options,
+	#propertyRegisterPage .property-floor-level-inline{
+		gap: 12px 16px;
+		width: 100%;
+		min-width: 0;
+	}
+
+	#propertyRegisterPage .property-deal-checks{
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		column-gap: 16px;
+		row-gap: 12px;
+		width: 100%;
+	}
+
+	#propertyRegisterPage .property-price-guide{
+		margin-left: 0;
+	}
+
+	#propertyRegisterPage .property-price-field .property-register-input,
+	#propertyRegisterPage .property-money-input-wrap .property-register-input{
+		padding-right: 210px;
+	}
+
+	#propertyRegisterPage .property-money-korean{
+		max-width: 96px;
+		font-size: 13px;
+	}
+
+	#propertyRegisterPage .property-register-dropdown-menu{
+		max-width: calc(100vw - 64px);
+	}
+
+	#propertyRegisterBottomBar .property-register-bottom-inner{
+		width: 100%;
+		max-width: none;
+		padding-left: 14px;
+		padding-right: 14px;
+		box-sizing: border-box;
+	}
+}
+
+.maintenance-none-summary{
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	color: #111827;
+	font-size: var(--property-register-option-font-size);
+	font-weight: 700;
+	line-height: 1.3;
+	letter-spacing: -0.18px;
+}
+
+.maintenance-fee-field .property-register-input:disabled{
+	background: #f3f4f6;
+	color: #9ca3af;
+	-webkit-text-fill-color: #9ca3af;
+	cursor: not-allowed;
+}
+
+
+.property-upload-box.has-photo-preview .property-upload-guide{
+	display: none;
+}
+
+
+.property-photo-preview-grid{
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+	gap: 12px;
+	width: 100%;
+	margin-top: 8px;
+}
+
+.property-upload-box.has-photo-preview{
+	justify-content: flex-start;
+}
+
+
+.property-upload-box.has-photo-preview .property-photo-preview-grid{
+	margin-top: 0;
+}
+
+.property-photo-preview-grid.is-hidden{
+	display: none;
+}
+
+.property-photo-preview-item{
+	position: relative;
+	aspect-ratio: 4 / 3;
+	border: 1px solid #d7dee8;
+	background: #f8fafc;
+	overflow: hidden;
+	cursor: grab;
+	touch-action: none;
+	user-select: none;
+}
+
+.property-photo-preview-item.is-dragging{
+	opacity: 0.46;
+	cursor: grabbing;
+}
+
+.property-photo-preview-item.is-drop-target{
+	border-color: #4A7EDC;
+	box-shadow: 0 0 0 2px rgba(74, 126, 220, 0.18) inset;
+}
+
+.property-photo-drag-ghost{
+	position: fixed;
+	left: 0;
+	top: 0;
+	z-index: 2147483647;
+	border: 1px solid rgba(37, 99, 235, 0.45);
+	border-radius: 8px;
+	background: #ffffff;
+	box-shadow: 0 16px 34px rgba(15, 23, 42, 0.28);
+	opacity: 0.94;
+	overflow: hidden;
+	pointer-events: none;
+	cursor: grabbing;
+	will-change: transform;
+}
+
+.property-photo-preview-item img{
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+}
+
+.property-photo-preview-name{
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	padding: 6px 8px;
+	background: rgba(17, 24, 39, 0.68);
+	color: #ffffff;
+	font-size: 12px;
+	font-weight: 600;
+	letter-spacing: -0.1px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.property-facility-card .property-check-option input{
+	width: var(--property-register-info-checkbox-size);
+	height: var(--property-register-info-checkbox-size);
+	margin: 0;
+	flex: 0 0 auto;
+}
+
+.property-register-page textarea{
+	box-sizing: border-box;
+}
+
+
+.property-form-control.property-register-dropdown,
+.property-form-control.property-register-dropdown .property-register-dropdown-trigger{
+	height: var(--property-register-input-height);
+	min-height: var(--property-register-input-height);
+	box-sizing: border-box;
+}
+
+.admin-notice-field .admin-notice-category-dropdown.property-form-control.property-register-dropdown,
+.admin-notice-field .admin-notice-category-dropdown.property-form-control.property-register-dropdown .property-register-dropdown-trigger{
+	height: 42px;
+	min-height: 42px;
+}
+
+
+body:not(.property-register-page-open) #propertyRegisterPage,
+body:not(.property-register-page-open) #propertyRegisterBottomBar{
+	display: none;
+	visibility: hidden;
+	pointer-events: none;
+}
+
+.auth-modal.profile-page-mode .auth-myinfo-display-row{
+	grid-template-columns: 140px minmax(0, 1fr);
+	border: 0;
+}
+
+.auth-modal.profile-page-mode .auth-myinfo-display-label{
+	font-family: var(--font-ui);
+	letter-spacing: -0.18px;
+	line-height: 1.2;
+	text-align: left;
+}
+
+.auth-modal.profile-page-mode .auth-myinfo-display-value{
+	align-items: center;
+}
+
+.auth-modal.profile-page-mode .auth-myinfo-screen .auth-modal-submit,
+.auth-modal.profile-page-mode .auth-myinfo-screen .auth-modal-secondary{
+	height: var(--property-register-input-height);
+	min-height: var(--property-register-input-height);
+	border-radius: 0;
+	font-family: var(--font-ui);
+	font-size: 16px;
+	font-weight: 700;
+	letter-spacing: -0.16px;
+	box-shadow: none;
+}
+
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-photo-preview{
+	border-radius: 50%;
+	border: 1px solid #e5e7eb;
+	background: #f3f4f6;
+	box-shadow: none;
+}
+
+
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-photo-preview{
+    width: 84px;
+    height: 84px;
+}
+
+
+.property-address-wrap{
+	position: relative;
+}
+
+.property-address-wrap .property-register-input{
+	cursor: pointer;
+}
+
+.property-address-hide-row{
+	display: none;
+	margin: var(--property-address-hide-row-margin-top)
+	        0
+	        var(--property-address-hide-row-margin-bottom)
+	        var(--property-address-hide-row-margin-left);
+}
+
+.property-address-hide-row.open{
+	display: block;
+}
+
+.property-address-hide-label{
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+	margin: 0;
+	font-size: var(--property-address-hide-label-font-size);
+	font-weight: var(--property-address-hide-label-font-weight);
+	letter-spacing: -0.16px;
+	color: #111827;
+	cursor: pointer;
+}
+
+.property-address-hide-label input{
+	width: var(--property-address-hide-checkbox-size);
+	height: var(--property-address-hide-checkbox-size);
+	margin: 0;
+	accent-color: var(--profile-page-primary-button-bg);
+	cursor: pointer;
+	flex: 0 0 auto;
+}
+
+.property-address-hide-help{
+	margin: var(--property-address-hide-help-margin-top)
+	        0
+	        0
+	        0;
+	font-size: var(--property-address-hide-help-font-size);
+	font-weight: 400;
+	line-height: 1.45;
+	letter-spacing: -0.1px;
+	color: var(--property-register-right-text-color);
+}
+
+.property-address-location-row{
+	display: none;
+	margin: var(--property-address-location-row-margin-top)
+	        0
+	        var(--property-address-location-row-margin-bottom)
+	        var(--property-address-location-row-margin-left);
+}
+
+.property-address-location-row.open{
+	display: block;
+}
+
+.property-address-location-mode-group{
+	display: flex;
+	align-items: center;
+	gap: var(--property-address-location-mode-gap);
+	margin: 0
+	        0
+	        var(--property-address-location-mode-margin-bottom);
+}
+
+.property-address-location-direct-group{
+	display: flex;
+	align-items: center;
+	gap: var(--property-address-location-direct-gap);
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+.property-address-location-direct-search-btn{
+	flex: 0 0 var(--property-address-location-direct-button-width);
+	width: var(--property-address-location-direct-button-width);
+	height: var(--property-address-location-direct-button-height);
+	min-height: var(--property-address-location-direct-button-height);
+	max-height: var(--property-address-location-direct-button-height);
+	padding: 0
+	        var(--property-address-location-direct-button-padding-x);
+	border: var(--profile-page-secondary-button-border);
+	border-radius: var(--profile-page-button-radius);
+	box-sizing: border-box;
+	background: var(--profile-page-secondary-button-bg);
+	color: var(--profile-page-secondary-button-color);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-size: var(--property-address-location-direct-button-font-size);
+	font-weight: var(--property-address-location-direct-button-font-weight);
+	line-height: 1;
+	letter-spacing: -0.1px;
+	white-space: nowrap;
+	word-break: keep-all;
+	cursor: pointer;
+}
+
+.property-address-location-direct-search-box{
+	display: none;
+	flex: 1 1 auto;
+	min-width: 0;
+	height: var(--property-address-location-direct-button-height);
+}
+
+.property-address-location-direct-search-box.open{
+	display: flex;
+	align-items: center;
+}
+
+.property-address-location-direct-search-input{
+	width: 100%;
+	height: var(--property-address-location-direct-button-height);
+	min-height: var(--property-address-location-direct-button-height);
+	max-height: var(--property-address-location-direct-button-height);
+	padding: 0
+	        var(--property-address-location-direct-input-padding-x);
+	border: var(--property-address-input-border);
+	border-radius: var(--property-address-input-radius);
+	box-sizing: border-box;
+	background: var(--property-address-input-bg);
+	color: var(--property-address-input-color);
+	font-size: var(--property-address-location-direct-input-font-size);
+	font-weight: 600;
+	line-height: 1;
+	appearance: none;
+	outline: none;
+}
+
+.property-register-page .property-address-location-mode-group .property-address-location-direct-search-input{
+	height: var(--property-address-location-direct-button-height);
+	min-height: var(--property-address-location-direct-button-height);
+	max-height: var(--property-address-location-direct-button-height);
+	box-sizing: border-box;
+}
+
+
+.quick-property-modal{
+	position: fixed;
+	inset: 0;
+	z-index: 100600;
+	display: none;
+	align-items: center;
+	justify-content: center;
+	padding: var(--property-address-modal-padding);
+	background: var(--property-address-modal-bg);
+	font-size: var(--property-register-option-font-size);
+}
+
+.quick-property-dialog{
+	position: relative;
+	width: var(--property-address-dialog-width);
+	max-width: var(--property-address-dialog-max-width);
+	max-height: var(--property-address-dialog-max-height);
+	padding: var(--property-address-dialog-padding-top)
+	        var(--property-address-dialog-padding-x)
+	        var(--property-address-dialog-padding-bottom);
+	background: var(--property-address-dialog-bg);
+	border-radius: var(--property-address-dialog-radius);
+	box-shadow: var(--property-address-dialog-shadow);
+	overflow: hidden;
+}
+
+.quick-property-title{
+	margin: 0;
+	color: var(--property-address-title-color);
+	font-size: var(--property-address-title-font-size);
+	font-weight: var(--property-address-title-font-weight);
+	line-height: var(--property-address-title-line-height);
+	letter-spacing: var(--property-address-title-letter-spacing);
+}
+
+.quick-property-paste-btn,
+.quick-property-cancel-btn,
+.quick-property-apply-btn{
+	height: var(--property-address-secondary-button-height);
+	min-width: var(--property-address-secondary-button-min-width);
+	padding: 0 var(--property-address-secondary-button-padding-x);
+	border-radius: var(--property-address-secondary-button-radius);
+	font-family: var(--font-ui);
+	font-size: var(--property-address-secondary-button-font-size);
+	font-weight: var(--property-address-secondary-button-font-weight);
+	letter-spacing: -0.18px;
+	line-height: 1;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	white-space: nowrap;
+}
+
+.quick-property-paste-btn,
+.quick-property-cancel-btn{
+	background: var(--property-address-secondary-button-bg);
+	color: var(--property-address-secondary-button-color);
+	border: var(--property-address-secondary-button-border);
+}
+
+.quick-property-source-option{
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	color: var(--property-address-input-color);
+	font-family: var(--font-ui);
+	font-size: 15px;
+	font-weight: 600;
+	line-height: 1.2;
+	cursor: pointer;
+	white-space: nowrap;
+}
+
+.quick-property-textarea{
+	width: 100%;
+	height: 188px;
+	padding: 18px;
+	border: var(--property-address-input-border);
+	border-radius: var(--property-address-input-radius);
+	background: var(--property-address-input-bg);
+	color: var(--property-address-input-color);
+	font-family: var(--font-ui);
+	font-size: var(--property-address-input-font-size);
+	font-weight: 400;
+	line-height: 1.55;
+	letter-spacing: var(--property-address-input-letter-spacing);
+	resize: none;
+	outline: none;
+	box-sizing: border-box;
+	overflow-y: auto;
+	white-space: pre-wrap;
+	overflow-wrap: anywhere;
+}
+
+.quick-property-textarea::placeholder{
+	color: var(--property-address-input-placeholder-color);
+	font-weight: 400;
+}
+
+.quick-property-textarea:empty::before{
+	content: attr(data-placeholder);
+	color: var(--property-address-input-placeholder-color);
+	font-weight: 400;
+	pointer-events: none;
+}
+
+.quick-property-textarea:focus{
+	border: var(--property-address-input-border-focus);
+	background: var(--property-address-input-bg);
+	box-shadow: none;
+	outline: none;
+}
+
+.quick-property-apply-btn{
+	min-width: var(--property-address-secondary-button-min-width);
+	padding: 0 var(--property-address-primary-button-padding-x);
+	border-radius: var(--property-address-primary-button-radius);
+	font-size: var(--property-address-primary-button-font-size);
+	font-weight: var(--property-address-primary-button-font-weight);
+	letter-spacing: var(--property-address-primary-button-letter-spacing);
+	background: var(--property-address-primary-button-bg);
+	color: var(--property-address-primary-button-color);
+	border: var(--property-address-primary-button-border);
+}
+
+@media (max-width: 720px) {
+	.quick-property-dialog{
+		width: calc(100vw - 32px);
+		padding: 24px;
+		border-radius: var(--property-address-dialog-radius);
+	}
+	.quick-property-head{
+		align-items: flex-start;
+		flex-direction: column;
+	}
+	.quick-property-title{
+		font-size: 24px;
+	}
+	.quick-property-textarea{
+		height: 220px;
+	}
+	.quick-property-foot{
+		padding-top: 18px;
+	}
+	.quick-property-paste-btn,
+.quick-property-cancel-btn,
+.quick-property-apply-btn{
+		height: var(--property-address-secondary-button-height);
+		min-width: 0;
+		flex: 1 1 0;
+	}
+}
+
+.property-address-location-direct-search-input::placeholder{
+	color: var(--property-address-input-placeholder-color);
+}
+
+.property-address-location-map{
+	width: 100%;
+	height: var(--property-address-location-map-height);
+	border: var(--property-address-location-map-border);
+	background: var(--property-address-location-map-bg);
+	overflow: hidden;
+}
+
+.property-address-location-help{
+	margin: var(--property-address-location-help-margin-top)
+	        0
+	        0;
+	font-size: var(--property-address-location-help-font-size);
+	font-weight: 600;
+	line-height: 1.45;
+	letter-spacing: -0.1px;
+	color: var(--property-address-location-help-color);
+}
+
+.property-address-location-row[data-location-mode="hidden"] .property-address-location-help{
+	color: #6b7280;
+}
+
+.property-address-search-modal{
+	position: fixed;
+	inset: 0;
+	z-index: var(--property-address-modal-z-index);
+	display: none;
+	align-items: center;
+	justify-content: center;
+	padding: var(--property-address-modal-padding);
+	background: var(--property-address-modal-bg);
+	font-size: var(--property-register-option-font-size);
+}
+
+.property-address-search-modal.open{
+	display: flex;
+}
+
+.property-address-search-dialog{
+	position: relative;
+	width: var(--property-address-dialog-width);
+	max-width: var(--property-address-dialog-max-width);
+	max-height: var(--property-address-dialog-max-height);
+	padding: var(--property-address-dialog-padding-top)
+	        var(--property-address-dialog-padding-x)
+	        var(--property-address-dialog-padding-bottom);
+	border-radius: var(--property-address-dialog-radius);
+	background: var(--property-address-dialog-bg);
+	box-shadow: var(--property-address-dialog-shadow);
+	overflow: hidden;
+}
+
+.property-address-search-close{
+	position: absolute;
+	top: var(--property-address-close-top);
+	right: var(--property-address-close-right);
+	width: var(--property-address-close-size);
+	height: var(--property-address-close-size);
+	border: 0;
+	border-radius: var(--radius-round);
+	background: var(--property-address-close-bg);
+	color: var(--property-address-close-color);
+	font-size: var(--property-address-close-font-size);
+	font-weight: var(--property-address-close-font-weight);
+	line-height: 1;
+	cursor: pointer;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.property-address-search-title{
+	margin: 0
+	        0
+	        var(--property-address-title-margin-bottom);
+	font-size: var(--property-address-title-font-size);
+	font-weight: var(--property-address-title-font-weight);
+	line-height: var(--property-address-title-line-height);
+	letter-spacing: var(--property-address-title-letter-spacing);
+	color: var(--property-address-title-color);
+}
+
+.property-address-search-form{
+	position: relative;
+	margin-bottom: var(--property-address-search-form-margin-bottom);
+}
+
+.property-address-search-input{
+	padding: 0
+	        var(--property-address-search-input-padding-right)
+	        0
+	        var(--property-address-search-input-padding-left);
+}
+
+.property-address-search-input::-webkit-search-cancel-button{
+	display: none;
+	-webkit-appearance: none;
+}
+
+.property-address-search-submit{
+	position: absolute;
+	top: 50%;
+	right: var(--property-address-search-icon-right);
+	transform: translateY(-50%);
+	width: var(--property-address-search-icon-size);
+	height: var(--property-address-search-icon-size);
+	border: 0;
+	background: transparent;
+	color: var(--property-address-search-icon-color);
+	font-size: var(--property-address-search-icon-font-size);
+	cursor: pointer;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0;
+}
+
+.property-address-search-guide{
+	padding-top: var(--property-address-guide-padding-top);
+}
+
+.property-address-search-guide-title{
+	margin: 0
+	        0
+	        var(--property-address-guide-title-margin-bottom);
+	font-size: var(--property-address-guide-title-font-size);
+	font-weight: var(--property-address-guide-title-font-weight);
+	letter-spacing: -0.5px;
+	color: var(--property-address-title-color);
+}
+
+.property-address-search-guide-row{
+	margin: 0
+	        0
+	        var(--property-address-guide-row-margin-bottom);
+}
+
+.property-address-search-guide-main{
+	margin: 0
+	        0
+	        var(--property-address-guide-main-margin-bottom);
+	font-size: var(--property-address-guide-main-font-size);
+	font-weight: var(--property-address-guide-main-font-weight);
+	letter-spacing: -0.35px;
+	color: #111827;
+}
+
+.property-address-search-guide-example{
+	margin: 0;
+	font-size: var(--property-address-guide-example-font-size);
+	font-weight: 400;
+	letter-spacing: -0.25px;
+	color: var(--property-address-guide-example-color);
+}
+
+.property-address-search-results{
+	display: none;
+	max-height: var(--property-address-results-max-height);
+	overflow-y: auto;
+	padding-right: 2px;
+}
+
+.property-address-search-results.open{
+	display: block;
+}
+
+.property-address-search-result{
+	position: relative;
+	padding: var(--property-address-result-padding-top)
+	        var(--property-address-result-padding-right)
+	        var(--property-address-result-padding-bottom)
+	        0;
+	border-bottom: 0;
+}
+
+.property-address-search-result + .property-address-search-result{
+	margin-top: var(--property-address-result-gap);
+}
+
+.property-address-result-zone{
+	margin: 0
+	        0
+	        var(--property-address-zone-margin-bottom);
+	font-size: var(--property-address-zone-font-size);
+	font-weight: var(--property-address-zone-font-weight);
+	letter-spacing: -0.2px;
+	color: var(--property-address-title-color);
+}
+
+.property-address-result-line{
+	display: flex;
+	align-items: center;
+	gap: var(--property-address-line-gap);
+	margin: 0
+	        0
+	        var(--property-address-line-margin-bottom);
+}
+
+.property-address-result-badge{
+	flex: 0 0 auto;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	height: var(--property-address-badge-height);
+	padding: 0
+	        var(--property-address-badge-padding-x);
+	border-radius: var(--property-address-badge-radius);
+	background: var(--property-address-badge-bg);
+	color: var(--property-address-badge-color);
+	font-size: var(--property-address-badge-font-size);
+	font-weight: var(--property-address-badge-font-weight);
+	letter-spacing: -0.1px;
+}
+
+.property-address-result-select{
+	position: absolute;
+	top: var(--property-address-result-select-top);
+	right: var(--property-address-result-select-right);
+}
+
+.property-address-search-empty,
+.property-address-search-loading{
+	padding: 24px 0 12px;
+	font-size: 17px;
+	font-weight: 400;
+	color: #6b7280;
+	letter-spacing: -0.2px;
+}
+
+
+/* ===== MERGED FROM broker_2.712.css ===== */
+/* =====================================================
+   4. 중개사 홈 / 중개사 관련 화면
+   ===================================================== */
+/* ===== INLINE FROM broker.css ===== */
+/* REALJEJU broker.css - stable split from realjeju_2.361(3).html / Ver 2.396 */
+
+.auth-modal.profile-page-mode .auth-profile-setup-screen,
+.auth-modal.profile-page-mode .auth-myinfo-screen,
+.auth-modal.profile-page-mode .auth-broker-office-screen{
+	width: min(680px, calc(100vw - 40px));
+	margin: 0 auto;
+}
+
+
+.auth-myinfo-screen,
+.auth-broker-office-screen{
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+}
+
+.auth-myinfo-edit-btn,
+.auth-myinfo-broker-btn{
+	width: 100%;
+	height: 44px;
+	border: 1px solid #e5e7eb;
+	border-radius: 4px;
+	background: #ffffff;
+	color: #111827;
+	font-size: 14px;
+	font-weight: 700;
+	letter-spacing: -0.1px;
+	cursor: pointer;
+}
+
+.auth-myinfo-broker-btn{
+	background: #2563EB;
+	border-color: #2563EB;
+	color: #ffffff;
+}
+
+.broker-office-inline-field{
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.broker-office-inline-field .auth-modal-input{
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+.broker-office-inline-btn{
+	flex: 0 0 auto;
+	height: 58px;
+	padding: 0 16px;
+	border: 0;
+	border-radius: 4px;
+	background: #2563EB;
+	color: #ffffff;
+	font-size: 16px;
+	font-weight: 800;
+	letter-spacing: -0.1px;
+	white-space: nowrap;
+	cursor: pointer;
+}
+
+.auth-broker-office-screen .auth-modal-form{
+	gap: 14px;
+}
+
+
+.auth-modal.profile-page-mode .auth-broker-office-screen{
+	
+	/* 중개사무소 가입 신청 - 오른쪽 끝에 스크롤바 생기는 현상 제거 */
+	overflow: hidden;
+}
+
+.broker-apply-page{
+	display: grid;
+	grid-template-columns: minmax(380px, 0.92fr) minmax(470px, 1.08fr);
+	gap: 72px;
+	align-items: start;
+	width: 100%;
+	padding: 0 0 28px;
+}
+
+.broker-apply-left{
+	padding-top: 4px;
+}
+
+.broker-apply-title{
+	margin: 0 0 46px;
+	font-size: 40px;
+	font-weight: 800;
+	line-height: 1.18;
+	letter-spacing: -1.2px;
+	color: #111827;
+}
+
+.broker-apply-guide-card{
+	width: 430px;
+	max-width: 100%;
+	padding: 22px 24px 20px;
+	border-radius: 0;
+	border: 1px solid #d6d6d6;
+	background: #f3f3f3;
+	color: #111827;
+}
+
+.broker-apply-guide-card p{
+	margin: 0 0 18px;
+	font-size: 16px;
+	font-weight: 600;
+	line-height: 1.45;
+	letter-spacing: -0.25px;
+	word-break: keep-all;
+}
+
+.broker-apply-guide-card p:last-of-type{
+	margin-bottom: 8px;
+}
+
+.broker-apply-guide-btn{
+	height: 40px;
+	padding: 0 16px;
+	border: 1px solid #d1d5db;
+	border-radius: 5px;
+	background: #ffffff;
+	color: #4b5573;
+	font-size: 14px;
+	font-weight: 600;
+	letter-spacing: -0.2px;
+	cursor: pointer;
+}
+
+.broker-apply-form{
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	padding-top: 0;
+}
+
+.broker-apply-field{
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.broker-apply-label{
+	font-size: 18px;
+	font-weight: 700;
+	line-height: 1.2;
+	letter-spacing: -0.4px;
+	color: #111827;
+}
+
+.broker-apply-label span{
+	font-weight: 600;
+	color: #6b7280;
+}
+
+.broker-apply-input,
+.broker-apply-select{
+	width: 100%;
+	height: 46px;
+	border: 2px solid #d8d8d8;
+	border-radius: 8px;
+	background: #ffffff;
+	color: #111827;
+	padding: 0 16px;
+	font-size: 15px;
+	font-weight: 600;
+	letter-spacing: -0.15px;
+	outline: none;
+	box-shadow: none;
+}
+
+.broker-apply-input::placeholder{
+	color: #6b7280;
+	font-weight: 600;
+}
+
+.broker-apply-field.broker-apply-address-field{
+	display: grid;
+	grid-template-columns: 140px minmax(0, 1fr);
+	align-items: center;
+	gap: 24px;
+}
+
+.broker-apply-address-label{
+	font-size: var(--property-register-left-label-font-size);
+	font-weight: var(--property-register-left-label-font-weight);
+	letter-spacing: -0.18px;
+	line-height: 1.3;
+}
+
+.broker-apply-address-wrap{
+	width: 100%;
+}
+
+.broker-apply-address-wrap .broker-apply-address-input{
+	height: var(--property-register-input-height);
+	border: 1px solid #d8dee8;
+	border-radius: 0;
+	padding-left: 52px;
+	font-size: var(--property-register-control-font-size);
+	font-weight: var(--property-register-control-font-weight);
+	letter-spacing: var(--property-register-control-letter-spacing);
+}
+
+.broker-apply-address-wrap .broker-apply-address-input[readonly]{
+	background: #ffffff;
+	color: #111827;
+}
+
+.broker-apply-search-btn{
+	position: absolute;
+	right: 6px;
+	bottom: 6px;
+	height: 30px;
+	padding: 0 12px;
+	border: 0;
+	border-radius: 4px;
+	background: #1B6FA4;
+	color: #ffffff;
+	font-size: 13px;
+	font-weight: 600;
+	letter-spacing: -0.1px;
+	cursor: pointer;
+}
+
+.broker-apply-search-btn + *{
+	margin-top: 0;
+}
+
+.broker-apply-hidden-fields{
+	display: none;
+}
+
+.broker-apply-email-row{
+	display: grid;
+	grid-template-columns: 1fr 22px 1fr;
+	gap: 8px;
+	align-items: center;
+}
+
+.broker-apply-at{
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 16px;
+	font-weight: 600;
+	color: #111827;
+	line-height: 1;
+}
+
+.broker-apply-select{
+	appearance: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	background-image: linear-gradient(45deg, transparent 50%, #9ca3af 50%), linear-gradient(135deg, #9ca3af 50%, transparent 50%);
+	background-position: calc(100% - 16px) 17px, calc(100% - 11px) 17px;
+	background-size: 5px 5px, 5px 5px;
+	background-repeat: no-repeat;
+}
+
+.broker-apply-terms{
+	margin-top: 160px;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	height: 46px;
+	padding: 0 12px;
+	border: 1px solid #e5e7eb;
+	border-radius: 5px;
+	background: #ffffff;
+	color: #111827;
+	font-size: 14px;
+	font-weight: 600;
+	letter-spacing: -0.15px;
+	cursor: pointer;
+	user-select: none;
+}
+
+.broker-apply-terms input{
+	position: absolute;
+	opacity: 0;
+	pointer-events: none;
+}
+
+.broker-apply-checkmark{
+	width: 14px;
+	height: 14px;
+	border: 1px solid #fb923c;
+	border-radius: 3px;
+	background: #ffffff;
+	flex: 0 0 auto;
+}
+
+.broker-apply-terms input:checked + .broker-apply-checkmark{
+	background: #fb923c;
+	box-shadow: inset 0 0 0 3px #ffffff;
+}
+
+.broker-apply-terms i{
+	margin-left: auto;
+	font-size: 15px;
+	color: #111827;
+}
+
+.broker-apply-submit{
+	width: 100%;
+	height: 58px;
+	margin-top: 14px;
+	border: 0;
+	border-radius: 10px;
+	background: #1f79ae;
+	color: #ffffff;
+	font-size: 20px;
+	font-weight: 700;
+	letter-spacing: -0.4px;
+	cursor: pointer;
+}
+
+@media (max-width: 980px) {
+	
+
+	.broker-apply-page{
+		grid-template-columns: 1fr;
+		gap: 34px;
+	}
+
+	.broker-apply-title{
+		margin-bottom: 28px;
+		font-size: 34px;
+	}
+
+	.broker-apply-terms{
+		margin-top: 22px;
+	}
+}
+
+.auth-modal.profile-page-mode .auth-broker-office-screen{
+	width: min(1080px, calc(100vw - 80px));
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-page{
+	grid-template-columns: minmax(320px, 0.85fr) minmax(440px, 1fr);
+	gap: 42px;
+	align-items: start;
+	justify-content: center;
+	max-width: 1080px;
+	margin: 0 auto;
+	padding: 0 0 28px;
+}
+
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-form{
+	padding: 30px 32px 34px;
+	background: #ffffff;
+	border: 1px solid #e5e7eb;
+	border-radius: 18px;
+	box-shadow: 0 18px 50px rgba(15, 23, 42, 0.10);
+	gap: 15px;
+}
+
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-field{
+	gap: 7px;
+}
+
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-label{
+	font-size: 14px;
+	font-weight: 800;
+	color: #334155;
+	letter-spacing: -0.15px;
+}
+
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-input,
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-select{
+	height: 52px;
+	border: 1px solid #dbe3ec;
+	border-radius: 12px;
+	background: #f8fafc;
+	color: #111827;
+	padding: 0 16px;
+	font-size: 15px;
+	font-weight: 700;
+}
+
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-input:focus,
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-select:focus{
+	border-color: #1B6FA4;
+	background: #ffffff;
+	box-shadow: 0 0 0 3px rgba(27, 111, 164, 0.10);
+}
+
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-submit{
+	height: 56px;
+	margin-top: 9px;
+	border-radius: 10px;
+	background: #1B6FA4;
+	font-size: 18px;
+	font-weight: 800;
+	box-shadow: 0 10px 22px rgba(27, 111, 164, 0.22);
+}
+
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-title{
+	margin: 0 0 28px;
+	font-size: 36px;
+	line-height: 1.18;
+	letter-spacing: -1px;
+}
+
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-guide-card{
+	border-radius: 18px;
+	border: 1px solid #e5e7eb;
+	background: #ffffff;
+	box-shadow: 0 12px 32px rgba(15, 23, 42, 0.06);
+}
+
+@media (max-width: 980px) {
+	.auth-modal.profile-page-mode .auth-modal-dialog{
+		padding: 28px 18px 36px;
+	}
+
+	.auth-modal.profile-page-mode .auth-profile-setup-screen,
+.auth-modal.profile-page-mode .auth-myinfo-screen{
+		width: min(500px, calc(100vw - 28px));
+		padding: 30px 24px 34px;
+	}
+
+	.auth-modal.profile-page-mode .auth-broker-office-screen{
+		width: min(680px, calc(100vw - 28px));
+	}
+
+	.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-page{
+		grid-template-columns: 1fr;
+		gap: 24px;
+	}
+
+	.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-form{
+		padding: 26px 22px 30px;
+	}
+}
+
+.auth-modal.profile-page-mode .auth-profile-setup-screen,
+.auth-modal.profile-page-mode .auth-myinfo-screen,
+.auth-modal.profile-page-mode .broker-apply-form{
+	position: relative;
+}
+
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-form{
+	padding-top: 54px;
+}
+
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-guide-card p{
+	display: grid;
+	grid-template-columns: 12px 1fr;
+	column-gap: 6px;
+	align-items: start;
+	text-align: left;
+	padding-left: 0;
+	text-indent: 0;
+	line-height: 1.62;
+	word-break: keep-all;
+}
+
+.broker-guide-dot{
+	display: block;
+	line-height: inherit;
+}
+
+.broker-guide-text{
+	display: block;
+	min-width: 0;
+	
+	font-size: 15px;
+	font-weight: 400;
+}
+
+/* 중개사무소 신청 화면은 기존 구조 보호 */
+.auth-modal.profile-page-mode .auth-broker-office-screen{
+	margin: 0 auto;
+}
+
+
+.auth-modal.broker-office-mode .auth-modal-dialog,
+.auth-modal.broker-office-mode .auth-modal-input,
+.auth-modal.broker-office-mode .auth-modal-submit,
+.auth-modal.broker-office-mode button{
+    border-radius: 0;
+    box-shadow: none;
+}
+
+
+
+
+.auth-modal.broker-office-mode *,
+.auth-modal.profile-page-mode .auth-broker-office-screen,
+.auth-modal.profile-page-mode .auth-broker-office-screen *,
+.auth-modal.profile-page-mode .broker-apply-page,
+.auth-modal.profile-page-mode .broker-apply-page *,
+.auth-modal.profile-page-mode .broker-apply-guide-card,
+.auth-modal.profile-page-mode .broker-apply-guide-card *,
+.auth-modal.profile-page-mode .broker-office-inline-field,
+.auth-modal.profile-page-mode .broker-office-inline-field *,
+.auth-modal.profile-page-mode [id^="brokerOffice"],
+.auth-modal.profile-page-mode [id^="brokerOffice"] *,
+.auth-modal.profile-page-mode [id^="brokerOwner"],
+.auth-modal.profile-page-mode [id^="brokerOwner"] *,
+.auth-modal.profile-page-mode [id^="brokerLicense"],
+.auth-modal.profile-page-mode [id^="brokerLicense"] *{
+	border-radius: 0;
+	box-shadow: none;
+}
+
+
+.auth-modal.profile-page-mode .auth-broker-office-screen,
+.auth-modal.profile-page-mode .auth-broker-office-screen *,
+.auth-modal.profile-page-mode .broker-apply-page,
+.auth-modal.profile-page-mode .broker-apply-page *,
+.auth-modal.profile-page-mode .broker-apply-left,
+.auth-modal.profile-page-mode .broker-apply-left *,
+.auth-modal.profile-page-mode .broker-apply-guide-card,
+.auth-modal.profile-page-mode .broker-apply-guide-card *,
+.auth-modal.profile-page-mode .broker-apply-right,
+.auth-modal.profile-page-mode .broker-apply-right *,
+.auth-modal.profile-page-mode .broker-apply-form-card,
+.auth-modal.profile-page-mode .broker-apply-form-card *,
+.auth-modal.profile-page-mode .auth-broker-office-screen .auth-modal-form,
+.auth-modal.profile-page-mode .auth-broker-office-screen .auth-modal-form *,
+.auth-modal.profile-page-mode .auth-broker-office-screen .auth-modal-field,
+.auth-modal.profile-page-mode .auth-broker-office-screen .auth-modal-field *,
+.auth-modal.profile-page-mode .auth-broker-office-screen input,
+.auth-modal.profile-page-mode .auth-broker-office-screen textarea,
+.auth-modal.profile-page-mode .auth-broker-office-screen select,
+.auth-modal.profile-page-mode .auth-broker-office-screen button,
+.auth-modal.profile-page-mode .auth-broker-office-screen .auth-modal-input,
+.auth-modal.profile-page-mode .auth-broker-office-screen .auth-modal-submit,
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-office-inline-btn,
+.auth-modal.profile-page-mode .auth-broker-office-screen .auth-card-close{
+	border-radius: 0;
+	box-shadow: none;
+}
+
+/* 중개사무소 신청 페이지 카드/입력창 배경 박스도 네모 고정 */
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-guide-card,
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-right,
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-form-card,
+.auth-modal.profile-page-mode .auth-broker-office-screen .auth-modal-input,
+.auth-modal.profile-page-mode .auth-broker-office-screen input{
+	border-radius: 0;
+}
+
+
+#authBrokerOfficeScreen input,
+#authBrokerOfficeScreen textarea,
+#authBrokerOfficeScreen select,
+#authBrokerOfficeScreen .auth-modal-input,
+#authBrokerOfficeScreen .broker-office-inline-field input,
+#authBrokerOfficeScreen .broker-apply-right input,
+#authBrokerOfficeScreen .broker-apply-right textarea,
+#authBrokerOfficeScreen .broker-apply-right select,
+#authBrokerOfficeScreen .broker-apply-right .auth-modal-input,
+#authBrokerOfficeScreen .auth-modal-field input,
+#authBrokerOfficeScreen .auth-modal-field textarea,
+#authBrokerOfficeScreen .auth-modal-field select{
+	border-radius: 0;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	box-shadow: none;
+	appearance: none;
+	-webkit-appearance: none;
+}
+
+
+:root{
+	--profile-common-button-width: 100%;
+	--profile-common-button-height: 54px;
+	--profile-common-button-margin-top: 24px;
+	--profile-common-button-bg: #1B6FA4;
+	--profile-common-button-color: #ffffff;
+	--profile-common-button-border: 1px solid #1B6FA4;
+	--profile-common-button-radius: 0;
+	--profile-common-button-shadow: none;
+	--profile-common-button-font-family: var(--profile-page-text-font-family, var(--font-ui));
+	--profile-common-button-font-size: var(--profile-page-text-font-size, 17px);
+	--profile-common-button-font-weight: 600;
+	--profile-common-button-letter-spacing: -0.18px;
+}
+
+/* 오른쪽 중개사무소 신청 전체 박스 네모 */
+.auth-modal.profile-page-mode .auth-broker-office-screen,
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-page,
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-right,
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-form-card,
+.auth-modal.profile-page-mode .auth-broker-office-screen .auth-modal-dialog{
+	border-radius: 0;
+	box-shadow: none;
+}
+
+/* 내정보 / 내 정보 설정 / 중개사무소 가입신청 버튼 디자인 한 군데에서 통일 */
+.auth-modal.profile-page-mode .auth-myinfo-screen .auth-modal-submit,
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-modal-submit,
+.auth-modal.profile-page-mode .auth-broker-office-screen .auth-modal-submit,
+.auth-modal.profile-page-mode .auth-broker-office-screen button[type="submit"],
+.auth-modal.profile-page-mode .broker-apply-page .auth-modal-submit,
+.auth-modal.profile-page-mode .broker-apply-page button[type="submit"]{
+	width: var(--profile-common-button-width);
+	height: var(--profile-common-button-height);
+	margin-top: var(--profile-common-button-margin-top);
+	background: var(--profile-common-button-bg);
+	color: var(--profile-common-button-color);
+	border: var(--profile-common-button-border);
+	border-radius: var(--profile-common-button-radius);
+	box-shadow: var(--profile-common-button-shadow);
+	font-family: var(--profile-common-button-font-family);
+	font-size: var(--profile-common-button-font-size);
+	font-weight: var(--profile-common-button-font-weight);
+	letter-spacing: var(--profile-common-button-letter-spacing);
+	line-height: 1;
+}
+
+/* hover/focus/active 때도 임의 그림자/라운드 금지 */
+.auth-modal.profile-page-mode .auth-myinfo-screen .auth-modal-submit:hover,
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-modal-submit:hover,
+.auth-modal.profile-page-mode .auth-broker-office-screen .auth-modal-submit:hover,
+.auth-modal.profile-page-mode .auth-broker-office-screen button[type="submit"]:hover,
+.auth-modal.profile-page-mode .broker-apply-page .auth-modal-submit:hover,
+.auth-modal.profile-page-mode .broker-apply-page button[type="submit"]:hover,
+.auth-modal.profile-page-mode .auth-myinfo-screen .auth-modal-submit:focus,
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-modal-submit:focus,
+.auth-modal.profile-page-mode .auth-broker-office-screen .auth-modal-submit:focus,
+.auth-modal.profile-page-mode .auth-broker-office-screen button[type="submit"]:focus,
+.auth-modal.profile-page-mode .broker-apply-page .auth-modal-submit:focus,
+.auth-modal.profile-page-mode .broker-apply-page button[type="submit"]:focus,
+.auth-modal.profile-page-mode .auth-myinfo-screen .auth-modal-submit:active,
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-modal-submit:active,
+.auth-modal.profile-page-mode .auth-broker-office-screen .auth-modal-submit:active,
+.auth-modal.profile-page-mode .auth-broker-office-screen button[type="submit"]:active,
+.auth-modal.profile-page-mode .broker-apply-page .auth-modal-submit:active,
+.auth-modal.profile-page-mode .broker-apply-page button[type="submit"]:active{
+	background: var(--profile-common-button-bg);
+	color: var(--profile-common-button-color);
+	border: var(--profile-common-button-border);
+	border-radius: var(--profile-common-button-radius);
+	box-shadow: var(--profile-common-button-shadow);
+}
+
+/* 중개사무소 신청 페이지 입력/카드 네모 재고정 */
+#authBrokerOfficeScreen,
+#authBrokerOfficeScreen *,
+#authBrokerOfficeScreen input,
+#authBrokerOfficeScreen textarea,
+#authBrokerOfficeScreen select,
+#authBrokerOfficeScreen button{
+	border-radius: 0;
+	box-shadow: none;
+}
+
+
+#authBrokerOfficeScreen .auth-card-close,
+#authBrokerOfficeScreen .auth-modal-close{
+	border-radius: 50%;
+}
+
+body.admin-page-open .admin-page-panel,
+body.operator-page-open #adminPagePanel,
+body.broker-home-page-open .broker-home-panel{
+	display: block;
+}
+
+body.broker-home-page-open .broker-home-panel{
+	display: block;
+}
+
+body.broker-home-page-open{
+	min-height: 100%;
+	background: #ffffff;
+	overflow-x: hidden;
+	overflow-y: hidden;
+}
+
+body.broker-home-page-open .global-topbar{
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 150;
+}
+
+body.broker-home-page-open::after{
+	content: none;
+	display: none;
+}
+
+body.admin-page-open .admin-page-panel,
+body.operator-page-open #adminPagePanel{
+	display: flex;
+	flex-direction: column;
+}
+
+body.admin-page-open .sub-topbar,
+body.admin-page-open .sidebar,
+body.admin-page-open .resizer,
+body.admin-page-open .map-wrap,
+body.operator-page-open .sub-topbar,
+body.operator-page-open .sidebar,
+body.operator-page-open .resizer,
+body.operator-page-open .map-wrap,
+body.broker-home-page-open .sub-topbar,
+body.broker-home-page-open .sidebar,
+body.broker-home-page-open .resizer,
+body.broker-home-page-open .map-wrap{
+	display: none;
+}
+
+
+.broker-home-panel{
+	--broker-home-pagination-logo-gap: 72px;
+	position: fixed;
+	inset: var(--global-topbar-height) 0 0 0;
+	z-index: 120;
+	display: none;
+	min-height: 0;
+	background: #ffffff;
+	color: #111827;
+	overflow-y: scroll;
+	overflow-x: hidden;
+	scrollbar-gutter: stable;
+	margin-top: 0;
+	padding: 32px 32px 0;
+	box-sizing: border-box;
+}
+
+.broker-home-panel > .broker-home-overview,
+.broker-home-panel > .broker-home-filterbar,
+.broker-home-panel > #brokerListingsList,
+.broker-home-panel > #brokerContractsShell,
+.broker-home-section-tabs{
+	width: min(1280px, 100%);
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.broker-home-section-tabs > .broker-contract-add-btn{
+	margin-left: auto;
+}
+
+
+.broker-home-panel > .broker-home-section-tabs{
+	margin-right: 0;
+	margin-left: -4px;
+}
+
+.broker-home-panel .admin-empty{
+	padding: 24px;
+	border: 1px solid #e5e7eb;
+	background: #ffffff;
+	box-sizing: border-box;
+	text-align: left;
+}
+
+.broker-home-list-title{
+	margin-top: 48px;
+	margin-bottom: 18px;
+	color: #111827;
+	font-size: 20px;
+	font-weight: 700;
+	line-height: 1.25;
+	letter-spacing: -0.04em;
+}
+
+.broker-home-section-tabs{
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	gap: 10px;
+	width: min(1280px, 100%);
+	max-width: min(1280px, 100%);
+	margin: 0 0 14px;
+	position: relative;
+	z-index: 1;
+	padding-left: 0;
+}
+
+.broker-home-tab-btn + .broker-home-tab-btn{
+	margin-left: 0;
+}
+
+.broker-home-tab-btn{
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+	box-sizing: border-box;
+	height: var(--subbar-menu-control-height-pc);
+	min-height: var(--subbar-menu-control-height-pc);
+	padding: 0 18px;
+	border: 0.8px solid #dbe4ee;
+	border-radius: 999px;
+	background: #ffffff;
+	color: var(--subbar-item-color);
+	font-family: var(--font-ui);
+	font-size: 15px;
+	font-weight: var(--subbar-menu-font-weight);
+	line-height: 1;
+	letter-spacing: -0.2px;
+	cursor: pointer;
+	transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.broker-home-tab-btn.active{
+	color: #0f172a;
+	border-color: #dbe4ee;
+	background: #f1f5f9;
+	font-weight: var(--subbar-menu-font-weight);
+}
+
+.broker-home-tab-btn:hover{
+	color: #0f172a;
+}
+
+.broker-home-tab-btn:focus-visible{
+	outline: 2px solid rgba(37, 99, 235, 0.35);
+	outline-offset: 2px;
+}
+
+.broker-home-tab-btn:focus{
+	outline: none;
+}
+
+.broker-home-company-info{
+	margin: 24px -24px 0;
+	padding: 0;
+	background: #ffffff;
+	color: #6f7782;
+	font-size: 12px;
+	line-height: 1.7;
+	letter-spacing: 0;
+}
+
+.broker-home-company-inner{
+	--broker-footer-left: 0px;
+	max-width: 1280px;
+	margin: 0 auto;
+	padding: 0 0 20px;
+	box-sizing: border-box;
+}
+
+.broker-home-footer-nav{
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0 15px;
+	margin-left: calc(50% - 50vw);
+	margin-right: calc(50% - 50vw);
+	padding-left: max(24px, calc((100vw - 1280px) / 2));
+	padding-right: max(24px, calc((100vw - 1280px) / 2));
+	border-top: 1px solid #e5e7eb;
+	border-bottom: 1px solid #e5e7eb;
+	min-height: 48px;
+	color: #2f343a;
+	font-size: 13px;
+	font-weight: 600;
+	line-height: 1.4;
+}
+
+.broker-home-footer-separator{
+	color: #d0d5dd;
+	font-weight: 400;
+}
+
+.broker-home-company-body{
+	padding: 14px 0 0;
+	padding-left: var(--broker-footer-left);
+}
+
+.broker-home-company-brand{
+	color: #202124;
+	font-size: 13px;
+	font-weight: 700;
+	line-height: 1.6;
+}
+
+.broker-home-company-lines{
+	display: grid;
+	gap: 1px;
+	color: #747d89;
+	font-size: 12px;
+	font-weight: 400;
+	line-height: 1.55;
+}
+
+.broker-home-company-lines p{
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0 12px;
+	margin: 0;
+}
+
+.broker-home-company-lines strong{
+	color: #202124;
+	font-weight: 600;
+}
+
+.broker-home-company-notice{
+	margin-top: 6px;
+	color: #858c96;
+	font-size: 11px;
+	font-weight: 400;
+	line-height: 1.55;
+}
+
+.broker-home-company-link,
+.broker-home-company-static-link{
+	margin: 0;
+	padding: 0;
+	border: 0;
+	background: transparent;
+	color: inherit;
+	font: inherit;
+	font-weight: inherit;
+	line-height: inherit;
+	cursor: pointer;
+}
+
+.broker-home-company-link.is-strong{
+	color: #ff4a45;
+	font-weight: 800;
+}
+
+.broker-home-company-link:hover,
+.broker-home-company-static-link:hover{
+	color: inherit;
+	text-decoration: underline;
+	text-underline-offset: 3px;
+}
+
+.broker-home-company-link.is-strong:hover{
+	color: #ff4a45;
+}
+
+.biz-comm-lookup-link{
+	display: inline-flex;
+	align-items: center;
+	margin-left: 4px;
+	color: #687281;
+	font: inherit;
+	font-weight: 600;
+	text-decoration: none;
+	white-space: nowrap;
+}
+
+.biz-comm-lookup-link:hover{
+	color: #687281;
+	text-decoration: underline;
+	text-underline-offset: 3px;
+}
+
+.broker-home-company-copy{
+	margin-top: 8px;
+	padding-left: var(--broker-footer-left);
+	border-top: 0;
+	color: #858c96;
+	font-size: 11px;
+	font-weight: 400;
+	line-height: 1.55;
+	text-align: left;
+}
+
+.broker-home-mini-footer{
+	margin-top: auto;
+}
+
+.broker-home-mini-footer .broker-home-company-inner{
+	padding: 0 0 48px;
+}
+
+.broker-home-mini-copy{
+	margin-top: 72px;
+	color: #9ca3af;
+	font-size: 13px;
+	font-weight: 600;
+	line-height: 1.5;
+	text-align: center;
+}
+
+@media (max-width: 900px) {
+	.broker-home-company-inner{
+		padding: 0 20px 22px;
+	}
+
+	.broker-home-footer-nav{
+		gap: 8px 11px;
+		min-height: 42px;
+	}
+
+	.broker-home-company-lines{
+		font-size: 12px;
+	}
+}
+
+
+:root{
+	--broker-home-top-gap: 14px;
+	--broker-home-filter-gap: 12px;
+	--broker-home-filter-menu-border: 1px solid #dbe4ee;
+	--broker-home-overview-filter-gap: 18px;
+	--broker-home-overview-to-filter-gap: 48px;
+	--broker-home-overview-right-width: 330px;
+}
+
+.broker-home-overview{
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) var(--broker-home-overview-right-width);
+	gap: var(--broker-home-top-gap);
+	
+	align-items: stretch;
+	margin-top: 0;
+	margin-bottom: var(--broker-home-overview-filter-gap);
+}
+
+.broker-home-main{
+	display: grid;
+	gap: var(--broker-home-top-gap);
+	min-width: 0;
+}
+
+.broker-home-law-notice{
+	display: grid;
+	grid-template-columns: 44px minmax(0, 1fr);
+	align-items: center;
+	gap: 10px;
+	min-height: 66px;
+	padding: 15px 20px;
+	background: #fff9dd;
+	color: #111827;
+}
+
+.broker-home-law-icon{
+	font-size: 26px;
+	color: #ef3b23;
+	text-align: center;
+}
+
+.broker-home-law-lines{
+	display: grid;
+	
+	gap: 1px;
+	font-size: 14px;
+	font-weight: 600;
+	line-height: 1.28;
+	letter-spacing: -0.16px;
+}
+
+.broker-home-law-lines strong{
+	color: #ef3b23;
+	font-weight: 600;
+}
+
+.broker-home-law-help{
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	color: #2563eb;
+	font-weight: 600;
+	text-decoration: underline;
+	text-underline-offset: 2px;
+	cursor: default;
+}
+
+.broker-home-law-help::after{
+	content: "";
+	position: absolute;
+	left: 50%;
+	top: 100%;
+	width: 46px;
+	height: 20px;
+	transform: translateX(-50%);
+	pointer-events: auto;
+}
+
+.broker-home-law-help-panel{
+	position: absolute;
+	left: 0;
+	top: calc(100% + 10.6px);
+	/* 최상위 오버레이보다 충분히 높게 배치해 드롭다운/툴팁과 겹침을 방지 */
+	z-index: 2147483000;
+	display: none;
+	width: min(390px, calc(100vw - 80px));
+	padding: 18px 18px 16px;
+	border: 1px solid #d8dee8;
+	background: #ffffff;
+	box-shadow: none;
+	color: #111827;
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 1.5;
+	letter-spacing: -0.12px;
+	white-space: normal;
+	word-break: keep-all;
+	overflow-wrap: break-word;
+}
+
+.broker-home-law-help:hover .broker-home-law-help-panel,
+.broker-home-law-help:focus .broker-home-law-help-panel,
+.broker-home-law-help-panel:hover{
+	display: grid;
+	gap: 12px;
+}
+
+.broker-home-law-help-title{
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	font-size: 18px;
+	font-weight: 800;
+	line-height: 1.28;
+}
+
+.broker-home-law-help-subtitle{
+	display: flex;
+	align-items: center;
+	gap: 7px;
+	font-size: 15px;
+	font-weight: 800;
+	line-height: 1.35;
+}
+
+.broker-home-law-help-list{
+	padding: 14px 18px;
+	background: #fff7c7;
+	font-size: 15px;
+	font-weight: 700;
+	line-height: 1.75;
+}
+
+.broker-home-law-help-desc{
+	display: block;
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 1.5;
+}
+
+.broker-home-usage{
+	display: grid;
+	
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 34px;
+	
+	padding: 20px 24px;
+	border: 1px solid rgba(74, 126, 220, 0.38);
+	background: #ffffff;
+}
+
+.broker-home-usage-item{
+	display: grid;
+	grid-template-rows: 20px 10px 20px;
+	align-content: center;
+	row-gap: 8px;
+}
+
+.broker-home-usage-title{
+	position: relative;
+	display: flex;
+	align-items: center;
+	font-size: 14px;
+	font-weight: 600;
+	color: #111827;
+	letter-spacing: -0.14px;
+}
+
+.broker-home-usage-title span{
+	color: #64748b;
+}
+
+.broker-home-usage-help{
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 18px;
+	height: 18px;
+	margin-left: 4px;
+	border-radius: 50%;
+	background: #35c66b;
+	color: #ffffff;
+	font-size: 12px;
+	font-weight: 700;
+	
+	cursor: default;
+}
+
+.broker-home-usage-help::after{
+	content: "";
+	position: absolute;
+	left: 50%;
+	top: 100%;
+	width: 46px;
+	height: 20px;
+	transform: translateX(-50%);
+	pointer-events: auto;
+}
+
+.broker-home-usage-title .broker-home-usage-help{
+	color: #ffffff;
+}
+
+.broker-home-usage-help-panel{
+	position: absolute;
+	left: 0;
+	top: calc(100% + 8px);
+	/* 최상위 오버레이보다 충분히 높게 배치해 드롭다운/툴팁과 겹침을 방지 */
+	z-index: 2147483000;
+	display: none;
+	box-sizing: border-box;
+	width: max-content;
+	max-width: calc(100vw - 80px);
+	padding: 14px 12px 14px 16px;
+	border: 1px solid #d8dee8;
+	background: #ffffff;
+	box-shadow: none;
+	color: #334155;
+	font-size: 13px;
+	font-weight: 400;
+	line-height: 1.5;
+	letter-spacing: -0.1px;
+	white-space: normal;
+	word-break: keep-all;
+	overflow-wrap: normal;
+	transform: none;
+	text-align: left;
+}
+
+.broker-home-usage-help:hover + .broker-home-usage-help-panel,
+.broker-home-usage-help:focus + .broker-home-usage-help-panel,
+.broker-home-usage-help-panel:hover{
+	display: block;
+}
+
+.broker-home-usage-track{
+	height: 10px;
+	margin: 0;
+	border-radius: 999px;
+	background: #e5e7eb;
+	overflow: hidden;
+}
+
+.broker-home-usage-fill{
+	height: 100%;
+	width: 0%;
+	border-radius: 999px;
+	background: #4A7EDC;
+}
+
+.broker-home-usage-meta{
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	font-size: 14px;
+	font-weight: 400;
+	color: #111827;
+}
+
+.broker-home-usage-meta strong{
+	color: #ef3b23;
+	font-size: inherit;
+	font-weight: 600;
+}
+
+.broker-home-ad{
+	position: relative;
+	align-self: stretch;
+	min-height: 0;
+	height: 100%;
+	padding: 22px 22px 20px;
+	border: 1px solid #e5e7eb;
+	background: #ffffff;
+	overflow: hidden;
+}
+
+.broker-home-ad[data-ad-mode="benefit"]{
+	background: #dff5ff;
+}
+
+.broker-home-ad-close{
+	position: absolute;
+	top: 14px;
+	right: 14px;
+	width: 26px;
+	height: 26px;
+	border: 0;
+	background: transparent;
+	color: #64748b;
+	font-size: 20px;
+	font-weight: 400;
+	cursor: pointer;
+}
+
+
+
+.broker-home-ad-card{
+	width: 190px;
+	min-height: 74px;
+	margin: 0 auto 18px;
+	padding: 12px 14px;
+	border-radius: 8px;
+	background: #ffffff;
+	box-shadow: 0 10px 22px rgba(15, 23, 42, 0.12);
+}
+
+.broker-home-ad-card-title{
+	font-size: 13px;
+	font-weight: 600;
+	color: #111827;
+}
+
+.broker-home-ad-card-meta{
+	margin-top: 8px;
+	font-size: 12px;
+	font-weight: 400;
+	color: #64748b;
+}
+
+
+
+.broker-home-ad[data-ad-mode="benefit"] .broker-home-ad-cta{
+	background: #242d3a;
+}
+
+.broker-home-filterbar{
+	display: flex;
+	align-items: center;
+	gap: var(--broker-home-filter-gap);
+	width: 100%;
+	
+	margin-top: var(--broker-home-overview-to-filter-gap);
+	margin-bottom: 20px;
+	padding: 0;
+}
+
+.management-list-filter-row{
+	display: contents;
+}
+
+@media (min-width: 901px) {
+	.management-list-filterbar{
+		flex-direction: column;
+		align-items: stretch;
+		gap: 10px;
+	}
+
+	.management-list-filter-row{
+		display: flex;
+		align-items: center;
+		gap: var(--broker-home-filter-gap);
+		width: 100%;
+		min-width: 0;
+	}
+
+	.admin-listings-filterbar{
+		flex-direction: row;
+		align-items: center;
+		gap: var(--broker-home-filter-gap);
+	}
+
+	.admin-listings-filterbar > .management-list-filter-row{
+		display: contents;
+	}
+
+	.admin-listings-filterbar .management-list-filter-row-overview > *{
+		order: 1;
+	}
+
+	.admin-listings-filterbar .management-list-filter-row-filters > *{
+		order: 2;
+	}
+
+	.admin-listings-filterbar .management-list-filter-row-overview > .broker-home-filter-spacer{
+		display: block;
+		order: 3;
+		flex: 1 1 auto;
+	}
+
+	.admin-listings-filterbar .management-list-filter-row-overview > :is(
+		[data-admin-listing-view="deleted"],
+		:has([data-admin-listing-view="deleted"])
+	){
+		order: 4;
+	}
+	#brokerHomeFilterbar{
+		flex-direction: row;
+		align-items: center;
+		gap: var(--broker-home-filter-gap);
+		margin-top: var(--realjeju-management-control-top-gap-pc);
+		margin-bottom: 20px;
+	}
+
+	#brokerHomeFilterbar > .management-list-filter-row{
+		display: contents;
+	}
+
+	#brokerHomeFilterbar .management-list-filter-row-overview > *{
+		order: 1;
+		flex: 0 0 auto;
+	}
+
+	#brokerHomeFilterbar .management-list-filter-row-filters > *{
+		order: 2;
+		flex: 0 0 auto;
+	}
+
+	#brokerHomeFilterbar .management-list-filter-row-overview > .broker-home-filter-spacer{
+		display: block;
+		order: 3;
+		flex: 1 1 auto;
+	}
+
+	#brokerHomeFilterbar .management-list-filter-row-overview > .broker-home-filter-item:has([data-broker-home-status-filter="deleted"]){
+		order: 4;
+	}
+
+	body.broker-home-page-open .broker-home-overview{
+		margin-bottom: 0;
+	}
+
+	.management-list-filterbar .broker-home-filter-menu{
+		border: var(--broker-home-filter-menu-border);
+	}
+}
+
+.broker-home-filter-item{
+	position: relative;
+}
+
+.broker-home-filter-btn{
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+	box-sizing: border-box;
+	height: 38px;
+	padding: 0 14px;
+	border: 1px solid #dbe4ee;
+	border-radius: 100px;
+	background: #ffffff;
+	color: var(--subbar-item-color);
+	font-family: var(--subbar-menu-font-family);
+	font-size: var(--subbar-menu-font-size);
+	font-weight: var(--subbar-menu-font-weight);
+	line-height: 1;
+	letter-spacing: var(--subbar-menu-letter-spacing);
+	cursor: pointer;
+}
+
+.broker-home-filter-btn i{
+	line-height: 1;
+}
+
+.broker-home-filterbar .broker-home-filter-btn,
+body.admin-page-open .admin-listings-filterbar .broker-home-filter-btn{
+	gap: 7px;
+	padding: 0 18px;
+	border: 0.8px solid #dbe4ee;
+	border-radius: 999px;
+	font-family: var(--font-ui);
+	font-size: 15px;
+	font-weight: var(--subbar-menu-font-weight);
+	letter-spacing: -0.2px;
+}
+
+.broker-home-filterbar .broker-home-filter-btn i,
+body.admin-page-open .admin-listings-filterbar .broker-home-filter-btn i{
+	font-size: 12px;
+	width: 12px;
+	min-width: 12px;
+	height: 12px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex: 0 0 12px;
+}
+
+.broker-home-filter-btn.active{
+	border-color: #dbe4ee;
+	background: #f1f5f9;
+	color: #111827;
+	font-weight: 600;
+}
+
+.broker-home-filter-btn.active span,
+.broker-home-filter-btn.active i{
+	color: #111827;
+}
+
+.broker-home-filter-menu{
+	position: absolute;
+	top: calc(100% + 10.6px);
+	left: 0;
+	right: auto;
+	z-index: 9999;
+	display: none;
+	min-width: 240px;
+	max-height: min(620px, calc(100vh - 120px));
+	overflow-y: auto;
+	padding: 8px;
+	background: rgba(255,255,255,0.98);
+	box-shadow: none;
+	backdrop-filter: blur(10px);
+	flex-direction: column;
+	gap: 2px;
+}
+
+.broker-home-filter-menu.open{
+	display: flex;
+}
+
+.broker-home-filter-option{
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	width: 100%;
+	min-height: 36px;
+	padding: 0 10px;
+	border: 0;
+	background: transparent;
+	color: #334155;
+	font-family: var(--subbar-item-font-family);
+	font-size: var(--subbar-item-font-size);
+	font-weight: var(--subbar-item-font-weight);
+	text-align: left;
+	letter-spacing: var(--subbar-item-letter-spacing);
+	cursor: pointer;
+	user-select: none;
+}
+
+.broker-home-filter-option:hover,
+.broker-home-filter-option.active{
+	background: #f8fafc;
+}
+
+.broker-home-filter-option input{
+	width: 16px;
+	height: 16px;
+	margin: 0;
+	accent-color: #2563eb;
+	cursor: pointer;
+	flex: 0 0 auto;
+}
+
+.broker-home-filter-option span{
+	line-height: 1.2;
+}
+
+.broker-home-filter-reset-row{
+	margin-top: 6px;
+	padding-top: 8px;
+	border-top: 1px solid #e5e7eb;
+}
+
+.broker-home-filter-reset-btn{
+	width: 100%;
+	min-height: 36px;
+	border: 0;
+	border-radius: 100px;
+	background: #f8fafc;
+	color: var(--subbar-item-color);
+	font-family: var(--subbar-item-font-family);
+	font-size: var(--subbar-item-font-size);
+	font-weight: var(--subbar-item-font-weight);
+	letter-spacing: var(--subbar-item-letter-spacing);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+	cursor: pointer;
+}
+
+.broker-home-filter-reset-btn:hover{
+	background: #eef2f7;
+	color: #4b5573;
+}
+
+
+.broker-home-filter-grid{
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 8px;
+	min-width: 420px;
+}
+
+.broker-home-price-type-grid,
+.broker-home-area-filter-grid{
+	min-width: 0;
+}
+
+.broker-home-land-type-grid,
+.broker-home-land-use-zone-grid{
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	min-width: 0;
+}
+
+.broker-home-filter-tile{
+	min-height: 38px;
+	justify-content: center;
+	padding: 0 10px;
+	border: 1px solid #e5e7eb;
+	border-radius: 10px;
+	background: #fff;
+	color: #73777d;
+	font-size: 15px;
+	font-weight: 600;
+	text-align: center;
+	white-space: nowrap;
+}
+
+.broker-home-filter-tile:hover,
+.broker-home-filter-tile.active{
+	border-color: #dbe4f0;
+	background: #f8fafc;
+	color: #111827;
+	font-weight: 700;
+}
+
+.broker-home-filter-tile input{
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	opacity: 0;
+	pointer-events: none;
+}
+
+.broker-home-filter-tile span{
+	line-height: 1.2;
+}
+
+.broker-home-map-style-menu{
+	top: calc(100% + 10.6px);
+	left: 0;
+	right: auto;
+	box-sizing: border-box;
+	width: 410px;
+	min-width: 410px;
+	max-width: min(410px, calc(100vw - 48px));
+	border: 1px solid #dbe4ee;
+	max-height: min(620px, calc(100vh - 120px));
+	overflow-y: auto;
+}
+
+.broker-home-map-style-menu .broker-home-type-buttons{
+	display: flex;
+	flex-direction: column;
+	gap: 18px;
+	width: 100%;
+}
+
+.broker-home-map-style-menu .broker-home-filter-menu-title{
+	margin: 0;
+	color: #111827;
+	font-family: var(--font-ui);
+	font-size: 18px;
+	font-weight: 700;
+	line-height: 1.2;
+	letter-spacing: 0;
+}
+
+.broker-home-map-style-menu .broker-home-filter-option{
+	display: block;
+	align-items: initial;
+	gap: 0;
+	width: auto;
+	min-height: 36px;
+	padding: 0;
+	border: 0;
+	background: transparent;
+	color: inherit;
+	font-family: inherit;
+	font-size: inherit;
+	font-weight: inherit;
+	text-align: initial;
+	letter-spacing: 0;
+}
+
+.broker-home-map-style-menu .broker-home-filter-option:hover,
+.broker-home-map-style-menu .broker-home-filter-option.active{
+	background: transparent;
+}
+
+.broker-home-map-style-menu .broker-home-filter-option input{
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: 0;
+	opacity: 0;
+	pointer-events: none;
+}
+
+.broker-home-map-style-menu .broker-home-filter-reset-row{
+	margin-top: 0;
+	padding-top: 12px;
+	border-top: 1px solid #edf0f4;
+}
+
+.broker-home-map-style-menu .broker-home-filter-reset-btn{
+	width: 100%;
+	min-height: 38px;
+	border: 0;
+	border-radius: 100px;
+	background: #f8fafc;
+	font-size: 15px;
+	font-weight: 600;
+}
+
+.broker-home-map-style-menu .broker-home-filter-reset-btn:hover{
+	background: #eef2f7;
+	color: #4b5573;
+}
+
+.broker-home-price-type-menu .broker-home-price-type-grid{
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.broker-home-land-type-menu .broker-home-land-type-grid,
+.broker-home-land-type-menu .type-filter-grid{
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.broker-home-land-use-zone-menu .broker-home-land-use-zone-grid,
+.broker-home-land-use-zone-menu .type-filter-grid{
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.broker-home-land-use-zone-menu .broker-home-filter-check[data-value="자연환경보전지역"] + span{
+	white-space: nowrap;
+}
+
+.broker-home-land-type-menu .type-filter-section-title,
+.broker-home-land-type-menu .type-filter-section:nth-of-type(2) .type-filter-section-title,
+.broker-home-land-use-zone-menu .type-filter-section-title,
+.broker-home-land-use-zone-menu .type-filter-section:nth-of-type(2) .type-filter-section-title{
+	margin: 0;
+	color: #3f4652;
+	font-family: var(--font-ui);
+	font-size: 15px;
+	font-weight: 700;
+	line-height: 1.2;
+	letter-spacing: 0;
+}
+
+
+.broker-home-area-menu .area-filter-summary-row{
+	gap: 2px;
+}
+
+.broker-home-area-menu .area-filter-scale{
+	width: 100%;
+}
+
+body.broker-home-page-open .broker-home-law-notice,
+body.broker-home-page-open .broker-home-usage,
+body.broker-home-page-open .broker-home-ad,
+body.broker-home-page-open .broker-home-payment-card,
+body.broker-home-page-open .broker-home-filter-menu,
+body.broker-home-page-open .broker-home-filter-btn,
+body.broker-home-page-open .broker-listing-list,
+body.broker-home-page-open .broker-listing-row,
+body.broker-home-page-open .broker-listing-thumb,
+body.broker-home-page-open .broker-home-company-info{
+	box-shadow: none;
+}
+
+.broker-home-filter-reset-btn i{
+	font-size: 12px;
+	line-height: 1;
+}
+
+.broker-home-filter-divider{
+	width: 1px;
+	height: 26px;
+	background: #d8dee8;
+}
+
+.broker-home-filter-spacer{
+	flex: 1 1 auto;
+	min-width: 16px;
+}
+
+.broker-contracts-shell{
+	margin-bottom: 0;
+}
+
+@media (min-width: 901px) {
+	.broker-contracts-shell{
+		margin-top: var(--broker-home-overview-to-filter-gap);
+	}
+}
+
+.broker-contract-add-btn{
+	height: 36px;
+	padding: 0 18px;
+	border: 0;
+	border-radius: 999px;
+	background: #2563eb;
+	color: #ffffff;
+	font-family: var(--subbar-menu-font-family);
+	font-size: 15px;
+	font-weight: 600;
+	line-height: 1;
+	cursor: pointer;
+}
+
+.broker-contract-filterbar{
+	width: 100%;
+	/* 계약 필터는 중첩 래퍼 안에 있으므로 외부 여백을 두 번 더하지 않는다. */
+	margin-top: 0;
+}
+
+.broker-contracts-table{
+	display: grid;
+	min-width: 0;
+	background: #ffffff;
+	border-top: 1px solid #edf1f5;
+	overflow-x: auto;
+}
+
+.broker-contracts-table-head{
+	display: grid;
+	grid-template-columns: 100px 100px 90px 90px 100px 120px minmax(220px, 1fr) 86px 124px 130px 124px 130px minmax(160px, 1fr) minmax(220px, 1fr);
+	gap: 0;
+	column-gap: 0;
+	align-items: center;
+	text-align: center;
+	padding: 12px 0;
+	border-bottom: 1px solid #edf1f5;
+	color: #94a3b8;
+	font-size: 13px;
+	font-weight: 400;
+	line-height: 1.35;
+	letter-spacing: -0.08px;
+}
+
+.broker-contracts-table .admin-empty{
+	grid-column: 1 / -1;
+	margin: 14px 0 0;
+	border: 0;
+	
+	padding: 24px 0;
+	box-sizing: border-box;
+}
+
+
+.broker-listing-shell{
+	--broker-list-front-gap: 33px;
+	--broker-list-title-area-gap: 14px;
+	--broker-list-area-price-gap: 33px;
+	--broker-list-price-edit-gap: 14px;
+	--broker-list-button-gap: 8px;
+	--broker-list-photo-size: 72px;
+	--broker-list-photo-col: var(--broker-list-photo-size);
+	--broker-list-type-col: 76px;
+	--broker-list-status-col: 52px;
+	--broker-list-date-col: 56px;
+	--broker-list-no-col: 82px;
+	--broker-list-area-col: 104px;
+	--broker-list-price-col: 160px;
+	--broker-list-edit-col: 58px;
+	--broker-list-copy-col: 92px;
+	--broker-list-menu-col: 34px;
+	display: block;
+	min-width: 0;
+}
+
+
+#brokerHomePanel[data-active-tab="contracts"] > #brokerHomeFilterbar,
+#brokerHomePanel[data-active-tab="contracts"] > #brokerListingsList,
+#brokerHomePanel[data-active-tab="listings"] > #brokerContractsShell{
+	display: none;
+}
+
+.broker-listing-list{
+	display: grid;
+	gap: 0;
+	border-top: 1px solid #edf1f5;
+	border-bottom: 0;
+	background: #ffffff;
+}
+
+.broker-listing-head,
+.broker-listing-row{
+	display: grid;
+	grid-template-columns: var(--broker-list-photo-col) 36px var(--broker-list-type-col) var(--broker-list-front-gap) var(--broker-list-status-col) var(--broker-list-front-gap) var(--broker-list-date-col) var(--broker-list-front-gap) var(--broker-list-no-col) var(--broker-list-front-gap) minmax(var(--broker-list-title-min, 350px), 1fr) var(--broker-list-title-area-gap) var(--broker-list-price-col) var(--broker-list-price-edit-gap) var(--broker-list-edit-col) var(--broker-list-button-gap) var(--broker-list-menu-col);
+	column-gap: 0;
+	box-sizing: border-box;
+	background: #ffffff;
+	min-width: 0;
+}
+
+.broker-listing-head > div:nth-child(1),
+.broker-listing-row > div:nth-child(1){
+	grid-column: 1;
+}
+
+.broker-listing-head > div:nth-child(2),
+.broker-listing-row > div:nth-child(2){
+	grid-column: 3;
+}
+
+.broker-listing-head > div:nth-child(3),
+.broker-listing-row > div:nth-child(3){
+	grid-column: 5;
+}
+
+.broker-listing-head > div:nth-child(4),
+.broker-listing-row > div:nth-child(4){
+	grid-column: 7;
+}
+
+.broker-listing-head > div:nth-child(5),
+.broker-listing-row > div:nth-child(5){
+	grid-column: 9;
+}
+
+.broker-listing-head > div:nth-child(6),
+.broker-listing-row > div:nth-child(6){
+	grid-column: 11;
+}
+
+.broker-listing-head > div:nth-child(7),
+.broker-listing-row > div:nth-child(7){
+	display: none;
+}
+
+.broker-listing-head > div:nth-child(8),
+.broker-listing-row > div:nth-child(8){
+	grid-column: 13;
+}
+
+.broker-listing-head > div:nth-child(9),
+.broker-listing-row > div:nth-child(9){
+	grid-column: 15;
+}
+
+.broker-listing-head > div:nth-child(10),
+.broker-listing-row > div:nth-child(10){
+	display: none;
+}
+
+.broker-listing-head > div:nth-child(11),
+.broker-listing-row > div:nth-child(11){
+	grid-column: 17;
+}
+
+.broker-listing-head{
+	align-items: center;
+	text-align: center;
+	padding: 12px 0;
+	border-bottom: 1px solid #edf1f5;
+	color: #94a3b8;
+	
+	font-size: 14px;
+	font-weight: 400;
+	letter-spacing: -0.08px;
+}
+
+.broker-listing-row{
+	align-items: center;
+	min-height: 97px;
+	padding: 12px 0;
+	border-bottom: 1px solid #edf1f5;
+	transition: background-color 0.12s ease;
+}
+
+.broker-listing-pagination{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 4px;
+	padding: 14px 0 6px;
+	border-top: 1px solid #edf1f5;
+	background: #ffffff;
+}
+
+.broker-listing-page-btn{
+	min-width: 32px;
+	height: 32px;
+	padding: 0 8px;
+	border: 1px solid #dbe4ee;
+	border-radius: 6px;
+	background: #ffffff;
+	color: #374151;
+	font-size: 12px;
+	font-weight: 600;
+	line-height: 1;
+	cursor: pointer;
+}
+
+.broker-listing-page-btn.nav{
+	min-width: 40px;
+}
+
+.broker-listing-page-btn.active{
+	border-color: #cdd8e5;
+	background: #f1f5f9;
+	color: #111827;
+	font-weight: 600;
+}
+
+.broker-listing-page-btn:disabled{
+	opacity: 0.45;
+	cursor: default;
+}
+
+.broker-listing-page-ellipsis{
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 18px;
+	height: 32px;
+	color: #94a3b8;
+	font-size: 12px;
+	font-weight: 600;
+}
+
+body.broker-home-page-open #brokerListingsList{
+	--broker-list-front-gap: clamp(18px, 2.55vw, 33px);
+	--broker-list-photo-size: clamp(60px, 5.6vw, 72px);
+	--broker-list-photo-col: var(--broker-list-photo-size);
+	--broker-list-no-col: 132px;
+	--broker-list-title-min: 0px;
+	min-width: 0;
+	height: auto;
+	max-height: none;
+	overflow-y: visible;
+	overflow-x: hidden;
+}
+
+body.broker-home-page-open #brokerListingsList.broker-listing-list{
+	height: auto;
+	max-height: none;
+	overflow-y: visible;
+}
+
+body.broker-home-page-open #brokerListingsList .broker-listing-list,
+body.broker-home-page-open #brokerListingsList .broker-listing-head,
+body.broker-home-page-open #brokerListingsList .broker-listing-row{
+	width: 100%;
+	min-width: 0;
+}
+
+.broker-listing-row:hover,
+.admin-listings-list .admin-listing-row.is-selected,
+.my-suite-favorites-list .my-suite-favorite-row.is-selected,
+body.broker-home-page-open #brokerListingsList .broker-listing-row.is-selected{
+	background: #f5f6f8;
+}
+
+.broker-listing-row:has(.broker-listing-edit-btn:hover),
+.broker-listing-row:has(.broker-listing-edit-btn:focus-visible),
+.broker-listing-row:has(.broker-listing-edit-btn:active){
+	background: #ffffff;
+}
+
+.broker-listing-cell{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 0;
+	text-align: center;
+}
+
+.broker-listing-photo-cell{
+	justify-content: flex-start;
+	align-items: center;
+	width: var(--broker-list-photo-size);
+	height: var(--broker-list-photo-size);
+	min-width: var(--broker-list-photo-size);
+}
+
+.broker-listing-row > .broker-listing-cell:nth-child(3),
+.broker-listing-row > .broker-listing-cell:nth-child(4),
+.broker-listing-row > .broker-listing-cell:nth-child(5){
+	justify-content: flex-start;
+	text-align: left;
+}
+
+.broker-listing-row > .broker-listing-cell:nth-child(2){
+	justify-content: center;
+	text-align: center;
+}
+
+.broker-listing-head > div:nth-child(2),
+.broker-listing-head > div:nth-child(3),
+.broker-listing-head > div:nth-child(4),
+.broker-listing-head > div:nth-child(5),
+.broker-listing-head > div:nth-child(6){
+	text-align: left;
+}
+
+.broker-listing-head > div:nth-child(9),
+.broker-listing-head > div:nth-child(10),
+.broker-listing-head > div:nth-child(11){
+	text-align: center;
+}
+
+.broker-listing-head > div:nth-child(7){
+	text-align: right;
+}
+
+.broker-listing-head > div:nth-child(8){
+	box-sizing: border-box;
+	padding-left: 10px;
+	text-align: left;
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+}
+
+.broker-listing-row:last-child{
+	border-bottom: 0;
+}
+
+.broker-listing-thumb{
+	inline-size: var(--broker-list-photo-size);
+	block-size: var(--broker-list-photo-size);
+	width: var(--broker-list-photo-size);
+	height: var(--broker-list-photo-size);
+	flex: 0 0 var(--broker-list-photo-size);
+	aspect-ratio: 1 / 1;
+	margin: 0;
+	box-sizing: border-box;
+	border: 0;
+	border-radius: 8px;
+	background: #f8fafc;
+	overflow: hidden;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: #94a3b8;
+	font-size: 12px;
+	font-weight: 400;
+	letter-spacing: -0.1px;
+}
+
+.broker-listing-thumb img{
+	inline-size: 100%;
+	block-size: 100%;
+	width: 100%;
+	height: 100%;
+	aspect-ratio: 1 / 1;
+	object-fit: cover;
+	display: block;
+}
+
+.broker-listing-type{
+	
+	font-size: 14px;
+	font-weight: 400;
+	color: #334155;
+	line-height: 1.45;
+	letter-spacing: -0.18px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	word-break: keep-all;
+	text-align: center;
+}
+
+.broker-listing-address{
+	margin-top: 5px;
+	
+	font-size: 14px;
+	font-weight: 400;
+	color: #64748b;
+	line-height: 1.45;
+	letter-spacing: -0.1px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.broker-listing-office{
+	margin-top: 2px;
+	font-size: 14px;
+	font-weight: 400;
+	color: #94a3b8;
+	line-height: 1.35;
+	letter-spacing: -0.08px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.admin-listing-mobile-office{
+	display: none;
+}
+
+/* Management listing information layout owner. */
+.management-list-desktop-area{
+	display: block;
+	margin-top: 2px;
+	color: #94a3b8;
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 1.35;
+	letter-spacing: -0.08px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.management-list-title-head{
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	min-width: 0;
+}
+
+.management-list-area-unit-toggle{
+	display: none;
+	align-items: center;
+	justify-content: center;
+	flex: 0 0 30px;
+	width: 30px;
+	height: 30px;
+	margin-left: auto;
+	padding: 0;
+	border: 0;
+	border-radius: 9999px;
+	background: transparent;
+	box-shadow: none;
+	cursor: pointer;
+}
+
+@media (min-width: 901px){
+	.management-list-area-unit-toggle{
+		display: inline-flex;
+	}
+
+	.management-list-card-list .broker-listing-title-cell{
+		height: 72px;
+	}
+
+	.management-list-card-list .management-list-inline-edit-btn{
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: auto;
+		min-width: 0;
+		height: auto;
+		padding: 0;
+		border: 0;
+		background: transparent;
+		color: var(--brand);
+		font-size: 13px;
+		font-weight: 500;
+		line-height: 1.45;
+		white-space: nowrap;
+		cursor: pointer;
+	}
+
+	.management-list-card-list .management-list-inline-area{
+		display: inline;
+	}
+}
+
+@media (max-width: 900px){
+	.management-list-card-list .management-list-desktop-area{
+		display: none;
+	}
+}
+/* End management listing information layout owner. */
+
+.broker-listing-title-cell{
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-self: center;
+	min-width: 0;
+	height: 58px;
+	box-sizing: border-box;
+}
+
+@media (min-width: 901px) {
+.admin-listings-list .admin-listing-row .broker-listing-title-cell{
+	height: 72px;
+}
+}
+
+.broker-listing-title{
+	font-size: 14px;
+	font-weight: 600;
+	color: #111827;
+	letter-spacing: -0.22px;
+	line-height: 1.42;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+@media (min-width: 901px) {
+	body.broker-home-page-open #brokerListingsList.broker-listing-list,
+	body.broker-home-page-open #brokerListingsList .broker-listing-row,
+	body.broker-home-page-open #brokerListingsList .broker-listing-title-cell{
+		overflow: visible;
+	}
+
+	body.broker-home-page-open #brokerListingsList .broker-listing-title-cell{
+		position: relative;
+		height: auto;
+		min-height: 58px;
+	}
+}
+
+body.broker-home-page-open #brokerListingsList .broker-listing-private-memo{
+	position: relative;
+	display: inline-flex;
+	width: fit-content;
+	line-height: 1.2;
+}
+
+body.broker-home-page-open #brokerListingsList .broker-listing-subnote-row{
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	width: fit-content;
+	max-width: 100%;
+	margin-top: 3px;
+	line-height: 1.2;
+	white-space: nowrap;
+}
+
+body.broker-home-page-open #brokerListingsList .broker-home-listing-flag-text{
+	display: inline-flex;
+	align-items: center;
+	color: #2563eb;
+	font-size: 13px;
+	font-weight: 600;
+	line-height: 1.2;
+	letter-spacing: -0.1px;
+	white-space: nowrap;
+}
+
+body.broker-home-page-open #brokerListingsList .broker-listing-memo-trigger{
+	appearance: none;
+	border: 0;
+	background: transparent;
+	padding: 0;
+	margin: 0;
+	font: inherit;
+	font-size: 13px;
+	font-weight: 600;
+	line-height: 1.2;
+	color: #2563eb;
+	cursor: pointer;
+}
+
+body.broker-home-page-open #brokerListingsList .broker-listing-memo-trigger:hover,
+body.broker-home-page-open #brokerListingsList .broker-listing-memo-trigger:focus-visible{
+	color: #1d4ed8;
+	text-decoration: underline;
+	text-underline-offset: 2px;
+	outline: none;
+}
+
+body.broker-home-page-open #brokerListingsList .broker-listing-memo-tooltip{
+	position: absolute;
+	left: 0;
+	top: calc(100% + 14px);
+	z-index: 80;
+	width: max-content;
+	min-width: 180px;
+	max-width: 320px;
+	padding: 14px 16px;
+	border-radius: 8px;
+	border: 1px solid #d7e0ec;
+	background: rgba(255, 255, 255, 0.98);
+	box-shadow: 0 10px 24px rgba(15, 23, 42, 0.14);
+	color: #111827;
+	font-size: 13px;
+	font-weight: 500;
+	line-height: 1.5;
+	letter-spacing: -0.1px;
+	text-align: left;
+	white-space: normal;
+	word-break: break-word;
+	opacity: 0;
+	visibility: hidden;
+	transform: translateY(-2px);
+	transition: opacity 0.12s ease, transform 0.12s ease, visibility 0.12s ease;
+	pointer-events: none;
+}
+
+body.broker-home-page-open #brokerListingsList .broker-listing-private-memo:hover .broker-listing-memo-tooltip,
+body.broker-home-page-open #brokerListingsList .broker-listing-memo-trigger:focus-visible + .broker-listing-memo-tooltip{
+	opacity: 1;
+	visibility: visible;
+	transform: translateY(0);
+}
+
+.broker-listing-meta{
+	font-size: 14px;
+	font-weight: 400;
+	color: #334155;
+	line-height: 1.45;
+	letter-spacing: -0.1px;
+}
+
+.broker-listing-status{
+	display: inline;
+	min-width: 0;
+	height: auto;
+	border: 0;
+	background: transparent;
+	color: #334155;
+	font-size: 14px;
+	font-weight: 400;
+}
+
+.broker-listing-status.published{
+	color: #334155;
+	background: transparent;
+}
+
+.broker-listing-no{
+	justify-content: center;
+	font-size: 14px;
+	font-weight: 400;
+	color: #334155;
+	letter-spacing: -0.1px;
+	overflow: visible;
+	text-overflow: clip;
+	white-space: nowrap;
+}
+
+body.broker-home-page-open #brokerListingsList .broker-listing-view-value{
+	color: #334155;
+	font-size: 14px;
+	font-weight: 400;
+	font-variant-numeric: tabular-nums;
+}
+
+.broker-listing-area{
+	justify-content: flex-end;
+	padding-left: 0;
+	text-align: right;
+	box-sizing: border-box;
+	color: #334155;
+	font-size: 14px;
+	font-weight: 400;
+	letter-spacing: -0.1px;
+	line-height: 1.45;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.broker-listing-area-toggle{
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	height: 20px;
+	line-height: 1;
+	border: 0;
+	background: transparent;
+	color: inherit;
+	font-size: 14px;
+	font-weight: 400;
+	letter-spacing: inherit;
+	padding: 0;
+	cursor: pointer;
+}
+
+.broker-listing-area-toggle-icon{
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 14px;
+	height: 14px;
+	font-size: 12px;
+	font-weight: 800;
+	line-height: 1;
+	vertical-align: middle;
+}
+
+/* 중개사 홈 가격 금액 */
+.broker-listing-price{
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	justify-content: flex-start;
+	padding-left: 10px;
+	box-sizing: border-box;
+	text-align: left;
+	white-space: nowrap;
+}
+
+.broker-listing-price-deal{
+	display: inline-flex;
+	align-items: center;
+	color: #334155;
+	font-size: 14px;
+	font-weight: 400;
+	letter-spacing: -0.1px;
+	line-height: 1.45;
+}
+
+.broker-listing-price-amount{
+	display: inline-flex;
+	align-items: center;
+	color: #334155;
+	font-size: 14px;
+	font-weight: 400;
+	letter-spacing: -0.1px;
+	line-height: 1.45;
+}
+
+.broker-listing-edit-btn,
+.broker-listing-blog-copy-btn{
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	height: 34px;
+	padding: 0 8px;
+	min-width: 52px;
+	border: 0;
+	
+	border-radius: 999px;
+	background: #f3f4f6;
+	color: #111827;
+	font-size: 14px;
+	font-weight: 600;
+	letter-spacing: -0.12px;
+	line-height: 1;
+	white-space: nowrap;
+	cursor: pointer;
+}
+
+.broker-listing-blog-copy-btn{
+	width: 88px;
+	min-width: 88px;
+	font-weight: 400;
+}
+
+.broker-listing-edit-btn:hover{
+	background: #f3f4f6;
+}
+
+.broker-listing-blog-copy-btn:hover{
+	background: #e5e7eb;
+}
+
+.management-list-inline-edit-btn,
+.management-list-inline-area{
+	display: none;
+}
+
+.broker-listing-menu-cell{
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.broker-listing-menu-btn{
+	width: 42px;
+	height: 42px;
+	border: 0;
+	background: transparent;
+	color: #475573;
+	font-size: 24px;
+	font-weight: 600;
+	line-height: 1;
+	cursor: pointer;
+}
+
+.broker-listing-menu-btn:hover{
+	background: #f1f5f9;
+}
+
+.broker-listing-more-menu{
+	--broker-listing-menu-content-inset: 6px;
+	position: absolute;
+	top: 38px;
+	right: 0;
+	z-index: 20;
+	display: none;
+	min-width: 154px;
+	padding: 8px;
+	border: 1px solid #e5e7eb;
+	background: #ffffff;
+	box-shadow: 0 12px 28px rgba(15, 23, 42, 0.14);
+}
+
+.broker-listing-more-menu.open{
+	display: grid;
+	gap: 2px;
+}
+
+
+body.broker-home-page-open .broker-listing-more-menu[data-broker-listing-menu-panel]{
+	position: fixed;
+	top: var(--rj-broker-listing-menu-top, 0);
+	right: auto;
+	left: var(--rj-broker-listing-menu-left, 0);
+	z-index: 10080;
+}
+
+.broker-listing-menu-item{
+	width: 100%;
+	height: 34px;
+	padding: 0 var(--broker-listing-menu-content-inset);
+	border: 0;
+	background: transparent;
+	color: #111827;
+	
+	font-size: 15px;
+	font-weight: 400;
+	text-align: left;
+	letter-spacing: -0.08px;
+	cursor: pointer;
+}
+
+.broker-listing-menu-item:hover{
+	background: #f8fafc;
+}
+
+.broker-listing-menu-item.danger{
+	color: #ef3b23;
+}
+
+.broker-listing-menu-divider{
+	height: 1px;
+	margin: 6px var(--broker-listing-menu-content-inset);
+	background: #e5e7eb;
+}
+
+@media (max-width: 900px) {
+	.admin-application-card{
+		grid-template-columns: 1fr;
+		align-items: stretch;
+	}
+	.admin-application-actions{
+		justify-content: flex-start;
+	}
+	.broker-listing-row{
+		grid-template-columns: var(--broker-list-photo-size) minmax(0, 1fr) 44px;
+	}
+	.broker-listing-head{
+		display: none;
+	}
+		.broker-listing-price{
+			grid-column: 2;
+			text-align: left;
+		}
+		.broker-listing-area{
+			grid-column: 2;
+		}
+		.broker-home-overview{
+		grid-template-columns: 1fr;
+	}
+}
+
+@media (max-width: 900px) {
+	body.realjeju-side-nav-enabled.broker-home-page-open .broker-home-panel{
+		--rj-page-inline: var(--realjeju-management-page-gap);
+		--broker-home-mobile-section-gap: 16px;
+		--management-list-filter-bottom-gap: var(--broker-home-mobile-section-gap);
+		--management-list-filter-bottom-padding: 0px;
+		padding-top: var(--broker-home-mobile-section-gap);
+		padding-inline: var(--rj-page-inline);
+		overflow-y: auto;
+		scrollbar-gutter: auto;
+		scrollbar-width: none;
+	}
+
+	body.realjeju-side-nav-enabled.broker-home-page-open .broker-home-panel::-webkit-scrollbar{
+		display: none;
+		width: 0;
+		height: 0;
+	}
+
+	body.broker-home-page-open .broker-home-tab-btn{
+		height: var(--subbar-menu-control-height);
+		min-height: var(--subbar-menu-control-height);
+	}
+	body.broker-home-page-open .broker-home-section-tabs{
+		margin-bottom: var(--broker-home-mobile-section-gap);
+	}
+
+	/* 계약관리 필터 행은 매물관리와 같은 모바일 섹션 여백을 사용합니다. */
+	body.broker-home-page-open .broker-contract-filterbar{
+		margin-top: 0;
+		margin-bottom: var(--broker-home-mobile-section-gap);
+		padding-bottom: 0;
+	}
+	body.realjeju-side-nav-enabled.my-suite-page-open.my-suite-favorites-tab-open,
+	body.realjeju-side-nav-enabled.admin-page-open.admin-listings-tab-open{
+		--management-list-mobile-section-gap: 16px;
+		--management-list-filter-bottom-gap: var(--management-list-mobile-section-gap);
+		--management-list-filter-bottom-padding: 0px;
+	}
+
+	body.realjeju-side-nav-enabled.my-suite-page-open.my-suite-favorites-tab-open .my-suite-panel,
+	body.realjeju-side-nav-enabled.admin-page-open.admin-listings-tab-open .admin-page-panel{
+		padding-top: var(--management-list-mobile-section-gap);
+	}
+
+	body.realjeju-side-nav-enabled.my-suite-page-open.my-suite-favorites-tab-open .my-suite-favorites-filterbar,
+	body.realjeju-side-nav-enabled.admin-page-open.admin-listings-tab-open .admin-listings-filterbar{
+		margin-bottom: var(--management-list-mobile-section-gap);
+		padding-bottom: 0;
+	}
+
+	body.broker-home-page-open .broker-home-panel > :is(
+		.broker-home-overview,
+		.broker-home-list-title,
+		.broker-home-filterbar,
+		#brokerListingsList,
+		.broker-home-section-tabs,
+		#brokerContractsShell
+	){
+		width: 100%;
+		max-width: 100%;
+		margin-left: 0;
+		margin-right: 0;
+	}
+
+
+	body.broker-home-page-open .broker-home-overview{
+		margin-bottom: var(--broker-home-mobile-section-gap);
+	}
+
+	body.broker-home-page-open .broker-home-payment-guide{
+		display: none;
+	}
+
+	.broker-home-main{
+		gap: 12px;
+	}
+
+	.broker-home-law-notice{
+		display: none;
+	}
+
+	.broker-home-law-icon{
+		padding-top: 2px;
+		font-size: 24px;
+	}
+
+	.broker-home-law-lines{
+  gap: 0;
+  font-size: 15px;
+  line-height: 1.46;
+  letter-spacing: -0.2px;
+}
+
+.broker-home-law-lines > div:first-child{
+  padding-left: 14px;
+  text-indent: -14px;
+  word-break: keep-all;
+}
+
+.broker-home-law-lines > div:last-child{
+  display: none;
+}
+
+	.broker-home-usage{
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 16px 14px;
+		padding: 16px;
+	}
+
+	.broker-home-usage-item{
+		grid-template-rows: auto 8px auto;
+		min-width: 0;
+		row-gap: 4px;
+	}
+
+	.broker-home-usage-title{
+		align-items: flex-start;
+		font-size: 13px;
+		line-height: 1.3;
+		word-break: keep-all;
+	}
+
+	.broker-home-usage-title span{
+		font-size: 12px;
+	}
+
+	.broker-home-usage-track{
+		height: 8px;
+	}
+
+	.broker-home-usage-meta{
+		gap: 6px;
+		font-size: 13px;
+	}
+
+	.broker-home-usage-meta span{
+		white-space: nowrap;
+	}
+
+
+
+	.management-list-filterbar{
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		gap: var(--broker-home-filter-gap);
+		width: 100%;
+		margin: 0 0 var(--management-list-filter-bottom-gap, 16px);
+		padding: 0 0 var(--management-list-filter-bottom-padding, 8px);
+		overflow-x: auto;
+		overflow-y: hidden;
+		flex-wrap: nowrap;
+		overscroll-behavior-x: contain;
+		-webkit-overflow-scrolling: touch;
+		touch-action: pan-x;
+		scrollbar-width: none;
+	}
+
+	/* 모바일 관리 필터 행의 넘침과 드래그는 이 공통 클래스만 소유합니다. */
+	.realjeju-horizontal-drag-scroll{
+		display: flex;
+		align-items: center;
+		width: 100%;
+		max-width: 100%;
+		overflow-x: auto;
+		overflow-y: hidden;
+		flex-wrap: nowrap;
+		overscroll-behavior-x: contain;
+		-webkit-overflow-scrolling: touch;
+		touch-action: pan-x;
+		scrollbar-width: none;
+		cursor: grab;
+		user-select: none;
+		-webkit-user-select: none;
+	}
+
+	.realjeju-horizontal-drag-scroll.is-dragging{
+		cursor: grabbing;
+	}
+
+	.management-list-filterbar::-webkit-scrollbar,
+	.realjeju-horizontal-drag-scroll::-webkit-scrollbar{
+		display: none;
+	}
+
+	.realjeju-horizontal-drag-scroll > *{
+		flex: 0 0 auto;
+	}
+
+	body > .broker-home-filter-menu.broker-home-filter-menu-mobile-centered.open{
+		position: fixed;
+		inset: auto;
+		top: 50%;
+		left: 50%;
+		right: auto;
+		width: min(410px, calc(100vw - var(--rj-mobile-drawer-inline) - var(--rj-mobile-drawer-inline)));
+		min-width: 0;
+		max-width: calc(100vw - var(--rj-mobile-drawer-inline) - var(--rj-mobile-drawer-inline));
+		max-height: calc(100dvh - var(--rj-mobile-drawer-inline) - var(--rj-mobile-drawer-inline));
+		margin: 0;
+		border: var(--broker-home-filter-menu-border);
+		box-sizing: border-box;
+		transform: translate(-50%, -50%);
+		z-index: var(--realjeju-mobile-modal-z, 2147483647);
+		overflow-y: auto;
+		overscroll-behavior: contain;
+	}
+
+	.management-list-filterbar :is(.broker-home-filter-item, .broker-home-filter-divider, .broker-home-filter-btn){
+		flex: 0 0 auto;
+	}
+
+	.admin-listings-list.management-list-card-list .admin-listing-mobile-office{
+		display: none;
+	}
+
+	.admin-listings-list.management-list-card-list .broker-listing-title{
+		display: block;
+		white-space: nowrap;
+		word-break: normal;
+	}
+
+	.admin-listings-list.management-list-card-list :is(.broker-listing-address, .broker-listing-office){
+		display: block;
+		max-width: 100%;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.admin-listings-list.management-list-card-list .broker-listing-address{
+		margin-top: 2px;
+		font-size: 13px;
+		line-height: 1.35;
+	}
+
+	.admin-listings-list.management-list-card-list .broker-listing-office{
+		margin-top: 2px;
+		font-size: 13px;
+		line-height: 1.35;
+	}
+
+	.admin-listings-list.management-list-card-list .management-list-inline-area{
+		display: inline;
+	}
+
+	.broker-home-filterbar .broker-home-filter-spacer{
+		display: none;
+	}
+
+	.management-list-filterbar .broker-home-filter-spacer{
+		display: none;
+	}
+
+	#brokerHomeFilterbar .management-list-filter-row-filters > .broker-home-filter-item,
+	.admin-listings-filterbar .management-list-filter-row-filters > .broker-home-filter-item{
+		order: 1;
+	}
+
+	#brokerHomeFilterbar .management-list-filter-row-overview > .broker-home-filter-item:has([data-broker-home-status-filter="deleted"]),
+	.admin-listings-filterbar [data-admin-listing-view="deleted"]{
+		order: 2;
+	}
+
+	.admin-listings-filterbar [data-admin-listing-view="reported"],
+	.admin-listings-filterbar [data-admin-listing-view="closed"],
+	.admin-listings-filterbar [data-admin-listing-view="hidden"]{
+		order: 4;
+	}
+
+	.management-list-card-list .broker-listing-row{
+		grid-template-columns: var(--broker-list-photo-size) minmax(0, 1fr) max-content 28px;
+		grid-template-areas:
+			"photo type edit menu"
+			"photo title edit menu"
+			"photo price edit menu";
+		align-items: start;
+		column-gap: 10px;
+		row-gap: 2px;
+		min-height: 0;
+		padding: 12px 0;
+	}
+
+	.management-list-card-list .broker-listing-row > *{
+		grid-column: auto;
+		min-width: 0;
+	}
+
+	.management-list-card-list .broker-listing-row > :nth-child(1){ grid-area: photo; }
+	.management-list-card-list .broker-listing-row > :nth-child(2){ grid-area: type; }
+	.management-list-card-list .broker-listing-row > :nth-child(3){ grid-area: status; }
+	.management-list-card-list .broker-listing-row > :nth-child(4){ grid-area: date; }
+	.management-list-card-list .broker-listing-row > :nth-child(6){ grid-area: title; }
+	.management-list-card-list .broker-listing-row > :nth-child(7){ grid-area: area; }
+	.management-list-card-list .broker-listing-row > :nth-child(8){ grid-area: price; }
+	.management-list-card-list .broker-listing-row > :nth-child(9){ grid-area: edit; }
+	.management-list-card-list .broker-listing-row > :nth-child(10){ grid-area: copy; }
+	.management-list-card-list .broker-listing-row > :nth-child(11){ grid-area: menu; }
+
+	.management-list-card-list .broker-listing-row > :is(:nth-child(3), :nth-child(4), :nth-child(5), :nth-child(7), :nth-child(10)),
+	.management-list-card-list :is(.broker-listing-address, .broker-listing-private-memo, .broker-listing-subnote-row){
+		display: none;
+	}
+
+	.management-list-card-list .broker-listing-row > :nth-child(2){
+		justify-content: flex-start;
+		width: auto;
+		max-width: none;
+		text-align: left;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.management-list-card-list .broker-listing-type[data-mobile-listing-no]::before{
+		content: attr(data-mobile-listing-no);
+		color: #0f172a;
+		font-weight: 700;
+		flex: 0 0 auto;
+	}
+
+	.management-list-card-list .broker-listing-type-label{
+		display: block;
+		min-width: 0;
+		margin-left: 0.25em;
+		color: var(--brand);
+		font-weight: 400;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.management-list-card-list .broker-listing-type-label::before{
+		content: "(";
+	}
+
+	.management-list-card-list .broker-listing-type-label::after{
+		content: ")";
+	}
+
+	.management-list-card-list .broker-listing-photo-cell{
+		align-self: start;
+	}
+
+	.management-list-card-list .broker-listing-title-cell{
+		align-self: start;
+		width: 100%;
+		height: auto;
+		min-height: 0;
+	}
+
+	.management-list-card-list .broker-listing-title{
+		display: -webkit-box;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: normal;
+		overflow-wrap: anywhere;
+		word-break: break-word;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 3;
+	}
+
+	.management-list-card-list .broker-listing-edit-cell{
+		align-self: center;
+		justify-self: end;
+		padding-left: 8px;
+	}
+
+	.management-list-card-list .management-list-inline-edit-btn{
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: auto;
+		min-width: 0;
+		height: auto;
+		padding: 0;
+		border: 0;
+		background: transparent;
+		color: var(--brand);
+		font-size: 13px;
+		font-weight: 500;
+		line-height: 1.45;
+		white-space: nowrap;
+		cursor: pointer;
+	}
+
+	.management-list-card-list .broker-listing-cell{
+		justify-content: flex-start;
+		text-align: left;
+	}
+
+	.management-list-card-list .broker-listing-status,
+	.management-list-card-list .broker-listing-no,
+	.management-list-card-list .broker-listing-area,
+	.management-list-card-list .broker-listing-price{
+		font-size: 13px;
+	}
+
+	.management-list-card-list .broker-listing-price{
+		justify-content: flex-start;
+		text-align: left;
+		padding-left: 0;
+		white-space: nowrap;
+	}
+
+	.management-list-card-list .broker-listing-menu-cell{
+		align-self: center;
+		justify-self: end;
+	}
+
+	.management-list-card-list .broker-listing-menu-btn{
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	.management-list-card-list :is(.broker-listing-edit-btn, .broker-listing-blog-copy-btn){
+		width: 100%;
+		min-width: 0;
+		font-size: 12px;
+	}
+}
+
+
+#brokerOfficeMenuItem.is-pending{
+	color: #1B6FA4;
+	cursor: default;
+	opacity: 1;
+}
+
+#brokerOfficeMenuItem.is-active{
+	color: #111827;
+}
+
+.broker-office-menu-profile{
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	min-width: 0;
+	max-width: 100%;
+}
+
+.broker-office-menu-profile-img{
+	flex: 0 0 24px;
+	width: 24px;
+	height: 24px;
+	border-radius: 50%;
+	object-fit: cover;
+	background: #e5e7eb;
+}
+
+.broker-office-menu-profile-name{
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.auth-modal.profile-page-mode .auth-myinfo-screen .auth-profile-action-row > button,
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-action-row > button,
+.auth-modal.profile-page-mode .auth-broker-office-screen .auth-modal-submit,
+.auth-modal.profile-page-mode .auth-broker-office-screen button[type="submit"],
+.auth-modal.profile-page-mode .broker-apply-page .auth-modal-submit,
+.auth-modal.profile-page-mode .broker-apply-page button[type="submit"]{
+	width: 100%;
+	min-width: 0;
+	height: var(--profile-page-button-height);
+	min-height: var(--profile-page-button-height);
+	margin: 0;
+	padding: 0 16px;
+	border-radius: var(--profile-page-button-radius);
+	box-shadow: var(--profile-page-button-shadow);
+	font-size: var(--profile-page-button-font-size);
+	font-weight: var(--profile-page-button-font-weight);
+	letter-spacing: var(--profile-page-button-letter-spacing);
+	line-height: 1;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	box-sizing: border-box;
+	cursor: pointer;
+}
+
+.auth-modal.profile-page-mode .auth-myinfo-screen .auth-modal-submit,
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-modal-submit,
+.auth-modal.profile-page-mode .auth-broker-office-screen .auth-modal-submit,
+.auth-modal.profile-page-mode .auth-broker-office-screen button[type="submit"],
+.auth-modal.profile-page-mode .broker-apply-page .auth-modal-submit,
+.auth-modal.profile-page-mode .broker-apply-page button[type="submit"],
+.auth-modal.profile-page-mode #authBrokerOfficeInfoScreen #brokerOfficeInfoEditBtn{
+	background: var(--profile-page-primary-button-bg);
+	color: var(--profile-page-primary-button-color);
+	border: var(--profile-page-primary-button-border);
+}
+
+.auth-modal.profile-page-mode .auth-myinfo-screen .auth-profile-action-row > button:hover,
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-action-row > button:hover,
+.auth-modal.profile-page-mode .auth-broker-office-screen .auth-modal-submit:hover,
+.auth-modal.profile-page-mode .auth-broker-office-screen button[type="submit"]:hover,
+.auth-modal.profile-page-mode .broker-apply-page .auth-modal-submit:hover,
+.auth-modal.profile-page-mode .broker-apply-page button[type="submit"]:hover,
+.auth-modal.profile-page-mode .auth-myinfo-screen .auth-profile-action-row > button:focus,
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-action-row > button:focus,
+.auth-modal.profile-page-mode .auth-broker-office-screen .auth-modal-submit:focus,
+.auth-modal.profile-page-mode .auth-broker-office-screen button[type="submit"]:focus,
+.auth-modal.profile-page-mode .broker-apply-page .auth-modal-submit:focus,
+.auth-modal.profile-page-mode .broker-apply-page button[type="submit"]:focus,
+.auth-modal.profile-page-mode .auth-myinfo-screen .auth-profile-action-row > button:active,
+.auth-modal.profile-page-mode .auth-profile-setup-screen .auth-profile-action-row > button:active,
+.auth-modal.profile-page-mode .auth-broker-office-screen .auth-modal-submit:active,
+.auth-modal.profile-page-mode .auth-broker-office-screen button[type="submit"]:active,
+.auth-modal.profile-page-mode .broker-apply-page .auth-modal-submit:active,
+.auth-modal.profile-page-mode .broker-apply-page button[type="submit"]:active{
+	border-radius: var(--profile-page-button-radius);
+	box-shadow: var(--profile-page-button-shadow);
+}
+
+
+.property-agency-card{
+	min-height: 0;
+}
+
+
+.property-register-page input[type="text"],
+.property-register-page input[type="tel"],
+.property-register-page input[type="number"],
+.property-register-page input[type="email"],
+.property-register-page input[type="url"],
+.property-register-page input[type="date"],
+.property-register-page select,
+.property-register-input,
+.property-register-select,
+.property-detail-input,
+.property-registrant-input,
+.broker-apply-input{
+	height: var(--property-register-input-height);
+	min-height: var(--property-register-input-height);
+	box-sizing: border-box;
+}
+
+
+
+
+
+
+
+
+.auth-modal.profile-page-mode #myInfoBrokerOfficeBtn.is-disabled,
+.auth-modal.profile-page-mode #myInfoBrokerOfficeBtn:disabled{
+	background: #e5e7eb;
+	color: #9ca3af;
+	border: 1px solid #e5e7eb;
+	cursor: not-allowed;
+	box-shadow: none;
+	pointer-events: none;
+}
+
+
+/* 내 정보 [수정] */
+.auth-modal.profile-page-mode #myInfoEditProfileBtn,
+/* 내 정보 설정 [저장] */
+.auth-modal.profile-page-mode #authProfileSaveBtn,
+/* 중개사무소 가입신청 */
+.auth-modal.profile-page-mode #myInfoBrokerOfficeBtn:not(:disabled):not(.is-disabled),
+/* 매물 등록하기 */
+#propertySubmitBtn,
+/* 알바 공고 등록하기 */
+#partTimeRegisterSubmitBtn{
+	background: #4A7EDC;
+	color: #ffffff;
+	border: 1px solid #4A7EDC;
+	box-shadow: none;
+}
+
+
+.auth-modal.profile-page-mode #myInfoBrokerOfficeBtn:not(:disabled):not(.is-disabled):not(.is-pending),
+.auth-modal.profile-page-mode .auth-myinfo-screen #myInfoBrokerOfficeBtn:not(:disabled):not(.is-disabled):not(.is-pending),
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-submit,
+#authBrokerOfficeScreen .broker-apply-submit{
+	background: #4A7EDC;
+	color: #ffffff;
+	border: 1px solid #4A7EDC;
+	box-shadow: none;
+}
+
+.auth-modal.profile-page-mode #myInfoBrokerOfficeBtn:not(:disabled):not(.is-disabled):not(.is-pending):hover,
+.auth-modal.profile-page-mode .auth-myinfo-screen #myInfoBrokerOfficeBtn:not(:disabled):not(.is-disabled):not(.is-pending):hover,
+.auth-modal.profile-page-mode .auth-broker-office-screen .broker-apply-submit:hover,
+#authBrokerOfficeScreen .broker-apply-submit:hover{
+	background: #3F6FCC;
+	border-color: #3F6FCC;
+	color: #ffffff;
+}
+
+
+/* REALJEJU 6.273: 모바일 매물 등록의 관리비·중개사무소·등록자 영역을 좁은 화면에 맞춰 정렬합니다. */
+@media (max-width: 900px) {
+  #propertyRegisterPage .maintenance-fee-field,
+  #propertyRegisterPage .maintenance-etc-fee-field{
+    display: grid;
+    grid-template-columns: max-content max-content minmax(124px, 1fr);
+    align-items: center;
+    gap: 8px 12px;
+    width: 100%;
+    min-width: 0;
+  }
+
+  #propertyRegisterPage .maintenance-fee-field .property-radio-option{
+    min-width: 0;
+    margin: 0;
+    white-space: nowrap;
+  }
+
+  #propertyRegisterPage .maintenance-fee-field .property-unit-input{
+    width: 100%;
+    min-width: 124px;
+  }
+
+  #propertyRegisterPage .property-agency-row > .property-form-label,
+  #propertyRegisterPage .property-agency-row > .property-form-control,
+  #propertyRegisterPage .property-agency-textarea{
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  #propertyRegisterPage .property-registrant-card{
+    --property-registrant-mobile-label-width: 72px;
+    --property-registrant-mobile-field-gap: 10px;
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+  }
+
+  #propertyRegisterPage .property-registrant-form-row{
+    row-gap: 10px;
+  }
+
+  #propertyRegisterPage .property-registrant-stack{
+    display: grid;
+    gap: 8px;
+    width: 100%;
+    min-width: 0;
+  }
+
+  #propertyRegisterPage .property-registrant-inline,
+  #propertyRegisterPage .property-registrant-row-two{
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+    width: 100%;
+    min-width: 0;
+  }
+
+  #propertyRegisterPage .property-registrant-field{
+    display: grid;
+    grid-template-columns: var(--property-registrant-mobile-label-width) minmax(0, 1fr);
+    align-items: center;
+    gap: var(--property-registrant-mobile-field-gap);
+    width: 100%;
+    min-width: 0;
+  }
+
+  #propertyRegisterPage .property-registrant-field-label{
+    margin: 0;
+    white-space: nowrap;
+  }
+
+  #propertyRegisterPage .property-registrant-input,
+  #propertyRegisterPage .property-registrant-input.short{
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+  }
+
+  #propertyRegisterPage .property-registrant-check-line{
+    display: flex;
+    min-height: 36px;
+    overflow: visible;
+    padding-left: calc(var(--property-registrant-mobile-label-width) + var(--property-registrant-mobile-field-gap));
+  }
+
+  #propertyRegisterPage .property-register-legal-notice{
+    white-space: normal;
+    word-break: keep-all;
+    overflow: visible;
+    text-overflow: clip;
+  }
+}
+
+/* REALJEJU 6.273: 모바일 계정 화면은 부동산 홈 기본 메뉴를 유지하며 서비스 광고를 끼워 넣지 않습니다. */
+@media (max-width: 720px) {
+  body.realjeju-account-page-open .realjeju-mobile-home-ad,
+  body.realjeju-account-page-open .realjeju-mobile-flat-line-after-home,
+  body.realjeju-account-page-open .realjeju-mobile-flat-line-after-ad{
+    display: none;
+  }
+}
+
+/* REALJEJU 6.706: responsive topbar square search/profile controls. */
+.mobile-topbar-search-trigger,
+.mobile-address-search-overlay{
+  display: none;
+}
+
+@media (max-width: 900px) {
+
+  body:is(
+    [data-global-category="realestate"],
+    [data-global-category="parcel"],
+    [data-global-category="local-business"],
+    [data-global-category="ev-charger"]
+  ) .mobile-topbar-search-trigger{
+    display: inline-flex;
+  }
+
+  .mobile-topbar-search-icon{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--realjeju-mobile-header-glyph-size, 21px);
+    height: var(--realjeju-mobile-header-glyph-size, 21px);
+    border-radius: 0;
+    background: transparent;
+    color: #111827;
+    font-size: var(--realjeju-mobile-header-glyph-size, 21px);
+    line-height: 1;
+  }
+
+  .mobile-topbar-search-icon > i{
+    display: block;
+    width: auto;
+    height: auto;
+    font-size: inherit;
+    line-height: 1;
+  }
+
+  body.mobile-address-search-open{
+    overflow: hidden;
+    touch-action: none;
+  }
+
+  .mobile-address-search-overlay:not([hidden]){
+    position: fixed;
+    inset: 0;
+    z-index: 2147483647;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100dvh;
+    min-height: 100vh;
+    background: #ffffff;
+    color: #111827;
+    overflow: hidden;
+  }
+
+  .mobile-address-search-head{
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr);
+    align-items: center;
+    gap: 8px;
+    min-height: 64px;
+    padding: max(8px, env(safe-area-inset-top)) 16px 8px;
+    border-bottom: 1px solid #edf0f4;
+    box-sizing: content-box;
+  }
+
+  .mobile-address-search-back,
+  .mobile-address-search-submit{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    background: transparent;
+    color: #111827;
+    cursor: pointer;
+  }
+
+  .mobile-address-search-back{
+    width: 44px;
+    height: 44px;
+    padding: 0;
+  }
+
+  .mobile-address-search-back svg{
+    width: 26px;
+    height: 26px;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .mobile-address-search-form{
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 44px;
+    align-items: center;
+    min-width: 0;
+    height: 46px;
+    border-bottom: 1px solid #dce2ea;
+  }
+
+  #mobileAddressSearchInput{
+    width: 100%;
+    min-width: 0;
+    height: 44px;
+    padding: 0 8px;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: #111827;
+    font-family: var(--font-ui);
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  #mobileAddressSearchInput::placeholder{
+    color: #b1b8c4;
+  }
+
+  .mobile-address-search-submit{
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    color: #7b8494;
+  }
+
+  .mobile-address-search-submit svg{
+    width: 22px;
+    height: 22px;
+    stroke: currentColor;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .mobile-address-search-recent-head{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 52px;
+    padding: 0 20px;
+    border-bottom: 1px solid #edf0f4;
+  }
+
+  .mobile-address-search-recent-head strong{
+    font-family: var(--font-ui);
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  .mobile-address-search-recent-head button{
+    border: 0;
+    background: transparent;
+    color: #1764ff;
+    font-family: var(--font-ui);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .mobile-address-search-recent-list{
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .mobile-address-search-recent-row{
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 48px;
+    align-items: center;
+    min-height: 68px;
+    padding-left: 20px;
+    border-bottom: 1px solid #edf0f4;
+  }
+
+  .mobile-address-search-recent-open,
+  .mobile-address-search-recent-delete{
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .mobile-address-search-recent-open{
+    min-width: 0;
+    height: 68px;
+    padding: 0;
+    overflow: hidden;
+    color: #111827;
+    font-family: var(--font-ui);
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.35;
+    text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .mobile-address-search-recent-delete{
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    color: #b3bbc7;
+    font-size: 28px;
+    font-weight: 300;
+    line-height: 1;
+  }
+
+  .mobile-address-search-empty{
+    margin: 0;
+    padding: 56px 20px;
+    color: #9ca3af;
+    font-family: var(--font-ui);
+    font-size: 14px;
+    text-align: center;
+  }
+}
+
+/* REALJEJU 6.706: visually match the minus stroke to the plus control. */
+@media (max-width: 900px) {
+  #mobileMapZoomOutBtn {
+    font-weight: 300;
+  }
+}
+
+/* REALJEJU 6.706: draw plus and minus with the exact same 2px stroke. */
+@media (max-width: 900px) {
+  #mobileMapZoomInBtn,
+  #mobileMapZoomOutBtn {
+    position: relative;
+    font-size: 0;
+    font-weight: 400;
+  }
+
+  #mobileMapZoomInBtn::before,
+  #mobileMapZoomInBtn::after,
+  #mobileMapZoomOutBtn::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 14px;
+    height: 2px;
+    border-radius: 1px;
+    background: #111827;
+    transform: translate(-50%, -50%);
+  }
+
+  #mobileMapZoomInBtn::after {
+    transform: translate(-50%, -50%) rotate(90deg);
+  }
+}
