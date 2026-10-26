@@ -1,5 +1,5 @@
-<!-- REALJEJU 6.760 | 2026-10-02 -->
-<!-- REALJEJU VERSION: 6.760 -->
+<!-- REALJEJU 7.353 | 2026-10-27 -->
+<!-- REALJEJU VERSION: 7.353 -->
 
 
 
@@ -41,7 +41,7 @@ REALJEJU HTML 구조 / Ver 5.268
 		<meta name="twitter:title" content="제주도 부동산 플랫폼 | 제주도부동산.닷컴 | 리얼제주">
 		<meta name="twitter:description" content="제주도부동산.닷컴은 제주 토지·주택·상가 매물을 지도에서 찾는 리얼제주 부동산 플랫폼입니다." />
 		<meta name="twitter:image" content="https://제주도부동산.닷컴/img/landingpage_1.jpg" />
-		<meta name="theme-color" content="#2563eb" />
+		<meta name="theme-color" content="#265af1" />
 		<script type="application/ld+json">
 			{
 				"@context": "https://schema.org",
@@ -122,7 +122,7 @@ REALJEJU HTML 구조 / Ver 5.268
 			}
 		</script>
 		<script id="realjeju-initial-route-guard">
-window.realjejuPreviewEntry = "/html/mobile-preview/realjeju_6.760.html";
+window.realjejuPreviewEntry = "/html/mobile-preview/realjeju_7.353.html";
 			(function () {
 				var protocol = String(window.location.protocol || "");
 				if (/^https?:$/.test(protocol)) {
@@ -150,7 +150,7 @@ window.realjejuPreviewEntry = "/html/mobile-preview/realjeju_6.760.html";
 				var initialCategoryRoutes = {
 					"/properties": { category: "realestate" },
           "/parcels": { category: "parcel", hideFilterMenu: true },
-          "/ev-chargers": { category: "ev-charger", hideFilterMenu: true },
+          "/ev-chargers": { category: "realestate", hideFilterMenu: false },
 					"/companies": { category: "local-business", hideFilterMenu: true },
 					"/jobs": { category: "part-time", documentPage: true },
 					"/used": { category: "used-market", hideFilterMenu: true, emptyMap: true },
@@ -189,7 +189,7 @@ window.realjejuPreviewEntry = "/html/mobile-preview/realjeju_6.760.html";
 				link.rel = "preload";
 				link.as = "script";
 				link.fetchPriority = "high";
-				link.href = "/js/min_app-core_6.760.js?v=20261071-nearby-next-margin-6180";
+				link.href = "/js/min_app-core_7.353.js?v=20261071-nearby-next-margin-6180";
 				document.head.appendChild(link);
 				var kakaoSdkLink = document.createElement("link");
 				kakaoSdkLink.rel = "preload";
@@ -207,7 +207,7 @@ window.realjejuPreviewEntry = "/html/mobile-preview/realjeju_6.760.html";
 				link.rel = "preload";
 				link.as = "script";
 				link.fetchPriority = "low";
-				link.href = "/js/min_app-features_6.760.js?v=20261071-nearby-next-margin-6180";
+				link.href = "/js/min_app-features_7.353.js?v=20261071-nearby-next-margin-6180";
 				document.head.appendChild(link);
 			})();
 		</script>
@@ -237,15 +237,15 @@ window.realjejuPreviewEntry = "/html/mobile-preview/realjeju_6.760.html";
 				transition: none;
 			}
 		</style>
-		<link rel="stylesheet" href="/css/base-foundation_6.760.css?v=20261046-side-toggle">
-		<link rel="stylesheet" href="/css/core-map_6.760.css?v=20261046-side-toggle">
-		<link rel="stylesheet" href="/css/property-info_6.760.css?v=20261046-side-toggle">
-		<link rel="stylesheet" href="/css/workspace-app_6.760.css?v=20261046-side-toggle">
-		<link rel="stylesheet" href="/css/admin-app_6.760.css?v=20261046-side-toggle">
-		<link rel="stylesheet" href="/css/account_6.760.css?v=20261046-side-toggle">
-		<link rel="stylesheet" href="/css/base_6.760.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/min_base-foundation_7.353.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/min_core-map_7.353.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/min_property-info_7.353.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/min_workspace-app_7.353.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/min_admin-app_7.353.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/min_account_7.353.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/min_base_7.353.css?v=20261046-side-toggle">
 
-  <link rel="stylesheet" href="/css/service-modes_6.760.css?v=20261046-side-toggle">
+  <link rel="stylesheet" href="/css/min_service-modes_7.353.css?v=20261046-side-toggle">
 </head>
 	<body class="sidebar-list-collapsed realjeju-side-nav-enabled main-landing-page-open">
 		<script id="realjeju-initial-body-route-prime">
@@ -568,7 +568,7 @@ window.realjejuPreviewEntry = "/html/mobile-preview/realjeju_6.760.html";
 							var button = controlGroup && controlGroup.querySelector(".map-tool-stack-collapse-control");
 							if (!enabled) {
 								if (controlGroup) controlGroup.remove();
-								stack.classList.remove("map-tool-stack-collapsible", "map-tool-stack-collapsed");
+								stack.classList.remove("map-tool-stack-collapsible", "map-tool-stack-collapsed"); if(stack.id === "mapSideTools") document.body.classList.remove("map-right-tool-stack-collapsed");
 								stack.style.removeProperty("--map-tool-stack-collapsed-height");
 								return;
 							}
@@ -603,7 +603,17 @@ window.realjejuPreviewEntry = "/html/mobile-preview/realjeju_6.760.html";
 						}
 
 						function syncMapToolStackCollapseControls() {
-							ensureMapToolStackCollapseControl(document.getElementById("mapSideTools"), true);
+ var rightStack = document.getElementById("mapSideTools");
+ if (rightStack && !rightStack.dataset.rjTopFilterCloseBound) {
+   rightStack.dataset.rjTopFilterCloseBound = "true";
+   rightStack.addEventListener("click", function(event) {
+     if (event.target.closest(".map-tool-btn") && typeof window.closeRealjejuFloatingMenusExcept === "function") window.closeRealjejuFloatingMenusExcept("map-tools");
+   }, true);
+ }
+							/* Desktop Home collapse launcher retained:
+ ensureMapToolStackCollapseControl(document.getElementById("mapSideTools"), true);
+ */
+ ensureMapToolStackCollapseControl(document.getElementById("mapSideTools"), mobileQuery.matches || !["realestate", "parcel"].includes(document.body.dataset.globalCategory));
 							ensureMapToolStackCollapseControl(
 								document.querySelector(".parcel-trade-left-tool-stack"),
 								mobileQuery.matches
@@ -1294,19 +1304,20 @@ function syncNow() {
       <a href="/properties" class="global-category-item is-active" data-global-category="realestate" aria-pressed="true">
         <i class="fa-solid fa-house" aria-hidden="true"></i><span>부동산 홈</span>
       </a>
-      <a href="/parcels" class="global-category-item" data-global-category="parcel" aria-pressed="false">
-        <i class="fa-solid fa-draw-polygon" aria-hidden="true"></i><span>부동산 필지분석</span>
+<button type="button" class="global-category-item" data-header-side-action="broker-home" aria-hidden="true" hidden><span>중개사 홈</span></button>
+      
+<button type="button" class="global-category-item" data-header-side-action="favorites" aria-hidden="false"><span>관심매물</span></button><a href="/parcels" class="global-category-item" data-global-category="parcel" aria-pressed="false">
+        <i class="fa-solid fa-draw-polygon" aria-hidden="true"></i><span>부동산 분석</span><span class="nav-new-badge">NEW</span>
       </a>
-      <a href="/companies" class="global-category-item" data-global-category="local-business" aria-pressed="false">
+      <a href="/companies" class="global-category-item" data-global-category="local-business" aria-pressed="false" hidden aria-hidden="true">
         <i class="fa-solid fa-thumbs-up" aria-hidden="true"></i><span>전문 중개사</span>
       </a>
-      <a href="/ev-chargers" class="global-category-item" data-global-category="ev-charger" aria-pressed="false">
-        <i class="fa-solid fa-charging-station" aria-hidden="true"></i><span>전기차 충전소</span>
-      </a>
-    </nav>
+      
+    
+</nav>
 					<div class="admin-listing-topbar-search" id="adminListingTopbarSearch" aria-label="관리자 매물 검색">
 						<i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
-						<input type="search" id="adminListingTopbarSearchInput" autocomplete="off" placeholder="매물 검색" aria-label="매물 검색" />
+						<input type="search" id="adminListingTopbarSearchInput" autocomplete="off" placeholder="매물 검색" aria-label="매물 검색" /><button type="button" class="broker-topbar-search-clear" data-broker-search-clear aria-label="검색어 지우기" aria-hidden="true" tabindex="-1"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m1 1 14 14M15 1 1 15"/></svg></button>
 					</div>
 					<div class="admin-listing-topbar-search my-suite-favorites-topbar-search" id="mySuiteFavoritesTopbarSearch" aria-label="관심 부동산 매물 검색">
 						<i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
@@ -1333,14 +1344,15 @@ function syncNow() {
 						<button type="button" class="my-suite-tab" data-my-suite-tab="broker-office">중개사 정보</button>
 					</nav>
 					<div class="global-topbar-right" id="globalTopbarRight">
-						<button type="button" class="global-auth-trigger" id="detailAuthTrigger" data-auth-state="logged-out" aria-label="로그인 및 회원가입" hidden aria-hidden="true">
+						<button type="button" class="global-auth-trigger" id="detailAuthTrigger" aria-controls="globalTopbarMoreMenu" aria-haspopup="true" aria-expanded="false" data-auth-state="logged-out" aria-label="로그인 및 회원가입" hidden aria-hidden="true">
 						</button>
 						<nav class="main-landing-auth-links" id="mainLandingAuthLinks" aria-label="로그인 및 회원가입">
 							<button type="button" class="main-landing-auth-link" id="mainLandingLoginBtn">로그인</button>
 							<span class="main-landing-auth-separator" aria-hidden="true">·</span>
 							<button type="button" class="main-landing-auth-link" id="mainLandingSignupBtn">회원가입</button>
 						</nav>
-						<button type="button" class="global-topbar-icon-btn topbar-chat-button" id="globalTopbarChatBtn" aria-label="채팅" aria-expanded="false" aria-controls="globalTopbarChatMenu" hidden>
+						<!-- Retained optional topbar control.
+<button type="button" class="global-topbar-icon-btn topbar-chat-button" id="globalTopbarChatBtn" aria-label="채팅" aria-expanded="false" aria-controls="globalTopbarChatMenu" hidden>
 							<svg class="topbar-custom-chat" viewBox="0 0 24 24" fill="none" aria-hidden="true">
 								<path d="M12 3c-4.97 0-9 3.42-9 7.65 0 1.94.85 3.71 2.27 5.06L3.9 21l4.75-1.87c1.04.34 2.17.52 3.35.52 4.97 0 9-3.42 9-8.1S16.97 3 12 3Z"></path>
 								<circle cx="8" cy="11" r="1.1"></circle>
@@ -1348,30 +1360,35 @@ function syncNow() {
 								<circle cx="16" cy="11" r="1.1"></circle>
 							</svg>
 						</button>
+-->
 						<div class="topbar-notification-menu topbar-chat-menu" id="globalTopbarChatMenu" aria-hidden="true" inert>
 							<div class="topbar-notification-title">채팅</div>
 							<div class="topbar-notification-empty">새로운 채팅이 없습니다.</div>
 						</div>
-						<button type="button" class="global-topbar-icon-btn topbar-notification-button" id="globalTopbarNotificationBtn" aria-label="알림" aria-expanded="false" aria-controls="globalTopbarNotificationMenu" hidden>
+						<!-- Retained optional topbar control.
+<button type="button" class="global-topbar-icon-btn topbar-notification-button" id="globalTopbarNotificationBtn" aria-label="알림" aria-expanded="false" aria-controls="globalTopbarNotificationMenu" hidden>
 							<svg class="topbar-custom-bell" viewBox="0 0 24 24" fill="none" aria-hidden="true">
 								<path d="M3 17.5l1.1-1.1A6 6 0 0 0 6 12V9a6 6 0 0 1 12 0v3a6 6 0 0 0 1.9 4.4l1.1 1.1"></path>
 								<path d="M3 17.5h18"></path>
 								<path d="M8.75 17.5a3.25 3.5 0 0 0 6.5 0"></path>
 							</svg>
 						</button>
+-->
 						<div class="topbar-notification-menu" id="globalTopbarNotificationMenu" aria-hidden="true" inert>
 							<div class="topbar-notification-title">알림</div>
 							<div class="topbar-notification-empty">새로운 알림이 없습니다.</div>
 						</div>
-						<button type="button" class="global-topbar-icon-btn global-topbar-more-btn account-launcher-button" id="globalTopbarMoreBtn" aria-label="마이페이지 메뉴" aria-expanded="false" aria-controls="globalTopbarMoreMenu" hidden>
+						<!-- Retained optional topbar control.
+<button type="button" class="global-topbar-icon-btn global-topbar-more-btn account-launcher-button" id="globalTopbarMoreBtn" aria-label="마이페이지 메뉴" aria-expanded="false" aria-controls="globalTopbarMoreMenu" hidden>
 							<span class="topbar-nine-dot-grid" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span>
 						</button>
+-->
 						<div class="global-topbar-more-menu account-launcher-menu" id="globalTopbarMoreMenu" aria-hidden="true" inert>
 							<div class="account-launcher-grid">
 								<button type="button" class="account-launcher-item global-account-menu-item" data-account-action="myinfo"><i class="fa-solid fa-user" aria-hidden="true"></i><span>내 정보</span></button>
 								<button type="button" class="account-launcher-item global-account-menu-item" data-account-action="broker-office"><i class="fa-solid fa-building" aria-hidden="true"></i><span>중개사무소 정보</span></button>
-								<button type="button" class="account-launcher-item global-account-menu-item" data-account-action="payment"><i class="fa-solid fa-credit-card" aria-hidden="true"></i><span>이용권 결제</span></button>
-								<button type="button" class="account-launcher-item global-account-menu-item" data-account-action="inquiries"><i class="fa-solid fa-comments" aria-hidden="true"></i><span>1:1 문의내역</span></button>
+								<div data-account-commerce-group hidden><button type="button" class="account-launcher-item global-account-menu-item" data-account-action="payment"><i class="fa-solid fa-credit-card" aria-hidden="true"></i><span>이용권 구매</span></button><button type="button" class="account-launcher-item global-account-menu-item" data-account-action="addons"><i class="fa-solid fa-cart-shopping" aria-hidden="true"></i><span>추가상품 구매</span></button><button type="button" class="account-launcher-item global-account-menu-item" data-account-action="coupons"><i class="fa-solid fa-ticket" aria-hidden="true"></i><span>쿠폰함</span></button></div>
+								<button type="button" class="account-launcher-item global-account-menu-item" data-account-action="inquiries"><i class="fa-solid fa-comments" aria-hidden="true"></i><span>1:1 문의내역</span></button><div class="rj-desktop-account-actions"><button type="button" class="account-launcher-item global-account-menu-item" data-account-action="notice"><i class="fa-solid fa-bullhorn" aria-hidden="true"></i><span>공지사항</span></button></div>
 							</div>
 							<div class="account-launcher-divider" aria-hidden="true"></div>
 							<div class="account-launcher-actions">
@@ -1459,11 +1476,7 @@ function syncNow() {
 							<span class="main-landing-simple-desc">우리동네 업체 정보</span>
 							<i class="fa-solid fa-thumbs-up" aria-hidden="true"></i>
 						</button>
-						<button type="button" class="main-landing-simple-card is-wide" data-main-landing-category="ev-charger">
-							<span class="main-landing-simple-title">전기차 충전소</span>
-							<span class="main-landing-simple-desc">제주 충전소 위치와<br>충전기 정보를 한눈에 확인</span>
-							<i class="fa-solid fa-charging-station" aria-hidden="true"></i>
-						</button>
+						
 					</div>
 					<button type="button" class="main-landing-simple-banner" data-main-landing-action="map">
 						<span>
@@ -1540,41 +1553,41 @@ function syncNow() {
 				<button type="button" class="realjeju-mobile-drawer-item active" data-mobile-drawer-category="realestate"><i class="fa-solid fa-house" aria-hidden="true"></i><span>부동산 홈</span></button>
 				<button type="button" class="realjeju-mobile-drawer-item" data-mobile-drawer-category="parcel"><i class="fa-solid fa-draw-polygon" aria-hidden="true"></i><span>부동산 필지분석</span></button>
 				<button type="button" class="realjeju-mobile-drawer-item" data-mobile-drawer-category="local-business"><i class="fa-solid fa-thumbs-up" aria-hidden="true"></i><span>전문 중개사</span></button>
-				<button type="button" class="realjeju-mobile-drawer-item" data-mobile-drawer-category="ev-charger"><i class="fa-solid fa-charging-station" aria-hidden="true"></i><span>전기차 충전소</span></button>
+				
 			</nav>
 			<div class="realjeju-mobile-drawer-divider" aria-hidden="true"></div>
 			<nav class="realjeju-side-nav-menu realjeju-side-admin-tabs" aria-label="관리자 메뉴">
 				<button type="button" class="realjeju-side-nav-item realjeju-side-admin-tab active" data-admin-tab="notices">
-					<i class="fa-solid fa-bullhorn" aria-hidden="true"></i>
+					<i class="rj-home-type-icon" aria-hidden="true"><svg viewBox="0 0 32 32" focusable="false"><path d="M5 13h8l13-7v20l-13-7H5z"/><path class="rj-type-icon-accent" d="M13 13l13-7v20l-13-7z"/><path class="rj-type-icon-ink" d="M8 19h6l2 9h-6z"/></svg></i>
 					<span>공지사항</span>
 				</button>
 				<button type="button" class="realjeju-side-nav-item realjeju-side-admin-tab" data-admin-tab="inquiries">
-					<i class="fa-solid fa-comments" aria-hidden="true"></i>
+					<i class="rj-home-type-icon" aria-hidden="true"><svg viewBox="0 0 32 32" focusable="false"><rect x="3" y="5" width="22" height="17" rx="3"/><path d="M7 21v6l7-6z"/><path class="rj-type-icon-accent" d="M13 13h16v14h-5l-4 3v-3h-7z"/><path class="rj-type-icon-light" d="M7 10h13v2H7zm0 5h10v2H7zm10 3h8v2h-8z"/></svg></i>
 					<span>1:1 문의내역</span>
 				</button>
 				<button type="button" class="realjeju-side-nav-item realjeju-side-admin-tab" data-admin-tab="users">
-					<i class="fa-solid fa-user-group" aria-hidden="true"></i>
+					<i class="rj-home-type-icon" aria-hidden="true"><svg viewBox="0 0 32 32" focusable="false"><circle cx="12" cy="10" r="6"/><circle class="rj-type-icon-accent" cx="24" cy="12" r="5"/><path d="M2 29v-7a10 10 0 0 1 20 0v7z"/><path class="rj-type-icon-accent" d="M19 29v-7a7 7 0 0 1 12 0v7z"/><path class="rj-type-icon-light" d="M10 21h4v8h-4z"/></svg></i>
 					<span>회원 관리</span>
 				</button>
 				<button type="button" class="realjeju-side-nav-item realjeju-side-admin-tab" data-admin-tab="broker-applications" aria-label="중개사 관리">
-					<i class="fa-solid fa-building" aria-hidden="true"></i>
+					<i class="rj-home-type-icon" aria-hidden="true"><svg viewBox="0 0 32 32" focusable="false"><path d="M5 6h22v23H5z"/><path class="rj-type-icon-accent" d="M5 3h22v5H5z"/><path class="rj-type-icon-light" d="M9 11h4v4H9zm10 0h4v4h-4zM9 18h4v4H9zm10 0h4v4h-4z"/><path class="rj-type-icon-ink" d="M14 23h4v6h-4z"/></svg></i>
 					<span>중개사 관리</span>
 				</button>
 				<button type="button" class="realjeju-side-nav-item realjeju-side-admin-tab" data-admin-tab="listings">
-					<i class="fa-solid fa-clipboard" aria-hidden="true"></i>
+					<i class="rj-home-type-icon" aria-hidden="true"><svg viewBox="0 0 32 32" focusable="false"><rect x="6" y="5" width="21" height="25" rx="2"/><path class="rj-type-icon-accent" d="M11 2h11v7H11z"/><path class="rj-type-icon-light" d="M10 13h13v2H10zm0 6h13v2H10zm0 6h9v2h-9z"/></svg></i>
 					<span>매물 관리</span>
 				</button>
 				<button type="button" class="realjeju-side-nav-item realjeju-side-admin-tab" data-admin-tab="coupons">
-					<i class="fa-solid fa-credit-card" aria-hidden="true"></i>
+					<i class="rj-home-type-icon" aria-hidden="true"><svg viewBox="0 0 32 32" focusable="false"><path d="M3 7h26v7a3 3 0 0 0 0 6v6H3v-6a3 3 0 0 0 0-6z"/><path class="rj-type-icon-accent" d="M3 7h9v19H3v-6a3 3 0 0 0 0-6z"/><path class="rj-type-icon-light" d="M15 10h2v3h-2zm0 6h2v3h-2zm0 6h2v2h-2z"/></svg></i>
 					<span>쿠폰 관리</span>
 				</button>
 				<div class="realjeju-side-admin-section-divider" aria-hidden="true"></div>
 				<button type="button" class="realjeju-side-nav-item realjeju-side-admin-tab" data-admin-tab="operations">
-					<i class="fa-solid fa-database" aria-hidden="true"></i>
+					<i class="rj-home-type-icon" aria-hidden="true"><svg viewBox="0 0 32 32" focusable="false"><ellipse cx="16" cy="7" rx="12" ry="5"/><path d="M4 7v18c0 7 24 7 24 0V7z"/><ellipse class="rj-type-icon-accent" cx="16" cy="7" rx="12" ry="5"/><path class="rj-type-icon-light" d="M7 15c6 3 12 3 18 0v2c-6 3-12 3-18 0zm0 7c6 3 12 3 18 0v2c-6 3-12 3-18 0z"/></svg></i>
 					<span>운영 관리</span>
 				</button>
 			</nav>
-			<nav class="realjeju-side-nav-menu realjeju-side-primary-menu">
+			<nav class="realjeju-side-nav-menu realjeju-side-parcel-tools" aria-label="부동산 분석 도구"><button type="button" class="realjeju-side-nav-item" data-parcel-sidebar-control="filter" aria-pressed="false" disabled><i class="rj-home-type-icon" aria-hidden="true"><svg viewBox="0 0 32 32" focusable="false"><path d="M3 5h26L19 17v10l-6-3V17z"/><path class="rj-type-icon-accent" d="M3 5h26l-7 8H10z"/></svg></i><span>필터</span></button><button type="button" class="realjeju-side-nav-item" data-parcel-sidebar-control="satellite" aria-pressed="false" disabled><i class="rj-home-type-icon" aria-hidden="true"><svg viewBox="0 0 32 32" focusable="false"><path class="rj-type-icon-accent" d="M3 10l7-7 7 7-7 7zm12 12 7-7 7 7-7 7z"/><path d="m12 13 6-6 7 7-6 6z"/><path class="rj-type-icon-ink" d="m7 24 7-7 3 3-7 7z"/></svg></i><span>위성</span></button><button type="button" class="realjeju-side-nav-item" data-parcel-sidebar-control="price" aria-pressed="false" disabled><i class="rj-home-type-icon" aria-hidden="true"><svg viewBox="0 0 32 32" focusable="false"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 14a11 11 0 0 1 20-5M27 18A11 11 0 0 1 7 23"/><path d="m19 8 6 1 1-6M13 24l-6-1-1 6"/></g></svg></i><span>단가</span></button><button type="button" class="realjeju-side-nav-item" data-parcel-sidebar-control="area" aria-pressed="false" disabled><i class="rj-home-type-icon" aria-hidden="true"><svg viewBox="0 0 32 32" focusable="false"><path d="M6 7h20v18H6z"/><path class="rj-type-icon-accent" d="M4 5h6v6H4zm18 0h6v6h-6zM4 21h6v6H4zm18 0h6v6h-6z"/><path class="rj-type-icon-light" d="M11 12h10v8H11z"/></svg></i><span>면적</span></button><button type="button" class="realjeju-side-nav-item" data-parcel-sidebar-control="road" aria-pressed="false" disabled><i class="rj-home-type-icon" aria-hidden="true"><svg viewBox="0 0 32 32" focusable="false"><path d="M10 3h12l7 26H3z"/><path class="rj-type-icon-accent" d="M10 3h12l2 8H8z"/><path class="rj-type-icon-light" d="M15 6h2v5h-2zm0 9h2v5h-2zm0 9h2v5h-2z"/></svg></i><span>도로</span></button></nav><nav class="realjeju-side-nav-menu realjeju-side-primary-menu">
 				<button type="button" class="realjeju-side-nav-item active" data-side-nav-action="home">
 					<i class="fa-solid fa-house" aria-hidden="true"></i>
 					<span>부동산 홈</span>
@@ -1597,11 +1610,26 @@ function syncNow() {
 					<i class="fa-solid fa-user-gear" aria-hidden="true"></i>
 					<span>중개사 홈</span>
 				</button>
-				<button type="button" class="realjeju-side-register-btn" data-side-nav-action="register" hidden>
+				
+			</nav>
+<nav class="realjeju-side-nav-menu realjeju-side-register-menu" aria-label="중개사 메뉴">
+  <div class="realjeju-side-broker-benefits">
+    <button type="button" class="realjeju-side-nav-item" data-side-nav-action="payment">
+        <i class="rj-home-type-icon rj-commerce-icon" aria-hidden="true"><svg viewBox="0 0 32 32" focusable="false"><path d="M3 5h26v22H3z"/><path class="rj-type-icon-accent" d="M3 9h26v7H3z"/><path class="rj-type-icon-light" d="M7 20h6v4H7z"/><path class="rj-type-icon-ink" d="M18 22h7v2h-7zM3 25h26v2H3z"/></svg></i><span>이용권</span>
+    </button>
+    <button type="button" class="realjeju-side-nav-item" data-side-nav-action="addons">
+        <i class="rj-home-type-icon rj-commerce-icon" aria-hidden="true"><svg viewBox="0 0 32 32" focusable="false"><path class="rj-type-icon-ink" fill-rule="evenodd" d="M10 3h12v8H10zM13 6v2h6V6z"/><path d="M5 9h22v20H5z"/><path class="rj-type-icon-accent" d="M5 9h22v6H5z"/><path class="rj-type-icon-light" d="M14 17h4v8h-4zM12 19h8v4h-8z"/><path class="rj-type-icon-ink" d="M5 27h22v2H5z"/></svg></i><span>추가상품</span>
+    </button>
+    <button type="button" class="realjeju-side-nav-item" data-side-nav-action="coupons">
+        <i class="rj-home-type-icon rj-commerce-icon" aria-hidden="true"><svg viewBox="0 0 32 32" focusable="false"><path d="M3 5h26v8h-5v6h5v8H3v-8h5v-6H3z"/><path class="rj-type-icon-accent" d="M3 5h9v22H3v-8h5v-6H3z"/><path class="rj-type-icon-light" d="M15 8h2v4h-2zm0 6h2v4h-2zm0 6h2v4h-2zm5-10h6v2h-6zm0 10h6v2h-6z"/></svg></i><span>쿠폰함</span>
+    </button>
+    <div class="realjeju-side-nav-line" aria-hidden="true"></div>
+  </div>
+  <button type="button" class="realjeju-side-register-btn" data-side-nav-action="register" hidden>
 					<i class="fa-solid fa-plus" aria-hidden="true"></i>
 					<span>매물 등록</span>
 				</button>
-			</nav>
+</nav>
 			<div class="realjeju-side-nav-line" aria-hidden="true"></div>
 			<div class="realjeju-side-account-wrap" aria-label="계정 메뉴">
 				<button type="button" class="realjeju-side-account" id="realjejuSideAccountTrigger">
@@ -1624,16 +1652,16 @@ function syncNow() {
 				<span class="realjeju-side-recent-ad-badge">AD</span>
 			</aside>
 			<div class="realjeju-side-nav-line realjeju-side-ad-bottom-line" aria-hidden="true"></div>
-			<div class="realjeju-side-recent" aria-label="최근 조회">
+			<div class="realjeju-side-recent" aria-label="최근 조회" tabindex="0">
 				<div class="realjeju-side-recent-title">최근 조회</div>
-				<div class="realjeju-side-recent-empty" id="realjejuSideRecentEmpty">최근 조회한 매물이 없습니다.</div>
-				<div class="realjeju-side-recent-list" id="realjejuSideRecentList" aria-live="polite"></div>
+				<div class="realjeju-home-recent-content"><div class="realjeju-side-recent-empty" id="realjejuSideRecentEmpty">최근 조회한 매물이 없습니다.</div>
+				<div class="realjeju-side-recent-list" id="realjejuSideRecentList" aria-live="polite"></div></div>
 			</div>
 			<div class="realjeju-side-nav-line realjeju-side-nav-bottom-line" aria-hidden="true"></div>
 			<nav class="realjeju-side-nav-menu realjeju-side-nav-bottom" aria-label="계정 메뉴">
 				<button type="button" class="realjeju-side-nav-item" data-side-nav-action="admin" hidden>
 					<i class="fa-solid fa-gear" aria-hidden="true"></i>
-					<span>관리자 페이지</span>
+					<span>관리자</span>
 				</button>
 				<button type="button" class="realjeju-side-nav-item" data-side-nav-action="notice">
 					<i class="fa-solid fa-bullhorn" aria-hidden="true"></i>
@@ -1642,7 +1670,7 @@ function syncNow() {
 			</nav>
 			<div class="realjeju-mobile-drawer-divider realjeju-mobile-drawer-version-divider" aria-hidden="true"></div>
 			<div class="realjeju-side-admin-version" id="realjejuSideAdminVersion" aria-hidden="true" hidden>
-				<span class="topbar-version-text">6.760</span>
+				<span class="topbar-version-text">7.353</span>
 			</div>
 		</aside>
 		<button type="button" class="realjeju-side-nav-toggle" id="realjejuSideNavToggle" aria-controls="realjejuSideNav" aria-expanded="true" aria-label="왼쪽 메뉴 접기">
@@ -2184,16 +2212,15 @@ function syncNow() {
 									<button type="button" class="admin-coupon-issue-btn" data-admin-coupon-plan="relist-50">쿠폰 발급</button>
 								</article>
 								<article class="payment-coupon-card">
-									<div class="payment-coupon-kind">계약서 보관</div>
-									<h2>계약서 보관 사용건수 <span data-admin-coupon-count-value>100</span>건</h2>
-									<p class="payment-coupon-desc">신규 작성한 계약서를 <span data-admin-coupon-count-value>100</span>건 보관할 수 있습니다.</p>
-									<p class="payment-coupon-desc">수정, 삭제는 카운트를 차감하지 않습니다.</p>
-									<label class="admin-coupon-count-field">
-										<span>적용 건수</span>
-										<span class="admin-coupon-count-control"><input type="number" class="admin-coupon-count-input" min="1" step="1" value="100" inputmode="numeric" aria-label="계약서 보관 적용 건수"><span>건</span></span>
-									</label>
-									<button type="button" class="admin-coupon-issue-btn" data-admin-coupon-plan="storage-100">쿠폰 발급</button>
-								</article>
+    <div class="payment-coupon-kind">상단노출</div>
+    <h2>상단노출 <span data-admin-coupon-duration-value>30</span>일 쿠폰</h2>
+    <p class="payment-coupon-desc">쿠폰 1장당 매물 1개를 지정한 기간 동안 상단 추천에 노출할 수 있습니다.</p>
+    <p class="payment-coupon-note">※ 프리미엄·프로 플랜 이용 중 사용할 수 있습니다.</p>
+    <label class="admin-coupon-duration-field"><span>적용 기간</span>
+      <span class="admin-coupon-duration-control"><input type="number" class="admin-coupon-duration-input" min="1" step="1" value="30" inputmode="numeric" aria-label="상단노출 적용 기간"><span>일</span></span>
+    </label>
+    <button type="button" class="admin-coupon-issue-btn" data-admin-coupon-plan="top-recommendation-30">쿠폰 발급</button>
+  </article>
 							</div>
 						</section>
 					</div>
@@ -2445,6 +2472,11 @@ function syncNow() {
 							<div class="broker-home-usage-meta"><span><strong id="brokerPremiumUsageCount">0</strong>건 사용중</span><span><strong id="brokerPremiumUsageLimit">0</strong>건</span></div>
 					</div>
 						<div class="broker-home-usage-item">
+						<div class="broker-home-usage-title">상단 노출 사용건수</div>
+						<div class="broker-home-usage-track"><div class="broker-home-usage-fill" id="brokerTopRecommendationUsageFill"></div></div>
+							<div class="broker-home-usage-meta"><span><strong id="brokerTopRecommendationUsageCount">0</strong>건 사용중</span><span><strong id="brokerTopRecommendationUsageLimit">0</strong>건</span></div>
+					</div>
+						<div class="broker-home-usage-item">
 							<div class="broker-home-usage-title">하루 재등록 사용건수 <span class="broker-home-usage-help" tabindex="0">?</span><span class="broker-home-usage-help-panel" role="tooltip">매물을 현재날짜로 갱신하여 신규 등록하는 기능입니다.<br>단, 기존 매물은 재등록 시 삭제됩니다.<br>재등록 이용건수는 매일 갱신됩니다.</span></div>
 							<div class="broker-home-usage-track"><div class="broker-home-usage-fill" id="brokerRelistUsageFill"></div></div>
 							<div class="broker-home-usage-meta"><span><strong id="brokerRelistUsageCount">0</strong>건 사용중</span><span><strong id="brokerRelistUsageLimit">0</strong>건</span></div>
@@ -2486,20 +2518,21 @@ function syncNow() {
 				<div class="broker-home-filter-item">
 									<button type="button" class="broker-home-filter-btn" data-broker-home-status-filter="draft">임시저장 <span id="brokerDraftCount">0</span></button>
 								</div>
-				<button type="button" class="broker-home-filter-btn" id="brokerBulkRefreshBtn">전체갱신</button>
-				<div class="broker-home-filter-spacer" aria-hidden="true"></div>
+				
+				
 				<div class="broker-home-filter-item">
 									<button type="button" class="broker-home-filter-btn" data-broker-home-status-filter="deleted">휴지통 <span id="brokerDeletedCount">0</span></button>
 								</div>
 			</div>
 			<div class="management-list-filter-row management-list-filter-row-filters">
+				
 				<div class="broker-home-filter-item">
-									<button type="button" class="broker-home-filter-btn" id="brokerPropertyTypeFilterBtn" data-broker-home-filter-menu="property">매물 유형 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
-									<div class="broker-home-filter-menu extra-filter-menu type-filter-menu broker-home-map-style-menu" id="brokerPropertyTypeFilterMenu"></div>
-								</div>
-				<div class="broker-home-filter-item">
-									<button type="button" class="broker-home-filter-btn" id="brokerPriceTypeFilterBtn" data-broker-home-filter-menu="deal">가격 유형 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
+									<button type="button" class="broker-home-filter-btn" id="brokerPriceTypeFilterBtn" data-broker-home-filter-menu="deal">거래유형 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
 									<div class="broker-home-filter-menu extra-filter-menu deal-filter-menu broker-home-price-type-menu broker-home-map-style-menu" id="brokerPriceTypeFilterMenu"></div>
+								</div>
+<div class="broker-home-filter-item">
+									<button type="button" class="broker-home-filter-btn" id="brokerPropertyTypeFilterBtn" data-broker-home-filter-menu="property">매물유형 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
+									<div class="broker-home-filter-menu extra-filter-menu type-filter-menu broker-home-map-style-menu" id="brokerPropertyTypeFilterMenu"></div>
 								</div>
 				<div class="broker-home-filter-item">
 									<button type="button" class="broker-home-filter-btn" id="brokerAreaFilterBtn" data-broker-home-filter-menu="area">면적 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
@@ -2513,9 +2546,31 @@ function syncNow() {
 									<button type="button" class="broker-home-filter-btn" id="brokerLandUseZoneFilterBtn" data-broker-home-filter-menu="landUseZone">용도지역 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button>
 									<div class="broker-home-filter-menu extra-filter-menu type-filter-menu broker-home-land-use-zone-menu broker-home-map-style-menu" id="brokerLandUseZoneFilterMenu"></div>
 								</div>
-			</div>
+			<div class="broker-home-filter-end">
+    <button type="button" class="broker-home-filter-btn broker-home-area-unit-control" data-broker-home-reset-all aria-label="검색 조건 초기화" title="초기화"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="butt" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5.072 8A8 8 0 0 1 20 12M18.928 16A8 8 0 0 1 4 12"/><path d="M16.2 10.5h7.6L20 14.7ZM.2 13.5h7.6L4 9.3Z" fill="currentColor" stroke="none"/></svg></button>
+    <span class="broker-home-filter-divider" aria-hidden="true"></span>
+    <button type="button" class="broker-home-filter-btn broker-home-area-unit-control rj-area-unit-toggle" data-broker-listing-area-toggle aria-label="면적 단위 전환" title="평 / ㎡"><span class="map-unit-cycle-icon"><svg class="rj-map-unit-cycle-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.95" stroke-linecap="butt" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5.072 8A8 8 0 0 1 20 12M18.928 16A8 8 0 0 1 4 12"/><path d="M17.530 11.235L22.470 11.235L20.000 13.965ZM1.530 12.765L6.470 12.765L4.000 10.035Z" fill="currentColor" stroke="none"/></svg><span class="management-list-area-unit-label map-unit-cycle-label">평</span></span></button>
+  </div>
+  <div class="broker-home-filter-spacer" aria-hidden="true"></div>
+  </div>
 		</div>
-		<div class="broker-listing-shell" id="brokerListingsList">
+		<div class="broker-listing-bulk-actions" id="brokerListingBulkActions" role="group" aria-label="선택 매물 일괄 처리">
+    <button type="button" id="brokerBulkRefreshBtn">전체갱신</button>
+    <div class="broker-listing-bulk-selection">
+      <button type="button" data-broker-list-bulk-action="refresh" disabled>현재날짜로 갱신</button>
+      <button type="button" data-broker-list-bulk-action="closed" disabled>거래완료</button>
+      <button type="button" data-broker-list-bulk-action="hidden" disabled>숨김</button>
+      <button type="button" data-broker-list-bulk-action="restore" hidden disabled>복원</button>
+      <button type="button" class="danger" data-broker-list-bulk-action="delete" disabled>삭제</button>
+      <span class="broker-home-filter-divider" aria-hidden="true"></span>
+      <button type="button" data-broker-list-bulk-action="premium" disabled>프리미엄 적용</button>
+      <button type="button" data-broker-list-bulk-action="premium_clear" disabled>프리미엄 해제</button>
+      <button type="button" data-broker-list-bulk-action="top_recommendation" disabled>상단노출 적용</button>
+      <button type="button" data-broker-list-bulk-action="top_recommendation_clear" disabled>상단노출 해제</button>
+      <span id="brokerListingSelectionCount" aria-live="polite" hidden>0개 선택</span>
+    </div>
+  </div>
+  <div class="broker-listing-shell" id="brokerListingsList">
 			<div class="admin-empty">등록한 매물을 불러오세요.</div>
 		</div>
 		<div class="broker-contracts-shell" id="brokerContractsShell" hidden>
@@ -2579,7 +2634,7 @@ function syncNow() {
 				<div class="myinfo-page-head payment-account-head account-page-head">
 					<div class="payment-tabs-current-row">
 						<div class="payment-tabs" role="tablist" aria-label="이용권 결제 메뉴">
-							<button type="button" class="payment-tab active" data-payment-tab="plans" role="tab" aria-selected="true">이용권 구매</button>
+							<button type="button" class="payment-tab active" data-payment-tab="plans" role="tab" aria-selected="true">이용권 구매</button><button type="button" class="payment-tab" data-payment-tab="addons" role="tab" aria-selected="false">추가상품 구매</button>
 							<button type="button" class="payment-tab" data-payment-tab="coupons" role="tab" aria-selected="false">쿠폰함</button>
 							<button type="button" class="payment-tab" data-payment-tab="history" role="tab" aria-selected="false">이용 내역</button>
 						</div>
@@ -2610,7 +2665,7 @@ function syncNow() {
 							</div>
 							<div data-payment-current-limit-item="premium">
 								<div class="payment-current-limit-value"><span>프리미엄 매물</span><strong data-payment-current-limit="premium">0건</strong></div>
-								<div class="payment-current-addon-list" data-payment-current-addons="premium" hidden></div>
+								<div class="payment-current-addon-list" data-payment-current-addons="premium" hidden></div><div class="payment-current-addon-list" data-payment-top-recommendation hidden></div>
 							</div>
 							<div data-payment-current-limit-item="contracts">
 								<div class="payment-current-limit-value"><span>계약서 보관</span><strong data-payment-current-limit="contracts">0건</strong></div>
@@ -2625,20 +2680,22 @@ function syncNow() {
 	<article class="payment-plan-card">
 	<div class="payment-plan-topline">STARTER</div>
 	<h2>베이직 플랜</h2>
-	<div class="payment-plan-price">11,000원 <span>/ 월 (VAT 포함)</span></div>
+	<div class="payment-plan-price-row"><div class="payment-plan-price" data-plan-unit-price="11000"><b data-plan-display-price>11,000원</b> <span data-plan-display-period>(VAT 포함)</span></div><select class="payment-purchase-select" data-plan-duration aria-label="플랜 이용기간"><option value="30">30일</option><option value="90">90일</option><option value="180">180일</option><option value="360">360일</option></select></div>
 	<ul>
 			<li>중개사홈 30일 이용</li>
 		<li>일반매물 100건</li>
 		<li>하루 재등록 20건</li>
+<li class="payment-plan-divider" aria-hidden="true"></li>
+<li class="payment-plan-eligibility-note">※ 추가상품은 프리미엄 플랜부터 이용 가능합니다.</li>
 	</ul>
-	<p class="payment-plan-addon-availability-note">※ 추가상품은 프리미엄 플랜부터 이용 가능합니다.</p>
+	
 	<button type="button" class="payment-plan-btn" data-plan="starter" aria-disabled="false">이용권 선택</button>
 </article>
 	<article class="payment-plan-card featured">
 		<div class="payment-plan-badge">추천</div>
 		<div class="payment-plan-topline">PREMIUM</div>
 		<h2>프리미엄 플랜</h2>
-		<div class="payment-plan-price">33,000원 <span>/ 월 (VAT 포함)</span></div>
+		<div class="payment-plan-price-row"><div class="payment-plan-price" data-plan-unit-price="33000"><b data-plan-display-price>33,000원</b> <span data-plan-display-period>(VAT 포함)</span></div><select class="payment-purchase-select" data-plan-duration aria-label="플랜 이용기간"><option value="30">30일</option><option value="90">90일</option><option value="180">180일</option><option value="360">360일</option></select></div>
 		<ul>
 			<li>중개사홈 30일 이용</li>
 			<li>일반매물 300건</li>
@@ -2652,7 +2709,7 @@ function syncNow() {
 	<article class="payment-plan-card">
 		<div class="payment-plan-topline">PRO</div>
 		<h2>프로 플랜</h2>
-		<div class="payment-plan-price">55,000원 <span>/ 월 (VAT 포함)</span></div>
+		<div class="payment-plan-price-row"><div class="payment-plan-price" data-plan-unit-price="55000"><b data-plan-display-price>55,000원</b> <span data-plan-display-period>(VAT 포함)</span></div><select class="payment-purchase-select" data-plan-duration aria-label="플랜 이용기간"><option value="30">30일</option><option value="90">90일</option><option value="180">180일</option><option value="360">360일</option></select></div>
 		<ul>
 			<li>중개사홈 30일 이용</li>
 			<li>일반매물 500건</li>
@@ -2667,7 +2724,24 @@ function syncNow() {
 				
 			</div>
 
-			<div class="payment-tab-panel" id="paymentCouponsPanel" data-payment-panel="coupons">
+			<section class="payment-addon-shop payment-tab-panel" data-payment-panel="addons" aria-label="추가상품 구매">
+				
+				<div class="payment-plan-grid"><article class="payment-plan-card" data-addon-purchase-card data-addon-key="top-recommendation" data-addon-title="상단 추천">
+    <div class="payment-plan-topline">TOP RECOMMENDATION</div>
+    <h2>상단 추천 · 30일</h2>
+    <div class="payment-plan-price-row"><div class="payment-plan-price"><b data-top-quantity-total data-plan-display-price>11,000원</b> <span data-plan-display-period>(VAT 포함)</span></div><select class="payment-purchase-select" data-top-quantity-select aria-label="상단 추천 구매 수량"><option value="1">1개</option><option value="2">2개</option><option value="3">3개</option></select></div>
+    <ul>
+      <li>부동산 홈 매물 목록 상단 추천 영역</li>
+      <li>중개사 프로필·상호 함께 선택한 매물 30일 노출</li>
+      <li>지도 범위·검색 조건에 맞는 매물 랜덤 노출</li>
+      <li>매물 더보기로 중개사 매물 연결</li>
+      <li>1인당 총 3개까지 구매 가능</li>
+      <li class="payment-plan-divider" aria-hidden="true"></li>
+      <li class="payment-plan-eligibility-note">※ 프리미엄·프로 플랜 이용 중 구매 가능</li>
+    </ul>
+    <button type="button" class="payment-plan-btn" data-addon-quantity="1" data-addon-purchase-button data-addon-id="top-recommendation-30" data-addon-label="상단 추천 30일" data-addon-price="11000">구매하기</button>
+  </article></div>
+			</section><div class="payment-tab-panel" id="paymentCouponsPanel" data-payment-panel="coupons">
 				<section class="payment-coupon-section">
 					<div class="payment-coupon-card-wrap">
 						<article class="payment-coupon-card">
@@ -2748,18 +2822,12 @@ function syncNow() {
 								<p class="payment-coupon-desc">신규 작성한 계약서를 100건 보관할 수 있습니다.</p>
 								<p class="payment-coupon-desc">수정, 삭제는 카운트를 차감하지 않습니다.</p>
 								<button type="button" class="payment-coupon-use-btn" data-coupon-plan="storage-100">사용하기</button>
-							</article>
+							</article><article class="payment-coupon-card"><div class="payment-coupon-kind">상단노출</div><h2>상단노출 30일 쿠폰</h2><p class="payment-coupon-desc">쿠폰 1장당 매물 1개를 지정한 기간 동안 상단 추천에 노출할 수 있습니다.</p><p class="payment-coupon-note">※ 프리미엄·프로 플랜 이용 중 사용할 수 있습니다.</p><button type="button" class="payment-coupon-use-btn" data-coupon-plan="top-recommendation-30">사용하기</button></article>
 						</div>
 					</section>
 				</div>
 			</section>
-			<section class="payment-addon-shop payment-addon-shop-temporarily-hidden payment-tab-panel active" data-payment-panel="plans" aria-label="추가상품 구매">
-				<div class="payment-addon-shop-head">
-					<h2 class="myinfo-page-title">추가상품 구매</h2>
-					<p class="myinfo-page-desc">프리미엄·프로 플랜에 필요한 수량만 선택해 추가할 수 있습니다.</p>
-				</div>
-				<p class="payment-addon-shop-preparing">상품을 준비중입니다.</p>
-			</section>
+			
 			<footer class="payment-company-info">
 				<div class="payment-company-name">제주도부동산.닷컴 | 리얼제주(REALJEJU.APP)</div>
 				<div class="payment-company-grid">
@@ -2787,7 +2855,8 @@ function syncNow() {
 		</div>
 	</section>
 
-	<section class="myinfo-page-panel account-page-panel" id="myInfoPagePanel" aria-hidden="true">
+	<section class="account-page-panel rj-public-broker-page" id="brokerPublicPagePanel" aria-hidden="true"><div class="account-page-inner"><main class="rj-public-broker-inner" data-public-broker-content></main></div></section>
+<section class="myinfo-page-panel account-page-panel" id="myInfoPagePanel" aria-hidden="true">
 		<div class="myinfo-page-inner account-page-inner">
 			<div class="myinfo-page-head account-page-head">
 				<h1 class="myinfo-page-title">내 정보</h1>
@@ -4212,7 +4281,8 @@ function syncNow() {
 				</div>
 				<div class="sub-topbar-right">
 					<div class="map-filter-bar">
-						<div class="extra-filter-dropdown map-region-filter-dropdown" id="mapRegionFilterDropdown">
+						<!-- Address filter markup is retained for reactivation; its runtime and styles remain intact.
+<div class="extra-filter-dropdown map-region-filter-dropdown" id="mapRegionFilterDropdown">
 							<button type="button" class="extra-filter-trigger map-region-filter-trigger" id="mapRegionFilterTrigger" aria-expanded="false">
 								<i class="fa-solid fa-location-dot map-region-trigger-icon" aria-hidden="true"></i>
 								<span id="mapRegionFilterLabel">현재 위치</span>
@@ -4225,6 +4295,7 @@ function syncNow() {
 								</div>
 							</div>
 						</div>
+-->
 						<div class="presale-map-filter-bar" id="presaleMapFilterBar" aria-label="분양 필터">
 							<div class="extra-filter-dropdown presale-filter-dropdown" id="presaleTypeFilterDropdown" data-presale-filter-dropdown>
 								<button type="button" class="extra-filter-trigger presale-filter-trigger" data-presale-filter-trigger data-base-label="분양유형" aria-expanded="false" aria-controls="presaleTypeFilterMenu">
@@ -4840,7 +4911,7 @@ function syncNow() {
 							</button>
 							<div class="extra-filter-menu deal-filter-menu" id="dealFilterMenu">
 								<div id="dealButtons">
-									<h3 class="deal-filter-section-title">거래유형</h3>
+									<h3 class="deal-filter-section-title">거래유형<small class="rj-home-deal-selection-help">중복 선택 가능</small></h3>
 									<div class="deal-filter-grid">
 									<label class="extra-filter-option deal-filter-option deal-filter-tile">
 										<input type="checkbox" data-value="매매" checked />
@@ -4868,14 +4939,16 @@ function syncNow() {
 									</div>
 								</div>
 							</div>
-							<div class="extra-filter-dropdown type-filter-dropdown" id="typeFilterDropdown">
-								<button type="button" class="extra-filter-trigger type-filter-trigger" id="typeFilterTrigger" aria-expanded="false">
+							<div id="typeFilterDropdown" hidden>
+								<!-- Property type is selected through the left navigation.
+<button type="button" class="extra-filter-trigger type-filter-trigger" id="typeFilterTrigger" aria-expanded="false">
 									<span id="typeFilterLabel">
 										매물 유형
 									</span>
 									<i class="fa-solid fa-chevron-down">
 									</i>
 								</button>
+-->
 								<div class="extra-filter-menu type-filter-menu" id="typeFilterMenu">
 									<div id="typeButtons">
 										<section class="type-filter-section">
@@ -5006,9 +5079,9 @@ function syncNow() {
 
 	<div class="extra-filter-menu area-filter-menu" id="areaFilterMenu">
 		<h3 class="area-filter-title">면적</h3>
-		<div class="area-filter-summary-row">
+		<div class="rj-home-range-body"><div class="area-filter-summary-row"><span class="rj-home-area-basis">매물유형별 기준면적</span>
 			<strong class="area-filter-summary" id="areaFilterSummaryText">전체</strong>
-			<button type="button" class="area-filter-icon-btn area-filter-manual-btn" id="areaFilterManualBtn" aria-label="면적 직접 입력">
+			<div class="rj-home-area-actions"><button type="button" class="area-filter-icon-btn area-filter-manual-btn" id="areaFilterManualBtn" aria-label="면적 직접 입력">
 				<i class="fa-solid fa-pen" aria-hidden="true"></i>
 			</button>
 			<button type="button" class="area-filter-unit-btn" id="areaFilterUnitToggleBtn" aria-label="면적 단위 전환">
@@ -5018,7 +5091,7 @@ function syncNow() {
 			<button type="button" class="area-filter-icon-btn area-filter-reset-btn" id="areaFilterResetBtn" aria-label="면적 초기화" hidden>
 				<i class="fa-solid fa-rotate-right" aria-hidden="true"></i>
 			</button>
-		</div>
+		</div></div>
 		<div class="area-filter-slider-wrap">
 			<div class="area-filter-slider-rail" id="areaFilterSliderRail">
 				<div class="area-filter-slider-fill" id="areaFilterSliderFill"></div>
@@ -5033,7 +5106,7 @@ function syncNow() {
 				<span>132㎡</span>
 				<span>최대</span>
 			</div>
-		</div>
+		</div></div>
 		<div class="area-filter-target-options">
 			<label class="area-filter-exclusive-option">
 				<input type="checkbox" id="areaFilterExclusiveChk" checked />
@@ -5093,7 +5166,7 @@ function syncNow() {
 	</button>
 
 	<div class="extra-filter-menu floor-direction-filter-menu land-type-filter-menu" id="landTypeFilterMenu">
-		<h3 class="floor-direction-filter-title land-type-filter-title">지목</h3>
+		<h3 class="floor-direction-filter-title land-type-filter-title">지목<small class="rj-home-deal-selection-help">중복선택 가능</small></h3>
 		<section class="floor-direction-filter-section land-type-filter-section">
 			<div class="type-filter-grid extra-condition-filter-grid land-type-filter-grid">
 				<label class="type-filter-option type-filter-tile extra-condition-filter-tile land-type-filter-tile">
@@ -5231,7 +5304,7 @@ function syncNow() {
 	</button>
 
 	<div class="extra-filter-menu floor-direction-filter-menu land-use-zone-filter-menu" id="landUseZoneFilterMenu">
-		<h3 class="floor-direction-filter-title land-use-zone-filter-title">용도지역</h3>
+		<h3 class="floor-direction-filter-title land-use-zone-filter-title">용도지역<small class="rj-home-deal-selection-help">중복선택 가능</small></h3>
 		<div class="land-use-zone-filter-scroll">
 		<section class="floor-direction-filter-section land-use-zone-filter-section">
 			<h4 class="floor-direction-filter-section-title land-use-zone-filter-section-title">주거지역</h4>
@@ -5354,7 +5427,7 @@ function syncNow() {
 	</button>
 
 	<div class="extra-filter-menu floor-direction-filter-menu room-bath-filter-menu" id="roomBathFilterMenu">
-		<h3 class="floor-direction-filter-title room-bath-filter-title">방/욕실</h3>
+		<h3 class="floor-direction-filter-title room-bath-filter-title">방/욕실<small class="rj-home-deal-selection-help">중복선택 가능</small></h3>
 		<section class="floor-direction-filter-section room-bath-filter-section">
 			<h4 class="floor-direction-filter-section-title room-bath-filter-section-title">방 개수</h4>
 			<div class="floor-direction-filter-chip-grid room-bath-filter-chip-grid">
@@ -5413,7 +5486,7 @@ function syncNow() {
 	</button>
 
 	<div class="extra-filter-menu floor-direction-filter-menu" id="floorDirectionFilterMenu">
-		<h3 class="floor-direction-filter-title">층/방향</h3>
+		<h3 class="floor-direction-filter-title">층/방향<small class="rj-home-deal-selection-help">중복선택 가능</small></h3>
 		<section class="floor-direction-filter-section">
 			<h4 class="floor-direction-filter-section-title">층</h4>
 			<div class="floor-direction-filter-chip-grid floor-direction-filter-floor-grid">
@@ -5489,7 +5562,7 @@ function syncNow() {
 
 	<div class="extra-filter-menu approval-year-filter-menu" id="approvalYearFilterMenu">
 		<h3 class="approval-year-filter-title">사용승인일</h3>
-		<div class="approval-year-filter-summary-row">
+		<div class="rj-home-range-body"><div class="approval-year-filter-summary-row">
 			<strong class="approval-year-filter-summary" id="approvalYearFilterSummaryText">전체</strong>
 			<button type="button" class="approval-year-filter-icon-btn approval-year-filter-reset-btn" id="approvalYearFilterResetBtn" aria-label="사용승인일 초기화" hidden>
 				<i class="fa-solid fa-rotate-right" aria-hidden="true"></i>
@@ -5509,7 +5582,7 @@ function syncNow() {
 				<span>20년</span>
 				<span>최대</span>
 			</div>
-		</div>
+		</div></div>
 	</div>
 </div>
 
@@ -5565,12 +5638,12 @@ function syncNow() {
 											</label>
 											<label class="extra-filter-option type-filter-option type-filter-tile extra-condition-filter-tile">
 												<input type="checkbox" id="extraPetChk" />
-												<span>반려동물가능</span>
+												<span>반려동물</span>
 											</label>
 										</div>
 									</section>
 								</div>
-								<div class="extra-filter-reset-row">
+								<section class="type-filter-section rj-home-extra-feature-section"><h3 class="type-filter-section-title">추가 시설</h3><div class="type-filter-grid extra-condition-filter-grid"><label class="extra-filter-option type-filter-option type-filter-tile extra-condition-filter-tile"><input type="checkbox" data-home-extra-feature="드레스룸" /><span>드레스룸</span></label><label class="extra-filter-option type-filter-option type-filter-tile extra-condition-filter-tile"><input type="checkbox" data-home-extra-feature="팬트리" /><span>팬트리</span></label><label class="extra-filter-option type-filter-option type-filter-tile extra-condition-filter-tile"><input type="checkbox" data-home-extra-feature="붙박이장" /><span>붙박이장</span></label><label class="extra-filter-option type-filter-option type-filter-tile extra-condition-filter-tile"><input type="checkbox" data-home-extra-feature="창고" /><span>창고</span></label><label class="extra-filter-option type-filter-option type-filter-tile extra-condition-filter-tile"><input type="checkbox" data-home-extra-feature="마당" /><span>마당</span></label><label class="extra-filter-option type-filter-option type-filter-tile extra-condition-filter-tile"><input type="checkbox" data-home-extra-feature="전용주차" /><span>전용주차</span></label><label class="extra-filter-option type-filter-option type-filter-tile extra-condition-filter-tile"><input type="checkbox" data-home-extra-feature="전기차 충전" /><span>전기차 충전</span></label><label class="extra-filter-option type-filter-option type-filter-tile extra-condition-filter-tile"><input type="checkbox" data-home-extra-feature="테라스" /><span>테라스</span></label><label class="extra-filter-option type-filter-option type-filter-tile extra-condition-filter-tile"><input type="checkbox" data-home-extra-feature="옥상" /><span>옥상</span></label><label class="extra-filter-option type-filter-option type-filter-tile extra-condition-filter-tile"><input type="checkbox" data-home-extra-feature="한라산 조망" /><span>한라산 조망</span></label><label class="extra-filter-option type-filter-option type-filter-tile extra-condition-filter-tile"><input type="checkbox" data-home-extra-feature="알파룸" /><span>알파룸</span></label></div></section><div class="extra-filter-reset-row">
 									<button type="button" class="extra-filter-reset-btn" id="extraFilterResetBtn">
 										<i class="fa-solid fa-rotate-right" aria-hidden="true">
 										</i>
@@ -5620,13 +5693,21 @@ function syncNow() {
 				<div class="sidebar-list-header">
 					<strong id="sidebarListTitle">매물 목록</strong>
 					<div class="sidebar-list-actions">
-						<button type="button" class="sidebar-list-share-btn" id="sidebarListShareBtn" aria-label="중개사 매물 공유하기" title="공유하기" hidden>
+						<details class="rj-home-list-sort" id="rjHomeListSort" hidden>
+    <summary aria-label="매물 정렬"><span data-home-sort-label>최신순</span><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></summary>
+    <div class="rj-home-list-sort-options" aria-label="정렬 기준">
+      <button type="button" data-home-list-sort="latest">최신순</button>
+      <button type="button" data-home-list-sort="price">가격순</button>
+      <button type="button" data-home-list-sort="area">면적순</button>
+    </div>
+  </details>
+  <button type="button" class="sidebar-list-share-btn" id="sidebarListShareBtn" aria-label="중개사 매물 공유하기" title="공유하기" hidden>
 							<i class="fa-solid fa-arrow-up-from-bracket" aria-hidden="true"></i>
-						</button>
+						<svg class="rj-home-panel-action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M18 14v2.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 6 16.5V14M12 6v9m-3-6 3-3 3 3"/></svg></button>
 					</div>
 					<button type="button" class="sidebar-list-close-btn" id="sidebarListCloseBtn" aria-label="매물 목록 닫기" title="매물 목록 닫기">
 						<i class="fa-solid fa-xmark" aria-hidden="true"></i>
-					</button>
+					<svg class="rj-home-panel-action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
 				</div>
 				<div class="property-list" id="propertyList">
 				</div>
@@ -5641,10 +5722,10 @@ function syncNow() {
 						<div class="detail-top-actions">
 							<button type="button" class="detail-icon-btn" id="detailShareBtn" aria-label="공유하기" title="공유하기">
 								<i class="fa-solid fa-share-nodes" aria-hidden="true"></i>
-							</button>
+							<svg class="rj-home-panel-action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M18 14v2.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 6 16.5V14M12 6v9m-3-6 3-3 3 3"/></svg></button>
 							<button type="button" class="detail-icon-btn detail-close-btn" id="detailCloseBtn" aria-label="종료" title="종료">
 								<i class="fa-solid fa-xmark" aria-hidden="true"></i>
-							</button>
+							<svg class="rj-home-panel-action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
 							<div class="detail-share-menu" id="detailShareMenu" role="dialog" aria-modal="false" aria-label="공유하기" aria-hidden="true" inert>
 								<div class="detail-share-head">
 									<strong>공유하기 <span class="detail-share-feedback" id="detailShareFeedback"></span></strong>
@@ -5857,7 +5938,7 @@ function syncNow() {
 		<aside class="education-facility-detail-panel" id="educationFacilityDetailPanel" aria-hidden="true">
 			<div class="education-facility-detail-head">
 				<strong id="educationFacilityDetailCategory">유치원·어린이집</strong>
-				<button type="button" class="education-facility-detail-close" id="educationFacilityDetailCloseBtn" aria-label="교육시설 상세 닫기" title="닫기">
+				<button type="button" class="education-facility-detail-close" id="educationFacilityDetailCloseBtn" aria-label="교육시설 상세 닫기" title="닫기"><svg class="rj-school-close-glyph rj-home-panel-action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
 					<i class="fa-solid fa-xmark" aria-hidden="true"></i>
 				</button>
 			</div>
@@ -6094,7 +6175,7 @@ function syncNow() {
 			</div>
 		</div>
 		<div class="map-side-tools" id="mapSideTools">
-			<div class="map-tool-group map-primary-tool-group">
+			<div class="map-tool-group map-primary-tool-group rj-home-hide-tool-group">
 				<button type="button" class="map-tool-btn map-property-toggle-btn active" id="mapPropertyToggleBtn" onclick="return window.toggleMapPrimaryAction ? window.toggleMapPrimaryAction(event) : (window.toggleMapPropertyPanels && window.toggleMapPropertyPanels())" aria-pressed="true" aria-label="매물 숨기기" title="매물 숨기기">
 					<span class="map-tool-label">매물</span>
 				</button>
@@ -6120,7 +6201,7 @@ function syncNow() {
 				</button>
 			</template>
 <button type="button" class="map-tool-btn map-area-unit-toggle-btn" id="areaUnitToggleBtn" data-area-unit-global-toggle aria-label="면적 단위 전환" title="평 / ㎡">
-					<span class="map-unit-cycle-label" id="areaUnitToggleLabel">㎡</span>
+					<span class="map-unit-cycle-icon"><svg class="rj-map-unit-cycle-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.95" stroke-linecap="butt" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5.072 8A8 8 0 0 1 20 12M18.928 16A8 8 0 0 1 4 12"/><path d="M17.530 11.235L22.470 11.235L20.000 13.965ZM1.530 12.765L6.470 12.765L4.000 10.035Z" fill="currentColor" stroke="none"/></svg><span class="map-unit-cycle-label" id="areaUnitToggleLabel">㎡</span></span>
 				</button>
 			</div>
 			<div class="map-tool-group map-parcel-analysis-tool-group" id="mapParcelAnalysisToolGroup" aria-label="필지 분석 도구">
@@ -6146,6 +6227,8 @@ function syncNow() {
 					<span class="map-tool-icon"><i class="fa-solid fa-road-barrier" aria-hidden="true"></i></span>
 					<span class="map-tool-label">개발</span>
 				</button>
+			</div>
+			<div class="map-tool-group map-location-tool-group map-broker-tool-group" id="mapBrokerToolGroup" aria-label="내 매물 표시">
 				<button type="button" class="map-tool-btn" id="mapBrokerToolBtn" aria-pressed="false" aria-label="중개" title="중개">
 					<span class="map-tool-icon"><i class="fa-solid fa-user-tie" aria-hidden="true"></i></span>
 					<span class="map-tool-label">중개</span>
@@ -6162,7 +6245,7 @@ function syncNow() {
 				</button>
 				<button type="button" class="map-tool-btn" id="mapDistanceToolBtn" onclick="event.preventDefault(); event.stopPropagation(); window.toggleDistanceMeasureTool && window.toggleDistanceMeasureTool();" aria-label="거리재기" title="거리재기">
 					<span class="map-tool-icon"><i class="fa-solid fa-ruler" aria-hidden="true"></i></span>
-					<span class="map-tool-label">거리재기</span>
+					<span class="map-tool-label">거리<br>재기</span>
 				</button>
 			</div>
 			<div class="map-tool-group map-current-tool-group" aria-label="현위치 도구">
@@ -7011,12 +7094,13 @@ function syncNow() {
 			}
 		</script>
 	<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-	<script src="/js/min_bootstrap_6.760.js?v=20261071-nearby-next-margin-6180"></script>
+	<script src="/js/min_bootstrap_7.353.js?v=20261071-nearby-next-margin-6180"></script>
 
 
 <script>
 (function () {
 	function syncMapPropertyButtonFallback() {
+ if (typeof syncMapPropertyToggleButton === "function") { syncMapPropertyToggleButton(); return; }
 		var btn = document.getElementById("mapPropertyToggleBtn");
 		if (!btn) return;
 		var isParcel = document.body && document.body.dataset.globalCategory === "parcel";
