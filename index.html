@@ -1,5 +1,5 @@
-<!-- REALJEJU 7.408 | 2026-10-31 -->
-<!-- REALJEJU VERSION: 7.408 -->
+<!-- REALJEJU 7.434 | 2026-11-03 -->
+<!-- REALJEJU VERSION: 7.434 -->
 
 
 
@@ -122,7 +122,7 @@ REALJEJU HTML 구조 / Ver 5.268
 			}
 		</script>
 		<script id="realjeju-initial-route-guard">
-window.realjejuPreviewEntry = "/html/mobile-preview/realjeju_7.408.html";
+window.realjejuPreviewEntry = "/html/mobile-preview/realjeju_7.434.html";
 			(function () {
 				var protocol = String(window.location.protocol || "");
 				if (/^https?:$/.test(protocol)) {
@@ -189,7 +189,7 @@ window.realjejuPreviewEntry = "/html/mobile-preview/realjeju_7.408.html";
 				link.rel = "preload";
 				link.as = "script";
 				link.fetchPriority = "high";
-				link.href = "/js/min_app-core_7.408.js?v=20261071-nearby-next-margin-6180";
+				link.href = "/js/min_app-core_7.434.js?v=20261071-nearby-next-margin-6180";
 				document.head.appendChild(link);
 				var kakaoSdkLink = document.createElement("link");
 				kakaoSdkLink.rel = "preload";
@@ -207,7 +207,7 @@ window.realjejuPreviewEntry = "/html/mobile-preview/realjeju_7.408.html";
 				link.rel = "preload";
 				link.as = "script";
 				link.fetchPriority = "low";
-				link.href = "/js/min_app-features_7.408.js?v=20261071-nearby-next-margin-6180";
+				link.href = "/js/min_app-features_7.434.js?v=20261071-nearby-next-margin-6180";
 				document.head.appendChild(link);
 			})();
 		</script>
@@ -237,15 +237,15 @@ window.realjejuPreviewEntry = "/html/mobile-preview/realjeju_7.408.html";
 				transition: none;
 			}
 		</style>
-		<link rel="stylesheet" href="/css/min_base-foundation_7.408.css?v=20261046-side-toggle">
-		<link rel="stylesheet" href="/css/min_core-map_7.408.css?v=20261046-side-toggle">
-		<link rel="stylesheet" href="/css/min_property-info_7.408.css?v=20261046-side-toggle">
-		<link rel="stylesheet" href="/css/min_workspace-app_7.408.css?v=20261046-side-toggle">
-		<link rel="stylesheet" href="/css/min_admin-app_7.408.css?v=20261046-side-toggle">
-		<link rel="stylesheet" href="/css/min_account_7.408.css?v=20261046-side-toggle">
-		<link rel="stylesheet" href="/css/min_base_7.408.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/min_base-foundation_7.434.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/min_core-map_7.434.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/min_property-info_7.434.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/min_workspace-app_7.434.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/min_admin-app_7.434.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/min_account_7.434.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/min_base_7.434.css?v=20261046-side-toggle">
 
-  <link rel="stylesheet" href="/css/min_service-modes_7.408.css?v=20261046-side-toggle">
+  <link rel="stylesheet" href="/css/min_service-modes_7.434.css?v=20261046-side-toggle">
 </head>
 	<body class="sidebar-list-collapsed realjeju-side-nav-enabled main-landing-page-open">
 		<script id="realjeju-initial-body-route-prime">
@@ -613,10 +613,10 @@ window.realjejuPreviewEntry = "/html/mobile-preview/realjeju_7.408.html";
 							/* Desktop Home collapse launcher retained:
  ensureMapToolStackCollapseControl(document.getElementById("mapSideTools"), true);
  */
- ensureMapToolStackCollapseControl(document.getElementById("mapSideTools"), mobileQuery.matches || !["realestate", "parcel"].includes(document.body.dataset.globalCategory));
+ ensureMapToolStackCollapseControl(document.getElementById("mapSideTools"), !mobileQuery.matches && !["realestate", "parcel"].includes(document.body.dataset.globalCategory));
 							ensureMapToolStackCollapseControl(
 								document.querySelector(".parcel-trade-left-tool-stack"),
-								mobileQuery.matches
+								false
 							);
 						}
 
@@ -684,7 +684,47 @@ window.realjejuPreviewEntry = "/html/mobile-preview/realjeju_7.408.html";
 							mobileAccountMenuBackdropControls.add(backdrop);
 						}
 
+function syncMobileHomeChrome() {
+    var body = document.body;
+    var chrome = document.querySelector(".rj-mobile-home-chrome");
+    if (!body || !chrome) return;
+    var excluded = ".main-landing-page-open,.admin-page-open,.operator-page-open,.broker-home-page-open,.my-suite-page-open,.property-register-page-open,.notice-page-open,.auth-page-open,.payment-page-open,.myinfo-page-open,.profile-edit-page-open,.broker-office-info-page-open,.broker-office-edit-page-open,.realjeju-document-page-open,.presale-page-open,.part-time-page-open,.broker-public-page-open,.account-inquiries-page-open";
+    var home = mobileQuery.matches && body.dataset.globalCategory === "realestate" && !body.matches(excluded);
+    var homeChanged = body.classList.contains("realjeju-mobile-home") !== home;
+    setMobileBodyClassState(body, "realjeju-mobile-home", home);
+    if (homeChanged && typeof window.realjejuSyncMobileHomeMapPresentation === "function") window.realjejuSyncMobileHomeMapPresentation();
+    if (chrome.hidden === home) chrome.hidden = !home;
+    if (!home) return;
+    chrome.querySelectorAll("[data-mobile-home-filter]").forEach(function(button) {
+      var dropdown = document.getElementById(button.dataset.mobileHomeFilter);
+      if (!dropdown) return;
+      watchControl(dropdown);
+      var expanded = String(dropdown.classList.contains("open"));
+      if (button.getAttribute("aria-expanded") !== expanded) button.setAttribute("aria-expanded", expanded);
+      var nativeLabel = document.getElementById(button.dataset.mobileHomeFilter.replace("Dropdown","Label"));
+      var label = button.querySelector("span");
+      var text = button.dataset.mobileHomeFilter === "allFilterDropdown" ? "필터" : nativeLabel && nativeLabel.textContent.trim() || label.textContent;
+      if (label.textContent !== text) label.textContent = text;
+    });
+  }
+document.addEventListener("click", function(event) {
+    if (!mobileQuery.matches || !document.body.classList.contains("realjeju-mobile-home")) return;
+    var target = event.target instanceof Element && event.target.closest("[data-mobile-home-type],[data-mobile-home-filter],[data-mobile-home-login]");
+    if (!target) return;
+    event.preventDefault();
+    event.stopPropagation();
+    if (target.hasAttribute("data-mobile-home-type")) {
+      if (typeof window.realjejuSelectMobileHomeType === "function") window.realjejuSelectMobileHomeType(target.dataset.mobileHomeType);
+    } else if (target.hasAttribute("data-mobile-home-login")) {
+      document.getElementById("mainLandingLoginBtn")?.click();
+    } else {
+      var trigger = document.querySelector("#" + target.dataset.mobileHomeFilter + " > .extra-filter-trigger");
+      if (trigger) trigger.click();
+    }
+    scheduleSync();
+  });
 function syncNow() {
+                            syncMobileHomeChrome();
 							scheduled = false;
 							syncMapToolStackCollapseControls();
 							resolveLandingServices();
@@ -1005,7 +1045,11 @@ function syncNow() {
 							syncMobileListingSheetControls();
 						}
 
-						function setMobileSummarySheetExpanded(expanded) {
+						window.realjejuExpandMobileHomeListing = function() {
+                            if (mobileQuery.matches && document.body.classList.contains("realjeju-mobile-home")) setMobileListingExpanded(true);
+                        };
+
+                        function setMobileSummarySheetExpanded(expanded) {
 							if (!document.body) return;
 							var sheet = getMobileSummarySheetState();
 							if (sheet.listingActive) setMobileBodyClassState(document.body, "listing-mobile-expanded", !!expanded);
@@ -1176,7 +1220,7 @@ function syncNow() {
 							var sidebarListTitle = document.getElementById("sidebarListTitle");
 							var sidebarDetailPanel = document.getElementById("sidebarDetailPanel");
 							var listingTitle = sidebarListTitle ? String(sidebarListTitle.textContent || "").trim() : "";
-							var standardListingTitle = listingTitle === "매물 목록" || /^(?:제주시|서귀포시)(?:\s|$)/.test(listingTitle);
+							var standardListingTitle = listingTitle === "매물" || listingTitle === "매물 목록" || /^(?:제주시|서귀포시)(?:\s|$)/.test(listingTitle);
 							var listingDetailIsOpen = !!(sidebarDetailPanel && sidebarDetailPanel.getAttribute("aria-hidden") === "false")
 								|| body.classList.contains("detail-page-panel-open")
 								|| body.classList.contains("shared-detail-mode")
@@ -1414,6 +1458,32 @@ function syncNow() {
 				</div>
 			</div>
 		</header>
+<section class="rj-mobile-home-chrome" aria-label="부동산 홈 매물 탐색" hidden><nav class="rj-mobile-home-types" aria-label="매물 유형"><button type="button" class="rj-mobile-home-type" data-mobile-home-type="room" aria-pressed="false"><i class="rj-home-type-icon" aria-hidden="true"><svg viewBox="0 0 32 32" focusable="false"><rect class="rj-type-icon-accent" x="5" y="4" width="22" height="25"/>
+      <path class="rj-type-icon-light" d="M9 9h8v18H9zM19 10h4v7h-4z"/>
+      <circle class="rj-type-icon-accent" cx="15" cy="19" r=".8"/>
+      <path class="rj-type-icon-ink" d="M5 27h22v2H5z"/></svg></i><span>원/투룸</span></button><button type="button" class="rj-mobile-home-type" data-mobile-home-type="apartment" aria-pressed="false"><i class="rj-home-type-icon" aria-hidden="true"><svg viewBox="0 0 32 32" focusable="false"><rect x="13" y="5" width="14" height="23" rx="1"/>
+      <rect class="rj-type-icon-light" x="3" y="9" width="12" height="19" rx="1"/>
+      <path class="rj-type-icon-frame" d="M3 11h1v14H3z"/>
+      <path class="rj-type-icon-accent" d="M13 3h14v3H13zM3 8h12v3H3zm0 17h24v4H3z"/>
+      <path class="rj-type-icon-ink" d="M14 25h5v4h-5z"/>
+      <path class="rj-type-icon-ink" d="M6 13h2v3H6zm4 0h2v3h-2zm-4 6h2v3H6zm4 0h2v3h-2z"/>
+      <path class="rj-type-icon-light" d="M17 9h2v3h-2zm5 0h2v3h-2zm-5 6h2v3h-2zm5 0h2v3h-2zm-5 6h2v3h-2zm5 0h2v3h-2z"/></svg></i><span>아파트</span></button><button type="button" class="rj-mobile-home-type" data-mobile-home-type="officetel" aria-pressed="false"><i class="rj-home-type-icon" aria-hidden="true"><svg viewBox="0 0 32 32" focusable="false"><rect x="5" y="5" width="22" height="23" rx="1"/>
+      <path class="rj-type-icon-accent" d="M5 5h22v16H5z"/>
+      <path class="rj-type-icon-light" d="M9 9h2v2H9zm6 0h2v2h-2zm6 0h2v2h-2zM9 15h2v2H9zm6 0h2v2h-2zm6 0h2v2h-2z"/>
+      <path class="rj-type-icon-ink" d="M9 22h4v6H9zm10 0h4v6h-4z"/>
+      <path class="rj-type-icon-light" d="M15 22h2v6h-2z"/>
+      <path class="rj-type-icon-ink" d="M5 27h22v2H5z"/></svg></i><span>오피스텔</span></button><button type="button" class="rj-mobile-home-type" data-mobile-home-type="house" aria-pressed="false"><i class="rj-home-type-icon" aria-hidden="true"><svg viewBox="0 0 32 32" focusable="false"><path d="M5 14 16 6l11 8v14H5z"/>
+      <path class="rj-type-icon-accent" d="m2 14 14-11 14 11-1.8 2.5L16 7 3.8 16.5zM5 25h22v4H5z"/>
+      <path class="rj-type-icon-light" d="M8 17h5v5H8zm11 0h5v5h-5z"/>
+      <path class="rj-type-icon-ink" d="M13 23h6v6h-6z"/>
+      <path class="rj-type-icon-light" d="M13 12h6v2h-6z"/></svg></i><span>주택/빌라</span></button><button type="button" class="rj-mobile-home-type" data-mobile-home-type="shop" aria-pressed="false"><i class="rj-home-type-icon" aria-hidden="true"><svg viewBox="0 0 32 32" focusable="false"><path d="M5 8h22v20H5z"/>
+      <path class="rj-type-icon-accent" d="M5 5h22v3H5zM5 9h22v9H5z"/>
+      <path class="rj-type-icon-light" d="M8 20h9v6H8zm12 0h4v8h-4z"/>
+      <path class="rj-type-icon-ink" d="M5 27h22v2H5z"/></svg></i><span>상가/사무실</span></button><button type="button" class="rj-mobile-home-type" data-mobile-home-type="land" aria-pressed="false"><i class="rj-home-type-icon" aria-hidden="true"><svg viewBox="0 0 32 32" focusable="false"><path d="m3 7 8-3 10 3 8-3v23l-8 3-10-3-8 3z"/>
+      <path class="rj-type-icon-light" fill-opacity=".3" d="m11 4 10 3v23l-10-3z"/>
+      <path class="rj-type-icon-accent" d="m3 7 8-3v13l-8 3z"/>
+      <path class="rj-type-icon-frame" d="m21 7 8-3v23l-8 3z"/>
+      <path class="rj-type-icon-light" d="M10 4h2v23h-2zm10 3h2v23h-2z"/></svg></i><span>토지</span></button></nav><div class="rj-mobile-home-filters" role="group" aria-label="매물 검색 조건"><button type="button" class="rj-mobile-home-filter" data-mobile-home-filter="dealFilterDropdown" aria-expanded="false"><span>거래 방식</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button><button type="button" class="rj-mobile-home-filter" data-mobile-home-filter="priceFilterDropdown" aria-expanded="false"><span>가격</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button><button type="button" class="rj-mobile-home-filter" data-mobile-home-filter="areaFilterDropdown" aria-expanded="false"><span>면적</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button><button type="button" class="rj-mobile-home-filter" data-mobile-home-filter="allFilterDropdown" aria-expanded="false"><span>필터</span></button></div><div class="rj-mobile-home-guest"><button type="button" data-mobile-home-login aria-label="로그인"><i class="fa-regular fa-user" aria-hidden="true"></i></button></div></section>
 		<section class="main-landing-page" id="mainLandingPage" aria-label="리얼제주 메인">
 			<div class="main-landing-inner">
 				<div class="main-landing-hero">
@@ -1670,7 +1740,7 @@ function syncNow() {
 			</nav>
 			<div class="realjeju-mobile-drawer-divider realjeju-mobile-drawer-version-divider" aria-hidden="true"></div>
 			<div class="realjeju-side-admin-version" id="realjejuSideAdminVersion" aria-hidden="true" hidden>
-				<span class="topbar-version-text">7.408</span>
+				<span class="topbar-version-text">7.434</span>
 			</div>
 		</aside>
 		<button type="button" class="realjeju-side-nav-toggle" id="realjejuSideNavToggle" aria-controls="realjejuSideNav" aria-expanded="true" aria-label="왼쪽 메뉴 접기">
@@ -7094,7 +7164,7 @@ function syncNow() {
 			}
 		</script>
 	<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-	<script src="/js/min_bootstrap_7.408.js?v=20261071-nearby-next-margin-6180"></script>
+	<script src="/js/min_bootstrap_7.434.js?v=20261071-nearby-next-margin-6180"></script>
 
 
 <script>
