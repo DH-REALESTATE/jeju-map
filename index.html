@@ -1,5 +1,5 @@
-<!-- REALJEJU 7.434 | 2026-11-03 -->
-<!-- REALJEJU VERSION: 7.434 -->
+<!-- REALJEJU 7.463 | 2026-11-08 -->
+<!-- REALJEJU VERSION: 7.463 -->
 
 
 
@@ -122,7 +122,7 @@ REALJEJU HTML 구조 / Ver 5.268
 			}
 		</script>
 		<script id="realjeju-initial-route-guard">
-window.realjejuPreviewEntry = "/html/mobile-preview/realjeju_7.434.html";
+window.realjejuPreviewEntry = "/html/mobile-preview/realjeju_7.463.html";
 			(function () {
 				var protocol = String(window.location.protocol || "");
 				if (/^https?:$/.test(protocol)) {
@@ -189,7 +189,7 @@ window.realjejuPreviewEntry = "/html/mobile-preview/realjeju_7.434.html";
 				link.rel = "preload";
 				link.as = "script";
 				link.fetchPriority = "high";
-				link.href = "/js/min_app-core_7.434.js?v=20261071-nearby-next-margin-6180";
+				link.href = "/js/min_app-core_7.463.js?v=20261071-nearby-next-margin-6180";
 				document.head.appendChild(link);
 				var kakaoSdkLink = document.createElement("link");
 				kakaoSdkLink.rel = "preload";
@@ -207,7 +207,7 @@ window.realjejuPreviewEntry = "/html/mobile-preview/realjeju_7.434.html";
 				link.rel = "preload";
 				link.as = "script";
 				link.fetchPriority = "low";
-				link.href = "/js/min_app-features_7.434.js?v=20261071-nearby-next-margin-6180";
+				link.href = "/js/min_app-features_7.463.js?v=20261071-nearby-next-margin-6180";
 				document.head.appendChild(link);
 			})();
 		</script>
@@ -237,15 +237,15 @@ window.realjejuPreviewEntry = "/html/mobile-preview/realjeju_7.434.html";
 				transition: none;
 			}
 		</style>
-		<link rel="stylesheet" href="/css/min_base-foundation_7.434.css?v=20261046-side-toggle">
-		<link rel="stylesheet" href="/css/min_core-map_7.434.css?v=20261046-side-toggle">
-		<link rel="stylesheet" href="/css/min_property-info_7.434.css?v=20261046-side-toggle">
-		<link rel="stylesheet" href="/css/min_workspace-app_7.434.css?v=20261046-side-toggle">
-		<link rel="stylesheet" href="/css/min_admin-app_7.434.css?v=20261046-side-toggle">
-		<link rel="stylesheet" href="/css/min_account_7.434.css?v=20261046-side-toggle">
-		<link rel="stylesheet" href="/css/min_base_7.434.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/min_base-foundation_7.463.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/min_core-map_7.463.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/min_property-info_7.463.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/min_workspace-app_7.463.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/min_admin-app_7.463.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/min_account_7.463.css?v=20261046-side-toggle">
+		<link rel="stylesheet" href="/css/min_base_7.463.css?v=20261046-side-toggle">
 
-  <link rel="stylesheet" href="/css/min_service-modes_7.434.css?v=20261046-side-toggle">
+  <link rel="stylesheet" href="/css/min_service-modes_7.463.css?v=20261046-side-toggle">
 </head>
 	<body class="sidebar-list-collapsed realjeju-side-nav-enabled main-landing-page-open">
 		<script id="realjeju-initial-body-route-prime">
@@ -559,7 +559,7 @@ window.realjejuPreviewEntry = "/html/mobile-preview/realjeju_7.434.html";
 							button.setAttribute("aria-label", collapsed ? "지도 도구 펼치기" : "지도 도구 접기");
 							button.title = collapsed ? "지도 도구 펼치기" : "지도 도구 접기";
 							var icon = button.querySelector("i");
-							if (icon) icon.className = collapsed ? "fa-solid fa-circle-chevron-down" : "fa-solid fa-circle-chevron-up";
+							if (icon) icon.className = stack.id === "mapSideTools" && document.body.classList.contains("realjeju-mobile-home") ? "fa-solid fa-layer-group" : collapsed ? "fa-solid fa-circle-chevron-down" : "fa-solid fa-circle-chevron-up";
 						}
 
 						function ensureMapToolStackCollapseControl(stack, enabled) {
@@ -599,7 +599,10 @@ window.realjejuPreviewEntry = "/html/mobile-preview/realjeju_7.434.html";
 								mapToolStackCollapseControls.add(button);
 							}
 
-							setMapToolStackCollapsed(stack, button, stack.classList.contains("map-tool-stack-collapsed"));
+							var compactHome = stack.id === "mapSideTools" && document.body.classList.contains("realjeju-mobile-home");
+var enteringHome = compactHome && !button.hasAttribute("data-mobile-home-layers");
+button.toggleAttribute("data-mobile-home-layers", compactHome);
+setMapToolStackCollapsed(stack, button, enteringHome || stack.classList.contains("map-tool-stack-collapsed"));
 						}
 
 						function syncMapToolStackCollapseControls() {
@@ -613,7 +616,7 @@ window.realjejuPreviewEntry = "/html/mobile-preview/realjeju_7.434.html";
 							/* Desktop Home collapse launcher retained:
  ensureMapToolStackCollapseControl(document.getElementById("mapSideTools"), true);
  */
- ensureMapToolStackCollapseControl(document.getElementById("mapSideTools"), !mobileQuery.matches && !["realestate", "parcel"].includes(document.body.dataset.globalCategory));
+ ensureMapToolStackCollapseControl(rightStack, document.body.classList.contains("realjeju-mobile-home") || !mobileQuery.matches && !["realestate", "parcel"].includes(document.body.dataset.globalCategory));
 							ensureMapToolStackCollapseControl(
 								document.querySelector(".parcel-trade-left-tool-stack"),
 								false
@@ -694,7 +697,11 @@ function syncMobileHomeChrome() {
     setMobileBodyClassState(body, "realjeju-mobile-home", home);
     if (homeChanged && typeof window.realjejuSyncMobileHomeMapPresentation === "function") window.realjejuSyncMobileHomeMapPresentation();
     if (chrome.hidden === home) chrome.hidden = !home;
-    if (!home) return;
+    var picker = chrome.querySelector(".rj-mobile-home-type-picker");
+    if (!home) { picker.open = false; return; }
+    var selectedType = picker.querySelector("[data-mobile-home-type][aria-pressed=true] span");
+    var typeLabel = picker.querySelector("summary > span");
+    if (selectedType && typeLabel.textContent !== selectedType.textContent) typeLabel.textContent = selectedType.textContent;
     chrome.querySelectorAll("[data-mobile-home-filter]").forEach(function(button) {
       var dropdown = document.getElementById(button.dataset.mobileHomeFilter);
       if (!dropdown) return;
@@ -704,16 +711,29 @@ function syncMobileHomeChrome() {
       var nativeLabel = document.getElementById(button.dataset.mobileHomeFilter.replace("Dropdown","Label"));
       var label = button.querySelector("span");
       var text = button.dataset.mobileHomeFilter === "allFilterDropdown" ? "필터" : nativeLabel && nativeLabel.textContent.trim() || label.textContent;
-      if (label.textContent !== text) label.textContent = text;
+      var shortLabels = { dealFilterDropdown: "거래", priceFilterDropdown: "가격", areaFilterDropdown: "면적", allFilterDropdown: "필터" };
+      var shortText = button.dataset.mobileHomeFilter === "dealFilterDropdown" && /^(매매|전세|월세|년세)$/.test(text) ? text : shortLabels[button.dataset.mobileHomeFilter];
+      if (button.getAttribute("aria-label") !== text) button.setAttribute("aria-label", text);
+      if (label.textContent !== shortText) label.textContent = shortText;
+      button.classList.toggle("has-value", dropdown.classList.contains("has-active"));
     });
   }
 document.addEventListener("click", function(event) {
     if (!mobileQuery.matches || !document.body.classList.contains("realjeju-mobile-home")) return;
-    var target = event.target instanceof Element && event.target.closest("[data-mobile-home-type],[data-mobile-home-filter],[data-mobile-home-login]");
+    var picker = document.querySelector(".rj-mobile-home-type-picker");
+    if (picker.open && !picker.contains(event.target)) picker.open = false;
+    var target = event.target instanceof Element && event.target.closest("[data-mobile-home-type],[data-mobile-home-filter],[data-mobile-home-login],[data-mobile-home-search],[data-mobile-home-results]");
     if (!target) return;
     event.preventDefault();
     event.stopPropagation();
-    if (target.hasAttribute("data-mobile-home-type")) {
+    if (target.hasAttribute("data-mobile-home-results")) {
+      void window.realjejuOpenMobileHomeViewportList?.();
+    } else if (target.hasAttribute("data-mobile-home-search")) {
+      document.getElementById("mobileTopbarSearchTrigger")?.click();
+    } else if (target.hasAttribute("data-mobile-home-type")) {
+      picker.open = false;
+      var selected = target.querySelector("span");
+      if (selected) picker.querySelector("summary > span").textContent = selected.textContent;
       if (typeof window.realjejuSelectMobileHomeType === "function") window.realjejuSelectMobileHomeType(target.dataset.mobileHomeType);
     } else if (target.hasAttribute("data-mobile-home-login")) {
       document.getElementById("mainLandingLoginBtn")?.click();
@@ -1458,32 +1478,7 @@ function syncNow() {
 				</div>
 			</div>
 		</header>
-<section class="rj-mobile-home-chrome" aria-label="부동산 홈 매물 탐색" hidden><nav class="rj-mobile-home-types" aria-label="매물 유형"><button type="button" class="rj-mobile-home-type" data-mobile-home-type="room" aria-pressed="false"><i class="rj-home-type-icon" aria-hidden="true"><svg viewBox="0 0 32 32" focusable="false"><rect class="rj-type-icon-accent" x="5" y="4" width="22" height="25"/>
-      <path class="rj-type-icon-light" d="M9 9h8v18H9zM19 10h4v7h-4z"/>
-      <circle class="rj-type-icon-accent" cx="15" cy="19" r=".8"/>
-      <path class="rj-type-icon-ink" d="M5 27h22v2H5z"/></svg></i><span>원/투룸</span></button><button type="button" class="rj-mobile-home-type" data-mobile-home-type="apartment" aria-pressed="false"><i class="rj-home-type-icon" aria-hidden="true"><svg viewBox="0 0 32 32" focusable="false"><rect x="13" y="5" width="14" height="23" rx="1"/>
-      <rect class="rj-type-icon-light" x="3" y="9" width="12" height="19" rx="1"/>
-      <path class="rj-type-icon-frame" d="M3 11h1v14H3z"/>
-      <path class="rj-type-icon-accent" d="M13 3h14v3H13zM3 8h12v3H3zm0 17h24v4H3z"/>
-      <path class="rj-type-icon-ink" d="M14 25h5v4h-5z"/>
-      <path class="rj-type-icon-ink" d="M6 13h2v3H6zm4 0h2v3h-2zm-4 6h2v3H6zm4 0h2v3h-2z"/>
-      <path class="rj-type-icon-light" d="M17 9h2v3h-2zm5 0h2v3h-2zm-5 6h2v3h-2zm5 0h2v3h-2zm-5 6h2v3h-2zm5 0h2v3h-2z"/></svg></i><span>아파트</span></button><button type="button" class="rj-mobile-home-type" data-mobile-home-type="officetel" aria-pressed="false"><i class="rj-home-type-icon" aria-hidden="true"><svg viewBox="0 0 32 32" focusable="false"><rect x="5" y="5" width="22" height="23" rx="1"/>
-      <path class="rj-type-icon-accent" d="M5 5h22v16H5z"/>
-      <path class="rj-type-icon-light" d="M9 9h2v2H9zm6 0h2v2h-2zm6 0h2v2h-2zM9 15h2v2H9zm6 0h2v2h-2zm6 0h2v2h-2z"/>
-      <path class="rj-type-icon-ink" d="M9 22h4v6H9zm10 0h4v6h-4z"/>
-      <path class="rj-type-icon-light" d="M15 22h2v6h-2z"/>
-      <path class="rj-type-icon-ink" d="M5 27h22v2H5z"/></svg></i><span>오피스텔</span></button><button type="button" class="rj-mobile-home-type" data-mobile-home-type="house" aria-pressed="false"><i class="rj-home-type-icon" aria-hidden="true"><svg viewBox="0 0 32 32" focusable="false"><path d="M5 14 16 6l11 8v14H5z"/>
-      <path class="rj-type-icon-accent" d="m2 14 14-11 14 11-1.8 2.5L16 7 3.8 16.5zM5 25h22v4H5z"/>
-      <path class="rj-type-icon-light" d="M8 17h5v5H8zm11 0h5v5h-5z"/>
-      <path class="rj-type-icon-ink" d="M13 23h6v6h-6z"/>
-      <path class="rj-type-icon-light" d="M13 12h6v2h-6z"/></svg></i><span>주택/빌라</span></button><button type="button" class="rj-mobile-home-type" data-mobile-home-type="shop" aria-pressed="false"><i class="rj-home-type-icon" aria-hidden="true"><svg viewBox="0 0 32 32" focusable="false"><path d="M5 8h22v20H5z"/>
-      <path class="rj-type-icon-accent" d="M5 5h22v3H5zM5 9h22v9H5z"/>
-      <path class="rj-type-icon-light" d="M8 20h9v6H8zm12 0h4v8h-4z"/>
-      <path class="rj-type-icon-ink" d="M5 27h22v2H5z"/></svg></i><span>상가/사무실</span></button><button type="button" class="rj-mobile-home-type" data-mobile-home-type="land" aria-pressed="false"><i class="rj-home-type-icon" aria-hidden="true"><svg viewBox="0 0 32 32" focusable="false"><path d="m3 7 8-3 10 3 8-3v23l-8 3-10-3-8 3z"/>
-      <path class="rj-type-icon-light" fill-opacity=".3" d="m11 4 10 3v23l-10-3z"/>
-      <path class="rj-type-icon-accent" d="m3 7 8-3v13l-8 3z"/>
-      <path class="rj-type-icon-frame" d="m21 7 8-3v23l-8 3z"/>
-      <path class="rj-type-icon-light" d="M10 4h2v23h-2zm10 3h2v23h-2z"/></svg></i><span>토지</span></button></nav><div class="rj-mobile-home-filters" role="group" aria-label="매물 검색 조건"><button type="button" class="rj-mobile-home-filter" data-mobile-home-filter="dealFilterDropdown" aria-expanded="false"><span>거래 방식</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button><button type="button" class="rj-mobile-home-filter" data-mobile-home-filter="priceFilterDropdown" aria-expanded="false"><span>가격</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button><button type="button" class="rj-mobile-home-filter" data-mobile-home-filter="areaFilterDropdown" aria-expanded="false"><span>면적</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button><button type="button" class="rj-mobile-home-filter" data-mobile-home-filter="allFilterDropdown" aria-expanded="false"><span>필터</span></button></div><div class="rj-mobile-home-guest"><button type="button" data-mobile-home-login aria-label="로그인"><i class="fa-regular fa-user" aria-hidden="true"></i></button></div></section>
+<section class="rj-mobile-home-chrome" aria-label="부동산 홈 매물 탐색" hidden><button type="button" class="rj-mobile-home-search" data-mobile-home-search><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i><span>주소·단지명 검색</span></button><div class="rj-mobile-home-filters" role="group" aria-label="매물 검색 조건"><details class="rj-mobile-home-type-picker"><summary><span>매물 유형</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></summary><nav class="rj-mobile-home-types" aria-label="매물 유형"><button type="button" class="rj-mobile-home-type" data-mobile-home-type="room" aria-pressed="false"><span>원/투룸</span></button><button type="button" class="rj-mobile-home-type" data-mobile-home-type="apartment" aria-pressed="false"><span>아파트</span></button><button type="button" class="rj-mobile-home-type" data-mobile-home-type="officetel" aria-pressed="false"><span>오피스텔</span></button><button type="button" class="rj-mobile-home-type" data-mobile-home-type="house" aria-pressed="false"><span>주택/빌라</span></button><button type="button" class="rj-mobile-home-type" data-mobile-home-type="shop" aria-pressed="false"><span>상가/사무실</span></button><button type="button" class="rj-mobile-home-type" data-mobile-home-type="land" aria-pressed="false"><span>토지</span></button></nav></details><button type="button" class="rj-mobile-home-filter" data-mobile-home-filter="dealFilterDropdown" aria-expanded="false"><span>거래 방식</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button><button type="button" class="rj-mobile-home-filter" data-mobile-home-filter="priceFilterDropdown" aria-expanded="false"><span>가격</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button><button type="button" class="rj-mobile-home-filter" data-mobile-home-filter="areaFilterDropdown" aria-expanded="false"><span>면적</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></button><button type="button" class="rj-mobile-home-filter" data-mobile-home-filter="allFilterDropdown" aria-expanded="false"><span>필터</span></button></div><div class="rj-mobile-home-guest"><button type="button" data-mobile-home-login aria-label="로그인"><i class="fa-regular fa-user" aria-hidden="true"></i></button></div></section>
 		<section class="main-landing-page" id="mainLandingPage" aria-label="리얼제주 메인">
 			<div class="main-landing-inner">
 				<div class="main-landing-hero">
@@ -1621,8 +1616,7 @@ function syncNow() {
 			<div class="realjeju-mobile-drawer-divider" aria-hidden="true"></div>
 			<nav class="realjeju-mobile-drawer-services" aria-label="서비스 메뉴">
 				<button type="button" class="realjeju-mobile-drawer-item active" data-mobile-drawer-category="realestate"><i class="fa-solid fa-house" aria-hidden="true"></i><span>부동산 홈</span></button>
-				<button type="button" class="realjeju-mobile-drawer-item" data-mobile-drawer-category="parcel"><i class="fa-solid fa-draw-polygon" aria-hidden="true"></i><span>부동산 필지분석</span></button>
-				<button type="button" class="realjeju-mobile-drawer-item" data-mobile-drawer-category="local-business"><i class="fa-solid fa-thumbs-up" aria-hidden="true"></i><span>전문 중개사</span></button>
+				<button type="button" class="realjeju-mobile-drawer-item" data-mobile-drawer-category="parcel"><i class="fa-solid fa-draw-polygon" aria-hidden="true"></i><span>부동산 분석</span></button>
 				
 			</nav>
 			<div class="realjeju-mobile-drawer-divider" aria-hidden="true"></div>
@@ -1740,7 +1734,7 @@ function syncNow() {
 			</nav>
 			<div class="realjeju-mobile-drawer-divider realjeju-mobile-drawer-version-divider" aria-hidden="true"></div>
 			<div class="realjeju-side-admin-version" id="realjejuSideAdminVersion" aria-hidden="true" hidden>
-				<span class="topbar-version-text">7.434</span>
+				<span class="topbar-version-text">7.463</span>
 			</div>
 		</aside>
 		<button type="button" class="realjeju-side-nav-toggle" id="realjejuSideNavToggle" aria-controls="realjejuSideNav" aria-expanded="true" aria-label="왼쪽 메뉴 접기">
@@ -6244,7 +6238,11 @@ function syncNow() {
 				</label>
 			</div>
 		</div>
-		<div class="map-side-tools" id="mapSideTools">
+		<div class="rj-mobile-home-results" id="rjMobileHomeResults">
+  <div class="rj-mobile-home-result-copy"><strong>이 지도에서 찾은 매물</strong><span data-mobile-home-result-status aria-live="polite">현재 지도 범위 기준</span></div>
+  <button type="button" data-mobile-home-results>매물 보기</button>
+</div>
+<div class="map-side-tools" id="mapSideTools">
 			<div class="map-tool-group map-primary-tool-group rj-home-hide-tool-group">
 				<button type="button" class="map-tool-btn map-property-toggle-btn active" id="mapPropertyToggleBtn" onclick="return window.toggleMapPrimaryAction ? window.toggleMapPrimaryAction(event) : (window.toggleMapPropertyPanels && window.toggleMapPropertyPanels())" aria-pressed="true" aria-label="매물 숨기기" title="매물 숨기기">
 					<span class="map-tool-label">매물</span>
@@ -7164,7 +7162,7 @@ function syncNow() {
 			}
 		</script>
 	<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-	<script src="/js/min_bootstrap_7.434.js?v=20261071-nearby-next-margin-6180"></script>
+	<script src="/js/min_bootstrap_7.463.js?v=20261071-nearby-next-margin-6180"></script>
 
 
 <script>
